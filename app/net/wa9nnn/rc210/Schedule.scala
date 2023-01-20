@@ -1,16 +1,23 @@
 package net.wa9nnn.rc210
 
 import com.typesafe.scalalogging.LazyLogging
+import com.wa9nnn.util.tableui.{Header, Row, RowSource}
 import net.wa9nnn.model.DataItem
+import net.wa9nnn.rc210.RC210.datFile
 
 import scala.util.Try
 
 
-case class Schedule(setPoStringNumber: Int, macroToRun: Int, week: Int, dayOfWeek: Int, monthToRun: Int, monthly: Boolean, hours: Int, minutes: Int){
+case class Schedule(setPoStringNumber: Int, macroToRun: Int, week: Int, dayOfWeek: Int, monthToRun: Int, monthly: Boolean, hours: Int, minutes: Int) extends RowSource{
   override def toString: String = s"setPoStringNumber: $setPoStringNumber macro:$macroToRun hours: $hours"
+
+  override def toRow: Row = {
+    Row(setPoStringNumber.toString, macroToRun, week, monthToRun, monthly, hours, minutes)
+  }
 }
 
 object Schedule extends LazyLogging {
+  val header: Header = Header("Schedules", "DetPoint", "MacroToRun", "Week", "MonthToRun", "Monthly", "Hours", "Minutes")
   def buildSchdule(setPoint: Int, items: Seq[DataItem]): Try[Schedule] = {
     {
       val valueMap: Map[String, DataItem] = items.map { dataItem =>
@@ -42,4 +49,19 @@ object Schedule extends LazyLogging {
       }
     }
   }
+
+  def extractSchedules(datFile: DatFile): Seq[Schedule] = {
+    for {
+      pair: (Option[Int], Seq[DataItem]) <- datFile.section("Scheduler").dataItems
+        .groupBy(_.maybeInt)
+        .toSeq
+        .sortBy(_._1)
+      if pair._1.isDefined // has number
+      schedule <- Schedule.buildSchdule(pair._1.get, pair._2).toOption
+    } yield {
+      schedule
+    }
+  }
+
 }
+
