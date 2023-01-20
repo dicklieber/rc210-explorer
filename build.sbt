@@ -48,6 +48,7 @@ libraryDependencies ++= Seq(
 
   "ch.qos.logback" % "logback-classic" % logbackVersion,
   "ch.qos.logback" % "logback-core" % logbackVersion,
+  "commons-io" % "commons-io" % "2.11.0",
 
 )
 

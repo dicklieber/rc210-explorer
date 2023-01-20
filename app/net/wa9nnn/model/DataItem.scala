@@ -1,6 +1,7 @@
-package net.wa9nnn.rc210
+package net.wa9nnn.model
 
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.RawDataLine
 
 import scala.util.Try
 import scala.util.matching.Regex
@@ -17,7 +18,7 @@ import scala.util.matching.Regex
  * @param value          rvalue
  * @param debugInfo      perhaps useful.
  */
-case class DataItem(name: String, maybeInt: Option[Int], value: String, debugInfo: DebugInfo) extends LazyLogging {
+case class DataItem(name: String, maybeInt: Option[Int], value: String, debugInfo: RawDataLine) extends LazyLogging {
   def dump(): Unit = {
     logger.info(s"\t$name\t${maybeInt.getOrElse("-")}\t$value")
   }
@@ -32,8 +33,8 @@ case class DataItem(name: String, maybeInt: Option[Int], value: String, debugInf
       maybeInt.get
     } catch {
       case e: Exception =>
-        logger.error(s"line: $debugInfo", e.getMessage)
-        -1
+        //        logger.error(s"line: $debugInfo", e.getMessage)
+        throw e
     }
   }
 }
@@ -41,11 +42,10 @@ case class DataItem(name: String, maybeInt: Option[Int], value: String, debugInf
 object DataItem {
   val dataItem: Regex = """([^(]*)(?:\((\d+)\))?=(.*)""".r
 
-  def apply(debugInfo: DebugInfo): Try[DataItem] = {
-    Try {
-      val dataItem(name, data, value) = debugInfo.line
-      new DataItem(name, Option(data).map(_.toInt), value, debugInfo)
-    }
+  def apply(rawDataLine: RawDataLine): DataItem = {
+
+    val dataItem(name, number, value) = rawDataLine.line
+    new DataItem(name, Option(number).map(_.toInt), value, rawDataLine)
   }
 
 }

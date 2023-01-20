@@ -1,6 +1,7 @@
 package net.wa9nnn.rc210
 
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.model.DataItem
 
 import scala.util.Try
 
