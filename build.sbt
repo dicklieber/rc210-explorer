@@ -1,14 +1,57 @@
+
 name := """rc210-explorer"""
 organization := "net.wa9nnn"
 
 version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
+  .settings(
+    scalaVersion := "2.13.10",
+    buildInfoKeys :=
+      Seq[BuildInfoKey](
+        name, version, scalaVersion, sbtVersion,
+        sbtVersion, git.remoteRepo,
+        git.gitCurrentBranch, git.gitHeadCommit, git.versionProperty, git.baseVersion, git.gitCurrentTags, git.remoteRepo
+      ),
+    buildInfoOptions := Seq(
+      BuildInfoOption.BuildTime,
+      BuildInfoOption.ToMap,
+      BuildInfoOption.ToJson
+    ),
+    buildInfoPackage := "net.wa9nnn.rc210explorer",
+    //    docusaurDir := (ThisBuild / baseDirectory).value / "website",
+    //    docusaurBuildDir := docusaurDir.value / "build",
 
-scalaVersion := "2.13.10"
+    scalacOptions ++= Seq(
+      "-feature",
+      "-deprecation",
+      "-Xfatal-warnings"
+    )
 
-libraryDependencies += guice
-libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
+  )
+
+
+resolvers += ("Reposilite" at "http://194.113.64.105:8080/releases").withAllowInsecureProtocol(true)
+
+
+val logbackVersion = "1.4.5"
+
+
+//libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
+
+libraryDependencies ++= Seq(
+  guice,
+  "com.wa9nnn" %% "util" % "0.1.9",
+//  "org.specs2" %% "specs2-core" % "5.2.0" % Test,
+  "org.specs2" %% "specs2-core" % "4.17.0" % "test",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
+
+  "ch.qos.logback" % "logback-classic" % logbackVersion,
+  "ch.qos.logback" % "logback-core" % logbackVersion,
+
+)
+
+
 
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "net.wa9nnn.controllers._"
