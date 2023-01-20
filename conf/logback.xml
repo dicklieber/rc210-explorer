@@ -14,7 +14,7 @@
   </appender>
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <withJansi>true</withJansi>
+<!--    <withJansi>true</withJansi>-->
     <encoder>
       <charset>UTF-8</charset>
       <pattern>
@@ -34,7 +34,10 @@
   <logger name="play" level="INFO" />
   <logger name="application" level="DEBUG" />
 
-  <root level="WARN">
+  <!-- Off these ones as they are annoying, and anyway we manage configuration ourselves -->
+  <logger name="net.wa9nnn.rc210.Schedule" level="INFO" />
+
+  <root level="INFO">
     <appender-ref ref="ASYNCFILE" />
     <appender-ref ref="ASYNCSTDOUT" />
   </root>

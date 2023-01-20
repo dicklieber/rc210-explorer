@@ -42,7 +42,7 @@ val logbackVersion = "1.4.5"
 libraryDependencies ++= Seq(
   guice,
   "com.wa9nnn" %% "util" % "0.1.9",
-//  "org.specs2" %% "specs2-core" % "5.2.0" % Test,
+  "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test,
   "org.specs2" %% "specs2-core" % "4.17.0" % "test",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
 
