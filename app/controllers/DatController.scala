@@ -1,7 +1,9 @@
 package controllers
 
 import com.wa9nnn.util.tableui.Table
-import net.wa9nnn.rc210.{DatFileIo, Schedule}
+import net.wa9nnn.model.Schedule
+import net.wa9nnn.model.macros.Macro
+import net.wa9nnn.rc210.DatFileIo
 import play.api.mvc._
 
 import java.net.URL
@@ -29,12 +31,10 @@ class DatController @Inject()(val controllerComponents: ControllerComponents) ex
     val datFile = DatFileIo(path)
 
 
-    val schedules: Seq[Schedule] = Schedule.extractSchedules(datFile)
+    val schedulesTable = Table(Schedule.header, Schedule.extractSchedules(datFile).map(_.toRow))
 
+    val macrosTable = Table(Macro.header,  Macro.extractMacros(datFile).map(_.toRow))
 
-    val table = Table(Schedule.header, schedules.map(_.toRow))
-
-
-    Ok(views.html.dat(table))
+    Ok(views.html.dat(schedulesTable, macrosTable))
   }
 }
