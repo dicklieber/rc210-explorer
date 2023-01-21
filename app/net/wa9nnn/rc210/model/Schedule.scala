@@ -1,13 +1,17 @@
-package net.wa9nnn.model
+package net.wa9nnn.rc210.model
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
 import net.wa9nnn.rc210.DatFile
+import net.wa9nnn.rc210.bubble.NodeId
 
 import scala.util.Try
 
 
-case class Schedule(setPoStringNumber: Int, macroToRun: Int, week: Int, dayOfWeek: Int, monthToRun: Int, monthly: Boolean, hours: Int, minutes: Int) extends RowSource{
+case class Schedule(setPoStringNumber: Int, macroToRun: NodeId, week: Int, dayOfWeek: Int, monthToRun: Int, monthly: Boolean, hours: Int, minutes: Int)
+  extends RowSource with Node {
+  override val nodeId: NodeId = NodeId('s', setPoStringNumber)
+
   override def toString: String = s"setPoStringNumber: $setPoStringNumber macro:$macroToRun hours: $hours"
 
   override def toRow: Row = {
@@ -17,6 +21,7 @@ case class Schedule(setPoStringNumber: Int, macroToRun: Int, week: Int, dayOfWee
 
 object Schedule extends LazyLogging {
   val header: Header = Header("Schedules", "SetPoint", "MacroToRun", "Week", "MonthToRun", "Monthly", "Hours", "Minutes")
+
   private def buildSchdule(setPoint: Int, items: Seq[DataItem]): Try[Schedule] = {
     {
       val valueMap: Map[String, DataItem] = items.map { dataItem =>
@@ -30,7 +35,7 @@ object Schedule extends LazyLogging {
 
       Try {
         val schedule = new Schedule(setPoint,
-          v("MacroToRun"),
+          NodeId('m', v("MacroToRun")),
           v("Week"),
           v("DOW"),
           v("MonthToRun"),

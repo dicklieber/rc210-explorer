@@ -5,6 +5,7 @@
 
 # An example controller showing a sample home page
 GET     /old                           controllers.HomeController.index()
+GET     /functions                           controllers.FunctionsController.index()
 GET     /                           controllers.DatController.index()
 
 # Map static resources from the /public folder to the /assets URL path

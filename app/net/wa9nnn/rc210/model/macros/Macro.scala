@@ -1,16 +1,19 @@
-package net.wa9nnn.model.macros
+package net.wa9nnn.rc210.model.macros
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
-import net.wa9nnn.model.DataItem
 import net.wa9nnn.rc210.DatFile
+import net.wa9nnn.rc210.bubble.NodeId
+import net.wa9nnn.rc210.model.{DataItem, Node}
 
 import scala.util.Try
 
-case class Macro(macroNumber: Int, dtmf: Option[Int], functions: List[Int]) extends RowSource {
+case class Macro(macroNumber: Int, dtmf: Option[Int], functions: List[Int]) extends RowSource with Node {
   override def toRow: Row = {
     Row(macroNumber.toString, dtmf.map(_.toString).getOrElse(" "), functions.mkString(" "))
   }
+
+  override val nodeId: NodeId = NodeId('m', macroNumber)
 }
 
 object Macro extends LazyLogging {

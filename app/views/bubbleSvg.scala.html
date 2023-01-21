@@ -1,0 +1,31 @@
+@()
+
+@main("Bubble (svg)") {
+    <h1>Bubble</h1>
+    <meta charset="utf-8">
+    <div class="bubble-container">
+        <svg width="960" height="600"></svg>
+
+        <div id=details>
+            Click on node for details
+        </div>
+    </div>
+    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/bubble.css")">
+    <script>
+            const svgData = "/bubbleSvg"
+
+            function showDetail(nodeId) {
+                let dd = nodeId
+                let url = `/nodeDetail/${nodeId}`
+                $("#details").load(url);
+            }
+
+    </script>
+
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="@routes.Assets.versioned("javascripts/bubble.js")"></script>
+
+}
+
+
+

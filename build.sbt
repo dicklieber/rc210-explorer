@@ -7,6 +7,7 @@ version := "1.0-SNAPSHOT"
 lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
   .settings(
     scalaVersion := "2.13.10",
+
     buildInfoKeys :=
       Seq[BuildInfoKey](
         name, version, scalaVersion, sbtVersion,
@@ -29,7 +30,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
     )
 
   )
-
+Compile / unmanagedResourceDirectories += baseDirectory.value / "resources"
 
 resolvers += ("Reposilite" at "http://194.113.64.105:8080/releases").withAllowInsecureProtocol(true)
 
@@ -49,7 +50,7 @@ libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % logbackVersion,
   "ch.qos.logback" % "logback-core" % logbackVersion,
   "commons-io" % "commons-io" % "2.11.0",
-
+//  "org.scala-lang.modules" %% "scala-xml" % "2.1.0",
 )
 
 

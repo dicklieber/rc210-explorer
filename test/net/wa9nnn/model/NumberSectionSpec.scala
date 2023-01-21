@@ -1,6 +1,7 @@
 package net.wa9nnn.model
 
 import net.wa9nnn.rc210.RawDataLine
+import net.wa9nnn.rc210.model.{DataItem, NumberSection}
 import org.specs2.mutable.Specification
 
 import scala.util.Try

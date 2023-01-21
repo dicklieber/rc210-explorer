@@ -1,0 +1,6057 @@
+{
+  "macros": {
+    "version": "1.004",
+    "functions": [
+      {
+        "id": "001",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 CTCSS Access"
+      },
+      {
+        "id": "002",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 CTCSS Access"
+      },
+      {
+        "id": "003",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 CTCSS Access"
+      },
+      {
+        "id": "004",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Carrier Access"
+      },
+      {
+        "id": "005",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Carrier Access"
+      },
+      {
+        "id": "006",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Carrier Access"
+      },
+      {
+        "id": "007",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 DTMF Covertone ON"
+      },
+      {
+        "id": "008",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 DTMF Covertone ON"
+      },
+      {
+        "id": "009",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 DTMF Covertone ON"
+      },
+      {
+        "id": "010",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 DTMF Covertone OFF"
+      },
+      {
+        "id": "011",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 DTMF Covertone OFF"
+      },
+      {
+        "id": "012",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 DTMF Covertone OFF"
+      },
+      {
+        "id": "013",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Enable"
+      },
+      {
+        "id": "014",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Enable"
+      },
+      {
+        "id": "015",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Enable"
+      },
+      {
+        "id": "016",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Disable"
+      },
+      {
+        "id": "017",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Disable"
+      },
+      {
+        "id": "018",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Disable"
+      },
+      {
+        "id": "019",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Monitor Port 1 from Port 2"
+      },
+      {
+        "id": "020",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Monitor Port 1 from Port 3"
+      },
+      {
+        "id": "021",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Disconnect Port 1 from Port 2"
+      },
+      {
+        "id": "022",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Disconnect Port 1 from Port 3"
+      },
+      {
+        "id": "023",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Monitor Port 2 from Port 1"
+      },
+      {
+        "id": "024",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Monitor Port 2 from Port 3"
+      },
+      {
+        "id": "025",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Disconnect Port 2 from Port 1"
+      },
+      {
+        "id": "026",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Disconnect Port 2 from Port 3"
+      },
+      {
+        "id": "027",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Monitor Port 3 from Port 1"
+      },
+      {
+        "id": "028",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Monitor Port 3 from Port 2"
+      },
+      {
+        "id": "029",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Disconnect Port 3 from Port 1"
+      },
+      {
+        "id": "030",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Disconnect Port 3 from Port 2"
+      },
+      {
+        "id": "031",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Monitor Mute"
+      },
+      {
+        "id": "032",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Monitor Mute"
+      },
+      {
+        "id": "033",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Monitor Mute"
+      },
+      {
+        "id": "034",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Monitor Mix"
+      },
+      {
+        "id": "035",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Monitor Mix"
+      },
+      {
+        "id": "036",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Monitor Mix"
+      },
+      {
+        "id": "037",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Repeat ON"
+      },
+      {
+        "id": "038",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Repeat ON"
+      },
+      {
+        "id": "039",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Repeat ON"
+      },
+      {
+        "id": "040",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Repeat OFF"
+      },
+      {
+        "id": "041",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Repeat OFF"
+      },
+      {
+        "id": "042",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Repeat OFF"
+      },
+      {
+        "id": "043",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Speech OverrideON"
+      },
+      {
+        "id": "044",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Speech OverrideON"
+      },
+      {
+        "id": "045",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Speech OverrideON"
+      },
+      {
+        "id": "046",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Speech Override OFF"
+      },
+      {
+        "id": "047",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Speech Override OFF"
+      },
+      {
+        "id": "048",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Speech Override OFF"
+      },
+      {
+        "id": "049",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Courtesy Tone 1"
+      },
+      {
+        "id": "050",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Courtesy Tone 2"
+      },
+      {
+        "id": "051",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Courtesy Tone 3"
+      },
+      {
+        "id": "052",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Courtesy Tone 4"
+      },
+      {
+        "id": "053",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Courtesy Tone 5"
+      },
+      {
+        "id": "054",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Courtesy Tone 6"
+      },
+      {
+        "id": "055",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Courtesy Tone 7"
+      },
+      {
+        "id": "056",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Courtesy Tone 8"
+      },
+      {
+        "id": "057",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Courtesy Tone 9"
+      },
+      {
+        "id": "058",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Courtesy Tone 10"
+      },
+      {
+        "id": "059",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Courtesy Tone 1"
+      },
+      {
+        "id": "060",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Courtesy Tone 2"
+      },
+      {
+        "id": "061",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Courtesy Tone 3"
+      },
+      {
+        "id": "062",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Courtesy Tone 4"
+      },
+      {
+        "id": "063",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Courtesy Tone 5"
+      },
+      {
+        "id": "064",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Courtesy Tone 6"
+      },
+      {
+        "id": "065",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Courtesy Tone 7"
+      },
+      {
+        "id": "066",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Courtesy Tone 8"
+      },
+      {
+        "id": "067",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Courtesy Tone 9"
+      },
+      {
+        "id": "068",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Courtesy Tone 10"
+      },
+      {
+        "id": "069",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Courtesy Tone 1"
+      },
+      {
+        "id": "070",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Courtesy Tone 2"
+      },
+      {
+        "id": "071",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Courtesy Tone 3"
+      },
+      {
+        "id": "072",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Courtesy Tone 4"
+      },
+      {
+        "id": "073",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Courtesy Tone 5"
+      },
+      {
+        "id": "074",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Courtesy Tone 6"
+      },
+      {
+        "id": "075",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Courtesy Tone 7"
+      },
+      {
+        "id": "076",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Courtesy Tone 8"
+      },
+      {
+        "id": "077",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Courtesy Tone 9"
+      },
+      {
+        "id": "078",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Courtesy Tone 10"
+      },
+      {
+        "id": "079",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 DTMF Muting ON"
+      },
+      {
+        "id": "080",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 DTMF Muting ON"
+      },
+      {
+        "id": "081",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 DTMF Muting ON"
+      },
+      {
+        "id": "082",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 DTMF Muting OFF"
+      },
+      {
+        "id": "083",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 DTMF Muting OFF"
+      },
+      {
+        "id": "084",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 DTMF Muting OFF"
+      },
+      {
+        "id": "085",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "CTCSS Encode ON (for the duration of this Macro)"
+      },
+      {
+        "id": "086",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "CTCSS Encode OFF (for the duration of this Macro)"
+      },
+      {
+        "id": "087",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Read ADC Channel 1"
+      },
+      {
+        "id": "088",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Read ADC Channel 2"
+      },
+      {
+        "id": "089",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Read ADC Channel 3"
+      },
+      {
+        "id": "090",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Read ADC Channel 4"
+      },
+      {
+        "id": "091",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Read ADC Channel 5"
+      },
+      {
+        "id": "092",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Read ADC Channel 6"
+      },
+      {
+        "id": "093",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Read ADC Channel 7"
+      },
+      {
+        "id": "094",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Read ADC Channel 8"
+      },
+      {
+        "id": "095",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "UF1 ON"
+      },
+      {
+        "id": "096",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "UF2 ON"
+      },
+      {
+        "id": "097",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "UF3 ON"
+      },
+      {
+        "id": "098",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "UF4 ON"
+      },
+      {
+        "id": "099",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "UF5 ON"
+      },
+      {
+        "id": "100",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "UF6 ON"
+      },
+      {
+        "id": "101",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "UF7 ON"
+      },
+      {
+        "id": "102",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "UF1 OFF"
+      },
+      {
+        "id": "103",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "UF2 OFF"
+      },
+      {
+        "id": "104",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "UF3 OFF"
+      },
+      {
+        "id": "105",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "UF4 OFF"
+      },
+      {
+        "id": "106",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "UF5 OFF"
+      },
+      {
+        "id": "107",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "UF6 OFF"
+      },
+      {
+        "id": "108",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "UF7 OFF"
+      },
+      {
+        "id": "109",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "UF1 Pulse"
+      },
+      {
+        "id": "110",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "UF2 Pulse"
+      },
+      {
+        "id": "111",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "UF3 Pulse"
+      },
+      {
+        "id": "112",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "UF4 Pulse"
+      },
+      {
+        "id": "113",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "UF5 Pulse"
+      },
+      {
+        "id": "114",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "UF6 Pulse"
+      },
+      {
+        "id": "115",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "UF7 Pulse"
+      },
+      {
+        "id": "116",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Say Time"
+      },
+      {
+        "id": "117",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Say Date"
+      },
+      {
+        "id": "118",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Link Port 1 to Port 2"
+      },
+      {
+        "id": "119",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Link Port 1 to Port 3"
+      },
+      {
+        "id": "120",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Link Port 2 to Port 3"
+      },
+      {
+        "id": "121",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Link All Ports"
+      },
+      {
+        "id": "122",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Unlink Port 1 from Port 2"
+      },
+      {
+        "id": "123",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Unlink Port 1 from Port 3"
+      },
+      {
+        "id": "124",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Unlink Port 2 from Port 3"
+      },
+      {
+        "id": "125",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "UnLink All Ports"
+      },
+      {
+        "id": "126",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play DVR Track 1"
+      },
+      {
+        "id": "127",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play DVR Track 2"
+      },
+      {
+        "id": "128",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play DVR Track 3"
+      },
+      {
+        "id": "129",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play DVR Track 4"
+      },
+      {
+        "id": "130",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play DVR Track 5"
+      },
+      {
+        "id": "131",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play DVR Track 6"
+      },
+      {
+        "id": "132",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play DVR Track 7"
+      },
+      {
+        "id": "133",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play DVR Track 8"
+      },
+      {
+        "id": "134",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play DVR Track 9"
+      },
+      {
+        "id": "135",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play DVR Track 10"
+      },
+      {
+        "id": "136",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play DVR Track 11"
+      },
+      {
+        "id": "137",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play DVR Track 12"
+      },
+      {
+        "id": "138",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play DVR Track 13"
+      },
+      {
+        "id": "139",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play DVR Track 14"
+      },
+      {
+        "id": "140",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play DVR Track 15"
+      },
+      {
+        "id": "141",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play DVR Track 16"
+      },
+      {
+        "id": "142",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play DVR Track 17"
+      },
+      {
+        "id": "143",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play DVR Track 18"
+      },
+      {
+        "id": "144",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play DVR Track 19"
+      },
+      {
+        "id": "145",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play DVR Track 20"
+      },
+      {
+        "id": "146",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Auxiliary Audio 1 ON"
+      },
+      {
+        "id": "147",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Auxiliary Audio 2 ON"
+      },
+      {
+        "id": "148",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Auxiliary Audio 3 ON"
+      },
+      {
+        "id": "149",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Auxiliary Audio 1 OFF"
+      },
+      {
+        "id": "150",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Auxiliary Audio 2 OFF"
+      },
+      {
+        "id": "151",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Auxiliary Audio 3 OFF"
+      },
+      {
+        "id": "152",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Alarm 1 ON"
+      },
+      {
+        "id": "153",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Alarm 2 ON"
+      },
+      {
+        "id": "154",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Alarm 3 ON"
+      },
+      {
+        "id": "155",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Alarm 4 ON"
+      },
+      {
+        "id": "156",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Alarm 5 ON"
+      },
+      {
+        "id": "157",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Alarm 1 OFF"
+      },
+      {
+        "id": "158",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Alarm 2 OFF"
+      },
+      {
+        "id": "159",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Alarm 3 OFF"
+      },
+      {
+        "id": "160",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Alarm 4 OFF"
+      },
+      {
+        "id": "161",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Alarm 5 OFF"
+      },
+      {
+        "id": "162",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Speech Out Port 1"
+      },
+      {
+        "id": "163",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Speech Out Port 2"
+      },
+      {
+        "id": "164",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Speech Out Port 3"
+      },
+      {
+        "id": "165",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Speech Out Ports 1 and 2"
+      },
+      {
+        "id": "166",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Speech Out Ports 1 and 3"
+      },
+      {
+        "id": "167",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Speech Out Ports 2 and 3"
+      },
+      {
+        "id": "168",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Speech Out All Ports"
+      },
+      {
+        "id": "169",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "DTMF Enable Port 1"
+      },
+      {
+        "id": "170",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "DTMF Enable Port 2"
+      },
+      {
+        "id": "171",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "DTMF Enable Port 3"
+      },
+      {
+        "id": "172",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "DTMF Disable Port 1"
+      },
+      {
+        "id": "173",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "DTMF Disable Port 2"
+      },
+      {
+        "id": "174",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "DTMF Disable Port 3"
+      },
+      {
+        "id": "175",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "DTMF Require CTCSS Port 1"
+      },
+      {
+        "id": "176",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "DTMF Require CTCSS Port 2"
+      },
+      {
+        "id": "177",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "DTMF Require CTCSS Port 3"
+      },
+      {
+        "id": "178",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "DTMF Not Require CTCSS Port 1"
+      },
+      {
+        "id": "179",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "DTMF Not Require CTCSS Port 2"
+      },
+      {
+        "id": "180",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "DTMF Not Require CTCSS Port 3"
+      },
+      {
+        "id": "181",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Force Next Voice ID In Rotation On Port 1"
+      },
+      {
+        "id": "182",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Force Next Voice ID In Rotation On Port 2"
+      },
+      {
+        "id": "183",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Force Next Voice ID In Rotation On Port 3"
+      },
+      {
+        "id": "184",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Force Next CW ID In Rotation On Port 1"
+      },
+      {
+        "id": "185",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Force Next CW ID In Rotation On Port 2"
+      },
+      {
+        "id": "186",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Force Next CW ID In Rotation On Port 3"
+      },
+      {
+        "id": "187",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 1"
+      },
+      {
+        "id": "188",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 2"
+      },
+      {
+        "id": "189",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 3"
+      },
+      {
+        "id": "190",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 4"
+      },
+      {
+        "id": "191",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 5"
+      },
+      {
+        "id": "192",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 6"
+      },
+      {
+        "id": "193",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 7"
+      },
+      {
+        "id": "194",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 8"
+      },
+      {
+        "id": "195",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 9"
+      },
+      {
+        "id": "196",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 10"
+      },
+      {
+        "id": "197",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 11"
+      },
+      {
+        "id": "198",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 12"
+      },
+      {
+        "id": "199",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 13"
+      },
+      {
+        "id": "200",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 14"
+      },
+      {
+        "id": "201",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 15"
+      },
+      {
+        "id": "202",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 16"
+      },
+      {
+        "id": "203",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 17"
+      },
+      {
+        "id": "204",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 18"
+      },
+      {
+        "id": "205",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 19"
+      },
+      {
+        "id": "206",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 20"
+      },
+      {
+        "id": "207",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 21"
+      },
+      {
+        "id": "208",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 22"
+      },
+      {
+        "id": "209",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 23"
+      },
+      {
+        "id": "210",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 24"
+      },
+      {
+        "id": "211",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 25"
+      },
+      {
+        "id": "212",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 26"
+      },
+      {
+        "id": "213",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 27"
+      },
+      {
+        "id": "214",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 28"
+      },
+      {
+        "id": "215",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 29"
+      },
+      {
+        "id": "216",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 30"
+      },
+      {
+        "id": "217",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 31"
+      },
+      {
+        "id": "218",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 32"
+      },
+      {
+        "id": "219",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 33"
+      },
+      {
+        "id": "220",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 34"
+      },
+      {
+        "id": "221",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 35"
+      },
+      {
+        "id": "222",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 36"
+      },
+      {
+        "id": "223",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 37"
+      },
+      {
+        "id": "224",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 38"
+      },
+      {
+        "id": "225",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 39"
+      },
+      {
+        "id": "226",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Play Message Macro 40"
+      },
+      {
+        "id": "227",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Good Morning/Afternoon/Evening Runtime Variable"
+      },
+      {
+        "id": "228",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Macro Priority High"
+      },
+      {
+        "id": "229",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Macro Priority Low"
+      },
+      {
+        "id": "230",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Enable Kerchunk Filter Port 1"
+      },
+      {
+        "id": "231",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Enable Kerchunk Filter Port 2"
+      },
+      {
+        "id": "232",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Enable Kerchunk Filter Port 3"
+      },
+      {
+        "id": "233",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Disable Kerchunk Filter Port 1"
+      },
+      {
+        "id": "234",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Disable Kerchunk Filter Port 2"
+      },
+      {
+        "id": "235",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Disable Kerchunk Filter Port 3"
+      },
+      {
+        "id": "236",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Enable Receiver Port 1"
+      },
+      {
+        "id": "237",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Enable Receiver Port 2"
+      },
+      {
+        "id": "238",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Enable Receiver Port 3"
+      },
+      {
+        "id": "239",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Disable Receiver Port 1"
+      },
+      {
+        "id": "240",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Disable Receiver Port 2"
+      },
+      {
+        "id": "241",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Disable Receiver Port 3"
+      },
+      {
+        "id": "242",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Speech ID Override ON"
+      },
+      {
+        "id": "243",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Speech ID Override ON"
+      },
+      {
+        "id": "244",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Speech ID Override ON"
+      },
+      {
+        "id": "245",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Speech ID Override OFF"
+      },
+      {
+        "id": "246",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Speech ID Override OFF"
+      },
+      {
+        "id": "247",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Speech ID Override OFF"
+      },
+      {
+        "id": "248",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "All Courtesy Tones OFF Port 1"
+      },
+      {
+        "id": "249",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "All Courtesy Tones OFF Port 2"
+      },
+      {
+        "id": "250",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "All Courtesy Tones OFF Port 3"
+      },
+      {
+        "id": "251",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Force Audio To Entered Port"
+      },
+      {
+        "id": "252",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Stop ID/Disable Timeout Timer Port 1"
+      },
+      {
+        "id": "253",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Stop ID/Disable Timeout Timer Port 2"
+      },
+      {
+        "id": "254",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Stop ID/Disable Timeout Timer Port 3"
+      },
+      {
+        "id": "256",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Resume ID/Enable Timeout Timer Port 1"
+      },
+      {
+        "id": "257",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Resume ID/Enable Timeout Timer Port 2"
+      },
+      {
+        "id": "258",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Resume ID/Enable Timeout Timer Port 3"
+      },
+      {
+        "id": "259",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Send DTMF Memory 1"
+      },
+      {
+        "id": "260",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Send DTMF Memory 2"
+      },
+      {
+        "id": "261",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Send DTMF Memory 3"
+      },
+      {
+        "id": "262",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Send DTMF Memory 4"
+      },
+      {
+        "id": "263",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Send DTMF Memory 5"
+      },
+      {
+        "id": "264",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Send DTMF Memory 6"
+      },
+      {
+        "id": "265",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Send DTMF Memory 7"
+      },
+      {
+        "id": "266",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Send DTMF Memory 8"
+      },
+      {
+        "id": "267",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Send DTMF Memory 9"
+      },
+      {
+        "id": "268",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Send DTMF Memory 10"
+      },
+      {
+        "id": "269",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Send DTMF Memory 11"
+      },
+      {
+        "id": "270",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Send DTMF Memory 12"
+      },
+      {
+        "id": "271",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Send DTMF Memory 13"
+      },
+      {
+        "id": "272",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Send DTMF Memory 14"
+      },
+      {
+        "id": "273",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Send DTMF Memory 15"
+      },
+      {
+        "id": "274",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Send DTMF Memory 16"
+      },
+      {
+        "id": "275",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Send DTMF Memory 17"
+      },
+      {
+        "id": "276",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Send DTMF Memory 18"
+      },
+      {
+        "id": "277",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Send DTMF Memory 19"
+      },
+      {
+        "id": "278",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Send DTMF Memory 20"
+      },
+      {
+        "id": "279",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Clear All Meter Hi/Low Trippoints"
+      },
+      {
+        "id": "280",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Clear Meter 1 Hi/Low Trippoint"
+      },
+      {
+        "id": "281",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Clear Meter 2 Hi/Low Trippoint"
+      },
+      {
+        "id": "282",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Clear Meter 3 Hi/Low Trippoint"
+      },
+      {
+        "id": "283",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Clear Meter 4 Hi/Low Trippoint"
+      },
+      {
+        "id": "284",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Clear Meter 5 Hi/Low Trippoint"
+      },
+      {
+        "id": "285",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Clear Meter 6 Hi/Low Trippoint"
+      },
+      {
+        "id": "286",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Clear Meter 7 Hi/Low Trippoint"
+      },
+      {
+        "id": "287",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Clear Meter 8 Hi/Low Trippoint"
+      },
+      {
+        "id": "288",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Enable Meter 1 Alarm"
+      },
+      {
+        "id": "289",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Enable Meter 2 Alarm"
+      },
+      {
+        "id": "290",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Enable Meter 3 Alarm"
+      },
+      {
+        "id": "291",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Enable Meter 4 Alarm"
+      },
+      {
+        "id": "292",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Enable Meter 5 Alarm"
+      },
+      {
+        "id": "293",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Enable Meter 6 Alarm"
+      },
+      {
+        "id": "294",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Enable Meter 7 Alarm"
+      },
+      {
+        "id": "295",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Enable Meter 8 Alarm"
+      },
+      {
+        "id": "296",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Disable Meter 1 Alarm"
+      },
+      {
+        "id": "297",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Disable Meter 2 Alarm"
+      },
+      {
+        "id": "298",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Disable Meter 3 Alarm"
+      },
+      {
+        "id": "299",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Disable Meter 4 Alarm"
+      },
+      {
+        "id": "300",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Disable Meter 5 Alarm"
+      },
+      {
+        "id": "301",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Disable Meter 6 Alarm"
+      },
+      {
+        "id": "302",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Disable Meter 7 Alarm"
+      },
+      {
+        "id": "303",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Disable Meter 8 Alarm"
+      },
+      {
+        "id": "304",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "CTCSS Encode Force OFF"
+      },
+      {
+        "id": "305",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "CTCSS Encode to Programmed Value"
+      },
+      {
+        "id": "306",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Bump Clock By Correction Factor"
+      },
+      {
+        "id": "307",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Say year as part of date"
+      },
+      {
+        "id": "308",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Don't say year as part of date"
+      },
+      {
+        "id": "309",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Tail Message OFF"
+      },
+      {
+        "id": "310",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Tail Message OFF"
+      },
+      {
+        "id": "311",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Tail Message OFF"
+      },
+      {
+        "id": "312",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Tail Message 1"
+      },
+      {
+        "id": "313",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Tail Message 1"
+      },
+      {
+        "id": "314",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Tail Message 1"
+      },
+      {
+        "id": "315",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Tail Message 2"
+      },
+      {
+        "id": "316",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Tail Message 2"
+      },
+      {
+        "id": "317",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Tail Message 2"
+      },
+      {
+        "id": "318",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Tail Message 3"
+      },
+      {
+        "id": "319",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Tail Message 3"
+      },
+      {
+        "id": "320",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Tail Message 3"
+      },
+      {
+        "id": "321",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Remote Base Memory 1"
+      },
+      {
+        "id": "322",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Remote Base Memory 2"
+      },
+      {
+        "id": "323",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Remote Base Memory 3"
+      },
+      {
+        "id": "324",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Remote Base Memory 4"
+      },
+      {
+        "id": "325",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Remote Base Memory 5"
+      },
+      {
+        "id": "326",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Remote Base Memory 6"
+      },
+      {
+        "id": "327",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Remote Base Memory 7"
+      },
+      {
+        "id": "328",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Remote Base Memory 8"
+      },
+      {
+        "id": "329",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Remote Base Memory 9"
+      },
+      {
+        "id": "330",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Remote Base Memory 10"
+      },
+      {
+        "id": "331",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Zero Hang Time Select"
+      },
+      {
+        "id": "332",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Zero Hang Time Select"
+      },
+      {
+        "id": "333",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Zero Hang Time Select"
+      },
+      {
+        "id": "334",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 1 Hang Time Revert to Programmed Value"
+      },
+      {
+        "id": "335",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 2 Hang Time Revert to Programmed Value"
+      },
+      {
+        "id": "336",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Port 3 Hang Time Revert to Programmed Value"
+      },
+      {
+        "id": "337",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Allow Autopatch from programmed Ports"
+      },
+      {
+        "id": "338",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Disable Autopatch"
+      },
+      {
+        "id": "339",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Enable Speech ID's Port 1"
+      },
+      {
+        "id": "340",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Enable Speech ID's Port 2"
+      },
+      {
+        "id": "341",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Enable Speech ID's Port 3"
+      },
+      {
+        "id": "342",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Disable Speech ID's Port 1"
+      },
+      {
+        "id": "343",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Disable Speech ID's Port 2"
+      },
+      {
+        "id": "344",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Disable Speech ID's Port 3"
+      },
+      {
+        "id": "345",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "User DVR Record test, erase after auto playback"
+      },
+      {
+        "id": "346",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "User DVR Record test, don't erase after auto playback"
+      },
+      {
+        "id": "347",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Start General Timer 1"
+      },
+      {
+        "id": "348",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Start General Timer 2"
+      },
+      {
+        "id": "349",
+        "versions": "5.281 5.285 5.360 6.000 6.040",
+        "description": "Start General Timer 3"
+      },
+      {
+        "id": "350",
+        "versions": "5.285 5.360 6.000 6.040",
+        "description": "Stop General Timer 1"
+      },
+      {
+        "id": "351",
+        "versions": "5.281",
+        "description": "Suspend Scheduler Setpoint 1"
+      },
+      {
+        "id": "351",
+        "versions": "5.285 5.360 6.000 6.040",
+        "description": "Stop General Timer 2"
+      },
+      {
+        "id": "352",
+        "versions": "5.281",
+        "description": "Suspend Scheduler Setpoint 2"
+      },
+      {
+        "id": "352",
+        "versions": "5.285 5.360 6.000 6.040",
+        "description": "Stop General Timer 3"
+      },
+      {
+        "id": "353",
+        "versions": "5.281",
+        "description": "Suspend Scheduler Setpoint 3"
+      },
+      {
+        "id": "353",
+        "versions": "5.285 5.360 6.000 6.040",
+        "description": "Remote Base Power Select 1"
+      },
+      {
+        "id": "354",
+        "versions": "5.281",
+        "description": "Suspend Scheduler Setpoint 4"
+      },
+      {
+        "id": "354",
+        "versions": "5.285 5.360 6.000 6.040",
+        "description": "Remote Base Power Select 2"
+      },
+      {
+        "id": "355",
+        "versions": "5.281",
+        "description": "Suspend Scheduler Setpoint 5"
+      },
+      {
+        "id": "355",
+        "versions": "5.285 5.360 6.000 6.040",
+        "description": "Remote Base Power Select 3"
+      },
+      {
+        "id": "356",
+        "versions": "5.281",
+        "description": "Suspend Scheduler Setpoint 6"
+      },
+      {
+        "id": "356",
+        "versions": "5.285 5.360 6.000 6.040",
+        "description": "Guest Macros Enabled"
+      },
+      {
+        "id": "357",
+        "versions": "5.281",
+        "description": "Suspend Scheduler Setpoint 7"
+      },
+      {
+        "id": "357",
+        "versions": "5.285 5.360 6.000 6.040",
+        "description": "Guest Macros Disabled"
+      },
+      {
+        "id": "358",
+        "versions": "5.281",
+        "description": "Suspend Scheduler Setpoint 8"
+      },
+      {
+        "id": "358",
+        "versions": "5.285",
+        "description": "Reveiver Is Active Port 1"
+      },
+      {
+        "id": "358",
+        "versions": "5.360 6.000 6.040",
+        "description": "Reveiver 1 Macros On"
+      },
+      {
+        "id": "359",
+        "versions": "5.281",
+        "description": "Suspend Scheduler Setpoint 9"
+      },
+      {
+        "id": "359",
+        "versions": "5.285",
+        "description": "Reveiver Is Active Port 2"
+      },
+      {
+        "id": "359",
+        "versions": "5.360 6.000 6.040",
+        "description": "Reveiver 2 Macros On"
+      },
+      {
+        "id": "360",
+        "versions": "5.281",
+        "description": "Suspend Scheduler Setpoint 10"
+      },
+      {
+        "id": "360",
+        "versions": "5.285",
+        "description": "Reveiver Is Active Port 3"
+      },
+      {
+        "id": "360",
+        "versions": "5.360 6.000 6.040",
+        "description": "Reveiver 3 Macros On"
+      },
+      {
+        "id": "361",
+        "versions": "5.281",
+        "description": "Suspend Scheduler Setpoint 11"
+      },
+      {
+        "id": "361",
+        "versions": "5.285",
+        "description": "Reveiver Is Inactive Port 1"
+      },
+      {
+        "id": "361",
+        "versions": "5.360 6.000 6.040",
+        "description": "Reveiver 3 Macros Off"
+      },
+      {
+        "id": "362",
+        "versions": "5.281",
+        "description": "Suspend Scheduler Setpoint 12"
+      },
+      {
+        "id": "362",
+        "versions": "5.285",
+        "description": "Reveiver Is Inactive Port 2"
+      },
+      {
+        "id": "362",
+        "versions": "5.360 6.000 6.040",
+        "description": "Reveiver 3 Macros Off"
+      },
+      {
+        "id": "363",
+        "versions": "5.281",
+        "description": "Suspend Scheduler Setpoint 13"
+      },
+      {
+        "id": "363",
+        "versions": "5.285",
+        "description": "Reveiver Is Inactive Port 3"
+      },
+      {
+        "id": "363",
+        "versions": "5.360 6.000 6.040",
+        "description": "Reveiver 3 Macros Off"
+      },
+      {
+        "id": "364",
+        "versions": "5.281",
+        "description": "Suspend Scheduler Setpoint 14"
+      },
+      {
+        "id": "364",
+        "versions": "5.285",
+        "description": "Play Message Macro 41"
+      },
+      {
+        "id": "364",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 1 Output ON"
+      },
+      {
+        "id": "365",
+        "versions": "5.281",
+        "description": "Suspend Scheduler Setpoint 15"
+      },
+      {
+        "id": "365",
+        "versions": "5.285",
+        "description": "Play Message Macro 42"
+      },
+      {
+        "id": "365",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 2 Output ON"
+      },
+      {
+        "id": "366",
+        "versions": "5.281",
+        "description": "Suspend Scheduler Setpoint 16"
+      },
+      {
+        "id": "366",
+        "versions": "5.285",
+        "description": "Play Message Macro 43"
+      },
+      {
+        "id": "366",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 3 Output ON"
+      },
+      {
+        "id": "367",
+        "versions": "5.281",
+        "description": "Suspend Scheduler Setpoint 17"
+      },
+      {
+        "id": "367",
+        "versions": "5.285",
+        "description": "Play Message Macro 44"
+      },
+      {
+        "id": "367",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 4 Output ON"
+      },
+      {
+        "id": "368",
+        "versions": "5.281",
+        "description": "Suspend Scheduler Setpoint 18"
+      },
+      {
+        "id": "368",
+        "versions": "5.285",
+        "description": "Play Message Macro 45"
+      },
+      {
+        "id": "368",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 5 Output ON"
+      },
+      {
+        "id": "369",
+        "versions": "5.281",
+        "description": "Suspend Scheduler Setpoint 19"
+      },
+      {
+        "id": "369",
+        "versions": "5.285",
+        "description": "Play Message Macro 46"
+      },
+      {
+        "id": "369",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 6 Output ON"
+      },
+      {
+        "id": "370",
+        "versions": "5.281",
+        "description": "Suspend Scheduler Setpoint 20"
+      },
+      {
+        "id": "370",
+        "versions": "5.285",
+        "description": "Play Message Macro 47"
+      },
+      {
+        "id": "370",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 7 Output ON"
+      },
+      {
+        "id": "371",
+        "versions": "5.281",
+        "description": "Resume Scheduler Setpoint 1"
+      },
+      {
+        "id": "371",
+        "versions": "5.285",
+        "description": "Play Message Macro 48"
+      },
+      {
+        "id": "371",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 8 Output ON"
+      },
+      {
+        "id": "372",
+        "versions": "5.281",
+        "description": "Resume Scheduler Setpoint 2"
+      },
+      {
+        "id": "372",
+        "versions": "5.285",
+        "description": "Play Message Macro 49"
+      },
+      {
+        "id": "372",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 9 Output ON"
+      },
+      {
+        "id": "373",
+        "versions": "5.281",
+        "description": "Resume Scheduler Setpoint 3"
+      },
+      {
+        "id": "373",
+        "versions": "5.285",
+        "description": "Play Message Macro 50"
+      },
+      {
+        "id": "373",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 10 Output ON"
+      },
+      {
+        "id": "374",
+        "versions": "5.281",
+        "description": "Resume Scheduler Setpoint 4"
+      },
+      {
+        "id": "374",
+        "versions": "5.285",
+        "description": "Play Message Macro 51"
+      },
+      {
+        "id": "374",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 11 Output ON"
+      },
+      {
+        "id": "375",
+        "versions": "5.281",
+        "description": "Resume Scheduler Setpoint 5"
+      },
+      {
+        "id": "375",
+        "versions": "5.285",
+        "description": "Play Message Macro 52"
+      },
+      {
+        "id": "375",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 12 Output ON"
+      },
+      {
+        "id": "376",
+        "versions": "5.281",
+        "description": "Resume Scheduler Setpoint 6"
+      },
+      {
+        "id": "376",
+        "versions": "5.285",
+        "description": "Play Message Macro 53"
+      },
+      {
+        "id": "376",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 13 Output ON"
+      },
+      {
+        "id": "377",
+        "versions": "5.281",
+        "description": "Resume Scheduler Setpoint 7"
+      },
+      {
+        "id": "377",
+        "versions": "5.285",
+        "description": "Play Message Macro 54"
+      },
+      {
+        "id": "377",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 14 Output ON"
+      },
+      {
+        "id": "378",
+        "versions": "5.281",
+        "description": "Resume Scheduler Setpoint 8"
+      },
+      {
+        "id": "378",
+        "versions": "5.285",
+        "description": "Play Message Macro 55"
+      },
+      {
+        "id": "378",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 15 Output ON"
+      },
+      {
+        "id": "379",
+        "versions": "5.281",
+        "description": "Resume Scheduler Setpoint 9"
+      },
+      {
+        "id": "379",
+        "versions": "5.285",
+        "description": "Play Message Macro 56"
+      },
+      {
+        "id": "379",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 16 Output ON"
+      },
+      {
+        "id": "380",
+        "versions": "5.281",
+        "description": "Resume Scheduler Setpoint 10"
+      },
+      {
+        "id": "380",
+        "versions": "5.285",
+        "description": "Play Message Macro 57"
+      },
+      {
+        "id": "380",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 17 Output ON"
+      },
+      {
+        "id": "381",
+        "versions": "5.281",
+        "description": "Resume Scheduler Setpoint 11"
+      },
+      {
+        "id": "381",
+        "versions": "5.285",
+        "description": "Play Message Macro 58"
+      },
+      {
+        "id": "381",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 18 Output ON"
+      },
+      {
+        "id": "382",
+        "versions": "5.281",
+        "description": "Resume Scheduler Setpoint 12"
+      },
+      {
+        "id": "382",
+        "versions": "5.285",
+        "description": "Play Message Macro 59"
+      },
+      {
+        "id": "382",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 19 Output ON"
+      },
+      {
+        "id": "383",
+        "versions": "5.281",
+        "description": "Resume Scheduler Setpoint 13"
+      },
+      {
+        "id": "383",
+        "versions": "5.285",
+        "description": "Play Message Macro 60"
+      },
+      {
+        "id": "383",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 20 Output ON"
+      },
+      {
+        "id": "384",
+        "versions": "5.281",
+        "description": "Resume Scheduler Setpoint 14"
+      },
+      {
+        "id": "384",
+        "versions": "5.285",
+        "description": "Play Message Macro 61"
+      },
+      {
+        "id": "384",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 21 Output ON"
+      },
+      {
+        "id": "385",
+        "versions": "5.281",
+        "description": "Resume Scheduler Setpoint 15"
+      },
+      {
+        "id": "385",
+        "versions": "5.285",
+        "description": "Play Message Macro 62"
+      },
+      {
+        "id": "385",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 22 Output ON"
+      },
+      {
+        "id": "386",
+        "versions": "5.281",
+        "description": "Resume Scheduler Setpoint 16"
+      },
+      {
+        "id": "386",
+        "versions": "5.285",
+        "description": "Play Message Macro 63"
+      },
+      {
+        "id": "386",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 23 Output ON"
+      },
+      {
+        "id": "387",
+        "versions": "5.281",
+        "description": "Resume Scheduler Setpoint 17"
+      },
+      {
+        "id": "387",
+        "versions": "5.285",
+        "description": "Play Message Macro 64"
+      },
+      {
+        "id": "387",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 24 Output ON"
+      },
+      {
+        "id": "388",
+        "versions": "5.281",
+        "description": "Resume Scheduler Setpoint 18"
+      },
+      {
+        "id": "388",
+        "versions": "5.285",
+        "description": "Play Message Macro 65"
+      },
+      {
+        "id": "388",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 25 Output ON"
+      },
+      {
+        "id": "389",
+        "versions": "5.281",
+        "description": "Resume Scheduler Setpoint 19"
+      },
+      {
+        "id": "389",
+        "versions": "5.285",
+        "description": "Play Message Macro 66"
+      },
+      {
+        "id": "389",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 26 Output ON"
+      },
+      {
+        "id": "390",
+        "versions": "5.281",
+        "description": "Resume Scheduler Setpoint 20"
+      },
+      {
+        "id": "390",
+        "versions": "5.285",
+        "description": "Play Message Macro 67"
+      },
+      {
+        "id": "390",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 27 Output ON"
+      },
+      {
+        "id": "391",
+        "versions": "5.281",
+        "description": "Stop General Timer 1"
+      },
+      {
+        "id": "391",
+        "versions": "5.285",
+        "description": "Play Message Macro 68"
+      },
+      {
+        "id": "391",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 28 Output ON"
+      },
+      {
+        "id": "392",
+        "versions": "5.281",
+        "description": "Stop General Timer 2"
+      },
+      {
+        "id": "392",
+        "versions": "5.285",
+        "description": "Play Message Macro 69"
+      },
+      {
+        "id": "392",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 29 Output ON"
+      },
+      {
+        "id": "393",
+        "versions": "5.281",
+        "description": "Stop General Timer 3"
+      },
+      {
+        "id": "393",
+        "versions": "5.285",
+        "description": "Play Message Macro 70"
+      },
+      {
+        "id": "393",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 30 Output ON"
+      },
+      {
+        "id": "394",
+        "versions": "5.285",
+        "description": "Remote Base Memory 11"
+      },
+      {
+        "id": "394",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 31 Output ON"
+      },
+      {
+        "id": "395",
+        "versions": "5.285",
+        "description": "Remote Base Memory 12"
+      },
+      {
+        "id": "395",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 32 Output ON"
+      },
+      {
+        "id": "396",
+        "versions": "5.285",
+        "description": "Remote Base Memory 13"
+      },
+      {
+        "id": "396",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 1 Output Pulse"
+      },
+      {
+        "id": "397",
+        "versions": "5.281",
+        "description": "Macro Subset Disable"
+      },
+      {
+        "id": "397",
+        "versions": "5.285",
+        "description": "Remote Base Memory 14"
+      },
+      {
+        "id": "397",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 2 Output Pulse"
+      },
+      {
+        "id": "398",
+        "versions": "5.281",
+        "description": "Macro Subset Enable"
+      },
+      {
+        "id": "398",
+        "versions": "5.285",
+        "description": "Remote Base Memory 15"
+      },
+      {
+        "id": "398",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 3 Output Pulse"
+      },
+      {
+        "id": "399",
+        "versions": "5.285",
+        "description": "Remote Base Memory 16"
+      },
+      {
+        "id": "399",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 4 Output Pulse"
+      },
+      {
+        "id": "400",
+        "versions": "5.285",
+        "description": "Remote Base Memory 17"
+      },
+      {
+        "id": "400",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 5 Output Pulse"
+      },
+      {
+        "id": "401",
+        "versions": "5.281",
+        "description": "Macro 1"
+      },
+      {
+        "id": "401",
+        "versions": "5.285",
+        "description": "Remote Base Memory 18"
+      },
+      {
+        "id": "401",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 6 Output Pulse"
+      },
+      {
+        "id": "402",
+        "versions": "5.281",
+        "description": "Macro 2"
+      },
+      {
+        "id": "402",
+        "versions": "5.285",
+        "description": "Remote Base Memory 19"
+      },
+      {
+        "id": "402",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 7 Output Pulse"
+      },
+      {
+        "id": "403",
+        "versions": "5.281",
+        "description": "Macro 3"
+      },
+      {
+        "id": "403",
+        "versions": "5.285",
+        "description": "Remote Base Memory 20"
+      },
+      {
+        "id": "403",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 8 Output Pulse"
+      },
+      {
+        "id": "404",
+        "versions": "5.281",
+        "description": "Macro 4"
+      },
+      {
+        "id": "404",
+        "versions": "5.285",
+        "description": "Remote Base Memory 21"
+      },
+      {
+        "id": "404",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 9 Output Pulse"
+      },
+      {
+        "id": "405",
+        "versions": "5.281",
+        "description": "Macro 5"
+      },
+      {
+        "id": "405",
+        "versions": "5.285",
+        "description": "Remote Base Memory 22"
+      },
+      {
+        "id": "405",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 10 Output Pulse"
+      },
+      {
+        "id": "406",
+        "versions": "5.281",
+        "description": "Macro 6"
+      },
+      {
+        "id": "406",
+        "versions": "5.285",
+        "description": "Remote Base Memory 23"
+      },
+      {
+        "id": "406",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 11 Output Pulse"
+      },
+      {
+        "id": "407",
+        "versions": "5.281",
+        "description": "Macro 7"
+      },
+      {
+        "id": "407",
+        "versions": "5.285",
+        "description": "Remote Base Memory 24"
+      },
+      {
+        "id": "407",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 12 Output Pulse"
+      },
+      {
+        "id": "408",
+        "versions": "5.281",
+        "description": "Macro 8"
+      },
+      {
+        "id": "408",
+        "versions": "5.285",
+        "description": "Remote Base Memory 25"
+      },
+      {
+        "id": "408",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 13 Output Pulse"
+      },
+      {
+        "id": "409",
+        "versions": "5.281",
+        "description": "Macro 9"
+      },
+      {
+        "id": "409",
+        "versions": "5.285",
+        "description": "Remote Base Memory 26"
+      },
+      {
+        "id": "409",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 14 Output Pulse"
+      },
+      {
+        "id": "410",
+        "versions": "5.281",
+        "description": "Macro 10"
+      },
+      {
+        "id": "410",
+        "versions": "5.285",
+        "description": "Remote Base Memory 27"
+      },
+      {
+        "id": "410",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 15 Output Pulse"
+      },
+      {
+        "id": "411",
+        "versions": "5.281",
+        "description": "Macro 11"
+      },
+      {
+        "id": "411",
+        "versions": "5.285",
+        "description": "Remote Base Memory 28"
+      },
+      {
+        "id": "411",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 16 Output Pulse"
+      },
+      {
+        "id": "412",
+        "versions": "5.281",
+        "description": "Macro 12"
+      },
+      {
+        "id": "412",
+        "versions": "5.285",
+        "description": "Remote Base Memory 29"
+      },
+      {
+        "id": "412",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 17 Output Pulse"
+      },
+      {
+        "id": "413",
+        "versions": "5.281",
+        "description": "Macro 13"
+      },
+      {
+        "id": "413",
+        "versions": "5.285",
+        "description": "Remote Base Memory 30"
+      },
+      {
+        "id": "413",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 18 Output Pulse"
+      },
+      {
+        "id": "414",
+        "versions": "5.281",
+        "description": "Macro 14"
+      },
+      {
+        "id": "414",
+        "versions": "5.285",
+        "description": "Remote Base Memory 31"
+      },
+      {
+        "id": "414",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 19 Output Pulse"
+      },
+      {
+        "id": "415",
+        "versions": "5.281",
+        "description": "Macro 15"
+      },
+      {
+        "id": "415",
+        "versions": "5.285",
+        "description": "Remote Base Memory 32"
+      },
+      {
+        "id": "415",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 20 Output Pulse"
+      },
+      {
+        "id": "416",
+        "versions": "5.281",
+        "description": "Macro 16"
+      },
+      {
+        "id": "416",
+        "versions": "5.285",
+        "description": "Remote Base Memory 33"
+      },
+      {
+        "id": "416",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 21 Output Pulse"
+      },
+      {
+        "id": "417",
+        "versions": "5.281",
+        "description": "Macro 17"
+      },
+      {
+        "id": "417",
+        "versions": "5.285",
+        "description": "Remote Base Memory 34"
+      },
+      {
+        "id": "417",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 22 Output Pulse"
+      },
+      {
+        "id": "418",
+        "versions": "5.281",
+        "description": "Macro 18"
+      },
+      {
+        "id": "418",
+        "versions": "5.285",
+        "description": "Remote Base Memory 35"
+      },
+      {
+        "id": "418",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 23 Output Pulse"
+      },
+      {
+        "id": "419",
+        "versions": "5.281",
+        "description": "Macro 19"
+      },
+      {
+        "id": "419",
+        "versions": "5.285",
+        "description": "Remote Base Memory 36"
+      },
+      {
+        "id": "419",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 24 Output Pulse"
+      },
+      {
+        "id": "420",
+        "versions": "5.281",
+        "description": "Macro 20"
+      },
+      {
+        "id": "420",
+        "versions": "5.285",
+        "description": "Remote Base Memory 37"
+      },
+      {
+        "id": "420",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 25 Output Pulse"
+      },
+      {
+        "id": "421",
+        "versions": "5.281",
+        "description": "Macro 21"
+      },
+      {
+        "id": "421",
+        "versions": "5.285",
+        "description": "Remote Base Memory 38"
+      },
+      {
+        "id": "421",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 26 Output Pulse"
+      },
+      {
+        "id": "422",
+        "versions": "5.281",
+        "description": "Macro 22"
+      },
+      {
+        "id": "422",
+        "versions": "5.285",
+        "description": "Remote Base Memory 39"
+      },
+      {
+        "id": "422",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 27 Output Pulse"
+      },
+      {
+        "id": "423",
+        "versions": "5.281",
+        "description": "Macro 23"
+      },
+      {
+        "id": "423",
+        "versions": "5.285",
+        "description": "Remote Base Memory 40"
+      },
+      {
+        "id": "423",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 28 Output Pulse"
+      },
+      {
+        "id": "424",
+        "versions": "5.281",
+        "description": "Macro 24"
+      },
+      {
+        "id": "424",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 21"
+      },
+      {
+        "id": "424",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 29 Output Pulse"
+      },
+      {
+        "id": "425",
+        "versions": "5.281",
+        "description": "Macro 25"
+      },
+      {
+        "id": "425",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 22"
+      },
+      {
+        "id": "425",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 30 Output Pulse"
+      },
+      {
+        "id": "426",
+        "versions": "5.281",
+        "description": "Macro 26"
+      },
+      {
+        "id": "426",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 23"
+      },
+      {
+        "id": "426",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 31 Output Pulse"
+      },
+      {
+        "id": "427",
+        "versions": "5.281",
+        "description": "Macro 27"
+      },
+      {
+        "id": "427",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 24"
+      },
+      {
+        "id": "427",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 32 Output Pulse"
+      },
+      {
+        "id": "428",
+        "versions": "5.281",
+        "description": "Macro 28"
+      },
+      {
+        "id": "428",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 25"
+      },
+      {
+        "id": "428",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 1 Output OFF"
+      },
+      {
+        "id": "429",
+        "versions": "5.281",
+        "description": "Macro 29"
+      },
+      {
+        "id": "429",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 26"
+      },
+      {
+        "id": "429",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 2 Output OFF"
+      },
+      {
+        "id": "430",
+        "versions": "5.281",
+        "description": "Macro 30"
+      },
+      {
+        "id": "430",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 27"
+      },
+      {
+        "id": "430",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 3 Output OFF"
+      },
+      {
+        "id": "431",
+        "versions": "5.281",
+        "description": "Macro 31"
+      },
+      {
+        "id": "431",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 28"
+      },
+      {
+        "id": "431",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 4 Output OFF"
+      },
+      {
+        "id": "432",
+        "versions": "5.281",
+        "description": "Macro 32"
+      },
+      {
+        "id": "432",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 29"
+      },
+      {
+        "id": "432",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 5 Output OFF"
+      },
+      {
+        "id": "433",
+        "versions": "5.281",
+        "description": "Macro 33"
+      },
+      {
+        "id": "433",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 30"
+      },
+      {
+        "id": "433",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 6 Output OFF"
+      },
+      {
+        "id": "434",
+        "versions": "5.281",
+        "description": "Macro 34"
+      },
+      {
+        "id": "434",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 31"
+      },
+      {
+        "id": "434",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 7 Output OFF"
+      },
+      {
+        "id": "435",
+        "versions": "5.281",
+        "description": "Macro 35"
+      },
+      {
+        "id": "435",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 32"
+      },
+      {
+        "id": "435",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 8 Output OFF"
+      },
+      {
+        "id": "436",
+        "versions": "5.281",
+        "description": "Macro 36"
+      },
+      {
+        "id": "436",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 33"
+      },
+      {
+        "id": "436",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 9 Output OFF"
+      },
+      {
+        "id": "437",
+        "versions": "5.281",
+        "description": "Macro 37"
+      },
+      {
+        "id": "437",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 34"
+      },
+      {
+        "id": "437",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 10 Output OFF"
+      },
+      {
+        "id": "438",
+        "versions": "5.281",
+        "description": "Macro 38"
+      },
+      {
+        "id": "438",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 35"
+      },
+      {
+        "id": "438",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 11 Output OFF"
+      },
+      {
+        "id": "439",
+        "versions": "5.281",
+        "description": "Macro 39"
+      },
+      {
+        "id": "439",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 36"
+      },
+      {
+        "id": "439",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 12 Output OFF"
+      },
+      {
+        "id": "440",
+        "versions": "5.281",
+        "description": "Macro 40"
+      },
+      {
+        "id": "440",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 37"
+      },
+      {
+        "id": "440",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 13 Output OFF"
+      },
+      {
+        "id": "441",
+        "versions": "5.281",
+        "description": "Macro 41"
+      },
+      {
+        "id": "441",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 38"
+      },
+      {
+        "id": "441",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 14 Output OFF"
+      },
+      {
+        "id": "442",
+        "versions": "5.281",
+        "description": "Macro 42"
+      },
+      {
+        "id": "442",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 39"
+      },
+      {
+        "id": "442",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 15 Output OFF"
+      },
+      {
+        "id": "443",
+        "versions": "5.281",
+        "description": "Macro 43"
+      },
+      {
+        "id": "443",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 40"
+      },
+      {
+        "id": "443",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 16 Output OFF"
+      },
+      {
+        "id": "444",
+        "versions": "5.281",
+        "description": "Macro 44"
+      },
+      {
+        "id": "444",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 41"
+      },
+      {
+        "id": "444",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 17 Output OFF"
+      },
+      {
+        "id": "445",
+        "versions": "5.281",
+        "description": "Macro 45"
+      },
+      {
+        "id": "445",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 42"
+      },
+      {
+        "id": "445",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 18 Output OFF"
+      },
+      {
+        "id": "446",
+        "versions": "5.281",
+        "description": "Macro 46"
+      },
+      {
+        "id": "446",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 43"
+      },
+      {
+        "id": "446",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 19 Output OFF"
+      },
+      {
+        "id": "447",
+        "versions": "5.281",
+        "description": "Macro 47"
+      },
+      {
+        "id": "447",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 44"
+      },
+      {
+        "id": "447",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 20 Output OFF"
+      },
+      {
+        "id": "448",
+        "versions": "5.281",
+        "description": "Macro 48"
+      },
+      {
+        "id": "448",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 45"
+      },
+      {
+        "id": "448",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 21 Output OFF"
+      },
+      {
+        "id": "449",
+        "versions": "5.281",
+        "description": "Macro 49"
+      },
+      {
+        "id": "449",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 46"
+      },
+      {
+        "id": "449",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 22 Output OFF"
+      },
+      {
+        "id": "450",
+        "versions": "5.281",
+        "description": "Macro 50"
+      },
+      {
+        "id": "450",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 47"
+      },
+      {
+        "id": "450",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 23 Output OFF"
+      },
+      {
+        "id": "451",
+        "versions": "5.281",
+        "description": "Macro 51"
+      },
+      {
+        "id": "451",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 48"
+      },
+      {
+        "id": "451",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 24 Output OFF"
+      },
+      {
+        "id": "452",
+        "versions": "5.281",
+        "description": "Macro 52"
+      },
+      {
+        "id": "452",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 49"
+      },
+      {
+        "id": "452",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 25 Output OFF"
+      },
+      {
+        "id": "453",
+        "versions": "5.281",
+        "description": "Macro 53"
+      },
+      {
+        "id": "453",
+        "versions": "5.285",
+        "description": "Send DTMF Memory 50"
+      },
+      {
+        "id": "453",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 26 Output OFF"
+      },
+      {
+        "id": "454",
+        "versions": "5.281",
+        "description": "Macro 54"
+      },
+      {
+        "id": "454",
+        "versions": "5.285",
+        "description": "Load RTC Time/Date"
+      },
+      {
+        "id": "454",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 27 Output OFF"
+      },
+      {
+        "id": "455",
+        "versions": "5.281",
+        "description": "Macro 55"
+      },
+      {
+        "id": "455",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 28 Output OFF"
+      },
+      {
+        "id": "456",
+        "versions": "5.281",
+        "description": "Macro 56"
+      },
+      {
+        "id": "456",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 29 Output OFF"
+      },
+      {
+        "id": "457",
+        "versions": "5.281",
+        "description": "Macro 57"
+      },
+      {
+        "id": "457",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 30 Output OFF"
+      },
+      {
+        "id": "458",
+        "versions": "5.281",
+        "description": "Macro 58"
+      },
+      {
+        "id": "458",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 31 Output OFF"
+      },
+      {
+        "id": "459",
+        "versions": "5.281",
+        "description": "Macro 59"
+      },
+      {
+        "id": "459",
+        "versions": "5.360 6.000 6.040",
+        "description": "Extended Logic 32 Output OFF"
+      },
+      {
+        "id": "460",
+        "versions": "5.281",
+        "description": "Macro 60"
+      },
+      {
+        "id": "460",
+        "versions": "5.285",
+        "description": "Suspend Scheduler Setpoint 1"
+      },
+      {
+        "id": "460",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 41"
+      },
+      {
+        "id": "461",
+        "versions": "5.281",
+        "description": "Macro 61"
+      },
+      {
+        "id": "461",
+        "versions": "5.285",
+        "description": "Suspend Scheduler Setpoint 2"
+      },
+      {
+        "id": "461",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 42"
+      },
+      {
+        "id": "462",
+        "versions": "5.281",
+        "description": "Macro 62"
+      },
+      {
+        "id": "462",
+        "versions": "5.285",
+        "description": "Suspend Scheduler Setpoint 3"
+      },
+      {
+        "id": "462",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 43"
+      },
+      {
+        "id": "463",
+        "versions": "5.281",
+        "description": "Macro 63"
+      },
+      {
+        "id": "463",
+        "versions": "5.285",
+        "description": "Suspend Scheduler Setpoint 4"
+      },
+      {
+        "id": "463",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 44"
+      },
+      {
+        "id": "464",
+        "versions": "5.281",
+        "description": "Macro 64"
+      },
+      {
+        "id": "464",
+        "versions": "5.285",
+        "description": "Suspend Scheduler Setpoint 5"
+      },
+      {
+        "id": "464",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 45"
+      },
+      {
+        "id": "465",
+        "versions": "5.281",
+        "description": "Macro 65"
+      },
+      {
+        "id": "465",
+        "versions": "5.285",
+        "description": "Suspend Scheduler Setpoint 6"
+      },
+      {
+        "id": "465",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 46"
+      },
+      {
+        "id": "466",
+        "versions": "5.281",
+        "description": "Macro 66"
+      },
+      {
+        "id": "466",
+        "versions": "5.285",
+        "description": "Suspend Scheduler Setpoint 7"
+      },
+      {
+        "id": "466",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 47"
+      },
+      {
+        "id": "467",
+        "versions": "5.281",
+        "description": "Macro 67"
+      },
+      {
+        "id": "467",
+        "versions": "5.285",
+        "description": "Suspend Scheduler Setpoint 8"
+      },
+      {
+        "id": "467",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 48"
+      },
+      {
+        "id": "468",
+        "versions": "5.281",
+        "description": "Macro 68"
+      },
+      {
+        "id": "468",
+        "versions": "5.285",
+        "description": "Suspend Scheduler Setpoint 9"
+      },
+      {
+        "id": "468",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 49"
+      },
+      {
+        "id": "469",
+        "versions": "5.281",
+        "description": "Macro 69"
+      },
+      {
+        "id": "469",
+        "versions": "5.285",
+        "description": "Suspend Scheduler Setpoint 10"
+      },
+      {
+        "id": "469",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 50"
+      },
+      {
+        "id": "470",
+        "versions": "5.281",
+        "description": "Macro 70"
+      },
+      {
+        "id": "470",
+        "versions": "5.285",
+        "description": "Suspend Scheduler Setpoint 11"
+      },
+      {
+        "id": "470",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 51"
+      },
+      {
+        "id": "471",
+        "versions": "5.281",
+        "description": "Macro 71"
+      },
+      {
+        "id": "471",
+        "versions": "5.285",
+        "description": "Suspend Scheduler Setpoint 12"
+      },
+      {
+        "id": "471",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 52"
+      },
+      {
+        "id": "472",
+        "versions": "5.281",
+        "description": "Macro 72"
+      },
+      {
+        "id": "472",
+        "versions": "5.285",
+        "description": "Suspend Scheduler Setpoint 13"
+      },
+      {
+        "id": "472",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 53"
+      },
+      {
+        "id": "473",
+        "versions": "5.281",
+        "description": "Macro 73"
+      },
+      {
+        "id": "473",
+        "versions": "5.285",
+        "description": "Suspend Scheduler Setpoint 14"
+      },
+      {
+        "id": "473",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 54"
+      },
+      {
+        "id": "474",
+        "versions": "5.281",
+        "description": "Macro 74"
+      },
+      {
+        "id": "474",
+        "versions": "5.285",
+        "description": "Suspend Scheduler Setpoint 15"
+      },
+      {
+        "id": "474",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 55"
+      },
+      {
+        "id": "475",
+        "versions": "5.281",
+        "description": "Macro 75"
+      },
+      {
+        "id": "475",
+        "versions": "5.285",
+        "description": "Suspend Scheduler Setpoint 16"
+      },
+      {
+        "id": "475",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 56"
+      },
+      {
+        "id": "476",
+        "versions": "5.281",
+        "description": "Macro 76"
+      },
+      {
+        "id": "476",
+        "versions": "5.285",
+        "description": "Suspend Scheduler Setpoint 17"
+      },
+      {
+        "id": "476",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 57"
+      },
+      {
+        "id": "477",
+        "versions": "5.281",
+        "description": "Macro 77"
+      },
+      {
+        "id": "477",
+        "versions": "5.285",
+        "description": "Suspend Scheduler Setpoint 18"
+      },
+      {
+        "id": "477",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 58"
+      },
+      {
+        "id": "478",
+        "versions": "5.281",
+        "description": "Macro 78"
+      },
+      {
+        "id": "478",
+        "versions": "5.285",
+        "description": "Suspend Scheduler Setpoint 19"
+      },
+      {
+        "id": "478",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 59"
+      },
+      {
+        "id": "479",
+        "versions": "5.281",
+        "description": "Macro 79"
+      },
+      {
+        "id": "479",
+        "versions": "5.285",
+        "description": "Suspend Scheduler Setpoint 20"
+      },
+      {
+        "id": "479",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 60"
+      },
+      {
+        "id": "480",
+        "versions": "5.281",
+        "description": "Macro 80"
+      },
+      {
+        "id": "480",
+        "versions": "5.285",
+        "description": "Resume Scheduler Setpoint 1"
+      },
+      {
+        "id": "480",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 61"
+      },
+      {
+        "id": "481",
+        "versions": "5.281",
+        "description": "Macro 81"
+      },
+      {
+        "id": "481",
+        "versions": "5.285",
+        "description": "Resume Scheduler Setpoint 2"
+      },
+      {
+        "id": "481",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 62"
+      },
+      {
+        "id": "482",
+        "versions": "5.281",
+        "description": "Macro 82"
+      },
+      {
+        "id": "482",
+        "versions": "5.285",
+        "description": "Resume Scheduler Setpoint 3"
+      },
+      {
+        "id": "482",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 63"
+      },
+      {
+        "id": "483",
+        "versions": "5.281",
+        "description": "Macro 83"
+      },
+      {
+        "id": "483",
+        "versions": "5.285",
+        "description": "Resume Scheduler Setpoint 4"
+      },
+      {
+        "id": "483",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 64"
+      },
+      {
+        "id": "484",
+        "versions": "5.281",
+        "description": "Macro 84"
+      },
+      {
+        "id": "484",
+        "versions": "5.285",
+        "description": "Resume Scheduler Setpoint 5"
+      },
+      {
+        "id": "484",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 65"
+      },
+      {
+        "id": "485",
+        "versions": "5.281",
+        "description": "Macro 85"
+      },
+      {
+        "id": "485",
+        "versions": "5.285",
+        "description": "Resume Scheduler Setpoint 6"
+      },
+      {
+        "id": "485",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 66"
+      },
+      {
+        "id": "486",
+        "versions": "5.281",
+        "description": "Macro 86"
+      },
+      {
+        "id": "486",
+        "versions": "5.285",
+        "description": "Resume Scheduler Setpoint 7"
+      },
+      {
+        "id": "486",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 67"
+      },
+      {
+        "id": "487",
+        "versions": "5.281",
+        "description": "Macro 87"
+      },
+      {
+        "id": "487",
+        "versions": "5.285",
+        "description": "Resume Scheduler Setpoint 8"
+      },
+      {
+        "id": "487",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 68"
+      },
+      {
+        "id": "488",
+        "versions": "5.281",
+        "description": "Macro 88"
+      },
+      {
+        "id": "488",
+        "versions": "5.285",
+        "description": "Resume Scheduler Setpoint 9"
+      },
+      {
+        "id": "488",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 69"
+      },
+      {
+        "id": "489",
+        "versions": "5.281",
+        "description": "Macro 89"
+      },
+      {
+        "id": "489",
+        "versions": "5.285",
+        "description": "Resume Scheduler Setpoint 10"
+      },
+      {
+        "id": "489",
+        "versions": "5.360 6.000 6.040",
+        "description": "Play Message Macro 70"
+      },
+      {
+        "id": "490",
+        "versions": "5.281",
+        "description": "Macro 90"
+      },
+      {
+        "id": "490",
+        "versions": "5.285",
+        "description": "Resume Scheduler Setpoint 11"
+      },
+      {
+        "id": "490",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 11"
+      },
+      {
+        "id": "491",
+        "versions": "5.285",
+        "description": "Resume Scheduler Setpoint 12"
+      },
+      {
+        "id": "491",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 12"
+      },
+      {
+        "id": "492",
+        "versions": "5.285",
+        "description": "Resume Scheduler Setpoint 13"
+      },
+      {
+        "id": "492",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 13"
+      },
+      {
+        "id": "493",
+        "versions": "5.285",
+        "description": "Resume Scheduler Setpoint 14"
+      },
+      {
+        "id": "493",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 14"
+      },
+      {
+        "id": "494",
+        "versions": "5.285",
+        "description": "Resume Scheduler Setpoint 15"
+      },
+      {
+        "id": "494",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 15"
+      },
+      {
+        "id": "495",
+        "versions": "5.285",
+        "description": "Resume Scheduler Setpoint 16"
+      },
+      {
+        "id": "495",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 16"
+      },
+      {
+        "id": "496",
+        "versions": "5.285",
+        "description": "Resume Scheduler Setpoint 17"
+      },
+      {
+        "id": "496",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 17"
+      },
+      {
+        "id": "497",
+        "versions": "5.285",
+        "description": "Resume Scheduler Setpoint 18"
+      },
+      {
+        "id": "497",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 18"
+      },
+      {
+        "id": "498",
+        "versions": "5.285",
+        "description": "Resume Scheduler Setpoint 19"
+      },
+      {
+        "id": "498",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 19"
+      },
+      {
+        "id": "499",
+        "versions": "5.285",
+        "description": "Resume Scheduler Setpoint 20"
+      },
+      {
+        "id": "499",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 20"
+      },
+      {
+        "id": "500",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 21"
+      },
+      {
+        "id": "501",
+        "versions": "5.285",
+        "description": "Call Macro 1"
+      },
+      {
+        "id": "501",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 22"
+      },
+      {
+        "id": "502",
+        "versions": "5.285",
+        "description": "Call Macro 2"
+      },
+      {
+        "id": "502",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 23"
+      },
+      {
+        "id": "503",
+        "versions": "5.285",
+        "description": "Call Macro 3"
+      },
+      {
+        "id": "503",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 24"
+      },
+      {
+        "id": "504",
+        "versions": "5.285",
+        "description": "Call Macro 4"
+      },
+      {
+        "id": "504",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 25"
+      },
+      {
+        "id": "505",
+        "versions": "5.285",
+        "description": "Call Macro 5"
+      },
+      {
+        "id": "505",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 26"
+      },
+      {
+        "id": "506",
+        "versions": "5.285",
+        "description": "Call Macro 6"
+      },
+      {
+        "id": "506",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 27"
+      },
+      {
+        "id": "507",
+        "versions": "5.285",
+        "description": "Call Macro 7"
+      },
+      {
+        "id": "507",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 28"
+      },
+      {
+        "id": "508",
+        "versions": "5.285",
+        "description": "Call Macro 8"
+      },
+      {
+        "id": "508",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 29"
+      },
+      {
+        "id": "509",
+        "versions": "5.285",
+        "description": "Call Macro 9"
+      },
+      {
+        "id": "509",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 30"
+      },
+      {
+        "id": "510",
+        "versions": "5.285",
+        "description": "Call Macro 10"
+      },
+      {
+        "id": "511",
+        "versions": "5.285",
+        "description": "Call Macro 11"
+      },
+      {
+        "id": "511",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 31"
+      },
+      {
+        "id": "512",
+        "versions": "5.285",
+        "description": "Call Macro 12"
+      },
+      {
+        "id": "512",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 32"
+      },
+      {
+        "id": "513",
+        "versions": "5.285",
+        "description": "Call Macro 13"
+      },
+      {
+        "id": "513",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 33"
+      },
+      {
+        "id": "514",
+        "versions": "5.285",
+        "description": "Call Macro 14"
+      },
+      {
+        "id": "514",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 34"
+      },
+      {
+        "id": "515",
+        "versions": "5.285",
+        "description": "Call Macro 15"
+      },
+      {
+        "id": "515",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 35"
+      },
+      {
+        "id": "516",
+        "versions": "5.285",
+        "description": "Call Macro 16"
+      },
+      {
+        "id": "516",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 36"
+      },
+      {
+        "id": "517",
+        "versions": "5.285",
+        "description": "Call Macro 17"
+      },
+      {
+        "id": "517",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 37"
+      },
+      {
+        "id": "518",
+        "versions": "5.285",
+        "description": "Call Macro 18"
+      },
+      {
+        "id": "518",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 38"
+      },
+      {
+        "id": "519",
+        "versions": "5.285",
+        "description": "Call Macro 19"
+      },
+      {
+        "id": "519",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 39"
+      },
+      {
+        "id": "520",
+        "versions": "5.285",
+        "description": "Call Macro 20"
+      },
+      {
+        "id": "520",
+        "versions": "5.360 6.000 6.040",
+        "description": "Remote Base Memory 40"
+      },
+      {
+        "id": "521",
+        "versions": "5.285",
+        "description": "Call Macro 21"
+      },
+      {
+        "id": "521",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 21"
+      },
+      {
+        "id": "522",
+        "versions": "5.285",
+        "description": "Call Macro 22"
+      },
+      {
+        "id": "522",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 22"
+      },
+      {
+        "id": "523",
+        "versions": "5.285",
+        "description": "Call Macro 23"
+      },
+      {
+        "id": "523",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 23"
+      },
+      {
+        "id": "524",
+        "versions": "5.285",
+        "description": "Call Macro 24"
+      },
+      {
+        "id": "524",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 24"
+      },
+      {
+        "id": "525",
+        "versions": "5.285",
+        "description": "Call Macro 25"
+      },
+      {
+        "id": "525",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 25"
+      },
+      {
+        "id": "526",
+        "versions": "5.285",
+        "description": "Call Macro 26"
+      },
+      {
+        "id": "526",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 26"
+      },
+      {
+        "id": "527",
+        "versions": "5.285",
+        "description": "Call Macro 27"
+      },
+      {
+        "id": "527",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 27"
+      },
+      {
+        "id": "528",
+        "versions": "5.285",
+        "description": "Call Macro 28"
+      },
+      {
+        "id": "528",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 28"
+      },
+      {
+        "id": "529",
+        "versions": "5.285",
+        "description": "Call Macro 29"
+      },
+      {
+        "id": "529",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 29"
+      },
+      {
+        "id": "530",
+        "versions": "5.285",
+        "description": "Call Macro 30"
+      },
+      {
+        "id": "530",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 30"
+      },
+      {
+        "id": "531",
+        "versions": "5.285",
+        "description": "Call Macro 31"
+      },
+      {
+        "id": "531",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 31"
+      },
+      {
+        "id": "532",
+        "versions": "5.285",
+        "description": "Call Macro 32"
+      },
+      {
+        "id": "532",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 32"
+      },
+      {
+        "id": "533",
+        "versions": "5.285",
+        "description": "Call Macro 33"
+      },
+      {
+        "id": "533",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 33"
+      },
+      {
+        "id": "534",
+        "versions": "5.285",
+        "description": "Call Macro 34"
+      },
+      {
+        "id": "534",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 34"
+      },
+      {
+        "id": "535",
+        "versions": "5.285",
+        "description": "Call Macro 35"
+      },
+      {
+        "id": "535",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 35"
+      },
+      {
+        "id": "536",
+        "versions": "5.285",
+        "description": "Call Macro 36"
+      },
+      {
+        "id": "536",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 36"
+      },
+      {
+        "id": "537",
+        "versions": "5.285",
+        "description": "Call Macro 37"
+      },
+      {
+        "id": "537",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 37"
+      },
+      {
+        "id": "538",
+        "versions": "5.285",
+        "description": "Call Macro 38"
+      },
+      {
+        "id": "538",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 38"
+      },
+      {
+        "id": "539",
+        "versions": "5.285",
+        "description": "Call Macro 39"
+      },
+      {
+        "id": "539",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 39"
+      },
+      {
+        "id": "540",
+        "versions": "5.285",
+        "description": "Call Macro 40"
+      },
+      {
+        "id": "540",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 40"
+      },
+      {
+        "id": "541",
+        "versions": "5.285",
+        "description": "Call Macro 41"
+      },
+      {
+        "id": "541",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 41"
+      },
+      {
+        "id": "542",
+        "versions": "5.285",
+        "description": "Call Macro 42"
+      },
+      {
+        "id": "542",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 42"
+      },
+      {
+        "id": "543",
+        "versions": "5.285",
+        "description": "Call Macro 43"
+      },
+      {
+        "id": "543",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 43"
+      },
+      {
+        "id": "544",
+        "versions": "5.285",
+        "description": "Call Macro 44"
+      },
+      {
+        "id": "544",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 44"
+      },
+      {
+        "id": "545",
+        "versions": "5.285",
+        "description": "Call Macro 45"
+      },
+      {
+        "id": "545",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 45"
+      },
+      {
+        "id": "546",
+        "versions": "5.285",
+        "description": "Call Macro 46"
+      },
+      {
+        "id": "546",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 46"
+      },
+      {
+        "id": "547",
+        "versions": "5.285",
+        "description": "Call Macro 47"
+      },
+      {
+        "id": "547",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 47"
+      },
+      {
+        "id": "548",
+        "versions": "5.285",
+        "description": "Call Macro 48"
+      },
+      {
+        "id": "548",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 48"
+      },
+      {
+        "id": "549",
+        "versions": "5.285",
+        "description": "Call Macro 49"
+      },
+      {
+        "id": "549",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 49"
+      },
+      {
+        "id": "550",
+        "versions": "5.285",
+        "description": "Call Macro 50"
+      },
+      {
+        "id": "550",
+        "versions": "5.360 6.000 6.040",
+        "description": "Send DTMF Memory 50"
+      },
+      {
+        "id": "551",
+        "versions": "5.285",
+        "description": "Call Macro 51"
+      },
+      {
+        "id": "551",
+        "versions": "5.360 6.000 6.040",
+        "description": "Get RTC Time and Date"
+      },
+      {
+        "id": "552",
+        "versions": "5.285",
+        "description": "Call Macro 52"
+      },
+      {
+        "id": "552",
+        "versions": "6.000 6.040",
+        "description": "CTCSS During ID ON"
+      },
+      {
+        "id": "553",
+        "versions": "5.285",
+        "description": "Call Macro 53"
+      },
+      {
+        "id": "553",
+        "versions": "6.000 6.040",
+        "description": "CTCSS During ID OFF"
+      },
+      {
+        "id": "554",
+        "versions": "5.285",
+        "description": "Call Macro 54"
+      },
+      {
+        "id": "555",
+        "versions": "5.285",
+        "description": "Call Macro 55"
+      },
+      {
+        "id": "556",
+        "versions": "5.285",
+        "description": "Call Macro 56"
+      },
+      {
+        "id": "557",
+        "versions": "5.285",
+        "description": "Call Macro 57"
+      },
+      {
+        "id": "558",
+        "versions": "5.285",
+        "description": "Call Macro 58"
+      },
+      {
+        "id": "559",
+        "versions": "5.285",
+        "description": "Call Macro 59"
+      },
+      {
+        "id": "560",
+        "versions": "5.285",
+        "description": "Call Macro 60"
+      },
+      {
+        "id": "560",
+        "versions": "5.360",
+        "description": "Suspend Scheduler Setpoint 1"
+      },
+      {
+        "id": "561",
+        "versions": "5.285",
+        "description": "Call Macro 61"
+      },
+      {
+        "id": "561",
+        "versions": "5.360",
+        "description": "Suspend Scheduler Setpoint 2"
+      },
+      {
+        "id": "561",
+        "versions": "6.000 6.040",
+        "description": "Restart Controller"
+      },
+      {
+        "id": "562",
+        "versions": "5.285",
+        "description": "Call Macro 62"
+      },
+      {
+        "id": "562",
+        "versions": "5.360",
+        "description": "Suspend Scheduler Setpoint 3"
+      },
+      {
+        "id": "563",
+        "versions": "5.285",
+        "description": "Call Macro 63"
+      },
+      {
+        "id": "563",
+        "versions": "5.360",
+        "description": "Suspend Scheduler Setpoint 4"
+      },
+      {
+        "id": "564",
+        "versions": "5.285",
+        "description": "Call Macro 64"
+      },
+      {
+        "id": "564",
+        "versions": "5.360",
+        "description": "Suspend Scheduler Setpoint 5"
+      },
+      {
+        "id": "565",
+        "versions": "5.285",
+        "description": "Call Macro 65"
+      },
+      {
+        "id": "565",
+        "versions": "5.360",
+        "description": "Suspend Scheduler Setpoint 6"
+      },
+      {
+        "id": "566",
+        "versions": "5.285",
+        "description": "Call Macro 66"
+      },
+      {
+        "id": "566",
+        "versions": "5.360",
+        "description": "Suspend Scheduler Setpoint 7"
+      },
+      {
+        "id": "567",
+        "versions": "5.285",
+        "description": "Call Macro 67"
+      },
+      {
+        "id": "567",
+        "versions": "5.360",
+        "description": "Suspend Scheduler Setpoint 8"
+      },
+      {
+        "id": "568",
+        "versions": "5.285",
+        "description": "Call Macro 68"
+      },
+      {
+        "id": "568",
+        "versions": "5.360",
+        "description": "Suspend Scheduler Setpoint 9"
+      },
+      {
+        "id": "569",
+        "versions": "5.285",
+        "description": "Call Macro 69"
+      },
+      {
+        "id": "569",
+        "versions": "5.360",
+        "description": "Suspend Scheduler Setpoint 10"
+      },
+      {
+        "id": "570",
+        "versions": "5.285",
+        "description": "Call Macro 70"
+      },
+      {
+        "id": "570",
+        "versions": "5.360",
+        "description": "Suspend Scheduler Setpoint 11"
+      },
+      {
+        "id": "570",
+        "versions": "6.000 6.040",
+        "description": "Readback A/D Channel 1 Stored Low"
+      },
+      {
+        "id": "571",
+        "versions": "5.285",
+        "description": "Call Macro 71"
+      },
+      {
+        "id": "571",
+        "versions": "5.360",
+        "description": "Suspend Scheduler Setpoint 12"
+      },
+      {
+        "id": "571",
+        "versions": "6.000 6.040",
+        "description": "Readback A/D Channel 2 Stored Low"
+      },
+      {
+        "id": "572",
+        "versions": "5.285",
+        "description": "Call Macro 72"
+      },
+      {
+        "id": "572",
+        "versions": "5.360",
+        "description": "Suspend Scheduler Setpoint 13"
+      },
+      {
+        "id": "572",
+        "versions": "6.000 6.040",
+        "description": "Readback A/D Channel 3 Stored Low"
+      },
+      {
+        "id": "573",
+        "versions": "5.285",
+        "description": "Call Macro 73"
+      },
+      {
+        "id": "573",
+        "versions": "5.360",
+        "description": "Suspend Scheduler Setpoint 14"
+      },
+      {
+        "id": "573",
+        "versions": "6.000 6.040",
+        "description": "Readback A/D Channel 4 Stored Low"
+      },
+      {
+        "id": "574",
+        "versions": "5.285",
+        "description": "Call Macro 74"
+      },
+      {
+        "id": "574",
+        "versions": "5.360",
+        "description": "Suspend Scheduler Setpoint 15"
+      },
+      {
+        "id": "574",
+        "versions": "6.000 6.040",
+        "description": "Readback A/D Channel 5 Stored Low"
+      },
+      {
+        "id": "575",
+        "versions": "5.285",
+        "description": "Call Macro 75"
+      },
+      {
+        "id": "575",
+        "versions": "5.360",
+        "description": "Suspend Scheduler Setpoint 16"
+      },
+      {
+        "id": "575",
+        "versions": "6.000 6.040",
+        "description": "Readback A/D Channel 6 Stored Low"
+      },
+      {
+        "id": "576",
+        "versions": "5.285",
+        "description": "Call Macro 76"
+      },
+      {
+        "id": "576",
+        "versions": "5.360",
+        "description": "Suspend Scheduler Setpoint 17"
+      },
+      {
+        "id": "576",
+        "versions": "6.000 6.040",
+        "description": "Readback A/D Channel 7 Stored Low"
+      },
+      {
+        "id": "577",
+        "versions": "5.285",
+        "description": "Call Macro 77"
+      },
+      {
+        "id": "577",
+        "versions": "5.360",
+        "description": "Suspend Scheduler Setpoint 18"
+      },
+      {
+        "id": "577",
+        "versions": "6.000 6.040",
+        "description": "Readback A/D Channel 8 Stored Low"
+      },
+      {
+        "id": "578",
+        "versions": "5.285",
+        "description": "Call Macro 78"
+      },
+      {
+        "id": "578",
+        "versions": "5.360",
+        "description": "Suspend Scheduler Setpoint 19"
+      },
+      {
+        "id": "578",
+        "versions": "6.000 6.040",
+        "description": "Readback A/D Channel 1 Stored High"
+      },
+      {
+        "id": "579",
+        "versions": "5.285",
+        "description": "Call Macro 79"
+      },
+      {
+        "id": "579",
+        "versions": "5.360",
+        "description": "Suspend Scheduler Setpoint 20"
+      },
+      {
+        "id": "579",
+        "versions": "6.000 6.040",
+        "description": "Readback A/D Channel 2 Stored High"
+      },
+      {
+        "id": "580",
+        "versions": "5.285",
+        "description": "Call Macro 80"
+      },
+      {
+        "id": "580",
+        "versions": "5.360",
+        "description": "Resume Scheduler Setpoint 1"
+      },
+      {
+        "id": "580",
+        "versions": "6.000 6.040",
+        "description": "Readback A/D Channel 3 Stored High"
+      },
+      {
+        "id": "581",
+        "versions": "5.285",
+        "description": "Call Macro 81"
+      },
+      {
+        "id": "581",
+        "versions": "5.360",
+        "description": "Resume Scheduler Setpoint 2"
+      },
+      {
+        "id": "581",
+        "versions": "6.000 6.040",
+        "description": "Readback A/D Channel 4 Stored High"
+      },
+      {
+        "id": "582",
+        "versions": "5.285",
+        "description": "Call Macro 82"
+      },
+      {
+        "id": "582",
+        "versions": "5.360",
+        "description": "Resume Scheduler Setpoint 3"
+      },
+      {
+        "id": "582",
+        "versions": "6.000 6.040",
+        "description": "Readback A/D Channel 5 Stored High"
+      },
+      {
+        "id": "583",
+        "versions": "5.285",
+        "description": "Call Macro 83"
+      },
+      {
+        "id": "583",
+        "versions": "5.360",
+        "description": "Resume Scheduler Setpoint 4"
+      },
+      {
+        "id": "583",
+        "versions": "6.000 6.040",
+        "description": "Readback A/D Channel 6 Stored High"
+      },
+      {
+        "id": "584",
+        "versions": "5.285",
+        "description": "Call Macro 84"
+      },
+      {
+        "id": "584",
+        "versions": "5.360",
+        "description": "Resume Scheduler Setpoint 5"
+      },
+      {
+        "id": "584",
+        "versions": "6.000 6.040",
+        "description": "Readback A/D Channel 7 Stored High"
+      },
+      {
+        "id": "585",
+        "versions": "5.285",
+        "description": "Call Macro 85"
+      },
+      {
+        "id": "585",
+        "versions": "5.360",
+        "description": "Resume Scheduler Setpoint 6"
+      },
+      {
+        "id": "585",
+        "versions": "6.000 6.040",
+        "description": "Readback A/D Channel 8 Stored High"
+      },
+      {
+        "id": "586",
+        "versions": "5.285",
+        "description": "Call Macro 86"
+      },
+      {
+        "id": "586",
+        "versions": "5.360",
+        "description": "Resume Scheduler Setpoint 7"
+      },
+      {
+        "id": "586",
+        "versions": "6.000 6.040",
+        "description": "Disable Port 1 Timeout Timer ONLY for 60 min."
+      },
+      {
+        "id": "587",
+        "versions": "5.285",
+        "description": "Call Macro 87"
+      },
+      {
+        "id": "587",
+        "versions": "5.360",
+        "description": "Resume Scheduler Setpoint 8"
+      },
+      {
+        "id": "587",
+        "versions": "6.000 6.040",
+        "description": "Disable Port 2 Timeout Timer ONLY for 60 min."
+      },
+      {
+        "id": "588",
+        "versions": "5.285",
+        "description": "Call Macro 88"
+      },
+      {
+        "id": "588",
+        "versions": "5.360",
+        "description": "Resume Scheduler Setpoint 9"
+      },
+      {
+        "id": "588",
+        "versions": "6.000 6.040",
+        "description": "Disable Port 3 Timeout Timer ONLY for 60 min."
+      },
+      {
+        "id": "589",
+        "versions": "5.285",
+        "description": "Call Macro 89"
+      },
+      {
+        "id": "589",
+        "versions": "5.360",
+        "description": "Resume Scheduler Setpoint 10"
+      },
+      {
+        "id": "589",
+        "versions": "6.000 6.040",
+        "description": "Enable Port 1 Timeout Timer ONLY for 60 min."
+      },
+      {
+        "id": "590",
+        "versions": "5.285",
+        "description": "Call Macro 90"
+      },
+      {
+        "id": "590",
+        "versions": "5.360",
+        "description": "Resume Scheduler Setpoint 11"
+      },
+      {
+        "id": "590",
+        "versions": "6.000 6.040",
+        "description": "Enable Port 2 Timeout Timer ONLY for 60 min."
+      },
+      {
+        "id": "591",
+        "versions": "5.360",
+        "description": "Resume Scheduler Setpoint 12"
+      },
+      {
+        "id": "591",
+        "versions": "6.000 6.040",
+        "description": "Enable Port 3 Timeout Timer ONLY for 60 min."
+      },
+      {
+        "id": "592",
+        "versions": "5.360",
+        "description": "Resume Scheduler Setpoint 13"
+      },
+      {
+        "id": "592",
+        "versions": "6.000 6.040",
+        "description": "Current wind speed and direction"
+      },
+      {
+        "id": "593",
+        "versions": "5.360",
+        "description": "Resume Scheduler Setpoint 14"
+      },
+      {
+        "id": "593",
+        "versions": "6.000 6.040",
+        "description": "Current Outdoor temperature"
+      },
+      {
+        "id": "594",
+        "versions": "5.360",
+        "description": "Resume Scheduler Setpoint 15"
+      },
+      {
+        "id": "594",
+        "versions": "6.000 6.040",
+        "description": "Indoor humidity"
+      },
+      {
+        "id": "595",
+        "versions": "5.360",
+        "description": "Resume Scheduler Setpoint 16"
+      },
+      {
+        "id": "595",
+        "versions": "6.000 6.040",
+        "description": "Outdoor humidity"
+      },
+      {
+        "id": "596",
+        "versions": "5.360",
+        "description": "Resume Scheduler Setpoint 17"
+      },
+      {
+        "id": "596",
+        "versions": "6.000 6.040",
+        "description": "Wind Speed high and direction (since Midnight)"
+      },
+      {
+        "id": "597",
+        "versions": "5.360",
+        "description": "Resume Scheduler Setpoint 18"
+      },
+      {
+        "id": "597",
+        "versions": "6.000 6.040",
+        "description": "Outdoor Temp High (since Midnight)"
+      },
+      {
+        "id": "598",
+        "versions": "5.360",
+        "description": "Resume Scheduler Setpoint 19"
+      },
+      {
+        "id": "598",
+        "versions": "6.000 6.040",
+        "description": "Outdoor Temp Low (since Midnight)"
+      },
+      {
+        "id": "599",
+        "versions": "5.360",
+        "description": "Resume Scheduler Setpoint 20"
+      },
+      {
+        "id": "601",
+        "versions": "5.360",
+        "description": "Call Macro 1"
+      },
+      {
+        "id": "602",
+        "versions": "5.360",
+        "description": "Call Macro 2"
+      },
+      {
+        "id": "603",
+        "versions": "5.360",
+        "description": "Call Macro 3"
+      },
+      {
+        "id": "604",
+        "versions": "5.360",
+        "description": "Call Macro 4"
+      },
+      {
+        "id": "605",
+        "versions": "5.360",
+        "description": "Call Macro 5"
+      },
+      {
+        "id": "605",
+        "versions": "6.000 6.040",
+        "description": "Speak Current Remote Base Freq and Offset"
+      },
+      {
+        "id": "606",
+        "versions": "5.360",
+        "description": "Call Macro 6"
+      },
+      {
+        "id": "606",
+        "versions": "6.040",
+        "description": "Start General Timer 4"
+      },
+      {
+        "id": "607",
+        "versions": "5.360",
+        "description": "Call Macro 7"
+      },
+      {
+        "id": "607",
+        "versions": "6.040",
+        "description": "Start General Timer 5"
+      },
+      {
+        "id": "608",
+        "versions": "5.360",
+        "description": "Call Macro 8"
+      },
+      {
+        "id": "608",
+        "versions": "6.040",
+        "description": "Start General Timer 6"
+      },
+      {
+        "id": "609",
+        "versions": "5.360",
+        "description": "Call Macro 9"
+      },
+      {
+        "id": "609",
+        "versions": "6.040",
+        "description": "Stop General Timer 4"
+      },
+      {
+        "id": "610",
+        "versions": "5.360",
+        "description": "Call Macro 10"
+      },
+      {
+        "id": "610",
+        "versions": "6.040",
+        "description": "Stop General Timer 5"
+      },
+      {
+        "id": "611",
+        "versions": "5.360",
+        "description": "Call Macro 11"
+      },
+      {
+        "id": "611",
+        "versions": "6.040",
+        "description": "Stop General Timer 6"
+      },
+      {
+        "id": "612",
+        "versions": "5.360",
+        "description": "Call Macro 12"
+      },
+      {
+        "id": "613",
+        "versions": "5.360",
+        "description": "Call Macro 13"
+      },
+      {
+        "id": "614",
+        "versions": "5.360",
+        "description": "Call Macro 14"
+      },
+      {
+        "id": "615",
+        "versions": "5.360",
+        "description": "Call Macro 15"
+      },
+      {
+        "id": "616",
+        "versions": "5.360",
+        "description": "Call Macro 16"
+      },
+      {
+        "id": "617",
+        "versions": "5.360",
+        "description": "Call Macro 17"
+      },
+      {
+        "id": "618",
+        "versions": "5.360",
+        "description": "Call Macro 18"
+      },
+      {
+        "id": "619",
+        "versions": "5.360",
+        "description": "Call Macro 19"
+      },
+      {
+        "id": "620",
+        "versions": "5.360",
+        "description": "Call Macro 20"
+      },
+      {
+        "id": "621",
+        "versions": "5.360",
+        "description": "Call Macro 21"
+      },
+      {
+        "id": "622",
+        "versions": "5.360",
+        "description": "Call Macro 22"
+      },
+      {
+        "id": "623",
+        "versions": "5.360",
+        "description": "Call Macro 23"
+      },
+      {
+        "id": "624",
+        "versions": "5.360",
+        "description": "Call Macro 24"
+      },
+      {
+        "id": "625",
+        "versions": "5.360",
+        "description": "Call Macro 25"
+      },
+      {
+        "id": "626",
+        "versions": "5.360",
+        "description": "Call Macro 26"
+      },
+      {
+        "id": "627",
+        "versions": "5.360",
+        "description": "Call Macro 27"
+      },
+      {
+        "id": "628",
+        "versions": "5.360",
+        "description": "Call Macro 28"
+      },
+      {
+        "id": "629",
+        "versions": "5.360",
+        "description": "Call Macro 29"
+      },
+      {
+        "id": "630",
+        "versions": "5.360",
+        "description": "Call Macro 30"
+      },
+      {
+        "id": "631",
+        "versions": "5.360",
+        "description": "Call Macro 31"
+      },
+      {
+        "id": "632",
+        "versions": "5.360",
+        "description": "Call Macro 32"
+      },
+      {
+        "id": "633",
+        "versions": "5.360",
+        "description": "Call Macro 33"
+      },
+      {
+        "id": "634",
+        "versions": "5.360",
+        "description": "Call Macro 34"
+      },
+      {
+        "id": "635",
+        "versions": "5.360",
+        "description": "Call Macro 35"
+      },
+      {
+        "id": "636",
+        "versions": "5.360",
+        "description": "Call Macro 36"
+      },
+      {
+        "id": "637",
+        "versions": "5.360",
+        "description": "Call Macro 37"
+      },
+      {
+        "id": "638",
+        "versions": "5.360",
+        "description": "Call Macro 38"
+      },
+      {
+        "id": "639",
+        "versions": "5.360",
+        "description": "Call Macro 39"
+      },
+      {
+        "id": "640",
+        "versions": "5.360",
+        "description": "Call Macro 40"
+      },
+      {
+        "id": "641",
+        "versions": "5.360",
+        "description": "Call Macro 41"
+      },
+      {
+        "id": "642",
+        "versions": "5.360",
+        "description": "Call Macro 42"
+      },
+      {
+        "id": "643",
+        "versions": "5.360",
+        "description": "Call Macro 43"
+      },
+      {
+        "id": "644",
+        "versions": "5.360",
+        "description": "Call Macro 44"
+      },
+      {
+        "id": "645",
+        "versions": "5.360",
+        "description": "Call Macro 45"
+      },
+      {
+        "id": "646",
+        "versions": "5.360",
+        "description": "Call Macro 46"
+      },
+      {
+        "id": "647",
+        "versions": "5.360",
+        "description": "Call Macro 47"
+      },
+      {
+        "id": "648",
+        "versions": "5.360",
+        "description": "Call Macro 48"
+      },
+      {
+        "id": "649",
+        "versions": "5.360",
+        "description": "Call Macro 49"
+      },
+      {
+        "id": "650",
+        "versions": "5.360",
+        "description": "Call Macro 50"
+      },
+      {
+        "id": "651",
+        "versions": "5.360",
+        "description": "Call Macro 51"
+      },
+      {
+        "id": "652",
+        "versions": "5.360",
+        "description": "Call Macro 52"
+      },
+      {
+        "id": "653",
+        "versions": "5.360",
+        "description": "Call Macro 53"
+      },
+      {
+        "id": "654",
+        "versions": "5.360",
+        "description": "Call Macro 54"
+      },
+      {
+        "id": "655",
+        "versions": "5.360",
+        "description": "Call Macro 55"
+      },
+      {
+        "id": "656",
+        "versions": "5.360",
+        "description": "Call Macro 56"
+      },
+      {
+        "id": "657",
+        "versions": "5.360",
+        "description": "Call Macro 57"
+      },
+      {
+        "id": "658",
+        "versions": "5.360",
+        "description": "Call Macro 58"
+      },
+      {
+        "id": "659",
+        "versions": "5.360",
+        "description": "Call Macro 59"
+      },
+      {
+        "id": "660",
+        "versions": "5.360",
+        "description": "Call Macro 60"
+      },
+      {
+        "id": "660",
+        "versions": "6.000 6.040",
+        "description": "Suspend Scheduler Setpoint 1"
+      },
+      {
+        "id": "661",
+        "versions": "5.360",
+        "description": "Call Macro 61"
+      },
+      {
+        "id": "661",
+        "versions": "6.000 6.040",
+        "description": "Suspend Scheduler Setpoint 2"
+      },
+      {
+        "id": "662",
+        "versions": "5.360",
+        "description": "Call Macro 62"
+      },
+      {
+        "id": "662",
+        "versions": "6.000 6.040",
+        "description": "Suspend Scheduler Setpoint 3"
+      },
+      {
+        "id": "663",
+        "versions": "5.360",
+        "description": "Call Macro 63"
+      },
+      {
+        "id": "663",
+        "versions": "6.000 6.040",
+        "description": "Suspend Scheduler Setpoint 4"
+      },
+      {
+        "id": "664",
+        "versions": "5.360",
+        "description": "Call Macro 64"
+      },
+      {
+        "id": "664",
+        "versions": "6.000 6.040",
+        "description": "Suspend Scheduler Setpoint 5"
+      },
+      {
+        "id": "665",
+        "versions": "5.360",
+        "description": "Call Macro 65"
+      },
+      {
+        "id": "665",
+        "versions": "6.000 6.040",
+        "description": "Suspend Scheduler Setpoint 6"
+      },
+      {
+        "id": "666",
+        "versions": "5.360",
+        "description": "Call Macro 66"
+      },
+      {
+        "id": "666",
+        "versions": "6.000 6.040",
+        "description": "Suspend Scheduler Setpoint 7"
+      },
+      {
+        "id": "667",
+        "versions": "5.360",
+        "description": "Call Macro 67"
+      },
+      {
+        "id": "667",
+        "versions": "6.000 6.040",
+        "description": "Suspend Scheduler Setpoint 8"
+      },
+      {
+        "id": "668",
+        "versions": "5.360",
+        "description": "Call Macro 68"
+      },
+      {
+        "id": "668",
+        "versions": "6.000 6.040",
+        "description": "Suspend Scheduler Setpoint 9"
+      },
+      {
+        "id": "669",
+        "versions": "5.360",
+        "description": "Call Macro 69"
+      },
+      {
+        "id": "669",
+        "versions": "6.000 6.040",
+        "description": "Suspend Scheduler Setpoint 10"
+      },
+      {
+        "id": "670",
+        "versions": "5.360",
+        "description": "Call Macro 70"
+      },
+      {
+        "id": "670",
+        "versions": "6.000 6.040",
+        "description": "Suspend Scheduler Setpoint 11"
+      },
+      {
+        "id": "671",
+        "versions": "5.360",
+        "description": "Call Macro 71"
+      },
+      {
+        "id": "671",
+        "versions": "6.000 6.040",
+        "description": "Suspend Scheduler Setpoint 12"
+      },
+      {
+        "id": "672",
+        "versions": "5.360",
+        "description": "Call Macro 72"
+      },
+      {
+        "id": "672",
+        "versions": "6.000 6.040",
+        "description": "Suspend Scheduler Setpoint 13"
+      },
+      {
+        "id": "673",
+        "versions": "5.360",
+        "description": "Call Macro 73"
+      },
+      {
+        "id": "673",
+        "versions": "6.000 6.040",
+        "description": "Suspend Scheduler Setpoint 14"
+      },
+      {
+        "id": "674",
+        "versions": "5.360",
+        "description": "Call Macro 74"
+      },
+      {
+        "id": "674",
+        "versions": "6.000 6.040",
+        "description": "Suspend Scheduler Setpoint 15"
+      },
+      {
+        "id": "675",
+        "versions": "5.360",
+        "description": "Call Macro 75"
+      },
+      {
+        "id": "675",
+        "versions": "6.000 6.040",
+        "description": "Suspend Scheduler Setpoint 16"
+      },
+      {
+        "id": "676",
+        "versions": "5.360",
+        "description": "Call Macro 76"
+      },
+      {
+        "id": "676",
+        "versions": "6.000 6.040",
+        "description": "Suspend Scheduler Setpoint 17"
+      },
+      {
+        "id": "677",
+        "versions": "5.360",
+        "description": "Call Macro 77"
+      },
+      {
+        "id": "677",
+        "versions": "6.000 6.040",
+        "description": "Suspend Scheduler Setpoint 18"
+      },
+      {
+        "id": "678",
+        "versions": "5.360",
+        "description": "Call Macro 78"
+      },
+      {
+        "id": "678",
+        "versions": "6.000 6.040",
+        "description": "Suspend Scheduler Setpoint 19"
+      },
+      {
+        "id": "679",
+        "versions": "5.360",
+        "description": "Call Macro 79"
+      },
+      {
+        "id": "679",
+        "versions": "6.000 6.040",
+        "description": "Suspend Scheduler Setpoint 20"
+      },
+      {
+        "id": "680",
+        "versions": "5.360",
+        "description": "Call Macro 80"
+      },
+      {
+        "id": "680",
+        "versions": "6.000 6.040",
+        "description": "Resume Scheduler Setpoint 1"
+      },
+      {
+        "id": "681",
+        "versions": "5.360",
+        "description": "Call Macro 81"
+      },
+      {
+        "id": "681",
+        "versions": "6.000 6.040",
+        "description": "Resume Scheduler Setpoint 2"
+      },
+      {
+        "id": "682",
+        "versions": "5.360",
+        "description": "Call Macro 82"
+      },
+      {
+        "id": "682",
+        "versions": "6.000 6.040",
+        "description": "Resume Scheduler Setpoint 3"
+      },
+      {
+        "id": "683",
+        "versions": "5.360",
+        "description": "Call Macro 83"
+      },
+      {
+        "id": "683",
+        "versions": "6.000 6.040",
+        "description": "Resume Scheduler Setpoint 4"
+      },
+      {
+        "id": "684",
+        "versions": "5.360",
+        "description": "Call Macro 84"
+      },
+      {
+        "id": "684",
+        "versions": "6.000 6.040",
+        "description": "Resume Scheduler Setpoint 5"
+      },
+      {
+        "id": "685",
+        "versions": "5.360",
+        "description": "Call Macro 85"
+      },
+      {
+        "id": "685",
+        "versions": "6.000 6.040",
+        "description": "Resume Scheduler Setpoint 6"
+      },
+      {
+        "id": "686",
+        "versions": "5.360",
+        "description": "Call Macro 86"
+      },
+      {
+        "id": "686",
+        "versions": "6.000 6.040",
+        "description": "Resume Scheduler Setpoint 7"
+      },
+      {
+        "id": "687",
+        "versions": "5.360",
+        "description": "Call Macro 87"
+      },
+      {
+        "id": "687",
+        "versions": "6.000 6.040",
+        "description": "Resume Scheduler Setpoint 8"
+      },
+      {
+        "id": "688",
+        "versions": "5.360",
+        "description": "Call Macro 88"
+      },
+      {
+        "id": "688",
+        "versions": "6.000 6.040",
+        "description": "Resume Scheduler Setpoint 9"
+      },
+      {
+        "id": "689",
+        "versions": "5.360",
+        "description": "Call Macro 89"
+      },
+      {
+        "id": "689",
+        "versions": "6.000 6.040",
+        "description": "Resume Scheduler Setpoint 10"
+      },
+      {
+        "id": "690",
+        "versions": "5.360",
+        "description": "Call Macro 90"
+      },
+      {
+        "id": "690",
+        "versions": "6.000 6.040",
+        "description": "Resume Scheduler Setpoint 11"
+      },
+      {
+        "id": "691",
+        "versions": "6.000 6.040",
+        "description": "Resume Scheduler Setpoint 12"
+      },
+      {
+        "id": "692",
+        "versions": "6.000 6.040",
+        "description": "Resume Scheduler Setpoint 13"
+      },
+      {
+        "id": "693",
+        "versions": "6.000 6.040",
+        "description": "Resume Scheduler Setpoint 14"
+      },
+      {
+        "id": "694",
+        "versions": "6.000 6.040",
+        "description": "Resume Scheduler Setpoint 15"
+      },
+      {
+        "id": "695",
+        "versions": "6.000 6.040",
+        "description": "Resume Scheduler Setpoint 16"
+      },
+      {
+        "id": "696",
+        "versions": "6.000 6.040",
+        "description": "Resume Scheduler Setpoint 17"
+      },
+      {
+        "id": "697",
+        "versions": "6.000 6.040",
+        "description": "Resume Scheduler Setpoint 18"
+      },
+      {
+        "id": "698",
+        "versions": "6.000 6.040",
+        "description": "Resume Scheduler Setpoint 19"
+      },
+      {
+        "id": "699",
+        "versions": "6.000 6.040",
+        "description": "Resume Scheduler Setpoint 20"
+      },
+      {
+        "id": "701",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 1"
+      },
+      {
+        "id": "702",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 2"
+      },
+      {
+        "id": "703",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 3"
+      },
+      {
+        "id": "704",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 4"
+      },
+      {
+        "id": "705",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 5"
+      },
+      {
+        "id": "706",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 6"
+      },
+      {
+        "id": "707",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 7"
+      },
+      {
+        "id": "708",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 8"
+      },
+      {
+        "id": "709",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 9"
+      },
+      {
+        "id": "710",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 10"
+      },
+      {
+        "id": "711",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 11"
+      },
+      {
+        "id": "712",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 12"
+      },
+      {
+        "id": "713",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 13"
+      },
+      {
+        "id": "714",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 14"
+      },
+      {
+        "id": "715",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 15"
+      },
+      {
+        "id": "716",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 16"
+      },
+      {
+        "id": "717",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 17"
+      },
+      {
+        "id": "718",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 18"
+      },
+      {
+        "id": "719",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 19"
+      },
+      {
+        "id": "720",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 20"
+      },
+      {
+        "id": "721",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 21"
+      },
+      {
+        "id": "722",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 22"
+      },
+      {
+        "id": "723",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 23"
+      },
+      {
+        "id": "724",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 24"
+      },
+      {
+        "id": "725",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 25"
+      },
+      {
+        "id": "726",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 26"
+      },
+      {
+        "id": "727",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 27"
+      },
+      {
+        "id": "728",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 28"
+      },
+      {
+        "id": "729",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 29"
+      },
+      {
+        "id": "730",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 30"
+      },
+      {
+        "id": "731",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 31"
+      },
+      {
+        "id": "732",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 32"
+      },
+      {
+        "id": "733",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 33"
+      },
+      {
+        "id": "734",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 34"
+      },
+      {
+        "id": "735",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 35"
+      },
+      {
+        "id": "736",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 36"
+      },
+      {
+        "id": "737",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 37"
+      },
+      {
+        "id": "738",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 38"
+      },
+      {
+        "id": "739",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 39"
+      },
+      {
+        "id": "740",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 40"
+      },
+      {
+        "id": "741",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 41"
+      },
+      {
+        "id": "742",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 42"
+      },
+      {
+        "id": "743",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 43"
+      },
+      {
+        "id": "744",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 44"
+      },
+      {
+        "id": "745",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 45"
+      },
+      {
+        "id": "746",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 46"
+      },
+      {
+        "id": "747",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 47"
+      },
+      {
+        "id": "748",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 48"
+      },
+      {
+        "id": "749",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 49"
+      },
+      {
+        "id": "750",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 50"
+      },
+      {
+        "id": "751",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 51"
+      },
+      {
+        "id": "752",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 52"
+      },
+      {
+        "id": "753",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 53"
+      },
+      {
+        "id": "754",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 54"
+      },
+      {
+        "id": "755",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 55"
+      },
+      {
+        "id": "756",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 56"
+      },
+      {
+        "id": "757",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 57"
+      },
+      {
+        "id": "758",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 58"
+      },
+      {
+        "id": "759",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 59"
+      },
+      {
+        "id": "760",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 60"
+      },
+      {
+        "id": "761",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 61"
+      },
+      {
+        "id": "762",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 62"
+      },
+      {
+        "id": "763",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 63"
+      },
+      {
+        "id": "764",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 64"
+      },
+      {
+        "id": "766",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 65"
+      },
+      {
+        "id": "767",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 66"
+      },
+      {
+        "id": "768",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 67"
+      },
+      {
+        "id": "769",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 68"
+      },
+      {
+        "id": "770",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 69"
+      },
+      {
+        "id": "771",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 70"
+      },
+      {
+        "id": "772",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 71"
+      },
+      {
+        "id": "773",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 72"
+      },
+      {
+        "id": "774",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 73"
+      },
+      {
+        "id": "775",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 74"
+      },
+      {
+        "id": "776",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 75"
+      },
+      {
+        "id": "777",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 76"
+      },
+      {
+        "id": "778",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 77"
+      },
+      {
+        "id": "779",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 78"
+      },
+      {
+        "id": "780",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 79"
+      },
+      {
+        "id": "781",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 80"
+      },
+      {
+        "id": "782",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 81"
+      },
+      {
+        "id": "783",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 82"
+      },
+      {
+        "id": "784",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 83"
+      },
+      {
+        "id": "785",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 84"
+      },
+      {
+        "id": "786",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 85"
+      },
+      {
+        "id": "787",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 86"
+      },
+      {
+        "id": "788",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 87"
+      },
+      {
+        "id": "789",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 88"
+      },
+      {
+        "id": "790",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 89"
+      },
+      {
+        "id": "791",
+        "versions": "6.000 6.040",
+        "description": "Call Macro 90"
+      }
+    ]
+  }
+}

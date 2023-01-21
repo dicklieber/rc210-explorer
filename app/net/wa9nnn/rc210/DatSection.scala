@@ -1,7 +1,7 @@
 package net.wa9nnn.rc210
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.model.DataItem
+import net.wa9nnn.rc210.model.DataItem
 
 /**
  * One section of an RCP .dat file.

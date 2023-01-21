@@ -1,4 +1,4 @@
-package net.wa9nnn.model
+package net.wa9nnn.rc210.model
 
 case class NumberSection(number: Int, items: List[DataItem])
 
