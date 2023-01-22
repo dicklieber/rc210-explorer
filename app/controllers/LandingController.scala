@@ -2,6 +2,7 @@ package controllers
 
 import com.wa9nnn.util.tableui.Table
 import net.wa9nnn.rc210.DatFileIo
+import net.wa9nnn.rc210.data.Functions
 import net.wa9nnn.rc210.model.Schedule
 import net.wa9nnn.rc210.model.macros.Macro
 import play.api.mvc._
@@ -15,7 +16,7 @@ import javax.inject._
  * application's home page.
  */
 @Singleton
-class DatController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
+class LandingController @Inject()(val controllerComponents: ControllerComponents, functions: Functions) extends BaseController {
 
   /**
    * Create an Action to render an HTML page.
@@ -24,17 +25,9 @@ class DatController @Inject()(val controllerComponents: ControllerComponents) ex
    * will be called when the application receives a `GET` request with
    * a path of `/`.
    */
-  def index() = Action { implicit request: Request[AnyContent] =>
-
-    val url1: URL = getClass.getResource("/examples/schedExamples.dat")
-    val path: Path = Paths.get(url1.toURI)
-    val datFile = DatFileIo(path)
-
-
-    val schedulesTable = Table(Schedule.header, Schedule.extractSchedules(datFile).map(_.toRow))
-
-    val macrosTable = Table(Macro.header,  Macro.extractMacros(datFile).map(_.toRow))
-
-    Ok(views.html.dat(schedulesTable, macrosTable))
+  def index(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+    val schedulesTable = Table(functions.header, functions.ordered.map(_._2.toRow))
+    Ok(views.html.landing(Seq(schedulesTable)))
   }
+
 }

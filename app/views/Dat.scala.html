@@ -1,10 +1,11 @@
 @import com.wa9nnn.util.tableui.Table
 @import com.wa9nnn.util.tableui.html.renderTable
-@(schedulesTable:Table, macrosTable:Table)
+@(tables: Seq[Table])
 
-  @main("RCP Dat") {
-    <h1>Welcome to WA9NNN RCP Dat Explorer!</h1>
+    @main("RCP Dat") {
+        <h1>Welcome to WA9NNN RCP Dat Explorer!</h1>
 
-    @renderTable(schedulesTable.withCssClass("tablesorter"))
-    @renderTable(macrosTable.withCssClass("tablesorter"))
-  }
+        @for(table <- tables) {
+            @renderTable(table.withCssClass("tablesorter"))
+        }
+    }
