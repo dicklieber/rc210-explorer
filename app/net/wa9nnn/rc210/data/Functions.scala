@@ -1,7 +1,7 @@
 package net.wa9nnn.rc210.data
 
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
-import net.wa9nnn.rc210.bubble.NodeId
+import net.wa9nnn.rc210.bubble.{D3Node, NodeId}
 import net.wa9nnn.rc210.model.Node
 import net.wa9nnn.rc210.model.macros.MacroNodeId
 
@@ -42,6 +42,10 @@ case class Function(nodeId: FunctionNodeId, description: String) extends RowSour
    * What this node can invoke.
    */
   override val outGoing: IterableOnce[NodeId] = nodeId.callMacro
+
+  override def d3Node: D3Node = {
+    D3Node(nodeId, description)
+  }
 }
 
 object Function {

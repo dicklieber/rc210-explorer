@@ -4,10 +4,12 @@
 # ~~~~
 
 # An example controller showing a sample home page
+GET        /bubble              controllers.BubbleController.d3()
+GET        /bubbleSvg           controllers.BubbleController.svg()
 GET        /functions           controllers.RawDataController.functions()
 GET        /schedules           controllers.RawDataController.schedules()
 GET        /macros              controllers.RawDataController.macros()
-GET        /              controllers.LandingController.index()
+GET        /                    controllers.LandingController.index()
 
 # Map static resources from the /public folder to the /assets URL path
 GET        /assets/*file        controllers.Assets.versioned(path="/public", file: Asset)

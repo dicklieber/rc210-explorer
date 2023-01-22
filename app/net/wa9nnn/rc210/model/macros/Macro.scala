@@ -2,22 +2,28 @@ package net.wa9nnn.rc210.model.macros
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
-import net.wa9nnn.rc210.DatFile
-import net.wa9nnn.rc210.bubble.NodeId
+import net.wa9nnn.rc210.bubble.{D3Node, NodeId}
 import net.wa9nnn.rc210.data.FunctionNodeId
-import net.wa9nnn.rc210.model.{DataItem, Node}
+import net.wa9nnn.rc210.model.{DatFile, DataItem, Node}
 
 import scala.util.Try
 
 case class Macro(nodeId: MacroNodeId, dtmf: Option[Int], functions: List[FunctionNodeId]) extends RowSource with Node {
+  private val functionsDisplay: String = functions.mkString(" ")
+
   override def toRow: Row = {
-    Row(nodeId.toString, dtmf.map(_.toString).getOrElse(" "), functions.mkString(" "))
+    Row(nodeId.toString, dtmf.map(_.toString).getOrElse(" "), functionsDisplay)
   }
 
   /**
    * What this node can invoke.
    */
   override val outGoing: Seq[NodeId] = functions
+
+  override def d3Node: D3Node = {
+
+    D3Node(nodeId, functionsDisplay)
+  }
 }
 
 object Macro extends LazyLogging {

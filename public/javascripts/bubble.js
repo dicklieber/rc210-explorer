@@ -48,17 +48,6 @@ d3.json(svgData, function (error, graph) {
 //Add a bubbleLinks force to the simulation
 
 
-//draw lines for the bubbleLinks
-    var link = topG.append("g")
-        .attr("class", "links")
-        .selectAll("line")
-        .data(bubbleLinks)
-        .enter().append("line")
-        .attr("stroke-width", 2);
-
-
-    // let linkForce = simulation.force("link");
-    // linkForce.links(bubbleLinks);
 
 //draw circles for the nodes
     var node = topG.append("g")
@@ -119,14 +108,12 @@ d3.json(svgData, function (error, graph) {
         .attr("x", 0)
 
 
-    text.append("tspan").text(function (d) {
-        return d.bottom.text
-    })
-        .attr("class", function (d) {
-            return d.bottom.cssClass
-        })
-        .attr("dy", "14pt")
-        .attr("x", 0)
+    // text.append("tspan").text(function (d) {
+    //     return d.bottom.text
+    // })
+    //    )
+    //     .attr("dy", "14pt")
+    //     .attr("x", 0)
 
 
 //add tick instructions:
@@ -134,6 +121,17 @@ d3.json(svgData, function (error, graph) {
         .on("tick", tickActions)
     simulation.force("link").links(bubbleLinks)
 
+//draw lines for the bubbleLinks
+    var link = topG.append("g")
+        .attr("class", "links")
+        .selectAll("line")
+        .data(bubbleLinks)
+        .enter().append("line")
+        .attr("stroke-width", 2);
+
+
+    let linkForce = simulation.force("link");
+    linkForce.links(bubbleLinks);
 
 
     function tickActions() {

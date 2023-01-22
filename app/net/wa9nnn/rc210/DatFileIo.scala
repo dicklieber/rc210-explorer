@@ -1,29 +1,11 @@
 
 package net.wa9nnn.rc210
 
+import net.wa9nnn.rc210.model.DatFile
 import org.apache.commons.io.IOUtils
 
 import java.nio.file.{Files, Path}
 import scala.io.{BufferedSource, Source}
-
-/**
- * Internalized representation of a RCP .dat file
- * as a map of [[DatSection]]s.
- */
-class DatFile(sections: Seq[DatSection]) {
-  def size: Int = sections.size
-
-  private val map: Map[String, DatSection] = sections.map(datSection => datSection.sectionName -> datSection).toMap
-
-  def section(sectionName: String): DatSection = {
-    map(sectionName)
-  }
-  def head:DatSection = sections.head
-
-  def dump(): Unit = {
-    sections.foreach(_.dump())
-  }
-}
 
 object DatFileIo {
   private val header = """\[(.+)]""".r
