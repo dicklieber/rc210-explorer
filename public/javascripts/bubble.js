@@ -24,9 +24,14 @@ d3.json("/bubbleSvg", function(error, graph) {
         .selectAll("g")
         .data(graph.nodes)
         .enter().append("g")
-    var circles = node.append("circle")
-        .attr("r", 5)
+    var nodeRects = node.append("rect")    .attr("rx", 6)
+        .attr("ry", 6)
+        .attr("x", -12.5)
+        .attr("y", -12.5)
+        .attr("width", 95)
+        .attr("height", 25)
         .attr("fill", function(d) { return color(d.group); });
+
 // Create a drag handler and append it to the node object instead
     var drag_handler = d3.drag()
         .on("start", dragstarted)

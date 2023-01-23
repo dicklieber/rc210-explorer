@@ -29,7 +29,7 @@
 
 .bubble-container {
     display: flex;
-    background-color: DodgerBlue;
+    background-color: rgba(30, 144, 255, 0.09);
 }
 .bubbleNodeId{
 
