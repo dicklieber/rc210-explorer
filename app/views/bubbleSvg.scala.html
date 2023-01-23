@@ -11,19 +11,30 @@
         </div>
     </div>
     <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/bubble.css")">
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="@routes.Assets.versioned("javascripts/bubble.js")"></script>
     <script>
-            const svgData = "/bubbleSvg"
+/*
+            d3.json("/bubbleSvg", function (error, graph) {
+                        if (error) {
+                            let source = error.source;
+                            let data = error.data;
+                            throw error;
+                        }
+                        console.log(graph)
+                        ForceGraph(graph)
+                    }
+                )
+*/
 
-            function showDetail(nodeId) {
-                let dd = nodeId
-                let url = `/nodeDetail/${nodeId}`
-                $("#details").load(url);
-            }
+            // function showDetail(nodeId) {
+            //     let dd = nodeId
+            //     let url = `/nodeDetail/${nodeId}`
+            //     $("#details").load(url);
+            // }
 
     </script>
 
-    <script src="https://d3js.org/d3.v4.min.js"></script>
-    <script src="@routes.Assets.versioned("javascripts/bubble.js")"></script>
 
 }
 

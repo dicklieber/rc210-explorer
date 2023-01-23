@@ -2,7 +2,7 @@ package net.wa9nnn.rc210.model
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
-import net.wa9nnn.rc210.bubble.{D3Node, NodeId}
+import net.wa9nnn.rc210.bubble.{D3Link, D3Node, NodeId}
 import net.wa9nnn.rc210.model.macros.MacroNodeId
 
 import scala.util.Try
@@ -22,7 +22,7 @@ case class Schedule(nodeId:ScheduleNodeId, macroToRun: MacroNodeId, week: Int, d
    */
   override val outGoing: Seq[NodeId] = Seq(macroToRun)
 
-  override def d3Node: D3Node = D3Node(nodeId, "//todo", List(macroToRun))
+  override def d3Node: D3Node = D3Node(nodeId, "//todo", List(D3Link(nodeId, macroToRun)))
 }
 
 object Schedule extends LazyLogging {
