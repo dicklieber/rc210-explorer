@@ -2,13 +2,13 @@ package net.wa9nnn.rc210.model.macros
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
-import net.wa9nnn.rc210.bubble.{D3Node, NodeId}
+import net.wa9nnn.rc210.bubble.{D3Link, D3Node, NodeId}
 import net.wa9nnn.rc210.data.FunctionNodeId
 import net.wa9nnn.rc210.model.{DatFile, DataItem, Node}
 
 import scala.util.Try
 
-case class Macro(nodeId: MacroNodeId, dtmf: Option[Int], functions: List[FunctionNodeId]) extends RowSource with Node {
+case class Macro(nodeId: MacroNodeId, dtmf: Option[String], functions: List[FunctionNodeId]) extends RowSource with Node {
   private val functionsDisplay: String = functions.mkString(" ")
 
   override def toRow: Row = {
@@ -22,44 +22,14 @@ case class Macro(nodeId: MacroNodeId, dtmf: Option[Int], functions: List[Functio
 
   override def d3Node: D3Node = {
 
-    D3Node(nodeId, functionsDisplay)
+    D3Node(nodeId, functionsDisplay, functions.map(D3Link(nodeId, _)))
   }
 }
 
 object Macro extends LazyLogging {
   val header: Header = Header("Macros", "Macro", "DTMF", "Functions")
 
-  private def buildMacro(macroNumber: Int, items: Seq[DataItem]): Try[Macro] = {
-    {
-      val valueMap: Map[String, DataItem] = items.map { dataItem =>
-        dataItem.name -> dataItem
-      }.toMap
 
-      Try {
-        val dtmf: String = valueMap("MacroCode").value
-        val xx: List[FunctionNodeId] = valueMap("Macro").value
-          .split(" ")
-          .toList.map(sNumber => FunctionNodeId(sNumber.toInt))
-        new Macro(MacroNodeId(macroNumber),
-          Option.when(dtmf.nonEmpty)(dtmf.toInt),
-          xx
-        )
-      }
-    }
-  }
-
-  def extractMacros(datFile: DatFile): Seq[Macro] = {
-    for {
-      pair: (Option[Int], Seq[DataItem]) <- datFile.section("Macros").dataItems
-        .groupBy(_.maybeInt)
-        .toSeq
-        .sortBy(_._1)
-      if pair._1.isDefined // has number
-      schedule <- Macro.buildMacro(pair._1.get, pair._2).toOption
-    } yield {
-      schedule
-    }
-  }
 
 }
 

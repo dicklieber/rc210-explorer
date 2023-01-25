@@ -1,8 +1,9 @@
 package net.wa9nnn.rc210.model
 
 import net.wa9nnn.rc210.DatSection
-import net.wa9nnn.rc210.bubble.{D3Data, D3Link, D3Node, NodeId}
-import net.wa9nnn.rc210.model.macros.Macro
+import net.wa9nnn.rc210.bubble.{D3Data, D3Link, D3Node}
+import net.wa9nnn.rc210.data.{Schedule, Schedules}
+import net.wa9nnn.rc210.model.macros.{Macro, Macros}
 
 import scala.collection.mutable
 
@@ -18,8 +19,8 @@ class DatFile(sections: Seq[DatSection]) {
   private val map: Map[String, DatSection] = sections.map(datSection => datSection.sectionName -> datSection).toMap
 
   private val builder: mutable.Builder[D3Node, List[D3Node]] = List.newBuilder[D3Node]
-  val schedules: Seq[Schedule] = Schedule.extractSchedules(this)
-  val macros: Seq[Macro] = Macro.extractMacros(this)
+  val schedules: Seq[Schedule] = Schedules(this)
+  val macros: Seq[Macro] = Macros(this)
 
   schedules.foreach(builder += _.d3Node)
   macros.foreach(builder += _.d3Node)

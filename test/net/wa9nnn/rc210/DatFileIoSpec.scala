@@ -22,7 +22,7 @@ class DatFileIoSpec extends Specification {
             |MacroToRun(3)=03
             |""".stripMargin
 
-      val datFile = DatFileIo(fileString)
+      val datFile = DateFileParser(fileString)
 
       val datSection = datFile.section(expectedSectionName)
       datSection.sectionName must beEqualTo(expectedSectionName)
@@ -33,7 +33,7 @@ class DatFileIoSpec extends Specification {
     "From file" in {
       val url1: URL = getClass.getResource("/data/schedExamples.dat")
       val path: Path = Paths.get(url1.toURI)
-      val datFile = DatFileIo(path)
+      val datFile = DateFileParser(path)
       datFile.size must beEqualTo(25)
     }
   }

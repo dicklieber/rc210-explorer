@@ -1,8 +1,7 @@
 package net.wa9nnn.rc210.bubble
 
 import com.wa9nnn.util.HostAndPort
-import net.wa9nnn.rc210.data.FunctionNodeId
-import net.wa9nnn.rc210.model.ScheduleNodeId
+import net.wa9nnn.rc210.data.{FunctionNodeId, ScheduleNodeId}
 import net.wa9nnn.rc210.model.macros.MacroNodeId
 import play.api.libs.json.{Format, JsError, JsResult, JsString, JsSuccess, JsValue}
 

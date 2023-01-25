@@ -12,8 +12,6 @@ import scala.util.{Try, Using}
 
 @Singleton
 class Functions {
-
-
   val functions: Try[Iterator[(NodeId, Function)]] =
     Using(new BufferedSource(getClass.getResourceAsStream("/FunctionList.txt"))) { bs: BufferedSource =>
       bs.getLines()
