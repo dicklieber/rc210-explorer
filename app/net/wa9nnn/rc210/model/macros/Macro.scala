@@ -15,10 +15,6 @@ case class Macro(nodeId: MacroNodeId, dtmf: Option[String], functions: List[Func
     Row(nodeId.toString, dtmf.map(_.toString).getOrElse(" "), functionsDisplay)
   }
 
-  /**
-   * What this node can invoke.
-   */
-  override val outGoing: Seq[NodeId] = functions
 
   override def d3Node: D3Node = {
 

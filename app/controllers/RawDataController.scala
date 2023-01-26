@@ -1,7 +1,7 @@
 package controllers
 
 import com.wa9nnn.util.tableui.Table
-import net.wa9nnn.rc210.DateFileParser
+import net.wa9nnn.rc210.DatFileParser
 import net.wa9nnn.rc210.data.{DatFileSource, Functions, Schedule}
 import net.wa9nnn.rc210.model.DatFile
 import net.wa9nnn.rc210.model.macros.Macro

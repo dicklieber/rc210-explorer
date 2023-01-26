@@ -12,7 +12,7 @@ import scala.io.{BufferedSource, Source}
 /**
  * Know how to parse an RCP .dat file
  */
-object DateFileParser {
+object DatFileParser {
   private val header = """\[(.+)]""".r
 
   def apply(file: Path): DatFile = {

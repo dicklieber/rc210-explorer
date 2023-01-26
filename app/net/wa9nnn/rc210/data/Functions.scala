@@ -22,7 +22,7 @@ class Functions {
     }
 
   val ordered: Seq[(NodeId, Function)] = functions.get.toSeq
-  val macro2FunctionMap: Map[NodeId, Function] = functions.get.toMap
+  val macro2FunctionMap: Map[NodeId, Function] = ordered.toMap
 
   def size: Int = ordered.size
 
@@ -35,11 +35,6 @@ case class Function(nodeId: FunctionNodeId, description: String) extends RowSour
   override def toString: String = s"function: $nodeId description: $description"
 
   override def toRow: Row = Row(nodeId.toString, nodeId.callMacro.getOrElse("-"), description)
-
-  /**
-   * What this node can invoke.
-   */
-  override val outGoing: IterableOnce[NodeId] = nodeId.callMacro
 
   override def d3Node: D3Node = {
     D3Node(nodeId, description)

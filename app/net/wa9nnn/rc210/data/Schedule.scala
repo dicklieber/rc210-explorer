@@ -19,12 +19,7 @@ case class Schedule(nodeId: ScheduleNodeId, macroToRun: MacroNodeId, week: Int, 
     Row(nodeId.toString, macroToRun, week, monthToRun, monthly, hours, minutes)
   }
 
-  /**
-   * What this node can invoke.
-   */
-  override val outGoing: Seq[NodeId] = Seq(macroToRun)
-
-  override def d3Node: D3Node = D3Node(nodeId, "//todo", List(D3Link(nodeId, macroToRun)))
+  override def d3Node: D3Node = D3Node(nodeId, s"SetPoint: ${nodeId.number} nmacroToRun: ${macroToRun.number}", List(D3Link(nodeId, macroToRun)))
 }
 
 object Schedule {

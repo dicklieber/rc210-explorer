@@ -7,6 +7,5 @@ trait  Node {
   /**
    * What this node can invoke.
    */
-  val outGoing: IterableOnce[NodeId]
   def d3Node:D3Node
 }
