@@ -2,8 +2,8 @@ package controllers
 
 import com.wa9nnn.util.tableui.Table
 import net.wa9nnn.rc210.DatFileParser
-import net.wa9nnn.rc210.data.{Functions, Schedule}
-import net.wa9nnn.rc210.model.macros.Macro
+import net.wa9nnn.rc210.data.{Functions, ScheduleNode}
+import net.wa9nnn.rc210.model.macros.MacroNode
 import play.api.mvc._
 
 import java.net.URL

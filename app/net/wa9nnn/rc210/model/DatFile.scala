@@ -1,9 +1,8 @@
 package net.wa9nnn.rc210.model
 
 import net.wa9nnn.rc210.DatSection
-import net.wa9nnn.rc210.bubble.D3Node
-import net.wa9nnn.rc210.data.{Schedule, Schedules}
-import net.wa9nnn.rc210.model.macros.{Macro, Macros}
+import net.wa9nnn.rc210.data.{ScheduleNode, Schedules}
+import net.wa9nnn.rc210.model.macros.{MacroNode, Macros}
 
 
 /**
@@ -11,14 +10,9 @@ import net.wa9nnn.rc210.model.macros.{Macro, Macros}
  * as a map of [[DatSection]]s.
  */
 class DatFile(sections: Seq[DatSection]) {
-  lazy val schedules: Seq[Schedule] = Schedules(this)
-  lazy val macros: Seq[Macro] = Macros(this)
+  lazy val schedules: Seq[ScheduleNode] = Schedules(this)
+  lazy val macros: Seq[MacroNode] = Macros(this)
 
-  def d3Nodes: List[D3Node] = {
-    (schedules.map(_.d3Node)
-      ++ macros.map(_.d3Node))
-      .toList
-  }
 
   def size: Int = sections.size
 

@@ -1,7 +1,7 @@
 package net.wa9nnn.rc210.data
 
-import com.wa9nnn.util.tableui.{Header, Row, RowSource}
-import net.wa9nnn.rc210.bubble.{D3Node, NodeId}
+import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
+import net.wa9nnn.rc210.bubble.NodeId
 import net.wa9nnn.rc210.model.Node
 import net.wa9nnn.rc210.model.macros.MacroNodeId
 
@@ -34,11 +34,8 @@ class Functions {
 case class Function(nodeId: FunctionNodeId, description: String) extends RowSource with Node {
   override def toString: String = s"function: $nodeId description: $description"
 
-  override def toRow: Row = Row(nodeId.toString, nodeId.callMacro.getOrElse("-"), description)
+  override def toRow: Row = Row(nodeId.toCell, description)
 
-  override def d3Node: D3Node = {
-    D3Node(nodeId, description)
-  }
 }
 
 object Function {
@@ -50,8 +47,10 @@ object Function {
   }
 }
 
-case class FunctionNodeId(override val number: Int) extends NodeId('f', number) {
+case class FunctionNodeId(override val number: Int) extends NodeId('f', number, "FunctionNode") {
   val callMacro: Option[NodeId] = Option.when(number >= 900) {
     MacroNodeId(number - 900)
   }
+
+  override def toCell: Cell = Cell(number).withCssClass("FunctionNode")
 }

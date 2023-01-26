@@ -8,19 +8,19 @@ import scala.util.Try
 
 object Macros {
 
-  def apply(datFile: DatFile): List[Macro] = {
+  def apply(datFile: DatFile): List[MacroNode] = {
     datFile.section("Macros")
-      .process[Macro] { numberedValues =>
+      .process[MacroNode] { numberedValues =>
         build(numberedValues)
       }
   }
 
-   def build(implicit numberedValues: NumberedValues): Try[Macro] = {
+   def build(implicit numberedValues: NumberedValues): Try[MacroNode] = {
     {
       import NumberedValues._
       Try {
         val dtmf: String = vs("MacroCode")
-        Macro(MacroNodeId(numberedValues.number.get),
+        MacroNode(MacroNodeId(numberedValues.number.get),
           Option.when(dtmf.nonEmpty)(dtmf),
           vs("Macro")
             .split(" ")

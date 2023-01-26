@@ -35,7 +35,7 @@
   <logger name="application" level="DEBUG" />
 
   <!-- Off these ones as they are annoying, and anyway we manage configuration ourselves -->
-  <logger name="net.wa9nnn.rc210.data.Schedule" level="INFO" />
+  <logger name="net.wa9nnn.rc210.data.ScheduleNode" level="INFO" />
 
   <root level="INFO">
     <appender-ref ref="ASYNCFILE" />

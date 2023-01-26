@@ -3,44 +3,42 @@ package net.wa9nnn.rc210.data
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
 import net.wa9nnn.rc210.NumberedValues
-import net.wa9nnn.rc210.bubble.{D3Link, D3Node, NodeId}
+import net.wa9nnn.rc210.bubble.{NodeId, TriggerNode}
+import net.wa9nnn.rc210.model.DatFile
 import net.wa9nnn.rc210.model.macros.MacroNodeId
-import net.wa9nnn.rc210.model.{DatFile, Node}
 
 import scala.util.Try
 
 
-case class Schedule(nodeId: ScheduleNodeId, macroToRun: MacroNodeId, week: Int, dayOfWeek: Int, monthToRun: Int, monthly: Boolean, hours: Int, minutes: Int)
-  extends RowSource with Node {
+case class ScheduleNode(nodeId: ScheduleNodeId, macroToRun: MacroNodeId, week: Int, dayOfWeek: Int, monthToRun: Int, monthly: Boolean, hours: Int, minutes: Int)
+  extends RowSource with TriggerNode {
 
-  override def toString: String = s"setPoStringNumber: $nodeId macro:$macroToRun hours: $hours"
+  override def description: String = s"setPoStringNumber: $nodeId macro:$macroToRun hours: $hours"
 
   override def toRow: Row = {
-    Row(nodeId.toString, macroToRun, week, monthToRun, monthly, hours, minutes)
+    Row(nodeId.toCell, description)
   }
-
-  override def d3Node: D3Node = D3Node(nodeId, s"SetPoint: ${nodeId.number} nmacroToRun: ${macroToRun.number}", List(D3Link(nodeId, macroToRun)))
 }
 
-object Schedule {
+object ScheduleNode {
   val header: Header = Header("Schedules", "SetPoint", "MacroToRun", "Week", "MonthToRun", "Monthly", "Hours", "Minutes")
 }
 
 object Schedules extends LazyLogging {
 
-  def apply(datFile: DatFile): List[Schedule] = {
+  def apply(datFile: DatFile): List[ScheduleNode] = {
     datFile.section("Scheduler")
-      .process[Schedule] { numberedValues =>
+      .process[ScheduleNode] { numberedValues =>
         buildSchdule(numberedValues)
       }
   }
 
-  private def buildSchdule(implicit numberedValues: NumberedValues): Try[Schedule] = {
+  private def buildSchdule(implicit numberedValues: NumberedValues): Try[ScheduleNode] = {
     {
       import NumberedValues._
       Try {
         val setPoint = numberedValues.number.get // schedules always have a number (setpoint)
-        val schedule = Schedule(
+        val schedule = ScheduleNode(
           nodeId = ScheduleNodeId(setPoint),
           macroToRun = MacroNodeId(vi("MacroToRun")),
           dayOfWeek = vi("Week"),
@@ -64,4 +62,4 @@ object Schedules extends LazyLogging {
 }
 
 
-case class ScheduleNodeId(override val number: Int) extends NodeId('s', number)
+case class ScheduleNodeId(override val number: Int) extends NodeId('s', number, "ScheduleNode")
