@@ -10,12 +10,12 @@ import javax.inject.{Inject, Singleton}
 import scala.language.postfixOps
 
 @Singleton
-class BubbleController @Inject()(val controllerComponents: ControllerComponents, d3DataBuilder: FlowTableBuilder, datFileSource: DatFileSource) extends BaseController {
+class BubbleController @Inject()(val controllerComponents: ControllerComponents, flowTableBuilder: FlowTableBuilder, datFileSource: DatFileSource) extends BaseController {
 
   def bubble: Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
 
     val datFile: DatFile = datFileSource.datFile()
-    val value: Table = d3DataBuilder.aoply(datFile)
+    val value: Table = flowTableBuilder.aoply(datFile)
     Ok(views.html.dat(Seq(value)))
   }
 
