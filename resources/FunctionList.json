@@ -1,3595 +1,3595 @@
 {
   "functions": [
     {
-      "fnumber": 1,
+      "fn": 1,
       "description": "Port 1 CTCSS Access"
     },
     {
-      "fnumber": 2,
+      "fn": 2,
       "description": "Port 2 CTCSS Access"
     },
     {
-      "fnumber": 3,
+      "fn": 3,
       "description": "Port 3 CTCSS Access"
     },
     {
-      "fnumber": 4,
+      "fn": 4,
       "description": "Port 1 Carrier Access"
     },
     {
-      "fnumber": 5,
+      "fn": 5,
       "description": "Port 2 Carrier Access"
     },
     {
-      "fnumber": 6,
+      "fn": 6,
       "description": "Port 3 Carrier Access"
     },
     {
-      "fnumber": 7,
+      "fn": 7,
       "description": "Port 1 DTMF Covertone ON"
     },
     {
-      "fnumber": 8,
+      "fn": 8,
       "description": "Port 2 DTMF Covertone ON"
     },
     {
-      "fnumber": 9,
+      "fn": 9,
       "description": "Port 3 DTMF Covertone ON"
     },
     {
-      "fnumber": 10,
+      "fn": 10,
       "description": "Port 1 DTMF Covertone OFF"
     },
     {
-      "fnumber": 11,
+      "fn": 11,
       "description": "Port 2 DTMF Covertone OFF"
     },
     {
-      "fnumber": 12,
+      "fn": 12,
       "description": "Port 3 DTMF Covertone OFF"
     },
     {
-      "fnumber": 13,
+      "fn": 13,
       "description": "Port 1 TX Enable"
     },
     {
-      "fnumber": 14,
+      "fn": 14,
       "description": "Port 2 TX Enable"
     },
     {
-      "fnumber": 15,
+      "fn": 15,
       "description": "Port 3 TX Enable"
     },
     {
-      "fnumber": 16,
+      "fn": 16,
       "description": "Port 1 TX Disable"
     },
     {
-      "fnumber": 17,
+      "fn": 17,
       "description": "Port 2 TX Disable"
     },
     {
-      "fnumber": 18,
+      "fn": 18,
       "description": "Port 3 TX Disable"
     },
     {
-      "fnumber": 19,
+      "fn": 19,
       "description": "Monitor Port 1 From Port 2"
     },
     {
-      "fnumber": 20,
+      "fn": 20,
       "description": "Monitor Port 1 From Port 3"
     },
     {
-      "fnumber": 21,
+      "fn": 21,
       "description": "Disconnect Port 1 From Port 2"
     },
     {
-      "fnumber": 22,
+      "fn": 22,
       "description": "Disconnect Port 1 From Port 3"
     },
     {
-      "fnumber": 23,
+      "fn": 23,
       "description": "Monitor Port 2 From Port 1"
     },
     {
-      "fnumber": 24,
+      "fn": 24,
       "description": "Monitor Port 2 From Port 3"
     },
     {
-      "fnumber": 25,
+      "fn": 25,
       "description": "Disconnect Port 3 From Port 1"
     },
     {
-      "fnumber": 26,
+      "fn": 26,
       "description": "Disconnect Port 2 From Port 3"
     },
     {
-      "fnumber": 27,
+      "fn": 27,
       "description": "Monitor Port 3 From Port 1"
     },
     {
-      "fnumber": 28,
+      "fn": 28,
       "description": "Monitor Port 3 From Port 2"
     },
     {
-      "fnumber": 29,
+      "fn": 29,
       "description": "Disconnect Port 3 From Port 1"
     },
     {
-      "fnumber": 30,
+      "fn": 30,
       "description": "Disconnect Port 3 From Port 2"
     },
     {
-      "fnumber": 31,
+      "fn": 31,
       "description": "Port 1 Monitor Mute"
     },
     {
-      "fnumber": 32,
+      "fn": 32,
       "description": "Port 2 Monitor Mute"
     },
     {
-      "fnumber": 33,
+      "fn": 33,
       "description": "Port 3 Monitor Mute"
     },
     {
-      "fnumber": 34,
+      "fn": 34,
       "description": "Port 1 Monitor Mix"
     },
     {
-      "fnumber": 35,
+      "fn": 35,
       "description": "Port 2 Monitor Mix"
     },
     {
-      "fnumber": 36,
+      "fn": 36,
       "description": "Port 3 Monitor Mix"
     },
     {
-      "fnumber": 37,
+      "fn": 37,
       "description": "Port 1 Repeat Mode"
     },
     {
-      "fnumber": 38,
+      "fn": 38,
       "description": "Port 2 Repeat Mode"
     },
     {
-      "fnumber": 39,
+      "fn": 39,
       "description": "Port 3 Repeat Mode"
     },
     {
-      "fnumber": 40,
+      "fn": 40,
       "description": "Port 1 Non-Repeat Mode"
     },
     {
-      "fnumber": 41,
+      "fn": 41,
       "description": "Port 2 Non-Repeat Mode"
     },
     {
-      "fnumber": 42,
+      "fn": 42,
       "description": "Port 3 Non-Repeat Mode"
     },
     {
-      "fnumber": 43,
+      "fn": 43,
       "description": "Port 1 Speech Override ON"
     },
     {
-      "fnumber": 44,
+      "fn": 44,
       "description": "Port 2 Speech Override ON"
     },
     {
-      "fnumber": 45,
+      "fn": 45,
       "description": "Port 3 Speech Override ON"
     },
     {
-      "fnumber": 46,
+      "fn": 46,
       "description": "Port 1 Speech Override OFF"
     },
     {
-      "fnumber": 47,
+      "fn": 47,
       "description": "Port 2 Speech Override OFF"
     },
     {
-      "fnumber": 48,
+      "fn": 48,
       "description": "Port 3 Speech Override OFF"
     },
     {
-      "fnumber": 49,
+      "fn": 49,
       "description": "Port 1 Courtesy Tone 1"
     },
     {
-      "fnumber": 50,
+      "fn": 50,
       "description": "Port 1 Courtesy Tone 2"
     },
     {
-      "fnumber": 51,
+      "fn": 51,
       "description": "Port 1 Courtesy Tone 3"
     },
     {
-      "fnumber": 52,
+      "fn": 52,
       "description": "Port 1 Courtesy Tone 4"
     },
     {
-      "fnumber": 53,
+      "fn": 53,
       "description": "Port 1 Courtesy Tone 5"
     },
     {
-      "fnumber": 54,
+      "fn": 54,
       "description": "Port 1 Courtesy Tone 6"
     },
     {
-      "fnumber": 55,
+      "fn": 55,
       "description": "Port 1 Courtesy Tone 7"
     },
     {
-      "fnumber": 56,
+      "fn": 56,
       "description": "Port 1 Courtesy Tone 8"
     },
     {
-      "fnumber": 57,
+      "fn": 57,
       "description": "Port 1 Courtesy Tone 9"
     },
     {
-      "fnumber": 58,
+      "fn": 58,
       "description": "Port 1 Courtesy Tone 10"
     },
     {
-      "fnumber": 59,
+      "fn": 59,
       "description": "Port 2 Courtesy Tone 1"
     },
     {
-      "fnumber": 60,
+      "fn": 60,
       "description": "Port 2 Courtesy Tone 2"
     },
     {
-      "fnumber": 61,
+      "fn": 61,
       "description": "Port 2 Courtesy Tone 3"
     },
     {
-      "fnumber": 62,
+      "fn": 62,
       "description": "Port 2 Courtesy Tone 4"
     },
     {
-      "fnumber": 63,
+      "fn": 63,
       "description": "Port 2 Courtesy Tone 5"
     },
     {
-      "fnumber": 64,
+      "fn": 64,
       "description": "Port 2 Courtesy Tone 6"
     },
     {
-      "fnumber": 65,
+      "fn": 65,
       "description": "Port 2 Courtesy Tone 7"
     },
     {
-      "fnumber": 66,
+      "fn": 66,
       "description": "Port 2 Courtesy Tone 8"
     },
     {
-      "fnumber": 67,
+      "fn": 67,
       "description": "Port 2 Courtesy Tone 9"
     },
     {
-      "fnumber": 68,
+      "fn": 68,
       "description": "Port 2 Courtesy Tone 10"
     },
     {
-      "fnumber": 69,
+      "fn": 69,
       "description": "Port 3 Courtesy Tone 1"
     },
     {
-      "fnumber": 70,
+      "fn": 70,
       "description": "Port 3 Courtesy Tone 2"
     },
     {
-      "fnumber": 71,
+      "fn": 71,
       "description": "Port 3 Courtesy Tone 3"
     },
     {
-      "fnumber": 72,
+      "fn": 72,
       "description": "Port 3 Courtesy Tone 4"
     },
     {
-      "fnumber": 73,
+      "fn": 73,
       "description": "Port 3 Courtesy Tone 5"
     },
     {
-      "fnumber": 74,
+      "fn": 74,
       "description": "Port 3 Courtesy Tone 6"
     },
     {
-      "fnumber": 75,
+      "fn": 75,
       "description": "Port 3 Courtesy Tone 7"
     },
     {
-      "fnumber": 76,
+      "fn": 76,
       "description": "Port 3 Courtesy Tone 8"
     },
     {
-      "fnumber": 77,
+      "fn": 77,
       "description": "Port 3 Courtesy Tone 9"
     },
     {
-      "fnumber": 78,
+      "fn": 78,
       "description": "Port 3 Courtesy Tone 10"
     },
     {
-      "fnumber": 79,
+      "fn": 79,
       "description": "Port 1 DTMF Muting ON"
     },
     {
-      "fnumber": 80,
+      "fn": 80,
       "description": "Port 2 DTMF Muting ON"
     },
     {
-      "fnumber": 81,
+      "fn": 81,
       "description": "Port 3 DTMF Muting ON"
     },
     {
-      "fnumber": 82,
+      "fn": 82,
       "description": "Port 1 DTMF Muting OFF"
     },
     {
-      "fnumber": 83,
+      "fn": 83,
       "description": "Port 2 DTMF Muting OFF"
     },
     {
-      "fnumber": 84,
+      "fn": 84,
       "description": "Port 3 DTMF Muting OFF"
     },
     {
-      "fnumber": 85,
+      "fn": 85,
       "description": "CTCSS Encode ON Current Speech Port"
     },
     {
-      "fnumber": 86,
+      "fn": 86,
       "description": "CTCSS Encode OFF Current Speech Port"
     },
     {
-      "fnumber": 87,
+      "fn": 87,
       "description": "Read ADC Channel 1"
     },
     {
-      "fnumber": 88,
+      "fn": 88,
       "description": "Read ADC Channel 2"
     },
     {
-      "fnumber": 89,
+      "fn": 89,
       "description": "Read ADC Channel 3"
     },
     {
-      "fnumber": 90,
+      "fn": 90,
       "description": "Read ADC Channel 4"
     },
     {
-      "fnumber": 91,
+      "fn": 91,
       "description": "Read ADC Channel 5"
     },
     {
-      "fnumber": 92,
+      "fn": 92,
       "description": "Read ADC Channel 6"
     },
     {
-      "fnumber": 93,
+      "fn": 93,
       "description": "Read ADC Channel 7"
     },
     {
-      "fnumber": 94,
+      "fn": 94,
       "description": "Read ADC Channel 8"
     },
     {
-      "fnumber": 95,
+      "fn": 95,
       "description": "UF1 ON"
     },
     {
-      "fnumber": 96,
+      "fn": 96,
       "description": "UF2 ON"
     },
     {
-      "fnumber": 97,
+      "fn": 97,
       "description": "UF3 ON"
     },
     {
-      "fnumber": 98,
+      "fn": 98,
       "description": "UF4 ON"
     },
     {
-      "fnumber": 99,
+      "fn": 99,
       "description": "UF5 ON"
     },
     {
-      "fnumber": 100,
+      "fn": 100,
       "description": "UF6 ON"
     },
     {
-      "fnumber": 101,
+      "fn": 101,
       "description": "UF7 ON"
     },
     {
-      "fnumber": 102,
+      "fn": 102,
       "description": "UF1 OFF"
     },
     {
-      "fnumber": 103,
+      "fn": 103,
       "description": "UF2 OFF"
     },
     {
-      "fnumber": 104,
+      "fn": 104,
       "description": "UF3 OFF"
     },
     {
-      "fnumber": 105,
+      "fn": 105,
       "description": "UF4 OFF"
     },
     {
-      "fnumber": 106,
+      "fn": 106,
       "description": "UF5 OFF"
     },
     {
-      "fnumber": 107,
+      "fn": 107,
       "description": "UF6 OFF"
     },
     {
-      "fnumber": 108,
+      "fn": 108,
       "description": "UF7 OFF"
     },
     {
-      "fnumber": 109,
+      "fn": 109,
       "description": "UF1 Pulse"
     },
     {
-      "fnumber": 110,
+      "fn": 110,
       "description": "UF2 Pulse"
     },
     {
-      "fnumber": 111,
+      "fn": 111,
       "description": "UF3 Pulse"
     },
     {
-      "fnumber": 112,
+      "fn": 112,
       "description": "UF4 Pulse"
     },
     {
-      "fnumber": 113,
+      "fn": 113,
       "description": "UF5 Pulse"
     },
     {
-      "fnumber": 114,
+      "fn": 114,
       "description": "UF6 Pulse"
     },
     {
-      "fnumber": 115,
+      "fn": 115,
       "description": "UF7 Pulse"
     },
     {
-      "fnumber": 116,
+      "fn": 116,
       "description": "Say Time"
     },
     {
-      "fnumber": 117,
+      "fn": 117,
       "description": "Say Date"
     },
     {
-      "fnumber": 118,
+      "fn": 118,
       "description": "Link Port 1 To Port 2"
     },
     {
-      "fnumber": 119,
+      "fn": 119,
       "description": "Link Port 1 To Port 3"
     },
     {
-      "fnumber": 120,
+      "fn": 120,
       "description": "Link Port 2 To Port 3"
     },
     {
-      "fnumber": 121,
+      "fn": 121,
       "description": "Link All Ports"
     },
     {
-      "fnumber": 122,
+      "fn": 122,
       "description": "Unlink Port 1 From Port 2"
     },
     {
-      "fnumber": 123,
+      "fn": 123,
       "description": "Unlink Port 1 From Port 3"
     },
     {
-      "fnumber": 124,
+      "fn": 124,
       "description": "Unlink Port 2 From Port 3"
     },
     {
-      "fnumber": 125,
+      "fn": 125,
       "description": "Unlink All Ports"
     },
     {
-      "fnumber": 126,
+      "fn": 126,
       "description": "Play DVR Track 1"
     },
     {
-      "fnumber": 127,
+      "fn": 127,
       "description": "Play DVR Track 2"
     },
     {
-      "fnumber": 128,
+      "fn": 128,
       "description": "Play DVR Track 3"
     },
     {
-      "fnumber": 129,
+      "fn": 129,
       "description": "Play DVR Track 4"
     },
     {
-      "fnumber": 130,
+      "fn": 130,
       "description": "Play DVR Track 5"
     },
     {
-      "fnumber": 131,
+      "fn": 131,
       "description": "Play DVR Track 6"
     },
     {
-      "fnumber": 132,
+      "fn": 132,
       "description": "Play DVR Track 7"
     },
     {
-      "fnumber": 133,
+      "fn": 133,
       "description": "Play DVR Track 8"
     },
     {
-      "fnumber": 134,
+      "fn": 134,
       "description": "Play DVR Track 9"
     },
     {
-      "fnumber": 135,
+      "fn": 135,
       "description": "Play DVR Track 10"
     },
     {
-      "fnumber": 136,
+      "fn": 136,
       "description": "Play DVR Track 11"
     },
     {
-      "fnumber": 137,
+      "fn": 137,
       "description": "Play DVR Track 12"
     },
     {
-      "fnumber": 138,
+      "fn": 138,
       "description": "Play DVR Track 13"
     },
     {
-      "fnumber": 139,
+      "fn": 139,
       "description": "Play DVR Track 14"
     },
     {
-      "fnumber": 140,
+      "fn": 140,
       "description": "Play DVR Track 15"
     },
     {
-      "fnumber": 141,
+      "fn": 141,
       "description": "Play DVR Track 16"
     },
     {
-      "fnumber": 142,
+      "fn": 142,
       "description": "Play DVR Track 17"
     },
     {
-      "fnumber": 143,
+      "fn": 143,
       "description": "Play DVR Track 18"
     },
     {
-      "fnumber": 144,
+      "fn": 144,
       "description": "Play DVR Track 19"
     },
     {
-      "fnumber": 145,
+      "fn": 145,
       "description": "Play DVR Track 20"
     },
     {
-      "fnumber": 146,
+      "fn": 146,
       "description": "Auxiliary Audio 1 ON"
     },
     {
-      "fnumber": 147,
+      "fn": 147,
       "description": "Auxiliary Audio 2 ON"
     },
     {
-      "fnumber": 148,
+      "fn": 148,
       "description": "Auxiliary Audio 3 ON"
     },
     {
-      "fnumber": 149,
+      "fn": 149,
       "description": "Auxiliary Audio 1 OFF"
     },
     {
-      "fnumber": 150,
+      "fn": 150,
       "description": "Auxiliary Audio 2 OFF"
     },
     {
-      "fnumber": 151,
+      "fn": 151,
       "description": "Auxiliary Audio 3 OFF"
     },
     {
-      "fnumber": 152,
+      "fn": 152,
       "description": "Alarm 1 ON"
     },
     {
-      "fnumber": 153,
+      "fn": 153,
       "description": "Alarm 2 ON"
     },
     {
-      "fnumber": 154,
+      "fn": 154,
       "description": "Alarm 3 ON"
     },
     {
-      "fnumber": 155,
+      "fn": 155,
       "description": "Alarm 4 ON"
     },
     {
-      "fnumber": 156,
+      "fn": 156,
       "description": "Alarm 5 ON"
     },
     {
-      "fnumber": 157,
+      "fn": 157,
       "description": "Alarm 1 OFF"
     },
     {
-      "fnumber": 158,
+      "fn": 158,
       "description": "Alarm 2 OFF"
     },
     {
-      "fnumber": 159,
+      "fn": 159,
       "description": "Alarm 3 OFF"
     },
     {
-      "fnumber": 160,
+      "fn": 160,
       "description": "Alarm 4 OFF"
     },
     {
-      "fnumber": 161,
+      "fn": 161,
       "description": "Alarm 5 OFF"
     },
     {
-      "fnumber": 162,
+      "fn": 162,
       "description": "Speech Out Port 1"
     },
     {
-      "fnumber": 163,
+      "fn": 163,
       "description": "Speech Out Port 2"
     },
     {
-      "fnumber": 164,
+      "fn": 164,
       "description": "Speech Out Port 3"
     },
     {
-      "fnumber": 165,
+      "fn": 165,
       "description": "Speech Out Ports 1 & 2"
     },
     {
-      "fnumber": 166,
+      "fn": 166,
       "description": "Speech Out Ports 1 & 3"
     },
     {
-      "fnumber": 167,
+      "fn": 167,
       "description": "Speech Out Ports 2 & 3"
     },
     {
-      "fnumber": 168,
+      "fn": 168,
       "description": "Speech Out All Ports"
     },
     {
-      "fnumber": 169,
+      "fn": 169,
       "description": "DTMF Enable Port 1"
     },
     {
-      "fnumber": 170,
+      "fn": 170,
       "description": "DTMF Enable Port 2"
     },
     {
-      "fnumber": 171,
+      "fn": 171,
       "description": "DTMF Enable Port 3"
     },
     {
-      "fnumber": 172,
+      "fn": 172,
       "description": "DTMF Disable Port 1"
     },
     {
-      "fnumber": 173,
+      "fn": 173,
       "description": "DTMF Disable Port 2"
     },
     {
-      "fnumber": 174,
+      "fn": 174,
       "description": "DTMF Disable Port 3"
     },
     {
-      "fnumber": 175,
+      "fn": 175,
       "description": "Require PL for DTMF Port 1"
     },
     {
-      "fnumber": 176,
+      "fn": 176,
       "description": "Require PL for DTMF Port 2"
     },
     {
-      "fnumber": 177,
+      "fn": 177,
       "description": "Require PL for DTMF Port 3"
     },
     {
-      "fnumber": 178,
+      "fn": 178,
       "description": "Do Not Require PL for DTMF Port 1"
     },
     {
-      "fnumber": 179,
+      "fn": 179,
       "description": "Do Not Require PL for DTMF Port 2"
     },
     {
-      "fnumber": 180,
+      "fn": 180,
       "description": "Do Not Require PL for DTMF Port 3"
     },
     {
-      "fnumber": 181,
+      "fn": 181,
       "description": "Play Next Voice ID on Port 1"
     },
     {
-      "fnumber": 182,
+      "fn": 182,
       "description": "Play Next Voice ID on Port 2"
     },
     {
-      "fnumber": 183,
+      "fn": 183,
       "description": "Play Next Voice ID on Port 3"
     },
     {
-      "fnumber": 184,
+      "fn": 184,
       "description": "Play Next CW ID on Port 1"
     },
     {
-      "fnumber": 185,
+      "fn": 185,
       "description": "Play Next CW ID on Port 2"
     },
     {
-      "fnumber": 186,
+      "fn": 186,
       "description": "Play Next CW ID on Port 3"
     },
     {
-      "fnumber": 187,
+      "fn": 187,
       "description": "Speak Message Macro 1"
     },
     {
-      "fnumber": 188,
+      "fn": 188,
       "description": "Speak Message Macro 2"
     },
     {
-      "fnumber": 189,
+      "fn": 189,
       "description": "Speak Message Macro 3"
     },
     {
-      "fnumber": 190,
+      "fn": 190,
       "description": "Speak Message Macro 4"
     },
     {
-      "fnumber": 191,
+      "fn": 191,
       "description": "Speak Message Macro 5"
     },
     {
-      "fnumber": 192,
+      "fn": 192,
       "description": "Speak Message Macro 6"
     },
     {
-      "fnumber": 193,
+      "fn": 193,
       "description": "Speak Message Macro 7"
     },
     {
-      "fnumber": 194,
+      "fn": 194,
       "description": "Speak Message Macro 8"
     },
     {
-      "fnumber": 195,
+      "fn": 195,
       "description": "Speak Message Macro 9"
     },
     {
-      "fnumber": 196,
+      "fn": 196,
       "description": "Speak Message Macro 10"
     },
     {
-      "fnumber": 197,
+      "fn": 197,
       "description": "Speak Message Macro 11"
     },
     {
-      "fnumber": 198,
+      "fn": 198,
       "description": "Speak Message Macro 12"
     },
     {
-      "fnumber": 199,
+      "fn": 199,
       "description": "Speak Message Macro 13"
     },
     {
-      "fnumber": 200,
+      "fn": 200,
       "description": "Speak Message Macro 14"
     },
     {
-      "fnumber": 201,
+      "fn": 201,
       "description": "Speak Message Macro 15"
     },
     {
-      "fnumber": 202,
+      "fn": 202,
       "description": "Speak Message Macro 16"
     },
     {
-      "fnumber": 203,
+      "fn": 203,
       "description": "Speak Message Macro 17"
     },
     {
-      "fnumber": 204,
+      "fn": 204,
       "description": "Speak Message Macro 18"
     },
     {
-      "fnumber": 205,
+      "fn": 205,
       "description": "Speak Message Macro 19"
     },
     {
-      "fnumber": 206,
+      "fn": 206,
       "description": "Speak Message Macro 20"
     },
     {
-      "fnumber": 207,
+      "fn": 207,
       "description": "Speak Message Macro 21"
     },
     {
-      "fnumber": 208,
+      "fn": 208,
       "description": "Speak Message Macro 22"
     },
     {
-      "fnumber": 209,
+      "fn": 209,
       "description": "Speak Message Macro 23"
     },
     {
-      "fnumber": 210,
+      "fn": 210,
       "description": "Speak Message Macro 24"
     },
     {
-      "fnumber": 211,
+      "fn": 211,
       "description": "Speak Message Macro 25"
     },
     {
-      "fnumber": 212,
+      "fn": 212,
       "description": "Speak Message Macro 26"
     },
     {
-      "fnumber": 213,
+      "fn": 213,
       "description": "Speak Message Macro 27"
     },
     {
-      "fnumber": 214,
+      "fn": 214,
       "description": "Speak Message Macro 28"
     },
     {
-      "fnumber": 215,
+      "fn": 215,
       "description": "Speak Message Macro 29"
     },
     {
-      "fnumber": 216,
+      "fn": 216,
       "description": "Speak Message Macro 30"
     },
     {
-      "fnumber": 217,
+      "fn": 217,
       "description": "Speak Message Macro 31"
     },
     {
-      "fnumber": 218,
+      "fn": 218,
       "description": "Speak Message Macro 32"
     },
     {
-      "fnumber": 219,
+      "fn": 219,
       "description": "Speak Message Macro 33"
     },
     {
-      "fnumber": 220,
+      "fn": 220,
       "description": "Speak Message Macro 34"
     },
     {
-      "fnumber": 221,
+      "fn": 221,
       "description": "Speak Message Macro 35"
     },
     {
-      "fnumber": 222,
+      "fn": 222,
       "description": "Speak Message Macro 36"
     },
     {
-      "fnumber": 223,
+      "fn": 223,
       "description": "Speak Message Macro 37"
     },
     {
-      "fnumber": 224,
+      "fn": 224,
       "description": "Speak Message Macro 38"
     },
     {
-      "fnumber": 225,
+      "fn": 225,
       "description": "Speak Message Macro 39"
     },
     {
-      "fnumber": 226,
+      "fn": 226,
       "description": "Speak Message Macro 40"
     },
     {
-      "fnumber": 227,
+      "fn": 227,
       "description": "Say Good (Morning/Afternoon/Evening)"
     },
     {
-      "fnumber": 228,
+      "fn": 228,
       "description": "High Priority Macro"
     },
     {
-      "fnumber": 229,
+      "fn": 229,
       "description": "Low Priority Macro"
     },
     {
-      "fnumber": 230,
+      "fn": 230,
       "description": "Port 1 Kerchunk Filter OFF"
     },
     {
-      "fnumber": 231,
+      "fn": 231,
       "description": "Port 2 Kerchunk Filter OFF"
     },
     {
-      "fnumber": 232,
+      "fn": 232,
       "description": "Port 3 Kerchunk Filter OFF"
     },
     {
-      "fnumber": 233,
+      "fn": 233,
       "description": "Port 1 Kerchunk Filter ON"
     },
     {
-      "fnumber": 234,
+      "fn": 234,
       "description": "Port 2 Kerchunk Filter ON"
     },
     {
-      "fnumber": 235,
+      "fn": 235,
       "description": "Port 2 Kerchunk Filter ON"
     },
     {
-      "fnumber": 236,
+      "fn": 236,
       "description": "Port 1 Receiver Disable"
     },
     {
-      "fnumber": 237,
+      "fn": 237,
       "description": "Port 2 Receiver Disable"
     },
     {
-      "fnumber": 238,
+      "fn": 238,
       "description": "Port 3 Receiver Disable"
     },
     {
-      "fnumber": 239,
+      "fn": 239,
       "description": "Port 1 Receiver Enable"
     },
     {
-      "fnumber": 240,
+      "fn": 240,
       "description": "Port 2 Receiver Enable"
     },
     {
-      "fnumber": 241,
+      "fn": 241,
       "description": "Port 3 Receiver Enable"
     },
     {
-      "fnumber": 242,
+      "fn": 242,
       "description": "Port 1 Speech ID Override OFF"
     },
     {
-      "fnumber": 243,
+      "fn": 243,
       "description": "Port 2 Speech ID Override OFF"
     },
     {
-      "fnumber": 244,
+      "fn": 244,
       "description": "Port 3 Speech ID Override OFF"
     },
     {
-      "fnumber": 245,
+      "fn": 245,
       "description": "Port 1 Speech ID Override ON"
     },
     {
-      "fnumber": 246,
+      "fn": 246,
       "description": "Port 2 Speech ID Override ON"
     },
     {
-      "fnumber": 247,
+      "fn": 247,
       "description": "Port 3 Speech ID Override ON"
     },
     {
-      "fnumber": 248,
+      "fn": 248,
       "description": "All Courtesy Tones OFF Port 1"
     },
     {
-      "fnumber": 249,
+      "fn": 249,
       "description": "All Courtesy Tones OFF Port 2"
     },
     {
-      "fnumber": 250,
+      "fn": 250,
       "description": "All Courtesy Tones OFF Port 3"
     },
     {
-      "fnumber": 251,
+      "fn": 251,
       "description": "Force Audio To Entered Port"
     },
     {
-      "fnumber": 252,
+      "fn": 252,
       "description": "Stop ID/Disable Timeout Timer Port 1"
     },
     {
-      "fnumber": 253,
+      "fn": 253,
       "description": "Stop ID/Disable Timeout Timer Port 2"
     },
     {
-      "fnumber": 254,
+      "fn": 254,
       "description": "Stop ID/Disable Timeout Timer Port 3"
     },
     {
-      "fnumber": 256,
+      "fn": 256,
       "description": "Resume ID/Enable Timeout Timer Port 1"
     },
     {
-      "fnumber": 257,
+      "fn": 257,
       "description": "Resume ID/Enable Timeout Timer Port 2"
     },
     {
-      "fnumber": 258,
+      "fn": 258,
       "description": "Resume ID/Enable Timeout Timer Port 3"
     },
     {
-      "fnumber": 259,
+      "fn": 259,
       "description": "Send DTMF Memory 1"
     },
     {
-      "fnumber": 260,
+      "fn": 260,
       "description": "Send DTMF Memory 2"
     },
     {
-      "fnumber": 261,
+      "fn": 261,
       "description": "Send DTMF Memory 3"
     },
     {
-      "fnumber": 262,
+      "fn": 262,
       "description": "Send DTMF Memory 4"
     },
     {
-      "fnumber": 263,
+      "fn": 263,
       "description": "Send DTMF Memory 5"
     },
     {
-      "fnumber": 264,
+      "fn": 264,
       "description": "Send DTMF Memory 6"
     },
     {
-      "fnumber": 265,
+      "fn": 265,
       "description": "Send DTMF Memory 7"
     },
     {
-      "fnumber": 266,
+      "fn": 266,
       "description": "Send DTMF Memory 8"
     },
     {
-      "fnumber": 267,
+      "fn": 267,
       "description": "Send DTMF Memory 9"
     },
     {
-      "fnumber": 268,
+      "fn": 268,
       "description": "Send DTMF Memory 10"
     },
     {
-      "fnumber": 269,
+      "fn": 269,
       "description": "Send DTMF Memory 11"
     },
     {
-      "fnumber": 270,
+      "fn": 270,
       "description": "Send DTMF Memory 12"
     },
     {
-      "fnumber": 271,
+      "fn": 271,
       "description": "Send DTMF Memory 13"
     },
     {
-      "fnumber": 272,
+      "fn": 272,
       "description": "Send DTMF Memory 14"
     },
     {
-      "fnumber": 273,
+      "fn": 273,
       "description": "Send DTMF Memory 15"
     },
     {
-      "fnumber": 274,
+      "fn": 274,
       "description": "Send DTMF Memory 16"
     },
     {
-      "fnumber": 275,
+      "fn": 275,
       "description": "Send DTMF Memory 17"
     },
     {
-      "fnumber": 276,
+      "fn": 276,
       "description": "Send DTMF Memory 18"
     },
     {
-      "fnumber": 277,
+      "fn": 277,
       "description": "Send DTMF Memory 19"
     },
     {
-      "fnumber": 278,
+      "fn": 278,
       "description": "Send DTMF Memory 20"
     },
     {
-      "fnumber": 279,
+      "fn": 279,
       "description": "Clear All Meters Hi/Low"
     },
     {
-      "fnumber": 280,
+      "fn": 280,
       "description": "Clear Meter 1 Hi/Low"
     },
     {
-      "fnumber": 281,
+      "fn": 281,
       "description": "Clear Meter 2 Hi/Low"
     },
     {
-      "fnumber": 282,
+      "fn": 282,
       "description": "Clear Meter 3 Hi/Low"
     },
     {
-      "fnumber": 283,
+      "fn": 283,
       "description": "Clear Meter 4 Hi/Low"
     },
     {
-      "fnumber": 284,
+      "fn": 284,
       "description": "Clear Meter 5 Hi/Low"
     },
     {
-      "fnumber": 285,
+      "fn": 285,
       "description": "Clear Meter 6 Hi/Low"
     },
     {
-      "fnumber": 286,
+      "fn": 286,
       "description": "Clear Meter 7 Hi/Low"
     },
     {
-      "fnumber": 287,
+      "fn": 287,
       "description": "Clear Meter 8 Hi/Low"
     },
     {
-      "fnumber": 288,
+      "fn": 288,
       "description": "Enable Meter Alarm 1"
     },
     {
-      "fnumber": 289,
+      "fn": 289,
       "description": "Enable Meter Alarm 2"
     },
     {
-      "fnumber": 290,
+      "fn": 290,
       "description": "Enable Meter Alarm 3"
     },
     {
-      "fnumber": 291,
+      "fn": 291,
       "description": "Enable Meter Alarm 4"
     },
     {
-      "fnumber": 292,
+      "fn": 292,
       "description": "Enable Meter Alarm 5"
     },
     {
-      "fnumber": 293,
+      "fn": 293,
       "description": "Enable Meter Alarm 6"
     },
     {
-      "fnumber": 294,
+      "fn": 294,
       "description": "Enable Meter Alarm 7"
     },
     {
-      "fnumber": 295,
+      "fn": 295,
       "description": "Enable Meter Alarm 8"
     },
     {
-      "fnumber": 296,
+      "fn": 296,
       "description": "Disable Meter Alarm 1"
     },
     {
-      "fnumber": 297,
+      "fn": 297,
       "description": "Disable Meter Alarm 2"
     },
     {
-      "fnumber": 298,
+      "fn": 298,
       "description": "Disable Meter Alarm 3"
     },
     {
-      "fnumber": 299,
+      "fn": 299,
       "description": "Disable Meter Alarm 4"
     },
     {
-      "fnumber": 300,
+      "fn": 300,
       "description": "Disable Meter Alarm 5"
     },
     {
-      "fnumber": 301,
+      "fn": 301,
       "description": "Disable Meter Alarm 6"
     },
     {
-      "fnumber": 302,
+      "fn": 302,
       "description": "Disable Meter Alarm 7"
     },
     {
-      "fnumber": 303,
+      "fn": 303,
       "description": "Disable Meter Alarm 8"
     },
     {
-      "fnumber": 304,
+      "fn": 304,
       "description": "CTCSS Encode Force OFF"
     },
     {
-      "fnumber": 305,
+      "fn": 305,
       "description": "CTCSS Encode To Programmed Value"
     },
     {
-      "fnumber": 306,
+      "fn": 306,
       "description": "Bump Clock By Correction Factor"
     },
     {
-      "fnumber": 307,
+      "fn": 307,
       "description": "Say Year As Part Of Date"
     },
     {
-      "fnumber": 308,
+      "fn": 308,
       "description": "Don't Say Year As Part Of Date"
     },
     {
-      "fnumber": 309,
+      "fn": 309,
       "description": "Port 1 Tail Message OFF"
     },
     {
-      "fnumber": 310,
+      "fn": 310,
       "description": "Port 2 Tail Message OFF"
     },
     {
-      "fnumber": 311,
+      "fn": 311,
       "description": "Port 3 Tail Message OFF"
     },
     {
-      "fnumber": 312,
+      "fn": 312,
       "description": "Port 1 Tail Message 1"
     },
     {
-      "fnumber": 313,
+      "fn": 313,
       "description": "Port 2 Tail Message 1"
     },
     {
-      "fnumber": 314,
+      "fn": 314,
       "description": "Port 3 Tail Message 1"
     },
     {
-      "fnumber": 315,
+      "fn": 315,
       "description": "Port 1 Tail Message 2"
     },
     {
-      "fnumber": 316,
+      "fn": 316,
       "description": "Port 2 Tail Message 2"
     },
     {
-      "fnumber": 317,
+      "fn": 317,
       "description": "Port 3 Tail Message 2"
     },
     {
-      "fnumber": 318,
+      "fn": 318,
       "description": "Port 1 Tail Message 3"
     },
     {
-      "fnumber": 319,
+      "fn": 319,
       "description": "Port 2 Tail Message 3"
     },
     {
-      "fnumber": 320,
+      "fn": 320,
       "description": "Port 3 Tail Message 3"
     },
     {
-      "fnumber": 321,
+      "fn": 321,
       "description": "Remote Base Memory 1"
     },
     {
-      "fnumber": 322,
+      "fn": 322,
       "description": "Remote Base Memory 2"
     },
     {
-      "fnumber": 323,
+      "fn": 323,
       "description": "Remote Base Memory 3"
     },
     {
-      "fnumber": 324,
+      "fn": 324,
       "description": "Remote Base Memory 4"
     },
     {
-      "fnumber": 325,
+      "fn": 325,
       "description": "Remote Base Memory 5"
     },
     {
-      "fnumber": 326,
+      "fn": 326,
       "description": "Remote Base Memory 6"
     },
     {
-      "fnumber": 327,
+      "fn": 327,
       "description": "Remote Base Memory 7"
     },
     {
-      "fnumber": 328,
+      "fn": 328,
       "description": "Remote Base Memory 8"
     },
     {
-      "fnumber": 329,
+      "fn": 329,
       "description": "Remote Base Memory 9"
     },
     {
-      "fnumber": 330,
+      "fn": 330,
       "description": "Remote Base Memory 10"
     },
     {
-      "fnumber": 331,
+      "fn": 331,
       "description": "Port 1 Zero Hang Time"
     },
     {
-      "fnumber": 332,
+      "fn": 332,
       "description": "Port 2 Zero Hang Time"
     },
     {
-      "fnumber": 333,
+      "fn": 333,
       "description": "Port 3 Zero Hang Time"
     },
     {
-      "fnumber": 334,
+      "fn": 334,
       "description": "Port 1 Revert to Programmed Value"
     },
     {
-      "fnumber": 335,
+      "fn": 335,
       "description": "Port 2 Revert to Programmed Value"
     },
     {
-      "fnumber": 336,
+      "fn": 336,
       "description": "Port 3 Revert to Programmed Value"
     },
     {
-      "fnumber": 337,
+      "fn": 337,
       "description": "Allow Autopatch From Programmed Ports"
     },
     {
-      "fnumber": 338,
+      "fn": 338,
       "description": "Disable Autopatch"
     },
     {
-      "fnumber": 339,
+      "fn": 339,
       "description": "Enable Speech ID's On Port 1"
     },
     {
-      "fnumber": 340,
+      "fn": 340,
       "description": "Enable Speech ID's On Port 2"
     },
     {
-      "fnumber": 341,
+      "fn": 341,
       "description": "Enable Speech ID's On Port 3"
     },
     {
-      "fnumber": 342,
+      "fn": 342,
       "description": "Disable Speech ID's On Port 1"
     },
     {
-      "fnumber": 343,
+      "fn": 343,
       "description": "Disable Speech ID's On Port 2"
     },
     {
-      "fnumber": 344,
+      "fn": 344,
       "description": "Disable Speech ID's On Port 3"
     },
     {
-      "fnumber": 345,
+      "fn": 345,
       "description": "User DVR Record, Erase After Auto Playback"
     },
     {
-      "fnumber": 346,
+      "fn": 346,
       "description": "User DVR Record, Don't Erase After Auto Playback"
     },
     {
-      "fnumber": 347,
+      "fn": 347,
       "description": "Start General Timer 1"
     },
     {
-      "fnumber": 348,
+      "fn": 348,
       "description": "Start General Timer 2"
     },
     {
-      "fnumber": 349,
+      "fn": 349,
       "description": "Start General Timer 3"
     },
     {
-      "fnumber": 350,
+      "fn": 350,
       "description": "Stop General Timer 1"
     },
     {
-      "fnumber": 351,
+      "fn": 351,
       "description": "Stop General Timer 2"
     },
     {
-      "fnumber": 352,
+      "fn": 352,
       "description": "Stop General Timer 3"
     },
     {
-      "fnumber": 353,
+      "fn": 353,
       "description": "Remote Base Power Select 1"
     },
     {
-      "fnumber": 354,
+      "fn": 354,
       "description": "Remote Base Power Select 2"
     },
     {
-      "fnumber": 355,
+      "fn": 355,
       "description": "Remote Base Power Select 3"
     },
     {
-      "fnumber": 356,
+      "fn": 356,
       "description": "Guest Macros ON"
     },
     {
-      "fnumber": 357,
+      "fn": 357,
       "description": "Guest Macros OFF"
     },
     {
-      "fnumber": 358,
+      "fn": 358,
       "description": "Receiver 1 Macros ON"
     },
     {
-      "fnumber": 359,
+      "fn": 359,
       "description": "Receiver 2 Macros ON"
     },
     {
-      "fnumber": 360,
+      "fn": 360,
       "description": "Receiver 3 Macros ON"
     },
     {
-      "fnumber": 361,
+      "fn": 361,
       "description": "Receiver 1 Macros OFF"
     },
     {
-      "fnumber": 362,
+      "fn": 362,
       "description": "Receiver 2 Macros OFF"
     },
     {
-      "fnumber": 363,
+      "fn": 363,
       "description": "Receiver 3 Macros OFF"
     },
     {
-      "fnumber": 364,
+      "fn": 364,
       "description": "Extended Logic Output 1 ON"
     },
     {
-      "fnumber": 365,
+      "fn": 365,
       "description": "Extended Logic Output 2 ON"
     },
     {
-      "fnumber": 366,
+      "fn": 366,
       "description": "Extended Logic Output 3 ON"
     },
     {
-      "fnumber": 367,
+      "fn": 367,
       "description": "Extended Logic Output 4 ON"
     },
     {
-      "fnumber": 368,
+      "fn": 368,
       "description": "Extended Logic Output 5 ON"
     },
     {
-      "fnumber": 369,
+      "fn": 369,
       "description": "Extended Logic Output 6 ON"
     },
     {
-      "fnumber": 370,
+      "fn": 370,
       "description": "Extended Logic Output 7 ON"
     },
     {
-      "fnumber": 371,
+      "fn": 371,
       "description": "Extended Logic Output 8 ON"
     },
     {
-      "fnumber": 372,
+      "fn": 372,
       "description": "Extended Logic Output 9 ON"
     },
     {
-      "fnumber": 373,
+      "fn": 373,
       "description": "Extended Logic Output 10 ON"
     },
     {
-      "fnumber": 374,
+      "fn": 374,
       "description": "Extended Logic Output 11 ON"
     },
     {
-      "fnumber": 375,
+      "fn": 375,
       "description": "Extended Logic Output 12 ON"
     },
     {
-      "fnumber": 376,
+      "fn": 376,
       "description": "Extended Logic Output 13 ON"
     },
     {
-      "fnumber": 377,
+      "fn": 377,
       "description": "Extended Logic Output 14 ON"
     },
     {
-      "fnumber": 378,
+      "fn": 378,
       "description": "Extended Logic Output 15 ON"
     },
     {
-      "fnumber": 379,
+      "fn": 379,
       "description": "Extended Logic Output 16 ON"
     },
     {
-      "fnumber": 380,
+      "fn": 380,
       "description": "Extended Logic Output 17 ON"
     },
     {
-      "fnumber": 381,
+      "fn": 381,
       "description": "Extended Logic Output 18 ON"
     },
     {
-      "fnumber": 382,
+      "fn": 382,
       "description": "Extended Logic Output 19 ON"
     },
     {
-      "fnumber": 383,
+      "fn": 383,
       "description": "Extended Logic Output 20 ON"
     },
     {
-      "fnumber": 384,
+      "fn": 384,
       "description": "Extended Logic Output 21 ON"
     },
     {
-      "fnumber": 385,
+      "fn": 385,
       "description": "Extended Logic Output 22 ON"
     },
     {
-      "fnumber": 386,
+      "fn": 386,
       "description": "Extended Logic Output 23 ON"
     },
     {
-      "fnumber": 387,
+      "fn": 387,
       "description": "Extended Logic Output 24 ON"
     },
     {
-      "fnumber": 388,
+      "fn": 388,
       "description": "Extended Logic Output 25 ON"
     },
     {
-      "fnumber": 389,
+      "fn": 389,
       "description": "Extended Logic Output 26 ON"
     },
     {
-      "fnumber": 390,
+      "fn": 390,
       "description": "Extended Logic Output 27 ON"
     },
     {
-      "fnumber": 391,
+      "fn": 391,
       "description": "Extended Logic Output 28 ON"
     },
     {
-      "fnumber": 392,
+      "fn": 392,
       "description": "Extended Logic Output 29 ON"
     },
     {
-      "fnumber": 393,
+      "fn": 393,
       "description": "Extended Logic Output 30 ON"
     },
     {
-      "fnumber": 394,
+      "fn": 394,
       "description": "Extended Logic Output 31 ON"
     },
     {
-      "fnumber": 395,
+      "fn": 395,
       "description": "Extended Logic Output 32 ON"
     },
     {
-      "fnumber": 396,
+      "fn": 396,
       "description": "Extended Logic Output 1 PULSE"
     },
     {
-      "fnumber": 397,
+      "fn": 397,
       "description": "Extended Logic Output 2 PULSE"
     },
     {
-      "fnumber": 398,
+      "fn": 398,
       "description": "Extended Logic Output 3 PULSE"
     },
     {
-      "fnumber": 399,
+      "fn": 399,
       "description": "Extended Logic Output 4 PULSE"
     },
     {
-      "fnumber": 400,
+      "fn": 400,
       "description": "Extended Logic Output 5 PULSE"
     },
     {
-      "fnumber": 401,
+      "fn": 401,
       "description": "Extended Logic Output 6 PULSE"
     },
     {
-      "fnumber": 402,
+      "fn": 402,
       "description": "Extended Logic Output 7 PULSE"
     },
     {
-      "fnumber": 403,
+      "fn": 403,
       "description": "Extended Logic Output 8 PULSE"
     },
     {
-      "fnumber": 404,
+      "fn": 404,
       "description": "Extended Logic Output 9 PULSE"
     },
     {
-      "fnumber": 405,
+      "fn": 405,
       "description": "Extended Logic Output 10 PULSE"
     },
     {
-      "fnumber": 406,
+      "fn": 406,
       "description": "Extended Logic Output 11 PULSE"
     },
     {
-      "fnumber": 407,
+      "fn": 407,
       "description": "Extended Logic Output 12 PULSE"
     },
     {
-      "fnumber": 408,
+      "fn": 408,
       "description": "Extended Logic Output 13 PULSE"
     },
     {
-      "fnumber": 409,
+      "fn": 409,
       "description": "Extended Logic Output 14 PULSE"
     },
     {
-      "fnumber": 410,
+      "fn": 410,
       "description": "Extended Logic Output 15 PULSE"
     },
     {
-      "fnumber": 411,
+      "fn": 411,
       "description": "Extended Logic Output 16 PULSE"
     },
     {
-      "fnumber": 412,
+      "fn": 412,
       "description": "Extended Logic Output 17 PULSE"
     },
     {
-      "fnumber": 413,
+      "fn": 413,
       "description": "Extended Logic Output 18 PULSE"
     },
     {
-      "fnumber": 414,
+      "fn": 414,
       "description": "Extended Logic Output 19 PULSE"
     },
     {
-      "fnumber": 415,
+      "fn": 415,
       "description": "Extended Logic Output 20 PULSE"
     },
     {
-      "fnumber": 416,
+      "fn": 416,
       "description": "Extended Logic Output 21 PULSE"
     },
     {
-      "fnumber": 417,
+      "fn": 417,
       "description": "Extended Logic Output 22 PULSE"
     },
     {
-      "fnumber": 418,
+      "fn": 418,
       "description": "Extended Logic Output 23 PULSE"
     },
     {
-      "fnumber": 419,
+      "fn": 419,
       "description": "Extended Logic Output 24 PULSE"
     },
     {
-      "fnumber": 420,
+      "fn": 420,
       "description": "Extended Logic Output 25 PULSE"
     },
     {
-      "fnumber": 421,
+      "fn": 421,
       "description": "Extended Logic Output 26 PULSE"
     },
     {
-      "fnumber": 422,
+      "fn": 422,
       "description": "Extended Logic Output 27 PULSE"
     },
     {
-      "fnumber": 423,
+      "fn": 423,
       "description": "Extended Logic Output 28 PULSE"
     },
     {
-      "fnumber": 424,
+      "fn": 424,
       "description": "Extended Logic Output 29 PULSE"
     },
     {
-      "fnumber": 425,
+      "fn": 425,
       "description": "Extended Logic Output 30 PULSE"
     },
     {
-      "fnumber": 426,
+      "fn": 426,
       "description": "Extended Logic Output 31 PULSE"
     },
     {
-      "fnumber": 427,
+      "fn": 427,
       "description": "Extended Logic Output 32 PULSE"
     },
     {
-      "fnumber": 428,
+      "fn": 428,
       "description": "Extended Logic Output 1 OFF"
     },
     {
-      "fnumber": 429,
+      "fn": 429,
       "description": "Extended Logic Output 2 OFF"
     },
     {
-      "fnumber": 430,
+      "fn": 430,
       "description": "Extended Logic Output 3 OFF"
     },
     {
-      "fnumber": 431,
+      "fn": 431,
       "description": "Extended Logic Output 4 OFF"
     },
     {
-      "fnumber": 432,
+      "fn": 432,
       "description": "Extended Logic Output 5 OFF"
     },
     {
-      "fnumber": 433,
+      "fn": 433,
       "description": "Extended Logic Output 6 OFF"
     },
     {
-      "fnumber": 434,
+      "fn": 434,
       "description": "Extended Logic Output 7 OFF"
     },
     {
-      "fnumber": 435,
+      "fn": 435,
       "description": "Extended Logic Output 8 OFF"
     },
     {
-      "fnumber": 436,
+      "fn": 436,
       "description": "Extended Logic Output 9 OFF"
     },
     {
-      "fnumber": 437,
+      "fn": 437,
       "description": "Extended Logic Output 10 OFF"
     },
     {
-      "fnumber": 438,
+      "fn": 438,
       "description": "Extended Logic Output 11 OFF"
     },
     {
-      "fnumber": 439,
+      "fn": 439,
       "description": "Extended Logic Output 12 OFF"
     },
     {
-      "fnumber": 440,
+      "fn": 440,
       "description": "Extended Logic Output 13 OFF"
     },
     {
-      "fnumber": 441,
+      "fn": 441,
       "description": "Extended Logic Output 14 OFF"
     },
     {
-      "fnumber": 442,
+      "fn": 442,
       "description": "Extended Logic Output 15 OFF"
     },
     {
-      "fnumber": 443,
+      "fn": 443,
       "description": "Extended Logic Output 16 OFF"
     },
     {
-      "fnumber": 444,
+      "fn": 444,
       "description": "Extended Logic Output 17 OFF"
     },
     {
-      "fnumber": 445,
+      "fn": 445,
       "description": "Extended Logic Output 18 OFF"
     },
     {
-      "fnumber": 446,
+      "fn": 446,
       "description": "Extended Logic Output 19 OFF"
     },
     {
-      "fnumber": 447,
+      "fn": 447,
       "description": "Extended Logic Output 20 OFF"
     },
     {
-      "fnumber": 448,
+      "fn": 448,
       "description": "Extended Logic Output 21 OFF"
     },
     {
-      "fnumber": 449,
+      "fn": 449,
       "description": "Extended Logic Output 22 OFF"
     },
     {
-      "fnumber": 450,
+      "fn": 450,
       "description": "Extended Logic Output 23 OFF"
     },
     {
-      "fnumber": 451,
+      "fn": 451,
       "description": "Extended Logic Output 24 OFF"
     },
     {
-      "fnumber": 452,
+      "fn": 452,
       "description": "Extended Logic Output 25 OFF"
     },
     {
-      "fnumber": 453,
+      "fn": 453,
       "description": "Extended Logic Output 26 OFF"
     },
     {
-      "fnumber": 454,
+      "fn": 454,
       "description": "Extended Logic Output 27 OFF"
     },
     {
-      "fnumber": 455,
+      "fn": 455,
       "description": "Extended Logic Output 28 OFF"
     },
     {
-      "fnumber": 456,
+      "fn": 456,
       "description": "Extended Logic Output 29 OFF"
     },
     {
-      "fnumber": 457,
+      "fn": 457,
       "description": "Extended Logic Output 30 OFF"
     },
     {
-      "fnumber": 458,
+      "fn": 458,
       "description": "Extended Logic Output 31 OFF"
     },
     {
-      "fnumber": 459,
+      "fn": 459,
       "description": "Extended Logic Output 32 OFF"
     },
     {
-      "fnumber": 460,
+      "fn": 460,
       "description": "Play Message Macro 41"
     },
     {
-      "fnumber": 461,
+      "fn": 461,
       "description": "Play Message Macro 42"
     },
     {
-      "fnumber": 462,
+      "fn": 462,
       "description": "Play Message Macro 43"
     },
     {
-      "fnumber": 463,
+      "fn": 463,
       "description": "Play Message Macro 44"
     },
     {
-      "fnumber": 464,
+      "fn": 464,
       "description": "Play Message Macro 45"
     },
     {
-      "fnumber": 465,
+      "fn": 465,
       "description": "Play Message Macro 46"
     },
     {
-      "fnumber": 466,
+      "fn": 466,
       "description": "Play Message Macro 47"
     },
     {
-      "fnumber": 467,
+      "fn": 467,
       "description": "Play Message Macro 48"
     },
     {
-      "fnumber": 468,
+      "fn": 468,
       "description": "Play Message Macro 49"
     },
     {
-      "fnumber": 469,
+      "fn": 469,
       "description": "Play Message Macro 50"
     },
     {
-      "fnumber": 470,
+      "fn": 470,
       "description": "Play Message Macro 51"
     },
     {
-      "fnumber": 471,
+      "fn": 471,
       "description": "Play Message Macro 52"
     },
     {
-      "fnumber": 472,
+      "fn": 472,
       "description": "Play Message Macro 53"
     },
     {
-      "fnumber": 473,
+      "fn": 473,
       "description": "Play Message Macro 54"
     },
     {
-      "fnumber": 474,
+      "fn": 474,
       "description": "Play Message Macro 55"
     },
     {
-      "fnumber": 475,
+      "fn": 475,
       "description": "Play Message Macro 56"
     },
     {
-      "fnumber": 476,
+      "fn": 476,
       "description": "Play Message Macro 57"
     },
     {
-      "fnumber": 477,
+      "fn": 477,
       "description": "Play Message Macro 58"
     },
     {
-      "fnumber": 478,
+      "fn": 478,
       "description": "Play Message Macro 59"
     },
     {
-      "fnumber": 479,
+      "fn": 479,
       "description": "Play Message Macro 60"
     },
     {
-      "fnumber": 480,
+      "fn": 480,
       "description": "Play Message Macro 61"
     },
     {
-      "fnumber": 481,
+      "fn": 481,
       "description": "Play Message Macro 62"
     },
     {
-      "fnumber": 482,
+      "fn": 482,
       "description": "Play Message Macro 63"
     },
     {
-      "fnumber": 483,
+      "fn": 483,
       "description": "Play Message Macro 64"
     },
     {
-      "fnumber": 484,
+      "fn": 484,
       "description": "Play Message Macro 65"
     },
     {
-      "fnumber": 485,
+      "fn": 485,
       "description": "Play Message Macro 66"
     },
     {
-      "fnumber": 486,
+      "fn": 486,
       "description": "Play Message Macro 67"
     },
     {
-      "fnumber": 487,
+      "fn": 487,
       "description": "Play Message Macro 68"
     },
     {
-      "fnumber": 488,
+      "fn": 488,
       "description": "Play Message Macro 69"
     },
     {
-      "fnumber": 489,
+      "fn": 489,
       "description": "Play Message Macro 70"
     },
     {
-      "fnumber": 490,
+      "fn": 490,
       "description": "Remote Base Memory 11"
     },
     {
-      "fnumber": 491,
+      "fn": 491,
       "description": "Remote Base Memory 12"
     },
     {
-      "fnumber": 492,
+      "fn": 492,
       "description": "Remote Base Memory 13"
     },
     {
-      "fnumber": 493,
+      "fn": 493,
       "description": "Remote Base Memory 14"
     },
     {
-      "fnumber": 494,
+      "fn": 494,
       "description": "Remote Base Memory 15"
     },
     {
-      "fnumber": 495,
+      "fn": 495,
       "description": "Remote Base Memory 16"
     },
     {
-      "fnumber": 496,
+      "fn": 496,
       "description": "Remote Base Memory 17"
     },
     {
-      "fnumber": 497,
+      "fn": 497,
       "description": "Remote Base Memory 18"
     },
     {
-      "fnumber": 498,
+      "fn": 498,
       "description": "Remote Base Memory 19"
     },
     {
-      "fnumber": 499,
+      "fn": 499,
       "description": "Remote Base Memory 20"
     },
     {
-      "fnumber": 500,
+      "fn": 500,
       "description": "Remote Base Memory 21"
     },
     {
-      "fnumber": 501,
+      "fn": 501,
       "description": "Remote Base Memory 22"
     },
     {
-      "fnumber": 502,
+      "fn": 502,
       "description": "Remote Base Memory 23"
     },
     {
-      "fnumber": 503,
+      "fn": 503,
       "description": "Remote Base Memory 24"
     },
     {
-      "fnumber": 504,
+      "fn": 504,
       "description": "Remote Base Memory 25"
     },
     {
-      "fnumber": 505,
+      "fn": 505,
       "description": "Remote Base Memory 26"
     },
     {
-      "fnumber": 506,
+      "fn": 506,
       "description": "Remote Base Memory 27"
     },
     {
-      "fnumber": 507,
+      "fn": 507,
       "description": "Remote Base Memory 28"
     },
     {
-      "fnumber": 508,
+      "fn": 508,
       "description": "Remote Base Memory 29"
     },
     {
-      "fnumber": 509,
+      "fn": 509,
       "description": "Remote Base Memory 30"
     },
     {
-      "fnumber": 510,
+      "fn": 510,
       "description": "NOT USED"
     },
     {
-      "fnumber": 511,
+      "fn": 511,
       "description": "Remote Base Memory 31"
     },
     {
-      "fnumber": 512,
+      "fn": 512,
       "description": "Remote Base Memory 32"
     },
     {
-      "fnumber": 513,
+      "fn": 513,
       "description": "Remote Base Memory 33"
     },
     {
-      "fnumber": 514,
+      "fn": 514,
       "description": "Remote Base Memory 34"
     },
     {
-      "fnumber": 515,
+      "fn": 515,
       "description": "Remote Base Memory 35"
     },
     {
-      "fnumber": 516,
+      "fn": 516,
       "description": "Remote Base Memory 36"
     },
     {
-      "fnumber": 517,
+      "fn": 517,
       "description": "Remote Base Memory 37"
     },
     {
-      "fnumber": 518,
+      "fn": 518,
       "description": "Remote Base Memory 38"
     },
     {
-      "fnumber": 519,
+      "fn": 519,
       "description": "Remote Base Memory 39"
     },
     {
-      "fnumber": 520,
+      "fn": 520,
       "description": "Remote Base Memory 40"
     },
     {
-      "fnumber": 521,
+      "fn": 521,
       "description": "Send DTMF Memory 21"
     },
     {
-      "fnumber": 522,
+      "fn": 522,
       "description": "Send DTMF Memory 22"
     },
     {
-      "fnumber": 523,
+      "fn": 523,
       "description": "Send DTMF Memory 23"
     },
     {
-      "fnumber": 524,
+      "fn": 524,
       "description": "Send DTMF Memory 24"
     },
     {
-      "fnumber": 525,
+      "fn": 525,
       "description": "Send DTMF Memory 25"
     },
     {
-      "fnumber": 526,
+      "fn": 526,
       "description": "Send DTMF Memory 26"
     },
     {
-      "fnumber": 527,
+      "fn": 527,
       "description": "Send DTMF Memory 27"
     },
     {
-      "fnumber": 528,
+      "fn": 528,
       "description": "Send DTMF Memory 28"
     },
     {
-      "fnumber": 529,
+      "fn": 529,
       "description": "Send DTMF Memory 29"
     },
     {
-      "fnumber": 530,
+      "fn": 530,
       "description": "Send DTMF Memory 30"
     },
     {
-      "fnumber": 531,
+      "fn": 531,
       "description": "Send DTMF Memory 31"
     },
     {
-      "fnumber": 532,
+      "fn": 532,
       "description": "Send DTMF Memory 32"
     },
     {
-      "fnumber": 533,
+      "fn": 533,
       "description": "Send DTMF Memory 33"
     },
     {
-      "fnumber": 534,
+      "fn": 534,
       "description": "Send DTMF Memory 34"
     },
     {
-      "fnumber": 535,
+      "fn": 535,
       "description": "Send DTMF Memory 35"
     },
     {
-      "fnumber": 536,
+      "fn": 536,
       "description": "Send DTMF Memory 36"
     },
     {
-      "fnumber": 537,
+      "fn": 537,
       "description": "Send DTMF Memory 37"
     },
     {
-      "fnumber": 538,
+      "fn": 538,
       "description": "Send DTMF Memory 38"
     },
     {
-      "fnumber": 539,
+      "fn": 539,
       "description": "Send DTMF Memory 39"
     },
     {
-      "fnumber": 540,
+      "fn": 540,
       "description": "Send DTMF Memory 40"
     },
     {
-      "fnumber": 541,
+      "fn": 541,
       "description": "Send DTMF Memory 41"
     },
     {
-      "fnumber": 542,
+      "fn": 542,
       "description": "Send DTMF Memory 42"
     },
     {
-      "fnumber": 543,
+      "fn": 543,
       "description": "Send DTMF Memory 43"
     },
     {
-      "fnumber": 544,
+      "fn": 544,
       "description": "Send DTMF Memory 44"
     },
     {
-      "fnumber": 545,
+      "fn": 545,
       "description": "Send DTMF Memory 45"
     },
     {
-      "fnumber": 546,
+      "fn": 546,
       "description": "Send DTMF Memory 46"
     },
     {
-      "fnumber": 547,
+      "fn": 547,
       "description": "Send DTMF Memory 47"
     },
     {
-      "fnumber": 548,
+      "fn": 548,
       "description": "Send DTMF Memory 48"
     },
     {
-      "fnumber": 549,
+      "fn": 549,
       "description": "Send DTMF Memory 49"
     },
     {
-      "fnumber": 550,
+      "fn": 550,
       "description": "Send DTMF Memory 50"
     },
     {
-      "fnumber": 551,
+      "fn": 551,
       "description": "Load RTC Time & Date Into RC210"
     },
     {
-      "fnumber": 552,
+      "fn": 552,
       "description": "CTCSS During ID ON"
     },
     {
-      "fnumber": 553,
+      "fn": 553,
       "description": "CTCSS During ID OFF"
     },
     {
-      "fnumber": 554,
+      "fn": 554,
       "description": "Port 1 Time XMTR has been active since last reset"
     },
     {
-      "fnumber": 555,
+      "fn": 555,
       "description": "Port 2 Time XMTR has been active since last reset"
     },
     {
-      "fnumber": 556,
+      "fn": 556,
       "description": "Port 3 Time XMTR has been active since last reset"
     },
     {
-      "fnumber": 557,
+      "fn": 557,
       "description": "Reset Port 1 Transmitter Activity Timer to 0"
     },
     {
-      "fnumber": 558,
+      "fn": 558,
       "description": "Reset Port 1 Transmitter Activity Timer to 0"
     },
     {
-      "fnumber": 559,
+      "fn": 559,
       "description": "Reset Port 1 Transmitter Activity Timer to 0"
     },
     {
-      "fnumber": 560,
+      "fn": 560,
       "description": "Give RSSI Report"
     },
     {
-      "fnumber": 561,
+      "fn": 561,
       "description": "Restart Controller"
     },
     {
-      "fnumber": 562,
+      "fn": 562,
       "description": "Readback Number of Keyups Port 1"
     },
     {
-      "fnumber": 563,
+      "fn": 563,
       "description": "Readback Number of Keyups Port 2"
     },
     {
-      "fnumber": 564,
+      "fn": 564,
       "description": "Readback Number of Keyups Port 3"
     },
     {
-      "fnumber": 565,
+      "fn": 565,
       "description": "Reset Keyup Counter Port 1"
     },
     {
-      "fnumber": 566,
+      "fn": 566,
       "description": "Reset Keyup Counter Port 2"
     },
     {
-      "fnumber": 567,
+      "fn": 567,
       "description": "Reset Keyup Counter Port 3"
     },
     {
-      "fnumber": 570,
+      "fn": 570,
       "description": "Readback A/D Channel 1 Low"
     },
     {
-      "fnumber": 571,
+      "fn": 571,
       "description": "Readback A/D Channel 2 Low"
     },
     {
-      "fnumber": 572,
+      "fn": 572,
       "description": "Readback A/D Channel 3 Low"
     },
     {
-      "fnumber": 573,
+      "fn": 573,
       "description": "Readback A/D Channel 4 Low"
     },
     {
-      "fnumber": 574,
+      "fn": 574,
       "description": "Readback A/D Channel 5 Low"
     },
     {
-      "fnumber": 575,
+      "fn": 575,
       "description": "Readback A/D Channel 6 Low"
     },
     {
-      "fnumber": 576,
+      "fn": 576,
       "description": "Readback A/D Channel 7 Low"
     },
     {
-      "fnumber": 577,
+      "fn": 577,
       "description": "Readback A/D Channel 8 Low"
     },
     {
-      "fnumber": 578,
+      "fn": 578,
       "description": "Readback A/D Channel 1 High"
     },
     {
-      "fnumber": 579,
+      "fn": 579,
       "description": "Readback A/D Channel 2 High"
     },
     {
-      "fnumber": 580,
+      "fn": 580,
       "description": "Readback A/D Channel 3 High"
     },
     {
-      "fnumber": 581,
+      "fn": 581,
       "description": "Readback A/D Channel 4 High"
     },
     {
-      "fnumber": 582,
+      "fn": 582,
       "description": "Readback A/D Channel 5 High"
     },
     {
-      "fnumber": 583,
+      "fn": 583,
       "description": "Readback A/D Channel 6 High"
     },
     {
-      "fnumber": 584,
+      "fn": 584,
       "description": "Readback A/D Channel 7 High"
     },
     {
-      "fnumber": 585,
+      "fn": 585,
       "description": "Readback A/D Channel 8 High"
     },
     {
-      "fnumber": 586,
+      "fn": 586,
       "description": "Disable Port 1 Timeout Timer ONLY for 60 minutes"
     },
     {
-      "fnumber": 587,
+      "fn": 587,
       "description": "Disable Port 2 Timeout Timer ONLY for 60 minutes"
     },
     {
-      "fnumber": 588,
+      "fn": 588,
       "description": "Disable Port 3 Timeout Timer ONLY for 60 minutes"
     },
     {
-      "fnumber": 589,
+      "fn": 589,
       "description": "Enable Port 1 Timeout Timer ONLY for 60 minutes"
     },
     {
-      "fnumber": 590,
+      "fn": 590,
       "description": "Enable Port 2 Timeout Timer ONLY for 60 minutes"
     },
     {
-      "fnumber": 591,
+      "fn": 591,
       "description": "Enable Port 2 Timeout Timer ONLY for 60 minutes"
     },
     {
-      "fnumber": 592,
+      "fn": 592,
       "description": "Current Wind Speed & Direction"
     },
     {
-      "fnumber": 593,
+      "fn": 593,
       "description": "Current Outdoor Temperature"
     },
     {
-      "fnumber": 594,
+      "fn": 594,
       "description": "Current Indoor Humidity"
     },
     {
-      "fnumber": 595,
+      "fn": 595,
       "description": "Current Outdoor Humidity"
     },
     {
-      "fnumber": 596,
+      "fn": 596,
       "description": "Wind Speed High & Direction Since Midnight"
     },
     {
-      "fnumber": 597,
+      "fn": 597,
       "description": "Outdoor Temp High & Time It Occurred Since Midnight"
     },
     {
-      "fnumber": 598,
+      "fn": 598,
       "description": "Outdoor Temp Low & Time It Occurred Since Midnight"
     },
     {
-      "fnumber": 599,
+      "fn": 599,
       "description": "Reserved for future use"
     },
     {
-      "fnumber": 600,
+      "fn": 600,
       "description": "Reserved for future use"
     },
     {
-      "fnumber": 605,
+      "fn": 605,
       "description": "Speak Current Remote Base Freq & Offset"
     },
     {
-      "fnumber": 606,
+      "fn": 606,
       "description": "Start General Timer 4"
     },
     {
-      "fnumber": 607,
+      "fn": 607,
       "description": "Start General Timer 5"
     },
     {
-      "fnumber": 608,
+      "fn": 608,
       "description": "Start General Timer 6"
     },
     {
-      "fnumber": 609,
+      "fn": 609,
       "description": "Stop General Timer 4"
     },
     {
-      "fnumber": 610,
+      "fn": 610,
       "description": "Stop General Timer 5"
     },
     {
-      "fnumber": 611,
+      "fn": 611,
       "description": "Stop General Timer 6"
     },
     {
-      "fnumber": 612,
+      "fn": 612,
       "description": "Disable Port 1 Inactivity Timer"
     },
     {
-      "fnumber": 613,
+      "fn": 613,
       "description": "Disable Port 2 Inactivity Timer"
     },
     {
-      "fnumber": 614,
+      "fn": 614,
       "description": "Disable Port 3 Inactivity Timer"
     },
     {
-      "fnumber": 615,
+      "fn": 615,
       "description": "Port 1 Inactivity Timer to Programmed Value"
     },
     {
-      "fnumber": 616,
+      "fn": 616,
       "description": "Port 2 Inactivity Timer to Programmed Value"
     },
     {
-      "fnumber": 617,
+      "fn": 617,
       "description": "Port 3 Inactivity Timer to Programmed Value"
     },
     {
-      "fnumber": 618,
+      "fn": 618,
       "description": "Delay Execution by 1 second"
     },
     {
-      "fnumber": 619,
+      "fn": 619,
       "description": "Delay Execution by 2 second"
     },
     {
-      "fnumber": 620,
+      "fn": 620,
       "description": "Delay Execution by 4 second"
     },
     {
-      "fnumber": 621,
+      "fn": 621,
       "description": "Port 1 Hangtimer 1 Select"
     },
     {
-      "fnumber": 622,
+      "fn": 622,
       "description": "Port 1 Hangtimer 2 Select"
     },
     {
-      "fnumber": 623,
+      "fn": 623,
       "description": "Port 1 Hangtimer 3 Select"
     },
     {
-      "fnumber": 624,
+      "fn": 624,
       "description": "Port 2 Hangtimer 1 Select"
     },
     {
-      "fnumber": 625,
+      "fn": 625,
       "description": "Port 2 Hangtimer 2 Select"
     },
     {
-      "fnumber": 626,
+      "fn": 626,
       "description": "Port 2 Hangtimer 3 Select"
     },
     {
-      "fnumber": 627,
+      "fn": 627,
       "description": "Port 3 Hangtimer 1 Select"
     },
     {
-      "fnumber": 628,
+      "fn": 628,
       "description": "Port 3 Hangtimer 2 Select"
     },
     {
-      "fnumber": 629,
+      "fn": 629,
       "description": "Port 3 Hangtimer 3 Select"
     },
     {
-      "fnumber": 630,
+      "fn": 630,
       "description": "Port 1 Next Courtesy Tone 1 Select"
     },
     {
-      "fnumber": 631,
+      "fn": 631,
       "description": "Port 1 Next Courtesy Tone 2 Select"
     },
     {
-      "fnumber": 632,
+      "fn": 632,
       "description": "Port 1 Next Courtesy Tone 3 Select"
     },
     {
-      "fnumber": 633,
+      "fn": 633,
       "description": "Port 1 Next Courtesy Tone 4 Select"
     },
     {
-      "fnumber": 634,
+      "fn": 634,
       "description": "Port 1 Next Courtesy Tone 5 Select"
     },
     {
-      "fnumber": 635,
+      "fn": 635,
       "description": "Port 1 Next Courtesy Tone 6 Select"
     },
     {
-      "fnumber": 636,
+      "fn": 636,
       "description": "Port 1 Next Courtesy Tone 7 Select"
     },
     {
-      "fnumber": 637,
+      "fn": 637,
       "description": "Port 1 Next Courtesy Tone 8 Select"
     },
     {
-      "fnumber": 638,
+      "fn": 638,
       "description": "Port 1 Next Courtesy Tone 9 Select"
     },
     {
-      "fnumber": 639,
+      "fn": 639,
       "description": "Port 1 Next Courtesy Tone 10 Select"
     },
     {
-      "fnumber": 640,
+      "fn": 640,
       "description": "Port 1 Following Courtesy Tone 1 Select"
     },
     {
-      "fnumber": 641,
+      "fn": 641,
       "description": "Port 1 Following Courtesy Tone 2 Select"
     },
     {
-      "fnumber": 642,
+      "fn": 642,
       "description": "Port 1 Following Courtesy Tone 3 Select"
     },
     {
-      "fnumber": 643,
+      "fn": 643,
       "description": "Port 1 Following Courtesy Tone 4 Select"
     },
     {
-      "fnumber": 644,
+      "fn": 644,
       "description": "Port 1 Following Courtesy Tone 5 Select"
     },
     {
-      "fnumber": 645,
+      "fn": 645,
       "description": "Port 1 Following Courtesy Tone 6 Select"
     },
     {
-      "fnumber": 646,
+      "fn": 646,
       "description": "Port 1 Following Courtesy Tone 7 Select"
     },
     {
-      "fnumber": 647,
+      "fn": 647,
       "description": "Port 1 Following Courtesy Tone 8 Select"
     },
     {
-      "fnumber": 648,
+      "fn": 648,
       "description": "Port 1 Following Courtesy Tone 9 Select"
     },
     {
-      "fnumber": 649,
+      "fn": 649,
       "description": "Port 1 Following Courtesy Tone 10 Select"
     },
     {
-      "fnumber": 650,
+      "fn": 650,
       "description": "Port 2 Next Courtesy Tone 1 Select"
     },
     {
-      "fnumber": 651,
+      "fn": 651,
       "description": "Port 2 Next Courtesy Tone 2 Select"
     },
     {
-      "fnumber": 652,
+      "fn": 652,
       "description": "Port 2 Next Courtesy Tone 3 Select"
     },
     {
-      "fnumber": 653,
+      "fn": 653,
       "description": "Port 2 Next Courtesy Tone 4 Select"
     },
     {
-      "fnumber": 654,
+      "fn": 654,
       "description": "Port 2 Next Courtesy Tone 5 Select"
     },
     {
-      "fnumber": 655,
+      "fn": 655,
       "description": "Port 2 Next Courtesy Tone 6 Select"
     },
     {
-      "fnumber": 656,
+      "fn": 656,
       "description": "Port 2 Next Courtesy Tone 7 Select"
     },
     {
-      "fnumber": 657,
+      "fn": 657,
       "description": "Port 2 Next Courtesy Tone 8 Select"
     },
     {
-      "fnumber": 658,
+      "fn": 658,
       "description": "Port 2 Next Courtesy Tone 9 Select"
     },
     {
-      "fnumber": 659,
+      "fn": 659,
       "description": "Port 2 Next Courtesy Tone 10 Select"
     },
     {
-      "fnumber": 660,
+      "fn": 660,
       "description": "Port 2 Following Courtesy Tone 1 Select"
     },
     {
-      "fnumber": 661,
+      "fn": 661,
       "description": "Port 2 Following Courtesy Tone 2 Select"
     },
     {
-      "fnumber": 662,
+      "fn": 662,
       "description": "Port 2 Following Courtesy Tone 3 Select"
     },
     {
-      "fnumber": 663,
+      "fn": 663,
       "description": "Port 2 Following Courtesy Tone 4 Select"
     },
     {
-      "fnumber": 664,
+      "fn": 664,
       "description": "Port 2 Following Courtesy Tone 5 Select"
     },
     {
-      "fnumber": 665,
+      "fn": 665,
       "description": "Port 2 Following Courtesy Tone 6 Select"
     },
     {
-      "fnumber": 666,
+      "fn": 666,
       "description": "Port 2 Following Courtesy Tone 7 Select"
     },
     {
-      "fnumber": 667,
+      "fn": 667,
       "description": "Port 2 Following Courtesy Tone 8 Select"
     },
     {
-      "fnumber": 668,
+      "fn": 668,
       "description": "Port 2 Following Courtesy Tone 9 Select"
     },
     {
-      "fnumber": 669,
+      "fn": 669,
       "description": "Port 2 Following Courtesy Tone 10 Select"
     },
     {
-      "fnumber": 670,
+      "fn": 670,
       "description": "Port 3 Next Courtesy Tone 1 Select"
     },
     {
-      "fnumber": 671,
+      "fn": 671,
       "description": "Port 3 Next Courtesy Tone 2 Select"
     },
     {
-      "fnumber": 672,
+      "fn": 672,
       "description": "Port 3 Next Courtesy Tone 3 Select"
     },
     {
-      "fnumber": 673,
+      "fn": 673,
       "description": "Port 3 Next Courtesy Tone 4 Select"
     },
     {
-      "fnumber": 674,
+      "fn": 674,
       "description": "Port 3 Next Courtesy Tone 5 Select"
     },
     {
-      "fnumber": 675,
+      "fn": 675,
       "description": "Port 3 Next Courtesy Tone 6 Select"
     },
     {
-      "fnumber": 676,
+      "fn": 676,
       "description": "Port 3 Next Courtesy Tone 7 Select"
     },
     {
-      "fnumber": 677,
+      "fn": 677,
       "description": "Port 3 Next Courtesy Tone 8 Select"
     },
     {
-      "fnumber": 678,
+      "fn": 678,
       "description": "Port 3 Next Courtesy Tone 9 Select"
     },
     {
-      "fnumber": 679,
+      "fn": 679,
       "description": "Port 3 Next Courtesy Tone 10 Select"
     },
     {
-      "fnumber": 680,
+      "fn": 680,
       "description": "Port 3 Following Courtesy Tone 1 Select"
     },
     {
-      "fnumber": 681,
+      "fn": 681,
       "description": "Port 3 Following Courtesy Tone 2 Select"
     },
     {
-      "fnumber": 682,
+      "fn": 682,
       "description": "Port 3 Following Courtesy Tone 3 Select"
     },
     {
-      "fnumber": 683,
+      "fn": 683,
       "description": "Port 3 Following Courtesy Tone 4 Select"
     },
     {
-      "fnumber": 684,
+      "fn": 684,
       "description": "Port 3 Following Courtesy Tone 5 Select"
     },
     {
-      "fnumber": 685,
+      "fn": 685,
       "description": "Port 3 Following Courtesy Tone 6 Select"
     },
     {
-      "fnumber": 686,
+      "fn": 686,
       "description": "Port 3 Following Courtesy Tone 7 Select"
     },
     {
-      "fnumber": 687,
+      "fn": 687,
       "description": "Port 3 Following Courtesy Tone 8 Select"
     },
     {
-      "fnumber": 688,
+      "fn": 688,
       "description": "Port 3 Following Courtesy Tone 9 Select"
     },
     {
-      "fnumber": 689,
+      "fn": 689,
       "description": "Port 3 Following Courtesy Tone 10 Select"
     },
     {
-      "fnumber": 690,
+      "fn": 690,
       "description": "Daylight Savings ON"
     },
     {
-      "fnumber": 691,
+      "fn": 691,
       "description": "Daylight Savings OFF"
     },
     {
-      "fnumber": 692,
+      "fn": 692,
       "description": "Play Port 1 Pending ID"
     },
     {
-      "fnumber": 693,
+      "fn": 693,
       "description": "Play Port 2 Pending ID"
     },
     {
-      "fnumber": 694,
+      "fn": 694,
       "description": "Play Port 3 Pending ID"
     },
     {
-      "fnumber": 810,
+      "fn": 810,
       "description": "Suspend Setpoint 1"
     },
     {
-      "fnumber": 811,
+      "fn": 811,
       "description": "Suspend Setpoint 2"
     },
     {
-      "fnumber": 812,
+      "fn": 812,
       "description": "Suspend Setpoint 3"
     },
     {
-      "fnumber": 813,
+      "fn": 813,
       "description": "Suspend Setpoint 4"
     },
     {
-      "fnumber": 814,
+      "fn": 814,
       "description": "Suspend Setpoint 5"
     },
     {
-      "fnumber": 815,
+      "fn": 815,
       "description": "Suspend Setpoint 6"
     },
     {
-      "fnumber": 816,
+      "fn": 816,
       "description": "Suspend Setpoint 7"
     },
     {
-      "fnumber": 817,
+      "fn": 817,
       "description": "Suspend Setpoint 8"
     },
     {
-      "fnumber": 818,
+      "fn": 818,
       "description": "Suspend Setpoint 9"
     },
     {
-      "fnumber": 819,
+      "fn": 819,
       "description": "Suspend Setpoint 10"
     },
     {
-      "fnumber": 820,
+      "fn": 820,
       "description": "Suspend Setpoint 11"
     },
     {
-      "fnumber": 821,
+      "fn": 821,
       "description": "Suspend Setpoint 12"
     },
     {
-      "fnumber": 822,
+      "fn": 822,
       "description": "Suspend Setpoint 13"
     },
     {
-      "fnumber": 823,
+      "fn": 823,
       "description": "Suspend Setpoint 14"
     },
     {
-      "fnumber": 824,
+      "fn": 824,
       "description": "Suspend Setpoint 15"
     },
     {
-      "fnumber": 825,
+      "fn": 825,
       "description": "Suspend Setpoint 16"
     },
     {
-      "fnumber": 826,
+      "fn": 826,
       "description": "Suspend Setpoint 17"
     },
     {
-      "fnumber": 827,
+      "fn": 827,
       "description": "Suspend Setpoint 18"
     },
     {
-      "fnumber": 828,
+      "fn": 828,
       "description": "Suspend Setpoint 19"
     },
     {
-      "fnumber": 829,
+      "fn": 829,
       "description": "Suspend Setpoint 20"
     },
     {
-      "fnumber": 830,
+      "fn": 830,
       "description": "Suspend Setpoint 21"
     },
     {
-      "fnumber": 831,
+      "fn": 831,
       "description": "Suspend Setpoint 22"
     },
     {
-      "fnumber": 832,
+      "fn": 832,
       "description": "Suspend Setpoint 23"
     },
     {
-      "fnumber": 833,
+      "fn": 833,
       "description": "Suspend Setpoint 24"
     },
     {
-      "fnumber": 834,
+      "fn": 834,
       "description": "Suspend Setpoint 25"
     },
     {
-      "fnumber": 835,
+      "fn": 835,
       "description": "Suspend Setpoint 26"
     },
     {
-      "fnumber": 836,
+      "fn": 836,
       "description": "Suspend Setpoint 27"
     },
     {
-      "fnumber": 837,
+      "fn": 837,
       "description": "Suspend Setpoint 28"
     },
     {
-      "fnumber": 838,
+      "fn": 838,
       "description": "Suspend Setpoint 29"
     },
     {
-      "fnumber": 839,
+      "fn": 839,
       "description": "Suspend Setpoint 30"
     },
     {
-      "fnumber": 840,
+      "fn": 840,
       "description": "Suspend Setpoint 31"
     },
     {
-      "fnumber": 841,
+      "fn": 841,
       "description": "Suspend Setpoint 32"
     },
     {
-      "fnumber": 842,
+      "fn": 842,
       "description": "Suspend Setpoint 33"
     },
     {
-      "fnumber": 843,
+      "fn": 843,
       "description": "Suspend Setpoint 34"
     },
     {
-      "fnumber": 844,
+      "fn": 844,
       "description": "Suspend Setpoint 35"
     },
     {
-      "fnumber": 845,
+      "fn": 845,
       "description": "Suspend Setpoint 36"
     },
     {
-      "fnumber": 846,
+      "fn": 846,
       "description": "Suspend Setpoint 37"
     },
     {
-      "fnumber": 847,
+      "fn": 847,
       "description": "Suspend Setpoint 38"
     },
     {
-      "fnumber": 848,
+      "fn": 848,
       "description": "Suspend Setpoint 39"
     },
     {
-      "fnumber": 849,
+      "fn": 849,
       "description": "Suspend Setpoint 40"
     },
     {
-      "fnumber": 850,
+      "fn": 850,
       "description": "Resume Setpoint 1"
     },
     {
-      "fnumber": 851,
+      "fn": 851,
       "description": "Resume Setpoint 2"
     },
     {
-      "fnumber": 852,
+      "fn": 852,
       "description": "Resume Setpoint 3"
     },
     {
-      "fnumber": 853,
+      "fn": 853,
       "description": "Resume Setpoint 4"
     },
     {
-      "fnumber": 854,
+      "fn": 854,
       "description": "Resume Setpoint 5"
     },
     {
-      "fnumber": 855,
+      "fn": 855,
       "description": "Resume Setpoint 6"
     },
     {
-      "fnumber": 856,
+      "fn": 856,
       "description": "Resume Setpoint 7"
     },
     {
-      "fnumber": 857,
+      "fn": 857,
       "description": "Resume Setpoint 8"
     },
     {
-      "fnumber": 858,
+      "fn": 858,
       "description": "Resume Setpoint 9"
     },
     {
-      "fnumber": 859,
+      "fn": 859,
       "description": "Resume Setpoint 10"
     },
     {
-      "fnumber": 860,
+      "fn": 860,
       "description": "Resume Setpoint 11"
     },
     {
-      "fnumber": 861,
+      "fn": 861,
       "description": "Resume Setpoint 12"
     },
     {
-      "fnumber": 862,
+      "fn": 862,
       "description": "Resume Setpoint 13"
     },
     {
-      "fnumber": 863,
+      "fn": 863,
       "description": "Resume Setpoint 14"
     },
     {
-      "fnumber": 864,
+      "fn": 864,
       "description": "Resume Setpoint 15"
     },
     {
-      "fnumber": 865,
+      "fn": 865,
       "description": "Resume Setpoint 16"
     },
     {
-      "fnumber": 866,
+      "fn": 866,
       "description": "Resume Setpoint 17"
     },
     {
-      "fnumber": 867,
+      "fn": 867,
       "description": "Resume Setpoint 18"
     },
     {
-      "fnumber": 868,
+      "fn": 868,
       "description": "Resume Setpoint 19"
     },
     {
-      "fnumber": 869,
+      "fn": 869,
       "description": "Resume Setpoint 20"
     },
     {
-      "fnumber": 870,
+      "fn": 870,
       "description": "Resume Setpoint 21"
     },
     {
-      "fnumber": 871,
+      "fn": 871,
       "description": "Resume Setpoint 22"
     },
     {
-      "fnumber": 872,
+      "fn": 872,
       "description": "Resume Setpoint 23"
     },
     {
-      "fnumber": 873,
+      "fn": 873,
       "description": "Resume Setpoint 24"
     },
     {
-      "fnumber": 874,
+      "fn": 874,
       "description": "Resume Setpoint 25"
     },
     {
-      "fnumber": 875,
+      "fn": 875,
       "description": "Resume Setpoint 26"
     },
     {
-      "fnumber": 876,
+      "fn": 876,
       "description": "Resume Setpoint 27"
     },
     {
-      "fnumber": 877,
+      "fn": 877,
       "description": "Resume Setpoint 28"
     },
     {
-      "fnumber": 878,
+      "fn": 878,
       "description": "Resume Setpoint 29"
     },
     {
-      "fnumber": 879,
+      "fn": 879,
       "description": "Resume Setpoint 30"
     },
     {
-      "fnumber": 880,
+      "fn": 880,
       "description": "Resume Setpoint 31"
     },
     {
-      "fnumber": 881,
+      "fn": 881,
       "description": "Resume Setpoint 32"
     },
     {
-      "fnumber": 882,
+      "fn": 882,
       "description": "Resume Setpoint 33"
     },
     {
-      "fnumber": 883,
+      "fn": 883,
       "description": "Resume Setpoint 34"
     },
     {
-      "fnumber": 884,
-      "description": "ResumeS etpoint 35"
+      "fn": 884,
+      "description": "Resume Setpoint 35"
     },
     {
-      "fnumber": 885,
+      "fn": 885,
       "description": "Resume Setpoint 36"
     },
     {
-      "fnumber": 886,
+      "fn": 886,
       "description": "Resume Setpoint 37"
     },
     {
-      "fnumber": 887,
+      "fn": 887,
       "description": "Resume Setpoint 38"
     },
     {
-      "fnumber": 888,
+      "fn": 888,
       "description": "Resume Setpoint 39"
     },
     {
-      "fnumber": 889,
+      "fn": 889,
       "description": "Resume Setpoint 40"
     },
     {
-      "fnumber": 901,
+      "fn": 901,
       "description": "Call Macro 1",
       "destination": "m1"
     },
     {
-      "fnumber": 902,
+      "fn": 902,
       "description": "Call Macro 2",
       "destination": "m2"
     },
     {
-      "fnumber": 903,
+      "fn": 903,
       "description": "Call Macro 3",
       "destination": "m3"
     },
     {
-      "fnumber": 904,
+      "fn": 904,
       "description": "Call Macro 4",
       "destination": "m4"
     },
     {
-      "fnumber": 905,
+      "fn": 905,
       "description": "Call Macro 5",
       "destination": "m5"
     },
     {
-      "fnumber": 906,
+      "fn": 906,
       "description": "Call Macro 6",
       "destination": "m6"
     },
     {
-      "fnumber": 907,
+      "fn": 907,
       "description": "Call Macro 7",
       "destination": "m7"
     },
     {
-      "fnumber": 908,
+      "fn": 908,
       "description": "Call Macro 8",
       "destination": "m8"
     },
     {
-      "fnumber": 909,
+      "fn": 909,
       "description": "Call Macro 9",
       "destination": "m9"
     },
     {
-      "fnumber": 910,
+      "fn": 910,
       "description": "Call Macro 10",
       "destination": "m10"
     },
     {
-      "fnumber": 911,
+      "fn": 911,
       "description": "Call Macro 11",
       "destination": "m11"
     },
     {
-      "fnumber": 912,
+      "fn": 912,
       "description": "Call Macro 12",
       "destination": "m12"
     },
     {
-      "fnumber": 913,
+      "fn": 913,
       "description": "Call Macro 13",
       "destination": "m13"
     },
     {
-      "fnumber": 914,
+      "fn": 914,
       "description": "Call Macro 14",
       "destination": "m14"
     },
     {
-      "fnumber": 915,
+      "fn": 915,
       "description": "Call Macro 15",
       "destination": "m15"
     },
     {
-      "fnumber": 916,
+      "fn": 916,
       "description": "Call Macro 16",
       "destination": "m16"
     },
     {
-      "fnumber": 917,
+      "fn": 917,
       "description": "Call Macro 17",
       "destination": "m17"
     },
     {
-      "fnumber": 918,
+      "fn": 918,
       "description": "Call Macro 18",
       "destination": "m18"
     },
     {
-      "fnumber": 919,
+      "fn": 919,
       "description": "Call Macro 19",
       "destination": "m19"
     },
     {
-      "fnumber": 920,
+      "fn": 920,
       "description": "Call Macro 20",
       "destination": "m20"
     },
     {
-      "fnumber": 921,
+      "fn": 921,
       "description": "Call Macro 21",
       "destination": "m21"
     },
     {
-      "fnumber": 922,
+      "fn": 922,
       "description": "Call Macro 22",
       "destination": "m22"
     },
     {
-      "fnumber": 923,
+      "fn": 923,
       "description": "Call Macro 23",
       "destination": "m23"
     },
     {
-      "fnumber": 924,
+      "fn": 924,
       "description": "Call Macro 24",
       "destination": "m2"
     },
     {
-      "fnumber": 925,
+      "fn": 925,
       "description": "Call Macro 25",
       "destination": "m25"
     },
     {
-      "fnumber": 926,
+      "fn": 926,
       "description": "Call Macro 26",
       "destination": "m26"
     },
     {
-      "fnumber": 927,
+      "fn": 927,
       "description": "Call Macro 27",
       "destination": "m27"
     },
     {
-      "fnumber": 928,
+      "fn": 928,
       "description": "Call Macro 28",
       "destination": "m28"
     },
     {
-      "fnumber": 929,
+      "fn": 929,
       "description": "Call Macro 29",
       "destination": "m29"
     },
     {
-      "fnumber": 930,
+      "fn": 930,
       "description": "Call Macro 30",
       "destination": "m30"
     },
     {
-      "fnumber": 931,
+      "fn": 931,
       "description": "Call Macro 31",
       "destination": "m31"
     },
     {
-      "fnumber": 932,
+      "fn": 932,
       "description": "Call Macro 32",
       "destination": "m32"
     },
     {
-      "fnumber": 933,
+      "fn": 933,
       "description": "Call Macro 33",
       "destination": "m33"
     },
     {
-      "fnumber": 934,
+      "fn": 934,
       "description": "Call Macro 34",
       "destination": "m34"
     },
     {
-      "fnumber": 935,
+      "fn": 935,
       "description": "Call Macro 35",
       "destination": "m35"
     },
     {
-      "fnumber": 936,
+      "fn": 936,
       "description": "Call Macro 36",
       "destination": "m36"
     },
     {
-      "fnumber": 937,
+      "fn": 937,
       "description": "Call Macro 37",
       "destination": "m37"
     },
     {
-      "fnumber": 938,
+      "fn": 938,
       "description": "Call Macro 38",
       "destination": "m38"
     },
     {
-      "fnumber": 939,
+      "fn": 939,
       "description": "Call Macro 39",
       "destination": "m39"
     },
     {
-      "fnumber": 940,
+      "fn": 940,
       "description": "Call Macro 40",
       "destination": "m40"
     },
     {
-      "fnumber": 941,
+      "fn": 941,
       "description": "Call Macro 41",
       "destination": "m41"
     },
     {
-      "fnumber": 942,
+      "fn": 942,
       "description": "Call Macro 42",
       "destination": "m492"
     },
     {
-      "fnumber": 943,
+      "fn": 943,
       "description": "Call Macro 43",
       "destination": "m43"
     },
     {
-      "fnumber": 944,
+      "fn": 944,
       "description": "Call Macro 44",
       "destination": "m44"
     },
     {
-      "fnumber": 945,
+      "fn": 945,
       "description": "Call Macro 45",
       "destination": "m45"
     },
     {
-      "fnumber": 946,
+      "fn": 946,
       "description": "Call Macro 46",
       "destination": "m46"
     },
     {
-      "fnumber": 947,
+      "fn": 947,
       "description": "Call Macro 47",
       "destination": "m497"
     },
     {
-      "fnumber": 948,
+      "fn": 948,
       "description": "Call Macro 48",
       "destination": "m48"
     },
     {
-      "fnumber": 949,
+      "fn": 949,
       "description": "Call Macro 49",
       "destination": "m49"
     },
     {
-      "fnumber": 950,
+      "fn": 950,
       "description": "Call Macro 50",
       "destination": "m50"
     },
     {
-      "fnumber": 951,
+      "fn": 951,
       "description": "Call Macro 51",
       "destination": "m51"
     },
     {
-      "fnumber": 952,
+      "fn": 952,
       "description": "Call Macro 52",
       "destination": "m52"
     },
     {
-      "fnumber": 953,
+      "fn": 953,
       "description": "Call Macro 53",
       "destination": "m53"
     },
     {
-      "fnumber": 954,
+      "fn": 954,
       "description": "Call Macro 54",
       "destination": "m54"
     },
     {
-      "fnumber": 955,
+      "fn": 955,
       "description": "Call Macro 55",
       "destination": "m55"
     },
     {
-      "fnumber": 956,
+      "fn": 956,
       "description": "Call Macro 56",
       "destination": "m56"
     },
     {
-      "fnumber": 957,
+      "fn": 957,
       "description": "Call Macro 57",
       "destination": "m57"
     },
     {
-      "fnumber": 958,
+      "fn": 958,
       "description": "Call Macro 58",
       "destination": "m58"
     },
     {
-      "fnumber": 959,
+      "fn": 959,
       "description": "Call Macro 59",
       "destination": "m59"
     },
     {
-      "fnumber": 960,
+      "fn": 960,
       "description": "Call Macro 60",
       "destination": "m60"
     },
     {
-      "fnumber": 961,
+      "fn": 961,
       "description": "Call Macro 61",
       "destination": "m61"
     },
     {
-      "fnumber": 962,
+      "fn": 962,
       "description": "Call Macro 62",
       "destination": "m62"
     },
     {
-      "fnumber": 963,
+      "fn": 963,
       "description": "Call Macro 63",
       "destination": "m63"
     },
     {
-      "fnumber": 964,
+      "fn": 964,
       "description": "Call Macro 64",
       "destination": "m64"
     },
     {
-      "fnumber": 965,
+      "fn": 965,
       "description": "Call Macro 65",
       "destination": "m65"
     },
     {
-      "fnumber": 966,
+      "fn": 966,
       "description": "Call Macro 66",
       "destination": "m66"
     },
     {
-      "fnumber": 967,
+      "fn": 967,
       "description": "Call Macro 67",
       "destination": "m67"
     },
     {
-      "fnumber": 968,
+      "fn": 968,
       "description": "Call Macro 68",
       "destination": "m68"
     },
     {
-      "fnumber": 969,
+      "fn": 969,
       "description": "Call Macro 69",
       "destination": "m60"
     },
     {
-      "fnumber": 970,
+      "fn": 970,
       "description": "Call Macro 70",
       "destination": "m70"
     },
     {
-      "fnumber": 971,
+      "fn": 971,
       "description": "Call Macro 71",
       "destination": "m71"
     },
     {
-      "fnumber": 972,
+      "fn": 972,
       "description": "Call Macro 72",
       "destination": "m72"
     },
     {
-      "fnumber": 973,
+      "fn": 973,
       "description": "Call Macro 73",
       "destination": "m73"
     },
     {
-      "fnumber": 974,
+      "fn": 974,
       "description": "Call Macro 74",
       "destination": "m74"
     },
     {
-      "fnumber": 975,
+      "fn": 975,
       "description": "Call Macro 75",
       "destination": "m75"
     },
     {
-      "fnumber": 976,
+      "fn": 976,
       "description": "Call Macro 76",
       "destination": "m76"
     },
     {
-      "fnumber": 977,
+      "fn": 977,
       "description": "Call Macro 77",
       "destination": "m77"
     },
     {
-      "fnumber": 978,
+      "fn": 978,
       "description": "Call Macro 78",
       "destination": "m78"
     },
     {
-      "fnumber": 979,
+      "fn": 979,
       "description": "Call Macro 79",
       "destination": "m79"
     },
     {
-      "fnumber": 980,
+      "fn": 980,
       "description": "Call Macro 80",
       "destination": "m80"
     },
     {
-      "fnumber": 981,
+      "fn": 981,
       "description": "Call Macro 81",
       "destination": "m8"
     },
     {
-      "fnumber": 982,
+      "fn": 982,
       "description": "Call Macro 82",
       "destination": "m82"
     },
     {
-      "fnumber": 983,
+      "fn": 983,
       "description": "Call Macro 83",
       "destination": "m83"
     },
     {
-      "fnumber": 984,
+      "fn": 984,
       "description": "Call Macro 84",
       "destination": "m84"
     },
     {
-      "fnumber": 985,
+      "fn": 985,
       "description": "Call Macro 85",
       "destination": "m85"
     },
     {
-      "fnumber": 986,
+      "fn": 986,
       "description": "Call Macro 86",
       "destination": "m86"
     },
     {
-      "fnumber": 987,
+      "fn": 987,
       "description": "Call Macro 87",
       "destination": "m87"
     },
     {
-      "fnumber": 988,
+      "fn": 988,
       "description": "Call Macro 88",
       "destination": "m88"
     },
     {
-      "fnumber": 989,
+      "fn": 989,
       "description": "Call Macro 89",
       "destination": "m89"
     },
     {
-      "fnumber": 990,
+      "fn": 990,
       "description": "Call Macro 90",
       "destination": "m90"
     },
     {
-      "fnumber": 991,
+      "fn": 991,
       "description": "Call Macro 91",
       "destination": "m91"
     },
     {
-      "fnumber": 992,
+      "fn": 992,
       "description": "Call Macro 92",
       "destination": "m92"
     },
     {
-      "fnumber": 993,
+      "fn": 993,
       "description": "Call Macro 93",
       "destination": "m93"
     },
     {
-      "fnumber": 994,
+      "fn": 994,
       "description": "Call Macro 94",
       "destination": "m94"
     },
     {
-      "fnumber": 995,
+      "fn": 995,
       "description": "Call Macro 95",
       "destination": "m95"
     },
     {
-      "fnumber": 996,
+      "fn": 996,
       "description": "Call Macro 96",
       "destination": "m96"
     },
     {
-      "fnumber": 997,
+      "fn": 997,
       "description": "Call Macro 97",
       "destination": "m97"
     },
     {
-      "fnumber": 998,
+      "fn": 998,
       "description": "Call Macro 98",
       "destination": "m98"
     },
     {
-      "fnumber": 999,
+      "fn": 999,
       "description": "Call Macro 99",
       "destination": "m99"
     },
     {
-      "fnumber": 1000,
+      "fn": 1000,
       "description": "Call Macro 100",
       "destination": "m100"
     },
     {
-      "fnumber": 1001,
+      "fn": 1001,
       "description": "Call Macro 101",
       "destination": "m101"
     },
     {
-      "fnumber": 1002,
+      "fn": 1002,
       "description": "Call Macro 102",
       "destination": "m102"
     },
     {
-      "fnumber": 1003,
+      "fn": 1003,
       "description": "Call Macro 103",
       "destination": "m103"
     },
     {
-      "fnumber": 1004,
+      "fn": 1004,
       "description": "Call Macro 104",
       "destination": "m104"
     },
     {
-      "fnumber": 1005,
+      "fn": 1005,
       "description": "Call Macro 105",
       "destination": "m105"
     }
