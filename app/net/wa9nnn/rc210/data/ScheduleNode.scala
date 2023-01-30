@@ -62,4 +62,7 @@ object Schedules extends LazyLogging {
 }
 
 
-case class ScheduleNodeId(override val number: Int) extends NodeId('s', number, "ScheduleNode")
+case class ScheduleNodeId(override val number: Int) extends NodeId{
+  override val prefix: Char = 's'
+  override val cssClass: String = "ScheduleNode"
+}

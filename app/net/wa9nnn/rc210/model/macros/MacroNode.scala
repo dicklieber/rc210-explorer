@@ -11,17 +11,15 @@ case class MacroNode(nodeId: MacroNodeId, dtmf: Option[String], functions: List[
   private val functionsDisplay: String = functions.mkString(" ")
 
   override def toRow: Row = {
-    Row(nodeId.toCell, dtmf.map(_.toString).getOrElse(" "), functionsDisplay)
+    Row(nodeId.toCell, dtmf.getOrElse(" "), functionsDisplay)
   }
-
-
 }
 
 object MacroNode extends LazyLogging {
   val header: Header = Header("Macros", "Macro", "DTMF", "Functions")
-
-
-
 }
 
-case class MacroNodeId(override val number: Int) extends NodeId('m', number, "MacroNode")
+case class MacroNodeId(override val number: Int) extends NodeId {
+  override val prefix: Char = 'm'
+  override val cssClass: String = "MacroNode"
+}

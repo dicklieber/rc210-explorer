@@ -6,10 +6,10 @@ class MessageMacroSpec extends WithDatFile {
 
   "MessageMacroSpec" should {
     "apply" in {
-      val messageMacros: MessageMacros = MessageMacro(datFile)
+      val messageMacros: MessageMacros = MessageMacroNode(datFile)
       messageMacros.messaageMacros must haveSize(11)
       val id = MessageMacroId(1)
-      val mmn: MessageMacro = messageMacros(id)
+      val mmn: MessageMacroNode = messageMacros(id)
       mmn.nodeId must beEqualTo(id)
       mmn.value must beEqualTo("USE(VERB) P L ONE O SEVEN POINT TWO")
     }

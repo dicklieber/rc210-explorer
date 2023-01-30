@@ -2,7 +2,7 @@ package controllers
 
 import com.wa9nnn.util.tableui.Table
 import net.wa9nnn.rc210.DatFileParser
-import net.wa9nnn.rc210.data.{DatFileSource, Functions, ScheduleNode}
+import net.wa9nnn.rc210.data.{DatFileSource, Functions, MessageMacroNode, ScheduleNode}
 import net.wa9nnn.rc210.model.DatFile
 import net.wa9nnn.rc210.model.macros.MacroNode
 import play.api.mvc._
@@ -27,12 +27,17 @@ class RawDataController @Inject()(val controllerComponents: ControllerComponents
    * a path of `/`.
    */
   def functions(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    val schedulesTable = Table(functions.header, functions.ordered.map(_._2.toRow))
+    val schedulesTable = Table(functions.header, functions.functions.map(_.toRow))
     Ok(views.html.dat(Seq(schedulesTable)))
   }
 
   def macros(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     val macrosTable = Table(MacroNode.header, datFile.macros .map(_.toRow))
+    Ok(views.html.dat(Seq(macrosTable)))
+  }
+
+  def messageMacros(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+    val macrosTable = Table(MessageMacroNode.header, datFile.messageMacros.messaageMacros.map(_.toRow))
     Ok(views.html.dat(Seq(macrosTable)))
   }
 

@@ -1,19 +1,21 @@
 package net.wa9nnn.rc210.bubble
 
-import com.wa9nnn.util.HostAndPort
-import com.wa9nnn.util.tableui.{Cell, CellProvider, Row, RowSource}
-import net.wa9nnn.rc210.data.{FunctionNodeId, ScheduleNodeId}
+import com.wa9nnn.util.tableui.{Cell, CellProvider, RowSource}
+import net.wa9nnn.rc210.data.{FunctionNodeId, MessageMacroId, ScheduleNodeId}
 import net.wa9nnn.rc210.model.Node
 import net.wa9nnn.rc210.model.macros.MacroNodeId
-import play.api.libs.json.{Format, JsError, JsResult, JsString, JsSuccess, JsValue}
+import play.api.libs.json._
 
 /**
  * Unique ID for any node.
  *
- * @param prefix kind of node e.g. 'm' macro 'f' function 't' timer
- * @param number within the kind of [[Node]]
  */
-abstract class NodeId(prefix: Char, val number: Int, cssClass: String) extends CellProvider {
+
+trait NodeId extends CellProvider {
+  val prefix: Char
+  val number: Int
+  val cssClass: String
+
   override def toString: String = {
     s"$prefix$number"
   }
@@ -42,17 +44,16 @@ object NodeId {
     sNodeId.head match {
       case 'f' => FunctionNodeId(sNodeId.tail.toInt)
       case 'm' => MacroNodeId(sNodeId.tail.toInt)
+      case 'M' => MessageMacroId(sNodeId.tail.toInt)
       case 's' => ScheduleNodeId(sNodeId.tail.toInt)
     }
   }
-
-
 }
+
 
 trait TriggerNode extends Node with RowSource {
   val macroToRun: MacroNodeId
 
   def description: String
-
 }
 

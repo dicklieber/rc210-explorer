@@ -1,13 +1,9 @@
 package controllers
 
 import com.wa9nnn.util.tableui.Table
-import net.wa9nnn.rc210.DatFileParser
-import net.wa9nnn.rc210.data.{Functions, ScheduleNode}
-import net.wa9nnn.rc210.model.macros.MacroNode
+import net.wa9nnn.rc210.data.Functions
 import play.api.mvc._
 
-import java.net.URL
-import java.nio.file.{Path, Paths}
 import javax.inject._
 
 /**
@@ -25,8 +21,7 @@ class LandingController @Inject()(val controllerComponents: ControllerComponents
    * a path of `/`.
    */
   def index(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    val schedulesTable = Table(functions.header, functions.ordered.map(_._2.toRow))
-    Ok(views.html.landing(Seq(schedulesTable)))
+    Ok(views.html.landing())
   }
 
 }

@@ -1,7 +1,7 @@
 package net.wa9nnn.rc210.model
 
 import net.wa9nnn.rc210.DatSection
-import net.wa9nnn.rc210.data.{ScheduleNode, Schedules}
+import net.wa9nnn.rc210.data.{MessageMacroNodes, MessageMacros, ScheduleNode, Schedules}
 import net.wa9nnn.rc210.model.macros.{MacroNode, Macros}
 
 
@@ -10,8 +10,10 @@ import net.wa9nnn.rc210.model.macros.{MacroNode, Macros}
  * as a map of [[DatSection]]s.
  */
 class DatFile(sections: Seq[DatSection]) {
+
   lazy val schedules: Seq[ScheduleNode] = Schedules(this)
   lazy val macros: Seq[MacroNode] = Macros(this)
+  lazy val messageMacros: MessageMacros = MessageMacroNodes(this)
 
 
   def size: Int = sections.size
