@@ -746,163 +746,203 @@
     },
     {
       "fn": 187,
-      "description": "Speak Message Macro 1"
+      "description": "Speak Message Macro 1",
+      "destination": "M1"
     },
     {
       "fn": 188,
-      "description": "Speak Message Macro 2"
+      "description": "Speak Message Macro 2",
+      "destination": "M2"
     },
     {
       "fn": 189,
-      "description": "Speak Message Macro 3"
+      "description": "Speak Message Macro 3",
+      "destination": "M3"
     },
     {
       "fn": 190,
-      "description": "Speak Message Macro 4"
+      "description": "Speak Message Macro 4",
+      "destination": "M4"
     },
     {
       "fn": 191,
-      "description": "Speak Message Macro 5"
+      "description": "Speak Message Macro 5",
+      "destination": "M5"
     },
     {
       "fn": 192,
-      "description": "Speak Message Macro 6"
+      "description": "Speak Message Macro 6",
+      "destination": "M6"
     },
     {
       "fn": 193,
-      "description": "Speak Message Macro 7"
+      "description": "Speak Message Macro 7",
+      "destination": "7"
     },
     {
       "fn": 194,
-      "description": "Speak Message Macro 8"
+      "description": "Speak Message Macro 8",
+      "destination": "M8"
     },
     {
       "fn": 195,
-      "description": "Speak Message Macro 9"
+      "description": "Speak Message Macro 9",
+      "destination": "M9"
     },
     {
       "fn": 196,
-      "description": "Speak Message Macro 10"
+      "description": "Speak Message Macro 10",
+      "destination": "M10"
     },
     {
       "fn": 197,
-      "description": "Speak Message Macro 11"
+      "description": "Speak Message Macro 11",
+      "destination": "M11"
     },
     {
       "fn": 198,
-      "description": "Speak Message Macro 12"
+      "description": "Speak Message Macro 12",
+      "destination": "M12"
     },
     {
       "fn": 199,
-      "description": "Speak Message Macro 13"
+      "description": "Speak Message Macro 13",
+      "destination": "M13"
     },
     {
       "fn": 200,
-      "description": "Speak Message Macro 14"
+      "description": "Speak Message Macro 14",
+      "destination": "M14"
     },
     {
       "fn": 201,
-      "description": "Speak Message Macro 15"
+      "description": "Speak Message Macro 15",
+      "destination": "M15"
     },
     {
       "fn": 202,
-      "description": "Speak Message Macro 16"
+      "description": "Speak Message Macro 16",
+      "destination": "M16"
     },
     {
       "fn": 203,
-      "description": "Speak Message Macro 17"
+      "description": "Speak Message Macro 17",
+      "destination": "M17"
     },
     {
       "fn": 204,
-      "description": "Speak Message Macro 18"
+      "description": "Speak Message Macro 18",
+      "destination": "M18"
     },
     {
       "fn": 205,
-      "description": "Speak Message Macro 19"
+      "description": "Speak Message Macro 19",
+      "destination": "M19"
     },
     {
       "fn": 206,
-      "description": "Speak Message Macro 20"
+      "description": "Speak Message Macro 20",
+      "destination": "M20"
     },
     {
       "fn": 207,
-      "description": "Speak Message Macro 21"
+      "description": "Speak Message Macro 21",
+      "destination": "M21"
     },
     {
       "fn": 208,
-      "description": "Speak Message Macro 22"
+      "description": "Speak Message Macro 22",
+      "destination": "M22"
     },
     {
       "fn": 209,
-      "description": "Speak Message Macro 23"
+      "description": "Speak Message Macro 23",
+      "destination": "M23"
     },
     {
       "fn": 210,
-      "description": "Speak Message Macro 24"
+      "description": "Speak Message Macro 24",
+      "destination": "M24"
     },
     {
       "fn": 211,
-      "description": "Speak Message Macro 25"
+      "description": "Speak Message Macro 25",
+      "destination": "M25"
     },
     {
       "fn": 212,
-      "description": "Speak Message Macro 26"
+      "description": "Speak Message Macro 26",
+      "destination": "M26"
     },
     {
       "fn": 213,
-      "description": "Speak Message Macro 27"
+      "description": "Speak Message Macro 27",
+      "destination": "M27"
     },
     {
       "fn": 214,
-      "description": "Speak Message Macro 28"
+      "description": "Speak Message Macro 28",
+      "destination": "M28"
     },
     {
       "fn": 215,
-      "description": "Speak Message Macro 29"
+      "description": "Speak Message Macro 29",
+      "destination": "M29"
     },
     {
       "fn": 216,
-      "description": "Speak Message Macro 30"
+      "description": "Speak Message Macro 30",
+      "destination": "M30"
     },
     {
       "fn": 217,
-      "description": "Speak Message Macro 31"
+      "description": "Speak Message Macro 31",
+      "destination": "M31"
     },
     {
       "fn": 218,
-      "description": "Speak Message Macro 32"
+      "description": "Speak Message Macro 32",
+      "destination": "M32"
     },
     {
       "fn": 219,
-      "description": "Speak Message Macro 33"
+      "description": "Speak Message Macro 33",
+      "destination": "M33"
     },
     {
       "fn": 220,
-      "description": "Speak Message Macro 34"
+      "description": "Speak Message Macro 34",
+      "destination": "M34"
     },
     {
       "fn": 221,
-      "description": "Speak Message Macro 35"
+      "description": "Speak Message Macro 35",
+      "destination": "M35"
     },
     {
       "fn": 222,
-      "description": "Speak Message Macro 36"
+      "description": "Speak Message Macro 36",
+      "destination": "M36"
     },
     {
       "fn": 223,
-      "description": "Speak Message Macro 37"
+      "description": "Speak Message Macro 37",
+      "destination": "M37"
     },
     {
       "fn": 224,
-      "description": "Speak Message Macro 38"
+      "description": "Speak Message Macro 38",
+      "destination": "M38"
     },
     {
       "fn": 225,
-      "description": "Speak Message Macro 39"
+      "description": "Speak Message Macro 39",
+      "destination": "M39"
     },
     {
       "fn": 226,
-      "description": "Speak Message Macro 40"
+      "description": "Speak Message Macro 40",
+      "destination": "M40"
     },
     {
       "fn": 227,
