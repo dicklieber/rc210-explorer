@@ -50,6 +50,7 @@ libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % logbackVersion,
   "ch.qos.logback" % "logback-core" % logbackVersion,
   "commons-io" % "commons-io" % "2.11.0",
+  "com.fazecast" % "jSerialComm" % "[2.0.0,3.0.0)",
 //  "org.scala-lang.modules" %% "scala-xml" % "2.1.0",
 )
 
