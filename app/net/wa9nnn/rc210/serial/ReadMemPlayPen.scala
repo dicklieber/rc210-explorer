@@ -5,10 +5,13 @@ import com.typesafe.scalalogging.LazyLogging
 
 import java.io.{BufferedReader, InputStreamReader, OutputStream}
 
-object ReadMem extends App with LazyLogging {
+object ReadMemPlayPen extends App with LazyLogging {
 
   private val ports: Array[SerialPort] = SerialPort.getCommPorts
   private val maybePort: Option[SerialPort] = ports.find(_.getDescriptivePortName.contains("FT232"))
+
+
+
 
   val comPort = maybePort.get
   logger.info(comPort.toString)
