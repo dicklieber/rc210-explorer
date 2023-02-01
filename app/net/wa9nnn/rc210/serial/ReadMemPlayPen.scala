@@ -13,7 +13,7 @@ object ReadMemPlayPen extends App with LazyLogging {
 
 
 
-  val comPort = maybePort.get
+  val comPort: SerialPort = maybePort.get
   logger.info(comPort.toString)
 
   import com.fazecast.jSerialComm.SerialPort
@@ -22,8 +22,7 @@ object ReadMemPlayPen extends App with LazyLogging {
   comPort.openPort
   comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0)
 
-  val in = comPort.getInputStream
-  private val reader = new InputStreamReader(in)
+  private val reader = new InputStreamReader(comPort.getInputStream)
   val br = new BufferedReader(reader)
 
 
@@ -35,8 +34,7 @@ object ReadMemPlayPen extends App with LazyLogging {
     Thread.sleep(100)
   }
 
-  private val bytes: Array[Byte] = "1SendEram\r\n".getBytes
-  outputStream.write(bytes)
+  outputStream.write("1SendEram\r\n".getBytes)
 
   try {
     while (true) {
