@@ -3,6 +3,7 @@ package net.wa9nnn.rc210.serial
 import com.fazecast.jSerialComm.SerialPort
 import org.specs2.mutable.Specification
 
+import java.nio.file.{Files, Paths}
 import scala.util.{Failure, Success, Try}
 
 class RC210DownloadSpec extends Specification {
@@ -27,13 +28,19 @@ class RC210DownloadSpec extends Specification {
 object DownloadTest extends App {
   private val ports = RC210Download.listPorts
   private val maybePort: Option[ComPort] = ports.find(_.friendlyName.contains("FT232"))
-  private val comport = maybePort.get
+  private val comport: ComPort = maybePort.get
 
-  private val triedBytes: Try[Array[Byte]] = RC210Download.download(comport)
+  private val triedBytes: Try[Array[Int]] = RC210Download.download(comport)
   triedBytes match {
     case Failure(exception) =>
       exception.printStackTrace()
-    case Success(result) =>
-      println(s"Read ${result.length} bytes from $comport")
+    case Success(result: Array[Int]) =>
+      println(s"Read ${result.length} values from $comport")
+      val memory = new Memory(result, comport)
+
+      val logsDir = Paths.get("logs")
+      val path = Files.createTempFile(logsDir, "Mem", ".pickle")
+
+      memory.save(path)
   }
 }

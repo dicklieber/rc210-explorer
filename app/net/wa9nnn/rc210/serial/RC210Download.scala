@@ -2,14 +2,15 @@ package net.wa9nnn.rc210.serial
 
 import com.fazecast.jSerialComm.SerialPort
 import com.typesafe.scalalogging.LazyLogging
+import play.api.libs.json.{Json, OFormat}
 
 import java.io.{IOException, OutputStream}
-import java.nio.ByteBuffer
-import java.nio.file.{Files, OpenOption, Path, Paths, StandardOpenOption}
+import java.nio.file.StandardOpenOption._
+import java.nio.file.{Files, Path, Paths}
+import scala.collection.mutable
 import scala.io.BufferedSource
 import scala.util.matching.Regex
 import scala.util.{Try, Using}
-import java.nio.file.StandardOpenOption._
 
 case object RC210Download extends LazyLogging {
   val parser: Regex = """(\d+),(\d+)""".r
@@ -18,7 +19,7 @@ case object RC210Download extends LazyLogging {
     SerialPort.getCommPorts.map(ComPort(_)).toList
   }
 
-  def download(comPort: ComPort): Try[Array[Byte]] = {
+  def download(comPort: ComPort): Try[Array[Int]] = {
     val linesFile: Option[Path] = Option.when(logger.underlying.isTraceEnabled()) {
       val logsDir = Paths.get("logs")
       Files.createDirectories(logsDir)
@@ -37,12 +38,12 @@ case object RC210Download extends LazyLogging {
     serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0)
     val outputStream: OutputStream = serialPort.getOutputStream
 
-    val byteBuffer: ByteBuffer = ByteBuffer.allocate(5000 * Integer.BYTES )
-//    val byteBuffer: ByteBuffer = ByteBuffer.allocate(4096 * Integer.BYTES )
+    val result: mutable.ArrayBuilder[Int] = Array.newBuilder[Int]
+    //    val byteBuffer: ByteBuffer = ByteBuffer.allocate(4096 * Integer.BYTES )
 
     wakeup(outputStream)
     outputStream.write("1SendEram\r\n".getBytes)
-//    outputStream.write("1SendRTCEram\r\n".getBytes)
+    //    outputStream.write("1SendRTCEram\r\n".getBytes)
 
     Using(new BufferedSource(serialPort.getInputStream)) { source: BufferedSource =>
       source
@@ -53,13 +54,14 @@ case object RC210Download extends LazyLogging {
           try {
             //            logger.trace("line: {}", line)
             if (line.nonEmpty) {
-              val parser(index, value) = line
+              val parser(sIndex, value) = line
+              val index = sIndex.toInt
               logger.whenDebugEnabled {
-                if (index.toInt % 250 == 0) {
-                  logger.debug(index)
+                if (index % 250 == 0) {
+                  logger.debug(sIndex)
                 }
               }
-              byteBuffer.putInt(value.toInt)
+              result += value.toInt
               //              logger.trace("value: {}", value)
             }
             outputStream.write("\rOK\r\n".getBytes)
@@ -69,8 +71,7 @@ case object RC210Download extends LazyLogging {
               logger.error(s"Processing line: $line", e)
           }
         }
-      val result: Array[Byte] = byteBuffer.array()
-      result
+      result.result()
     }
   }
 
@@ -88,6 +89,7 @@ case object RC210Download extends LazyLogging {
 case class ComPort(descriptor: String, friendlyName: String)
 
 object ComPort {
+  implicit val comPortFmt: OFormat[ComPort] = Json.format[ComPort]
   def apply(serialPort: SerialPort): ComPort = {
     new ComPort(serialPort.getSystemPortPath, serialPort.getDescriptivePortName)
   }
