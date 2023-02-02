@@ -3,21 +3,25 @@ package net.wa9nnn.rc210.serial
 import org.specs2.mutable.Specification
 
 import java.nio.file.{Files, Paths}
+import scala.util.Try
 
 class MemorySpec extends Specification {
-  private val data = Array[Int](1, 2, 3)
-  private val comPort = ComPort("desc", "fred")
-  private val expected = Memory(data, comPort)
+  private val data = Array[Int](1, 2, 3, 0 ,255)
+  private val comment = "justg a comment"
+  private val expected = Memory(data, comment)
 
   "MemoryTest" should {
     "round trip" in {
       val logsDir = Paths.get("logs")
-      val path = Files.createTempFile(logsDir, "Memory-", ".json")
+      Files.createDirectories(logsDir)
+      val path = Files.createTempFile(logsDir, "Memory-", ".txt")
       expected.save(path)
 
-      val backAgain = Memory(path)
+      val backAgain: Try[Memory] = Memory(path)
 
-      backAgain.data must beEqualTo (expected.data)
+      val backAgainMemory = backAgain.get
+      backAgainMemory.data must beEqualTo (expected.data)
+      backAgainMemory.comment must beEqualTo (comment)
     }
 
     "get one int" in {
