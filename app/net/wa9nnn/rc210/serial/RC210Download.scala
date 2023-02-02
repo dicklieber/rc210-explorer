@@ -39,11 +39,9 @@ case object RC210Download extends LazyLogging {
     val outputStream: OutputStream = serialPort.getOutputStream
 
     val result: mutable.ArrayBuilder[Int] = Array.newBuilder[Int]
-    //    val byteBuffer: ByteBuffer = ByteBuffer.allocate(4096 * Integer.BYTES )
 
     wakeup(outputStream)
     outputStream.write("1SendEram\r\n".getBytes)
-    //    outputStream.write("1SendRTCEram\r\n".getBytes)
 
     Using(new BufferedSource(serialPort.getInputStream)) { source: BufferedSource =>
       source
@@ -62,7 +60,6 @@ case object RC210Download extends LazyLogging {
                 }
               }
               result += value.toInt
-              //              logger.trace("value: {}", value)
             }
             outputStream.write("\rOK\r\n".getBytes)
 

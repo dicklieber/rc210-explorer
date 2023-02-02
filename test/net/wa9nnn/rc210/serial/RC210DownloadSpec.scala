@@ -39,7 +39,7 @@ object DownloadTest extends App {
       val memory = new Memory(result, "Hello")
 
       val logsDir = Paths.get("logs")
-      val path = Files.createTempFile(logsDir, "Mem", ".pickle")
+      val path = Files.createTempFile(logsDir, "Mem", ".txt")
 
       memory.save(path)
   }
