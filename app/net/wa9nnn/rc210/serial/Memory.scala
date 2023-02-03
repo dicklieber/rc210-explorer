@@ -1,6 +1,6 @@
 package net.wa9nnn.rc210.serial
 
-import java.io.PrintWriter
+import java.io.{InputStream, PrintWriter}
 import java.nio.file.{Files, Path}
 import java.time.Instant
 import java.util.concurrent.atomic.AtomicInteger
@@ -45,7 +45,7 @@ case class Memory(data: Array[Int], comment: String = "", stamp: Instant = Insta
 }
 
 /**
- * Used to calculate wallking through [[Memory]]
+ * Used to calculate walking through [[Memory]]
  */
 class Slicer() {
   private val pos = new AtomicInteger()
@@ -70,7 +70,7 @@ case class MemorySlice(offset: Int = 0, length: Int = 0) {
 }
 
 object Memory {
-  // RC-210 downloqd data has lines like
+  // RC-210 download data has lines like
   val r: Regex = """(.*):\s+(.*)""".r
 
   /**
@@ -80,7 +80,11 @@ object Memory {
    * @return the data or an exception.
    */
   def apply(path: Path): Try[Memory] = {
-    Using(new BufferedSource(Files.newInputStream(path))) { bs =>
+    apply(Files.newInputStream(path))
+  }
+
+  def apply(inputStream: InputStream): Try[Memory] = {
+    Using(new BufferedSource(inputStream)) { bs =>
       var comment = ""
       var stamp = Instant.now()
       var size = -1

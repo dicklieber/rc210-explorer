@@ -1,9 +1,12 @@
-package net.wa9nnn.rc210.things
+package net.wa9nnn.rc210.command
 
+import net.wa9nnn.rc210.fixtures.WithMemory
 import net.wa9nnn.rc210.serial.MemorySlice
-import org.specs2.mutable.Specification
+import net.wa9nnn.rc210.command.Commands.Command
 
-class CommandsSpec extends Specification {
+import scala.util.Try
+
+class CommandsSpec extends WithMemory {
 
   "Commands" should {
     "first command" in {
@@ -18,5 +21,11 @@ class CommandsSpec extends Specification {
       first.command must beEqualTo (command)
       first.slice must beEqualTo (MemorySlice(4,6))
     }
+  }
+
+
+  "Parsing" >> {
+    val d: Map[Command, Try[ItemValue]] = Commands.parse(memory)
+    d must haveSize(2)
   }
 }
