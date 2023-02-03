@@ -22,3 +22,15 @@ private object DtmfParser extends Parser {
     }
   }
 }
+
+/**
+ * Parse ASCII values into a string.
+ */
+private object BooleanParser extends Parser {
+  def apply(slice: Array[Int]): Try[ItemValue] = {
+    Try {
+      assert(slice.length == 1)
+      ItemBoolean(slice.head != 0)
+    }
+  }
+}

@@ -29,7 +29,8 @@ object Commands extends LazyLogging {
    */
   val commands = List(
     CommandItem(DtmfParser, "SitePrefix", "*2108", slicer(4)),
-    CommandItem(DtmfParser, "TTPadTest", "*2093", slicer(6))
+    CommandItem(DtmfParser, "TTPadTest", "*2093", slicer(6)),
+    CommandItem(DtmfParser, "SayHours", "*2093", slicer(1)),
   )
 
   val commandMap: Map[Command, CommandItem] = commands
@@ -39,17 +40,3 @@ object Commands extends LazyLogging {
 }
 
 case class CommandValue(command: Command, data: Try[ItemValue])
-
-case class ItemString(value: String) extends ItemValue {
-  override def toString: String = value
-}
-
-case class ItemStrings(values: List[String]) extends ItemValue {
-  override def toString: String = values.mkString(" ")
-}
-
-case class ItemBoolean(value: Boolean) extends ItemValue {
-  override def toString: String = value.toString
-}
-
-trait ItemValue
