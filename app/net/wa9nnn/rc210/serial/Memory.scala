@@ -3,6 +3,7 @@ package net.wa9nnn.rc210.serial
 import java.io.PrintWriter
 import java.nio.file.{Files, Path}
 import java.time.Instant
+import java.util.concurrent.atomic.AtomicInteger
 import scala.io.BufferedSource
 import scala.util.matching.Regex
 import scala.util.{Try, Using}
@@ -15,14 +16,15 @@ import scala.util.{Try, Using}
  * @param stamp   when we did this.
  */
 case class Memory(data: Array[Int], comment: String = "", stamp: Instant = Instant.now()) {
-  def apply(index: Int): Int = {
-    data(index)
-  }
-
-  def apply(index: Int, length: Int): Array[Int] = data.slice(index, index + length)
+  /**
+   *
+   * @param slice part of [[Memory]] we are interested in.
+   * @return requested [[Array]].
+   */
+  def apply(slice: MemorySlice): Array[Int] = data.slice(slice.offset, slice.until)
 
   /**
-   * File looks ;ike:
+   * File looks like:
    * comment: comment\n
    * stamp: ISO-8601\n as ISO-860
    * size: data.length \n
@@ -42,7 +44,33 @@ case class Memory(data: Array[Int], comment: String = "", stamp: Instant = Insta
   }
 }
 
+/**
+ * Used to calculate wallking through [[Memory]]
+ */
+class Slicer() {
+  private val pos = new AtomicInteger()
+
+  def apply(length: Int): MemorySlice = {
+    MemorySlice(pos.getAndAdd(length), length)
+  }
+}
+
+/**
+ * Specifies a part (slice) of memory.
+ *
+ * @param offset in [[Memory]].
+ * @param length how much to slice.
+ */
+case class MemorySlice(offset: Int = 0, length: Int = 0) {
+  def until: Int = offset + length
+
+  def apply(requested: Int): MemorySlice = {
+    MemorySlice(offset + length, requested)
+  }
+}
+
 object Memory {
+  // RC-210 downloqd data has lines like
   val r: Regex = """(.*):\s+(.*)""".r
 
   /**

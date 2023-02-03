@@ -9,8 +9,8 @@ class FunctionsSpec extends Specification {
   "Functions" should {
     "get1" in {
       val function: FunctionNode = functions.get(NodeId("f3")).get
-      function.nodeId must beEqualTo (1)
-      function.description must beEqualTo ("Port 1 CTCSS Access")
+      function.nodeId.number must beEqualTo (3)
+      function.description must beEqualTo ("Port 3 CTCSS Access")
     }
 //    "get2" in {
 //      val function = functions.get(2).get

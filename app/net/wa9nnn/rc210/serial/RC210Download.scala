@@ -47,6 +47,7 @@ case object RC210Download extends LazyLogging {
       source
         .getLines()
         .takeWhile(_.head != 'C')
+        .filterNot(_.startsWith("-"))
         .foreach { line =>
           linesFile.foreach(Files.writeString(_, line + "\n", CREATE, WRITE, APPEND))
           try {
