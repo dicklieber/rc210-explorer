@@ -28,5 +28,9 @@ object CommandId {
     new CommandId(base, Option(port), Option(sub))
   }
 
+  def apply(base: String, port: Int): CommandId = {
+    new CommandId(base, Option(port))
+  }
+
   implicit val cmdIdFmt: OFormat[CommandId] = Json.format[CommandId]
 }

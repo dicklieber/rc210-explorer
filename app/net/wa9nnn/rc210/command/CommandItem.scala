@@ -66,7 +66,7 @@ trait CommandSpecBase extends LazyLogging {
  * @param command   base command number
  * @param slicePos  where this item lives in [[Memory]].
  */
-case class DTMFSpec(override val name: String, override val command: String, override val slicePos: SlicePos) extends CommandSpecBase with LazyLogging {
+case class DTMF(override val name: String, override val command: String, override val slicePos: SlicePos) extends CommandSpecBase with LazyLogging {
   override def parse(slice: Slice): ParseResult = {
     val triedValue: Try[String] = DtmfParser(slice)
 
@@ -95,6 +95,21 @@ case class BoolSpec(override val name: String, command: String, offset: Int) ext
   }
 }
 
+/**
+ * An item consisting of a single boolean value.
+ *
+ * @param command base command number
+ * @param offset  into Memory
+ */
+
+case class IntValue(override val name: String, command: String, offset: Int) extends CommandSpecBase with LazyLogging {
+  override val slicePos: SlicePos = SlicePos(offset)
+
+  def parse(slice: Slice): ParseResult = {
+    ParseResult(slice, Seq(ItemValue(CommandId(command), (slice.head.toString))))
+  }
+}
+
 case class Hangtime(offset: Int) extends CommandSpecBase with LazyLogging {
   override val slicePos: SlicePos = SlicePos(offset, 9)
   override val name: String = "Hangtime"
@@ -102,11 +117,27 @@ case class Hangtime(offset: Int) extends CommandSpecBase with LazyLogging {
 
   def parse(slice: Slice): ParseResult = {
     val iterator = slice.iterator
-   val itemValues =  for {
+    val itemValues = for {
       sub <- 0 until 3
       port <- 0 until 3
     } yield {
       ItemValue(CommandId(command, port, sub), iterator.next().toString)
+    }
+
+    ParseResult(slice, itemValues)
+  }
+
+}
+
+case class PortInts(override val name: String, command: String, offset: Int) extends CommandSpecBase with LazyLogging {
+  override val slicePos: SlicePos = SlicePos(offset, 9)
+
+  def parse(slice: Slice): ParseResult = {
+    val iterator = slice.iterator
+    val itemValues = for {
+      port <- 0 until 3
+    } yield {
+      ItemValue(CommandId(command, port), iterator.next().toString)
     }
 
     ParseResult(slice, itemValues)

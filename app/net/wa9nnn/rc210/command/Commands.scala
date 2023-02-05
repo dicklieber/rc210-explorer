@@ -9,17 +9,13 @@ import scala.math.Ordered.orderingToOrdered
 object Commands extends LazyLogging {
 
   val commandSpecs: Seq[CommandSpecBase] = Seq(
-    DTMFSpec("SitePrefix", "*2108", SlicePos(0, 4)),
-    DTMFSpec("TTPadTest", "*2093", SlicePos(5, 6)),
+    DTMF("SitePrefix", "*2108", SlicePos(0, 4)),
+    DTMF("TTPadTest", "*2093", SlicePos(5, 6)),
     BoolSpec("SayHours", "*5104", 10),
     Hangtime(11),
+    PortInts("Initial ID Timer", "*1002", 12),
+    PortInts("Pending ID Timer", "*1003", 12),
   )
-
-  //    CommandItem(DtmfParser, "SitePrefix", CommandId("*2108"), Slice(0,4),
-  //    CommandItem(DtmfParser, "TTPadTest", CommandId("*2093"), Slice(5,6)),
-  //    CommandItem(BooleanParser, "SayHours", CommandId("*5104"), slicer(1)),
-  //    CommandItem(DtmfParser, "HangTime1", "*1000", slicer(3)),
-
 
   /**
    * Build RC-210 State i.e. [[ItemValue]]s from a [[Memory]].
@@ -38,7 +34,6 @@ object Commands extends LazyLogging {
     }).toMap
 
   }
-
 
   type Command = String
 }
