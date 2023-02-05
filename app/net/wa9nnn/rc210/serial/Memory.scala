@@ -79,6 +79,10 @@ case class Slice(data: Seq[Int], slicePos: SlicePos) {
     s"$slicePos => ${data.mkString(",")}"
   }
 
+  def iterator: Iterator[Int] = {
+    data.iterator
+  }
+
   def head: Int = {
     data.head
   }
@@ -87,14 +91,16 @@ case class Slice(data: Seq[Int], slicePos: SlicePos) {
 object Slice {
   /**
    * Handy for unit tests.
+   *
    * @param csv e.g. 2,4,42
    * @return
    */
   def apply(csv: String): Slice = {
     val seq: Seq[Int] = csv
       .split(',')
-      .map{s: String =>
-        s.trim.toInt}.toIndexedSeq
+      .map { s: String =>
+        s.trim.toInt
+      }.toIndexedSeq
     new Slice(seq,
       SlicePos())
   }

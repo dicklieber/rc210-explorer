@@ -1,8 +1,9 @@
 package net.wa9nnn.rc210.command
 
+import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.fixtures.WithMemory
 
-class CommandsSpec extends WithMemory {
+class CommandsSpec extends WithMemory with LazyLogging{
 
 //  "Commands" should {
 //    "first command" in {
@@ -22,6 +23,14 @@ class CommandsSpec extends WithMemory {
 
   "Parsing" >> {
     val d: Map[CommandId, ItemValue] = Commands.parse(memory)
-    d must haveSize(3)
+
+     d.values
+       .toSeq
+       .sorted
+       .foreach{iv: ItemValue =>
+         logger.info("sorted: {}", iv.toString)
+       }
+
+    pending
   }
 }

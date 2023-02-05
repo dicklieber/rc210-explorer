@@ -4,12 +4,15 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 import play.api.libs.json.{Json, OFormat}
 
+import scala.math.Ordered.orderingToOrdered
+
 object Commands extends LazyLogging {
 
   val commandSpecs: Seq[CommandSpecBase] = Seq(
     DTMFSpec("SitePrefix", "*2108", SlicePos(0, 4)),
     DTMFSpec("TTPadTest", "*2093", SlicePos(5, 6)),
-    BoolSpec("SayHours", "*5104", 10)
+    BoolSpec("SayHours", "*5104", 10),
+    Hangtime(11),
   )
 
   //    CommandItem(DtmfParser, "SitePrefix", CommandId("*2108"), Slice(0,4),
@@ -19,7 +22,7 @@ object Commands extends LazyLogging {
 
 
   /**
-   * Build RC-210 State from a [[Memory]].
+   * Build RC-210 State i.e. [[ItemValue]]s from a [[Memory]].
    * This extracts all the [[ItemValue]]s from a [[Memory]].
    *
    * @param memory data freom an RC=210.
@@ -38,19 +41,5 @@ object Commands extends LazyLogging {
 
 
   type Command = String
-
 }
 
-
-case class CommandId(base: String, port: Option[Int] = None, sub: Option[Int] = None) {
-  override def toString: String = {
-    val sPort = port.map(p => s" port: $p").getOrElse("")
-    val sSub = sub.map(s => s" sub: $s").getOrElse("")
-
-    s"$base$sPort$sSub"
-  }
-}
-
-object CommandId {
-  implicit val cmdIdFmt: OFormat[CommandId] = Json.format[CommandId]
-}

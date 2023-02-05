@@ -24,13 +24,15 @@ import play.api.libs.json.{Json, OFormat}
  * @param value     a parsed or entered.
  * @param error     if true or false handle as a boolean otherwise edit as a string.
  */
-case class ItemValue(commandId: CommandId, value: String, error: Option[ItemProblem] = None) {
+case class ItemValue(commandId: CommandId, value: String, error: Option[ItemProblem] = None) extends Ordered[ItemValue] {
 
   override def toString: String = {
     val sProblem = error.map(problem => s" error: $problem").getOrElse("")
 
     s"commandId: $commandId value: $value $sProblem"
   }
+
+  override def compare(that: ItemValue): Int = commandId compareTo(that.commandId)
 }
 
 object ItemValue {

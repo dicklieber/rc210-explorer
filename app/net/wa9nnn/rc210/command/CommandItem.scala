@@ -48,7 +48,7 @@ trait CommandSpecBase extends LazyLogging {
       logger.trace(s"slicePos:\t$slicePos")
       logger.trace(s"slice:\t\t$slice")
       logger.trace("Items:")
-      value.values.foreach{itemValue =>
+      value.values.foreach { itemValue =>
         logger.trace(s"\t\t\t$itemValue")
       }
     }
@@ -93,6 +93,25 @@ case class BoolSpec(override val name: String, command: String, offset: Int) ext
   def parse(slice: Slice): ParseResult = {
     ParseResult(slice, Seq(ItemValue(CommandId(command), (slice.head != 0).toString)))
   }
+}
+
+case class Hangtime(offset: Int) extends CommandSpecBase with LazyLogging {
+  override val slicePos: SlicePos = SlicePos(offset, 9)
+  override val name: String = "Hangtime"
+  override val command: String = "*1000"
+
+  def parse(slice: Slice): ParseResult = {
+    val iterator = slice.iterator
+   val itemValues =  for {
+      sub <- 0 until 3
+      port <- 0 until 3
+    } yield {
+      ItemValue(CommandId(command, port, sub), iterator.next().toString)
+    }
+
+    ParseResult(slice, itemValues)
+  }
+
 }
 
 case class ParseResult(slice: Slice, values: Seq[ItemValue]) {
