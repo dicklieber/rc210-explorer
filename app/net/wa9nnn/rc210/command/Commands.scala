@@ -1,42 +1,56 @@
 package net.wa9nnn.rc210.command
 
-import com.fasterxml.jackson.module.scala.deser.overrides.TrieMap
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.serial.{Memory, MemorySlice, Slicer}
-import net.wa9nnn.rc210.command.Commands.Command
-
-import java.nio.file.Paths
-import scala.util.{Failure, Success, Try}
+import net.wa9nnn.rc210.serial.{Memory, SlicePos}
+import play.api.libs.json.{Json, OFormat}
 
 object Commands extends LazyLogging {
-  /**
-   * Build RC-210 State
-   * This extracts all the [[CommandValue]]s from a [[Memory]].
-   *
-   * @param memory data freom an RC=210.
-   * @return
-   */
-  def parse(memory: Memory): Map[Command, Try[ItemValue]] = {
-    commands.map { ci: CommandItem =>
-      ci.command -> ci.parse(memory)
-    }.toMap
-  }
 
-  type Command = String
-  val slicer = new Slicer()
-  /**
-   * Specify each [[CommandItem]] in order as returned in [[Memory]].
-   */
-  val commands = List(
-    CommandItem(DtmfParser, "SitePrefix", "*2108", slicer(4)),
-    CommandItem(DtmfParser, "TTPadTest", "*2093", slicer(6)),
-    CommandItem(DtmfParser, "SayHours", "*2093", slicer(1)),
+  val commandSpecs: Seq[CommandSpecBase] = Seq(
+    DTMFSpec("SitePrefix", "*2108", SlicePos(0, 4)),
+    DTMFSpec("TTPadTest", "*2093", SlicePos(5, 6)),
+    BoolSpec("SayHours", "*5104", 10)
   )
 
-  val commandMap: Map[Command, CommandItem] = commands
-    .map(c => c.command -> c)
-    .toMap
-  val valueMap = new TrieMap[Command, CommandValue]() // mutable
+  //    CommandItem(DtmfParser, "SitePrefix", CommandId("*2108"), Slice(0,4),
+  //    CommandItem(DtmfParser, "TTPadTest", CommandId("*2093"), Slice(5,6)),
+  //    CommandItem(BooleanParser, "SayHours", CommandId("*5104"), slicer(1)),
+  //    CommandItem(DtmfParser, "HangTime1", "*1000", slicer(3)),
+
+
+  /**
+   * Build RC-210 State from a [[Memory]].
+   * This extracts all the [[ItemValue]]s from a [[Memory]].
+   *
+   * @param memory data freom an RC=210.
+   * @return map of all parsaed values.
+   */
+  def parse(memory: Memory): Map[CommandId, ItemValue] = {
+    (for {
+      commandSpec: CommandSpecBase <- commandSpecs
+      pr: ParseResult = commandSpec.parse(memory)
+      itemValue <- pr.values
+    } yield {
+      itemValue.commandId -> itemValue
+    }).toMap
+
+  }
+
+
+  type Command = String
+
 }
 
-case class CommandValue(command: Command, data: Try[ItemValue])
+
+case class CommandId(base: String, port: Option[Int] = None, sub: Option[Int] = None) {
+  override def toString: String = {
+    val sPort = port.map(p => s" port: $p").getOrElse("")
+    val sSub = sub.map(s => s" sub: $s").getOrElse("")
+
+    s"$base$sPort$sSub"
+  }
+}
+
+object CommandId {
+  implicit val cmdIdFmt: OFormat[CommandId] = Json.format[CommandId]
+}

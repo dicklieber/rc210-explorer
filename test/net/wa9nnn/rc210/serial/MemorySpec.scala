@@ -25,15 +25,15 @@ class MemorySpec extends Specification {
     }
 
     "get one int" in {
-      val array: Array[Int] = memory(MemorySlice(2, 1))
-      val expected: Array[Int] = Array(3)
-      array must beEqualTo (expected)
+      val slice: Slice = memory(SlicePos(2, 1))
+      val expected: Seq[Int] = Seq(3)
+      slice.data must beEqualTo (expected)
     }
     "slice" in {
-      val array: Array[Int] = memory(MemorySlice(1, 2))
-      array must haveLength(2)
-      array.head must beEqualTo (2)
-      array.last must beEqualTo (3)
+      val slice: Slice = memory(SlicePos(1, 2))
+      slice.data must haveLength(2)
+      slice.head must beEqualTo (2)
+      slice.data.last must beEqualTo (3)
     }
 
   }

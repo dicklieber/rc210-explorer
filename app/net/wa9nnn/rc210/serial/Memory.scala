@@ -1,9 +1,10 @@
 package net.wa9nnn.rc210.serial
 
+import play.api.libs.json.{Json, OFormat}
+
 import java.io.{InputStream, PrintWriter}
 import java.nio.file.{Files, Path}
 import java.time.Instant
-import java.util.concurrent.atomic.AtomicInteger
 import scala.io.BufferedSource
 import scala.util.matching.Regex
 import scala.util.{Try, Using}
@@ -21,7 +22,9 @@ case class Memory(data: Array[Int], comment: String = "", stamp: Instant = Insta
    * @param slice part of [[Memory]] we are interested in.
    * @return requested [[Array]].
    */
-  def apply(slice: MemorySlice): Array[Int] = data.slice(slice.offset, slice.until)
+  def apply(slice: SlicePos): Slice = {
+    Slice(data.slice(slice.offset, slice.until).toIndexedSeq, slice)
+  }
 
   /**
    * File looks like:
@@ -44,29 +47,59 @@ case class Memory(data: Array[Int], comment: String = "", stamp: Instant = Insta
   }
 }
 
-/**
- * Used to calculate walking through [[Memory]]
- */
-class Slicer() {
-  private val pos = new AtomicInteger()
 
-  def apply(length: Int): MemorySlice = {
-    MemorySlice(pos.getAndAdd(length), length)
+/**
+ * Specifies a position and length in [[Memory.data]]
+ *
+ * @param offset in [[Memory]].
+ * @param length how much to slice. 0
+ */
+case class SlicePos(offset: Int = 0, length: Int = 1) {
+  def until: Int = offset + length
+
+  def apply(requested: Int): SlicePos = {
+    SlicePos(offset + length, requested)
   }
+
+  override def toString: String = s"$offset to $until"
+}
+
+object SlicePos {
+  implicit val fmtSlicePos: OFormat[SlicePos] = Json.format[SlicePos]
 }
 
 /**
- * Specifies a part (slice) of memory.
+ * result from applying a [[SlicePos]] to [[Memory]]
  *
- * @param offset in [[Memory]].
- * @param length how much to slice.
+ * @param data     from the pos in [[Memory]]
+ * @param slicePos that was requested.
  */
-case class MemorySlice(offset: Int = 0, length: Int = 0) {
-  def until: Int = offset + length
-
-  def apply(requested: Int): MemorySlice = {
-    MemorySlice(offset + length, requested)
+case class Slice(data: Seq[Int], slicePos: SlicePos) {
+  override def toString: String = {
+    s"$slicePos => ${data.mkString(",")}"
   }
+
+  def head: Int = {
+    data.head
+  }
+}
+
+object Slice {
+  /**
+   * Handy for unit tests.
+   * @param csv e.g. 2,4,42
+   * @return
+   */
+  def apply(csv: String): Slice = {
+    val seq: Seq[Int] = csv
+      .split(',')
+      .map{s: String =>
+        s.trim.toInt}.toIndexedSeq
+    new Slice(seq,
+      SlicePos())
+  }
+
+  implicit val fmtSlice: OFormat[Slice] = Json.format[Slice]
 }
 
 object Memory {
