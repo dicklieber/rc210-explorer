@@ -9,12 +9,15 @@ import scala.math.Ordered.orderingToOrdered
 object Commands extends LazyLogging {
 
   val commandSpecs: Seq[CommandSpecBase] = Seq(
-    DTMF("SitePrefix", "*2108", SlicePos(0, 4)),
-    DTMF("TTPadTest", "*2093", SlicePos(5, 6)),
-    BoolSpec("SayHours", "*5104", 10),
+    DTMF("Site Prefix", "*2108", SlicePos(0, 4)),
+    DTMF("TT Pad Test", "*2093", SlicePos(5, 6)),
+    BoolSpec("Say Hours", "*5104", 10),
     Hangtime(11),
-    PortInts("Initial ID Timer", "*1002", 12),
-    PortInts("Pending ID Timer", "*1003", 12),
+    PortInts("Initial ID Timer", "*1002", 20),
+    PortInts("Pending ID Timer", "*1003", 23),
+    PortInts("Tx Enable", "111", 26), // becomes p111v p=port v bool as 0 or 1
+    PortInts("DTMF Covertone", "113", 29),
+    PortInts16("DTMF Mute Timer", "*1006", 32),
   )
 
   /**

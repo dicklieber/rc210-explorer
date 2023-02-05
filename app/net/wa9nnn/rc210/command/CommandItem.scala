@@ -123,14 +123,12 @@ case class Hangtime(offset: Int) extends CommandSpecBase with LazyLogging {
     } yield {
       ItemValue(CommandId(command, port, sub), iterator.next().toString)
     }
-
     ParseResult(slice, itemValues)
   }
-
 }
 
 case class PortInts(override val name: String, command: String, offset: Int) extends CommandSpecBase with LazyLogging {
-  override val slicePos: SlicePos = SlicePos(offset, 9)
+  override val slicePos: SlicePos = SlicePos(offset, 3)
 
   def parse(slice: Slice): ParseResult = {
     val iterator = slice.iterator
@@ -139,10 +137,22 @@ case class PortInts(override val name: String, command: String, offset: Int) ext
     } yield {
       ItemValue(CommandId(command, port), iterator.next().toString)
     }
-
     ParseResult(slice, itemValues)
   }
+}
+case class PortInts16(override val name: String, command: String, offset: Int) extends CommandSpecBase with LazyLogging {
+  override val slicePos: SlicePos = SlicePos(offset, 6)
 
+  def parse(slice: Slice): ParseResult = {
+    val iterator = slice.iterator
+    val itemValues = for {
+      port <- 0 until 3
+    } yield {
+      val number = iterator.next() + iterator.next() * 256
+      ItemValue(CommandId(command, port), number.toString)
+    }
+    ParseResult(slice, itemValues)
+  }
 }
 
 case class ParseResult(slice: Slice, values: Seq[ItemValue]) {
