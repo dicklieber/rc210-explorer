@@ -18,6 +18,18 @@ object Commands extends LazyLogging {
     PortInts("Tx Enable", "111", 26), // becomes p111v p=port v bool as 0 or 1
     PortInts("DTMF Covertone", "113", 29),
     PortInts16("DTMF Mute Timer", "*1006", 32),
+    PortInts("Kerchunk ON/OFF", "115", 38),
+    PortInts16("Kerchunk Timer", "*1008", 41),
+    IntValue("Mute Digit Select", "*2090", 47),
+    PortInts("CTCSS During ID", "*2089", 48),
+    PortInts("CTCSS CT Control", "*2088", 51),
+    IntValue("TimeoutPorts", "*2051", 54),
+    IntValue16("Speech Delay", "*1019", 51),
+    PortInts("CTCSS Encode Polarity", "*1021", 57),
+    PortInts16("Guest Macro Range", "*4009", 60),
+    PortInts("DTMF COS Control", "22", 67),
+    PortInts("DTMF Enable", "116", 70),
+    PortInts("DTMF Require Tone", "117", 73),
   )
 
   /**

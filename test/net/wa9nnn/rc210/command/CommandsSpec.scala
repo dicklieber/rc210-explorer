@@ -24,13 +24,13 @@ class CommandsSpec extends WithMemory with LazyLogging{
   "Parsing" >> {
     val d: Map[CommandId, ItemValue] = Commands.parse(memory)
 
-    logger.info(":::::::: sorted Result ::::::::")
-     d.values
-       .toSeq
-       .sorted
-       .foreach{iv: ItemValue =>
-         logger.info("sorted: {}", iv.toString)
-       }
+//    logger.info(":::::::: sorted Result ::::::::")
+//     d.values
+//       .toSeq
+//       .sorted
+//       .foreach{iv: ItemValue =>
+//         logger.info("sorted: {}", iv.toString)
+//       }
 
     pending
   }

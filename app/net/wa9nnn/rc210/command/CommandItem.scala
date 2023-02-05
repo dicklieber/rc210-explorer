@@ -109,6 +109,21 @@ case class IntValue(override val name: String, command: String, offset: Int) ext
     ParseResult(slice, Seq(ItemValue(CommandId(command), (slice.head.toString))))
   }
 }
+/**
+ * An item consisting of a single boolean value.
+ *
+ * @param command base command number
+ * @param offset  into Memory
+ */
+
+case class IntValue16(override val name: String, command: String, offset: Int) extends CommandSpecBase with LazyLogging {
+  override val slicePos: SlicePos = SlicePos(offset, 2)
+
+  def parse(slice: Slice): ParseResult = {
+    val value: Int = slice.head + slice.data(1) * 256
+    ParseResult(slice, Seq(ItemValue(CommandId(command), (value.toString))))
+  }
+}
 
 case class Hangtime(offset: Int) extends CommandSpecBase with LazyLogging {
   override val slicePos: SlicePos = SlicePos(offset, 9)
@@ -147,6 +162,20 @@ case class PortInts16(override val name: String, command: String, offset: Int) e
     val iterator = slice.iterator
     val itemValues = for {
       port <- 0 until 3
+    } yield {
+      val number = iterator.next() + iterator.next() * 256
+      ItemValue(CommandId(command, port), number.toString)
+    }
+    ParseResult(slice, itemValues)
+  }
+}
+case class SubSet(override val name: String, command: String, offset: Int) extends CommandSpecBase with LazyLogging {
+  override val slicePos: SlicePos = SlicePos(offset, 4)
+
+  def parse(slice: Slice): ParseResult = {
+    val iterator = slice.iterator
+    val itemValues = for {
+      port <- 0 until 2
     } yield {
       val number = iterator.next() + iterator.next() * 256
       ItemValue(CommandId(command, port), number.toString)
