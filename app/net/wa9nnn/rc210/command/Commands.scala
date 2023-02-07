@@ -42,7 +42,7 @@ object Commands extends LazyLogging {
   def parse(memory: Memory): Map[CommandId, ItemValue] = {
     (for {
       commandSpec: CommandSpecBase <- commandSpecs
-      pr: ParseResult = commandSpec.parse(memory)
+      pr: ParseSliceResult = commandSpec.parse(memory)
       itemValue <- pr.values
     } yield {
       itemValue.commandId -> itemValue

@@ -7,7 +7,7 @@ class CommandIdSpec extends Specification {
     "tostring base" >> {
       val commandId: CommandId = CommandId("*123")
       val s = commandId.toString
-      s must beEqualTo("base: *123")
+      s must beEqualTo("*123")
     }
   }
 }

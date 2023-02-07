@@ -74,7 +74,7 @@ object SlicePos {
  * @param data     from the pos in [[Memory]]
  * @param slicePos that was requested.
  */
-case class Slice(data: Seq[Int], slicePos: SlicePos) {
+case class Slice(data: Seq[Int] = Seq.empty, slicePos: SlicePos = SlicePos()) {
   override def toString: String = {
     s"$slicePos => ${data.mkString(",")}"
   }
