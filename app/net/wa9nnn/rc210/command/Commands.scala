@@ -2,12 +2,10 @@ package net.wa9nnn.rc210.command
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
-import play.api.libs.json.{Json, OFormat}
-
-import scala.math.Ordered.orderingToOrdered
 
 object Commands extends LazyLogging {
 
+/*
   val commandSpecs: Seq[CommandSpecBase] = Seq(
     DTMF("Site Prefix", "*2108", SlicePos(0, 4)),
     DTMF("TT Pad Test", "*2093", SlicePos(5, 6)),
@@ -31,24 +29,25 @@ object Commands extends LazyLogging {
     PortInts("DTMF Enable", "116", 70),
     PortInts("DTMF Require Tone", "117", 73),
   )
+*/
 
-  /**
-   * Build RC-210 State i.e. [[ItemValue]]s from a [[Memory]].
-   * This extracts all the [[ItemValue]]s from a [[Memory]].
-   *
-   * @param memory data freom an RC=210.
-   * @return map of all parsaed values.
-   */
-  def parse(memory: Memory): Map[CommandId, ItemValue] = {
-    (for {
-      commandSpec: CommandSpecBase <- commandSpecs
-      pr: ParseSliceResult = commandSpec.parse(memory)
-      itemValue <- pr.values
-    } yield {
-      itemValue.commandId -> itemValue
-    }).toMap
-
-  }
+//  /**
+//   * Build RC-210 State i.e. [[ItemValue]]s from a [[Memory]].
+//   * This extracts all the [[ItemValue]]s from a [[Memory]].
+//   *
+//   * @param memory data freom an RC=210.
+//   * @return map of all parsaed values.
+//   */
+//  def parse(memory: Memory): Map[CommandId, ItemValue] = {
+//    (for {
+//      commandSpec: CommandSpecBase <- commandSpecs
+//      pr: ParseSliceResult = commandSpec.parse(memory)
+//      itemValue <- pr.values
+//    } yield {
+//      itemValue.commandId -> itemValue
+//    }).toMap
+//
+//  }
 
   type Command = String
 }

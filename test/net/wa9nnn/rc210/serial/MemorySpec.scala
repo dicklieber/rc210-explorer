@@ -8,7 +8,7 @@ import scala.util.Try
 class MemorySpec extends Specification {
   private val data = Array[Int](1, 2, 3, 0 ,255)
   private val comment = "justg a comment"
-  private val memory = Memory(data, comment)
+  private val memory = MemoryArray(data, comment)
 
   "MemoryTest" should {
     "round trip" in {
@@ -17,7 +17,7 @@ class MemorySpec extends Specification {
       val path = Files.createTempFile(logsDir, "Memory-", ".txt")
       memory.save(path)
 
-      val backAgain: Try[Memory] = Memory(path)
+      val backAgain: Try[MemoryArray] = MemoryArray(path)
 
       val backAgainMemory = backAgain.get
       backAgainMemory.data must beEqualTo (memory.data)

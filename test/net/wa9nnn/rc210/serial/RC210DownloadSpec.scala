@@ -36,7 +36,7 @@ object DownloadTest extends App {
       exception.printStackTrace()
     case Success(result: Array[Int]) =>
       println(s"Read ${result.length} values from $comport")
-      val memory = new Memory(result, "Hello")
+      val memory = new MemoryArray(result, "Hello")
 
       val logsDir = Paths.get("logs")
       val path = Files.createTempFile(logsDir, "Mem", ".txt")

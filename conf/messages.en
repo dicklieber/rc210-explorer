@@ -1,0 +1,5 @@
+# https://www.playframework.com/documentation/latest/ScalaI18N
+
+constraint.required=Required
+toolarge= {0} is too long, max: {1}
+tooLong={0} is to long, max (1)!

@@ -16,7 +16,7 @@ import scala.util.{Try, Using}
  * @param comment Anything.
  * @param stamp   when we did this.
  */
-case class Memory(data: Array[Int], comment: String = "", stamp: Instant = Instant.now()) {
+case class MemoryArray(data: Array[Int], comment: String = "", stamp: Instant = Instant.now()) extends Memory {
   /**
    *
    * @param slice part of [[Memory]] we are interested in.
@@ -49,7 +49,7 @@ case class Memory(data: Array[Int], comment: String = "", stamp: Instant = Insta
 
 
 /**
- * Specifies a position and length in [[Memory.data]]
+ * Specifies a position and length in [[Memory]]
  *
  * @param offset in [[Memory]].
  * @param length how much to slice. 0
@@ -86,6 +86,8 @@ case class Slice(data: Seq[Int] = Seq.empty, slicePos: SlicePos = SlicePos()) {
   def head: Int = {
     data.head
   }
+
+
 }
 
 object Slice {
@@ -108,21 +110,21 @@ object Slice {
   implicit val fmtSlice: OFormat[Slice] = Json.format[Slice]
 }
 
-object Memory {
+object MemoryArray {
   // RC-210 download data has lines like
   val r: Regex = """(.*):\s+(.*)""".r
 
   /**
-   * Read from a file produced by [[Memory.save()]].
+   * Read from a file produced by [[MemoryArray.save()]].
    *
    * @param path where to read from.
    * @return the data or an exception.
    */
-  def apply(path: Path): Try[Memory] = {
+  def apply(path: Path): Try[MemoryArray] = {
     apply(Files.newInputStream(path))
   }
 
-  def apply(inputStream: InputStream): Try[Memory] = {
+  def apply(inputStream: InputStream): Try[MemoryArray] = {
     Using(new BufferedSource(inputStream)) { bs =>
       var comment = ""
       var stamp = Instant.now()
@@ -139,8 +141,11 @@ object Memory {
         case line =>
           builder += line.toInt
       }
-      Memory(builder.result(), comment, stamp)
+      MemoryArray(builder.result(), comment, stamp)
     }
   }
+}
 
+trait Memory {
+  def apply(slice: SlicePos): Slice
 }

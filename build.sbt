@@ -43,7 +43,7 @@ val specs2Version = "4.19.2"
 
 libraryDependencies ++= Seq(
   guice,
-  "net.wa9nnn" %% "util" % "0.1.11",
+  "net.wa9nnn" %% "util" % "0.1.12-SNAPSHOT",
   "org.specs2" %% "specs2-core" % specs2Version % Test,
   "org.specs2" %% "specs2-junit" % specs2Version % Test,
 

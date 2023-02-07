@@ -21,8 +21,10 @@ class CommandsSpec extends WithMemory with LazyLogging{
 //  }
 
 
+/*
   "Parsing" >> {
     val d: Map[CommandId, ItemValue] = Commands.parse(memory)
+*/
 
 //    logger.info(":::::::: sorted Result ::::::::")
 //     d.values
@@ -33,5 +35,5 @@ class CommandsSpec extends WithMemory with LazyLogging{
 //       }
 
     pending
-  }
+//  }
 }
