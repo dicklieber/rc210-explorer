@@ -8,8 +8,10 @@ public enum Command {
 	SitePrefix("*2108",	4,	ValueType.dtmf,	3,	Locus.misc),
     TTPadTest(  "*2093",	6,	ValueType.dtmf,	5,	Locus.misc),
     SayHours(   "*5104",	1,	ValueType.bool,	5,	Locus.misc),
-    Hangtime(   "*1000",	11,	ValueType.hangTime,	255,	Locus.portOut),
-    IIDMinutes(   "*1002",	20,	ValueType.portInt8,	255,	Locus.portOut),
+    Hangtime(   "*1000",	9,	ValueType.hangTime,	255,	Locus.portOut),
+    IIDMinutes(   "*1002",	3,	ValueType.portInt8,	255,	Locus.portOut),
+    PIDMinutes(   "*1003",	3,	ValueType.portInt8,	255,	Locus.portOut),
+    TxEnable(   "111",	3,	ValueType.portBool,	1,	Locus.portOut),
 
 
     ;

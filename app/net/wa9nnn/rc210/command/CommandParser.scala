@@ -1,6 +1,7 @@
 package net.wa9nnn.rc210.command
 
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.command.ItemValue.Values
 import net.wa9nnn.rc210.command.Parsers.ParsedValues
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 
@@ -23,6 +24,10 @@ object CommandParser extends LazyLogging {
         HangTimeParser(commandId, slice)
       case ValueType.portInt8 =>
         PortInt8Parser(commandId, slice)
+      case ValueType.portBool =>
+        PortInt8Parser(commandId, slice).map { iv =>
+          iv.copy(values = iv.values.map { v: String => (v != "0").toString })
+        }
 
       //      case ValueType.int16 =>
       //      case ValueType.hangTime =>

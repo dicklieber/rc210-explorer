@@ -7,5 +7,6 @@ public enum ValueType {
     int16,
     hangTime,
     portInt8,
-    range
+    range,
+    portBool;
 }
