@@ -1,16 +1,16 @@
 package net.wa9nnn.rc210.command;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 /*
 Note .toString is the i18n base key
  */
-public enum CommandId {
+public enum Command {
     //@formatter:off
 	SitePrefix("*2108",	4,	ValueType.dtmf,	3,	Locus.misc),
     TTPadTest(  "*2093",	6,	ValueType.dtmf,	5,	Locus.misc),
     SayHours(   "*5104",	1,	ValueType.bool,	5,	Locus.misc),
-    Hangtime(   "*1000",	9,	ValueType.hangTime,	5,	Locus.portOut)
+    Hangtime(   "*1000",	11,	ValueType.hangTime,	255,	Locus.portOut),
+
+
     ;
     //@formatter:on
 
@@ -22,7 +22,7 @@ public enum CommandId {
     private final Locus locus;
 
 
-    CommandId(String base, int memoryLength, ValueType valueType, int max, Locus locus) {
+    Command(String base, int memoryLength, ValueType valueType, int max, Locus locus) {
         this.base = base;
         this.memoryLength = memoryLength;
         this.memoryOffset = MemoryPos.ai.getAndAdd(memoryLength);

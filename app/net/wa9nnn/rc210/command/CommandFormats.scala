@@ -6,7 +6,7 @@ import play.api.libs.json.Format
 object CommandFormats {
   implicit val fmtLocus: Format[Locus] = javaEnumFormat[Locus]
   implicit val fmtValueType: Format[ValueType] = javaEnumFormat[ValueType]
-  implicit val fmtCommandId: Format[CommandId] = javaEnumFormat[CommandId]
+  implicit val fmtCommandId: Format[Command] = javaEnumFormat[Command]
 
 }
 

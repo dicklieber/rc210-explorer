@@ -1,6 +1,7 @@
 package net.wa9nnn.rc210.command
 
 import net.wa9nnn.rc210.command.ItemValue.Values
+import net.wa9nnn.rc210.command.Parsers.ParsedValues
 import net.wa9nnn.rc210.serial.Slice
 import org.specs2.matcher.DataTables
 import org.specs2.mutable.Specification
@@ -17,8 +18,8 @@ class ParsersSpec extends Specification with DataTables {
       "49, 68, 67, 50" !! "1DC2" |
       "50, 0, 0, 0" !! "2" |
       "0, 0, 0, 0" !! "" |> { (in: String, result: String) =>
-      val triedValue: ItemValue = DtmfParser(CommandId.TTPadTest, in)
-      val i: String = triedValue.head
+      val triedValue: ParsedValues = DtmfParser(Command.TTPadTest, in)
+      val i: String = triedValue.head.head
       i must beEqualTo(result)
     }
   }

@@ -3,7 +3,7 @@ package net.wa9nnn.rc210.command
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 
-object Commands extends LazyLogging {
+object CommandsOLD extends LazyLogging {
 
 /*
   val commandSpecs: Seq[CommandSpecBase] = Seq(
