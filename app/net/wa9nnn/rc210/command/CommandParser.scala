@@ -21,6 +21,8 @@ object CommandParser extends LazyLogging {
         Int16Parser(commandId, slice)
       case ValueType.hangTime =>
         HangTimeParser(commandId, slice)
+      case ValueType.portInt8 =>
+        PortInt8Parser(commandId, slice)
 
       //      case ValueType.int16 =>
       //      case ValueType.hangTime =>

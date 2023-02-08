@@ -89,7 +89,7 @@ object HangTimeParser extends Parser {
       sub <- 1 to 3
       port <- 1 to 3
     } yield {
-      ports(port-1) += iterator.next()
+      ports(port - 1) += iterator.next()
     }
 
     for {
@@ -102,6 +102,23 @@ object HangTimeParser extends Parser {
         ItemValue(command, Seq.empty, Option(port), Option(L10NMessage("toolarge")))
       } else {
         ItemValue(command, values.map(_.toString), Option(port))
+      }
+    }
+  }
+}
+
+object PortInt8Parser extends Parser {
+  def apply(command: Command, slice: Slice): ParsedValues = {
+    val max: Int = command.getMax
+    val iterator = slice.iterator
+    for {
+      port <- 1 to 3
+    } yield {
+      val value = iterator.next()
+      if(value > max) {
+        ItemValue(command, Seq.empty, Option(port), Option(L10NMessage("toolarge")))
+      } else {
+        ItemValue(command, Seq(value.toString), Option(port))
       }
     }
   }

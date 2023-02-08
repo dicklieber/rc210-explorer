@@ -23,16 +23,4 @@ class ParsersSpec extends Specification with DataTables {
       i must beEqualTo(result)
     }
   }
-  //  "Boolean" >> {
-  //    "In" | "Result" |
-  //      Array(0) !! false |
-  //      Array(1) !! true |
-  //      Array(255) !! true |> { (in:Array[Int], result:Boolean) =>
-  //      val triedValue: Try[ItemValue] = BooleanParser(in)
-  //      triedValue must beSuccessfulTry
-  //      val i: ItemBoolean = triedValue.get.asInstanceOf[ItemBoolean]
-  //      i.value must beEqualTo(result)
-  //    }
-  //  }
-
 }
