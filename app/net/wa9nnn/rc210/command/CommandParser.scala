@@ -26,8 +26,13 @@ object CommandParser extends LazyLogging {
         PortInt8Parser(commandId, slice)
       case ValueType.portBool =>
         PortInt8Parser(commandId, slice).map { iv =>
-          iv.copy(values = iv.values.map { v: String => (v != "0").toString })
+          iv.copy(values = iv.values.map { v: String => (v != "0").toString }) // convert to "true" or "false"
         }
+      case ValueType.portInt16 =>
+        PortInt16Parser(commandId, slice)
+      case ValueType.guestMacro =>
+        GuestMacroSubsetParser(commandId, slice)
+
 
       //      case ValueType.int16 =>
       //      case ValueType.hangTime =>

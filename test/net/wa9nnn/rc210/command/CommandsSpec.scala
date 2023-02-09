@@ -1,7 +1,6 @@
 package net.wa9nnn.rc210.command
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.command.Parsers.ParsedValues
 import net.wa9nnn.rc210.data.Rc210Data
 import net.wa9nnn.rc210.fixtures.WithMemory
 import play.api.libs.json.Json

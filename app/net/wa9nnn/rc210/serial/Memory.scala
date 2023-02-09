@@ -40,8 +40,8 @@ case class MemoryArray(data: Array[Int], comment: String = "", stamp: Instant = 
       writer.println(s"comment: \t$comment")
       writer.println(s"stamp: \t${stamp.toString}")
       writer.println(s"size: \t${data.length}")
-      data.foreach { x =>
-        writer.println(x.toString)
+      data.zipWithIndex.foreach { case (v,i) =>
+        writer.println(f"$i%04d:$v%d")
       }
     }
   }
@@ -75,6 +75,8 @@ object SlicePos {
  * @param slicePos that was requested.
  */
 case class Slice(data: Seq[Int] = Seq.empty, slicePos: SlicePos = SlicePos()) {
+  def length: Int = data.length
+
   override def toString: String = {
     s"$slicePos => ${data.mkString(",")}"
   }
@@ -139,7 +141,8 @@ object MemoryArray {
         case r("size", rvalue) =>
           size = rvalue.toInt
         case line =>
-          builder += line.toInt
+          line.drop(5) // get reide of index and colon
+          builder += line.drop(5).toInt // get rid of index and colon
       }
       MemoryArray(builder.result(), comment, stamp)
     }

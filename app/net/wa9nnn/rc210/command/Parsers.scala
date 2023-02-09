@@ -1,5 +1,6 @@
 package net.wa9nnn.rc210.command
 
+import net.wa9nnn.rc210.command.ItemValue.Values
 import net.wa9nnn.rc210.command.Parsers.ParsedValues
 import net.wa9nnn.rc210.serial.Slice
 
@@ -35,18 +36,16 @@ object DtmfParser extends Parser {
 
 object Int8Parser extends Parser {
   def apply(commandId: Command, slice: Slice): ParsedValues = {
+    assert(slice.length == 1)
+
     Seq(ItemValue(commandId, Try {
       val max: Int = commandId.getMax
       val v = slice.head
       if (v > max)
         throw new IllegalArgumentException(s"")
 
-      val str = new String(slice.data
-        .takeWhile(_ != 0)
-        .map(_.toChar)
-        .toArray
-      )
-      if (str.length > max)
+      val str = v.toString
+      if (v > max)
         throw L10NParseException("tooLarge", str, max)
       Seq(str)
     }
@@ -56,6 +55,7 @@ object Int8Parser extends Parser {
 
 object Int16Parser extends Parser {
   def apply(commandId: Command, slice: Slice): ParsedValues = {
+    assert(slice.length == 2)
     Seq(ItemValue(commandId, Try {
       val max: Int = commandId.getMax
 
@@ -63,15 +63,7 @@ object Int16Parser extends Parser {
       val v = iterator.next() + iterator.next() * 256
       if (v > max)
         throw new IllegalArgumentException(s"")
-
-      val str = new String(slice.data
-        .takeWhile(_ != 0)
-        .map(_.toChar)
-        .toArray
-      )
-      if (str.length > max)
-        throw L10NParseException("tooLarge", str, max)
-      Seq(str)
+      Seq(v.toString)
     }
     ))
   }
@@ -79,6 +71,8 @@ object Int16Parser extends Parser {
 
 object HangTimeParser extends Parser {
   def apply(command: Command, slice: Slice): ParsedValues = {
+    assert(slice.length == 9)
+
     val max: Int = command.getMax
     val iterator = slice.iterator
     val ports =
@@ -109,18 +103,57 @@ object HangTimeParser extends Parser {
 
 object PortInt8Parser extends Parser {
   def apply(command: Command, slice: Slice): ParsedValues = {
+    assert(slice.length == 3)
+
     val max: Int = command.getMax
     val iterator = slice.iterator
     for {
       port <- 1 to 3
     } yield {
       val value = iterator.next()
-      if(value > max) {
+      if (value > max) {
         ItemValue(command, Seq.empty, Option(port), Option(L10NMessage("toolarge")))
       } else {
         ItemValue(command, Seq(value.toString), Option(port))
       }
     }
+  }
+}
+
+object PortInt16Parser extends Parser {
+  def apply(command: Command, slice: Slice): ParsedValues = {
+    assert(slice.length == 6)
+    val max: Int = command.getMax
+    val iterator = slice.iterator
+    for {
+      port <- 1 to 3
+    } yield {
+      val value = iterator.next() + iterator.next() * 256
+      if (value > max) {
+        ItemValue(command, Seq.empty, Option(port), Option(L10NMessage("toolarge")))
+      } else {
+        ItemValue(command, Seq(value.toString), Option(port))
+      }
+    }
+  }
+}
+
+/**
+ * A range
+ *  Data seems to be fixed e.g. "001090" we'll ignored null terminator. Wouod produce 1, 90
+ */
+object GuestMacroSubsetParser extends Parser {
+  def apply(command: Command, slice: Slice): ParsedValues = {
+    assert(slice.length == 7)
+
+    val s: Values = slice
+      .data
+      .take(6)
+      .map(_.toChar).toArray
+      .grouped(3)
+      .map(new String(_))
+      .toSeq
+    Seq(ItemValue(command, s))
   }
 }
 

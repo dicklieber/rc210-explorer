@@ -3,10 +3,12 @@ package net.wa9nnn.rc210.fixtures
 import net.wa9nnn.rc210.serial.{Memory, MemoryArray}
 import org.specs2.mutable.Specification
 
+import java.io.InputStream
 import java.nio.file.Paths
 
 class WithMemory extends Specification{
-  val memory: Memory = MemoryArray(Paths.get("/Users/dlieber/dev/ham/rc210-explorer/logs/Mem16918954127124727059.txt")).get
+  private val stream: InputStream = getClass.getResourceAsStream("/data/MemExample.txt")
+  val memory: Memory = MemoryArray(stream).get
 //  val memory: Memory = Memory.apply(getClass.getResourceAsStream("/data/MemExample.txt")).get
 
 

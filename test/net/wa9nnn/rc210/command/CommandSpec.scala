@@ -9,9 +9,7 @@ class CommandSpec extends WithMemory {
       val ids = Command.values()
 
       ids.foreach { command =>
-        println(s"Command  $command")
-        val values1: ParsedValues = CommandParser(command, memory)
-        println(s"\t$values1")
+        val pv: ParsedValues = CommandParser(command, memory)
       }
 
 
@@ -36,7 +34,7 @@ class testCmd extends WithMemory {
     val itemValue: ParsedValues = CommandParser(Command.Hangtime, memory)
     itemValue must haveSize(3)
 
-    itemValue.head.toString must beEqualTo ("commandId: Hangtime value: 40, 40, 144 port: 1)")
+    itemValue.head.toString must beEqualTo ("commandId: Hangtime value: 11, 12, 13 port: 1)")
   }
 
 
