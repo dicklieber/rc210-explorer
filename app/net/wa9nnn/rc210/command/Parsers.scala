@@ -1,7 +1,8 @@
 package net.wa9nnn.rc210.command
 
+import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.command.ItemValue.Values
-import net.wa9nnn.rc210.command.Parsers.ParsedValues
+import net.wa9nnn.rc210.command.Parsers.{ParsedValues, procSeq}
 import net.wa9nnn.rc210.serial.Slice
 
 import scala.util.Try
@@ -35,21 +36,9 @@ object DtmfParser extends Parser {
 }
 
 object Int8Parser extends Parser {
-  def apply(commandId: Command, slice: Slice): ParsedValues = {
+  def apply(command: Command, slice: Slice): ParsedValues = {
     assert(slice.length == 1)
-
-    Seq(ItemValue(commandId, Try {
-      val max: Int = commandId.getMax
-      val v = slice.head
-      if (v > max)
-        throw new IllegalArgumentException(s"")
-
-      val str = v.toString
-      if (v > max)
-        throw L10NParseException("tooLarge", str, max)
-      Seq(str)
-    }
-    ))
+    Seq(procSeq(command, slice.data))
   }
 }
 
@@ -103,42 +92,30 @@ object HangTimeParser extends Parser {
 object PortInt8Parser extends Parser {
   def apply(command: Command, slice: Slice): ParsedValues = {
     assert(slice.length == 3)
-
-    val max: Int = command.getMax
-    val iterator = slice.iterator
-    for {
-      port <- 1 to 3
-    } yield {
-      val value = iterator.next()
-      val iv = ItemValue(command, value.toString)
-        .withVIndex(VIndex.port(port))
-      if (value > max) {
-        iv.withError(L10NMessage("toolarge"))
-      } else {
-        iv
+    slice
+      .data
+      .grouped(1)
+      .zipWithIndex
+      .map { case (seq, i) =>
+        procSeq(command, seq)
+          .withVIndex(VIndex.port(i + 1))
       }
-    }
-  }
+  }.toSeq
 }
 
 object PortInt16Parser extends Parser {
   def apply(command: Command, slice: Slice): ParsedValues = {
     assert(slice.length == 6)
-    val max: Int = command.getMax
-    val iterator = slice.iterator
-    for {
-      port <- 1 to 3
-    } yield {
-      val value = iterator.next() + iterator.next() * 256
-      val iv = ItemValue(command, value.toString)
-        .withVIndex(VIndex.port(port))
-      if (value > max) {
-        iv.withError(L10NMessage("toolarge"))
-      } else {
-        iv
+
+    slice
+      .data
+      .grouped(2)
+      .zipWithIndex
+      .map { case (seq, i) =>
+        procSeq(command, seq)
+          .withVIndex(VIndex.port(i + 1))
       }
-    }
-  }
+  }.toSeq
 }
 
 /**
@@ -175,6 +152,45 @@ object PortUnlockParser extends Parser {
       .toSeq
   }
 }
+object AlarmBoolParser extends Parser {
+  def apply(command: Command, slice: Slice): ParsedValues = {
+    assert(slice.length == 5)
+
+    slice
+      .data
+      .grouped(1).zipWithIndex
+      .map { case (v, i) =>
+        procSeq(command, v)
+          .withVIndex(VIndex.alarm(i + 4))
+      }
+      .toSeq
+  }
+}
+
+object CwTonesParser extends Parser with LazyLogging {
+  def apply(command: Command, slice: Slice): ParsedValues = {
+    assert(slice.length == 12)
+    logger.warn("//todo this one needs more consideration!")
+
+    /*
+    CW ID Programming
+There are 2 CW ID messages, each of which may be programmed with up to 15 characters each (See Morse Code Character Table). They normally rotate as the Pending IDs. However if you have Speech Override ON and a signal appears on that port's receiver during a Voice ID, it will revert to CW and play CW message 2. To minimize disruption, it is recommended that you keep CW ID #2 as short as possible.
+*8002xx-xx Program CWID #1 *8003xx-xx Program CWID #2
+Examples
+*8002 21 42 06 53 32 12 21 82 92 *8003 21 42 06 53 32 12 72
+Program "AH6LE/AUX" into ID #1 Program" AH6LE/R" into ID #2
+Note: If you exceed 15 characters, all characters that follow will be ignored.
+Figure 6 below shows the relationships between the codes and the layout of a standard Touchtone© pad. As you can see, it makes it easier to remember the code for a particular character without having to look up codes (Q and Z are treated as special cases).
+Fig 6 Morse Code Character Table
+A21 U82 B22 V83 C23 W91 D31 X92 E32 Y93 F33 Z90 G41
+H42 000 I43 101 J51 202 K52 303 L53 404 M61 505 N62 606 O63 707 P70 808 Q71 909 R 72
+S 73 T 81
+Word
+Space 11 - 10 / 12 AR13 , 14 ?20 SK60
+     */
+    Seq.empty
+  }
+}
 
 
 case class L10NMessage(messageKey: String, cssClass: String = "", args: List[String] = List.empty)
@@ -193,6 +209,25 @@ object L10NParseException {
 object Parsers {
   type ParsedValues = Seq[ItemValue]
 
+  def procSeq(command: Command, in: Seq[Int]): ItemValue = {
+    val value = in.length match {
+      case 1 =>
+        in.head
+      case 2 =>
+        in.head + in(1) * 256
+      case x =>
+        throw new IllegalArgumentException(s"Must be 1 or two Ints! but got: x")
+    }
+    val iv = ItemValue(command, value.toString)
+    if (value > command.getMax)
+      iv.withError(L10NMessage("toolarge"))
+    else
+      iv
+  }
+
+  def convertToBool(itemValue: ItemValue): ItemValue = {
+    itemValue.copy(values = itemValue.values.map { v: String => (v != "0").toString }) // convert to "true" or "false"
+  }
 }
 
 ///**

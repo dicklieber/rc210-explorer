@@ -19,7 +19,7 @@ case class ItemValue(commandId: Command, values: Values, maybeVIndex: Option[VIn
   def withError(l10NMessage:L10NMessage):ItemValue = copy(maybeMessage = Option(l10NMessage))
 
   override def toString: String = {
-    val sVIn = maybeVIndex.map(p => s" vIndxe: $p").getOrElse("")
+    val sVIn = maybeVIndex.map(p => s" vIndex: $p").getOrElse("")
     val sError = maybeMessage.map(e => s" error: $maybeMessage").getOrElse("")
     s"commandId: $commandId value: ${values.mkString(", ")}$sVIn$sError)"
   }

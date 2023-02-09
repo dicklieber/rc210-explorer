@@ -27,6 +27,20 @@ public enum Command {
     DTMFEnable(   "116",	ValueType.portBool,	1,	Locus.portIn),
     DTMFRequireTone(   "117",	ValueType.portBool,	1,	Locus.portIn),
     Unlock(   "*9000",	ValueType.portUnlock,	8,	Locus.codes),
+    SpeechIDOverride(   "118",	ValueType.portBool,	1,	Locus.portOut),
+    CwTones(   "*8001",	ValueType.cwTones,	1,	Locus.portOut),
+    CWSpeed(   "*8000",	ValueType.portInt8,	50,	Locus.portOut),
+    CWUnused(   "",	ValueType.unused,	0,	Locus.portOut, 15),
+    CTCSSDecode(   "112",	ValueType.portInt8,	1,	Locus.portIn),
+    MonitorMix(   "119",	ValueType.portBool,	1,	Locus.portIn),
+    AuxAudioTimer(   "*101",	ValueType.portInt16,	32767,	Locus.aux),
+    InActiveTimeout(   "*1005",	ValueType.portInt8,	255,	Locus.portIn),
+    Speechoverride(   "120",	ValueType.portBool,	1,	Locus.portOut),
+    EncodeTimer(   "*1007",	ValueType.portInt8,	255,	Locus.portOut),
+    RepeatMode(   "114",	ValueType.portBool,	1,	Locus.portIn),
+    TimeoutTimer(   "*1001",	ValueType.portInt16,	32767,	Locus.portIn),
+    DTMFMute(   "121",	ValueType.portBool,	1,	Locus.portOut),
+    AlarmEnable(   "191",	ValueType.portBool,	1,	Locus.portOut),
 
     ;
     //@formatter:on

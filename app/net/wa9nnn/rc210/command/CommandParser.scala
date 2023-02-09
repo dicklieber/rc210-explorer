@@ -1,39 +1,46 @@
 package net.wa9nnn.rc210.command
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.command.ItemValue.Values
-import net.wa9nnn.rc210.command.Parsers.ParsedValues
+import net.wa9nnn.rc210.command.Parsers.{ParsedValues, convertToBool}
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 
 object CommandParser extends LazyLogging {
-  def apply(commandId: Command, memory: Memory): ParsedValues = {
+  def apply(command: Command, memory: Memory): ParsedValues = {
 
-    val slicePos = SlicePos(commandId.getMemoryOffset, commandId.getMemoryLength)
+    val slicePos = SlicePos(command.getMemoryOffset, command.getMemoryLength)
     val slice = memory(slicePos)
 
-    commandId.getValueType match {
+    command.getValueType match {
       case ValueType.dtmf =>
-        DtmfParser(commandId, slice)
+        DtmfParser(command, slice)
       case ValueType.bool =>
-        Seq(ItemValue(commandId, Seq((slice.head != 0).toString)))
+        Seq(ItemValue(command, Seq((slice.head != 0).toString)))
       case ValueType.int8 =>
-        Int8Parser(commandId, slice)
+        Int8Parser(command, slice)
       case ValueType.int16 =>
-        Int16Parser(commandId, slice)
+        Int16Parser(command, slice)
       case ValueType.hangTime =>
-        HangTimeParser(commandId, slice)
+        HangTimeParser(command, slice)
       case ValueType.portInt8 =>
-        PortInt8Parser(commandId, slice)
+        PortInt8Parser(command, slice)
       case ValueType.portBool =>
-        PortInt8Parser(commandId, slice).map { iv =>
-          iv.copy(values = iv.values.map { v: String => (v != "0").toString }) // convert to "true" or "false"
+        PortInt8Parser(command, slice).map { iv =>
+          convertToBool(iv)
         }
       case ValueType.portInt16 =>
-        PortInt16Parser(commandId, slice)
+        PortInt16Parser(command, slice)
       case ValueType.guestMacro =>
-        GuestMacroSubsetParser(commandId, slice)
+        GuestMacroSubsetParser(command, slice)
       case ValueType.portUnlock =>
-        PortUnlockParser(commandId, slice)
+        PortUnlockParser(command, slice)
+      case ValueType.cwTones =>
+        CwTonesParser(command, slice)
+      case ValueType.alarmBool =>
+        AlarmBoolParser(command, slice)
+
+      case ValueType.unused =>
+        // Not used
+        Seq.empty
 
       //      case ValueType.int16 =>
       //      case ValueType.hangTime =>

@@ -33,9 +33,15 @@ object VIndex {
     assert(index <= 40, "Schedule numbers are 1 through 40")
     VIndex(kinds(2), index)
   }
+  def alarm(index: Int): VIndex = {
+    assert((1 to 5) .contains(index), "Alarm numbers are 1 through 5")
+    VIndex(kinds(3), index)
+  }
 
 
-  private val kinds = Seq("port", "macro", "schedule", "unlock")
+  private val kinds = Seq("port", "macro", "schedule", "unlock",
+    "alarm"
+  )
   implicit val fmtQuantifier: OFormat[VIndex] = Json.format[VIndex]
 }
 
