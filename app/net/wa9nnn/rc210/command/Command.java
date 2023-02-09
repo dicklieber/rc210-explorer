@@ -39,7 +39,7 @@ public enum Command {
     private final Locus locus;
 
 
-    Command(String base,  ValueType valueType, int max, Locus locus) {
+    Command(String base, ValueType valueType, int max, Locus locus) {
         this.base = base;
         this.memoryLength = valueType.getBytes();
         this.memoryOffset = MemoryPos.ai.getAndAdd(memoryLength);
@@ -47,6 +47,7 @@ public enum Command {
         this.max = max;
         this.locus = locus;
     }
+
     Command(String base, ValueType valueType, int max, Locus locus, int requiredBytes) {
         this.base = base;
         this.memoryLength = requiredBytes;

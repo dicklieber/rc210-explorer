@@ -87,16 +87,15 @@ object HangTimeParser extends Parser {
     }
 
     for {
-      portBuilder <- ports.zipWithIndex
+      case (b, i) <- ports.zipWithIndex
     } yield {
-      val port = portBuilder._2 + 1
-      val values: Seq[Int] = portBuilder._1.result()
-      val tooLarge = values.exists(_ > max)
-      if (tooLarge) {
-        ItemValue(command, Seq.empty, Option(port), Option(L10NMessage("toolarge")))
-      } else {
-        ItemValue(command, values.map(_.toString), Option(port))
-      }
+      val values: Seq[Int] = b.result()
+      val iv = ItemValue(command, Seq.empty)
+        .withVIndex(VIndex.port(i + 1))
+      if (values.exists(_ > max))
+        iv.withError(L10NMessage("toolarge"))
+      else
+        iv
     }
   }
 }
@@ -111,10 +110,12 @@ object PortInt8Parser extends Parser {
       port <- 1 to 3
     } yield {
       val value = iterator.next()
+      val iv = ItemValue(command, value.toString)
+        .withVIndex(VIndex.port(port))
       if (value > max) {
-        ItemValue(command, Seq.empty, Option(port), Option(L10NMessage("toolarge")))
+        iv.withError(L10NMessage("toolarge"))
       } else {
-        ItemValue(command, Seq(value.toString), Option(port))
+        iv
       }
     }
   }
@@ -129,10 +130,12 @@ object PortInt16Parser extends Parser {
       port <- 1 to 3
     } yield {
       val value = iterator.next() + iterator.next() * 256
+      val iv = ItemValue(command, value.toString)
+        .withVIndex(VIndex.port(port))
       if (value > max) {
-        ItemValue(command, Seq.empty, Option(port), Option(L10NMessage("toolarge")))
+        iv.withError(L10NMessage("toolarge"))
       } else {
-        ItemValue(command, Seq(value.toString), Option(port))
+        iv
       }
     }
   }
@@ -166,21 +169,24 @@ object PortUnlockParser extends Parser {
       .grouped(9).zipWithIndex
       .map { case (v, i) =>
         val value: Array[Char] = v.takeWhile(_ != 0).map(_.toChar).toArray
-        ItemValue(command, new String(value), i + 1)
+        ItemValue(command, new String(value))
+          .withVIndex(VIndex.port(i + 1))
       }
       .toSeq
   }
 }
 
 
-case class L10NMessage(messageKey: String, args: List[String] = List.empty)
+case class L10NMessage(messageKey: String, cssClass: String = "", args: List[String] = List.empty)
 
 
 case class L10NParseException(l10NError: L10NMessage) extends Exception
 
 object L10NParseException {
   def apply(messageKey: String, args: Any*): L10NParseException = {
-    new L10NParseException(L10NMessage(messageKey, args.map(_.toString).toList))
+    val value: Seq[String] = args.map(_.toString)
+    val message = L10NMessage(messageKey, "errpr", value.toList)
+    new L10NParseException(message)
   }
 }
 
