@@ -140,7 +140,7 @@ object PortInt16Parser extends Parser {
 
 /**
  * A range
- *  Data seems to be fixed e.g. "001090" we'll ignored null terminator. Wouod produce 1, 90
+ * Data seems to be fixed e.g. "001090" we'll ignored null terminator. Wouod produce 1, 90
  */
 object GuestMacroSubsetParser extends Parser {
   def apply(command: Command, slice: Slice): ParsedValues = {
@@ -154,6 +154,21 @@ object GuestMacroSubsetParser extends Parser {
       .map(new String(_))
       .toSeq
     Seq(ItemValue(command, s))
+  }
+}
+
+object PortUnlockParser extends Parser {
+  def apply(command: Command, slice: Slice): ParsedValues = {
+    assert(slice.length == 27)
+
+    slice
+      .data
+      .grouped(9).zipWithIndex
+      .map { case (v, i) =>
+        val value: Array[Char] = v.takeWhile(_ != 0).map(_.toChar).toArray
+        ItemValue(command, new String(value), i + 1)
+      }
+      .toSeq
   }
 }
 

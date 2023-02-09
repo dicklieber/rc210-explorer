@@ -32,7 +32,8 @@ object CommandParser extends LazyLogging {
         PortInt16Parser(commandId, slice)
       case ValueType.guestMacro =>
         GuestMacroSubsetParser(commandId, slice)
-
+      case ValueType.portUnlock =>
+        PortUnlockParser(commandId, slice)
 
       //      case ValueType.int16 =>
       //      case ValueType.hangTime =>

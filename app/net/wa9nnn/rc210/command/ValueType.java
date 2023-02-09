@@ -11,6 +11,7 @@ public enum ValueType {
     range(4),
     portBool(3),
     portInt16(6),
+    portUnlock(27),
     guestMacro(7);
 
     private final int bytes;

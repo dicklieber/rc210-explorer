@@ -1,7 +1,6 @@
 package net.wa9nnn.rc210.command
 
 import net.wa9nnn.rc210.command.ItemValue.Values
-import net.wa9nnn.rc210.command.Parsers.ParsedValues
 import play.api.libs.json.{Json, OFormat}
 
 import scala.util.{Failure, Success, Try}
@@ -31,8 +30,12 @@ case class ItemValue(commandId: Command,
 object ItemValue {
   type Values = Seq[String]
 
-  def apply(command: Command, values:Values,  port:Int):ItemValue = {
+  def apply(command: Command, values: Values, port: Int): ItemValue = {
     new ItemValue(command, values, Option(port))
+  }
+
+  def apply(command: Command, values: String, port: Int): ItemValue = {
+    new ItemValue(command, Seq(values), Option(port))
   }
 
   def apply(commandId: Command, triedValues: Try[Values]): ItemValue = {

@@ -5,7 +5,8 @@ public enum Locus {
     portOut("portOut"),
     portIn("portIn"),
     schedules("schedules"),
-    macro("macro");
+    macro("macro"),
+    codes("codes");
 
     private final String u18n;
 

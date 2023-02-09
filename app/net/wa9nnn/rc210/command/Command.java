@@ -23,6 +23,10 @@ public enum Command {
     SpeechDelay(   "*1019",	ValueType.int16,	32767,	Locus.misc),
     CTCSSEncodePolarity(   "*1021",	ValueType.portInt8,	255,	Locus.portOut),
     GuestMacroRange(   "*4009",	ValueType.guestMacro,	90,	Locus.misc),
+    DTMFCOSControl(   "122",	ValueType.portBool,	1,	Locus.portIn),
+    DTMFEnable(   "116",	ValueType.portBool,	1,	Locus.portIn),
+    DTMFRequireTone(   "117",	ValueType.portBool,	1,	Locus.portIn),
+    Unlock(   "*9000",	ValueType.portUnlock,	8,	Locus.codes),
 
     ;
     //@formatter:on
