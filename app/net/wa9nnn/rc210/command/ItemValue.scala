@@ -8,18 +8,20 @@ import scala.util.{Failure, Success, Try}
 /**
  *
  * @param values                 as parsed or inputted.
- * @param maybeVIndex            used when there is more than one [[ItemValue]].
+ * @param key                    used when there is more than one [[ItemValue]].
  * @param maybeMessage           if there was an error porsing or from processing the form value. This can be localized.
  */
-case class ItemValue(commandId: Command, values: Values, maybeVIndex: Option[VIndex] = None, maybeMessage: Option[L10NMessage] = None) extends Ordered[ItemValue] {
+case class ItemValue(commandId: Command, values: Values, key: Option[Key] = None, maybeMessage: Option[L10NMessage] = None) extends Ordered[ItemValue] {
 
   def head: String = values.headOption.getOrElse("?")
 
-  def withVIndex(vIndex: VIndex): ItemValue = copy(maybeVIndex = Option(vIndex))
-  def withError(l10NMessage:L10NMessage):ItemValue = copy(maybeMessage = Option(l10NMessage))
+  def withKey(key: Key): ItemValue = copy(key = Option(key))
+  def withPort(number:Int): ItemValue = copy(key = Option(PortKey(number)))
+
+  def withError(l10NMessage: L10NMessage): ItemValue = copy(maybeMessage = Option(l10NMessage))
 
   override def toString: String = {
-    val sVIn = maybeVIndex.map(p => s" vIndex: $p").getOrElse("")
+    val sVIn = key.map(p => s" vIndex: $p").getOrElse("")
     val sError = maybeMessage.map(e => s" error: $maybeMessage").getOrElse("")
     s"commandId: $commandId value: ${values.mkString(", ")}$sVIn$sError)"
   }

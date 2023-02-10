@@ -120,15 +120,18 @@ body {
 }
 
 
-.FunctionNode {
+.function {
     background-color: palegoldenrod;
 }
 
-.MacroNode {
+.alarm {
+    background-color: #ffbecc;
+}
+.macro {
     background-color: lightskyblue;
 }
 
-.ScheduleNode{
+.schedule{
     background-color: lightgrey;
 }
 .messageMacro{

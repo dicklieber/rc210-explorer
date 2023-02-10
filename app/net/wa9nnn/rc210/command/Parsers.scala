@@ -76,11 +76,11 @@ object HangTimeParser extends Parser {
     }
 
     for {
-      case (b, i) <- ports.zipWithIndex
+      case (b, port) <- ports.zipWithIndex
     } yield {
       val values: Seq[Int] = b.result()
       val iv = ItemValue(command, Seq.empty)
-        .withVIndex(VIndex.port(i + 1))
+        .withPort(port)
       if (values.exists(_ > max))
         iv.withError(L10NMessage("toolarge"))
       else
@@ -98,7 +98,7 @@ object PortInt8Parser extends Parser {
       .zipWithIndex
       .map { case (seq, i) =>
         procSeq(command, seq)
-          .withVIndex(VIndex.port(i + 1))
+          .withPort(i)
       }
   }.toSeq
 }
@@ -111,16 +111,16 @@ object PortInt16Parser extends Parser {
       .data
       .grouped(2)
       .zipWithIndex
-      .map { case (seq, i) =>
+      .map { case (seq, port) =>
         procSeq(command, seq)
-          .withVIndex(VIndex.port(i + 1))
+          .withPort(port)
       }
   }.toSeq
 }
 
 /**
  * A range
- * Data seems to be fixed e.g. "001090" we'll ignored null terminator. Wouod produce 1, 90
+ * Data seems to be fixed e.g. "001090" we'll ignored null terminator. Would produce 1, 90
  */
 object GuestMacroSubsetParser extends Parser {
   def apply(command: Command, slice: Slice): ParsedValues = {
@@ -144,10 +144,10 @@ object PortUnlockParser extends Parser {
     slice
       .data
       .grouped(9).zipWithIndex
-      .map { case (v, i) =>
+      .map { case (v, port) =>
         val value: Array[Char] = v.takeWhile(_ != 0).map(_.toChar).toArray
         ItemValue(command, new String(value))
-          .withVIndex(VIndex.port(i + 1))
+          .withPort(port)
       }
       .toSeq
   }
@@ -161,7 +161,7 @@ object AlarmBoolParser extends Parser {
       .grouped(1).zipWithIndex
       .map { case (v, i) =>
         procSeq(command, v)
-          .withVIndex(VIndex.alarm(i + 4))
+          .withKey( AlarmKey(i + 4))
       }
       .toSeq
   }

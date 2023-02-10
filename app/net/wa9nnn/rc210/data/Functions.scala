@@ -2,10 +2,8 @@ package net.wa9nnn.rc210.data
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
-import net.wa9nnn.rc210.bubble.NodeId
-import net.wa9nnn.rc210.data.FunctionNode._
+import net.wa9nnn.rc210.command.{FunctionKey, MacroKey}
 import net.wa9nnn.rc210.model.Node
-import net.wa9nnn.rc210.model.macros.MacroNodeId
 import play.api.libs.json._
 
 import java.io.InputStream
@@ -18,81 +16,58 @@ class Functions extends LazyLogging {
 
   val rr: Try[List[FunctionNode]] = Using(getClass.getResourceAsStream("/FunctionList.json")) { is: InputStream =>
     val ImportFunction: JsValue = Json.parse(is)
-    val nodes = ImportFunction.as[List[ImportFunction]]
-    nodes.map(_.toFunctionNode)
+
+    throw new NotImplementedError() //todo
+//    val nodes = ImportFunction.as[List[ImportFunction]]
+//    nodes.map(_.toFunctionNode)
   }
 
 
-  val functions: List[FunctionNode] = rr.get
-  val macro2FunctionMap: Map[NodeId, FunctionNode] = functions
-    .map { fn => fn.nodeId -> fn }
-    .toMap
+//  val functions: List[FunctionNode] = rr.get
+//  val macro2FunctionMap: Map[MacroKey, FunctionNode] = functions
+//    .map { fn => fn.key -> fn }
+//    .toMap
 
-  def size: Int = functions.size
+  def size: Int = -1//todofunctions.size
 
-  def get(nodeId: NodeId): Option[FunctionNode] = macro2FunctionMap.get(nodeId)
+  def get(nodeId: MacroKey): Option[FunctionNode] = throw new NotImplementedError() //todomacro2FunctionMap.get(nodeId)
 
   def header: Header = Header(s"Functions ($size)", "Id", "Description", "Destination")
 
 }
 
-case class ImportFunction(fn:Int, description:String, destination: Option[String] = None){
-  def toFunctionNode:FunctionNode =
-    try {
-      FunctionNode(FunctionNodeId(fn), description, destination.map(NodeId(_)))
-    } catch {
-      case e:Exception =>
-        e.printStackTrace()
-        throw e
-    }
-}
+//case class ImportFunction(fn:Int, description:String, destination: Option[String] = None){
+//  def toFunctionNode:FunctionNode =
+//    try {
+//      FunctionNode(FunctionNodeId(fn), description, destination.map(NodeId(_)))
+//    } catch {
+//      case e:Exception =>
+//        e.printStackTrace()
+//        throw e
+//    }
+//}
 
-case class FunctionNodes(functions: List[ImportFunction])
+//case class FunctionNodes(functions: List[FunctionNode])
 
 object FunctionNode {
   val parser: Regex = """(\d+)\s+(.*)""".r
 
-  def apply(line: String): FunctionNode = {
-    val parser(m, d) = line
-    new FunctionNode(FunctionNodeId(m.toInt), d)
-  }
+//  def apply(line: String): FunctionNode = {
+//    val parser(m, d) = line
+//    new FunctionNode(FunctionNodeId(m.toInt), d)
+//  }
 
 
 
-  implicit val fmtFn: OFormat[ImportFunction] = Json.format[ImportFunction]
+//  implicit val fmtFn: OFormat[ImportFunction] = Json.format[ImportFunction]
 }
 
-case class FunctionNode(nodeId: FunctionNodeId, description: String, destination: Option[NodeId] = None) extends RowSource with Node {
-  override def toString: String = s"function: $nodeId description: $description"
+case class FunctionNode(key: FunctionKey, description: String, destination: Option[MacroKey] = None) extends RowSource with Node {
+  override def toString: String = s"key: $key description: $description"
 
-  override def toRow: Row = Row(nodeId.toCell, description, destination)
+  override def toRow: Row = Row(key.toCell, description, destination)
 }
 
 
-case class FunctionNodeId(override val number: Int) extends NodeId  {
-  override val prefix: Char = 'f'
-  override val cssClass: String = "FunctionNode"
 
-  val callMacro: Option[MacroNodeId] = Option.when(number >= 900) {
-    MacroNodeId(number - 900)
-  }
-}
 
-object FunctionNodeId {
-  implicit val nodeIdFormat: Format[FunctionNodeId] = new Format[FunctionNodeId] {
-    override def reads(json: JsValue): JsResult[FunctionNodeId] = {
-
-      try {
-        JsSuccess(NodeId(json.as[String]).asInstanceOf[FunctionNodeId])
-      }
-      catch {
-        case e: IllegalArgumentException => JsError(e.getMessage)
-      }
-    }
-
-    override def writes(nodeId: FunctionNodeId): JsValue = {
-      JsString(nodeId.toString)
-    }
-  }
-
-}

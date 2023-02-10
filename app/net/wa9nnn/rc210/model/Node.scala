@@ -1,7 +1,18 @@
 package net.wa9nnn.rc210.model
 
-import net.wa9nnn.rc210.bubble.NodeId
+import com.wa9nnn.util.tableui.RowSource
+import net.wa9nnn.rc210.command.{Key, MacroKey}
 
-trait  Node {
-  val nodeId: NodeId
+trait Node extends RowSource {
+  val key: Key
 }
+
+/**
+ * A [[Node]] that can invoke a Macro
+ */
+trait TriggerNode extends Node {
+  val macroToRun: MacroKey
+
+  def description: String
+}
+
