@@ -7,7 +7,7 @@ public enum Locus {
     schedules,
     macro,
     codes,
-    aux
-    ;
+    aux,
+    alarm;
 
 }

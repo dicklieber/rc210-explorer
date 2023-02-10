@@ -40,8 +40,16 @@ public enum Command {
     RepeatMode(   "114",	ValueType.portBool,	1,	Locus.portIn),
     TimeoutTimer(   "*1001",	ValueType.portInt16,	32767,	Locus.portIn),
     DTMFMute(   "121",	ValueType.portBool,	1,	Locus.portOut),
-    AlarmEnable(   "191",	ValueType.portBool,	1,	Locus.portOut),
+//    AlarmEnable(   "191",	ValueType.portBool,	1,	Locus.alarm),
+//    AlarmMacroLow(   "*2101",	ValueType.alarmBool,	1,	Locus.alarm),
+//    AlarmMacroHigh(   "*2102",	ValueType.alarmBool,	1,	Locus.alarm),
+//    VREF(   "*2065",	ValueType.int16,	2000,	Locus.alarm),
+//    MeterFaceName(   "*2065",	ValueType.int16,	2000,	Locus.alarm),
 
+//    MemoryPos
+
+    EatUntilMacros("", ValueType.unused, 0,Locus.misc, 1985 - 168) // skip ahead, //todo fill in gaps later.
+//    Macro("", ValueType.unused, 0,Locus.misc, 1985 - 168) // skip ahead, //todo fill in gaps later.
     ;
     //@formatter:on
 
