@@ -27,7 +27,13 @@ case class AlarmKey(index: Int) extends Key("alarm", index) {
 
 case class MacroKey(index: Int) extends Key("macro", index) {
   assert(index <= 90, "Macro numbers are 1 through 90")
+  val slots: Int = index match {
+    case x if (1 to 40).contains(x) => 15
+    case x if (41 to 90).contains(x) => 6
+    case x if (91 to 105).contains(x) => 20
+  }
 }
+
 case class MessageMacroKey(index: Int) extends Key("messageMacro", index) {
   assert(index <= 90, "MessageMacro numbers are 1 through 70")
 }

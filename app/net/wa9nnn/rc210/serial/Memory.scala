@@ -40,7 +40,7 @@ case class MemoryArray(data: Array[Int], comment: String = "", stamp: Instant = 
       writer.println(s"comment: \t$comment")
       writer.println(s"stamp: \t${stamp.toString}")
       writer.println(s"size: \t${data.length}")
-      data.zipWithIndex.foreach { case (v,i) =>
+      data.zipWithIndex.foreach { case (v, i) =>
         writer.println(f"$i%04d:$v%d")
       }
     }
@@ -53,8 +53,9 @@ case class MemoryArray(data: Array[Int], comment: String = "", stamp: Instant = 
  *
  * @param offset in [[Memory]].
  * @param length how much to slice. 0
+ * @param name   as used in [[akka.io.Dns.Command]] and, pefhaps,  other places.
  */
-case class SlicePos(offset: Int = 0, length: Int = 1) {
+case class SlicePos(offset: Int = 0, length: Int = 1, name: String = "") {
   def until: Int = offset + length
 
   def apply(requested: Int): SlicePos = {
@@ -65,6 +66,23 @@ case class SlicePos(offset: Int = 0, length: Int = 1) {
 }
 
 object SlicePos {
+  val r: Regex = """//([^\d^\-]+)\s.*[\s\-]+(\d+)[\s\-]+(\d+)""".r
+
+  /**
+   * WebRCP php essentially documents the eeprom dump with comments like: "//Macro - 1985-2624"
+   *
+   * @param phpComment e.g. "//DTMFEnable - 70-72"
+   * @return
+   */
+  def apply(phpComment: String): SlicePos = {
+    var r(name, sOffset, sEnd) = phpComment
+
+    val offset = sOffset.toInt
+    val end = sEnd .toInt
+    val len = end - offset
+    new SlicePos(offset, len + 1, name)
+  }
+
   implicit val fmtSlicePos: OFormat[SlicePos] = Json.format[SlicePos]
 }
 
@@ -88,8 +106,6 @@ case class Slice(data: Seq[Int] = Seq.empty, slicePos: SlicePos = SlicePos()) {
   def head: Int = {
     data.head
   }
-
-
 }
 
 object Slice {
