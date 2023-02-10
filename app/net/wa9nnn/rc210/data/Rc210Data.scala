@@ -1,9 +1,16 @@
 package net.wa9nnn.rc210.data
 
-import net.wa9nnn.rc210.command.ItemValue
+import net.wa9nnn.rc210.command.{ItemValue, Named}
+import net.wa9nnn.rc210.data.macros.Macro
 import play.api.libs.json.{Json, OFormat}
 
-case class Rc210Data(itemValues:Seq[ItemValue])
+/**
+ *
+ * @param itemValues simple items
+ * @param macros
+ * @param names
+ */
+case class Rc210Data(itemValues:Seq[ItemValue], macros:Seq[Macro], names:Seq[Named])
 
 object Rc210Data {
   import ItemValue.fmtItemValue

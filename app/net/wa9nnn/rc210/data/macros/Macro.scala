@@ -1,35 +1,68 @@
 package net.wa9nnn.rc210.data.macros
 
 import com.wa9nnn.util.tableui.Row
-import net.wa9nnn.rc210.command.{Key, MacroKey}
+import net.wa9nnn.rc210.command.{FunctionKey, Key, MacroKey}
 import net.wa9nnn.rc210.model.Node
 import net.wa9nnn.rc210.serial.{Memory, Slice, SlicePos}
 
-case class Macro(key: Key) extends Node {
+import java.util.concurrent.atomic.AtomicInteger
+
+case class Macro(key: MacroKey, functions: Seq[FunctionKey]) extends Node {
 
   override def toRow: Row = throw new NotImplementedError() //todo???
 }
 
 object Macro {
-  def apply(macroKey: MacroKey, slice: Slice): Macro = {
+  //  def apply(macroKey: MacroKey, slice: Slice): Macro = {
+  //
+  //    //    macroKey.slots
+  //    throw new NotImplementedError() //todo
+  //  }
 
-//    macroKey.slots
-    throw new NotImplementedError() //todo
-  }
+
+  /* Macro 1
+  long
+1985,165
+1986,85
+1987,27
+1988,60
+1989,196
+1990,0
+1991,255
+1992,255
+1993,255
+1994,255
+1995,255
+1996,255
+1997,255
+1998,255
+1999,255
+2000,255
+
+   */
 
 
   def apply(memory: Memory): Seq[Macro] = {
+    val m = new AtomicInteger(1)
     //    LongMacros(memory),
-    //    ShortMacros(memory),
-    //    ExtendedMacros(memory),
-    Seq.empty
-
-    //SlicePos("1985-2624")
+    val longMacros: Seq[Macro] = macroBuilder(SlicePos("//Macro - 1985-2624"), memory, 16, m)
+    val shortMacros: Seq[Macro] = macroBuilder(SlicePos("//ShortMacro - 2825-3174"), memory, 7, m)
+    //    val extendedMacros: Seq[Macro] = macroBuilder(SlicePos("//Extended Macros 1 - 390 (91 - 105)"), memory, 20) //todo rtc
+    val r: Seq[Macro] = longMacros
+      .concat(shortMacros)
+    r
   }
 
-  def macroBuilder(slicePos: SlicePos, memory: Memory): Seq[Macro] = {
+  def macroBuilder(slicePos: SlicePos, memory: Memory, slots: Int, m: AtomicInteger): Seq[Macro] = {
+    val macrosSlice = memory(slicePos)
+    val f: Seq[Macro] = macrosSlice.data
+      .grouped(slots)
+      .map { bytes =>
+        val functions: Seq[FunctionKey] = bytes.takeWhile(_ != 0).map(fn => FunctionKey(fn))
+        Macro(MacroKey(m.getAndIncrement()), functions)
+      }.toSeq
 
-    throw new NotImplementedError() //todo
+    f
   }
 }
 

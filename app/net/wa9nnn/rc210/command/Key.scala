@@ -18,7 +18,6 @@ sealed abstract class Key(kind: String, index: Int) extends CellProvider {
 
 case class PortKey(index: Int) extends Key("port", index) {
   assert(index <= 3, "Port numbers are 1 through 3")
-
 }
 
 case class AlarmKey(index: Int) extends Key("alarm", index) {
@@ -27,11 +26,6 @@ case class AlarmKey(index: Int) extends Key("alarm", index) {
 
 case class MacroKey(index: Int) extends Key("macro", index) {
   assert(index <= 90, "Macro numbers are 1 through 90")
-  val slots: Int = index match {
-    case x if (1 to 40).contains(x) => 15
-    case x if (41 to 90).contains(x) => 6
-    case x if (91 to 105).contains(x) => 20
-  }
 }
 
 case class MessageMacroKey(index: Int) extends Key("messageMacro", index) {
@@ -46,8 +40,6 @@ case class ScheduleKey(index: Int) extends Key("schedule", index) {
   assert(index <= 3, "Schedule numbers are 1 through 40")
 }
 
-
-case class PortNode()
 
 object Key {
   val r: Regex = """([a-z]+)(\d+)""".r
@@ -81,5 +73,6 @@ object Key {
 
 }
 
+case class Named(key:Key, name:String)
 
 

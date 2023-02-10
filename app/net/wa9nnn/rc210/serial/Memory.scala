@@ -41,7 +41,8 @@ case class MemoryArray(data: Array[Int], comment: String = "", stamp: Instant = 
       writer.println(s"stamp: \t${stamp.toString}")
       writer.println(s"size: \t${data.length}")
       data.zipWithIndex.foreach { case (v, i) =>
-        writer.println(f"$i%04d:$v%d")
+        val s = f"$i%04d:$v%d"
+        writer.println(s)
       }
     }
   }
@@ -75,7 +76,7 @@ object SlicePos {
    * @return
    */
   def apply(phpComment: String): SlicePos = {
-    var r(name, sOffset, sEnd) = phpComment
+    val r(name, sOffset, sEnd) = phpComment
 
     val offset = sOffset.toInt
     val end = sEnd .toInt
