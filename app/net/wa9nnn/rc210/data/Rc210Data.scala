@@ -13,6 +13,8 @@ import play.api.libs.json.{Json, OFormat}
 case class Rc210Data(itemValues:Seq[ItemValue], macros:Seq[Macro], names:Seq[Named])
 
 object Rc210Data {
+  import net.wa9nnn.rc210.command.Key.fmtKey
+  import net.wa9nnn.rc210.command.Named.fmtNamed
   import ItemValue.fmtItemValue
   import ItemValue.fmtL10NError
   implicit val fmtRc210Data: OFormat[Rc210Data] = Json.format[Rc210Data]

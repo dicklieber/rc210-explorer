@@ -1,16 +1,20 @@
 package controllers
 
-import net.wa9nnn.rc210.data.Functions
+import com.wa9nnn.util.tableui.Table
+import net.wa9nnn.rc210.DataProvider
+import net.wa9nnn.rc210.data.{Functions, Rc210Data}
+import net.wa9nnn.rc210.data.macros.Macro
 import play.api.mvc._
 
 import javax.inject._
+import scala.util.Try
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
  * application's home page.
  */
 @Singleton
-class RawDataController @Inject()(val controllerComponents: ControllerComponents, functions: Functions) extends BaseController {
+class RawDataController @Inject()(val controllerComponents: ControllerComponents, functions: Functions, dataProvider: DataProvider) extends BaseController {
 
 
   //  private val datFile: DatFile = datFileSource.datFile()
@@ -29,9 +33,10 @@ class RawDataController @Inject()(val controllerComponents: ControllerComponents
   }
 
   def macros(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    Ok("//todo")
-    //    val macrosTable = Table(MacroNode.header, datFile.macros .map(_.toRow))
-    //    Ok(views.html.dat(Seq(macrosTable)))
+
+    val rc210Data: Rc210Data = dataProvider.rc210Data
+        val macrosTable = Table(Macro.header, rc210Data.macros.map(_.toRow))
+        Ok(views.html.dat(Seq(macrosTable)))
   }
 
   def messageMacros(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>

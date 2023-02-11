@@ -13,7 +13,7 @@ import scala.util.matching.Regex
 sealed abstract class Key(kind: String, index: Int) extends CellProvider {
   override def toString: String = s"$kind$index"
 
-  override def toCell: Cell = Cell(toCell).withCssClass(kind)
+  override def toCell: Cell = Cell(toString).withCssClass(kind)
 }
 
 case class PortKey(index: Int) extends Key("port", index) {
@@ -54,7 +54,12 @@ object Key {
     }
   }
 
-  implicit val nodeIdFormat: Format[Key] = new Format[Key] {
+  implicit val fmtMacroKey: OFormat[MacroKey] = Json.format[MacroKey]
+  implicit val fmtMessageMacroKey: OFormat[MessageMacroKey] = Json.format[MessageMacroKey]
+  implicit val fmtFunctionKey: OFormat[FunctionKey] = Json.format[FunctionKey]
+  implicit val fmtScheduleKey: OFormat[ScheduleKey] = Json.format[ScheduleKey]
+
+  implicit val fmtKey: Format[Key] = new Format[Key] {
     override def reads(json: JsValue): JsResult[Key] = {
 
       try {
@@ -74,5 +79,9 @@ object Key {
 }
 
 case class Named(key:Key, name:String)
+
+object  Named {
+  implicit val fmtNamed: OFormat[Named] = Json.format[Named]
+}
 
 
