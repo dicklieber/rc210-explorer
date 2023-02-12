@@ -2,7 +2,8 @@ package controllers
 
 import com.wa9nnn.util.tableui.Table
 import net.wa9nnn.rc210.DataProvider
-import net.wa9nnn.rc210.data.{Functions, Rc210Data}
+import net.wa9nnn.rc210.data.Rc210Data
+import net.wa9nnn.rc210.data.functions.Functions
 import net.wa9nnn.rc210.data.macros.Macro
 import play.api.mvc._
 
@@ -27,15 +28,15 @@ class RawDataController @Inject()(val controllerComponents: ControllerComponents
    * a path of `/`.
    */
   def functions(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    Ok("//todo")
-    //    val schedulesTable = Table(functions.header, functions.functions.map(_.toRow))
-    //    Ok(views.html.dat(Seq(schedulesTable)))
+        val schedulesTable = Table(functions.header, functions.functions.map(_.toRow))
+        Ok(views.html.dat(Seq(schedulesTable)))
   }
 
   def macros(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
 
     val rc210Data: Rc210Data = dataProvider.rc210Data
-        val macrosTable = Table(Macro.header, rc210Data.macros.map(_.toRow))
+    val macros = rc210Data.macros
+    val macrosTable = Table(Macro.header(macros.length), macros.map(_.toRow))
         Ok(views.html.dat(Seq(macrosTable)))
   }
 

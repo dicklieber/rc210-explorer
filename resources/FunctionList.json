@@ -1,3635 +1,3635 @@
-[
-  {
-    "fn": 1,
-    "description": "Port 1 CTCSS Access"
-  },
-  {
-    "fn": 2,
-    "description": "Port 2 CTCSS Access"
-  },
-  {
-    "fn": 3,
-    "description": "Port 3 CTCSS Access"
-  },
-  {
-    "fn": 4,
-    "description": "Port 1 Carrier Access"
-  },
-  {
-    "fn": 5,
-    "description": "Port 2 Carrier Access"
-  },
-  {
-    "fn": 6,
-    "description": "Port 3 Carrier Access"
-  },
-  {
-    "fn": 7,
-    "description": "Port 1 DTMF Covertone ON"
-  },
-  {
-    "fn": 8,
-    "description": "Port 2 DTMF Covertone ON"
-  },
-  {
-    "fn": 9,
-    "description": "Port 3 DTMF Covertone ON"
-  },
-  {
-    "fn": 10,
-    "description": "Port 1 DTMF Covertone OFF"
-  },
-  {
-    "fn": 11,
-    "description": "Port 2 DTMF Covertone OFF"
-  },
-  {
-    "fn": 12,
-    "description": "Port 3 DTMF Covertone OFF"
-  },
-  {
-    "fn": 13,
-    "description": "Port 1 TX Enable"
-  },
-  {
-    "fn": 14,
-    "description": "Port 2 TX Enable"
-  },
-  {
-    "fn": 15,
-    "description": "Port 3 TX Enable"
-  },
-  {
-    "fn": 16,
-    "description": "Port 1 TX Disable"
-  },
-  {
-    "fn": 17,
-    "description": "Port 2 TX Disable"
-  },
-  {
-    "fn": 18,
-    "description": "Port 3 TX Disable"
-  },
-  {
-    "fn": 19,
-    "description": "Monitor Port 1 From Port 2"
-  },
-  {
-    "fn": 20,
-    "description": "Monitor Port 1 From Port 3"
-  },
-  {
-    "fn": 21,
-    "description": "Disconnect Port 1 From Port 2"
-  },
-  {
-    "fn": 22,
-    "description": "Disconnect Port 1 From Port 3"
-  },
-  {
-    "fn": 23,
-    "description": "Monitor Port 2 From Port 1"
-  },
-  {
-    "fn": 24,
-    "description": "Monitor Port 2 From Port 3"
-  },
-  {
-    "fn": 25,
-    "description": "Disconnect Port 3 From Port 1"
-  },
-  {
-    "fn": 26,
-    "description": "Disconnect Port 2 From Port 3"
-  },
-  {
-    "fn": 27,
-    "description": "Monitor Port 3 From Port 1"
-  },
-  {
-    "fn": 28,
-    "description": "Monitor Port 3 From Port 2"
-  },
-  {
-    "fn": 29,
-    "description": "Disconnect Port 3 From Port 1"
-  },
-  {
-    "fn": 30,
-    "description": "Disconnect Port 3 From Port 2"
-  },
-  {
-    "fn": 31,
-    "description": "Port 1 Monitor Mute"
-  },
-  {
-    "fn": 32,
-    "description": "Port 2 Monitor Mute"
-  },
-  {
-    "fn": 33,
-    "description": "Port 3 Monitor Mute"
-  },
-  {
-    "fn": 34,
-    "description": "Port 1 Monitor Mix"
-  },
-  {
-    "fn": 35,
-    "description": "Port 2 Monitor Mix"
-  },
-  {
-    "fn": 36,
-    "description": "Port 3 Monitor Mix"
-  },
-  {
-    "fn": 37,
-    "description": "Port 1 Repeat Mode"
-  },
-  {
-    "fn": 38,
-    "description": "Port 2 Repeat Mode"
-  },
-  {
-    "fn": 39,
-    "description": "Port 3 Repeat Mode"
-  },
-  {
-    "fn": 40,
-    "description": "Port 1 Non-Repeat Mode"
-  },
-  {
-    "fn": 41,
-    "description": "Port 2 Non-Repeat Mode"
-  },
-  {
-    "fn": 42,
-    "description": "Port 3 Non-Repeat Mode"
-  },
-  {
-    "fn": 43,
-    "description": "Port 1 Speech Override ON"
-  },
-  {
-    "fn": 44,
-    "description": "Port 2 Speech Override ON"
-  },
-  {
-    "fn": 45,
-    "description": "Port 3 Speech Override ON"
-  },
-  {
-    "fn": 46,
-    "description": "Port 1 Speech Override OFF"
-  },
-  {
-    "fn": 47,
-    "description": "Port 2 Speech Override OFF"
-  },
-  {
-    "fn": 48,
-    "description": "Port 3 Speech Override OFF"
-  },
-  {
-    "fn": 49,
-    "description": "Port 1 Courtesy Tone 1"
-  },
-  {
-    "fn": 50,
-    "description": "Port 1 Courtesy Tone 2"
-  },
-  {
-    "fn": 51,
-    "description": "Port 1 Courtesy Tone 3"
-  },
-  {
-    "fn": 52,
-    "description": "Port 1 Courtesy Tone 4"
-  },
-  {
-    "fn": 53,
-    "description": "Port 1 Courtesy Tone 5"
-  },
-  {
-    "fn": 54,
-    "description": "Port 1 Courtesy Tone 6"
-  },
-  {
-    "fn": 55,
-    "description": "Port 1 Courtesy Tone 7"
-  },
-  {
-    "fn": 56,
-    "description": "Port 1 Courtesy Tone 8"
-  },
-  {
-    "fn": 57,
-    "description": "Port 1 Courtesy Tone 9"
-  },
-  {
-    "fn": 58,
-    "description": "Port 1 Courtesy Tone 10"
-  },
-  {
-    "fn": 59,
-    "description": "Port 2 Courtesy Tone 1"
-  },
-  {
-    "fn": 60,
-    "description": "Port 2 Courtesy Tone 2"
-  },
-  {
-    "fn": 61,
-    "description": "Port 2 Courtesy Tone 3"
-  },
-  {
-    "fn": 62,
-    "description": "Port 2 Courtesy Tone 4"
-  },
-  {
-    "fn": 63,
-    "description": "Port 2 Courtesy Tone 5"
-  },
-  {
-    "fn": 64,
-    "description": "Port 2 Courtesy Tone 6"
-  },
-  {
-    "fn": 65,
-    "description": "Port 2 Courtesy Tone 7"
-  },
-  {
-    "fn": 66,
-    "description": "Port 2 Courtesy Tone 8"
-  },
-  {
-    "fn": 67,
-    "description": "Port 2 Courtesy Tone 9"
-  },
-  {
-    "fn": 68,
-    "description": "Port 2 Courtesy Tone 10"
-  },
-  {
-    "fn": 69,
-    "description": "Port 3 Courtesy Tone 1"
-  },
-  {
-    "fn": 70,
-    "description": "Port 3 Courtesy Tone 2"
-  },
-  {
-    "fn": 71,
-    "description": "Port 3 Courtesy Tone 3"
-  },
-  {
-    "fn": 72,
-    "description": "Port 3 Courtesy Tone 4"
-  },
-  {
-    "fn": 73,
-    "description": "Port 3 Courtesy Tone 5"
-  },
-  {
-    "fn": 74,
-    "description": "Port 3 Courtesy Tone 6"
-  },
-  {
-    "fn": 75,
-    "description": "Port 3 Courtesy Tone 7"
-  },
-  {
-    "fn": 76,
-    "description": "Port 3 Courtesy Tone 8"
-  },
-  {
-    "fn": 77,
-    "description": "Port 3 Courtesy Tone 9"
-  },
-  {
-    "fn": 78,
-    "description": "Port 3 Courtesy Tone 10"
-  },
-  {
-    "fn": 79,
-    "description": "Port 1 DTMF Muting ON"
-  },
-  {
-    "fn": 80,
-    "description": "Port 2 DTMF Muting ON"
-  },
-  {
-    "fn": 81,
-    "description": "Port 3 DTMF Muting ON"
-  },
-  {
-    "fn": 82,
-    "description": "Port 1 DTMF Muting OFF"
-  },
-  {
-    "fn": 83,
-    "description": "Port 2 DTMF Muting OFF"
-  },
-  {
-    "fn": 84,
-    "description": "Port 3 DTMF Muting OFF"
-  },
-  {
-    "fn": 85,
-    "description": "CTCSS Encode ON Current Speech Port"
-  },
-  {
-    "fn": 86,
-    "description": "CTCSS Encode OFF Current Speech Port"
-  },
-  {
-    "fn": 87,
-    "description": "Read ADC Channel 1"
-  },
-  {
-    "fn": 88,
-    "description": "Read ADC Channel 2"
-  },
-  {
-    "fn": 89,
-    "description": "Read ADC Channel 3"
-  },
-  {
-    "fn": 90,
-    "description": "Read ADC Channel 4"
-  },
-  {
-    "fn": 91,
-    "description": "Read ADC Channel 5"
-  },
-  {
-    "fn": 92,
-    "description": "Read ADC Channel 6"
-  },
-  {
-    "fn": 93,
-    "description": "Read ADC Channel 7"
-  },
-  {
-    "fn": 94,
-    "description": "Read ADC Channel 8"
-  },
-  {
-    "fn": 95,
-    "description": "UF1 ON"
-  },
-  {
-    "fn": 96,
-    "description": "UF2 ON"
-  },
-  {
-    "fn": 97,
-    "description": "UF3 ON"
-  },
-  {
-    "fn": 98,
-    "description": "UF4 ON"
-  },
-  {
-    "fn": 99,
-    "description": "UF5 ON"
-  },
-  {
-    "fn": 100,
-    "description": "UF6 ON"
-  },
-  {
-    "fn": 101,
-    "description": "UF7 ON"
-  },
-  {
-    "fn": 102,
-    "description": "UF1 OFF"
-  },
-  {
-    "fn": 103,
-    "description": "UF2 OFF"
-  },
-  {
-    "fn": 104,
-    "description": "UF3 OFF"
-  },
-  {
-    "fn": 105,
-    "description": "UF4 OFF"
-  },
-  {
-    "fn": 106,
-    "description": "UF5 OFF"
-  },
-  {
-    "fn": 107,
-    "description": "UF6 OFF"
-  },
-  {
-    "fn": 108,
-    "description": "UF7 OFF"
-  },
-  {
-    "fn": 109,
-    "description": "UF1 Pulse"
-  },
-  {
-    "fn": 110,
-    "description": "UF2 Pulse"
-  },
-  {
-    "fn": 111,
-    "description": "UF3 Pulse"
-  },
-  {
-    "fn": 112,
-    "description": "UF4 Pulse"
-  },
-  {
-    "fn": 113,
-    "description": "UF5 Pulse"
-  },
-  {
-    "fn": 114,
-    "description": "UF6 Pulse"
-  },
-  {
-    "fn": 115,
-    "description": "UF7 Pulse"
-  },
-  {
-    "fn": 116,
-    "description": "Say Time"
-  },
-  {
-    "fn": 117,
-    "description": "Say Date"
-  },
-  {
-    "fn": 118,
-    "description": "Link Port 1 To Port 2"
-  },
-  {
-    "fn": 119,
-    "description": "Link Port 1 To Port 3"
-  },
-  {
-    "fn": 120,
-    "description": "Link Port 2 To Port 3"
-  },
-  {
-    "fn": 121,
-    "description": "Link All Ports"
-  },
-  {
-    "fn": 122,
-    "description": "Unlink Port 1 From Port 2"
-  },
-  {
-    "fn": 123,
-    "description": "Unlink Port 1 From Port 3"
-  },
-  {
-    "fn": 124,
-    "description": "Unlink Port 2 From Port 3"
-  },
-  {
-    "fn": 125,
-    "description": "Unlink All Ports"
-  },
-  {
-    "fn": 126,
-    "description": "Play DVR Track 1"
-  },
-  {
-    "fn": 127,
-    "description": "Play DVR Track 2"
-  },
-  {
-    "fn": 128,
-    "description": "Play DVR Track 3"
-  },
-  {
-    "fn": 129,
-    "description": "Play DVR Track 4"
-  },
-  {
-    "fn": 130,
-    "description": "Play DVR Track 5"
-  },
-  {
-    "fn": 131,
-    "description": "Play DVR Track 6"
-  },
-  {
-    "fn": 132,
-    "description": "Play DVR Track 7"
-  },
-  {
-    "fn": 133,
-    "description": "Play DVR Track 8"
-  },
-  {
-    "fn": 134,
-    "description": "Play DVR Track 9"
-  },
-  {
-    "fn": 135,
-    "description": "Play DVR Track 10"
-  },
-  {
-    "fn": 136,
-    "description": "Play DVR Track 11"
-  },
-  {
-    "fn": 137,
-    "description": "Play DVR Track 12"
-  },
-  {
-    "fn": 138,
-    "description": "Play DVR Track 13"
-  },
-  {
-    "fn": 139,
-    "description": "Play DVR Track 14"
-  },
-  {
-    "fn": 140,
-    "description": "Play DVR Track 15"
-  },
-  {
-    "fn": 141,
-    "description": "Play DVR Track 16"
-  },
-  {
-    "fn": 142,
-    "description": "Play DVR Track 17"
-  },
-  {
-    "fn": 143,
-    "description": "Play DVR Track 18"
-  },
-  {
-    "fn": 144,
-    "description": "Play DVR Track 19"
-  },
-  {
-    "fn": 145,
-    "description": "Play DVR Track 20"
-  },
-  {
-    "fn": 146,
-    "description": "Auxiliary Audio 1 ON"
-  },
-  {
-    "fn": 147,
-    "description": "Auxiliary Audio 2 ON"
-  },
-  {
-    "fn": 148,
-    "description": "Auxiliary Audio 3 ON"
-  },
-  {
-    "fn": 149,
-    "description": "Auxiliary Audio 1 OFF"
-  },
-  {
-    "fn": 150,
-    "description": "Auxiliary Audio 2 OFF"
-  },
-  {
-    "fn": 151,
-    "description": "Auxiliary Audio 3 OFF"
-  },
-  {
-    "fn": 152,
-    "description": "Alarm 1 ON"
-  },
-  {
-    "fn": 153,
-    "description": "Alarm 2 ON"
-  },
-  {
-    "fn": 154,
-    "description": "Alarm 3 ON"
-  },
-  {
-    "fn": 155,
-    "description": "Alarm 4 ON"
-  },
-  {
-    "fn": 156,
-    "description": "Alarm 5 ON"
-  },
-  {
-    "fn": 157,
-    "description": "Alarm 1 OFF"
-  },
-  {
-    "fn": 158,
-    "description": "Alarm 2 OFF"
-  },
-  {
-    "fn": 159,
-    "description": "Alarm 3 OFF"
-  },
-  {
-    "fn": 160,
-    "description": "Alarm 4 OFF"
-  },
-  {
-    "fn": 161,
-    "description": "Alarm 5 OFF"
-  },
-  {
-    "fn": 162,
-    "description": "Speech Out Port 1"
-  },
-  {
-    "fn": 163,
-    "description": "Speech Out Port 2"
-  },
-  {
-    "fn": 164,
-    "description": "Speech Out Port 3"
-  },
-  {
-    "fn": 165,
-    "description": "Speech Out Ports 1 & 2"
-  },
-  {
-    "fn": 166,
-    "description": "Speech Out Ports 1 & 3"
-  },
-  {
-    "fn": 167,
-    "description": "Speech Out Ports 2 & 3"
-  },
-  {
-    "fn": 168,
-    "description": "Speech Out All Ports"
-  },
-  {
-    "fn": 169,
-    "description": "DTMF Enable Port 1"
-  },
-  {
-    "fn": 170,
-    "description": "DTMF Enable Port 2"
-  },
-  {
-    "fn": 171,
-    "description": "DTMF Enable Port 3"
-  },
-  {
-    "fn": 172,
-    "description": "DTMF Disable Port 1"
-  },
-  {
-    "fn": 173,
-    "description": "DTMF Disable Port 2"
-  },
-  {
-    "fn": 174,
-    "description": "DTMF Disable Port 3"
-  },
-  {
-    "fn": 175,
-    "description": "Require PL for DTMF Port 1"
-  },
-  {
-    "fn": 176,
-    "description": "Require PL for DTMF Port 2"
-  },
-  {
-    "fn": 177,
-    "description": "Require PL for DTMF Port 3"
-  },
-  {
-    "fn": 178,
-    "description": "Do Not Require PL for DTMF Port 1"
-  },
-  {
-    "fn": 179,
-    "description": "Do Not Require PL for DTMF Port 2"
-  },
-  {
-    "fn": 180,
-    "description": "Do Not Require PL for DTMF Port 3"
-  },
-  {
-    "fn": 181,
-    "description": "Play Next Voice ID on Port 1"
-  },
-  {
-    "fn": 182,
-    "description": "Play Next Voice ID on Port 2"
-  },
-  {
-    "fn": 183,
-    "description": "Play Next Voice ID on Port 3"
-  },
-  {
-    "fn": 184,
-    "description": "Play Next CW ID on Port 1"
-  },
-  {
-    "fn": 185,
-    "description": "Play Next CW ID on Port 2"
-  },
-  {
-    "fn": 186,
-    "description": "Play Next CW ID on Port 3"
-  },
-  {
-    "fn": 187,
-    "description": "Speak Message Macro 1",
-    "destination": "M1"
-  },
-  {
-    "fn": 188,
-    "description": "Speak Message Macro 2",
-    "destination": "M2"
-  },
-  {
-    "fn": 189,
-    "description": "Speak Message Macro 3",
-    "destination": "M3"
-  },
-  {
-    "fn": 190,
-    "description": "Speak Message Macro 4",
-    "destination": "M4"
-  },
-  {
-    "fn": 191,
-    "description": "Speak Message Macro 5",
-    "destination": "M5"
-  },
-  {
-    "fn": 192,
-    "description": "Speak Message Macro 6",
-    "destination": "M6"
-  },
-  {
-    "fn": 193,
-    "description": "Speak Message Macro 7",
-    "destination": "M7"
-  },
-  {
-    "fn": 194,
-    "description": "Speak Message Macro 8",
-    "destination": "M8"
-  },
-  {
-    "fn": 195,
-    "description": "Speak Message Macro 9",
-    "destination": "M9"
-  },
-  {
-    "fn": 196,
-    "description": "Speak Message Macro 10",
-    "destination": "M10"
-  },
-  {
-    "fn": 197,
-    "description": "Speak Message Macro 11",
-    "destination": "M11"
-  },
-  {
-    "fn": 198,
-    "description": "Speak Message Macro 12",
-    "destination": "M12"
-  },
-  {
-    "fn": 199,
-    "description": "Speak Message Macro 13",
-    "destination": "M13"
-  },
-  {
-    "fn": 200,
-    "description": "Speak Message Macro 14",
-    "destination": "M14"
-  },
-  {
-    "fn": 201,
-    "description": "Speak Message Macro 15",
-    "destination": "M15"
-  },
-  {
-    "fn": 202,
-    "description": "Speak Message Macro 16",
-    "destination": "M16"
-  },
-  {
-    "fn": 203,
-    "description": "Speak Message Macro 17",
-    "destination": "M17"
-  },
-  {
-    "fn": 204,
-    "description": "Speak Message Macro 18",
-    "destination": "M18"
-  },
-  {
-    "fn": 205,
-    "description": "Speak Message Macro 19",
-    "destination": "M19"
-  },
-  {
-    "fn": 206,
-    "description": "Speak Message Macro 20",
-    "destination": "M20"
-  },
-  {
-    "fn": 207,
-    "description": "Speak Message Macro 21",
-    "destination": "M21"
-  },
-  {
-    "fn": 208,
-    "description": "Speak Message Macro 22",
-    "destination": "M22"
-  },
-  {
-    "fn": 209,
-    "description": "Speak Message Macro 23",
-    "destination": "M23"
-  },
-  {
-    "fn": 210,
-    "description": "Speak Message Macro 24",
-    "destination": "M24"
-  },
-  {
-    "fn": 211,
-    "description": "Speak Message Macro 25",
-    "destination": "M25"
-  },
-  {
-    "fn": 212,
-    "description": "Speak Message Macro 26",
-    "destination": "M26"
-  },
-  {
-    "fn": 213,
-    "description": "Speak Message Macro 27",
-    "destination": "M27"
-  },
-  {
-    "fn": 214,
-    "description": "Speak Message Macro 28",
-    "destination": "M28"
-  },
-  {
-    "fn": 215,
-    "description": "Speak Message Macro 29",
-    "destination": "M29"
-  },
-  {
-    "fn": 216,
-    "description": "Speak Message Macro 30",
-    "destination": "M30"
-  },
-  {
-    "fn": 217,
-    "description": "Speak Message Macro 31",
-    "destination": "M31"
-  },
-  {
-    "fn": 218,
-    "description": "Speak Message Macro 32",
-    "destination": "M32"
-  },
-  {
-    "fn": 219,
-    "description": "Speak Message Macro 33",
-    "destination": "M33"
-  },
-  {
-    "fn": 220,
-    "description": "Speak Message Macro 34",
-    "destination": "M34"
-  },
-  {
-    "fn": 221,
-    "description": "Speak Message Macro 35",
-    "destination": "M35"
-  },
-  {
-    "fn": 222,
-    "description": "Speak Message Macro 36",
-    "destination": "M36"
-  },
-  {
-    "fn": 223,
-    "description": "Speak Message Macro 37",
-    "destination": "M37"
-  },
-  {
-    "fn": 224,
-    "description": "Speak Message Macro 38",
-    "destination": "M38"
-  },
-  {
-    "fn": 225,
-    "description": "Speak Message Macro 39",
-    "destination": "M39"
-  },
-  {
-    "fn": 226,
-    "description": "Speak Message Macro 40",
-    "destination": "M40"
-  },
-  {
-    "fn": 227,
-    "description": "Say Good (Morning/Afternoon/Evening)"
-  },
-  {
-    "fn": 228,
-    "description": "High Priority Macro"
-  },
-  {
-    "fn": 229,
-    "description": "Low Priority Macro"
-  },
-  {
-    "fn": 230,
-    "description": "Port 1 Kerchunk Filter OFF"
-  },
-  {
-    "fn": 231,
-    "description": "Port 2 Kerchunk Filter OFF"
-  },
-  {
-    "fn": 232,
-    "description": "Port 3 Kerchunk Filter OFF"
-  },
-  {
-    "fn": 233,
-    "description": "Port 1 Kerchunk Filter ON"
-  },
-  {
-    "fn": 234,
-    "description": "Port 2 Kerchunk Filter ON"
-  },
-  {
-    "fn": 235,
-    "description": "Port 2 Kerchunk Filter ON"
-  },
-  {
-    "fn": 236,
-    "description": "Port 1 Receiver Disable"
-  },
-  {
-    "fn": 237,
-    "description": "Port 2 Receiver Disable"
-  },
-  {
-    "fn": 238,
-    "description": "Port 3 Receiver Disable"
-  },
-  {
-    "fn": 239,
-    "description": "Port 1 Receiver Enable"
-  },
-  {
-    "fn": 240,
-    "description": "Port 2 Receiver Enable"
-  },
-  {
-    "fn": 241,
-    "description": "Port 3 Receiver Enable"
-  },
-  {
-    "fn": 242,
-    "description": "Port 1 Speech ID Override OFF"
-  },
-  {
-    "fn": 243,
-    "description": "Port 2 Speech ID Override OFF"
-  },
-  {
-    "fn": 244,
-    "description": "Port 3 Speech ID Override OFF"
-  },
-  {
-    "fn": 245,
-    "description": "Port 1 Speech ID Override ON"
-  },
-  {
-    "fn": 246,
-    "description": "Port 2 Speech ID Override ON"
-  },
-  {
-    "fn": 247,
-    "description": "Port 3 Speech ID Override ON"
-  },
-  {
-    "fn": 248,
-    "description": "All Courtesy Tones OFF Port 1"
-  },
-  {
-    "fn": 249,
-    "description": "All Courtesy Tones OFF Port 2"
-  },
-  {
-    "fn": 250,
-    "description": "All Courtesy Tones OFF Port 3"
-  },
-  {
-    "fn": 251,
-    "description": "Force Audio To Entered Port"
-  },
-  {
-    "fn": 252,
-    "description": "Stop ID/Disable Timeout Timer Port 1"
-  },
-  {
-    "fn": 253,
-    "description": "Stop ID/Disable Timeout Timer Port 2"
-  },
-  {
-    "fn": 254,
-    "description": "Stop ID/Disable Timeout Timer Port 3"
-  },
-  {
-    "fn": 256,
-    "description": "Resume ID/Enable Timeout Timer Port 1"
-  },
-  {
-    "fn": 257,
-    "description": "Resume ID/Enable Timeout Timer Port 2"
-  },
-  {
-    "fn": 258,
-    "description": "Resume ID/Enable Timeout Timer Port 3"
-  },
-  {
-    "fn": 259,
-    "description": "Send DTMF Memory 1"
-  },
-  {
-    "fn": 260,
-    "description": "Send DTMF Memory 2"
-  },
-  {
-    "fn": 261,
-    "description": "Send DTMF Memory 3"
-  },
-  {
-    "fn": 262,
-    "description": "Send DTMF Memory 4"
-  },
-  {
-    "fn": 263,
-    "description": "Send DTMF Memory 5"
-  },
-  {
-    "fn": 264,
-    "description": "Send DTMF Memory 6"
-  },
-  {
-    "fn": 265,
-    "description": "Send DTMF Memory 7"
-  },
-  {
-    "fn": 266,
-    "description": "Send DTMF Memory 8"
-  },
-  {
-    "fn": 267,
-    "description": "Send DTMF Memory 9"
-  },
-  {
-    "fn": 268,
-    "description": "Send DTMF Memory 10"
-  },
-  {
-    "fn": 269,
-    "description": "Send DTMF Memory 11"
-  },
-  {
-    "fn": 270,
-    "description": "Send DTMF Memory 12"
-  },
-  {
-    "fn": 271,
-    "description": "Send DTMF Memory 13"
-  },
-  {
-    "fn": 272,
-    "description": "Send DTMF Memory 14"
-  },
-  {
-    "fn": 273,
-    "description": "Send DTMF Memory 15"
-  },
-  {
-    "fn": 274,
-    "description": "Send DTMF Memory 16"
-  },
-  {
-    "fn": 275,
-    "description": "Send DTMF Memory 17"
-  },
-  {
-    "fn": 276,
-    "description": "Send DTMF Memory 18"
-  },
-  {
-    "fn": 277,
-    "description": "Send DTMF Memory 19"
-  },
-  {
-    "fn": 278,
-    "description": "Send DTMF Memory 20"
-  },
-  {
-    "fn": 279,
-    "description": "Clear All Meters Hi/Low"
-  },
-  {
-    "fn": 280,
-    "description": "Clear Meter 1 Hi/Low"
-  },
-  {
-    "fn": 281,
-    "description": "Clear Meter 2 Hi/Low"
-  },
-  {
-    "fn": 282,
-    "description": "Clear Meter 3 Hi/Low"
-  },
-  {
-    "fn": 283,
-    "description": "Clear Meter 4 Hi/Low"
-  },
-  {
-    "fn": 284,
-    "description": "Clear Meter 5 Hi/Low"
-  },
-  {
-    "fn": 285,
-    "description": "Clear Meter 6 Hi/Low"
-  },
-  {
-    "fn": 286,
-    "description": "Clear Meter 7 Hi/Low"
-  },
-  {
-    "fn": 287,
-    "description": "Clear Meter 8 Hi/Low"
-  },
-  {
-    "fn": 288,
-    "description": "Enable Meter Alarm 1"
-  },
-  {
-    "fn": 289,
-    "description": "Enable Meter Alarm 2"
-  },
-  {
-    "fn": 290,
-    "description": "Enable Meter Alarm 3"
-  },
-  {
-    "fn": 291,
-    "description": "Enable Meter Alarm 4"
-  },
-  {
-    "fn": 292,
-    "description": "Enable Meter Alarm 5"
-  },
-  {
-    "fn": 293,
-    "description": "Enable Meter Alarm 6"
-  },
-  {
-    "fn": 294,
-    "description": "Enable Meter Alarm 7"
-  },
-  {
-    "fn": 295,
-    "description": "Enable Meter Alarm 8"
-  },
-  {
-    "fn": 296,
-    "description": "Disable Meter Alarm 1"
-  },
-  {
-    "fn": 297,
-    "description": "Disable Meter Alarm 2"
-  },
-  {
-    "fn": 298,
-    "description": "Disable Meter Alarm 3"
-  },
-  {
-    "fn": 299,
-    "description": "Disable Meter Alarm 4"
-  },
-  {
-    "fn": 300,
-    "description": "Disable Meter Alarm 5"
-  },
-  {
-    "fn": 301,
-    "description": "Disable Meter Alarm 6"
-  },
-  {
-    "fn": 302,
-    "description": "Disable Meter Alarm 7"
-  },
-  {
-    "fn": 303,
-    "description": "Disable Meter Alarm 8"
-  },
-  {
-    "fn": 304,
-    "description": "CTCSS Encode Force OFF"
-  },
-  {
-    "fn": 305,
-    "description": "CTCSS Encode To Programmed Value"
-  },
-  {
-    "fn": 306,
-    "description": "Bump Clock By Correction Factor"
-  },
-  {
-    "fn": 307,
-    "description": "Say Year As Part Of Date"
-  },
-  {
-    "fn": 308,
-    "description": "Don't Say Year As Part Of Date"
-  },
-  {
-    "fn": 309,
-    "description": "Port 1 Tail Message OFF"
-  },
-  {
-    "fn": 310,
-    "description": "Port 2 Tail Message OFF"
-  },
-  {
-    "fn": 311,
-    "description": "Port 3 Tail Message OFF"
-  },
-  {
-    "fn": 312,
-    "description": "Port 1 Tail Message 1"
-  },
-  {
-    "fn": 313,
-    "description": "Port 2 Tail Message 1"
-  },
-  {
-    "fn": 314,
-    "description": "Port 3 Tail Message 1"
-  },
-  {
-    "fn": 315,
-    "description": "Port 1 Tail Message 2"
-  },
-  {
-    "fn": 316,
-    "description": "Port 2 Tail Message 2"
-  },
-  {
-    "fn": 317,
-    "description": "Port 3 Tail Message 2"
-  },
-  {
-    "fn": 318,
-    "description": "Port 1 Tail Message 3"
-  },
-  {
-    "fn": 319,
-    "description": "Port 2 Tail Message 3"
-  },
-  {
-    "fn": 320,
-    "description": "Port 3 Tail Message 3"
-  },
-  {
-    "fn": 321,
-    "description": "Remote Base Memory 1"
-  },
-  {
-    "fn": 322,
-    "description": "Remote Base Memory 2"
-  },
-  {
-    "fn": 323,
-    "description": "Remote Base Memory 3"
-  },
-  {
-    "fn": 324,
-    "description": "Remote Base Memory 4"
-  },
-  {
-    "fn": 325,
-    "description": "Remote Base Memory 5"
-  },
-  {
-    "fn": 326,
-    "description": "Remote Base Memory 6"
-  },
-  {
-    "fn": 327,
-    "description": "Remote Base Memory 7"
-  },
-  {
-    "fn": 328,
-    "description": "Remote Base Memory 8"
-  },
-  {
-    "fn": 329,
-    "description": "Remote Base Memory 9"
-  },
-  {
-    "fn": 330,
-    "description": "Remote Base Memory 10"
-  },
-  {
-    "fn": 331,
-    "description": "Port 1 Zero Hang Time"
-  },
-  {
-    "fn": 332,
-    "description": "Port 2 Zero Hang Time"
-  },
-  {
-    "fn": 333,
-    "description": "Port 3 Zero Hang Time"
-  },
-  {
-    "fn": 334,
-    "description": "Port 1 Revert to Programmed Value"
-  },
-  {
-    "fn": 335,
-    "description": "Port 2 Revert to Programmed Value"
-  },
-  {
-    "fn": 336,
-    "description": "Port 3 Revert to Programmed Value"
-  },
-  {
-    "fn": 337,
-    "description": "Allow Autopatch From Programmed Ports"
-  },
-  {
-    "fn": 338,
-    "description": "Disable Autopatch"
-  },
-  {
-    "fn": 339,
-    "description": "Enable Speech ID's On Port 1"
-  },
-  {
-    "fn": 340,
-    "description": "Enable Speech ID's On Port 2"
-  },
-  {
-    "fn": 341,
-    "description": "Enable Speech ID's On Port 3"
-  },
-  {
-    "fn": 342,
-    "description": "Disable Speech ID's On Port 1"
-  },
-  {
-    "fn": 343,
-    "description": "Disable Speech ID's On Port 2"
-  },
-  {
-    "fn": 344,
-    "description": "Disable Speech ID's On Port 3"
-  },
-  {
-    "fn": 345,
-    "description": "User DVR Record, Erase After Auto Playback"
-  },
-  {
-    "fn": 346,
-    "description": "User DVR Record, Don't Erase After Auto Playback"
-  },
-  {
-    "fn": 347,
-    "description": "Start General Timer 1"
-  },
-  {
-    "fn": 348,
-    "description": "Start General Timer 2"
-  },
-  {
-    "fn": 349,
-    "description": "Start General Timer 3"
-  },
-  {
-    "fn": 350,
-    "description": "Stop General Timer 1"
-  },
-  {
-    "fn": 351,
-    "description": "Stop General Timer 2"
-  },
-  {
-    "fn": 352,
-    "description": "Stop General Timer 3"
-  },
-  {
-    "fn": 353,
-    "description": "Remote Base Power Select 1"
-  },
-  {
-    "fn": 354,
-    "description": "Remote Base Power Select 2"
-  },
-  {
-    "fn": 355,
-    "description": "Remote Base Power Select 3"
-  },
-  {
-    "fn": 356,
-    "description": "Guest Macros ON"
-  },
-  {
-    "fn": 357,
-    "description": "Guest Macros OFF"
-  },
-  {
-    "fn": 358,
-    "description": "Receiver 1 Macros ON"
-  },
-  {
-    "fn": 359,
-    "description": "Receiver 2 Macros ON"
-  },
-  {
-    "fn": 360,
-    "description": "Receiver 3 Macros ON"
-  },
-  {
-    "fn": 361,
-    "description": "Receiver 1 Macros OFF"
-  },
-  {
-    "fn": 362,
-    "description": "Receiver 2 Macros OFF"
-  },
-  {
-    "fn": 363,
-    "description": "Receiver 3 Macros OFF"
-  },
-  {
-    "fn": 364,
-    "description": "Extended Logic Output 1 ON"
-  },
-  {
-    "fn": 365,
-    "description": "Extended Logic Output 2 ON"
-  },
-  {
-    "fn": 366,
-    "description": "Extended Logic Output 3 ON"
-  },
-  {
-    "fn": 367,
-    "description": "Extended Logic Output 4 ON"
-  },
-  {
-    "fn": 368,
-    "description": "Extended Logic Output 5 ON"
-  },
-  {
-    "fn": 369,
-    "description": "Extended Logic Output 6 ON"
-  },
-  {
-    "fn": 370,
-    "description": "Extended Logic Output 7 ON"
-  },
-  {
-    "fn": 371,
-    "description": "Extended Logic Output 8 ON"
-  },
-  {
-    "fn": 372,
-    "description": "Extended Logic Output 9 ON"
-  },
-  {
-    "fn": 373,
-    "description": "Extended Logic Output 10 ON"
-  },
-  {
-    "fn": 374,
-    "description": "Extended Logic Output 11 ON"
-  },
-  {
-    "fn": 375,
-    "description": "Extended Logic Output 12 ON"
-  },
-  {
-    "fn": 376,
-    "description": "Extended Logic Output 13 ON"
-  },
-  {
-    "fn": 377,
-    "description": "Extended Logic Output 14 ON"
-  },
-  {
-    "fn": 378,
-    "description": "Extended Logic Output 15 ON"
-  },
-  {
-    "fn": 379,
-    "description": "Extended Logic Output 16 ON"
-  },
-  {
-    "fn": 380,
-    "description": "Extended Logic Output 17 ON"
-  },
-  {
-    "fn": 381,
-    "description": "Extended Logic Output 18 ON"
-  },
-  {
-    "fn": 382,
-    "description": "Extended Logic Output 19 ON"
-  },
-  {
-    "fn": 383,
-    "description": "Extended Logic Output 20 ON"
-  },
-  {
-    "fn": 384,
-    "description": "Extended Logic Output 21 ON"
-  },
-  {
-    "fn": 385,
-    "description": "Extended Logic Output 22 ON"
-  },
-  {
-    "fn": 386,
-    "description": "Extended Logic Output 23 ON"
-  },
-  {
-    "fn": 387,
-    "description": "Extended Logic Output 24 ON"
-  },
-  {
-    "fn": 388,
-    "description": "Extended Logic Output 25 ON"
-  },
-  {
-    "fn": 389,
-    "description": "Extended Logic Output 26 ON"
-  },
-  {
-    "fn": 390,
-    "description": "Extended Logic Output 27 ON"
-  },
-  {
-    "fn": 391,
-    "description": "Extended Logic Output 28 ON"
-  },
-  {
-    "fn": 392,
-    "description": "Extended Logic Output 29 ON"
-  },
-  {
-    "fn": 393,
-    "description": "Extended Logic Output 30 ON"
-  },
-  {
-    "fn": 394,
-    "description": "Extended Logic Output 31 ON"
-  },
-  {
-    "fn": 395,
-    "description": "Extended Logic Output 32 ON"
-  },
-  {
-    "fn": 396,
-    "description": "Extended Logic Output 1 PULSE"
-  },
-  {
-    "fn": 397,
-    "description": "Extended Logic Output 2 PULSE"
-  },
-  {
-    "fn": 398,
-    "description": "Extended Logic Output 3 PULSE"
-  },
-  {
-    "fn": 399,
-    "description": "Extended Logic Output 4 PULSE"
-  },
-  {
-    "fn": 400,
-    "description": "Extended Logic Output 5 PULSE"
-  },
-  {
-    "fn": 401,
-    "description": "Extended Logic Output 6 PULSE"
-  },
-  {
-    "fn": 402,
-    "description": "Extended Logic Output 7 PULSE"
-  },
-  {
-    "fn": 403,
-    "description": "Extended Logic Output 8 PULSE"
-  },
-  {
-    "fn": 404,
-    "description": "Extended Logic Output 9 PULSE"
-  },
-  {
-    "fn": 405,
-    "description": "Extended Logic Output 10 PULSE"
-  },
-  {
-    "fn": 406,
-    "description": "Extended Logic Output 11 PULSE"
-  },
-  {
-    "fn": 407,
-    "description": "Extended Logic Output 12 PULSE"
-  },
-  {
-    "fn": 408,
-    "description": "Extended Logic Output 13 PULSE"
-  },
-  {
-    "fn": 409,
-    "description": "Extended Logic Output 14 PULSE"
-  },
-  {
-    "fn": 410,
-    "description": "Extended Logic Output 15 PULSE"
-  },
-  {
-    "fn": 411,
-    "description": "Extended Logic Output 16 PULSE"
-  },
-  {
-    "fn": 412,
-    "description": "Extended Logic Output 17 PULSE"
-  },
-  {
-    "fn": 413,
-    "description": "Extended Logic Output 18 PULSE"
-  },
-  {
-    "fn": 414,
-    "description": "Extended Logic Output 19 PULSE"
-  },
-  {
-    "fn": 415,
-    "description": "Extended Logic Output 20 PULSE"
-  },
-  {
-    "fn": 416,
-    "description": "Extended Logic Output 21 PULSE"
-  },
-  {
-    "fn": 417,
-    "description": "Extended Logic Output 22 PULSE"
-  },
-  {
-    "fn": 418,
-    "description": "Extended Logic Output 23 PULSE"
-  },
-  {
-    "fn": 419,
-    "description": "Extended Logic Output 24 PULSE"
-  },
-  {
-    "fn": 420,
-    "description": "Extended Logic Output 25 PULSE"
-  },
-  {
-    "fn": 421,
-    "description": "Extended Logic Output 26 PULSE"
-  },
-  {
-    "fn": 422,
-    "description": "Extended Logic Output 27 PULSE"
-  },
-  {
-    "fn": 423,
-    "description": "Extended Logic Output 28 PULSE"
-  },
-  {
-    "fn": 424,
-    "description": "Extended Logic Output 29 PULSE"
-  },
-  {
-    "fn": 425,
-    "description": "Extended Logic Output 30 PULSE"
-  },
-  {
-    "fn": 426,
-    "description": "Extended Logic Output 31 PULSE"
-  },
-  {
-    "fn": 427,
-    "description": "Extended Logic Output 32 PULSE"
-  },
-  {
-    "fn": 428,
-    "description": "Extended Logic Output 1 OFF"
-  },
-  {
-    "fn": 429,
-    "description": "Extended Logic Output 2 OFF"
-  },
-  {
-    "fn": 430,
-    "description": "Extended Logic Output 3 OFF"
-  },
-  {
-    "fn": 431,
-    "description": "Extended Logic Output 4 OFF"
-  },
-  {
-    "fn": 432,
-    "description": "Extended Logic Output 5 OFF"
-  },
-  {
-    "fn": 433,
-    "description": "Extended Logic Output 6 OFF"
-  },
-  {
-    "fn": 434,
-    "description": "Extended Logic Output 7 OFF"
-  },
-  {
-    "fn": 435,
-    "description": "Extended Logic Output 8 OFF"
-  },
-  {
-    "fn": 436,
-    "description": "Extended Logic Output 9 OFF"
-  },
-  {
-    "fn": 437,
-    "description": "Extended Logic Output 10 OFF"
-  },
-  {
-    "fn": 438,
-    "description": "Extended Logic Output 11 OFF"
-  },
-  {
-    "fn": 439,
-    "description": "Extended Logic Output 12 OFF"
-  },
-  {
-    "fn": 440,
-    "description": "Extended Logic Output 13 OFF"
-  },
-  {
-    "fn": 441,
-    "description": "Extended Logic Output 14 OFF"
-  },
-  {
-    "fn": 442,
-    "description": "Extended Logic Output 15 OFF"
-  },
-  {
-    "fn": 443,
-    "description": "Extended Logic Output 16 OFF"
-  },
-  {
-    "fn": 444,
-    "description": "Extended Logic Output 17 OFF"
-  },
-  {
-    "fn": 445,
-    "description": "Extended Logic Output 18 OFF"
-  },
-  {
-    "fn": 446,
-    "description": "Extended Logic Output 19 OFF"
-  },
-  {
-    "fn": 447,
-    "description": "Extended Logic Output 20 OFF"
-  },
-  {
-    "fn": 448,
-    "description": "Extended Logic Output 21 OFF"
-  },
-  {
-    "fn": 449,
-    "description": "Extended Logic Output 22 OFF"
-  },
-  {
-    "fn": 450,
-    "description": "Extended Logic Output 23 OFF"
-  },
-  {
-    "fn": 451,
-    "description": "Extended Logic Output 24 OFF"
-  },
-  {
-    "fn": 452,
-    "description": "Extended Logic Output 25 OFF"
-  },
-  {
-    "fn": 453,
-    "description": "Extended Logic Output 26 OFF"
-  },
-  {
-    "fn": 454,
-    "description": "Extended Logic Output 27 OFF"
-  },
-  {
-    "fn": 455,
-    "description": "Extended Logic Output 28 OFF"
-  },
-  {
-    "fn": 456,
-    "description": "Extended Logic Output 29 OFF"
-  },
-  {
-    "fn": 457,
-    "description": "Extended Logic Output 30 OFF"
-  },
-  {
-    "fn": 458,
-    "description": "Extended Logic Output 31 OFF"
-  },
-  {
-    "fn": 459,
-    "description": "Extended Logic Output 32 OFF"
-  },
-  {
-    "fn": 460,
-    "description": "Play Message Macro 41"
-  },
-  {
-    "fn": 461,
-    "description": "Play Message Macro 42"
-  },
-  {
-    "fn": 462,
-    "description": "Play Message Macro 43"
-  },
-  {
-    "fn": 463,
-    "description": "Play Message Macro 44"
-  },
-  {
-    "fn": 464,
-    "description": "Play Message Macro 45"
-  },
-  {
-    "fn": 465,
-    "description": "Play Message Macro 46"
-  },
-  {
-    "fn": 466,
-    "description": "Play Message Macro 47"
-  },
-  {
-    "fn": 467,
-    "description": "Play Message Macro 48"
-  },
-  {
-    "fn": 468,
-    "description": "Play Message Macro 49"
-  },
-  {
-    "fn": 469,
-    "description": "Play Message Macro 50"
-  },
-  {
-    "fn": 470,
-    "description": "Play Message Macro 51"
-  },
-  {
-    "fn": 471,
-    "description": "Play Message Macro 52"
-  },
-  {
-    "fn": 472,
-    "description": "Play Message Macro 53"
-  },
-  {
-    "fn": 473,
-    "description": "Play Message Macro 54"
-  },
-  {
-    "fn": 474,
-    "description": "Play Message Macro 55"
-  },
-  {
-    "fn": 475,
-    "description": "Play Message Macro 56"
-  },
-  {
-    "fn": 476,
-    "description": "Play Message Macro 57"
-  },
-  {
-    "fn": 477,
-    "description": "Play Message Macro 58"
-  },
-  {
-    "fn": 478,
-    "description": "Play Message Macro 59"
-  },
-  {
-    "fn": 479,
-    "description": "Play Message Macro 60"
-  },
-  {
-    "fn": 480,
-    "description": "Play Message Macro 61"
-  },
-  {
-    "fn": 481,
-    "description": "Play Message Macro 62"
-  },
-  {
-    "fn": 482,
-    "description": "Play Message Macro 63"
-  },
-  {
-    "fn": 483,
-    "description": "Play Message Macro 64"
-  },
-  {
-    "fn": 484,
-    "description": "Play Message Macro 65"
-  },
-  {
-    "fn": 485,
-    "description": "Play Message Macro 66"
-  },
-  {
-    "fn": 486,
-    "description": "Play Message Macro 67"
-  },
-  {
-    "fn": 487,
-    "description": "Play Message Macro 68"
-  },
-  {
-    "fn": 488,
-    "description": "Play Message Macro 69"
-  },
-  {
-    "fn": 489,
-    "description": "Play Message Macro 70"
-  },
-  {
-    "fn": 490,
-    "description": "Remote Base Memory 11"
-  },
-  {
-    "fn": 491,
-    "description": "Remote Base Memory 12"
-  },
-  {
-    "fn": 492,
-    "description": "Remote Base Memory 13"
-  },
-  {
-    "fn": 493,
-    "description": "Remote Base Memory 14"
-  },
-  {
-    "fn": 494,
-    "description": "Remote Base Memory 15"
-  },
-  {
-    "fn": 495,
-    "description": "Remote Base Memory 16"
-  },
-  {
-    "fn": 496,
-    "description": "Remote Base Memory 17"
-  },
-  {
-    "fn": 497,
-    "description": "Remote Base Memory 18"
-  },
-  {
-    "fn": 498,
-    "description": "Remote Base Memory 19"
-  },
-  {
-    "fn": 499,
-    "description": "Remote Base Memory 20"
-  },
-  {
-    "fn": 500,
-    "description": "Remote Base Memory 21"
-  },
-  {
-    "fn": 501,
-    "description": "Remote Base Memory 22"
-  },
-  {
-    "fn": 502,
-    "description": "Remote Base Memory 23"
-  },
-  {
-    "fn": 503,
-    "description": "Remote Base Memory 24"
-  },
-  {
-    "fn": 504,
-    "description": "Remote Base Memory 25"
-  },
-  {
-    "fn": 505,
-    "description": "Remote Base Memory 26"
-  },
-  {
-    "fn": 506,
-    "description": "Remote Base Memory 27"
-  },
-  {
-    "fn": 507,
-    "description": "Remote Base Memory 28"
-  },
-  {
-    "fn": 508,
-    "description": "Remote Base Memory 29"
-  },
-  {
-    "fn": 509,
-    "description": "Remote Base Memory 30"
-  },
-  {
-    "fn": 510,
-    "description": "NOT USED"
-  },
-  {
-    "fn": 511,
-    "description": "Remote Base Memory 31"
-  },
-  {
-    "fn": 512,
-    "description": "Remote Base Memory 32"
-  },
-  {
-    "fn": 513,
-    "description": "Remote Base Memory 33"
-  },
-  {
-    "fn": 514,
-    "description": "Remote Base Memory 34"
-  },
-  {
-    "fn": 515,
-    "description": "Remote Base Memory 35"
-  },
-  {
-    "fn": 516,
-    "description": "Remote Base Memory 36"
-  },
-  {
-    "fn": 517,
-    "description": "Remote Base Memory 37"
-  },
-  {
-    "fn": 518,
-    "description": "Remote Base Memory 38"
-  },
-  {
-    "fn": 519,
-    "description": "Remote Base Memory 39"
-  },
-  {
-    "fn": 520,
-    "description": "Remote Base Memory 40"
-  },
-  {
-    "fn": 521,
-    "description": "Send DTMF Memory 21"
-  },
-  {
-    "fn": 522,
-    "description": "Send DTMF Memory 22"
-  },
-  {
-    "fn": 523,
-    "description": "Send DTMF Memory 23"
-  },
-  {
-    "fn": 524,
-    "description": "Send DTMF Memory 24"
-  },
-  {
-    "fn": 525,
-    "description": "Send DTMF Memory 25"
-  },
-  {
-    "fn": 526,
-    "description": "Send DTMF Memory 26"
-  },
-  {
-    "fn": 527,
-    "description": "Send DTMF Memory 27"
-  },
-  {
-    "fn": 528,
-    "description": "Send DTMF Memory 28"
-  },
-  {
-    "fn": 529,
-    "description": "Send DTMF Memory 29"
-  },
-  {
-    "fn": 530,
-    "description": "Send DTMF Memory 30"
-  },
-  {
-    "fn": 531,
-    "description": "Send DTMF Memory 31"
-  },
-  {
-    "fn": 532,
-    "description": "Send DTMF Memory 32"
-  },
-  {
-    "fn": 533,
-    "description": "Send DTMF Memory 33"
-  },
-  {
-    "fn": 534,
-    "description": "Send DTMF Memory 34"
-  },
-  {
-    "fn": 535,
-    "description": "Send DTMF Memory 35"
-  },
-  {
-    "fn": 536,
-    "description": "Send DTMF Memory 36"
-  },
-  {
-    "fn": 537,
-    "description": "Send DTMF Memory 37"
-  },
-  {
-    "fn": 538,
-    "description": "Send DTMF Memory 38"
-  },
-  {
-    "fn": 539,
-    "description": "Send DTMF Memory 39"
-  },
-  {
-    "fn": 540,
-    "description": "Send DTMF Memory 40"
-  },
-  {
-    "fn": 541,
-    "description": "Send DTMF Memory 41"
-  },
-  {
-    "fn": 542,
-    "description": "Send DTMF Memory 42"
-  },
-  {
-    "fn": 543,
-    "description": "Send DTMF Memory 43"
-  },
-  {
-    "fn": 544,
-    "description": "Send DTMF Memory 44"
-  },
-  {
-    "fn": 545,
-    "description": "Send DTMF Memory 45"
-  },
-  {
-    "fn": 546,
-    "description": "Send DTMF Memory 46"
-  },
-  {
-    "fn": 547,
-    "description": "Send DTMF Memory 47"
-  },
-  {
-    "fn": 548,
-    "description": "Send DTMF Memory 48"
-  },
-  {
-    "fn": 549,
-    "description": "Send DTMF Memory 49"
-  },
-  {
-    "fn": 550,
-    "description": "Send DTMF Memory 50"
-  },
-  {
-    "fn": 551,
-    "description": "Load RTC Time & Date Into RC210"
-  },
-  {
-    "fn": 552,
-    "description": "CTCSS During ID ON"
-  },
-  {
-    "fn": 553,
-    "description": "CTCSS During ID OFF"
-  },
-  {
-    "fn": 554,
-    "description": "Port 1 Time XMTR has been active since last reset"
-  },
-  {
-    "fn": 555,
-    "description": "Port 2 Time XMTR has been active since last reset"
-  },
-  {
-    "fn": 556,
-    "description": "Port 3 Time XMTR has been active since last reset"
-  },
-  {
-    "fn": 557,
-    "description": "Reset Port 1 Transmitter Activity Timer to 0"
-  },
-  {
-    "fn": 558,
-    "description": "Reset Port 1 Transmitter Activity Timer to 0"
-  },
-  {
-    "fn": 559,
-    "description": "Reset Port 1 Transmitter Activity Timer to 0"
-  },
-  {
-    "fn": 560,
-    "description": "Give RSSI Report"
-  },
-  {
-    "fn": 561,
-    "description": "Restart Controller"
-  },
-  {
-    "fn": 562,
-    "description": "Readback Number of Keyups Port 1"
-  },
-  {
-    "fn": 563,
-    "description": "Readback Number of Keyups Port 2"
-  },
-  {
-    "fn": 564,
-    "description": "Readback Number of Keyups Port 3"
-  },
-  {
-    "fn": 565,
-    "description": "Reset Keyup Counter Port 1"
-  },
-  {
-    "fn": 566,
-    "description": "Reset Keyup Counter Port 2"
-  },
-  {
-    "fn": 567,
-    "description": "Reset Keyup Counter Port 3"
-  },
-  {
-    "fn": 570,
-    "description": "Readback A/D Channel 1 Low"
-  },
-  {
-    "fn": 571,
-    "description": "Readback A/D Channel 2 Low"
-  },
-  {
-    "fn": 572,
-    "description": "Readback A/D Channel 3 Low"
-  },
-  {
-    "fn": 573,
-    "description": "Readback A/D Channel 4 Low"
-  },
-  {
-    "fn": 574,
-    "description": "Readback A/D Channel 5 Low"
-  },
-  {
-    "fn": 575,
-    "description": "Readback A/D Channel 6 Low"
-  },
-  {
-    "fn": 576,
-    "description": "Readback A/D Channel 7 Low"
-  },
-  {
-    "fn": 577,
-    "description": "Readback A/D Channel 8 Low"
-  },
-  {
-    "fn": 578,
-    "description": "Readback A/D Channel 1 High"
-  },
-  {
-    "fn": 579,
-    "description": "Readback A/D Channel 2 High"
-  },
-  {
-    "fn": 580,
-    "description": "Readback A/D Channel 3 High"
-  },
-  {
-    "fn": 581,
-    "description": "Readback A/D Channel 4 High"
-  },
-  {
-    "fn": 582,
-    "description": "Readback A/D Channel 5 High"
-  },
-  {
-    "fn": 583,
-    "description": "Readback A/D Channel 6 High"
-  },
-  {
-    "fn": 584,
-    "description": "Readback A/D Channel 7 High"
-  },
-  {
-    "fn": 585,
-    "description": "Readback A/D Channel 8 High"
-  },
-  {
-    "fn": 586,
-    "description": "Disable Port 1 Timeout Timer ONLY for 60 minutes"
-  },
-  {
-    "fn": 587,
-    "description": "Disable Port 2 Timeout Timer ONLY for 60 minutes"
-  },
-  {
-    "fn": 588,
-    "description": "Disable Port 3 Timeout Timer ONLY for 60 minutes"
-  },
-  {
-    "fn": 589,
-    "description": "Enable Port 1 Timeout Timer ONLY for 60 minutes"
-  },
-  {
-    "fn": 590,
-    "description": "Enable Port 2 Timeout Timer ONLY for 60 minutes"
-  },
-  {
-    "fn": 591,
-    "description": "Enable Port 2 Timeout Timer ONLY for 60 minutes"
-  },
-  {
-    "fn": 592,
-    "description": "Current Wind Speed & Direction"
-  },
-  {
-    "fn": 593,
-    "description": "Current Outdoor Temperature"
-  },
-  {
-    "fn": 594,
-    "description": "Current Indoor Humidity"
-  },
-  {
-    "fn": 595,
-    "description": "Current Outdoor Humidity"
-  },
-  {
-    "fn": 596,
-    "description": "Wind Speed High & Direction Since Midnight"
-  },
-  {
-    "fn": 597,
-    "description": "Outdoor Temp High & Time It Occurred Since Midnight"
-  },
-  {
-    "fn": 598,
-    "description": "Outdoor Temp Low & Time It Occurred Since Midnight"
-  },
-  {
-    "fn": 599,
-    "description": "Reserved for future use"
-  },
-  {
-    "fn": 600,
-    "description": "Reserved for future use"
-  },
-  {
-    "fn": 605,
-    "description": "Speak Current Remote Base Freq & Offset"
-  },
-  {
-    "fn": 606,
-    "description": "Start General Timer 4"
-  },
-  {
-    "fn": 607,
-    "description": "Start General Timer 5"
-  },
-  {
-    "fn": 608,
-    "description": "Start General Timer 6"
-  },
-  {
-    "fn": 609,
-    "description": "Stop General Timer 4"
-  },
-  {
-    "fn": 610,
-    "description": "Stop General Timer 5"
-  },
-  {
-    "fn": 611,
-    "description": "Stop General Timer 6"
-  },
-  {
-    "fn": 612,
-    "description": "Disable Port 1 Inactivity Timer"
-  },
-  {
-    "fn": 613,
-    "description": "Disable Port 2 Inactivity Timer"
-  },
-  {
-    "fn": 614,
-    "description": "Disable Port 3 Inactivity Timer"
-  },
-  {
-    "fn": 615,
-    "description": "Port 1 Inactivity Timer to Programmed Value"
-  },
-  {
-    "fn": 616,
-    "description": "Port 2 Inactivity Timer to Programmed Value"
-  },
-  {
-    "fn": 617,
-    "description": "Port 3 Inactivity Timer to Programmed Value"
-  },
-  {
-    "fn": 618,
-    "description": "Delay Execution by 1 second"
-  },
-  {
-    "fn": 619,
-    "description": "Delay Execution by 2 second"
-  },
-  {
-    "fn": 620,
-    "description": "Delay Execution by 4 second"
-  },
-  {
-    "fn": 621,
-    "description": "Port 1 Hangtimer 1 Select"
-  },
-  {
-    "fn": 622,
-    "description": "Port 1 Hangtimer 2 Select"
-  },
-  {
-    "fn": 623,
-    "description": "Port 1 Hangtimer 3 Select"
-  },
-  {
-    "fn": 624,
-    "description": "Port 2 Hangtimer 1 Select"
-  },
-  {
-    "fn": 625,
-    "description": "Port 2 Hangtimer 2 Select"
-  },
-  {
-    "fn": 626,
-    "description": "Port 2 Hangtimer 3 Select"
-  },
-  {
-    "fn": 627,
-    "description": "Port 3 Hangtimer 1 Select"
-  },
-  {
-    "fn": 628,
-    "description": "Port 3 Hangtimer 2 Select"
-  },
-  {
-    "fn": 629,
-    "description": "Port 3 Hangtimer 3 Select"
-  },
-  {
-    "fn": 630,
-    "description": "Port 1 Next Courtesy Tone 1 Select"
-  },
-  {
-    "fn": 631,
-    "description": "Port 1 Next Courtesy Tone 2 Select"
-  },
-  {
-    "fn": 632,
-    "description": "Port 1 Next Courtesy Tone 3 Select"
-  },
-  {
-    "fn": 633,
-    "description": "Port 1 Next Courtesy Tone 4 Select"
-  },
-  {
-    "fn": 634,
-    "description": "Port 1 Next Courtesy Tone 5 Select"
-  },
-  {
-    "fn": 635,
-    "description": "Port 1 Next Courtesy Tone 6 Select"
-  },
-  {
-    "fn": 636,
-    "description": "Port 1 Next Courtesy Tone 7 Select"
-  },
-  {
-    "fn": 637,
-    "description": "Port 1 Next Courtesy Tone 8 Select"
-  },
-  {
-    "fn": 638,
-    "description": "Port 1 Next Courtesy Tone 9 Select"
-  },
-  {
-    "fn": 639,
-    "description": "Port 1 Next Courtesy Tone 10 Select"
-  },
-  {
-    "fn": 640,
-    "description": "Port 1 Following Courtesy Tone 1 Select"
-  },
-  {
-    "fn": 641,
-    "description": "Port 1 Following Courtesy Tone 2 Select"
-  },
-  {
-    "fn": 642,
-    "description": "Port 1 Following Courtesy Tone 3 Select"
-  },
-  {
-    "fn": 643,
-    "description": "Port 1 Following Courtesy Tone 4 Select"
-  },
-  {
-    "fn": 644,
-    "description": "Port 1 Following Courtesy Tone 5 Select"
-  },
-  {
-    "fn": 645,
-    "description": "Port 1 Following Courtesy Tone 6 Select"
-  },
-  {
-    "fn": 646,
-    "description": "Port 1 Following Courtesy Tone 7 Select"
-  },
-  {
-    "fn": 647,
-    "description": "Port 1 Following Courtesy Tone 8 Select"
-  },
-  {
-    "fn": 648,
-    "description": "Port 1 Following Courtesy Tone 9 Select"
-  },
-  {
-    "fn": 649,
-    "description": "Port 1 Following Courtesy Tone 10 Select"
-  },
-  {
-    "fn": 650,
-    "description": "Port 2 Next Courtesy Tone 1 Select"
-  },
-  {
-    "fn": 651,
-    "description": "Port 2 Next Courtesy Tone 2 Select"
-  },
-  {
-    "fn": 652,
-    "description": "Port 2 Next Courtesy Tone 3 Select"
-  },
-  {
-    "fn": 653,
-    "description": "Port 2 Next Courtesy Tone 4 Select"
-  },
-  {
-    "fn": 654,
-    "description": "Port 2 Next Courtesy Tone 5 Select"
-  },
-  {
-    "fn": 655,
-    "description": "Port 2 Next Courtesy Tone 6 Select"
-  },
-  {
-    "fn": 656,
-    "description": "Port 2 Next Courtesy Tone 7 Select"
-  },
-  {
-    "fn": 657,
-    "description": "Port 2 Next Courtesy Tone 8 Select"
-  },
-  {
-    "fn": 658,
-    "description": "Port 2 Next Courtesy Tone 9 Select"
-  },
-  {
-    "fn": 659,
-    "description": "Port 2 Next Courtesy Tone 10 Select"
-  },
-  {
-    "fn": 660,
-    "description": "Port 2 Following Courtesy Tone 1 Select"
-  },
-  {
-    "fn": 661,
-    "description": "Port 2 Following Courtesy Tone 2 Select"
-  },
-  {
-    "fn": 662,
-    "description": "Port 2 Following Courtesy Tone 3 Select"
-  },
-  {
-    "fn": 663,
-    "description": "Port 2 Following Courtesy Tone 4 Select"
-  },
-  {
-    "fn": 664,
-    "description": "Port 2 Following Courtesy Tone 5 Select"
-  },
-  {
-    "fn": 665,
-    "description": "Port 2 Following Courtesy Tone 6 Select"
-  },
-  {
-    "fn": 666,
-    "description": "Port 2 Following Courtesy Tone 7 Select"
-  },
-  {
-    "fn": 667,
-    "description": "Port 2 Following Courtesy Tone 8 Select"
-  },
-  {
-    "fn": 668,
-    "description": "Port 2 Following Courtesy Tone 9 Select"
-  },
-  {
-    "fn": 669,
-    "description": "Port 2 Following Courtesy Tone 10 Select"
-  },
-  {
-    "fn": 670,
-    "description": "Port 3 Next Courtesy Tone 1 Select"
-  },
-  {
-    "fn": 671,
-    "description": "Port 3 Next Courtesy Tone 2 Select"
-  },
-  {
-    "fn": 672,
-    "description": "Port 3 Next Courtesy Tone 3 Select"
-  },
-  {
-    "fn": 673,
-    "description": "Port 3 Next Courtesy Tone 4 Select"
-  },
-  {
-    "fn": 674,
-    "description": "Port 3 Next Courtesy Tone 5 Select"
-  },
-  {
-    "fn": 675,
-    "description": "Port 3 Next Courtesy Tone 6 Select"
-  },
-  {
-    "fn": 676,
-    "description": "Port 3 Next Courtesy Tone 7 Select"
-  },
-  {
-    "fn": 677,
-    "description": "Port 3 Next Courtesy Tone 8 Select"
-  },
-  {
-    "fn": 678,
-    "description": "Port 3 Next Courtesy Tone 9 Select"
-  },
-  {
-    "fn": 679,
-    "description": "Port 3 Next Courtesy Tone 10 Select"
-  },
-  {
-    "fn": 680,
-    "description": "Port 3 Following Courtesy Tone 1 Select"
-  },
-  {
-    "fn": 681,
-    "description": "Port 3 Following Courtesy Tone 2 Select"
-  },
-  {
-    "fn": 682,
-    "description": "Port 3 Following Courtesy Tone 3 Select"
-  },
-  {
-    "fn": 683,
-    "description": "Port 3 Following Courtesy Tone 4 Select"
-  },
-  {
-    "fn": 684,
-    "description": "Port 3 Following Courtesy Tone 5 Select"
-  },
-  {
-    "fn": 685,
-    "description": "Port 3 Following Courtesy Tone 6 Select"
-  },
-  {
-    "fn": 686,
-    "description": "Port 3 Following Courtesy Tone 7 Select"
-  },
-  {
-    "fn": 687,
-    "description": "Port 3 Following Courtesy Tone 8 Select"
-  },
-  {
-    "fn": 688,
-    "description": "Port 3 Following Courtesy Tone 9 Select"
-  },
-  {
-    "fn": 689,
-    "description": "Port 3 Following Courtesy Tone 10 Select"
-  },
-  {
-    "fn": 690,
-    "description": "Daylight Savings ON"
-  },
-  {
-    "fn": 691,
-    "description": "Daylight Savings OFF"
-  },
-  {
-    "fn": 692,
-    "description": "Play Port 1 Pending ID"
-  },
-  {
-    "fn": 693,
-    "description": "Play Port 2 Pending ID"
-  },
-  {
-    "fn": 694,
-    "description": "Play Port 3 Pending ID"
-  },
-  {
-    "fn": 810,
-    "description": "Suspend Setpoint 1"
-  },
-  {
-    "fn": 811,
-    "description": "Suspend Setpoint 2"
-  },
-  {
-    "fn": 812,
-    "description": "Suspend Setpoint 3"
-  },
-  {
-    "fn": 813,
-    "description": "Suspend Setpoint 4"
-  },
-  {
-    "fn": 814,
-    "description": "Suspend Setpoint 5"
-  },
-  {
-    "fn": 815,
-    "description": "Suspend Setpoint 6"
-  },
-  {
-    "fn": 816,
-    "description": "Suspend Setpoint 7"
-  },
-  {
-    "fn": 817,
-    "description": "Suspend Setpoint 8"
-  },
-  {
-    "fn": 818,
-    "description": "Suspend Setpoint 9"
-  },
-  {
-    "fn": 819,
-    "description": "Suspend Setpoint 10"
-  },
-  {
-    "fn": 820,
-    "description": "Suspend Setpoint 11"
-  },
-  {
-    "fn": 821,
-    "description": "Suspend Setpoint 12"
-  },
-  {
-    "fn": 822,
-    "description": "Suspend Setpoint 13"
-  },
-  {
-    "fn": 823,
-    "description": "Suspend Setpoint 14"
-  },
-  {
-    "fn": 824,
-    "description": "Suspend Setpoint 15"
-  },
-  {
-    "fn": 825,
-    "description": "Suspend Setpoint 16"
-  },
-  {
-    "fn": 826,
-    "description": "Suspend Setpoint 17"
-  },
-  {
-    "fn": 827,
-    "description": "Suspend Setpoint 18"
-  },
-  {
-    "fn": 828,
-    "description": "Suspend Setpoint 19"
-  },
-  {
-    "fn": 829,
-    "description": "Suspend Setpoint 20"
-  },
-  {
-    "fn": 830,
-    "description": "Suspend Setpoint 21"
-  },
-  {
-    "fn": 831,
-    "description": "Suspend Setpoint 22"
-  },
-  {
-    "fn": 832,
-    "description": "Suspend Setpoint 23"
-  },
-  {
-    "fn": 833,
-    "description": "Suspend Setpoint 24"
-  },
-  {
-    "fn": 834,
-    "description": "Suspend Setpoint 25"
-  },
-  {
-    "fn": 835,
-    "description": "Suspend Setpoint 26"
-  },
-  {
-    "fn": 836,
-    "description": "Suspend Setpoint 27"
-  },
-  {
-    "fn": 837,
-    "description": "Suspend Setpoint 28"
-  },
-  {
-    "fn": 838,
-    "description": "Suspend Setpoint 29"
-  },
-  {
-    "fn": 839,
-    "description": "Suspend Setpoint 30"
-  },
-  {
-    "fn": 840,
-    "description": "Suspend Setpoint 31"
-  },
-  {
-    "fn": 841,
-    "description": "Suspend Setpoint 32"
-  },
-  {
-    "fn": 842,
-    "description": "Suspend Setpoint 33"
-  },
-  {
-    "fn": 843,
-    "description": "Suspend Setpoint 34"
-  },
-  {
-    "fn": 844,
-    "description": "Suspend Setpoint 35"
-  },
-  {
-    "fn": 845,
-    "description": "Suspend Setpoint 36"
-  },
-  {
-    "fn": 846,
-    "description": "Suspend Setpoint 37"
-  },
-  {
-    "fn": 847,
-    "description": "Suspend Setpoint 38"
-  },
-  {
-    "fn": 848,
-    "description": "Suspend Setpoint 39"
-  },
-  {
-    "fn": 849,
-    "description": "Suspend Setpoint 40"
-  },
-  {
-    "fn": 850,
-    "description": "Resume Setpoint 1"
-  },
-  {
-    "fn": 851,
-    "description": "Resume Setpoint 2"
-  },
-  {
-    "fn": 852,
-    "description": "Resume Setpoint 3"
-  },
-  {
-    "fn": 853,
-    "description": "Resume Setpoint 4"
-  },
-  {
-    "fn": 854,
-    "description": "Resume Setpoint 5"
-  },
-  {
-    "fn": 855,
-    "description": "Resume Setpoint 6"
-  },
-  {
-    "fn": 856,
-    "description": "Resume Setpoint 7"
-  },
-  {
-    "fn": 857,
-    "description": "Resume Setpoint 8"
-  },
-  {
-    "fn": 858,
-    "description": "Resume Setpoint 9"
-  },
-  {
-    "fn": 859,
-    "description": "Resume Setpoint 10"
-  },
-  {
-    "fn": 860,
-    "description": "Resume Setpoint 11"
-  },
-  {
-    "fn": 861,
-    "description": "Resume Setpoint 12"
-  },
-  {
-    "fn": 862,
-    "description": "Resume Setpoint 13"
-  },
-  {
-    "fn": 863,
-    "description": "Resume Setpoint 14"
-  },
-  {
-    "fn": 864,
-    "description": "Resume Setpoint 15"
-  },
-  {
-    "fn": 865,
-    "description": "Resume Setpoint 16"
-  },
-  {
-    "fn": 866,
-    "description": "Resume Setpoint 17"
-  },
-  {
-    "fn": 867,
-    "description": "Resume Setpoint 18"
-  },
-  {
-    "fn": 868,
-    "description": "Resume Setpoint 19"
-  },
-  {
-    "fn": 869,
-    "description": "Resume Setpoint 20"
-  },
-  {
-    "fn": 870,
-    "description": "Resume Setpoint 21"
-  },
-  {
-    "fn": 871,
-    "description": "Resume Setpoint 22"
-  },
-  {
-    "fn": 872,
-    "description": "Resume Setpoint 23"
-  },
-  {
-    "fn": 873,
-    "description": "Resume Setpoint 24"
-  },
-  {
-    "fn": 874,
-    "description": "Resume Setpoint 25"
-  },
-  {
-    "fn": 875,
-    "description": "Resume Setpoint 26"
-  },
-  {
-    "fn": 876,
-    "description": "Resume Setpoint 27"
-  },
-  {
-    "fn": 877,
-    "description": "Resume Setpoint 28"
-  },
-  {
-    "fn": 878,
-    "description": "Resume Setpoint 29"
-  },
-  {
-    "fn": 879,
-    "description": "Resume Setpoint 30"
-  },
-  {
-    "fn": 880,
-    "description": "Resume Setpoint 31"
-  },
-  {
-    "fn": 881,
-    "description": "Resume Setpoint 32"
-  },
-  {
-    "fn": 882,
-    "description": "Resume Setpoint 33"
-  },
-  {
-    "fn": 883,
-    "description": "Resume Setpoint 34"
-  },
-  {
-    "fn": 884,
-    "description": "Resume Setpoint 35"
-  },
-  {
-    "fn": 885,
-    "description": "Resume Setpoint 36"
-  },
-  {
-    "fn": 886,
-    "description": "Resume Setpoint 37"
-  },
-  {
-    "fn": 887,
-    "description": "Resume Setpoint 38"
-  },
-  {
-    "fn": 888,
-    "description": "Resume Setpoint 39"
-  },
-  {
-    "fn": 889,
-    "description": "Resume Setpoint 40"
-  },
-  {
-    "fn": 901,
-    "description": "Call Macro 1",
-    "destination": "m1"
-  },
-  {
-    "fn": 902,
-    "description": "Call Macro 2",
-    "destination": "m2"
-  },
-  {
-    "fn": 903,
-    "description": "Call Macro 3",
-    "destination": "m3"
-  },
-  {
-    "fn": 904,
-    "description": "Call Macro 4",
-    "destination": "m4"
-  },
-  {
-    "fn": 905,
-    "description": "Call Macro 5",
-    "destination": "m5"
-  },
-  {
-    "fn": 906,
-    "description": "Call Macro 6",
-    "destination": "m6"
-  },
-  {
-    "fn": 907,
-    "description": "Call Macro 7",
-    "destination": "m7"
-  },
-  {
-    "fn": 908,
-    "description": "Call Macro 8",
-    "destination": "m8"
-  },
-  {
-    "fn": 909,
-    "description": "Call Macro 9",
-    "destination": "m9"
-  },
-  {
-    "fn": 910,
-    "description": "Call Macro 10",
-    "destination": "m10"
-  },
-  {
-    "fn": 911,
-    "description": "Call Macro 11",
-    "destination": "m11"
-  },
-  {
-    "fn": 912,
-    "description": "Call Macro 12",
-    "destination": "m12"
-  },
-  {
-    "fn": 913,
-    "description": "Call Macro 13",
-    "destination": "m13"
-  },
-  {
-    "fn": 914,
-    "description": "Call Macro 14",
-    "destination": "m14"
-  },
-  {
-    "fn": 915,
-    "description": "Call Macro 15",
-    "destination": "m15"
-  },
-  {
-    "fn": 916,
-    "description": "Call Macro 16",
-    "destination": "m16"
-  },
-  {
-    "fn": 917,
-    "description": "Call Macro 17",
-    "destination": "m17"
-  },
-  {
-    "fn": 918,
-    "description": "Call Macro 18",
-    "destination": "m18"
-  },
-  {
-    "fn": 919,
-    "description": "Call Macro 19",
-    "destination": "m19"
-  },
-  {
-    "fn": 920,
-    "description": "Call Macro 20",
-    "destination": "m20"
-  },
-  {
-    "fn": 921,
-    "description": "Call Macro 21",
-    "destination": "m21"
-  },
-  {
-    "fn": 922,
-    "description": "Call Macro 22",
-    "destination": "m22"
-  },
-  {
-    "fn": 923,
-    "description": "Call Macro 23",
-    "destination": "m23"
-  },
-  {
-    "fn": 924,
-    "description": "Call Macro 24",
-    "destination": "m2"
-  },
-  {
-    "fn": 925,
-    "description": "Call Macro 25",
-    "destination": "m25"
-  },
-  {
-    "fn": 926,
-    "description": "Call Macro 26",
-    "destination": "m26"
-  },
-  {
-    "fn": 927,
-    "description": "Call Macro 27",
-    "destination": "m27"
-  },
-  {
-    "fn": 928,
-    "description": "Call Macro 28",
-    "destination": "m28"
-  },
-  {
-    "fn": 929,
-    "description": "Call Macro 29",
-    "destination": "m29"
-  },
-  {
-    "fn": 930,
-    "description": "Call Macro 30",
-    "destination": "m30"
-  },
-  {
-    "fn": 931,
-    "description": "Call Macro 31",
-    "destination": "m31"
-  },
-  {
-    "fn": 932,
-    "description": "Call Macro 32",
-    "destination": "m32"
-  },
-  {
-    "fn": 933,
-    "description": "Call Macro 33",
-    "destination": "m33"
-  },
-  {
-    "fn": 934,
-    "description": "Call Macro 34",
-    "destination": "m34"
-  },
-  {
-    "fn": 935,
-    "description": "Call Macro 35",
-    "destination": "m35"
-  },
-  {
-    "fn": 936,
-    "description": "Call Macro 36",
-    "destination": "m36"
-  },
-  {
-    "fn": 937,
-    "description": "Call Macro 37",
-    "destination": "m37"
-  },
-  {
-    "fn": 938,
-    "description": "Call Macro 38",
-    "destination": "m38"
-  },
-  {
-    "fn": 939,
-    "description": "Call Macro 39",
-    "destination": "m39"
-  },
-  {
-    "fn": 940,
-    "description": "Call Macro 40",
-    "destination": "m40"
-  },
-  {
-    "fn": 941,
-    "description": "Call Macro 41",
-    "destination": "m41"
-  },
-  {
-    "fn": 942,
-    "description": "Call Macro 42",
-    "destination": "m492"
-  },
-  {
-    "fn": 943,
-    "description": "Call Macro 43",
-    "destination": "m43"
-  },
-  {
-    "fn": 944,
-    "description": "Call Macro 44",
-    "destination": "m44"
-  },
-  {
-    "fn": 945,
-    "description": "Call Macro 45",
-    "destination": "m45"
-  },
-  {
-    "fn": 946,
-    "description": "Call Macro 46",
-    "destination": "m46"
-  },
-  {
-    "fn": 947,
-    "description": "Call Macro 47",
-    "destination": "m497"
-  },
-  {
-    "fn": 948,
-    "description": "Call Macro 48",
-    "destination": "m48"
-  },
-  {
-    "fn": 949,
-    "description": "Call Macro 49",
-    "destination": "m49"
-  },
-  {
-    "fn": 950,
-    "description": "Call Macro 50",
-    "destination": "m50"
-  },
-  {
-    "fn": 951,
-    "description": "Call Macro 51",
-    "destination": "m51"
-  },
-  {
-    "fn": 952,
-    "description": "Call Macro 52",
-    "destination": "m52"
-  },
-  {
-    "fn": 953,
-    "description": "Call Macro 53",
-    "destination": "m53"
-  },
-  {
-    "fn": 954,
-    "description": "Call Macro 54",
-    "destination": "m54"
-  },
-  {
-    "fn": 955,
-    "description": "Call Macro 55",
-    "destination": "m55"
-  },
-  {
-    "fn": 956,
-    "description": "Call Macro 56",
-    "destination": "m56"
-  },
-  {
-    "fn": 957,
-    "description": "Call Macro 57",
-    "destination": "m57"
-  },
-  {
-    "fn": 958,
-    "description": "Call Macro 58",
-    "destination": "m58"
-  },
-  {
-    "fn": 959,
-    "description": "Call Macro 59",
-    "destination": "m59"
-  },
-  {
-    "fn": 960,
-    "description": "Call Macro 60",
-    "destination": "m60"
-  },
-  {
-    "fn": 961,
-    "description": "Call Macro 61",
-    "destination": "m61"
-  },
-  {
-    "fn": 962,
-    "description": "Call Macro 62",
-    "destination": "m62"
-  },
-  {
-    "fn": 963,
-    "description": "Call Macro 63",
-    "destination": "m63"
-  },
-  {
-    "fn": 964,
-    "description": "Call Macro 64",
-    "destination": "m64"
-  },
-  {
-    "fn": 965,
-    "description": "Call Macro 65",
-    "destination": "m65"
-  },
-  {
-    "fn": 966,
-    "description": "Call Macro 66",
-    "destination": "m66"
-  },
-  {
-    "fn": 967,
-    "description": "Call Macro 67",
-    "destination": "m67"
-  },
-  {
-    "fn": 968,
-    "description": "Call Macro 68",
-    "destination": "m68"
-  },
-  {
-    "fn": 969,
-    "description": "Call Macro 69",
-    "destination": "m60"
-  },
-  {
-    "fn": 970,
-    "description": "Call Macro 70",
-    "destination": "m70"
-  },
-  {
-    "fn": 971,
-    "description": "Call Macro 71",
-    "destination": "m71"
-  },
-  {
-    "fn": 972,
-    "description": "Call Macro 72",
-    "destination": "m72"
-  },
-  {
-    "fn": 973,
-    "description": "Call Macro 73",
-    "destination": "m73"
-  },
-  {
-    "fn": 974,
-    "description": "Call Macro 74",
-    "destination": "m74"
-  },
-  {
-    "fn": 975,
-    "description": "Call Macro 75",
-    "destination": "m75"
-  },
-  {
-    "fn": 976,
-    "description": "Call Macro 76",
-    "destination": "m76"
-  },
-  {
-    "fn": 977,
-    "description": "Call Macro 77",
-    "destination": "m77"
-  },
-  {
-    "fn": 978,
-    "description": "Call Macro 78",
-    "destination": "m78"
-  },
-  {
-    "fn": 979,
-    "description": "Call Macro 79",
-    "destination": "m79"
-  },
-  {
-    "fn": 980,
-    "description": "Call Macro 80",
-    "destination": "m80"
-  },
-  {
-    "fn": 981,
-    "description": "Call Macro 81",
-    "destination": "m8"
-  },
-  {
-    "fn": 982,
-    "description": "Call Macro 82",
-    "destination": "m82"
-  },
-  {
-    "fn": 983,
-    "description": "Call Macro 83",
-    "destination": "m83"
-  },
-  {
-    "fn": 984,
-    "description": "Call Macro 84",
-    "destination": "m84"
-  },
-  {
-    "fn": 985,
-    "description": "Call Macro 85",
-    "destination": "m85"
-  },
-  {
-    "fn": 986,
-    "description": "Call Macro 86",
-    "destination": "m86"
-  },
-  {
-    "fn": 987,
-    "description": "Call Macro 87",
-    "destination": "m87"
-  },
-  {
-    "fn": 988,
-    "description": "Call Macro 88",
-    "destination": "m88"
-  },
-  {
-    "fn": 989,
-    "description": "Call Macro 89",
-    "destination": "m89"
-  },
-  {
-    "fn": 990,
-    "description": "Call Macro 90",
-    "destination": "m90"
-  },
-  {
-    "fn": 991,
-    "description": "Call Macro 91",
-    "destination": "m91"
-  },
-  {
-    "fn": 992,
-    "description": "Call Macro 92",
-    "destination": "m92"
-  },
-  {
-    "fn": 993,
-    "description": "Call Macro 93",
-    "destination": "m93"
-  },
-  {
-    "fn": 994,
-    "description": "Call Macro 94",
-    "destination": "m94"
-  },
-  {
-    "fn": 995,
-    "description": "Call Macro 95",
-    "destination": "m95"
-  },
-  {
-    "fn": 996,
-    "description": "Call Macro 96",
-    "destination": "m96"
-  },
-  {
-    "fn": 997,
-    "description": "Call Macro 97",
-    "destination": "m97"
-  },
-  {
-    "fn": 998,
-    "description": "Call Macro 98",
-    "destination": "m98"
-  },
-  {
-    "fn": 999,
-    "description": "Call Macro 99",
-    "destination": "m99"
-  },
-  {
-    "fn": 1000,
-    "description": "Call Macro 100",
-    "destination": "m100"
-  },
-  {
-    "fn": 1001,
-    "description": "Call Macro 101",
-    "destination": "m101"
-  },
-  {
-    "fn": 1002,
-    "description": "Call Macro 102",
-    "destination": "m102"
-  },
-  {
-    "fn": 1003,
-    "description": "Call Macro 103",
-    "destination": "m103"
-  },
-  {
-    "fn": 1004,
-    "description": "Call Macro 104",
-    "destination": "m104"
-  },
-  {
-    "fn": 1005,
-    "description": "Call Macro 105",
-    "destination": "m105"
-  }
-]
+ [
+    {
+      "key": "function1",
+      "description": "Port 1 CTCSS Access"
+    },
+    {
+      "key": "function2",
+      "description": "Port 2 CTCSS Access"
+    },
+    {
+      "key": "function3",
+      "description": "Port 3 CTCSS Access"
+    },
+    {
+      "key": "function4",
+      "description": "Port 1 Carrier Access"
+    },
+    {
+      "key": "function5",
+      "description": "Port 2 Carrier Access"
+    },
+    {
+      "key": "function6",
+      "description": "Port 3 Carrier Access"
+    },
+    {
+      "key": "function7",
+      "description": "Port 1 DTMF Covertone ON"
+    },
+    {
+      "key": "function8",
+      "description": "Port 2 DTMF Covertone ON"
+    },
+    {
+      "key": "function9",
+      "description": "Port 3 DTMF Covertone ON"
+    },
+    {
+      "key": "function10",
+      "description": "Port 1 DTMF Covertone OFF"
+    },
+    {
+      "key": "function11",
+      "description": "Port 2 DTMF Covertone OFF"
+    },
+    {
+      "key": "function12",
+      "description": "Port 3 DTMF Covertone OFF"
+    },
+    {
+      "key": "function13",
+      "description": "Port 1 TX Enable"
+    },
+    {
+      "key": "function14",
+      "description": "Port 2 TX Enable"
+    },
+    {
+      "key": "function15",
+      "description": "Port 3 TX Enable"
+    },
+    {
+      "key": "function16",
+      "description": "Port 1 TX Disable"
+    },
+    {
+      "key": "function17",
+      "description": "Port 2 TX Disable"
+    },
+    {
+      "key": "function18",
+      "description": "Port 3 TX Disable"
+    },
+    {
+      "key": "function19",
+      "description": "Monitor Port 1 From Port 2"
+    },
+    {
+      "key": "function20",
+      "description": "Monitor Port 1 From Port 3"
+    },
+    {
+      "key": "function21",
+      "description": "Disconnect Port 1 From Port 2"
+    },
+    {
+      "key": "function22",
+      "description": "Disconnect Port 1 From Port 3"
+    },
+    {
+      "key": "function23",
+      "description": "Monitor Port 2 From Port 1"
+    },
+    {
+      "key": "function24",
+      "description": "Monitor Port 2 From Port 3"
+    },
+    {
+      "key": "function25",
+      "description": "Disconnect Port 3 From Port 1"
+    },
+    {
+      "key": "function26",
+      "description": "Disconnect Port 2 From Port 3"
+    },
+    {
+      "key": "function27",
+      "description": "Monitor Port 3 From Port 1"
+    },
+    {
+      "key": "function28",
+      "description": "Monitor Port 3 From Port 2"
+    },
+    {
+      "key": "function29",
+      "description": "Disconnect Port 3 From Port 1"
+    },
+    {
+      "key": "function30",
+      "description": "Disconnect Port 3 From Port 2"
+    },
+    {
+      "key": "function31",
+      "description": "Port 1 Monitor Mute"
+    },
+    {
+      "key": "function32",
+      "description": "Port 2 Monitor Mute"
+    },
+    {
+      "key": "function33",
+      "description": "Port 3 Monitor Mute"
+    },
+    {
+      "key": "function34",
+      "description": "Port 1 Monitor Mix"
+    },
+    {
+      "key": "function35",
+      "description": "Port 2 Monitor Mix"
+    },
+    {
+      "key": "function36",
+      "description": "Port 3 Monitor Mix"
+    },
+    {
+      "key": "function37",
+      "description": "Port 1 Repeat Mode"
+    },
+    {
+      "key": "function38",
+      "description": "Port 2 Repeat Mode"
+    },
+    {
+      "key": "function39",
+      "description": "Port 3 Repeat Mode"
+    },
+    {
+      "key": "function40",
+      "description": "Port 1 Non-Repeat Mode"
+    },
+    {
+      "key": "function41",
+      "description": "Port 2 Non-Repeat Mode"
+    },
+    {
+      "key": "function42",
+      "description": "Port 3 Non-Repeat Mode"
+    },
+    {
+      "key": "function43",
+      "description": "Port 1 Speech Override ON"
+    },
+    {
+      "key": "function44",
+      "description": "Port 2 Speech Override ON"
+    },
+    {
+      "key": "function45",
+      "description": "Port 3 Speech Override ON"
+    },
+    {
+      "key": "function46",
+      "description": "Port 1 Speech Override OFF"
+    },
+    {
+      "key": "function47",
+      "description": "Port 2 Speech Override OFF"
+    },
+    {
+      "key": "function48",
+      "description": "Port 3 Speech Override OFF"
+    },
+    {
+      "key": "function49",
+      "description": "Port 1 Courtesy Tone 1"
+    },
+    {
+      "key": "function50",
+      "description": "Port 1 Courtesy Tone 2"
+    },
+    {
+      "key": "function51",
+      "description": "Port 1 Courtesy Tone 3"
+    },
+    {
+      "key": "function52",
+      "description": "Port 1 Courtesy Tone 4"
+    },
+    {
+      "key": "function53",
+      "description": "Port 1 Courtesy Tone 5"
+    },
+    {
+      "key": "function54",
+      "description": "Port 1 Courtesy Tone 6"
+    },
+    {
+      "key": "function55",
+      "description": "Port 1 Courtesy Tone 7"
+    },
+    {
+      "key": "function56",
+      "description": "Port 1 Courtesy Tone 8"
+    },
+    {
+      "key": "function57",
+      "description": "Port 1 Courtesy Tone 9"
+    },
+    {
+      "key": "function58",
+      "description": "Port 1 Courtesy Tone 10"
+    },
+    {
+      "key": "function59",
+      "description": "Port 2 Courtesy Tone 1"
+    },
+    {
+      "key": "function60",
+      "description": "Port 2 Courtesy Tone 2"
+    },
+    {
+      "key": "function61",
+      "description": "Port 2 Courtesy Tone 3"
+    },
+    {
+      "key": "function62",
+      "description": "Port 2 Courtesy Tone 4"
+    },
+    {
+      "key": "function63",
+      "description": "Port 2 Courtesy Tone 5"
+    },
+    {
+      "key": "function64",
+      "description": "Port 2 Courtesy Tone 6"
+    },
+    {
+      "key": "function65",
+      "description": "Port 2 Courtesy Tone 7"
+    },
+    {
+      "key": "function66",
+      "description": "Port 2 Courtesy Tone 8"
+    },
+    {
+      "key": "function67",
+      "description": "Port 2 Courtesy Tone 9"
+    },
+    {
+      "key": "function68",
+      "description": "Port 2 Courtesy Tone 10"
+    },
+    {
+      "key": "function69",
+      "description": "Port 3 Courtesy Tone 1"
+    },
+    {
+      "key": "function70",
+      "description": "Port 3 Courtesy Tone 2"
+    },
+    {
+      "key": "function71",
+      "description": "Port 3 Courtesy Tone 3"
+    },
+    {
+      "key": "function72",
+      "description": "Port 3 Courtesy Tone 4"
+    },
+    {
+      "key": "function73",
+      "description": "Port 3 Courtesy Tone 5"
+    },
+    {
+      "key": "function74",
+      "description": "Port 3 Courtesy Tone 6"
+    },
+    {
+      "key": "function75",
+      "description": "Port 3 Courtesy Tone 7"
+    },
+    {
+      "key": "function76",
+      "description": "Port 3 Courtesy Tone 8"
+    },
+    {
+      "key": "function77",
+      "description": "Port 3 Courtesy Tone 9"
+    },
+    {
+      "key": "function78",
+      "description": "Port 3 Courtesy Tone 10"
+    },
+    {
+      "key": "function79",
+      "description": "Port 1 DTMF Muting ON"
+    },
+    {
+      "key": "function80",
+      "description": "Port 2 DTMF Muting ON"
+    },
+    {
+      "key": "function81",
+      "description": "Port 3 DTMF Muting ON"
+    },
+    {
+      "key": "function82",
+      "description": "Port 1 DTMF Muting OFF"
+    },
+    {
+      "key": "function83",
+      "description": "Port 2 DTMF Muting OFF"
+    },
+    {
+      "key": "function84",
+      "description": "Port 3 DTMF Muting OFF"
+    },
+    {
+      "key": "function85",
+      "description": "CTCSS Encode ON Current Speech Port"
+    },
+    {
+      "key": "function86",
+      "description": "CTCSS Encode OFF Current Speech Port"
+    },
+    {
+      "key": "function87",
+      "description": "Read ADC Channel 1"
+    },
+    {
+      "key": "function88",
+      "description": "Read ADC Channel 2"
+    },
+    {
+      "key": "function89",
+      "description": "Read ADC Channel 3"
+    },
+    {
+      "key": "function90",
+      "description": "Read ADC Channel 4"
+    },
+    {
+      "key": "function91",
+      "description": "Read ADC Channel 5"
+    },
+    {
+      "key": "function92",
+      "description": "Read ADC Channel 6"
+    },
+    {
+      "key": "function93",
+      "description": "Read ADC Channel 7"
+    },
+    {
+      "key": "function94",
+      "description": "Read ADC Channel 8"
+    },
+    {
+      "key": "function95",
+      "description": "UF1 ON"
+    },
+    {
+      "key": "function96",
+      "description": "UF2 ON"
+    },
+    {
+      "key": "function97",
+      "description": "UF3 ON"
+    },
+    {
+      "key": "function98",
+      "description": "UF4 ON"
+    },
+    {
+      "key": "function99",
+      "description": "UF5 ON"
+    },
+    {
+      "key": "function100",
+      "description": "UF6 ON"
+    },
+    {
+      "key": "function101",
+      "description": "UF7 ON"
+    },
+    {
+      "key": "function102",
+      "description": "UF1 OFF"
+    },
+    {
+      "key": "function103",
+      "description": "UF2 OFF"
+    },
+    {
+      "key": "function104",
+      "description": "UF3 OFF"
+    },
+    {
+      "key": "function105",
+      "description": "UF4 OFF"
+    },
+    {
+      "key": "function106",
+      "description": "UF5 OFF"
+    },
+    {
+      "key": "function107",
+      "description": "UF6 OFF"
+    },
+    {
+      "key": "function108",
+      "description": "UF7 OFF"
+    },
+    {
+      "key": "function109",
+      "description": "UF1 Pulse"
+    },
+    {
+      "key": "function110",
+      "description": "UF2 Pulse"
+    },
+    {
+      "key": "function111",
+      "description": "UF3 Pulse"
+    },
+    {
+      "key": "function112",
+      "description": "UF4 Pulse"
+    },
+    {
+      "key": "function113",
+      "description": "UF5 Pulse"
+    },
+    {
+      "key": "function114",
+      "description": "UF6 Pulse"
+    },
+    {
+      "key": "function115",
+      "description": "UF7 Pulse"
+    },
+    {
+      "key": "function116",
+      "description": "Say Time"
+    },
+    {
+      "key": "function117",
+      "description": "Say Date"
+    },
+    {
+      "key": "function118",
+      "description": "Link Port 1 To Port 2"
+    },
+    {
+      "key": "function119",
+      "description": "Link Port 1 To Port 3"
+    },
+    {
+      "key": "function120",
+      "description": "Link Port 2 To Port 3"
+    },
+    {
+      "key": "function121",
+      "description": "Link All Ports"
+    },
+    {
+      "key": "function122",
+      "description": "Unlink Port 1 From Port 2"
+    },
+    {
+      "key": "function123",
+      "description": "Unlink Port 1 From Port 3"
+    },
+    {
+      "key": "function124",
+      "description": "Unlink Port 2 From Port 3"
+    },
+    {
+      "key": "function125",
+      "description": "Unlink All Ports"
+    },
+    {
+      "key": "function126",
+      "description": "Play DVR Track 1"
+    },
+    {
+      "key": "function127",
+      "description": "Play DVR Track 2"
+    },
+    {
+      "key": "function128",
+      "description": "Play DVR Track 3"
+    },
+    {
+      "key": "function129",
+      "description": "Play DVR Track 4"
+    },
+    {
+      "key": "function130",
+      "description": "Play DVR Track 5"
+    },
+    {
+      "key": "function131",
+      "description": "Play DVR Track 6"
+    },
+    {
+      "key": "function132",
+      "description": "Play DVR Track 7"
+    },
+    {
+      "key": "function133",
+      "description": "Play DVR Track 8"
+    },
+    {
+      "key": "function134",
+      "description": "Play DVR Track 9"
+    },
+    {
+      "key": "function135",
+      "description": "Play DVR Track 10"
+    },
+    {
+      "key": "function136",
+      "description": "Play DVR Track 11"
+    },
+    {
+      "key": "function137",
+      "description": "Play DVR Track 12"
+    },
+    {
+      "key": "function138",
+      "description": "Play DVR Track 13"
+    },
+    {
+      "key": "function139",
+      "description": "Play DVR Track 14"
+    },
+    {
+      "key": "function140",
+      "description": "Play DVR Track 15"
+    },
+    {
+      "key": "function141",
+      "description": "Play DVR Track 16"
+    },
+    {
+      "key": "function142",
+      "description": "Play DVR Track 17"
+    },
+    {
+      "key": "function143",
+      "description": "Play DVR Track 18"
+    },
+    {
+      "key": "function144",
+      "description": "Play DVR Track 19"
+    },
+    {
+      "key": "function145",
+      "description": "Play DVR Track 20"
+    },
+    {
+      "key": "function146",
+      "description": "Auxiliary Audio 1 ON"
+    },
+    {
+      "key": "function147",
+      "description": "Auxiliary Audio 2 ON"
+    },
+    {
+      "key": "function148",
+      "description": "Auxiliary Audio 3 ON"
+    },
+    {
+      "key": "function149",
+      "description": "Auxiliary Audio 1 OFF"
+    },
+    {
+      "key": "function150",
+      "description": "Auxiliary Audio 2 OFF"
+    },
+    {
+      "key": "function151",
+      "description": "Auxiliary Audio 3 OFF"
+    },
+    {
+      "key": "function152",
+      "description": "Alarm 1 ON"
+    },
+    {
+      "key": "function153",
+      "description": "Alarm 2 ON"
+    },
+    {
+      "key": "function154",
+      "description": "Alarm 3 ON"
+    },
+    {
+      "key": "function155",
+      "description": "Alarm 4 ON"
+    },
+    {
+      "key": "function156",
+      "description": "Alarm 5 ON"
+    },
+    {
+      "key": "function157",
+      "description": "Alarm 1 OFF"
+    },
+    {
+      "key": "function158",
+      "description": "Alarm 2 OFF"
+    },
+    {
+      "key": "function159",
+      "description": "Alarm 3 OFF"
+    },
+    {
+      "key": "function160",
+      "description": "Alarm 4 OFF"
+    },
+    {
+      "key": "function161",
+      "description": "Alarm 5 OFF"
+    },
+    {
+      "key": "function162",
+      "description": "Speech Out Port 1"
+    },
+    {
+      "key": "function163",
+      "description": "Speech Out Port 2"
+    },
+    {
+      "key": "function164",
+      "description": "Speech Out Port 3"
+    },
+    {
+      "key": "function165",
+      "description": "Speech Out Ports 1 & 2"
+    },
+    {
+      "key": "function166",
+      "description": "Speech Out Ports 1 & 3"
+    },
+    {
+      "key": "function167",
+      "description": "Speech Out Ports 2 & 3"
+    },
+    {
+      "key": "function168",
+      "description": "Speech Out All Ports"
+    },
+    {
+      "key": "function169",
+      "description": "DTMF Enable Port 1"
+    },
+    {
+      "key": "function170",
+      "description": "DTMF Enable Port 2"
+    },
+    {
+      "key": "function171",
+      "description": "DTMF Enable Port 3"
+    },
+    {
+      "key": "function172",
+      "description": "DTMF Disable Port 1"
+    },
+    {
+      "key": "function173",
+      "description": "DTMF Disable Port 2"
+    },
+    {
+      "key": "function174",
+      "description": "DTMF Disable Port 3"
+    },
+    {
+      "key": "function175",
+      "description": "Require PL for DTMF Port 1"
+    },
+    {
+      "key": "function176",
+      "description": "Require PL for DTMF Port 2"
+    },
+    {
+      "key": "function177",
+      "description": "Require PL for DTMF Port 3"
+    },
+    {
+      "key": "function178",
+      "description": "Do Not Require PL for DTMF Port 1"
+    },
+    {
+      "key": "function179",
+      "description": "Do Not Require PL for DTMF Port 2"
+    },
+    {
+      "key": "function180",
+      "description": "Do Not Require PL for DTMF Port 3"
+    },
+    {
+      "key": "function181",
+      "description": "Play Next Voice ID on Port 1"
+    },
+    {
+      "key": "function182",
+      "description": "Play Next Voice ID on Port 2"
+    },
+    {
+      "key": "function183",
+      "description": "Play Next Voice ID on Port 3"
+    },
+    {
+      "key": "function184",
+      "description": "Play Next CW ID on Port 1"
+    },
+    {
+      "key": "function185",
+      "description": "Play Next CW ID on Port 2"
+    },
+    {
+      "key": "function186",
+      "description": "Play Next CW ID on Port 3"
+    },
+    {
+      "key": "function187",
+      "description": "Speak Message Macro 1",
+      "destination": "messageMacro1"
+    },
+    {
+      "key": "function188",
+      "description": "Speak Message Macro 2",
+      "destination": "messageMacro2"
+    },
+    {
+      "key": "function189",
+      "description": "Speak Message Macro 3",
+      "destination": "messageMacro3"
+    },
+    {
+      "key": "function190",
+      "description": "Speak Message Macro 4",
+      "destination": "messageMacro4"
+    },
+    {
+      "key": "function191",
+      "description": "Speak Message Macro 5",
+      "destination": "messageMacro5"
+    },
+    {
+      "key": "function192",
+      "description": "Speak Message Macro 6",
+      "destination": "messageMacro6"
+    },
+    {
+      "key": "function193",
+      "description": "Speak Message Macro 7",
+      "destination": "messageMacro7"
+    },
+    {
+      "key": "function194",
+      "description": "Speak Message Macro 8",
+      "destination": "messageMacro8"
+    },
+    {
+      "key": "function195",
+      "description": "Speak Message Macro 9",
+      "destination": "messageMacro9"
+    },
+    {
+      "key": "function196",
+      "description": "Speak Message Macro 10",
+      "destination": "messageMacro10"
+    },
+    {
+      "key": "function197",
+      "description": "Speak Message Macro 11",
+      "destination": "messageMacro11"
+    },
+    {
+      "key": "function198",
+      "description": "Speak Message Macro 12",
+      "destination": "messageMacro12"
+    },
+    {
+      "key": "function199",
+      "description": "Speak Message Macro 13",
+      "destination": "messageMacro13"
+    },
+    {
+      "key": "function200",
+      "description": "Speak Message Macro 14",
+      "destination": "messageMacro14"
+    },
+    {
+      "key": "function201",
+      "description": "Speak Message Macro 15",
+      "destination": "messageMacro15"
+    },
+    {
+      "key": "function202",
+      "description": "Speak Message Macro 16",
+      "destination": "messageMacro16"
+    },
+    {
+      "key": "function203",
+      "description": "Speak Message Macro 17",
+      "destination": "messageMacro17"
+    },
+    {
+      "key": "function204",
+      "description": "Speak Message Macro 18",
+      "destination": "messageMacro18"
+    },
+    {
+      "key": "function205",
+      "description": "Speak Message Macro 19",
+      "destination": "messageMacro19"
+    },
+    {
+      "key": "function206",
+      "description": "Speak Message Macro 20",
+      "destination": "messageMacro20"
+    },
+    {
+      "key": "function207",
+      "description": "Speak Message Macro 21",
+      "destination": "messageMacro21"
+    },
+    {
+      "key": "function208",
+      "description": "Speak Message Macro 22",
+      "destination": "messageMacro22"
+    },
+    {
+      "key": "function209",
+      "description": "Speak Message Macro 23",
+      "destination": "messageMacro23"
+    },
+    {
+      "key": "function210",
+      "description": "Speak Message Macro 24",
+      "destination": "messageMacro24"
+    },
+    {
+      "key": "function211",
+      "description": "Speak Message Macro 25",
+      "destination": "messageMacro25"
+    },
+    {
+      "key": "function212",
+      "description": "Speak Message Macro 26",
+      "destination": "messageMacro26"
+    },
+    {
+      "key": "function213",
+      "description": "Speak Message Macro 27",
+      "destination": "messageMacro27"
+    },
+    {
+      "key": "function214",
+      "description": "Speak Message Macro 28",
+      "destination": "messageMacro28"
+    },
+    {
+      "key": "function215",
+      "description": "Speak Message Macro 29",
+      "destination": "messageMacro29"
+    },
+    {
+      "key": "function216",
+      "description": "Speak Message Macro 30",
+      "destination": "messageMacro30"
+    },
+    {
+      "key": "function217",
+      "description": "Speak Message Macro 31",
+      "destination": "messageMacro31"
+    },
+    {
+      "key": "function218",
+      "description": "Speak Message Macro 32",
+      "destination": "messageMacro32"
+    },
+    {
+      "key": "function219",
+      "description": "Speak Message Macro 33",
+      "destination": "messageMacro33"
+    },
+    {
+      "key": "function220",
+      "description": "Speak Message Macro 34",
+      "destination": "messageMacro34"
+    },
+    {
+      "key": "function221",
+      "description": "Speak Message Macro 35",
+      "destination": "messageMacro35"
+    },
+    {
+      "key": "function222",
+      "description": "Speak Message Macro 36",
+      "destination": "messageMacro36"
+    },
+    {
+      "key": "function223",
+      "description": "Speak Message Macro 37",
+      "destination": "messageMacro37"
+    },
+    {
+      "key": "function224",
+      "description": "Speak Message Macro 38",
+      "destination": "messageMacro38"
+    },
+    {
+      "key": "function225",
+      "description": "Speak Message Macro 39",
+      "destination": "messageMacro39"
+    },
+    {
+      "key": "function226",
+      "description": "Speak Message Macro 40",
+      "destination": "messageMacro40"
+    },
+    {
+      "key": "function227",
+      "description": "Say Good (Morning/Afternoon/Evening)"
+    },
+    {
+      "key": "function228",
+      "description": "High Priority Macro"
+    },
+    {
+      "key": "function229",
+      "description": "Low Priority Macro"
+    },
+    {
+      "key": "function230",
+      "description": "Port 1 Kerchunk Filter OFF"
+    },
+    {
+      "key": "function231",
+      "description": "Port 2 Kerchunk Filter OFF"
+    },
+    {
+      "key": "function232",
+      "description": "Port 3 Kerchunk Filter OFF"
+    },
+    {
+      "key": "function233",
+      "description": "Port 1 Kerchunk Filter ON"
+    },
+    {
+      "key": "function234",
+      "description": "Port 2 Kerchunk Filter ON"
+    },
+    {
+      "key": "function235",
+      "description": "Port 2 Kerchunk Filter ON"
+    },
+    {
+      "key": "function236",
+      "description": "Port 1 Receiver Disable"
+    },
+    {
+      "key": "function237",
+      "description": "Port 2 Receiver Disable"
+    },
+    {
+      "key": "function238",
+      "description": "Port 3 Receiver Disable"
+    },
+    {
+      "key": "function239",
+      "description": "Port 1 Receiver Enable"
+    },
+    {
+      "key": "function240",
+      "description": "Port 2 Receiver Enable"
+    },
+    {
+      "key": "function241",
+      "description": "Port 3 Receiver Enable"
+    },
+    {
+      "key": "function242",
+      "description": "Port 1 Speech ID Override OFF"
+    },
+    {
+      "key": "function243",
+      "description": "Port 2 Speech ID Override OFF"
+    },
+    {
+      "key": "function244",
+      "description": "Port 3 Speech ID Override OFF"
+    },
+    {
+      "key": "function245",
+      "description": "Port 1 Speech ID Override ON"
+    },
+    {
+      "key": "function246",
+      "description": "Port 2 Speech ID Override ON"
+    },
+    {
+      "key": "function247",
+      "description": "Port 3 Speech ID Override ON"
+    },
+    {
+      "key": "function248",
+      "description": "All Courtesy Tones OFF Port 1"
+    },
+    {
+      "key": "function249",
+      "description": "All Courtesy Tones OFF Port 2"
+    },
+    {
+      "key": "function250",
+      "description": "All Courtesy Tones OFF Port 3"
+    },
+    {
+      "key": "function251",
+      "description": "Force Audio To Entered Port"
+    },
+    {
+      "key": "function252",
+      "description": "Stop ID/Disable Timeout Timer Port 1"
+    },
+    {
+      "key": "function253",
+      "description": "Stop ID/Disable Timeout Timer Port 2"
+    },
+    {
+      "key": "function254",
+      "description": "Stop ID/Disable Timeout Timer Port 3"
+    },
+    {
+      "key": "function256",
+      "description": "Resume ID/Enable Timeout Timer Port 1"
+    },
+    {
+      "key": "function257",
+      "description": "Resume ID/Enable Timeout Timer Port 2"
+    },
+    {
+      "key": "function258",
+      "description": "Resume ID/Enable Timeout Timer Port 3"
+    },
+    {
+      "key": "function259",
+      "description": "Send DTMF Memory 1"
+    },
+    {
+      "key": "function260",
+      "description": "Send DTMF Memory 2"
+    },
+    {
+      "key": "function261",
+      "description": "Send DTMF Memory 3"
+    },
+    {
+      "key": "function262",
+      "description": "Send DTMF Memory 4"
+    },
+    {
+      "key": "function263",
+      "description": "Send DTMF Memory 5"
+    },
+    {
+      "key": "function264",
+      "description": "Send DTMF Memory 6"
+    },
+    {
+      "key": "function265",
+      "description": "Send DTMF Memory 7"
+    },
+    {
+      "key": "function266",
+      "description": "Send DTMF Memory 8"
+    },
+    {
+      "key": "function267",
+      "description": "Send DTMF Memory 9"
+    },
+    {
+      "key": "function268",
+      "description": "Send DTMF Memory 10"
+    },
+    {
+      "key": "function269",
+      "description": "Send DTMF Memory 11"
+    },
+    {
+      "key": "function270",
+      "description": "Send DTMF Memory 12"
+    },
+    {
+      "key": "function271",
+      "description": "Send DTMF Memory 13"
+    },
+    {
+      "key": "function272",
+      "description": "Send DTMF Memory 14"
+    },
+    {
+      "key": "function273",
+      "description": "Send DTMF Memory 15"
+    },
+    {
+      "key": "function274",
+      "description": "Send DTMF Memory 16"
+    },
+    {
+      "key": "function275",
+      "description": "Send DTMF Memory 17"
+    },
+    {
+      "key": "function276",
+      "description": "Send DTMF Memory 18"
+    },
+    {
+      "key": "function277",
+      "description": "Send DTMF Memory 19"
+    },
+    {
+      "key": "function278",
+      "description": "Send DTMF Memory 20"
+    },
+    {
+      "key": "function279",
+      "description": "Clear All Meters Hi/Low"
+    },
+    {
+      "key": "function280",
+      "description": "Clear Meter 1 Hi/Low"
+    },
+    {
+      "key": "function281",
+      "description": "Clear Meter 2 Hi/Low"
+    },
+    {
+      "key": "function282",
+      "description": "Clear Meter 3 Hi/Low"
+    },
+    {
+      "key": "function283",
+      "description": "Clear Meter 4 Hi/Low"
+    },
+    {
+      "key": "function284",
+      "description": "Clear Meter 5 Hi/Low"
+    },
+    {
+      "key": "function285",
+      "description": "Clear Meter 6 Hi/Low"
+    },
+    {
+      "key": "function286",
+      "description": "Clear Meter 7 Hi/Low"
+    },
+    {
+      "key": "function287",
+      "description": "Clear Meter 8 Hi/Low"
+    },
+    {
+      "key": "function288",
+      "description": "Enable Meter Alarm 1"
+    },
+    {
+      "key": "function289",
+      "description": "Enable Meter Alarm 2"
+    },
+    {
+      "key": "function290",
+      "description": "Enable Meter Alarm 3"
+    },
+    {
+      "key": "function291",
+      "description": "Enable Meter Alarm 4"
+    },
+    {
+      "key": "function292",
+      "description": "Enable Meter Alarm 5"
+    },
+    {
+      "key": "function293",
+      "description": "Enable Meter Alarm 6"
+    },
+    {
+      "key": "function294",
+      "description": "Enable Meter Alarm 7"
+    },
+    {
+      "key": "function295",
+      "description": "Enable Meter Alarm 8"
+    },
+    {
+      "key": "function296",
+      "description": "Disable Meter Alarm 1"
+    },
+    {
+      "key": "function297",
+      "description": "Disable Meter Alarm 2"
+    },
+    {
+      "key": "function298",
+      "description": "Disable Meter Alarm 3"
+    },
+    {
+      "key": "function299",
+      "description": "Disable Meter Alarm 4"
+    },
+    {
+      "key": "function300",
+      "description": "Disable Meter Alarm 5"
+    },
+    {
+      "key": "function301",
+      "description": "Disable Meter Alarm 6"
+    },
+    {
+      "key": "function302",
+      "description": "Disable Meter Alarm 7"
+    },
+    {
+      "key": "function303",
+      "description": "Disable Meter Alarm 8"
+    },
+    {
+      "key": "function304",
+      "description": "CTCSS Encode Force OFF"
+    },
+    {
+      "key": "function305",
+      "description": "CTCSS Encode To Programmed Value"
+    },
+    {
+      "key": "function306",
+      "description": "Bump Clock By Correction Factor"
+    },
+    {
+      "key": "function307",
+      "description": "Say Year As Part Of Date"
+    },
+    {
+      "key": "function308",
+      "description": "Don't Say Year As Part Of Date"
+    },
+    {
+      "key": "function309",
+      "description": "Port 1 Tail Message OFF"
+    },
+    {
+      "key": "function310",
+      "description": "Port 2 Tail Message OFF"
+    },
+    {
+      "key": "function311",
+      "description": "Port 3 Tail Message OFF"
+    },
+    {
+      "key": "function312",
+      "description": "Port 1 Tail Message 1"
+    },
+    {
+      "key": "function313",
+      "description": "Port 2 Tail Message 1"
+    },
+    {
+      "key": "function314",
+      "description": "Port 3 Tail Message 1"
+    },
+    {
+      "key": "function315",
+      "description": "Port 1 Tail Message 2"
+    },
+    {
+      "key": "function316",
+      "description": "Port 2 Tail Message 2"
+    },
+    {
+      "key": "function317",
+      "description": "Port 3 Tail Message 2"
+    },
+    {
+      "key": "function318",
+      "description": "Port 1 Tail Message 3"
+    },
+    {
+      "key": "function319",
+      "description": "Port 2 Tail Message 3"
+    },
+    {
+      "key": "function320",
+      "description": "Port 3 Tail Message 3"
+    },
+    {
+      "key": "function321",
+      "description": "Remote Base Memory 1"
+    },
+    {
+      "key": "function322",
+      "description": "Remote Base Memory 2"
+    },
+    {
+      "key": "function323",
+      "description": "Remote Base Memory 3"
+    },
+    {
+      "key": "function324",
+      "description": "Remote Base Memory 4"
+    },
+    {
+      "key": "function325",
+      "description": "Remote Base Memory 5"
+    },
+    {
+      "key": "function326",
+      "description": "Remote Base Memory 6"
+    },
+    {
+      "key": "function327",
+      "description": "Remote Base Memory 7"
+    },
+    {
+      "key": "function328",
+      "description": "Remote Base Memory 8"
+    },
+    {
+      "key": "function329",
+      "description": "Remote Base Memory 9"
+    },
+    {
+      "key": "function330",
+      "description": "Remote Base Memory 10"
+    },
+    {
+      "key": "function331",
+      "description": "Port 1 Zero Hang Time"
+    },
+    {
+      "key": "function332",
+      "description": "Port 2 Zero Hang Time"
+    },
+    {
+      "key": "function333",
+      "description": "Port 3 Zero Hang Time"
+    },
+    {
+      "key": "function334",
+      "description": "Port 1 Revert to Programmed Value"
+    },
+    {
+      "key": "function335",
+      "description": "Port 2 Revert to Programmed Value"
+    },
+    {
+      "key": "function336",
+      "description": "Port 3 Revert to Programmed Value"
+    },
+    {
+      "key": "function337",
+      "description": "Allow Autopatch From Programmed Ports"
+    },
+    {
+      "key": "function338",
+      "description": "Disable Autopatch"
+    },
+    {
+      "key": "function339",
+      "description": "Enable Speech ID's On Port 1"
+    },
+    {
+      "key": "function340",
+      "description": "Enable Speech ID's On Port 2"
+    },
+    {
+      "key": "function341",
+      "description": "Enable Speech ID's On Port 3"
+    },
+    {
+      "key": "function342",
+      "description": "Disable Speech ID's On Port 1"
+    },
+    {
+      "key": "function343",
+      "description": "Disable Speech ID's On Port 2"
+    },
+    {
+      "key": "function344",
+      "description": "Disable Speech ID's On Port 3"
+    },
+    {
+      "key": "function345",
+      "description": "User DVR Record, Erase After Auto Playback"
+    },
+    {
+      "key": "function346",
+      "description": "User DVR Record, Don't Erase After Auto Playback"
+    },
+    {
+      "key": "function347",
+      "description": "Start General Timer 1"
+    },
+    {
+      "key": "function348",
+      "description": "Start General Timer 2"
+    },
+    {
+      "key": "function349",
+      "description": "Start General Timer 3"
+    },
+    {
+      "key": "function350",
+      "description": "Stop General Timer 1"
+    },
+    {
+      "key": "function351",
+      "description": "Stop General Timer 2"
+    },
+    {
+      "key": "function352",
+      "description": "Stop General Timer 3"
+    },
+    {
+      "key": "function353",
+      "description": "Remote Base Power Select 1"
+    },
+    {
+      "key": "function354",
+      "description": "Remote Base Power Select 2"
+    },
+    {
+      "key": "function355",
+      "description": "Remote Base Power Select 3"
+    },
+    {
+      "key": "function356",
+      "description": "Guest Macros ON"
+    },
+    {
+      "key": "function357",
+      "description": "Guest Macros OFF"
+    },
+    {
+      "key": "function358",
+      "description": "Receiver 1 Macros ON"
+    },
+    {
+      "key": "function359",
+      "description": "Receiver 2 Macros ON"
+    },
+    {
+      "key": "function360",
+      "description": "Receiver 3 Macros ON"
+    },
+    {
+      "key": "function361",
+      "description": "Receiver 1 Macros OFF"
+    },
+    {
+      "key": "function362",
+      "description": "Receiver 2 Macros OFF"
+    },
+    {
+      "key": "function363",
+      "description": "Receiver 3 Macros OFF"
+    },
+    {
+      "key": "function364",
+      "description": "Extended Logic Output 1 ON"
+    },
+    {
+      "key": "function365",
+      "description": "Extended Logic Output 2 ON"
+    },
+    {
+      "key": "function366",
+      "description": "Extended Logic Output 3 ON"
+    },
+    {
+      "key": "function367",
+      "description": "Extended Logic Output 4 ON"
+    },
+    {
+      "key": "function368",
+      "description": "Extended Logic Output 5 ON"
+    },
+    {
+      "key": "function369",
+      "description": "Extended Logic Output 6 ON"
+    },
+    {
+      "key": "function370",
+      "description": "Extended Logic Output 7 ON"
+    },
+    {
+      "key": "function371",
+      "description": "Extended Logic Output 8 ON"
+    },
+    {
+      "key": "function372",
+      "description": "Extended Logic Output 9 ON"
+    },
+    {
+      "key": "function373",
+      "description": "Extended Logic Output 10 ON"
+    },
+    {
+      "key": "function374",
+      "description": "Extended Logic Output 11 ON"
+    },
+    {
+      "key": "function375",
+      "description": "Extended Logic Output 12 ON"
+    },
+    {
+      "key": "function376",
+      "description": "Extended Logic Output 13 ON"
+    },
+    {
+      "key": "function377",
+      "description": "Extended Logic Output 14 ON"
+    },
+    {
+      "key": "function378",
+      "description": "Extended Logic Output 15 ON"
+    },
+    {
+      "key": "function379",
+      "description": "Extended Logic Output 16 ON"
+    },
+    {
+      "key": "function380",
+      "description": "Extended Logic Output 17 ON"
+    },
+    {
+      "key": "function381",
+      "description": "Extended Logic Output 18 ON"
+    },
+    {
+      "key": "function382",
+      "description": "Extended Logic Output 19 ON"
+    },
+    {
+      "key": "function383",
+      "description": "Extended Logic Output 20 ON"
+    },
+    {
+      "key": "function384",
+      "description": "Extended Logic Output 21 ON"
+    },
+    {
+      "key": "function385",
+      "description": "Extended Logic Output 22 ON"
+    },
+    {
+      "key": "function386",
+      "description": "Extended Logic Output 23 ON"
+    },
+    {
+      "key": "function387",
+      "description": "Extended Logic Output 24 ON"
+    },
+    {
+      "key": "function388",
+      "description": "Extended Logic Output 25 ON"
+    },
+    {
+      "key": "function389",
+      "description": "Extended Logic Output 26 ON"
+    },
+    {
+      "key": "function390",
+      "description": "Extended Logic Output 27 ON"
+    },
+    {
+      "key": "function391",
+      "description": "Extended Logic Output 28 ON"
+    },
+    {
+      "key": "function392",
+      "description": "Extended Logic Output 29 ON"
+    },
+    {
+      "key": "function393",
+      "description": "Extended Logic Output 30 ON"
+    },
+    {
+      "key": "function394",
+      "description": "Extended Logic Output 31 ON"
+    },
+    {
+      "key": "function395",
+      "description": "Extended Logic Output 32 ON"
+    },
+    {
+      "key": "function396",
+      "description": "Extended Logic Output 1 PULSE"
+    },
+    {
+      "key": "function397",
+      "description": "Extended Logic Output 2 PULSE"
+    },
+    {
+      "key": "function398",
+      "description": "Extended Logic Output 3 PULSE"
+    },
+    {
+      "key": "function399",
+      "description": "Extended Logic Output 4 PULSE"
+    },
+    {
+      "key": "function400",
+      "description": "Extended Logic Output 5 PULSE"
+    },
+    {
+      "key": "function401",
+      "description": "Extended Logic Output 6 PULSE"
+    },
+    {
+      "key": "function402",
+      "description": "Extended Logic Output 7 PULSE"
+    },
+    {
+      "key": "function403",
+      "description": "Extended Logic Output 8 PULSE"
+    },
+    {
+      "key": "function404",
+      "description": "Extended Logic Output 9 PULSE"
+    },
+    {
+      "key": "function405",
+      "description": "Extended Logic Output 10 PULSE"
+    },
+    {
+      "key": "function406",
+      "description": "Extended Logic Output 11 PULSE"
+    },
+    {
+      "key": "function407",
+      "description": "Extended Logic Output 12 PULSE"
+    },
+    {
+      "key": "function408",
+      "description": "Extended Logic Output 13 PULSE"
+    },
+    {
+      "key": "function409",
+      "description": "Extended Logic Output 14 PULSE"
+    },
+    {
+      "key": "function410",
+      "description": "Extended Logic Output 15 PULSE"
+    },
+    {
+      "key": "function411",
+      "description": "Extended Logic Output 16 PULSE"
+    },
+    {
+      "key": "function412",
+      "description": "Extended Logic Output 17 PULSE"
+    },
+    {
+      "key": "function413",
+      "description": "Extended Logic Output 18 PULSE"
+    },
+    {
+      "key": "function414",
+      "description": "Extended Logic Output 19 PULSE"
+    },
+    {
+      "key": "function415",
+      "description": "Extended Logic Output 20 PULSE"
+    },
+    {
+      "key": "function416",
+      "description": "Extended Logic Output 21 PULSE"
+    },
+    {
+      "key": "function417",
+      "description": "Extended Logic Output 22 PULSE"
+    },
+    {
+      "key": "function418",
+      "description": "Extended Logic Output 23 PULSE"
+    },
+    {
+      "key": "function419",
+      "description": "Extended Logic Output 24 PULSE"
+    },
+    {
+      "key": "function420",
+      "description": "Extended Logic Output 25 PULSE"
+    },
+    {
+      "key": "function421",
+      "description": "Extended Logic Output 26 PULSE"
+    },
+    {
+      "key": "function422",
+      "description": "Extended Logic Output 27 PULSE"
+    },
+    {
+      "key": "function423",
+      "description": "Extended Logic Output 28 PULSE"
+    },
+    {
+      "key": "function424",
+      "description": "Extended Logic Output 29 PULSE"
+    },
+    {
+      "key": "function425",
+      "description": "Extended Logic Output 30 PULSE"
+    },
+    {
+      "key": "function426",
+      "description": "Extended Logic Output 31 PULSE"
+    },
+    {
+      "key": "function427",
+      "description": "Extended Logic Output 32 PULSE"
+    },
+    {
+      "key": "function428",
+      "description": "Extended Logic Output 1 OFF"
+    },
+    {
+      "key": "function429",
+      "description": "Extended Logic Output 2 OFF"
+    },
+    {
+      "key": "function430",
+      "description": "Extended Logic Output 3 OFF"
+    },
+    {
+      "key": "function431",
+      "description": "Extended Logic Output 4 OFF"
+    },
+    {
+      "key": "function432",
+      "description": "Extended Logic Output 5 OFF"
+    },
+    {
+      "key": "function433",
+      "description": "Extended Logic Output 6 OFF"
+    },
+    {
+      "key": "function434",
+      "description": "Extended Logic Output 7 OFF"
+    },
+    {
+      "key": "function435",
+      "description": "Extended Logic Output 8 OFF"
+    },
+    {
+      "key": "function436",
+      "description": "Extended Logic Output 9 OFF"
+    },
+    {
+      "key": "function437",
+      "description": "Extended Logic Output 10 OFF"
+    },
+    {
+      "key": "function438",
+      "description": "Extended Logic Output 11 OFF"
+    },
+    {
+      "key": "function439",
+      "description": "Extended Logic Output 12 OFF"
+    },
+    {
+      "key": "function440",
+      "description": "Extended Logic Output 13 OFF"
+    },
+    {
+      "key": "function441",
+      "description": "Extended Logic Output 14 OFF"
+    },
+    {
+      "key": "function442",
+      "description": "Extended Logic Output 15 OFF"
+    },
+    {
+      "key": "function443",
+      "description": "Extended Logic Output 16 OFF"
+    },
+    {
+      "key": "function444",
+      "description": "Extended Logic Output 17 OFF"
+    },
+    {
+      "key": "function445",
+      "description": "Extended Logic Output 18 OFF"
+    },
+    {
+      "key": "function446",
+      "description": "Extended Logic Output 19 OFF"
+    },
+    {
+      "key": "function447",
+      "description": "Extended Logic Output 20 OFF"
+    },
+    {
+      "key": "function448",
+      "description": "Extended Logic Output 21 OFF"
+    },
+    {
+      "key": "function449",
+      "description": "Extended Logic Output 22 OFF"
+    },
+    {
+      "key": "function450",
+      "description": "Extended Logic Output 23 OFF"
+    },
+    {
+      "key": "function451",
+      "description": "Extended Logic Output 24 OFF"
+    },
+    {
+      "key": "function452",
+      "description": "Extended Logic Output 25 OFF"
+    },
+    {
+      "key": "function453",
+      "description": "Extended Logic Output 26 OFF"
+    },
+    {
+      "key": "function454",
+      "description": "Extended Logic Output 27 OFF"
+    },
+    {
+      "key": "function455",
+      "description": "Extended Logic Output 28 OFF"
+    },
+    {
+      "key": "function456",
+      "description": "Extended Logic Output 29 OFF"
+    },
+    {
+      "key": "function457",
+      "description": "Extended Logic Output 30 OFF"
+    },
+    {
+      "key": "function458",
+      "description": "Extended Logic Output 31 OFF"
+    },
+    {
+      "key": "function459",
+      "description": "Extended Logic Output 32 OFF"
+    },
+    {
+      "key": "function460",
+      "description": "Play Message Macro 41"
+    },
+    {
+      "key": "function461",
+      "description": "Play Message Macro 42"
+    },
+    {
+      "key": "function462",
+      "description": "Play Message Macro 43"
+    },
+    {
+      "key": "function463",
+      "description": "Play Message Macro 44"
+    },
+    {
+      "key": "function464",
+      "description": "Play Message Macro 45"
+    },
+    {
+      "key": "function465",
+      "description": "Play Message Macro 46"
+    },
+    {
+      "key": "function466",
+      "description": "Play Message Macro 47"
+    },
+    {
+      "key": "function467",
+      "description": "Play Message Macro 48"
+    },
+    {
+      "key": "function468",
+      "description": "Play Message Macro 49"
+    },
+    {
+      "key": "function469",
+      "description": "Play Message Macro 50"
+    },
+    {
+      "key": "function470",
+      "description": "Play Message Macro 51"
+    },
+    {
+      "key": "function471",
+      "description": "Play Message Macro 52"
+    },
+    {
+      "key": "function472",
+      "description": "Play Message Macro 53"
+    },
+    {
+      "key": "function473",
+      "description": "Play Message Macro 54"
+    },
+    {
+      "key": "function474",
+      "description": "Play Message Macro 55"
+    },
+    {
+      "key": "function475",
+      "description": "Play Message Macro 56"
+    },
+    {
+      "key": "function476",
+      "description": "Play Message Macro 57"
+    },
+    {
+      "key": "function477",
+      "description": "Play Message Macro 58"
+    },
+    {
+      "key": "function478",
+      "description": "Play Message Macro 59"
+    },
+    {
+      "key": "function479",
+      "description": "Play Message Macro 60"
+    },
+    {
+      "key": "function480",
+      "description": "Play Message Macro 61"
+    },
+    {
+      "key": "function481",
+      "description": "Play Message Macro 62"
+    },
+    {
+      "key": "function482",
+      "description": "Play Message Macro 63"
+    },
+    {
+      "key": "function483",
+      "description": "Play Message Macro 64"
+    },
+    {
+      "key": "function484",
+      "description": "Play Message Macro 65"
+    },
+    {
+      "key": "function485",
+      "description": "Play Message Macro 66"
+    },
+    {
+      "key": "function486",
+      "description": "Play Message Macro 67"
+    },
+    {
+      "key": "function487",
+      "description": "Play Message Macro 68"
+    },
+    {
+      "key": "function488",
+      "description": "Play Message Macro 69"
+    },
+    {
+      "key": "function489",
+      "description": "Play Message Macro 70"
+    },
+    {
+      "key": "function490",
+      "description": "Remote Base Memory 11"
+    },
+    {
+      "key": "function491",
+      "description": "Remote Base Memory 12"
+    },
+    {
+      "key": "function492",
+      "description": "Remote Base Memory 13"
+    },
+    {
+      "key": "function493",
+      "description": "Remote Base Memory 14"
+    },
+    {
+      "key": "function494",
+      "description": "Remote Base Memory 15"
+    },
+    {
+      "key": "function495",
+      "description": "Remote Base Memory 16"
+    },
+    {
+      "key": "function496",
+      "description": "Remote Base Memory 17"
+    },
+    {
+      "key": "function497",
+      "description": "Remote Base Memory 18"
+    },
+    {
+      "key": "function498",
+      "description": "Remote Base Memory 19"
+    },
+    {
+      "key": "function499",
+      "description": "Remote Base Memory 20"
+    },
+    {
+      "key": "function500",
+      "description": "Remote Base Memory 21"
+    },
+    {
+      "key": "function501",
+      "description": "Remote Base Memory 22"
+    },
+    {
+      "key": "function502",
+      "description": "Remote Base Memory 23"
+    },
+    {
+      "key": "function503",
+      "description": "Remote Base Memory 24"
+    },
+    {
+      "key": "function504",
+      "description": "Remote Base Memory 25"
+    },
+    {
+      "key": "function505",
+      "description": "Remote Base Memory 26"
+    },
+    {
+      "key": "function506",
+      "description": "Remote Base Memory 27"
+    },
+    {
+      "key": "function507",
+      "description": "Remote Base Memory 28"
+    },
+    {
+      "key": "function508",
+      "description": "Remote Base Memory 29"
+    },
+    {
+      "key": "function509",
+      "description": "Remote Base Memory 30"
+    },
+    {
+      "key": "function510",
+      "description": "NOT USED"
+    },
+    {
+      "key": "function511",
+      "description": "Remote Base Memory 31"
+    },
+    {
+      "key": "function512",
+      "description": "Remote Base Memory 32"
+    },
+    {
+      "key": "function513",
+      "description": "Remote Base Memory 33"
+    },
+    {
+      "key": "function514",
+      "description": "Remote Base Memory 34"
+    },
+    {
+      "key": "function515",
+      "description": "Remote Base Memory 35"
+    },
+    {
+      "key": "function516",
+      "description": "Remote Base Memory 36"
+    },
+    {
+      "key": "function517",
+      "description": "Remote Base Memory 37"
+    },
+    {
+      "key": "function518",
+      "description": "Remote Base Memory 38"
+    },
+    {
+      "key": "function519",
+      "description": "Remote Base Memory 39"
+    },
+    {
+      "key": "function520",
+      "description": "Remote Base Memory 40"
+    },
+    {
+      "key": "function521",
+      "description": "Send DTMF Memory 21"
+    },
+    {
+      "key": "function522",
+      "description": "Send DTMF Memory 22"
+    },
+    {
+      "key": "function523",
+      "description": "Send DTMF Memory 23"
+    },
+    {
+      "key": "function524",
+      "description": "Send DTMF Memory 24"
+    },
+    {
+      "key": "function525",
+      "description": "Send DTMF Memory 25"
+    },
+    {
+      "key": "function526",
+      "description": "Send DTMF Memory 26"
+    },
+    {
+      "key": "function527",
+      "description": "Send DTMF Memory 27"
+    },
+    {
+      "key": "function528",
+      "description": "Send DTMF Memory 28"
+    },
+    {
+      "key": "function529",
+      "description": "Send DTMF Memory 29"
+    },
+    {
+      "key": "function530",
+      "description": "Send DTMF Memory 30"
+    },
+    {
+      "key": "function531",
+      "description": "Send DTMF Memory 31"
+    },
+    {
+      "key": "function532",
+      "description": "Send DTMF Memory 32"
+    },
+    {
+      "key": "function533",
+      "description": "Send DTMF Memory 33"
+    },
+    {
+      "key": "function534",
+      "description": "Send DTMF Memory 34"
+    },
+    {
+      "key": "function535",
+      "description": "Send DTMF Memory 35"
+    },
+    {
+      "key": "function536",
+      "description": "Send DTMF Memory 36"
+    },
+    {
+      "key": "function537",
+      "description": "Send DTMF Memory 37"
+    },
+    {
+      "key": "function538",
+      "description": "Send DTMF Memory 38"
+    },
+    {
+      "key": "function539",
+      "description": "Send DTMF Memory 39"
+    },
+    {
+      "key": "function540",
+      "description": "Send DTMF Memory 40"
+    },
+    {
+      "key": "function541",
+      "description": "Send DTMF Memory 41"
+    },
+    {
+      "key": "function542",
+      "description": "Send DTMF Memory 42"
+    },
+    {
+      "key": "function543",
+      "description": "Send DTMF Memory 43"
+    },
+    {
+      "key": "function544",
+      "description": "Send DTMF Memory 44"
+    },
+    {
+      "key": "function545",
+      "description": "Send DTMF Memory 45"
+    },
+    {
+      "key": "function546",
+      "description": "Send DTMF Memory 46"
+    },
+    {
+      "key": "function547",
+      "description": "Send DTMF Memory 47"
+    },
+    {
+      "key": "function548",
+      "description": "Send DTMF Memory 48"
+    },
+    {
+      "key": "function549",
+      "description": "Send DTMF Memory 49"
+    },
+    {
+      "key": "function550",
+      "description": "Send DTMF Memory 50"
+    },
+    {
+      "key": "function551",
+      "description": "Load RTC Time & Date Into RC210"
+    },
+    {
+      "key": "function552",
+      "description": "CTCSS During ID ON"
+    },
+    {
+      "key": "function553",
+      "description": "CTCSS During ID OFF"
+    },
+    {
+      "key": "function554",
+      "description": "Port 1 Time XMTR has been active since last reset"
+    },
+    {
+      "key": "function555",
+      "description": "Port 2 Time XMTR has been active since last reset"
+    },
+    {
+      "key": "function556",
+      "description": "Port 3 Time XMTR has been active since last reset"
+    },
+    {
+      "key": "function557",
+      "description": "Reset Port 1 Transmitter Activity Timer to 0"
+    },
+    {
+      "key": "function558",
+      "description": "Reset Port 1 Transmitter Activity Timer to 0"
+    },
+    {
+      "key": "function559",
+      "description": "Reset Port 1 Transmitter Activity Timer to 0"
+    },
+    {
+      "key": "function560",
+      "description": "Give RSSI Report"
+    },
+    {
+      "key": "function561",
+      "description": "Restart Controller"
+    },
+    {
+      "key": "function562",
+      "description": "Readback Number of Keyups Port 1"
+    },
+    {
+      "key": "function563",
+      "description": "Readback Number of Keyups Port 2"
+    },
+    {
+      "key": "function564",
+      "description": "Readback Number of Keyups Port 3"
+    },
+    {
+      "key": "function565",
+      "description": "Reset Keyup Counter Port 1"
+    },
+    {
+      "key": "function566",
+      "description": "Reset Keyup Counter Port 2"
+    },
+    {
+      "key": "function567",
+      "description": "Reset Keyup Counter Port 3"
+    },
+    {
+      "key": "function570",
+      "description": "Readback A/D Channel 1 Low"
+    },
+    {
+      "key": "function571",
+      "description": "Readback A/D Channel 2 Low"
+    },
+    {
+      "key": "function572",
+      "description": "Readback A/D Channel 3 Low"
+    },
+    {
+      "key": "function573",
+      "description": "Readback A/D Channel 4 Low"
+    },
+    {
+      "key": "function574",
+      "description": "Readback A/D Channel 5 Low"
+    },
+    {
+      "key": "function575",
+      "description": "Readback A/D Channel 6 Low"
+    },
+    {
+      "key": "function576",
+      "description": "Readback A/D Channel 7 Low"
+    },
+    {
+      "key": "function577",
+      "description": "Readback A/D Channel 8 Low"
+    },
+    {
+      "key": "function578",
+      "description": "Readback A/D Channel 1 High"
+    },
+    {
+      "key": "function579",
+      "description": "Readback A/D Channel 2 High"
+    },
+    {
+      "key": "function580",
+      "description": "Readback A/D Channel 3 High"
+    },
+    {
+      "key": "function581",
+      "description": "Readback A/D Channel 4 High"
+    },
+    {
+      "key": "function582",
+      "description": "Readback A/D Channel 5 High"
+    },
+    {
+      "key": "function583",
+      "description": "Readback A/D Channel 6 High"
+    },
+    {
+      "key": "function584",
+      "description": "Readback A/D Channel 7 High"
+    },
+    {
+      "key": "function585",
+      "description": "Readback A/D Channel 8 High"
+    },
+    {
+      "key": "function586",
+      "description": "Disable Port 1 Timeout Timer ONLY for 60 minutes"
+    },
+    {
+      "key": "function587",
+      "description": "Disable Port 2 Timeout Timer ONLY for 60 minutes"
+    },
+    {
+      "key": "function588",
+      "description": "Disable Port 3 Timeout Timer ONLY for 60 minutes"
+    },
+    {
+      "key": "function589",
+      "description": "Enable Port 1 Timeout Timer ONLY for 60 minutes"
+    },
+    {
+      "key": "function590",
+      "description": "Enable Port 2 Timeout Timer ONLY for 60 minutes"
+    },
+    {
+      "key": "function591",
+      "description": "Enable Port 2 Timeout Timer ONLY for 60 minutes"
+    },
+    {
+      "key": "function592",
+      "description": "Current Wind Speed & Direction"
+    },
+    {
+      "key": "function593",
+      "description": "Current Outdoor Temperature"
+    },
+    {
+      "key": "function594",
+      "description": "Current Indoor Humidity"
+    },
+    {
+      "key": "function595",
+      "description": "Current Outdoor Humidity"
+    },
+    {
+      "key": "function596",
+      "description": "Wind Speed High & Direction Since Midnight"
+    },
+    {
+      "key": "function597",
+      "description": "Outdoor Temp High & Time It Occurred Since Midnight"
+    },
+    {
+      "key": "function598",
+      "description": "Outdoor Temp Low & Time It Occurred Since Midnight"
+    },
+    {
+      "key": "function599",
+      "description": "Reserved for future use"
+    },
+    {
+      "key": "function600",
+      "description": "Reserved for future use"
+    },
+    {
+      "key": "function605",
+      "description": "Speak Current Remote Base Freq & Offset"
+    },
+    {
+      "key": "function606",
+      "description": "Start General Timer 4"
+    },
+    {
+      "key": "function607",
+      "description": "Start General Timer 5"
+    },
+    {
+      "key": "function608",
+      "description": "Start General Timer 6"
+    },
+    {
+      "key": "function609",
+      "description": "Stop General Timer 4"
+    },
+    {
+      "key": "function610",
+      "description": "Stop General Timer 5"
+    },
+    {
+      "key": "function611",
+      "description": "Stop General Timer 6"
+    },
+    {
+      "key": "function612",
+      "description": "Disable Port 1 Inactivity Timer"
+    },
+    {
+      "key": "function613",
+      "description": "Disable Port 2 Inactivity Timer"
+    },
+    {
+      "key": "function614",
+      "description": "Disable Port 3 Inactivity Timer"
+    },
+    {
+      "key": "function615",
+      "description": "Port 1 Inactivity Timer to Programmed Value"
+    },
+    {
+      "key": "function616",
+      "description": "Port 2 Inactivity Timer to Programmed Value"
+    },
+    {
+      "key": "function617",
+      "description": "Port 3 Inactivity Timer to Programmed Value"
+    },
+    {
+      "key": "function618",
+      "description": "Delay Execution by 1 second"
+    },
+    {
+      "key": "function619",
+      "description": "Delay Execution by 2 second"
+    },
+    {
+      "key": "function620",
+      "description": "Delay Execution by 4 second"
+    },
+    {
+      "key": "function621",
+      "description": "Port 1 Hangtimer 1 Select"
+    },
+    {
+      "key": "function622",
+      "description": "Port 1 Hangtimer 2 Select"
+    },
+    {
+      "key": "function623",
+      "description": "Port 1 Hangtimer 3 Select"
+    },
+    {
+      "key": "function624",
+      "description": "Port 2 Hangtimer 1 Select"
+    },
+    {
+      "key": "function625",
+      "description": "Port 2 Hangtimer 2 Select"
+    },
+    {
+      "key": "function626",
+      "description": "Port 2 Hangtimer 3 Select"
+    },
+    {
+      "key": "function627",
+      "description": "Port 3 Hangtimer 1 Select"
+    },
+    {
+      "key": "function628",
+      "description": "Port 3 Hangtimer 2 Select"
+    },
+    {
+      "key": "function629",
+      "description": "Port 3 Hangtimer 3 Select"
+    },
+    {
+      "key": "function630",
+      "description": "Port 1 Next Courtesy Tone 1 Select"
+    },
+    {
+      "key": "function631",
+      "description": "Port 1 Next Courtesy Tone 2 Select"
+    },
+    {
+      "key": "function632",
+      "description": "Port 1 Next Courtesy Tone 3 Select"
+    },
+    {
+      "key": "function633",
+      "description": "Port 1 Next Courtesy Tone 4 Select"
+    },
+    {
+      "key": "function634",
+      "description": "Port 1 Next Courtesy Tone 5 Select"
+    },
+    {
+      "key": "function635",
+      "description": "Port 1 Next Courtesy Tone 6 Select"
+    },
+    {
+      "key": "function636",
+      "description": "Port 1 Next Courtesy Tone 7 Select"
+    },
+    {
+      "key": "function637",
+      "description": "Port 1 Next Courtesy Tone 8 Select"
+    },
+    {
+      "key": "function638",
+      "description": "Port 1 Next Courtesy Tone 9 Select"
+    },
+    {
+      "key": "function639",
+      "description": "Port 1 Next Courtesy Tone 10 Select"
+    },
+    {
+      "key": "function640",
+      "description": "Port 1 Following Courtesy Tone 1 Select"
+    },
+    {
+      "key": "function641",
+      "description": "Port 1 Following Courtesy Tone 2 Select"
+    },
+    {
+      "key": "function642",
+      "description": "Port 1 Following Courtesy Tone 3 Select"
+    },
+    {
+      "key": "function643",
+      "description": "Port 1 Following Courtesy Tone 4 Select"
+    },
+    {
+      "key": "function644",
+      "description": "Port 1 Following Courtesy Tone 5 Select"
+    },
+    {
+      "key": "function645",
+      "description": "Port 1 Following Courtesy Tone 6 Select"
+    },
+    {
+      "key": "function646",
+      "description": "Port 1 Following Courtesy Tone 7 Select"
+    },
+    {
+      "key": "function647",
+      "description": "Port 1 Following Courtesy Tone 8 Select"
+    },
+    {
+      "key": "function648",
+      "description": "Port 1 Following Courtesy Tone 9 Select"
+    },
+    {
+      "key": "function649",
+      "description": "Port 1 Following Courtesy Tone 10 Select"
+    },
+    {
+      "key": "function650",
+      "description": "Port 2 Next Courtesy Tone 1 Select"
+    },
+    {
+      "key": "function651",
+      "description": "Port 2 Next Courtesy Tone 2 Select"
+    },
+    {
+      "key": "function652",
+      "description": "Port 2 Next Courtesy Tone 3 Select"
+    },
+    {
+      "key": "function653",
+      "description": "Port 2 Next Courtesy Tone 4 Select"
+    },
+    {
+      "key": "function654",
+      "description": "Port 2 Next Courtesy Tone 5 Select"
+    },
+    {
+      "key": "function655",
+      "description": "Port 2 Next Courtesy Tone 6 Select"
+    },
+    {
+      "key": "function656",
+      "description": "Port 2 Next Courtesy Tone 7 Select"
+    },
+    {
+      "key": "function657",
+      "description": "Port 2 Next Courtesy Tone 8 Select"
+    },
+    {
+      "key": "function658",
+      "description": "Port 2 Next Courtesy Tone 9 Select"
+    },
+    {
+      "key": "function659",
+      "description": "Port 2 Next Courtesy Tone 10 Select"
+    },
+    {
+      "key": "function660",
+      "description": "Port 2 Following Courtesy Tone 1 Select"
+    },
+    {
+      "key": "function661",
+      "description": "Port 2 Following Courtesy Tone 2 Select"
+    },
+    {
+      "key": "function662",
+      "description": "Port 2 Following Courtesy Tone 3 Select"
+    },
+    {
+      "key": "function663",
+      "description": "Port 2 Following Courtesy Tone 4 Select"
+    },
+    {
+      "key": "function664",
+      "description": "Port 2 Following Courtesy Tone 5 Select"
+    },
+    {
+      "key": "function665",
+      "description": "Port 2 Following Courtesy Tone 6 Select"
+    },
+    {
+      "key": "function666",
+      "description": "Port 2 Following Courtesy Tone 7 Select"
+    },
+    {
+      "key": "function667",
+      "description": "Port 2 Following Courtesy Tone 8 Select"
+    },
+    {
+      "key": "function668",
+      "description": "Port 2 Following Courtesy Tone 9 Select"
+    },
+    {
+      "key": "function669",
+      "description": "Port 2 Following Courtesy Tone 10 Select"
+    },
+    {
+      "key": "function670",
+      "description": "Port 3 Next Courtesy Tone 1 Select"
+    },
+    {
+      "key": "function671",
+      "description": "Port 3 Next Courtesy Tone 2 Select"
+    },
+    {
+      "key": "function672",
+      "description": "Port 3 Next Courtesy Tone 3 Select"
+    },
+    {
+      "key": "function673",
+      "description": "Port 3 Next Courtesy Tone 4 Select"
+    },
+    {
+      "key": "function674",
+      "description": "Port 3 Next Courtesy Tone 5 Select"
+    },
+    {
+      "key": "function675",
+      "description": "Port 3 Next Courtesy Tone 6 Select"
+    },
+    {
+      "key": "function676",
+      "description": "Port 3 Next Courtesy Tone 7 Select"
+    },
+    {
+      "key": "function677",
+      "description": "Port 3 Next Courtesy Tone 8 Select"
+    },
+    {
+      "key": "function678",
+      "description": "Port 3 Next Courtesy Tone 9 Select"
+    },
+    {
+      "key": "function679",
+      "description": "Port 3 Next Courtesy Tone 10 Select"
+    },
+    {
+      "key": "function680",
+      "description": "Port 3 Following Courtesy Tone 1 Select"
+    },
+    {
+      "key": "function681",
+      "description": "Port 3 Following Courtesy Tone 2 Select"
+    },
+    {
+      "key": "function682",
+      "description": "Port 3 Following Courtesy Tone 3 Select"
+    },
+    {
+      "key": "function683",
+      "description": "Port 3 Following Courtesy Tone 4 Select"
+    },
+    {
+      "key": "function684",
+      "description": "Port 3 Following Courtesy Tone 5 Select"
+    },
+    {
+      "key": "function685",
+      "description": "Port 3 Following Courtesy Tone 6 Select"
+    },
+    {
+      "key": "function686",
+      "description": "Port 3 Following Courtesy Tone 7 Select"
+    },
+    {
+      "key": "function687",
+      "description": "Port 3 Following Courtesy Tone 8 Select"
+    },
+    {
+      "key": "function688",
+      "description": "Port 3 Following Courtesy Tone 9 Select"
+    },
+    {
+      "key": "function689",
+      "description": "Port 3 Following Courtesy Tone 10 Select"
+    },
+    {
+      "key": "function690",
+      "description": "Daylight Savings ON"
+    },
+    {
+      "key": "function691",
+      "description": "Daylight Savings OFF"
+    },
+    {
+      "key": "function692",
+      "description": "Play Port 1 Pending ID"
+    },
+    {
+      "key": "function693",
+      "description": "Play Port 2 Pending ID"
+    },
+    {
+      "key": "function694",
+      "description": "Play Port 3 Pending ID"
+    },
+    {
+      "key": "function810",
+      "description": "Suspend Setpoint 1"
+    },
+    {
+      "key": "function811",
+      "description": "Suspend Setpoint 2"
+    },
+    {
+      "key": "function812",
+      "description": "Suspend Setpoint 3"
+    },
+    {
+      "key": "function813",
+      "description": "Suspend Setpoint 4"
+    },
+    {
+      "key": "function814",
+      "description": "Suspend Setpoint 5"
+    },
+    {
+      "key": "function815",
+      "description": "Suspend Setpoint 6"
+    },
+    {
+      "key": "function816",
+      "description": "Suspend Setpoint 7"
+    },
+    {
+      "key": "function817",
+      "description": "Suspend Setpoint 8"
+    },
+    {
+      "key": "function818",
+      "description": "Suspend Setpoint 9"
+    },
+    {
+      "key": "function819",
+      "description": "Suspend Setpoint 10"
+    },
+    {
+      "key": "function820",
+      "description": "Suspend Setpoint 11"
+    },
+    {
+      "key": "function821",
+      "description": "Suspend Setpoint 12"
+    },
+    {
+      "key": "function822",
+      "description": "Suspend Setpoint 13"
+    },
+    {
+      "key": "function823",
+      "description": "Suspend Setpoint 14"
+    },
+    {
+      "key": "function824",
+      "description": "Suspend Setpoint 15"
+    },
+    {
+      "key": "function825",
+      "description": "Suspend Setpoint 16"
+    },
+    {
+      "key": "function826",
+      "description": "Suspend Setpoint 17"
+    },
+    {
+      "key": "function827",
+      "description": "Suspend Setpoint 18"
+    },
+    {
+      "key": "function828",
+      "description": "Suspend Setpoint 19"
+    },
+    {
+      "key": "function829",
+      "description": "Suspend Setpoint 20"
+    },
+    {
+      "key": "function830",
+      "description": "Suspend Setpoint 21"
+    },
+    {
+      "key": "function831",
+      "description": "Suspend Setpoint 22"
+    },
+    {
+      "key": "function832",
+      "description": "Suspend Setpoint 23"
+    },
+    {
+      "key": "function833",
+      "description": "Suspend Setpoint 24"
+    },
+    {
+      "key": "function834",
+      "description": "Suspend Setpoint 25"
+    },
+    {
+      "key": "function835",
+      "description": "Suspend Setpoint 26"
+    },
+    {
+      "key": "function836",
+      "description": "Suspend Setpoint 27"
+    },
+    {
+      "key": "function837",
+      "description": "Suspend Setpoint 28"
+    },
+    {
+      "key": "function838",
+      "description": "Suspend Setpoint 29"
+    },
+    {
+      "key": "function839",
+      "description": "Suspend Setpoint 30"
+    },
+    {
+      "key": "function840",
+      "description": "Suspend Setpoint 31"
+    },
+    {
+      "key": "function841",
+      "description": "Suspend Setpoint 32"
+    },
+    {
+      "key": "function842",
+      "description": "Suspend Setpoint 33"
+    },
+    {
+      "key": "function843",
+      "description": "Suspend Setpoint 34"
+    },
+    {
+      "key": "function844",
+      "description": "Suspend Setpoint 35"
+    },
+    {
+      "key": "function845",
+      "description": "Suspend Setpoint 36"
+    },
+    {
+      "key": "function846",
+      "description": "Suspend Setpoint 37"
+    },
+    {
+      "key": "function847",
+      "description": "Suspend Setpoint 38"
+    },
+    {
+      "key": "function848",
+      "description": "Suspend Setpoint 39"
+    },
+    {
+      "key": "function849",
+      "description": "Suspend Setpoint 40"
+    },
+    {
+      "key": "function850",
+      "description": "Resume Setpoint 1"
+    },
+    {
+      "key": "function851",
+      "description": "Resume Setpoint 2"
+    },
+    {
+      "key": "function852",
+      "description": "Resume Setpoint 3"
+    },
+    {
+      "key": "function853",
+      "description": "Resume Setpoint 4"
+    },
+    {
+      "key": "function854",
+      "description": "Resume Setpoint 5"
+    },
+    {
+      "key": "function855",
+      "description": "Resume Setpoint 6"
+    },
+    {
+      "key": "function856",
+      "description": "Resume Setpoint 7"
+    },
+    {
+      "key": "function857",
+      "description": "Resume Setpoint 8"
+    },
+    {
+      "key": "function858",
+      "description": "Resume Setpoint 9"
+    },
+    {
+      "key": "function859",
+      "description": "Resume Setpoint 10"
+    },
+    {
+      "key": "function860",
+      "description": "Resume Setpoint 11"
+    },
+    {
+      "key": "function861",
+      "description": "Resume Setpoint 12"
+    },
+    {
+      "key": "function862",
+      "description": "Resume Setpoint 13"
+    },
+    {
+      "key": "function863",
+      "description": "Resume Setpoint 14"
+    },
+    {
+      "key": "function864",
+      "description": "Resume Setpoint 15"
+    },
+    {
+      "key": "function865",
+      "description": "Resume Setpoint 16"
+    },
+    {
+      "key": "function866",
+      "description": "Resume Setpoint 17"
+    },
+    {
+      "key": "function867",
+      "description": "Resume Setpoint 18"
+    },
+    {
+      "key": "function868",
+      "description": "Resume Setpoint 19"
+    },
+    {
+      "key": "function869",
+      "description": "Resume Setpoint 20"
+    },
+    {
+      "key": "function870",
+      "description": "Resume Setpoint 21"
+    },
+    {
+      "key": "function871",
+      "description": "Resume Setpoint 22"
+    },
+    {
+      "key": "function872",
+      "description": "Resume Setpoint 23"
+    },
+    {
+      "key": "function873",
+      "description": "Resume Setpoint 24"
+    },
+    {
+      "key": "function874",
+      "description": "Resume Setpoint 25"
+    },
+    {
+      "key": "function875",
+      "description": "Resume Setpoint 26"
+    },
+    {
+      "key": "function876",
+      "description": "Resume Setpoint 27"
+    },
+    {
+      "key": "function877",
+      "description": "Resume Setpoint 28"
+    },
+    {
+      "key": "function878",
+      "description": "Resume Setpoint 29"
+    },
+    {
+      "key": "function879",
+      "description": "Resume Setpoint 30"
+    },
+    {
+      "key": "function880",
+      "description": "Resume Setpoint 31"
+    },
+    {
+      "key": "function881",
+      "description": "Resume Setpoint 32"
+    },
+    {
+      "key": "function882",
+      "description": "Resume Setpoint 33"
+    },
+    {
+      "key": "function883",
+      "description": "Resume Setpoint 34"
+    },
+    {
+      "key": "function884",
+      "description": "Resume Setpoint 35"
+    },
+    {
+      "key": "function885",
+      "description": "Resume Setpoint 36"
+    },
+    {
+      "key": "function886",
+      "description": "Resume Setpoint 37"
+    },
+    {
+      "key": "function887",
+      "description": "Resume Setpoint 38"
+    },
+    {
+      "key": "function888",
+      "description": "Resume Setpoint 39"
+    },
+    {
+      "key": "function889",
+      "description": "Resume Setpoint 40"
+    },
+    {
+      "key": "function901",
+      "description": "Call Macro 1",
+      "destination": "macro1"
+    },
+    {
+      "key": "function902",
+      "description": "Call Macro 2",
+      "destination": "macro2"
+    },
+    {
+      "key": "function903",
+      "description": "Call Macro 3",
+      "destination": "macro3"
+    },
+    {
+      "key": "function904",
+      "description": "Call Macro 4",
+      "destination": "macro4"
+    },
+    {
+      "key": "function905",
+      "description": "Call Macro 5",
+      "destination": "macro5"
+    },
+    {
+      "key": "function906",
+      "description": "Call Macro 6",
+      "destination": "macro6"
+    },
+    {
+      "key": "function907",
+      "description": "Call Macro 7",
+      "destination": "macro7"
+    },
+    {
+      "key": "function908",
+      "description": "Call Macro 8",
+      "destination": "macro8"
+    },
+    {
+      "key": "function909",
+      "description": "Call Macro 9",
+      "destination": "macro9"
+    },
+    {
+      "key": "function910",
+      "description": "Call Macro 10",
+      "destination": "macro10"
+    },
+    {
+      "key": "function911",
+      "description": "Call Macro 11",
+      "destination": "macro11"
+    },
+    {
+      "key": "function912",
+      "description": "Call Macro 12",
+      "destination": "macro12"
+    },
+    {
+      "key": "function913",
+      "description": "Call Macro 13",
+      "destination": "macro13"
+    },
+    {
+      "key": "function914",
+      "description": "Call Macro 14",
+      "destination": "macro14"
+    },
+    {
+      "key": "function915",
+      "description": "Call Macro 15",
+      "destination": "macro15"
+    },
+    {
+      "key": "function916",
+      "description": "Call Macro 16",
+      "destination": "macro16"
+    },
+    {
+      "key": "function917",
+      "description": "Call Macro 17",
+      "destination": "macro17"
+    },
+    {
+      "key": "function918",
+      "description": "Call Macro 18",
+      "destination": "macro18"
+    },
+    {
+      "key": "function919",
+      "description": "Call Macro 19",
+      "destination": "macro19"
+    },
+    {
+      "key": "function920",
+      "description": "Call Macro 20",
+      "destination": "macro20"
+    },
+    {
+      "key": "function921",
+      "description": "Call Macro 21",
+      "destination": "macro21"
+    },
+    {
+      "key": "function922",
+      "description": "Call Macro 22",
+      "destination": "macro22"
+    },
+    {
+      "key": "function923",
+      "description": "Call Macro 23",
+      "destination": "macro23"
+    },
+    {
+      "key": "function924",
+      "description": "Call Macro 24",
+      "destination": "macro2"
+    },
+    {
+      "key": "function925",
+      "description": "Call Macro 25",
+      "destination": "macro25"
+    },
+    {
+      "key": "function926",
+      "description": "Call Macro 26",
+      "destination": "macro26"
+    },
+    {
+      "key": "function927",
+      "description": "Call Macro 27",
+      "destination": "macro27"
+    },
+    {
+      "key": "function928",
+      "description": "Call Macro 28",
+      "destination": "macro28"
+    },
+    {
+      "key": "function929",
+      "description": "Call Macro 29",
+      "destination": "macro29"
+    },
+    {
+      "key": "function930",
+      "description": "Call Macro 30",
+      "destination": "macro30"
+    },
+    {
+      "key": "function931",
+      "description": "Call Macro 31",
+      "destination": "macro31"
+    },
+    {
+      "key": "function932",
+      "description": "Call Macro 32",
+      "destination": "macro32"
+    },
+    {
+      "key": "function933",
+      "description": "Call Macro 33",
+      "destination": "macro33"
+    },
+    {
+      "key": "function934",
+      "description": "Call Macro 34",
+      "destination": "macro34"
+    },
+    {
+      "key": "function935",
+      "description": "Call Macro 35",
+      "destination": "macro35"
+    },
+    {
+      "key": "function936",
+      "description": "Call Macro 36",
+      "destination": "macro36"
+    },
+    {
+      "key": "function937",
+      "description": "Call Macro 37",
+      "destination": "macro37"
+    },
+    {
+      "key": "function938",
+      "description": "Call Macro 38",
+      "destination": "macro38"
+    },
+    {
+      "key": "function939",
+      "description": "Call Macro 39",
+      "destination": "macro39"
+    },
+    {
+      "key": "function940",
+      "description": "Call Macro 40",
+      "destination": "macro40"
+    },
+    {
+      "key": "function941",
+      "description": "Call Macro 41",
+      "destination": "macro41"
+    },
+    {
+      "key": "function942",
+      "description": "Call Macro 42",
+      "destination": "macro42"
+    },
+    {
+      "key": "function943",
+      "description": "Call Macro 43",
+      "destination": "macro43"
+    },
+    {
+      "key": "function944",
+      "description": "Call Macro 44",
+      "destination": "macro44"
+    },
+    {
+      "key": "function945",
+      "description": "Call Macro 45",
+      "destination": "macro45"
+    },
+    {
+      "key": "function946",
+      "description": "Call Macro 46",
+      "destination": "macro46"
+    },
+    {
+      "key": "function947",
+      "description": "Call Macro 47",
+      "destination": "macro47"
+    },
+    {
+      "key": "function948",
+      "description": "Call Macro 48",
+      "destination": "macro48"
+    },
+    {
+      "key": "function949",
+      "description": "Call Macro 49",
+      "destination": "macro49"
+    },
+    {
+      "key": "function950",
+      "description": "Call Macro 50",
+      "destination": "macro50"
+    },
+    {
+      "key": "function951",
+      "description": "Call Macro 51",
+      "destination": "macro51"
+    },
+    {
+      "key": "function952",
+      "description": "Call Macro 52",
+      "destination": "macro52"
+    },
+    {
+      "key": "function953",
+      "description": "Call Macro 53",
+      "destination": "macro53"
+    },
+    {
+      "key": "function954",
+      "description": "Call Macro 54",
+      "destination": "macro54"
+    },
+    {
+      "key": "function955",
+      "description": "Call Macro 55",
+      "destination": "macro55"
+    },
+    {
+      "key": "function956",
+      "description": "Call Macro 56",
+      "destination": "macro56"
+    },
+    {
+      "key": "function957",
+      "description": "Call Macro 57",
+      "destination": "macro57"
+    },
+    {
+      "key": "function958",
+      "description": "Call Macro 58",
+      "destination": "macro58"
+    },
+    {
+      "key": "function959",
+      "description": "Call Macro 59",
+      "destination": "macro59"
+    },
+    {
+      "key": "function960",
+      "description": "Call Macro 60",
+      "destination": "macro60"
+    },
+    {
+      "key": "function961",
+      "description": "Call Macro 61",
+      "destination": "macro61"
+    },
+    {
+      "key": "function962",
+      "description": "Call Macro 62",
+      "destination": "macro62"
+    },
+    {
+      "key": "function963",
+      "description": "Call Macro 63",
+      "destination": "macro63"
+    },
+    {
+      "key": "function964",
+      "description": "Call Macro 64",
+      "destination": "macro64"
+    },
+    {
+      "key": "function965",
+      "description": "Call Macro 65",
+      "destination": "macro65"
+    },
+    {
+      "key": "function966",
+      "description": "Call Macro 66",
+      "destination": "macro66"
+    },
+    {
+      "key": "function967",
+      "description": "Call Macro 67",
+      "destination": "macro67"
+    },
+    {
+      "key": "function968",
+      "description": "Call Macro 68",
+      "destination": "macro68"
+    },
+    {
+      "key": "function969",
+      "description": "Call Macro 69",
+      "destination": "macro60"
+    },
+    {
+      "key": "function970",
+      "description": "Call Macro 70",
+      "destination": "macro70"
+    },
+    {
+      "key": "function971",
+      "description": "Call Macro 71",
+      "destination": "macro71"
+    },
+    {
+      "key": "function972",
+      "description": "Call Macro 72",
+      "destination": "macro72"
+    },
+    {
+      "key": "function973",
+      "description": "Call Macro 73",
+      "destination": "macro73"
+    },
+    {
+      "key": "function974",
+      "description": "Call Macro 74",
+      "destination": "macro74"
+    },
+    {
+      "key": "function975",
+      "description": "Call Macro 75",
+      "destination": "macro75"
+    },
+    {
+      "key": "function976",
+      "description": "Call Macro 76",
+      "destination": "macro76"
+    },
+    {
+      "key": "function977",
+      "description": "Call Macro 77",
+      "destination": "macro77"
+    },
+    {
+      "key": "function978",
+      "description": "Call Macro 78",
+      "destination": "macro78"
+    },
+    {
+      "key": "function979",
+      "description": "Call Macro 79",
+      "destination": "macro79"
+    },
+    {
+      "key": "function980",
+      "description": "Call Macro 80",
+      "destination": "macro80"
+    },
+    {
+      "key": "function981",
+      "description": "Call Macro 81",
+      "destination": "macro8"
+    },
+    {
+      "key": "function982",
+      "description": "Call Macro 82",
+      "destination": "macro82"
+    },
+    {
+      "key": "function983",
+      "description": "Call Macro 83",
+      "destination": "macro83"
+    },
+    {
+      "key": "function984",
+      "description": "Call Macro 84",
+      "destination": "macro84"
+    },
+    {
+      "key": "function985",
+      "description": "Call Macro 85",
+      "destination": "macro85"
+    },
+    {
+      "key": "function986",
+      "description": "Call Macro 86",
+      "destination": "macro86"
+    },
+    {
+      "key": "function987",
+      "description": "Call Macro 87",
+      "destination": "macro87"
+    },
+    {
+      "key": "function988",
+      "description": "Call Macro 88",
+      "destination": "macro88"
+    },
+    {
+      "key": "function989",
+      "description": "Call Macro 89",
+      "destination": "macro89"
+    },
+    {
+      "key": "function990",
+      "description": "Call Macro 90",
+      "destination": "macro90"
+    },
+    {
+      "key": "function991",
+      "description": "Call Macro 91",
+      "destination": "macro91"
+    },
+    {
+      "key": "function992",
+      "description": "Call Macro 92",
+      "destination": "macro92"
+    },
+    {
+      "key": "function993",
+      "description": "Call Macro 93",
+      "destination": "macro93"
+    },
+    {
+      "key": "function994",
+      "description": "Call Macro 94",
+      "destination": "macro94"
+    },
+    {
+      "key": "function995",
+      "description": "Call Macro 95",
+      "destination": "macro95"
+    },
+    {
+      "key": "function996",
+      "description": "Call Macro 96",
+      "destination": "macro96"
+    },
+    {
+      "key": "function997",
+      "description": "Call Macro 97",
+      "destination": "macro97"
+    },
+    {
+      "key": "function998",
+      "description": "Call Macro 98",
+      "destination": "macro98"
+    },
+    {
+      "key": "function999",
+      "description": "Call Macro 99",
+      "destination": "macro99"
+    },
+    {
+      "key": "function1000",
+      "description": "Call Macro 100",
+      "destination": "macro100"
+    },
+    {
+      "key": "function1001",
+      "description": "Call Macro 101",
+      "destination": "macro101"
+    },
+    {
+      "key": "function1002",
+      "description": "Call Macro 102",
+      "destination": "macro102"
+    },
+    {
+      "key": "function1003",
+      "description": "Call Macro 103",
+      "destination": "macro103"
+    },
+    {
+      "key": "function1004",
+      "description": "Call Macro 104",
+      "destination": "macro104"
+    },
+    {
+      "key": "function1005",
+      "description": "Call Macro 105",
+      "destination": "macro105"
+    }
+  ]

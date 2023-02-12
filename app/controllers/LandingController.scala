@@ -1,7 +1,7 @@
 package controllers
 
 import com.wa9nnn.util.tableui.Table
-import net.wa9nnn.rc210.data.Functions
+import net.wa9nnn.rc210.data.functions.Functions
 import play.api.mvc._
 
 import javax.inject._

@@ -26,7 +26,7 @@ case class AlarmKey(override val index: Int) extends Key("alarm", index) {
 }
 
 case class MacroKey(override val index: Int) extends Key("macro", index) {
-  assert(index <= 90, s"Macro numbers are 1 through 90, can't do $index")
+  assert(index <= 105, s"Macro numbers are 1 through 105, can't do $index")
 }
 
 case class MessageMacroKey(override val index: Int) extends Key("messageMacro", index) {
@@ -43,15 +43,20 @@ case class ScheduleKey(override val index: Int) extends Key("schedule", index) {
 
 
 object Key {
-  val r: Regex = """([a-z]+)(\d+)""".r
+  val r: Regex = """([a-zA-Z]+)(\d+)""".r
 
   def apply(kind: String, number: Int): Key = {
     kind match {
-      case "port" => PortKey(number)
-      case "alarm" => AlarmKey(number)
-      case "macro" => MacroKey(number)
-      case "messageMacro" => MessageMacroKey(number)
-      case "function" => FunctionKey(number)
+      case "port" =>
+        PortKey(number)
+      case "alarm" =>
+        AlarmKey(number)
+      case "macro" =>
+        MacroKey(number)
+      case "messageMacro" =>
+        MessageMacroKey(number)
+      case "function" =>
+        FunctionKey(number)
     }
   }
 
@@ -64,7 +69,7 @@ object Key {
     override def reads(json: JsValue): JsResult[Key] = {
 
       try {
-        val r(kind, number) = json.toString()
+        val r(kind, number) = json.as[String]
         JsSuccess(Key(kind, number.toInt))
       }
       catch {

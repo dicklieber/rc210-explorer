@@ -22,7 +22,7 @@ case class Macro(key: MacroKey, dtmf: Dtmf, functions: Seq[FunctionKey]) extends
 }
 
 object Macro {
-  val header: Header = Header("Macros", "Key", "DTMF", "Functions")
+  def header(count:Int): Header = Header(s"Macros ($count)", "Key", "DTMF", "Functions")
 
   implicit val fmtMacro: OFormat[Macro] = Json.format[Macro]
 }
