@@ -10,33 +10,34 @@ import scala.util.matching.Regex
  * @param kind  e.g. port, schedule, macro.
  * @param index 1 to N
  */
-sealed abstract class Key(kind: String, index: Int) extends CellProvider {
+sealed abstract class Key(val kind: String, val index: Int) extends CellProvider{
   override def toString: String = s"$kind$index"
 
   override def toCell: Cell = Cell(toString).withCssClass(kind)
+
 }
 
-case class PortKey(index: Int) extends Key("port", index) {
+case class PortKey(override val index: Int) extends Key("port", index) {
   assert(index <= 3, "Port numbers are 1 through 3")
 }
 
-case class AlarmKey(index: Int) extends Key("alarm", index) {
+case class AlarmKey(override val index: Int) extends Key("alarm", index) {
   assert(index <= 5, "Alarm numbers are 1 through 5")
 }
 
-case class MacroKey(index: Int) extends Key("macro", index) {
-  assert(index <= 90, "Macro numbers are 1 through 90")
+case class MacroKey(override val index: Int) extends Key("macro", index) {
+  assert(index <= 90, s"Macro numbers are 1 through 90, can't do $index")
 }
 
-case class MessageMacroKey(index: Int) extends Key("messageMacro", index) {
+case class MessageMacroKey(override val index: Int) extends Key("messageMacro", index) {
   assert(index <= 90, "MessageMacro numbers are 1 through 70")
 }
 
-case class FunctionKey(index: Int) extends Key("function", index) {
+case class FunctionKey(override val index: Int) extends Key("function", index) {
   assert(index <= 1005, "Function numbers are 1 through 1005 ")
 }
 
-case class ScheduleKey(index: Int) extends Key("schedule", index) {
+case class ScheduleKey(override val index: Int) extends Key("schedule", index) {
   assert(index <= 3, "Schedule numbers are 1 through 40")
 }
 

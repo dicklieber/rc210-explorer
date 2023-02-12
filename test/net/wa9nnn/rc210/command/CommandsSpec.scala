@@ -14,7 +14,7 @@ class CommandsSpec extends WithMemory with LazyLogging {
       }
     result.foreach(println(_))
 
-    val rc210Data = Rc210Data(result.toIndexedSeq)
+    val rc210Data = Rc210Data(result.toIndexedSeq, Seq.empty)
 
     val sJson = Json.prettyPrint(Json.toJson(rc210Data))
     println(sJson)

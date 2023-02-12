@@ -2,7 +2,7 @@ package net.wa9nnn.rc210
 
 import net.wa9nnn.rc210.command.{Command, CommandParser, ItemValue}
 import net.wa9nnn.rc210.data.Rc210Data
-import net.wa9nnn.rc210.data.macros.Macro
+import net.wa9nnn.rc210.data.macros.{Macro, MacroExtractor}
 import net.wa9nnn.rc210.serial.{Memory, MemoryArray}
 
 import java.io.InputStream
@@ -24,7 +24,7 @@ class DataProvider() {
         }
       result.foreach(println(_))
 
-      val macros = Macro(memory)
+      val macros = MacroExtractor(memory)
 
       Rc210Data(result.toIndexedSeq, macros, Seq.empty)
 

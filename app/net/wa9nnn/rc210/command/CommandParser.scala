@@ -7,8 +7,9 @@ import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 object CommandParser extends LazyLogging {
   def apply(command: Command, memory: Memory): ParsedValues = {
 
-    val slicePos = SlicePos(command.getMemoryOffset, command.getMemoryLength)
+    val slicePos = SlicePos(command.getMemoryOffset, command.getMemoryLength, command.name())
     val slice = memory(slicePos)
+    logger.debug(slice.toString)
 
     command.getValueType match {
       case ValueType.dtmf =>
