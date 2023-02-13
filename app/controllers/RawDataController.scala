@@ -5,6 +5,7 @@ import net.wa9nnn.rc210.DataProvider
 import net.wa9nnn.rc210.data.Rc210Data
 import net.wa9nnn.rc210.data.functions.Functions
 import net.wa9nnn.rc210.data.macros.Macro
+import net.wa9nnn.rc210.data.schedules.Schedule
 import play.api.mvc._
 
 import javax.inject._
@@ -33,7 +34,6 @@ class RawDataController @Inject()(val controllerComponents: ControllerComponents
   }
 
   def macros(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-
     val rc210Data: Rc210Data = dataProvider.rc210Data
     val macros = rc210Data.macros
     val macrosTable = Table(Macro.header(macros.length), macros.map(_.toRow))
@@ -47,9 +47,10 @@ class RawDataController @Inject()(val controllerComponents: ControllerComponents
   }
 
   def schedules(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    Ok("//todo")
-    //    val schedulesTable = Table(ScheduleNode.header, datFile.schedules.map(_.toRow))
-    //    Ok(views.html.dat(Seq(schedulesTable)))
+    val rc210Data: Rc210Data = dataProvider.rc210Data
+    val schedules = rc210Data.schedules
+    val macrosTable = Table(Schedule.header(schedules.length), schedules.map(_.toRow))
+    Ok(views.html.dat(Seq(macrosTable)))
   }
 
 }

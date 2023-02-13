@@ -3,6 +3,7 @@ package net.wa9nnn.rc210
 import net.wa9nnn.rc210.command.{Command, CommandParser, ItemValue}
 import net.wa9nnn.rc210.data.Rc210Data
 import net.wa9nnn.rc210.data.macros.{Macro, MacroExtractor}
+import net.wa9nnn.rc210.data.schedules.ScheduleExtractor
 import net.wa9nnn.rc210.serial.{Memory, MemoryArray}
 
 import java.io.InputStream
@@ -25,8 +26,10 @@ class DataProvider() {
       result.foreach(println(_))
 
       val macros = MacroExtractor(memory)
+      val schedules = ScheduleExtractor(memory)
 
-      Rc210Data(result.toIndexedSeq, macros, Seq.empty)
+
+      Rc210Data(result.toIndexedSeq, macros, schedules)
 
     }.get
   }

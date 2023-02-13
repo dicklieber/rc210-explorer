@@ -2,6 +2,7 @@ package net.wa9nnn.rc210.data
 
 import net.wa9nnn.rc210.command.{ItemValue, Named}
 import net.wa9nnn.rc210.data.macros.Macro
+import net.wa9nnn.rc210.data.schedules.Schedule
 import play.api.libs.json.{Json, OFormat}
 
 /**
@@ -10,12 +11,14 @@ import play.api.libs.json.{Json, OFormat}
  * @param macros
  * @param names
  */
-case class Rc210Data(itemValues:Seq[ItemValue], macros:Seq[Macro], names:Seq[Named] = Seq.empty)
+case class Rc210Data(itemValues:Seq[ItemValue],
+                     macros:Seq[Macro],
+                     schedules:Seq[Schedule],
+                     metadata: Metadata = Metadata())
 
+case class Metadata(names:Seq[Named] = Seq.empty)
 object Rc210Data {
-  import net.wa9nnn.rc210.command.Key.fmtKey
-  import net.wa9nnn.rc210.command.Named.fmtNamed
-  import ItemValue.fmtItemValue
-  import ItemValue.fmtL10NError
+
+  implicit val fmtMetadata: OFormat[Metadata] = Json.format[Metadata]
   implicit val fmtRc210Data: OFormat[Rc210Data] = Json.format[Rc210Data]
 }

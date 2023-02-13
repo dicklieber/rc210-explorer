@@ -38,7 +38,7 @@ case class FunctionKey(override val index: Int) extends Key("function", index) {
 }
 
 case class ScheduleKey(override val index: Int) extends Key("schedule", index) {
-  assert(index <= 3, "Schedule numbers are 1 through 40")
+  assert(index <= 40, "Schedule numbers are 1 through 40")
 }
 
 

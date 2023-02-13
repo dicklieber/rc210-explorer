@@ -33,7 +33,7 @@
     <logger name="application" level="DEBUG"/>
 
     <!-- Off these ones as they are annoying, and anyway we manage configuration ourselves -->
-    <logger name="net.wa9nnn.rc210.data.ScheduleNode" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.data.schedules.ScheduleNode" level="INFO"/>
     <logger name="net.wa9nnn.rc210.serial.RC210Download" level="TRACE"/>
     <logger name="net.wa9nnn.rc210.command.CommandSpecBase" level="TRACE"/>
     <logger name="net.wa9nnn.rc210.command.CommandParser" level="TRACE"/>
