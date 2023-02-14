@@ -1,7 +1,7 @@
 package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.command.MacroKey
+import net.wa9nnn.rc210.MacroKey
 
 class ScheduleBuilder extends LazyLogging {
   // colXXX index into n2 dimension of array.

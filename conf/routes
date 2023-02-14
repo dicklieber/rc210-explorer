@@ -4,10 +4,12 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET        /functions            controllers.RawDataController.functions()
+GET        /itemValues           controllers.RawDataController.items()
 GET        /schedules            controllers.RawDataController.schedules()
+GET        /functions            controllers.RawDataController.functions()
 GET        /macros               controllers.RawDataController.macros()
 GET        /messageMacros        controllers.RawDataController.messageMacros()
+GET        /vocabulary           controllers.RawDataController.vocabulary()
 GET        /                     controllers.LandingController.index()
 
 # Map static resources from the /public folder to the /assets URL path

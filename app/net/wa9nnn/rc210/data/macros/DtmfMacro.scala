@@ -1,6 +1,6 @@
 package net.wa9nnn.rc210.data.macros
 
-import net.wa9nnn.rc210.command.MacroKey
+import net.wa9nnn.rc210.MacroKey
 import net.wa9nnn.rc210.data.Dtmf
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 

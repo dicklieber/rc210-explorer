@@ -36,7 +36,7 @@
     <logger name="net.wa9nnn.rc210.data.schedules.ScheduleNode" level="INFO"/>
     <logger name="net.wa9nnn.rc210.serial.RC210Download" level="TRACE"/>
     <logger name="net.wa9nnn.rc210.command.CommandSpecBase" level="TRACE"/>
-    <logger name="net.wa9nnn.rc210.command.CommandParser" level="TRACE"/>
+    <logger name="net.wa9nnn.rc210.command.CommandParser" level="INFO"/>
 
     <root level="INFO">
         <appender-ref ref="ASYNCFILE"/>

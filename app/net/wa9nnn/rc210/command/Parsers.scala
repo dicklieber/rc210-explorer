@@ -1,6 +1,7 @@
 package net.wa9nnn.rc210.command
 
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.AlarmKey
 import net.wa9nnn.rc210.command.ItemValue.Values
 import net.wa9nnn.rc210.command.Parsers.{ParsedValues, procSeq}
 import net.wa9nnn.rc210.serial.Slice

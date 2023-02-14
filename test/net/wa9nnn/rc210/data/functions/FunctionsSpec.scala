@@ -1,6 +1,6 @@
 package net.wa9nnn.rc210.data.functions
 
-import net.wa9nnn.rc210.command.{FunctionKey, MacroKey, MessageMacroKey}
+import net.wa9nnn.rc210.{FunctionKey, MacroKey, MessageMacroKey}
 import org.specs2.mutable.Specification
 
 class FunctionsSpec extends Specification {

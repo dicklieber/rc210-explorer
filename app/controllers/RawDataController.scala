@@ -1,15 +1,33 @@
+/*
+ * Copyright (C) 2023  Dick Lieber, WA9NNN
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package controllers
 
 import com.wa9nnn.util.tableui.Table
 import net.wa9nnn.rc210.DataProvider
+import net.wa9nnn.rc210.command.ItemValue
 import net.wa9nnn.rc210.data.Rc210Data
 import net.wa9nnn.rc210.data.functions.Functions
 import net.wa9nnn.rc210.data.macros.Macro
 import net.wa9nnn.rc210.data.schedules.Schedule
+import net.wa9nnn.rc210.data.vocabulary.{MessageMacro, Phrase, Vocabulary}
 import play.api.mvc._
 
 import javax.inject._
-import scala.util.Try
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
@@ -32,6 +50,12 @@ class RawDataController @Inject()(val controllerComponents: ControllerComponents
         val schedulesTable = Table(functions.header, functions.functions.map(_.toRow))
         Ok(views.html.dat(Seq(schedulesTable)))
   }
+  def items(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+
+    val itemValues = dataProvider.rc210Data.itemValues
+        val schedulesTable = Table(ItemValue.header(itemValues.length), itemValues.map(_.toRow))
+        Ok(views.html.dat(Seq(schedulesTable)))
+  }
 
   def macros(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     val rc210Data: Rc210Data = dataProvider.rc210Data
@@ -40,16 +64,22 @@ class RawDataController @Inject()(val controllerComponents: ControllerComponents
         Ok(views.html.dat(Seq(macrosTable)))
   }
 
-  def messageMacros(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    Ok("//todo")
-    //    val macrosTable = Table(MessageMacroNode.header, datFile.messageMacros.messaageMacros.map(_.toRow))
-    //    Ok(views.html.dat(Seq(macrosTable)))
-  }
 
   def schedules(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     val rc210Data: Rc210Data = dataProvider.rc210Data
     val schedules = rc210Data.schedules
     val macrosTable = Table(Schedule.header(schedules.length), schedules.map(_.toRow))
+    Ok(views.html.dat(Seq(macrosTable)))
+  }
+  def messageMacros(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+    val messageMacros: Seq[MessageMacro] = dataProvider.rc210Data.messageMacros
+    val macrosTable = Table(MessageMacro.header(messageMacros.length), messageMacros.map(_.toRow))
+    Ok(views.html.dat(Seq(macrosTable)))
+  }
+  def vocabulary(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+
+    val phrases = Vocabulary.phrases
+    val macrosTable = Table(Phrase.header(phrases.length), phrases.map(_.toRow))
     Ok(views.html.dat(Seq(macrosTable)))
   }
 

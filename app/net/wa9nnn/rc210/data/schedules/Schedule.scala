@@ -3,7 +3,8 @@ package net.wa9nnn.rc210.data.schedules
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.JsonFormatUtils.javaEnumFormat
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
-import net.wa9nnn.rc210.command.{Locus, MacroKey, ScheduleKey}
+import net.wa9nnn.rc210.{MacroKey, ScheduleKey}
+import net.wa9nnn.rc210.command.Locus
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 import play.api.libs.json.{Format, Json, OFormat}
 

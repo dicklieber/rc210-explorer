@@ -1,7 +1,7 @@
 package net.wa9nnn.rc210.data
 
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
-import net.wa9nnn.rc210.command.MessageMacroKey
+import net.wa9nnn.rc210.MessageMacroKey
 import net.wa9nnn.rc210.model.Node
 
 import scala.util.Try

@@ -1,4 +1,21 @@
-package net.wa9nnn.rc210.command
+/*
+ * Copyright (C) 2023  Dick Lieber, WA9NNN
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package net.wa9nnn.rc210
 
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
 import play.api.libs.json._
@@ -40,6 +57,9 @@ case class FunctionKey(override val index: Int) extends Key("function", index) {
 case class ScheduleKey(override val index: Int) extends Key("schedule", index) {
   assert(index <= 40, "Schedule numbers are 1 through 40")
 }
+case class WordKey(override val index: Int) extends Key("word", index) {
+  assert(index <= 255, "Words numbers are 0 through 255")
+}
 
 
 object Key {
@@ -57,6 +77,8 @@ object Key {
         MessageMacroKey(number)
       case "function" =>
         FunctionKey(number)
+      case "word" =>
+        WordKey(number)
     }
   }
 
@@ -64,6 +86,7 @@ object Key {
   implicit val fmtMessageMacroKey: OFormat[MessageMacroKey] = Json.format[MessageMacroKey]
   implicit val fmtFunctionKey: OFormat[FunctionKey] = Json.format[FunctionKey]
   implicit val fmtScheduleKey: OFormat[ScheduleKey] = Json.format[ScheduleKey]
+  implicit val fmtWordKey: OFormat[WordKey] = Json.format[WordKey]
 
   implicit val fmtKey: Format[Key] = new Format[Key] {
     override def reads(json: JsValue): JsResult[Key] = {
