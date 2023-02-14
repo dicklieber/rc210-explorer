@@ -21,8 +21,8 @@ import com.wa9nnn.util.tableui.Table
 import net.wa9nnn.rc210.DataProvider
 import net.wa9nnn.rc210.command.ItemValue
 import net.wa9nnn.rc210.data.Rc210Data
-import net.wa9nnn.rc210.data.functions.Functions
-import net.wa9nnn.rc210.data.macros.Macro
+import net.wa9nnn.rc210.data.functions.{Function, Functions}
+import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.schedules.Schedule
 import net.wa9nnn.rc210.data.vocabulary.{MessageMacro, Phrase, Vocabulary}
 import play.api.mvc._
@@ -47,7 +47,7 @@ class RawDataController @Inject()(val controllerComponents: ControllerComponents
    * a path of `/`.
    */
   def functions(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-        val schedulesTable = Table(functions.header, functions.functions.map(_.toRow))
+        val schedulesTable = Table(Function.header(functions.functions.length), functions.functions.map(_.toRow))
         Ok(views.html.dat(Seq(schedulesTable)))
   }
   def items(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
@@ -60,7 +60,7 @@ class RawDataController @Inject()(val controllerComponents: ControllerComponents
   def macros(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     val rc210Data: Rc210Data = dataProvider.rc210Data
     val macros = rc210Data.macros
-    val macrosTable = Table(Macro.header(macros.length), macros.map(_.toRow))
+    val macrosTable = Table(MacroNode.header(macros.length), macros.map(_.toRow))
         Ok(views.html.dat(Seq(macrosTable)))
   }
 

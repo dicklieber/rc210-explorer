@@ -11,6 +11,7 @@ GET        /macros               controllers.RawDataController.macros()
 GET        /messageMacros        controllers.RawDataController.messageMacros()
 GET        /vocabulary           controllers.RawDataController.vocabulary()
 GET        /downloadjson         controllers.IOController.downloadJson()
+GET        /flow                 controllers.FlowController.flow()
 GET        /                     controllers.LandingController.index()
 
 # Map static resources from the /public folder to the /assets URL path

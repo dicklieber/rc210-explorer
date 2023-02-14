@@ -9,7 +9,7 @@ import play.api.libs.json.{Json, OFormat}
 
 import java.util.concurrent.atomic.AtomicInteger
 
-case class Macro(key: MacroKey, dtmf: Dtmf, functions: Seq[FunctionKey]) extends Node {
+case class MacroNode(key: MacroKey, dtmf: Dtmf, functions: Seq[FunctionKey]) extends Node {
 
   override def toRow: Row = {
     val sFunctionString = functions
@@ -21,16 +21,16 @@ case class Macro(key: MacroKey, dtmf: Dtmf, functions: Seq[FunctionKey]) extends
   }
 }
 
-object Macro {
+object MacroNode {
   def header(count:Int): Header = Header(s"Macros ($count)", "Key", "DTMF", "Functions")
 
-  implicit val fmtMacro: OFormat[Macro] = Json.format[Macro]
+  implicit val fmtMacro: OFormat[MacroNode] = Json.format[MacroNode]
 }
 
 object MacroExtractor {
 
 
-  def apply(memory: Memory): Seq[Macro] = {
+  def apply(memory: Memory): Seq[MacroNode] = {
     val dtmfMacroMap: DtmfMacros = DtmfMacroExractor(memory)
     val mai = new AtomicInteger(1)
 
@@ -43,21 +43,21 @@ object MacroExtractor {
      */
     def macroBuilder(macroSlicePos: SlicePos, memory: Memory, bytesPerMacro: Int) = {
       val macrosSlice = memory(macroSlicePos)
-      val f: Seq[Macro] = macrosSlice.data
+      val f: Seq[MacroNode] = macrosSlice.data
         .grouped(bytesPerMacro)
         .map { bytes =>
           val functions: Seq[FunctionKey] = bytes.takeWhile(_ != 0).map(fn => FunctionKey(fn))
           val macroKey = MacroKey(mai.getAndIncrement())
-          Macro(macroKey, dtmfMacroMap(macroKey), functions)
+          MacroNode(macroKey, dtmfMacroMap(macroKey), functions)
         }.toSeq
 
       f
     }
 
-    val longMacros: Seq[Macro] = macroBuilder(SlicePos("//Macro - 1985-2624"), memory, 16)
-    val shortMacros: Seq[Macro] = macroBuilder(SlicePos("//ShortMacro - 2825-3174"), memory, 7)
+    val longMacros: Seq[MacroNode] = macroBuilder(SlicePos("//Macro - 1985-2624"), memory, 16)
+    val shortMacros: Seq[MacroNode] = macroBuilder(SlicePos("//ShortMacro - 2825-3174"), memory, 7)
     //    val extendedMacros: Seq[Macro] = macroBuilder(SlicePos("//Extended Macros 1 - 390 (91 - 105)"), memory, 20) //todo rtc
-    val r: Seq[Macro] = longMacros.concat(shortMacros)
+    val r: Seq[MacroNode] = longMacros.concat(shortMacros)
     r
 
 

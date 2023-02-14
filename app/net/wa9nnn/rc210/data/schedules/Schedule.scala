@@ -2,14 +2,13 @@ package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.JsonFormatUtils.javaEnumFormat
-import com.wa9nnn.util.tableui.{Header, Row, RowSource}
-import net.wa9nnn.rc210.{MacroKey, ScheduleKey}
-import net.wa9nnn.rc210.command.Locus
+import com.wa9nnn.util.tableui.{Header, Row}
+import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
+import net.wa9nnn.rc210.{MacroKey, ScheduleKey}
 import play.api.libs.json.{Format, Json, OFormat}
 
 import java.time.LocalTime
-import java.util.concurrent.atomic.AtomicInteger
 
 /**
  *
@@ -26,11 +25,22 @@ case class Schedule(key: ScheduleKey,
                     monthOfYear: MonthOfYear,
                     localTime: Option[LocalTime],
                     macroToRun: MacroKey)
-  extends RowSource {
+  extends TriggerNode {
 
 
   override def toRow: Row = {
     Row(key.toCell, macroToRun.toCell, dayOfWeek, weekInMonth, monthOfYear, localTime)
+  }
+
+  override def enabled: Boolean = localTime.nonEmpty
+
+
+  override def toString: String = {
+    s"DOW: $dayOfWeek WeekInMonth: $weekInMonth Month: $monthOfYear time: $localTime"
+  }
+
+  override def triggerRow: Row = {
+    Row(key.toCell, this)
   }
 }
 

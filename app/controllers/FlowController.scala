@@ -15,16 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.vocabulary
+package controllers
 
-import net.wa9nnn.rc210.fixtures.WithMemory
+import net.wa9nnn.rc210.data.FlowTableBuilder
+import play.api.mvc._
 
-class MessageMacroExtractorSpec extends WithMemory {
+import javax.inject.{Inject, Singleton}
 
-  "MessageMacroExtractor" should {
-    "apply" in {
-      val messageMacros: Seq[MessageMacro] = MessageMacroExtractor(memory)
-      messageMacros must haveLength(40)
-    }
+@Singleton
+class FlowController @Inject()(val controllerComponents: ControllerComponents, flowTableBuilder: FlowTableBuilder) extends BaseController {
+
+  def flow(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+    val table = flowTableBuilder()
+    Ok(views.html.dat(Seq(table)))
   }
 }

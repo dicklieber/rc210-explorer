@@ -3,7 +3,7 @@ package net.wa9nnn.rc210.data.macros
 import net.wa9nnn.rc210.fixtures.WithMemory
 import org.specs2.mutable.Specification
 
-class DtmfMacroExractorSpec extends WithMemory {
+class DtmfMacroExractorSpecNode extends WithMemory {
 
   "DtmfMacroExractor" should {
     "apply" in {

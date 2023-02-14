@@ -32,8 +32,7 @@ class Functions extends LazyLogging {
    * @param fkey of interest.
    * @return the [[Function]]
    */
-  @throws[NoSuchElementException]("If fkey is not defined.")
-  def apply(fkey: FunctionKey): Function = map(fkey)
+  def apply(fkey: FunctionKey): Option[Function] = map.get(fkey)
 
   def size: Int = functions.length
 
@@ -53,7 +52,6 @@ class Functions extends LazyLogging {
     destKey.asInstanceOf[MessageMacroKey]
   }
 
-  def header: Header = Header(s"Functions ($size)", "Id", "Description", "Destination")
 }
 
 case class Function(key: FunctionKey, description: String, destination: Option[Key]) extends Ordered[Function] with RowSource {
@@ -88,6 +86,8 @@ object Function {
       JsString(key.toString)
     }
   }
+  def header(count:Int): Header = Header(s"Functions ($count)", "Key", "Description")
+
 }
 
 
