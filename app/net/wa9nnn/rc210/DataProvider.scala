@@ -19,14 +19,14 @@ package net.wa9nnn.rc210
 
 import net.wa9nnn.rc210.command.{Command, CommandParser, ItemValue}
 import net.wa9nnn.rc210.data.Rc210Data
-import net.wa9nnn.rc210.data.macros.{Macro, MacroExtractor}
+import net.wa9nnn.rc210.data.macros.MacroExtractor
 import net.wa9nnn.rc210.data.schedules.ScheduleExtractor
 import net.wa9nnn.rc210.data.vocabulary.{MessageMacro, MessageMacroExtractor}
 import net.wa9nnn.rc210.serial.{Memory, MemoryArray}
 
 import java.io.InputStream
 import javax.inject.Singleton
-import scala.util.{Try, Using}
+import scala.util.Using
 
 @Singleton
 class DataProvider() {
@@ -41,7 +41,6 @@ class DataProvider() {
         .flatMap { command =>
           CommandParser(command, memory)
         }
-//      result.foreach(println(_))
 
       val macros = MacroExtractor(memory)
       val schedules = ScheduleExtractor(memory)

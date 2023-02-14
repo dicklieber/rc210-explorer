@@ -5,7 +5,6 @@ import net.wa9nnn.rc210.command.ItemValue
 import net.wa9nnn.rc210.data.macros.Macro
 import net.wa9nnn.rc210.data.schedules.Schedule
 import net.wa9nnn.rc210.data.vocabulary.MessageMacro
-import net.wa9nnn.rc210.data.vocabulary.MessageMacro._
 import play.api.libs.json.{Json, OFormat}
 
 /**
