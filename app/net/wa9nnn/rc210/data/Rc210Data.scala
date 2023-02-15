@@ -1,11 +1,11 @@
 package net.wa9nnn.rc210.data
 
-import net.wa9nnn.rc210.{Key, MacroKey, Named}
 import net.wa9nnn.rc210.command.ItemValue
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.schedules.Schedule
 import net.wa9nnn.rc210.data.vocabulary.MessageMacro
 import net.wa9nnn.rc210.model.TriggerNode
+import net.wa9nnn.rc210.{MacroKey, Named}
 import play.api.libs.json.{Json, OFormat}
 
 /**
@@ -19,16 +19,18 @@ case class Rc210Data(itemValues: Seq[ItemValue],
                      schedules: Seq[Schedule],
                      messageMacros: Seq[MessageMacro],
                      metadata: Metadata = Metadata()) {
+
+  val enabledTriggers:Seq[TriggerNode] = {
+    schedules
+      .filter(_.enabled)
+  }
   def triggers(macroKey: MacroKey): Seq[TriggerNode] = {
     //todo There are other TriggerNodes
     schedules
       .filter(_.enabled)
+
   }
 }
 
 case class Metadata(names: Seq[Named] = Seq.empty)
 
-object Rc210Data {
-  implicit val fmtMetadata: OFormat[Metadata] = Json.format[Metadata]
-  implicit val fmtRc210Data: OFormat[Rc210Data] = Json.format[Rc210Data]
-}

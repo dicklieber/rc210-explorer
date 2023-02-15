@@ -3,7 +3,7 @@ package net.wa9nnn.rc210.data.schedules
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.JsonFormatUtils.javaEnumFormat
 import com.wa9nnn.util.tableui.{Header, Row}
-import net.wa9nnn.rc210.model.TriggerNode
+import net.wa9nnn.rc210.model.{TriggerDetail, TriggerNode}
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 import net.wa9nnn.rc210.{MacroKey, ScheduleKey}
 import play.api.libs.json.{Format, Json, OFormat}
@@ -42,15 +42,14 @@ case class Schedule(key: ScheduleKey,
   override def triggerRow: Row = {
     Row(key.toCell, this)
   }
+
+  override def triggerDetail: TriggerDetail = TriggerDetail(key, macroToRun, toString)
 }
 
 object Schedule {
   def header(count: Int): Header = Header(s"Schedules ($count)", "SetPoint", "Macro", "DOW", "WeekInMonth", "MonthOfYear", "LocalTime")
 
-  implicit val fmtDOW: Format[DayOfWeek] = javaEnumFormat[DayOfWeek]
-  implicit val fmtMOY: Format[MonthOfYear] = javaEnumFormat[MonthOfYear]
 
-  implicit val fmtSchedule: OFormat[Schedule] = Json.format[Schedule]
 }
 
 object ScheduleExtractor extends LazyLogging {

@@ -17,11 +17,10 @@
 
 package net.wa9nnn.rc210.command
 
-import net.wa9nnn.rc210.command.ItemValue.Values
-import play.api.libs.json.{Json, OFormat}
-import CommandFormats._
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
+import net.wa9nnn.rc210.command.ItemValue.Values
 import net.wa9nnn.rc210.{Key, PortKey}
+import net.wa9nnn.rc210.data.Formats._
 
 import scala.util.{Failure, Success, Try}
 
@@ -73,9 +72,7 @@ object ItemValue {
     }
   }
 
-  implicit val fmtL10NError: OFormat[L10NMessage] = Json.format[L10NMessage]
-  implicit val fmtItemValue: OFormat[ItemValue] = Json.format[ItemValue]
-}
+ }
 
 
 

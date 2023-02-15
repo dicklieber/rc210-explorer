@@ -4,6 +4,7 @@ import com.wa9nnn.util.tableui.{Header, Row}
 import net.wa9nnn.rc210.data.Dtmf
 import net.wa9nnn.rc210.model.Node
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
+import net.wa9nnn.rc210.data.Formats._
 import net.wa9nnn.rc210.{FunctionKey, MacroKey}
 import play.api.libs.json.{Json, OFormat}
 
@@ -24,7 +25,6 @@ case class MacroNode(key: MacroKey, dtmf: Dtmf, functions: Seq[FunctionKey]) ext
 object MacroNode {
   def header(count:Int): Header = Header(s"Macros ($count)", "Key", "DTMF", "Functions")
 
-  implicit val fmtMacro: OFormat[MacroNode] = Json.format[MacroNode]
 }
 
 object MacroExtractor {

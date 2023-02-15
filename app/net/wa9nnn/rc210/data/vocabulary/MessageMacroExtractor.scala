@@ -21,6 +21,7 @@ import com.wa9nnn.util.tableui.{Header, Row, RowSource}
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 import net.wa9nnn.rc210.{MessageMacroKey, WordKey}
 import play.api.libs.json.{Json, OFormat}
+import net.wa9nnn.rc210.data.Formats._
 
 case class MessageMacro(key: MessageMacroKey, words: Seq[WordKey]) extends RowSource{
   override def toRow: Row = {

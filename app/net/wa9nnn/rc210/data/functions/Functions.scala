@@ -9,7 +9,7 @@ import play.api.libs.json._
 import java.io.InputStream
 import javax.inject.Singleton
 import scala.util.{Failure, Success, Using}
-
+import net.wa9nnn.rc210.data.Formats._
 @Singleton
 class Functions extends LazyLogging {
 
@@ -62,32 +62,7 @@ case class Function(key: FunctionKey, description: String, destination: Option[K
 
 
 object Function {
-//  implicit val fmtFunction: Format[Function] = Json.format[Function]
-  //todo  I don't understand why the above fails but the below work.
-
-  implicit val fmtFunction: Format[Function] = new Format[Function] {
-    override def reads(json: JsValue): JsResult[Function] = {
-
-      try {
-        val jsKey: Key = (json \ "key").as[Key]
-
-        val sdesc: String = (json \ "description").as[String]
-        val sdest: Option[Key] = (json \ "destination").asOpt[Key]
-
-        val f = Function(jsKey.asInstanceOf[FunctionKey], sdesc, sdest)
-        JsSuccess(f)
-      }
-      catch {
-        case e: IllegalArgumentException => JsError(e.getMessage)
-      }
-    }
-
-    override def writes(key: Function): JsValue = {
-      JsString(key.toString)
-    }
-  }
   def header(count:Int): Header = Header(s"Functions ($count)", "Key", "Description")
-
 }
 
 

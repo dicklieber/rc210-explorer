@@ -1,3 +1,4 @@
+// Bubble view of flow
 var svg = d3.select("svg"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
@@ -18,7 +19,7 @@ var simulation = d3.forceSimulation()
         .iterations(16)
     )
 ;
-d3.json("/bubbleSvg", function (error, graph) {
+d3.json("/bubbleData", function (error, graph) {
     if (error) throw error;
 
     var link = svg.append("g")
