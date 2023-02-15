@@ -1,9 +1,11 @@
 package net.wa9nnn.rc210.data
 
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table, TableInACell}
-import net.wa9nnn.rc210.DataProvider
+import net.wa9nnn.rc210.data.FlowTableBuilder.macroRowHeaderCell
+import net.wa9nnn.rc210.{DataProvider, MacroKey}
 import net.wa9nnn.rc210.data.functions.{Function, Functions}
 import net.wa9nnn.rc210.model.TriggerNode
+import views.html.macroRowHeader
 
 import javax.inject.{Inject, Singleton}
 
@@ -24,14 +26,20 @@ class FlowTableBuilder @Inject()(functions: Functions, dataProvider: DataProvide
 
         Table(TriggerNode.header(triggers.length), triggers.map(_.triggerRow))
       }
-
       val triggersCell: Cell = TableInACell(triggerTable)
       val macroFunctionTable: Cell = TableInACell(macroFunctionsTable)
-      Row(Seq(triggersCell, macroFunctionTable))
+      Row(Seq( macroRowHeaderCell(macroNode.key),  triggersCell, macroFunctionTable))
     }
-    val header = Header("Flow", "Triggers", "Macro")
+    val header = Header("Flow", "Macro", "Triggers", "Functions")
 
     Table(header, rows)
 
+  }
+}
+
+object FlowTableBuilder {
+  def macroRowHeaderCell(macroKey: MacroKey): Cell = {
+    Cell.rawHtml(
+      macroRowHeader(macroKey).toString())
   }
 }

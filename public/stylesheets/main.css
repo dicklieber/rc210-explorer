@@ -137,3 +137,9 @@ body {
 .messageMacro{
     background-color: lightgreen;
 }
+
+.macroRowHeader{
+    background-color: lightskyblue;
+    font-size:larger;
+    font-weight: bold;
+}
