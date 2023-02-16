@@ -72,7 +72,7 @@ object Formats {
     }
   }
 
-  implicit val fmtMacroKey: Format[MacroKey] =  new Format[MacroKey]{
+  implicit val fmtMacroKey: Format[MacroKey] = new Format[MacroKey] {
     def writes(key: MacroKey): JsValue = {
       JsString(key.toString)
     }
@@ -89,7 +89,18 @@ object Formats {
   implicit val fmtValueType: Format[ValueType] = javaEnumFormat[ValueType]
 
   implicit val fmtMessageMacroKey: OFormat[MessageMacroKey] = Json.format[MessageMacroKey]
-  implicit val fmtFunctionKey: OFormat[FunctionKey] = Json.format[FunctionKey]
+
+  implicit val fmtFunctionKey: Format[FunctionKey] = new Format[FunctionKey] {
+    def writes(key: FunctionKey): JsValue = {
+      JsString(key.toString)
+    }
+
+    override def reads(json: JsValue) = {
+      throw new NotImplementedError() //todo
+    }
+  }
+
+
   implicit val fmtScheduleKey: OFormat[ScheduleKey] = Json.format[ScheduleKey]
   implicit val fmtWordKey: OFormat[WordKey] = Json.format[WordKey]
 
@@ -112,6 +123,7 @@ object Formats {
       case e: IllegalArgumentException => JsError(e.getMessage)
     }
   }
+
   implicit val fmtItemValue: OFormat[ItemValue] = Json.format[ItemValue]
 
 
