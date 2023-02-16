@@ -24,7 +24,7 @@ import net.wa9nnn.rc210.data.Rc210Data
 import net.wa9nnn.rc210.data.functions.{FunctionNode, FunctionsProvider}
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.schedules.Schedule
-import net.wa9nnn.rc210.data.vocabulary.{MessageMacro, Phrase, Vocabulary}
+import net.wa9nnn.rc210.data.vocabulary.{MessageMacroNode, Phrase, Vocabulary}
 import play.api.mvc._
 
 import javax.inject._
@@ -72,8 +72,8 @@ class RawDataController @Inject()(val controllerComponents: ControllerComponents
     Ok(views.html.dat(Seq(macrosTable)))
   }
   def messageMacros(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    val messageMacros: Seq[MessageMacro] = dataProvider.rc210Data.messageMacros
-    val macrosTable = Table(MessageMacro.header(messageMacros.length), messageMacros.map(_.toRow))
+    val messageMacros: Seq[MessageMacroNode] = dataProvider.rc210Data.messageMacros
+    val macrosTable = Table(MessageMacroNode.header(messageMacros.length), messageMacros.map(_.toRow))
     Ok(views.html.dat(Seq(macrosTable)))
   }
   def vocabulary(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>

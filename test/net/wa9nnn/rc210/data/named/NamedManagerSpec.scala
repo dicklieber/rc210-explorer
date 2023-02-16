@@ -15,16 +15,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.vocabulary
+package net.wa9nnn.rc210.data.named
 
-import net.wa9nnn.rc210.fixtures.WithMemory
+import com.typesafe.config.{Config, ConfigFactory, ConfigValue}
+import net.wa9nnn.rc210.MacroKey
+import org.specs2.mutable.Specification
+import org.specs2.mock._
 
-class MessageMacroExtractorSpecNode extends WithMemory {
+import java.nio.file.{Files, Path}
 
-  "MessageMacroExtractor" should {
-    "apply" in {
-      val messageMacros: Seq[MessageMacroNode] = MessageMacroExtractor(memory)
-      messageMacros must haveLength(40)
+class NamedManagerSpec extends Specification with Mockito {
+
+  private val configMock: Config = mock[Config]
+  private val path: Path = Files.createTempFile("vizrc210", "")
+  configMock.getString("vizRc210.dataDir").returns(path.toString)
+  val namedManager = new NamedManager(configMock)
+  "NamedManager" should {
+    "save" in {
+      namedManager.apply(MacroKey(42), "named42named")
+      println(path)
+
+      ok
     }
   }
 }

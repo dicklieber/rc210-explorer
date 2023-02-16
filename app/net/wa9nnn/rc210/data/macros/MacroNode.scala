@@ -1,7 +1,7 @@
 package net.wa9nnn.rc210.data.macros
 
 import com.wa9nnn.util.tableui.{Header, Row, Table}
-import net.wa9nnn.rc210.data.Dtmf
+import net.wa9nnn.rc210.data.{Dtmf, Rc210Data}
 import net.wa9nnn.rc210.data.Formats._
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.model.Node
@@ -21,12 +21,12 @@ case class MacroNode(key: MacroKey, dtmf: Dtmf, functions: Seq[FunctionKey]) ext
       .withId(key.toString)
   }
 
-  def table()(implicit functionsProvider: FunctionsProvider): Table = {
+  def table()(implicit rc210Data: Rc210Data,  functionsProvider: FunctionsProvider): Table = {
     val rows = for {
       functionKey <- functions
       f <- functionsProvider(functionKey)
     } yield {
-      f.toRow
+      f.toRowMacroBlockRow()
     }
 
     Table(Seq.empty, rows)

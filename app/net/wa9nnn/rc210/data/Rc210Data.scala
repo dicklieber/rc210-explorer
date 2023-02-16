@@ -3,22 +3,14 @@ package net.wa9nnn.rc210.data
 import net.wa9nnn.rc210.command.ItemValue
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.schedules.Schedule
-import net.wa9nnn.rc210.data.vocabulary.MessageMacro
+import net.wa9nnn.rc210.data.vocabulary.MessageMacroNode
 import net.wa9nnn.rc210.model.TriggerNode
-import net.wa9nnn.rc210.{MacroKey, Named}
-import play.api.libs.json.{Json, OFormat}
+import net.wa9nnn.rc210.{MacroKey, MessageMacroKey}
 
-/**
- *
- * @param itemValues simple items
- * @param macros
- * @param names
- */
 case class Rc210Data(itemValues: Seq[ItemValue],
                      macros: Seq[MacroNode],
                      schedules: Seq[Schedule],
-                     messageMacros: Seq[MessageMacro],
-                     metadata: Metadata = Metadata()) {
+                     messageMacros: Seq[MessageMacroNode]) {
 
   val enabledTriggers:Seq[TriggerNode] = {
     schedules
@@ -28,9 +20,10 @@ case class Rc210Data(itemValues: Seq[ItemValue],
     //todo There are other TriggerNodes
     schedules
       .filter(_.enabled)
-
   }
+  lazy val messageMacroMap: Map[MessageMacroKey, MessageMacroNode] = messageMacros.map(mm => mm.key -> mm).toMap
+
+  def messageMacro(messageMacroKey: MessageMacroKey):Option[MessageMacroNode] = messageMacroMap.get(messageMacroKey)
 }
 
-case class Metadata(names: Seq[Named] = Seq.empty)
 

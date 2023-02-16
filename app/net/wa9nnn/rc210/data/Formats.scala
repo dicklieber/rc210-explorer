@@ -23,10 +23,13 @@ import net.wa9nnn.rc210._
 import net.wa9nnn.rc210.command.{Command, ItemValue, L10NMessage, Locus, ValueType}
 import net.wa9nnn.rc210.data.functions.FunctionNode
 import net.wa9nnn.rc210.data.macros.MacroNode
+import net.wa9nnn.rc210.data.named.{NamedData, NamedKey}
 import net.wa9nnn.rc210.data.schedules.{DayOfWeek, MonthOfYear, Schedule}
+import net.wa9nnn.rc210.data.vocabulary.MessageMacroNode
 import net.wa9nnn.rc210.model.TriggerDetail
 import play.api.libs.json._
 
+import javax.inject.Named
 import scala.util.matching.Regex
 
 object Formats {
@@ -127,8 +130,8 @@ object Formats {
   implicit val fmtItemValue: OFormat[ItemValue] = Json.format[ItemValue]
 
 
-  implicit val fmtNamed: OFormat[Named] = Json.format[Named]
-
+  implicit val fmtNamed: OFormat[NamedKey] = Json.format[NamedKey]
+  implicit val fmtNamedData: OFormat[NamedData] = Json.format[NamedData]
 
   implicit val fmtTriggerDetail: OFormat[TriggerDetail] = Json.format[TriggerDetail]
   implicit val fmtDOW: Format[DayOfWeek] = javaEnumFormat[DayOfWeek]
@@ -137,11 +140,12 @@ object Formats {
   implicit val fmtSchedule: OFormat[Schedule] = Json.format[Schedule]
 
   implicit val fmtMacro: OFormat[MacroNode] = Json.format[MacroNode]
+  implicit val fmtMessageMacro: OFormat[MessageMacroNode] = Json.format[MessageMacroNode]
+
 
   implicit val fmtBubbleFlowData: OFormat[BubbleFlowData] = Json.format[BubbleFlowData]
 
 
-  implicit val fmtMetadata: OFormat[Metadata] = Json.format[Metadata]
   implicit val fmtRc210Data: OFormat[Rc210Data] = Json.format[Rc210Data]
 
 }

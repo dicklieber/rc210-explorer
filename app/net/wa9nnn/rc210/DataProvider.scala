@@ -21,7 +21,7 @@ import net.wa9nnn.rc210.command.{Command, CommandParser, ItemValue}
 import net.wa9nnn.rc210.data.Rc210Data
 import net.wa9nnn.rc210.data.macros.MacroExtractor
 import net.wa9nnn.rc210.data.schedules.ScheduleExtractor
-import net.wa9nnn.rc210.data.vocabulary.{MessageMacro, MessageMacroExtractor}
+import net.wa9nnn.rc210.data.vocabulary.{MessageMacroNode, MessageMacroExtractor}
 import net.wa9nnn.rc210.serial.{Memory, MemoryArray}
 
 import java.io.InputStream
@@ -44,7 +44,7 @@ class DataProvider() {
 
       val macros = MacroExtractor(memory)
       val schedules = ScheduleExtractor(memory)
-      val messageMacros: Seq[MessageMacro] = MessageMacroExtractor(memory)
+      val messageMacros: Seq[MessageMacroNode] = MessageMacroExtractor(memory)
 
 
       Rc210Data(itemValues.toIndexedSeq, macros, schedules,messageMacros)

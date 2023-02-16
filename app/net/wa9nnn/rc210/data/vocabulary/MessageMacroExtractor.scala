@@ -20,19 +20,18 @@ package net.wa9nnn.rc210.data.vocabulary
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 import net.wa9nnn.rc210.{MessageMacroKey, WordKey}
-import play.api.libs.json.{Json, OFormat}
 import net.wa9nnn.rc210.data.Formats._
+import net.wa9nnn.rc210.model.Node
 
-case class MessageMacro(key: MessageMacroKey, words: Seq[WordKey]) extends RowSource{
+case class MessageMacroNode(key: MessageMacroKey, words: Seq[WordKey]) extends RowSource with Node{
   override def toRow: Row = {
     Row(key.toCell, words.map(Vocabulary(_)).mkString(" "))
   }
 }
 
-object MessageMacro {
+object MessageMacroNode {
   def header(count: Int):Header = Header(s"Message Macros ($count)", "Key", "Words")
 
-  implicit val fmtMessageMacro: OFormat[MessageMacro] = Json.format[MessageMacro]
 }
 
 
@@ -42,14 +41,14 @@ object MessageMacro {
  */
 object MessageMacroExtractor {
 
-  def apply(memory: Memory): Seq[MessageMacro] = {
+  def apply(memory: Memory): Seq[MessageMacroNode] = {
     val slice = memory(SlicePos("//Phrase - 1576-1975"))
     slice.data
       .grouped(10)
       .zipWithIndex
       .map { case (words, k) =>
         val w = words.takeWhile(_ != 0)
-        MessageMacro(MessageMacroKey(k), w.map(WordKey))
+        MessageMacroNode(MessageMacroKey(k), w.map(WordKey))
       }
       .toSeq
   }

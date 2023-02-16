@@ -15,16 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.vocabulary
+package net.wa9nnn.rc210.data.named
 
-import net.wa9nnn.rc210.fixtures.WithMemory
+import net.wa9nnn.rc210.Key
 
-class MessageMacroExtractorSpecNode extends WithMemory {
-
-  "MessageMacroExtractor" should {
-    "apply" in {
-      val messageMacros: Seq[MessageMacroNode] = MessageMacroExtractor(memory)
-      messageMacros must haveLength(40)
-    }
-  }
-}

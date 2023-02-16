@@ -5,6 +5,7 @@ import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
 import net.wa9nnn.rc210.{FunctionKey, Key, MacroKey, MessageMacroKey}
 import play.api.libs.json._
 import net.wa9nnn.rc210.data.Formats._
+import net.wa9nnn.rc210.data.Rc210Data
 
 import java.io.InputStream
 import javax.inject.Singleton
@@ -55,12 +56,17 @@ class FunctionsProvider extends LazyLogging {
 }
 
 case class FunctionNode(key: FunctionKey, description: String, destination: Option[Key]) extends Ordered[FunctionNode] with RowSource {
-  override def toRow: Row = Row(
+
+   def toRowMacroBlockRow()(implicit rc210Data: Rc210Data): Row = Row(
     Cell(description)
       .withToolTip(key.toString)
     , destination)
 
   override def compare(that: FunctionNode): Int = description compareTo that.description
+
+  override def toRow: Row = {
+    Row(key.toCell, destination, destination)
+  }
 }
 
 

@@ -37,16 +37,14 @@ resolvers += ("Reposilite" at "http://194.113.64.105:8080/releases").withAllowIn
 
 val logbackVersion = "1.4.5"
 val specs2Version = "4.19.2"
+libraryDependencies += specs2 % Test
 
 
 //libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
 
 libraryDependencies ++= Seq(
-  guice,
+  guice, specs2 % Test,
   "net.wa9nnn" %% "util" % "0.1.12-SNAPSHOT",
-  "org.specs2" %% "specs2-core" % specs2Version % Test,
-  "org.specs2" %% "specs2-junit" % specs2Version % Test,
-
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
 
   "ch.qos.logback" % "logback-classic" % logbackVersion,

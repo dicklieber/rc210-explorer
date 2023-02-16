@@ -2,7 +2,8 @@
 @import com.wa9nnn.util.tableui.html.renderTable
 @(tables: Seq[Table])
 
-    @main("RC Flow") {
+    @main("RCP Dat") {
+        <h1>Welcome to WA9NNN RCP Dat Explorer!</h1>
 
         @for(table <- tables) {
             @renderTable(table.withCssClass("tablesorter"))

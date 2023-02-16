@@ -64,5 +64,4 @@ case class WordKey(override val index: Int) extends Key("word", index) {
   assert(index <= 255, "Words numbers are 0 through 255")
 }
 
-case class Named(key:Key, name:String)
 
