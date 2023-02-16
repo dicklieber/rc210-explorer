@@ -21,7 +21,7 @@ import com.wa9nnn.util.tableui.Table
 import net.wa9nnn.rc210.DataProvider
 import net.wa9nnn.rc210.command.ItemValue
 import net.wa9nnn.rc210.data.Rc210Data
-import net.wa9nnn.rc210.data.functions.{Function, Functions}
+import net.wa9nnn.rc210.data.functions.{FunctionNode, FunctionsProvider}
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.schedules.Schedule
 import net.wa9nnn.rc210.data.vocabulary.{MessageMacro, Phrase, Vocabulary}
@@ -34,7 +34,7 @@ import javax.inject._
  * application's home page.
  */
 @Singleton
-class RawDataController @Inject()(val controllerComponents: ControllerComponents, functions: Functions, dataProvider: DataProvider) extends BaseController {
+class RawDataController @Inject()(val controllerComponents: ControllerComponents, functions: FunctionsProvider, dataProvider: DataProvider) extends BaseController {
 
 
   //  private val datFile: DatFile = datFileSource.datFile()
@@ -47,7 +47,7 @@ class RawDataController @Inject()(val controllerComponents: ControllerComponents
    * a path of `/`.
    */
   def functions(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-        val schedulesTable = Table(Function.header(functions.functions.length), functions.functions.map(_.toRow))
+        val schedulesTable = Table(FunctionNode.header(functions.functions.length), functions.functions.map(_.toRow))
         Ok(views.html.dat(Seq(schedulesTable)))
   }
   def items(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>

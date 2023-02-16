@@ -17,18 +17,21 @@
 
 package controllers
 
-import net.wa9nnn.rc210.data.FlowTableBuilder
+import com.wa9nnn.util.tableui.Table
+import net.wa9nnn.rc210.DataProvider
+import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import play.api.mvc._
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
 
-@Singleton
-class FlowController @Inject()(val controllerComponents: ControllerComponents, flowTableBuilder: FlowTableBuilder) extends BaseController {
+class Flow2Controller @Inject()(implicit val controllerComponents: ControllerComponents, dataProvider: DataProvider, functionsProvider: FunctionsProvider) extends BaseController {
 
   def flow(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    val table = flowTableBuilder()
-    Ok(views.html.dat(Seq(table)))
+
+    val head = dataProvider.rc210Data.macros.head
+    val headTable: Table = head.table()
+
+    Ok(views.html.dat(Seq(headTable)))
   }
+
 }
-
-

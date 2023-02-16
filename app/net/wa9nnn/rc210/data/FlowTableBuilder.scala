@@ -3,14 +3,14 @@ package net.wa9nnn.rc210.data
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table, TableInACell}
 import net.wa9nnn.rc210.data.FlowTableBuilder.macroRowHeaderCell
 import net.wa9nnn.rc210.{DataProvider, MacroKey}
-import net.wa9nnn.rc210.data.functions.{Function, Functions}
+import net.wa9nnn.rc210.data.functions.{FunctionNode, FunctionsProvider}
 import net.wa9nnn.rc210.model.TriggerNode
 import views.html.macroRowHeader
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class FlowTableBuilder @Inject()(functions: Functions, dataProvider: DataProvider) {
+class FlowTableBuilder @Inject()(functions: FunctionsProvider, dataProvider: DataProvider) {
   def apply(): Table = {
 
     val rc210Data = dataProvider.rc210Data
@@ -19,7 +19,7 @@ class FlowTableBuilder @Inject()(functions: Functions, dataProvider: DataProvide
         val functionRows = macroNode.functions.flatMap { functionKey =>
           functions(functionKey).map(_.toRow)
         }
-        Table(Function.header(functionRows.length), functionRows)
+        Table(FunctionNode.header(functionRows.length), functionRows)
       }
       val triggerTable: Table = {
         val triggers: Seq[TriggerNode] = rc210Data.triggers(macroNode.key)

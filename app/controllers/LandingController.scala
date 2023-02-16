@@ -1,7 +1,7 @@
 package controllers
 
 import com.wa9nnn.util.tableui.Table
-import net.wa9nnn.rc210.data.functions.Functions
+import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import play.api.mvc._
 
 import javax.inject._
@@ -11,7 +11,7 @@ import javax.inject._
  * application's home page.
  */
 @Singleton
-class LandingController @Inject()(val controllerComponents: ControllerComponents, functions: Functions) extends BaseController {
+class LandingController @Inject()(val controllerComponents: ControllerComponents, functions: FunctionsProvider) extends BaseController {
 
   /**
    * Create an Action to render an HTML page.

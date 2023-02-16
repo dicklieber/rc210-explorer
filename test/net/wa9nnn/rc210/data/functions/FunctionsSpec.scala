@@ -7,7 +7,7 @@ class FunctionsSpec extends Specification {
 
   "Functions" should {
     "load" in {
-      val functions = new Functions()
+      val functions = new FunctionsProvider()
       functions(FunctionKey(1)).toString must beEqualTo ("Function(function1,Port 1 CTCSS Access,None)")
       functions.size must beEqualTo (872)
 

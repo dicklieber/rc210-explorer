@@ -1,20 +1,20 @@
 package net.wa9nnn.rc210.data.functions
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.{Header, Row, RowSource}
-import net.wa9nnn.rc210.data.functions.Function._
+import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
 import net.wa9nnn.rc210.{FunctionKey, Key, MacroKey, MessageMacroKey}
 import play.api.libs.json._
+import net.wa9nnn.rc210.data.Formats._
 
 import java.io.InputStream
 import javax.inject.Singleton
 import scala.util.{Failure, Success, Using}
-import net.wa9nnn.rc210.data.Formats._
-@Singleton
-class Functions extends LazyLogging {
 
-  val functions: Seq[Function] = Using(getClass.getResourceAsStream("/FunctionList.json")) { is: InputStream =>
-    Json.parse(is).as[List[Function]]
+@Singleton
+class FunctionsProvider extends LazyLogging {
+
+  val functions: Seq[FunctionNode] = Using(getClass.getResourceAsStream("/FunctionList.json")) { is: InputStream =>
+    Json.parse(is).as[List[FunctionNode]]
 
   } match {
     case Failure(exception) =>
@@ -24,15 +24,15 @@ class Functions extends LazyLogging {
       value
   }
 
-  val byDescription: Seq[Function] = functions.sorted
+  val byDescription: Seq[FunctionNode] = functions.sorted
   private val map = functions.map(f => f.key -> f).toMap
 
   /**
    *
    * @param fkey of interest.
-   * @return the [[Function]]
+   * @return the [[FunctionNode]]
    */
-  def apply(fkey: FunctionKey): Option[Function] = map.get(fkey)
+  def apply(fkey: FunctionKey): Option[FunctionNode] = map.get(fkey)
 
   def size: Int = functions.length
 
@@ -54,15 +54,18 @@ class Functions extends LazyLogging {
 
 }
 
-case class Function(key: FunctionKey, description: String, destination: Option[Key]) extends Ordered[Function] with RowSource {
-  override def toRow: Row = Row(key.toCell, description, destination)
+case class FunctionNode(key: FunctionKey, description: String, destination: Option[Key]) extends Ordered[FunctionNode] with RowSource {
+  override def toRow: Row = Row(
+    Cell(description)
+      .withToolTip(key.toString)
+    , destination)
 
-  override def compare(that: Function): Int = description compareTo that.description
+  override def compare(that: FunctionNode): Int = description compareTo that.description
 }
 
 
-object Function {
-  def header(count:Int): Header = Header(s"Functions ($count)", "Key", "Description")
+object FunctionNode {
+  def header(count: Int): Header = Header(s"Functions ($count)", "Description")
 }
 
 

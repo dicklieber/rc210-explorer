@@ -21,7 +21,7 @@ import com.wa9nnn.util.JsonFormatUtils.javaEnumFormat
 import controllers.BubbleFlowData
 import net.wa9nnn.rc210._
 import net.wa9nnn.rc210.command.{Command, ItemValue, L10NMessage, Locus, ValueType}
-import net.wa9nnn.rc210.data.functions.Function
+import net.wa9nnn.rc210.data.functions.FunctionNode
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.schedules.{DayOfWeek, MonthOfYear, Schedule}
 import net.wa9nnn.rc210.model.TriggerDetail
@@ -31,8 +31,8 @@ import scala.util.matching.Regex
 
 object Formats {
 
-  implicit val fmtFunction: Format[Function] = new Format[Function] {
-    override def reads(json: JsValue): JsResult[Function] = {
+  implicit val fmtFunction: Format[FunctionNode] = new Format[FunctionNode] {
+    override def reads(json: JsValue): JsResult[FunctionNode] = {
 
       try {
         val jsKey: Key = (json \ "key").as[Key]
@@ -40,7 +40,7 @@ object Formats {
         val sdesc: String = (json \ "description").as[String]
         val sdest: Option[Key] = (json \ "destination").asOpt[Key]
 
-        val f = Function(jsKey.asInstanceOf[FunctionKey], sdesc, sdest)
+        val f = FunctionNode(jsKey.asInstanceOf[FunctionKey], sdesc, sdest)
         JsSuccess(f)
       }
       catch {
@@ -48,7 +48,7 @@ object Formats {
       }
     }
 
-    override def writes(key: Function): JsValue = {
+    override def writes(key: FunctionNode): JsValue = {
       JsString(key.toString)
     }
   }

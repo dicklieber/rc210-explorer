@@ -1,12 +1,12 @@
 package net.wa9nnn.rc210.data.macros
 
-import com.wa9nnn.util.tableui.{Header, Row}
+import com.wa9nnn.util.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.data.Dtmf
+import net.wa9nnn.rc210.data.Formats._
+import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.model.Node
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
-import net.wa9nnn.rc210.data.Formats._
 import net.wa9nnn.rc210.{FunctionKey, MacroKey}
-import play.api.libs.json.{Json, OFormat}
 
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -20,10 +20,21 @@ case class MacroNode(key: MacroKey, dtmf: Dtmf, functions: Seq[FunctionKey]) ext
     Row(key.toCell, dtmf, sFunctionString)
       .withId(key.toString)
   }
+
+  def table()(implicit functionsProvider: FunctionsProvider): Table = {
+    val rows = for {
+      functionKey <- functions
+      f <- functionsProvider(functionKey)
+    } yield {
+      f.toRow
+    }
+
+    Table(Seq.empty, rows)
+  }
 }
 
 object MacroNode {
-  def header(count:Int): Header = Header(s"Macros ($count)", "Key", "DTMF", "Functions")
+  def header(count: Int): Header = Header(s"Macros ($count)", "Key", "DTMF", "Functions")
 
 }
 
@@ -36,8 +47,8 @@ object MacroExtractor {
 
     /**
      *
-     * @param macroSlicePos the functions in macro.
-     * @param memory        from the RC-210
+     * @param macroSlicePos         the functions in macro.
+     * @param memory                from the RC-210
      * @param bytesPerMacro         how many slots in a macro.
      * @return the macros with functions, dtmf code
      */
