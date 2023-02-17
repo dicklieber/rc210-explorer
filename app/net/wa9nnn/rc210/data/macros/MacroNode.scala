@@ -23,16 +23,16 @@ case class MacroNode(key: MacroKey, dtmf: Dtmf, functions: Seq[FunctionKey]) ext
       .withId(key.toString)
   }
 
-  def table()(implicit rc210Data: Rc210Data,  functionsProvider: FunctionsProvider): Table = {
-    val rows = for {
+
+  def table()(implicit rc210Data: Rc210Data, functionsProvider: FunctionsProvider): Table = {
+    Table(Seq.empty, for {
       functionKey <- functions
       f <- functionsProvider(functionKey)
     } yield {
-      f.toRowMacroBlockRow()
-    }
-
-    Table(Seq.empty, rows)
+      f.toRow
+    })
   }
+
 }
 
 object MacroNode {

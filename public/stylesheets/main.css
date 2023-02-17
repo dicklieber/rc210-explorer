@@ -143,3 +143,6 @@ body {
     font-size:larger;
     font-weight: bold;
 }
+.flowTable {
+    border-collapse: separate !important
+}

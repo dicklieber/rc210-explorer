@@ -20,6 +20,7 @@ package controllers
 import com.wa9nnn.util.tableui.Table
 import net.wa9nnn.rc210.{DataProvider, MacroKey}
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
+import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.named.NamedManager
 import play.api.mvc._
 
@@ -30,20 +31,16 @@ class Flow2Controller @Inject()(implicit val controllerComponents: ControllerCom
                                 namedManager: NamedManager,
                                 functionsProvider: FunctionsProvider) extends BaseController {
 
-  def flow(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+  def flow(): Action[AnyContent] = Action {
+    implicit request: Request[AnyContent] =>
 
 
-    implicit val rc210Data = dataProvider.rc210Data
+      implicit val rc210Data = dataProvider.rc210Data
 
-   val macroBlocks =  rc210Data
-     .macros
-     .filter(_.enabled)
-     .map{macroNode =>
-      MacroBlock(macroNode.key, macroNode.table())
-    }
+      val macroNodes: Seq[MacroNode] = rc210Data
+        .macros
+        .filter(_.enabled)
 
-    Ok(views.html.flow(macroBlocks))
+      Ok(views.html.flow(macroNodes))
   }
-
 }
-case class MacroBlock(macroKey:MacroKey, table: Table)
