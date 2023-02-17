@@ -11,6 +11,8 @@ import net.wa9nnn.rc210.{FunctionKey, MacroKey}
 import java.util.concurrent.atomic.AtomicInteger
 
 case class MacroNode(key: MacroKey, dtmf: Dtmf, functions: Seq[FunctionKey]) extends Node {
+  def enabled: Boolean = functions.nonEmpty
+
 
   override def toRow: Row = {
     val sFunctionString = functions

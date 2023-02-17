@@ -1,11 +1,22 @@
-@import com.wa9nnn.util.tableui.Table
 @import com.wa9nnn.util.tableui.html.renderTable
-@(tables: Seq[Table])
+@import net.wa9nnn.rc210.data.named.NamedManager
+@(macroBlocks: Seq[MacroBlock])(implicit namedManager: NamedManager)
 
     @main("RCP Dat") {
         <h1>Welcome to WA9NNN RCP Dat Explorer!</h1>
 
-        @for(table <- tables) {
-            @renderTable(table.withCssClass("tablesorter"))
+        @for(macroBlock <- macroBlocks) {
+            <div class="container  border border-primary rounded pb-1">
+                <div class="row  ">
+
+                    <div class="col-sm-1 bg-primary border border-primary rounded text-white">
+                        <p>@macroBlock.macroKey</p>
+                    </div>
+                    <div class="col-sm-4">
+                    @renderTable(macroBlock.table)
+                    </div>
+                </div>
+            </div>
+
         }
     }

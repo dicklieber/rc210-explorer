@@ -57,10 +57,16 @@ class FunctionsProvider extends LazyLogging {
 
 case class FunctionNode(key: FunctionKey, description: String, destination: Option[Key]) extends Ordered[FunctionNode] with RowSource {
 
-   def toRowMacroBlockRow()(implicit rc210Data: Rc210Data): Row = Row(
-    Cell(description)
-      .withToolTip(key.toString)
-    , destination)
+  def toRowMacroBlockRow()(implicit rc210Data: Rc210Data): Row = {
+
+    val cell = Cell(description).withToolTip(key.toString)
+    val row: Row = new Row(Seq(cell))
+
+    if (destination.nonEmpty)
+      row :+ destination.get
+    else
+      row // we don't want the <td> in this case
+  }
 
   override def compare(that: FunctionNode): Int = description compareTo that.description
 
