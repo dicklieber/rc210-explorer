@@ -17,20 +17,28 @@
 
 package net.wa9nnn.rc210.data.vocabulary
 
-import com.wa9nnn.util.tableui.{Header, Row, RowSource}
+import com.wa9nnn.util.tableui.{Cell, CellProvider, Header, Row, RowSource}
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 import net.wa9nnn.rc210.{MessageMacroKey, WordKey}
 import net.wa9nnn.rc210.data.Formats._
 import net.wa9nnn.rc210.model.Node
 
-case class MessageMacroNode(key: MessageMacroKey, words: Seq[WordKey]) extends RowSource with Node{
+case class MessageMacroNode(key: MessageMacroKey, words: Seq[WordKey]) extends RowSource with Node with CellProvider {
   override def toRow: Row = {
     Row(key.toCell, words.map(Vocabulary(_)).mkString(" "))
   }
+
+  override def toCell: Cell =
+    Cell(words.map { wordKey =>
+      val phrase: Phrase = Vocabulary(wordKey)
+      phrase.string
+    }.mkString(" "))
+      .withToolTip(key.toString)
+      .withCssClass(key.kind)
 }
 
 object MessageMacroNode {
-  def header(count: Int):Header = Header(s"Message Macros ($count)", "Key", "Words")
+  def header(count: Int): Header = Header(s"Message Macros ($count)", "Key", "Words")
 
 }
 
