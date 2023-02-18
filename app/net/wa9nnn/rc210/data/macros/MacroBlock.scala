@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.data.macros
 
-import com.wa9nnn.util.tableui.{Cell, Row}
+import com.wa9nnn.util.tableui.{Cell, Row, Table, TableInACell}
 import net.wa9nnn.rc210.data.Rc210Data
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.named.NamedManager
@@ -33,6 +33,73 @@ object MacroBlock {
                                   functionsProvider: FunctionsProvider): Seq[Row] = {
 
     implicit val functions: Seq[FunctionKey] = macroNode.functions
+
+
+    /**
+     * Builds one function row for the flow table.
+     *
+     * @param functionKey       to render
+     * @param maybeMacroKey     Some if 1st row, will add top border. Can also be marked as last.
+     * @param last              true if last or only row, will add bottom border
+     * @return
+     */
+    def buildRow(functionKey: FunctionKey, maybeMacroKey: Option[MacroKey] = None, last: Boolean = false): Row = {
+
+      /**
+       * Right extension td to a function td.
+       */
+      def buildDestinationCell(key: Option[Key]): Cell = {
+        key
+          .map {
+            case key: MessageMacroKey =>
+              rc210Data
+                .messageMacroMap
+                .get(key)
+                .map(_.toCell)
+                .getOrElse(Cell(""))
+            case key =>
+              key.toCell
+          }.getOrElse(Cell(""))
+      }
+
+      val functionCells: Seq[Cell] = {
+        functionsProvider(functionKey).map { functionNode =>
+          var descriptionCell = Cell(functionNode.description)
+          var destinationCell: Cell = buildDestinationCell(functionNode.destination)
+            .withCssClass("border-right border-color-primary")
+          if (last) {
+            descriptionCell = descriptionCell.withCssClass("border-bottom border-color-primary")
+            destinationCell = destinationCell.withCssClass("border-bottom border-color-primary")
+          }
+          Seq(descriptionCell, destinationCell)
+        }.getOrElse(Seq.empty)
+      }
+
+      def buildMacroLeftTd = {
+        val macroKey = macroNode.key
+        val rows = rc210Data
+          .triggers(macroKey)
+          .map { triggerNode =>
+            triggerNode.triggerRow
+          }
+        val triggersTable = Table(Seq.empty, rows)
+        TableInACell(Table(Seq.empty, Seq(
+          Row(
+            TableInACell(triggersTable),
+            Cell(namedManager(macroKey))
+              .withRowSpan(functions.length)
+              .withCssClass("bg-primary text-white border border-color-primary")
+              .withToolTip(s"Macro Command ${macroKey.index}")
+          )
+        )))
+      }
+
+      maybeMacroKey.map { macroKey =>
+        Row(buildMacroLeftTd, functionCells: _*)
+      }.getOrElse {
+        Row( functionCells)
+      }
+    }
 
     functions.length match {
       case 0 =>
@@ -50,59 +117,5 @@ object MacroBlock {
           .dropRight(1)
           .map(buildRow(_)) :+ buildRow(functions.last, last = true)
     }
-  }
-
-  /**
-   * Builds one function row for the flow table.
-   *
-   * @param functionKey  to render
-   * @param macroKey     if 1st will add top border. Can also be marked as last.
-   * @param last         true if last or only row, will add bottom border
-   * @return
-   */
-  def buildRow(functionKey: FunctionKey, macroKey: Option[MacroKey] = None, last: Boolean = false)
-              (implicit functions: Seq[FunctionKey], functionsProvider: FunctionsProvider, namedManager: NamedManager, rc210Data: Rc210Data): Row = {
-    val maybeMacroKeyCell: Option[Cell] = macroKey.map { mk =>
-      Cell(namedManager(mk))
-        .withRowSpan(functions.length)
-        .withCssClass("bg-primary text-white border border-color-primary")
-        .withToolTip(s"Macro Command ${mk.index}")
-    }
-
-    def buildDestinationCell(key: Option[Key]): Cell = {
-      key
-        .map {
-          case key: MessageMacroKey =>
-            rc210Data
-              .messageMacroMap
-              .get(key)
-              .map(_.toCell)
-              .getOrElse(Cell(""))
-
-          case key =>
-            key.toCell
-        }.getOrElse(Cell(""))
-    }
-
-
-    val functionCells: Seq[Cell] = {
-      functionsProvider(functionKey).map { functionNode =>
-        var descriptionCell = Cell(functionNode.description)
-        var destinationCell: Cell = buildDestinationCell(functionNode.destination)
-          .withCssClass("border-right border-color-primary")
-        if (last) {
-          descriptionCell = descriptionCell.withCssClass("border-bottom border-color-primary")
-          destinationCell = destinationCell.withCssClass("border-bottom border-color-primary")
-        }
-        Seq(descriptionCell, destinationCell)
-      }.getOrElse(Seq.empty)
-    }
-
-    val cells: Seq[Cell] = maybeMacroKeyCell.map {
-      _ +: functionCells
-    }.getOrElse(functionCells)
-    Row(cells)
-
-
   }
 }

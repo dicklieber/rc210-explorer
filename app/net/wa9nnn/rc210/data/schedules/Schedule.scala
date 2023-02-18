@@ -34,9 +34,14 @@ case class Schedule(key: ScheduleKey,
 
   override def enabled: Boolean = localTime.nonEmpty
 
-
   override def toString: String = {
-    s"DOW: $dayOfWeek WeekInMonth: $weekInMonth Month: $monthOfYear time: $localTime"
+    localTime.map{localTime =>
+      val week = weekInMonth.map{week =>
+        s" Week: $week"
+      }.getOrElse("")
+      s"$monthOfYear$week on $dayOfWeek at $localTime"
+    }
+      .getOrElse("-disabled-")
   }
 
   override def triggerRow: Row = {
