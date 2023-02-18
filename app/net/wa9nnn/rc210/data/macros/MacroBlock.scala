@@ -130,6 +130,8 @@ object MacroBlock {
 
 
   val seperatorRow = Row(Seq(Cell("")
-  .withColSpan(3)
-  .withCssClass("border-bottom border-3 border-secondary")))
+    .withColSpan(3)
+  ))
+//    .withCssClass("border-bottom border-3 border-secondary"))
+//  )
 }

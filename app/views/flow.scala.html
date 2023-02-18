@@ -13,6 +13,11 @@
     <h1>Flow</h1>
 
     <table class="flowTable">
+        <thead>
+            <th>Macro</th>
+            <th>Trigger</th>
+            <th colspan="2">Functions</th>
+        </thead>
         <tbody>
         @for(macroNode <- macroNodes) {
             @renderTableBodyRows(MacroBlock(macroNode))
