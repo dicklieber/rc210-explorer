@@ -127,22 +127,42 @@ body {
 .alarm {
     background-color: #ffbecc;
 }
+
 .macro {
     background-color: lightskyblue;
 }
 
-.schedule{
+.schedule {
     background-color: lightgrey;
 }
-.messageMacro{
+
+.messageMacro {
     background-color: lightgreen;
 }
 
-.macroRowHeader{
+.macroRowHeader {
     background-color: lightskyblue;
-    font-size:larger;
+    font-size: larger;
     font-weight: bold;
 }
+
 .flowTable {
     border-collapse: separate !important
+    border-spacing:0;
+}
+
+.flowMacroLeft {
+    border-left:  5px solid red;
+}
+
+.flowMacroRight {
+    border-right:  5px solid red;
+}
+
+.flowMacroTop {
+    border-top:  5px solid red;
+}
+
+.flowMacroBottom {
+  border-bottom:  5px solid red;
 }

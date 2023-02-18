@@ -65,11 +65,12 @@ object MacroBlock {
       val functionCells: Seq[Cell] = {
         functionsProvider(functionKey).map { functionNode =>
           var descriptionCell = Cell(functionNode.description)
+
           var destinationCell: Cell = buildDestinationCell(functionNode.destination)
-            .withCssClass("border-right border-color-primary")
+            .withCssClass("flowMacroRight")
           if (last) {
-            descriptionCell = descriptionCell.withCssClass("border-bottom border-color-primary")
-            destinationCell = destinationCell.withCssClass("border-bottom border-color-primary")
+            descriptionCell = descriptionCell.withCssClass("flowMacroBottom")
+            destinationCell = destinationCell.withCssClass("flowMacroBottom")
           }
           Seq(descriptionCell, destinationCell)
         }.getOrElse(Seq.empty)
@@ -83,25 +84,32 @@ object MacroBlock {
             triggerNode.triggerRow
           }
         val triggersTable = Table(Seq.empty, rows)
-        TableInACell(Table(Seq.empty, Seq(
-          Row(
-            TableInACell(triggersTable),
-            Cell(namedManager(macroKey))
-              .withRowSpan(functions.length)
-              .withCssClass("bg-primary text-white border border-color-primary")
-              .withToolTip(s"Macro Command ${macroKey.index}")
-          )
-        )))
+        val table = Table(
+          headers = Seq.empty,
+          rows = Seq(
+            Row(
+              TableInACell(triggersTable),
+              Cell(namedManager(macroKey))
+                .withToolTip(s"Macro Command ${macroKey.index}")
+            )
+          ),
+          cssClass = Seq.empty)
+        TableInACell(table)
+          .withRowSpan(functions.length)
+          .withCssClass("flowMacroBottom flowMacroLeft flowMacroTop")
+          .withToolTip(s"Macro Command ${macroKey.index}")
+
       }
 
       maybeMacroKey.map { macroKey =>
-        Row(buildMacroLeftTd, functionCells: _*)
+        val topRowCells = functionCells.map(_.withCssClass("flowMacroTop"))
+        Row(buildMacroLeftTd, topRowCells: _*)
       }.getOrElse {
-        Row( functionCells)
+        Row(functionCells)
       }
     }
 
-    functions.length match {
+    val functionRows = functions.length match {
       case 0 =>
         Seq.empty
       case 1 =>
@@ -117,5 +125,11 @@ object MacroBlock {
           .dropRight(1)
           .map(buildRow(_)) :+ buildRow(functions.last, last = true)
     }
+    functionRows :+ seperatorRow
   }
+
+
+  val seperatorRow = Row(Seq(Cell("")
+  .withColSpan(3)
+  .withCssClass("border-bottom border-3 border-secondary")))
 }
