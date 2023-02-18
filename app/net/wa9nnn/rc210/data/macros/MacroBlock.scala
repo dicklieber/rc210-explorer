@@ -76,21 +76,31 @@ object MacroBlock {
         }.getOrElse(Seq.empty)
       }
 
-      def buildMacroLeftTd = {
+      def macroCell() = {
         val macroKey = macroNode.key
-        val rows = rc210Data
+        Cell(namedManager(macroKey))
+          .withToolTip(s"Macro Command $macroKey")
+          .withRowSpan(functions.length)
+          .withCssClass("flowMacroCell bg-primary text-white")
+
+      }
+
+      def buildTriggersCell: Cell = {
+        val macroKey = macroNode.key
+        val triggerRows = rc210Data
           .triggers(macroKey)
           .map { triggerNode =>
             triggerNode.triggerRow
           }
-        val triggersTable = Table(Seq.empty, rows)
+        val triggersTable = Table(Seq.empty, triggerRows)
         val table = Table(
           headers = Seq.empty,
           rows = Seq(
-            Row(
-              TableInACell(triggersTable),
-              Cell(namedManager(macroKey))
-                .withToolTip(s"Macro Command ${macroKey.index}")
+            Row(Seq(
+              TableInACell(triggersTable)
+              //              Cell(namedManager(macroKey))
+              //                .withToolTip(s"Macro Command ${macroKey.index}")
+            )
             )
           ),
           cssClass = Seq.empty)
@@ -103,7 +113,8 @@ object MacroBlock {
 
       maybeMacroKey.map { macroKey =>
         val topRowCells = functionCells.map(_.withCssClass("flowMacroTop"))
-        Row(buildMacroLeftTd, topRowCells: _*)
+        val moreCells: Seq[Cell] = macroCell() +: buildTriggersCell +: topRowCells
+        new Row( moreCells)
       }.getOrElse {
         Row(functionCells)
       }
@@ -125,13 +136,14 @@ object MacroBlock {
           .dropRight(1)
           .map(buildRow(_)) :+ buildRow(functions.last, last = true)
     }
-    functionRows :+ seperatorRow
+    functionRows
+//    functionRows :+ seperatorRow
   }
 
 
   val seperatorRow = Row(Seq(Cell("")
     .withColSpan(3)
   ))
-//    .withCssClass("border-bottom border-3 border-secondary"))
-//  )
+  //    .withCssClass("border-bottom border-3 border-secondary"))
+  //  )
 }

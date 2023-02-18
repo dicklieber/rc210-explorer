@@ -170,3 +170,6 @@ body {
     border-bottom:2px solid dimgray;
 
 }
+.flowMacroCell{
+    border:2px solid dimgray;
+}
