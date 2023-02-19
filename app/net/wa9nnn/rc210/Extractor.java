@@ -15,18 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.vocabulary
+package net.wa9nnn.rc210;
 
-import net.wa9nnn.rc210.data.Rc210Data
-import net.wa9nnn.rc210.fixtures.WithMemory
+import javax.inject.Qualifier;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-class MessageMacroExtractorSpecNode extends WithMemory {
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-  "MessageMacroExtractor" should {
-    "apply" in {
-      val messageMacroExtractor = new MessageMacroExtractor()
-      val rc210Data: Rc210Data = messageMacroExtractor(memory, Rc210Data())
-      rc210Data.messageMacros must haveLength(40)
-    }
-  }
-}
+@Qualifier
+@Target({ FIELD, PARAMETER, METHOD })
+@Retention(RUNTIME)
+public @interface Extractor {}
+

@@ -17,38 +17,46 @@
 
 package net.wa9nnn.rc210
 
-import net.wa9nnn.rc210.command.{Command, CommandParser, ItemValue}
 import net.wa9nnn.rc210.data.Rc210Data
 import net.wa9nnn.rc210.data.macros.MacroExtractor
 import net.wa9nnn.rc210.data.schedules.ScheduleExtractor
-import net.wa9nnn.rc210.data.vocabulary.{MessageMacroNode, MessageMacroExtractor}
+import net.wa9nnn.rc210.data.vocabulary.MessageMacroExtractor
 import net.wa9nnn.rc210.serial.{Memory, MemoryArray}
 
 import java.io.InputStream
-import javax.inject.Singleton
+import javax.inject.{Inject, Singleton}
 import scala.util.Using
 
 @Singleton
-class DataProvider() {
+class DataProvider @Inject()() {
 
   val rc210Data: Rc210Data = {
 
-    Using(getClass.getResourceAsStream("/MemFixedtxt.txt")) { stream: InputStream =>
-      val memory: Memory = MemoryArray(stream).get
+    Using(getClass.getResourceAsStream("/MemFixedtxt.txt")) {
+      stream: InputStream =>
+        val memory: Memory = MemoryArray(stream).get
 
-      val itemValues: Array[ItemValue] = Command
-        .values()
-        .flatMap { command =>
-          CommandParser(command, memory)
+        val extractors = Seq(
+          new MacroExtractor(),
+          new ScheduleExtractor(),
+          new MessageMacroExtractor()
+        )
+        var rc210Data = Rc210Data()
+        extractors.foreach {
+          extractor: MemoryExtractor =>
+            rc210Data = extractor(memory, rc210Data)
         }
-
-      val macros = MacroExtractor(memory)
-      val schedules = ScheduleExtractor(memory)
-      val messageMacros: Seq[MessageMacroNode] = MessageMacroExtractor(memory)
-
-
-      Rc210Data(itemValues.toIndexedSeq, macros, schedules,messageMacros)
-
+        rc210Data
     }.get
   }
+}
+
+trait MemoryExtractor {
+  /**
+   *
+   * @param memory    source of RC-210 data.
+   * @param rc210Data internal to have our data appended to it.
+   * @return the inputted rc210Data with our data inserted into it.
+   */
+  def apply(memory: Memory, rc210Data: Rc210Data): Rc210Data
 }

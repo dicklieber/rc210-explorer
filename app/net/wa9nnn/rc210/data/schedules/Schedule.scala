@@ -2,11 +2,13 @@ package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row}
+import net.wa9nnn.rc210.data.Rc210Data
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
-import net.wa9nnn.rc210.{MacroKey, ScheduleKey}
+import net.wa9nnn.rc210.{MacroKey, MemoryExtractor, ScheduleKey}
 
 import java.time.LocalTime
+import javax.inject.Singleton
 
 /**
  *
@@ -32,7 +34,7 @@ case class Schedule(key: ScheduleKey,
 
   override val nodeEnabled: Boolean = localTime.nonEmpty
 
-  override def toString: String = {
+   val description: String = {
     localTime.map{localTime =>
       val week = weekInMonth.map{week =>
         s" Week: $week"
@@ -43,11 +45,11 @@ case class Schedule(key: ScheduleKey,
   }
 
   override def triggerRow: Row = {
-    Row(key.toCell, this)
+    Row(key.toCell, description)
   }
 
 
-  override def triggerEnabled: Boolean = nodeEnabled
+  override val triggerEnabled: Boolean = nodeEnabled
 
   override def triggerDescription: String = toString
 
@@ -58,11 +60,10 @@ object Schedule {
 
 
 }
-
-object ScheduleExtractor extends LazyLogging {
-  def apply(memory: Memory): Seq[Schedule] = {
+@Singleton
+class ScheduleExtractor extends LazyLogging with MemoryExtractor{
+  def apply(memory:Memory, rc210Data: Rc210Data): Rc210Data = {
     // dim0 setpoint row, dim1 is piece column
-
 
     /**
      * Extract one piece of a schedules.
@@ -88,7 +89,7 @@ object ScheduleExtractor extends LazyLogging {
       val parts = scheduleBuilder.getSetpointRow(setPoint)
 
       Schedule(
-        key = ScheduleKey(setPoint),
+        key = ScheduleKey(setPoint + 1),
         dayOfWeek = parts.head.asInstanceOf[DayOfWeek],
         weekInMonth = parts(1).asInstanceOf[Option[Int]],
         monthOfYear = parts(2).asInstanceOf[MonthOfYear],
@@ -108,7 +109,7 @@ object ScheduleExtractor extends LazyLogging {
         macroToRun = parts(5).asInstanceOf[MacroKey]
       )
     }
-    r
+    rc210Data.copy(schedules = r)
   }
 }
 

@@ -19,8 +19,9 @@ package net.wa9nnn.rc210.data.vocabulary
 
 import com.wa9nnn.util.tableui.{Cell, CellProvider, Header, Row, RowSource}
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
-import net.wa9nnn.rc210.{MessageMacroKey, WordKey}
+import net.wa9nnn.rc210.{MemoryExtractor, MessageMacroKey, WordKey}
 import net.wa9nnn.rc210.data.Formats._
+import net.wa9nnn.rc210.data.Rc210Data
 import net.wa9nnn.rc210.model.Node
 
 case class MessageMacroNode(key: MessageMacroKey, words: Seq[WordKey]) extends RowSource with Node with CellProvider {
@@ -47,11 +48,16 @@ object MessageMacroNode {
  * The PHP code calls MessageMacros Phrases; which is probably a better term than MessageMacro but
  * MessageMacro is what's in thre RC-210 programming manual.
  */
-object MessageMacroExtractor {
-
-  def apply(memory: Memory): Seq[MessageMacroNode] = {
+class MessageMacroExtractor extends MemoryExtractor {
+  /**
+   *
+   * @param memory    source of RC-210 data.
+   * @param rc210Data internal to have our data appended to it.
+   * @return the inputted rc210Data with our data inserted into it.
+   */
+  override def apply(memory: Memory, rc210Data: Rc210Data): Rc210Data = {
     val slice = memory(SlicePos("//Phrase - 1576-1975"))
-    slice.data
+    val r = slice.data
       .grouped(10)
       .zipWithIndex
       .map { case (words, k) =>
@@ -59,6 +65,8 @@ object MessageMacroExtractor {
         MessageMacroNode(MessageMacroKey(k), w.map(WordKey))
       }
       .toSeq
+
+    rc210Data.copy(messageMacros = r)
   }
 
 }

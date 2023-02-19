@@ -15,18 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.vocabulary
+package net.wa9nnn.rc210
 
 import net.wa9nnn.rc210.data.Rc210Data
 import net.wa9nnn.rc210.fixtures.WithMemory
 
-class MessageMacroExtractorSpecNode extends WithMemory {
+class DataProviderSpec extends WithMemory {
 
-  "MessageMacroExtractor" should {
-    "apply" in {
-      val messageMacroExtractor = new MessageMacroExtractor()
-      val rc210Data: Rc210Data = messageMacroExtractor(memory, Rc210Data())
-      rc210Data.messageMacros must haveLength(40)
+  "DataProvider" should {
+    val rc210Data: Rc210Data = new DataProvider().rc210Data
+    "rc210Data" in {
+      val triggersForMacro1 = rc210Data.triggers(MacroKey(1))
+      val triggersForMacro3 = rc210Data.triggers(MacroKey(3))
+
+      triggersForMacro1 must haveLength(1)
+      triggersForMacro3 must haveLength(2)
     }
   }
 }
