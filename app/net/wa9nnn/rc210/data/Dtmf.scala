@@ -8,6 +8,7 @@ import play.api.libs.json._
  * @param value consisting of only dtmf digits.
  */
 case class Dtmf(value: String = "") {
+  val enabled: Boolean = value.nonEmpty
   override def toString: String = value
 }
 

@@ -39,7 +39,7 @@ class Flow2Controller @Inject()(implicit val controllerComponents: ControllerCom
 
       val macroNodes: Seq[MacroNode] = rc210Data
         .macros
-        .filter(_.enabled)
+        .filter(_.nodeEnabled)
 
       Ok(views.html.flow(macroNodes))
   }

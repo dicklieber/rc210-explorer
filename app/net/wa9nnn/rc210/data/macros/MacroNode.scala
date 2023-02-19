@@ -1,17 +1,16 @@
 package net.wa9nnn.rc210.data.macros
 
 import com.wa9nnn.util.tableui.{Header, Row, Table}
-import net.wa9nnn.rc210.data.{Dtmf, Rc210Data}
-import net.wa9nnn.rc210.data.Formats._
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
-import net.wa9nnn.rc210.model.Node
+import net.wa9nnn.rc210.data.{Dtmf, Rc210Data}
+import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 import net.wa9nnn.rc210.{FunctionKey, MacroKey}
 
 import java.util.concurrent.atomic.AtomicInteger
 
-case class MacroNode(key: MacroKey, dtmf: Dtmf, functions: Seq[FunctionKey]) extends Node {
-  def enabled: Boolean = functions.nonEmpty
+case class MacroNode(key: MacroKey, dtmf: Dtmf, functions: Seq[FunctionKey]) extends TriggerNode {
+  override def nodeEnabled: Boolean = functions.nonEmpty
 
 
   override def toRow: Row = {
@@ -33,6 +32,11 @@ case class MacroNode(key: MacroKey, dtmf: Dtmf, functions: Seq[FunctionKey]) ext
     })
   }
 
+  override def macroToRun: MacroKey = key
+
+  override def triggerEnabled: Boolean = dtmf.enabled
+
+  override def triggerDescription: String = s"Run on DTMF: $dtmf"
 }
 
 object MacroNode {
@@ -55,28 +59,20 @@ object MacroExtractor {
      * @return the macros with functions, dtmf code
      */
     def macroBuilder(macroSlicePos: SlicePos, memory: Memory, bytesPerMacro: Int) = {
-      val macrosSlice = memory(macroSlicePos)
-      val f: Seq[MacroNode] = macrosSlice.data
+      memory(macroSlicePos).data
         .grouped(bytesPerMacro)
         .map { bytes =>
           val functions: Seq[FunctionKey] = bytes.takeWhile(_ != 0).map(fn => FunctionKey(fn))
           val macroKey = MacroKey(mai.getAndIncrement())
           MacroNode(macroKey, dtmfMacroMap(macroKey), functions)
         }.toSeq
-
-      f
     }
 
     val longMacros: Seq[MacroNode] = macroBuilder(SlicePos("//Macro - 1985-2624"), memory, 16)
     val shortMacros: Seq[MacroNode] = macroBuilder(SlicePos("//ShortMacro - 2825-3174"), memory, 7)
-    //    val extendedMacros: Seq[Macro] = macroBuilder(SlicePos("//Extended Macros 1 - 390 (91 - 105)"), memory, 20) //todo rtc
-    val r: Seq[MacroNode] = longMacros.concat(shortMacros)
-    r
-
+    longMacros.concat(shortMacros)
 
   }
-
-
 }
 
-case class DtmfMacro(value: String, macroKey: MacroKey)
+

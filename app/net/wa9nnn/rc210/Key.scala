@@ -63,5 +63,8 @@ case class ScheduleKey(override val index: Int) extends Key("schedule", index) {
 case class WordKey(override val index: Int) extends Key("word", index) {
   assert(index <= 255, "Words numbers are 0 through 255")
 }
+case class DtmfMacroKey(override val index: Int) extends Key("dtmfMacro", index) {
+//  assert(index <= 255, "Words numbers are 0 through 255")
+}
 
 

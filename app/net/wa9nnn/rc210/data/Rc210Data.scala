@@ -14,12 +14,12 @@ case class Rc210Data(itemValues: Seq[ItemValue],
 
   val enabledTriggers:Seq[TriggerNode] = {
     schedules
-      .filter(_.enabled)
+      .filter(_.nodeEnabled)
   }
   def triggers(macroKey: MacroKey): Seq[TriggerNode] = {
     //todo There are other TriggerNodes
-    schedules
-      .filter(_.enabled)
+    schedules.filter(_.nodeEnabled) ++: macros.filter(_.triggerEnabled)
+      .filter(_.macroToRun == macroKey)
   }
   lazy val messageMacroMap: Map[MessageMacroKey, MessageMacroNode] = messageMacros.map(mm => mm.key -> mm).toMap
 

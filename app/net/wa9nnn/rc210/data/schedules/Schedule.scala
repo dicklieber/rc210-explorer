@@ -1,12 +1,10 @@
 package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.JsonFormatUtils.javaEnumFormat
 import com.wa9nnn.util.tableui.{Header, Row}
-import net.wa9nnn.rc210.model.{TriggerDetail, TriggerNode}
+import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 import net.wa9nnn.rc210.{MacroKey, ScheduleKey}
-import play.api.libs.json.{Format, Json, OFormat}
 
 import java.time.LocalTime
 
@@ -14,7 +12,7 @@ import java.time.LocalTime
  *
  * @param key          e.g "schedule5"
  * @param dayOfWeek    See [[DayOfWeek]]
- * @param weekInMonthm e.g 1 == 1st week in month.
+ * @param weekInMonth e.g 1 == 1st week in month.
  * @param monthOfYear  See [[MonthOfYear]]
  * @param localTime    illegal times are None.
  * @param macroToRun   e.g. "macro42"
@@ -32,7 +30,7 @@ case class Schedule(key: ScheduleKey,
     Row(key.toCell, macroToRun.toCell, dayOfWeek, weekInMonth, monthOfYear, localTime)
   }
 
-  override def enabled: Boolean = localTime.nonEmpty
+  override val nodeEnabled: Boolean = localTime.nonEmpty
 
   override def toString: String = {
     localTime.map{localTime =>
@@ -48,7 +46,11 @@ case class Schedule(key: ScheduleKey,
     Row(key.toCell, this)
   }
 
-  override def triggerDetail: TriggerDetail = TriggerDetail(key, macroToRun, toString)
+
+  override def triggerEnabled: Boolean = nodeEnabled
+
+  override def triggerDescription: String = toString
+
 }
 
 object Schedule {
@@ -63,10 +65,10 @@ object ScheduleExtractor extends LazyLogging {
 
 
     /**
-     * Wxtract one piece of a schedules.
+     * Extract one piece of a schedules.
      *
      * @param php  where in the [[Memory]]
-     * @returns one int for eqch setpoint.
+     * @return one int for each setpoint.
      */
     def collect(php: String): Seq[Int] = {
       memory(SlicePos(php)).data
@@ -98,7 +100,7 @@ object ScheduleExtractor extends LazyLogging {
               LocalTime.of(hour, minute)
             }
           } catch {
-            case e: Exception =>
+            case _: Exception =>
               logger.error(s"setPoint: $setPoint hour: $hour, minute: $minute")
               None
           }
