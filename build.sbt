@@ -46,7 +46,7 @@ libraryDependencies ++= Seq(
   guice, specs2 % Test,
   "net.wa9nnn" %% "util" % "0.1.12-SNAPSHOT",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
-
+  "net.codingwell" %% "scala-guice" % "5.1.0",
   "ch.qos.logback" % "logback-classic" % logbackVersion,
   "ch.qos.logback" % "logback-core" % logbackVersion,
   "commons-io" % "commons-io" % "2.11.0",

@@ -45,8 +45,6 @@ object MacroNode {
 }
 
 object MacroExtractor {
-
-
   def apply(memory: Memory): Seq[MacroNode] = {
     val dtmfMacroMap: DtmfMacros = DtmfMacroExractor(memory)
     val mai = new AtomicInteger(1)
