@@ -8,7 +8,7 @@ class FunctionsSpec extends Specification {
   "Functions" should {
     "load" in {
       val functions = new FunctionsProvider()
-      functions(FunctionKey(1)).toString must beEqualTo ("Function(function1,Port 1 CTCSS Access,None)")
+      functions(FunctionKey(1)).get.toString must beEqualTo ("FunctionNode(function1,Port 1 CTCSS Access,None)")
       functions.size must beEqualTo (872)
 
       val invokedMessageMacros = functions.invokedMessageMacros

@@ -26,7 +26,8 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
     scalacOptions ++= Seq(
       "-feature",
       "-deprecation",
-      "-Xfatal-warnings"
+      "-Xfatal-warnings",
+      "-Ymacro-annotations"
     )
 
   )
@@ -37,6 +38,7 @@ resolvers += ("Reposilite" at "http://194.113.64.105:8080/releases").withAllowIn
 
 val logbackVersion = "1.4.5"
 val specs2Version = "4.19.2"
+val circeVersion = "0.14.1"
 libraryDependencies += specs2 % Test
 
 
@@ -53,7 +55,12 @@ libraryDependencies ++= Seq(
   "com.fazecast" % "jSerialComm" % "[2.0.0,3.0.0)",
   "io.suzaku" %% "boopickle" % "1.4.0",
   "org.fusesource.jansi" % "jansi" % "2.4.0",
-//  "org.scala-lang.modules" %% "scala-xml" % "2.1.0",
+
+  "io.circe" %% "circe-core" % circeVersion,
+  "io.circe" %% "circe-generic" % circeVersion,
+  "io.circe" %% "circe-parser" % circeVersion,
+
+  //  "org.scala-lang.modules" %% "scala-xml" % "2.1.0",
 )
 
 
