@@ -26,7 +26,6 @@ import net.wa9nnn.rc210.serial.{Memory, MemoryArray}
 import java.io.InputStream
 import javax.inject.{Inject, Singleton}
 import scala.util.Using
-
 @Singleton
 class DataProvider @Inject()() {
 
@@ -35,7 +34,6 @@ class DataProvider @Inject()() {
     Using(getClass.getResourceAsStream("/MemFixedtxt.txt")) {
       stream: InputStream =>
         val memory: Memory = MemoryArray(stream).get
-
         val extractors = Seq(
           new MacroExtractor(),
           new ScheduleExtractor(),
