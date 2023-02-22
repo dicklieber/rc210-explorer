@@ -27,6 +27,7 @@ import net.wa9nnn.rc210.serial.{Memory, MemoryArray}
 import java.io.InputStream
 import javax.inject.{Inject, Singleton}
 import scala.util.Using
+
 @Singleton
 class DataProvider @Inject()() {
 
@@ -37,13 +38,16 @@ class DataProvider @Inject()() {
       stream: InputStream =>
         val memory: Memory = MemoryArray(stream).get
 
-        val result: Array[ItemValue] = Command
+        val result: Seq[ItemValue] = Command
           .values()
           .flatMap { command =>
             CommandParser(command, memory)
-          }
-        result.foreach(println(_))
+          }.toIndexedSeq
+        //        result.foreach(println(_))
 
+        val grouped = result
+          .filter(_.key.isDefined)
+          .groupBy(_.key.get.index)
 
 
         val extractors = Seq(
@@ -51,7 +55,7 @@ class DataProvider @Inject()() {
           new ScheduleExtractor(),
           new MessageMacroExtractor()
         )
-        var rc210Data = Rc210Data(itemValues = result.toIndexedSeq)
+        var rc210Data = Rc210Data(itemValues = result)
         extractors.foreach {
           extractor: MemoryExtractor =>
             rc210Data = extractor(memory, rc210Data)
