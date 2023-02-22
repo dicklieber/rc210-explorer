@@ -15,11 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data
+package net.wa9nnn.rc210
 
 import com.wa9nnn.util.JsonFormatUtils.javaEnumFormat
-import net.wa9nnn.rc210._
 import net.wa9nnn.rc210.command._
+import net.wa9nnn.rc210.data.Rc210Data
 import net.wa9nnn.rc210.data.functions.FunctionNode
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.named.{NamedData, NamedKey}
@@ -29,7 +29,7 @@ import play.api.libs.json._
 
 import scala.util.matching.Regex
 
-object Formats {
+object KeyFormats {
 
   implicit val fmtFunction: Format[FunctionNode] = new Format[FunctionNode] {
     override def reads(json: JsValue): JsResult[FunctionNode] = {
@@ -65,10 +65,14 @@ object Formats {
         MacroKey(number)
       case "messageMacro" =>
         MessageMacroKey(number)
+      case "schedule" =>
+        ScheduleKey(number)
       case "function" =>
         FunctionKey(number)
       case "word" =>
         WordKey(number)
+      case "dtmf" =>
+        DtmfMacroKey(number)
     }
   }
 
@@ -88,10 +92,37 @@ object Formats {
   implicit val fmtLocus: Format[Locus] = javaEnumFormat[Locus]
   implicit val fmtValueType: Format[ValueType] = javaEnumFormat[ValueType]
 
-  implicit val fmtMessageMacroKey: OFormat[MessageMacroKey] = Json.format[MessageMacroKey]
 
   implicit val fmtFunctionKey: Format[FunctionKey] = new Format[FunctionKey] {
     def writes(key: FunctionKey): JsValue = {
+      JsString(key.toString)
+    }
+    override def reads(json: JsValue) = {
+      throw new NotImplementedError() //todo
+    }
+  }
+
+
+  implicit val fmtScheduleKey: Format[ScheduleKey] = new Format[ScheduleKey] {
+    def writes(key: ScheduleKey): JsValue = {
+      JsString(key.toString)
+    }
+
+    override def reads(json: JsValue) = {
+      throw new NotImplementedError() //todo
+    }
+  }
+  implicit val fmtMessageMacroKey: Format[MessageMacroKey] = new Format[MessageMacroKey] {
+    def writes(key: MessageMacroKey): JsValue = {
+      JsString(key.toString)
+    }
+
+    override def reads(json: JsValue) = {
+      throw new NotImplementedError() //todo
+    }
+  }
+  implicit val fmtWordKey: Format[WordKey] = new Format[WordKey] {
+    def writes(key: WordKey): JsValue = {
       JsString(key.toString)
     }
 
@@ -101,8 +132,6 @@ object Formats {
   }
 
 
-  implicit val fmtScheduleKey: OFormat[ScheduleKey] = Json.format[ScheduleKey]
-  implicit val fmtWordKey: OFormat[WordKey] = Json.format[WordKey]
 
   implicit val fmtKey: Format[Key] = new Format[Key] {
     override def reads(json: JsValue): JsResult[Key] = {

@@ -17,16 +17,15 @@
 
 package net.wa9nnn.rc210.data.vocabulary
 
-import com.wa9nnn.util.tableui.{Cell, CellProvider, Header, Row, RowSource}
-import net.wa9nnn.rc210.serial.{Memory, SlicePos}
-import net.wa9nnn.rc210.{MemoryExtractor, MessageMacroKey, WordKey}
-import net.wa9nnn.rc210.data.Formats._
+import com.wa9nnn.util.tableui._
 import net.wa9nnn.rc210.data.Rc210Data
 import net.wa9nnn.rc210.model.Node
+import net.wa9nnn.rc210.serial.{Memory, SlicePos}
+import net.wa9nnn.rc210.{MemoryExtractor, MessageMacroKey, WordKey}
 
 case class MessageMacroNode(key: MessageMacroKey, words: Seq[WordKey]) extends RowSource with Node with CellProvider {
   override def toRow: Row = {
-    Row(key.toCell, words.map(Vocabulary(_)).mkString(" "))
+    Row(key.toCell, toCell)
   }
 
   override def toCell: Cell =
@@ -34,8 +33,6 @@ case class MessageMacroNode(key: MessageMacroKey, words: Seq[WordKey]) extends R
       val phrase: Phrase = Vocabulary(wordKey)
       phrase.string
     }.mkString(" "))
-      .withToolTip(key.toString)
-      .withCssClass(key.kind)
 }
 
 object MessageMacroNode {

@@ -17,26 +17,23 @@
 
 package net.wa9nnn.rc210.data.duration
 
-import io.circe
-import io.circe.Json
-import io.circe.generic.JsonCodec
-import io.circe.parser.decode
-import io.circe.syntax.EncoderOps
 import net.wa9nnn.rc210.fixtures.WithMemory
-
+import play.api.libs.json.{JsValue, Json, OFormat}
+import net.wa9nnn.rc210.data.duration.RcDurationFormats._
 class RCDurationSpec extends WithMemory {
 
   "RCDurationSpec" should {
     "duration" in {
 
-      @JsonCodec
       case class Things(i: Int, seconds: Seconds, minutes:Minutes, tenthSeconds: TenthSeconds, milliseconds: Milliseconds)
+      implicit val fmtThings: OFormat[Things] = Json.format[Things]
 
-      val thing = Things(123, Seconds("12"), Minutes("5"), TenthSeconds(1), Milliseconds(1000))
-      val thingJson: Json = thing.asJson
+      val things = Things(123, Seconds("12"), Minutes("5"), TenthSeconds(1), Milliseconds(1000))
+      val json: JsValue = Json.toJson(things)
 
 
-      val sThingJson: String = thingJson.toString
+      val sThingJson: String = json.toString
+
       sThingJson must beEqualTo("""{
                                   |  "i" : 123,
                                   |  "seconds" : "PT12S",
@@ -44,8 +41,9 @@ class RCDurationSpec extends WithMemory {
                                   |  "tenthSeconds" : "PT0.1S",
                                   |  "milliseconds" : "PT1S"
                                   |}""".stripMargin)
-      val thEither: Either[circe.Error, Things] = decode[Things](sThingJson)
-      thEither must beRight(thing)
+
+      val th: Things = Json.parse(sThingJson).as[Things]
+      th must beEqualTo (th)
     }
   }
 }

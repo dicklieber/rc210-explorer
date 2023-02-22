@@ -4,7 +4,7 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
 import net.wa9nnn.rc210.{FunctionKey, Key, MacroKey, MessageMacroKey}
 import play.api.libs.json._
-import net.wa9nnn.rc210.data.Formats._
+import net.wa9nnn.rc210.KeyFormats._
 import net.wa9nnn.rc210.data.Rc210Data
 
 import java.io.InputStream
@@ -60,13 +60,13 @@ case class FunctionNode(key: FunctionKey, description: String, destination: Opti
   override def compare(that: FunctionNode): Int = description compareTo that.description
 
   override def toRow: Row = {
-    Row(key.toCell, destination, destination)
+    Row(key.toCell, description, destination)
   }
 }
 
 
 object FunctionNode {
-  def header(count: Int): Header = Header(s"Functions ($count)", "Description")
+  def header(count:Int): Header = Header(s"Functions ($count)", "Key", "Description")
 }
 
 

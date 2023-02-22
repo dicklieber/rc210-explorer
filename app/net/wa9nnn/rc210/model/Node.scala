@@ -1,7 +1,7 @@
 package net.wa9nnn.rc210.model
 
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
-import net.wa9nnn.rc210.data.Formats._
+import net.wa9nnn.rc210.KeyFormats._
 import net.wa9nnn.rc210.{Key, MacroKey}
 
 trait Node extends RowSource {

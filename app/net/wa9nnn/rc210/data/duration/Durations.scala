@@ -18,11 +18,8 @@
 package net.wa9nnn.rc210.data.duration
 
 
-import io.circe
-import io.circe.generic.JsonCodec
-import io.circe.parser.decode
-import io.circe.syntax.EncoderOps
-import io.circe.{Decoder, Encoder, HCursor, Json}
+
+import play.api.libs.json.{Json, OFormat}
 
 import java.time.Duration
 
@@ -57,17 +54,7 @@ object Minutes {
     new Minutes(Duration.ofMinutes(minutes.toLong))
   }
 
-  implicit val encodeSeconds: Encoder[Minutes] = new Encoder[Minutes] {
-    final def apply(a: Minutes): Json = Json.fromString(
-      a.duration.toString
-    )
-  }
 
-  implicit val decodeSeconds: Decoder[Minutes] = new Decoder[Minutes] {
-    final def apply(c: HCursor): Decoder.Result[Minutes] = {
-      Right(new Minutes(Duration.parse(c.value.asString.get)))
-    }
-  }
 }
 
 case class Seconds(duration: Duration) extends RCDuration {
@@ -82,18 +69,6 @@ case class Seconds(duration: Duration) extends RCDuration {
 object Seconds {
   def apply(seconds: String): Seconds = {
     new Seconds(Duration.ofSeconds(seconds.toLong))
-  }
-
-  implicit val encodeSeconds: Encoder[Seconds] = new Encoder[Seconds] {
-    final def apply(a: Seconds): Json = Json.fromString(
-      a.duration.toString
-    )
-  }
-
-  implicit val decodeSeconds: Decoder[Seconds] = new Decoder[Seconds] {
-    final def apply(c: HCursor): Decoder.Result[Seconds] = {
-      Right(new Seconds(Duration.parse(c.value.asString.get)))
-    }
   }
 }
 
@@ -111,13 +86,6 @@ object TenthSeconds {
 
   def apply(tenths: String): TenthSeconds = new TenthSeconds(Duration.ofMillis(tenths.toInt * 100))
 
-  implicit val encodeSeconds: Encoder[TenthSeconds] = (a: TenthSeconds) => Json.fromString(
-    a.duration.toString
-  )
-
-  implicit val decodeSeconds: Decoder[TenthSeconds] = (c: HCursor) => {
-    Right(TenthSeconds(Duration.parse(c.value.asString.get)))
-  }
 }
 
 case class Milliseconds(duration: Duration) extends RCDuration {
@@ -132,37 +100,36 @@ object Milliseconds {
   def apply(millis: Int): Milliseconds = new Milliseconds(Duration.ofMillis(millis))
 
   def apply(tenths: String): Milliseconds = new Milliseconds(Duration.ofMillis(tenths.toLong))
+}
 
-  implicit val encodeSeconds: Encoder[Milliseconds] = (a: Milliseconds) => Json.fromString(
-    a.duration.toString
-  )
-
-  implicit val decodeSeconds: Decoder[Milliseconds] = (c: HCursor) => {
-    Right(Milliseconds(Duration.parse(c.value.asString.get)))
-  }
+object RcDurationFormats {
+  implicit val fmtMinutes: OFormat[Minutes] = Json.format[Minutes]
+  implicit val fmtSeconds: OFormat[Seconds] = Json.format[Seconds]
+  implicit val fmtTenthSeconds: OFormat[TenthSeconds] = Json.format[TenthSeconds]
+  implicit val fmtMilliseconds: OFormat[Milliseconds] = Json.format[Milliseconds]
 }
 
 
-object DurationPlayPen extends App {
-
-  @JsonCodec
-  case class Things(i: Int, seconds: Seconds)
-
-  val thing = Things(123, Seconds("12"))
-  private val thingJson: Json = thing.asJson
-
-  println(s"thingJson $thingJson")
-
-  private val sThingJson: String = thingJson.toString
-  private val thEither: Either[circe.Error, Things] = decode[Things](sThingJson)
-  thEither match {
-    case Left(error) =>
-      error.printStackTrace()
-
-    case Right(th) =>
-      println(s"backAgain: $th")
-
-  }
-
-
-}
+//object DurationPlayPen extends App {
+//
+//  @JsonCodec
+//  case class Things(i: Int, seconds: Seconds)
+//
+//  val thing = Things(123, Seconds("12"))
+//  private val thingJson: Json = thing.asJson
+//
+//  println(s"thingJson $thingJson")
+//
+//  private val sThingJson: String = thingJson.toString
+//  private val thEither: Either[circe.Error, Things] = decode[Things](sThingJson)
+//  thEither match {
+//    case Left(error) =>
+//      error.printStackTrace()
+//
+//    case Right(th) =>
+//      println(s"backAgain: $th")
+//
+//  }
+//
+//
+//}

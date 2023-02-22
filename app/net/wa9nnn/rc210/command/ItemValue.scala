@@ -20,7 +20,7 @@ package net.wa9nnn.rc210.command
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
 import net.wa9nnn.rc210.command.ItemValue.Values
 import net.wa9nnn.rc210.{Key, PortKey}
-import net.wa9nnn.rc210.data.Formats._
+import net.wa9nnn.rc210.KeyFormats._
 
 import scala.util.{Failure, Success, Try}
 

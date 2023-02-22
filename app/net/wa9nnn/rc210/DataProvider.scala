@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210
 
+import net.wa9nnn.rc210.command.{Command, CommandParser, ItemValue}
 import net.wa9nnn.rc210.data.Rc210Data
 import net.wa9nnn.rc210.data.macros.MacroExtractor
 import net.wa9nnn.rc210.data.schedules.ScheduleExtractor
@@ -31,15 +32,26 @@ class DataProvider @Inject()() {
 
   val rc210Data: Rc210Data = {
 
+
     Using(getClass.getResourceAsStream("/MemFixedtxt.txt")) {
       stream: InputStream =>
         val memory: Memory = MemoryArray(stream).get
+
+        val result: Array[ItemValue] = Command
+          .values()
+          .flatMap { command =>
+            CommandParser(command, memory)
+          }
+        result.foreach(println(_))
+
+
+
         val extractors = Seq(
           new MacroExtractor(),
           new ScheduleExtractor(),
           new MessageMacroExtractor()
         )
-        var rc210Data = Rc210Data()
+        var rc210Data = Rc210Data(itemValues = result.toIndexedSeq)
         extractors.foreach {
           extractor: MemoryExtractor =>
             rc210Data = extractor(memory, rc210Data)

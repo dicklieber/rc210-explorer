@@ -21,7 +21,7 @@ import com.fasterxml.jackson.module.scala.deser.overrides.TrieMap
 import com.typesafe.config.Config
 import net.wa9nnn.rc210.Key
 import play.api.libs.json.Json
-import net.wa9nnn.rc210.data.Formats._
+import net.wa9nnn.rc210.KeyFormats._
 import java.nio.file.{Files, Paths}
 import javax.inject.{Inject, Singleton}
 import scala.collection.mutable

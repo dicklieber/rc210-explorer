@@ -19,7 +19,7 @@ package net.wa9nnn.rc210
 
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
 import play.api.libs.json._
-import net.wa9nnn.rc210.data.Formats._
+import KeyFormats._
 
 
 import scala.util.matching.Regex
