@@ -17,11 +17,11 @@
 
 package net.wa9nnn.rc210.data
 
-import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.{Key, PortKey}
 
 class MappedValuesSeq(val name:String, slotCount:Int) {
   val slots: IndexedSeq[MappedValues] = for (_ <- 0 to slotCount) yield {
-    new MappedValues()
+    new MappedValues(PortKey(2))
   }
 
   def setup(parsedValue: ParsedValue, fieldMetadata: FieldMetadata):Unit = {
@@ -29,6 +29,6 @@ class MappedValuesSeq(val name:String, slotCount:Int) {
     assert(maybeKey.isDefined, "Must have a key for a MappedValuesSeq!")
     val mappedValues = slots(maybeKey.get.index)
 
-    mappedValues.setupField(parsedValue.fieldKey.name, fieldMetadata, parsedValue.value)
+//    mappedValues.setupField(parsedValue.fieldKey.name, fieldMetadata, parsedValue.value)
   }
 }

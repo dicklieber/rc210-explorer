@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data
 
 import net.wa9nnn.rc210.{Key, KeyFormats}
+import play.api.libs.json.{Json, OFormat}
 
 import scala.util.matching.Regex
 
@@ -57,5 +58,6 @@ object FieldKey {
  * @param command to be sent to an RC-210.
  */
 case class FieldMetadata(name: String, command: String)
+
 
 case class ParsedValue(fieldKey: FieldKey, value: String)

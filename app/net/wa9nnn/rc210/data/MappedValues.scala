@@ -18,18 +18,21 @@
 package net.wa9nnn.rc210.data
 
 import com.fasterxml.jackson.module.scala.deser.overrides.TrieMap
+import net.wa9nnn.rc210.Key
 import play.api.data.Field
+import play.api.libs.json.{JsArray, JsObject, JsValue, Json, OFormat}
 
 /**
  * Maintains a collection of field values and metadata.
  */
-class MappedValues {
+class MappedValues(val key: Key) {
+  private val map = new TrieMap[String, FieldContainer]
+
   def acceptCandidate(fieldName: String): Unit = {
     val container = map(fieldName)
-    container.acceptCandidate()
+    map.put(fieldName, container.acceptCandidate())
   }
 
-  private val map = new TrieMap[String, FieldContainer]
 
   def container(key: String): FieldContainer = map(key)
 
@@ -40,63 +43,107 @@ class MappedValues {
    * @param value         it's initial value
    * @param fieldMetadata fixed stuff we know about the field.
    */
-  def setupField(fieldName: String, fieldMetadata: FieldMetadata, initialValue:String): Unit = {
+  def setupField(fieldMetadata: FieldMetadata, initialValue: String): Unit = {
+    val fieldName = fieldMetadata.name
     assert(!map.contains(fieldName), s"Map already has a container for key: $fieldName")
-    val container = new FieldContainer(fieldMetadata, initialValue)
+    val container = FieldContainer(fieldMetadata, initialValue)
     map.put(fieldName, container)
   }
 
+  /**
+   * set a new candidate.
+   *
+   * @param key
+   * @param value
+   */
   def update(key: String, value: String): Unit = {
     val container = map.getOrElse(key, throw new IllegalStateException(s"Field for key: $key has not been setup, must invoke setupField first!"))
-    container.updateCandidate(value)
-  }
-}
-
-/**
- * Holds information abiuyt a field.
- *
- * @param fieldMetadata immutable stuff that's known about a field.n
- * @param initialValue  what we start with.
- */
-class FieldContainer(val fieldMetadata: FieldMetadata, initialValue: String) {
-  def value: String = fieldState.value
-
-  private var fieldState: FieldState = FieldState(initialValue)
-
-  def toField: Field = {
-    //todo probably cant make this here.
-    throw new NotImplementedError() //todo
+    map.put(key, container.updateCandidate(value))
   }
 
-  def updateCandidate(value: String): Unit = {
-    fieldState = fieldState.setCandidate(value)
+  def toJson: JsArray = {
+    import FieldContainer._
+    import play.api.libs.json._
+
+    Json.arr(
+      map.values
+    )
   }
-
-  def candidate: Option[String] = fieldState.candidate
-
-  def acceptCandidate(): Unit = {
-    fieldState = fieldState.acceptCandidate()
-  }
-
-  def state: FieldState = fieldState
-
 
 }
 
+object MappedValues {
+  implicit val fmtMappedValues: OFormat[MappedValues] = new OFormat[MappedValues] {
 
-/**
- * Mutable
- *
- * @param value current value.
- */
-case class FieldState(value: String, candidate: Option[String] = None) {
+    import net.wa9nnn.rc210.KeyFormats._
 
-  def setCandidate(value: String): FieldState = copy(candidate = Option(value))
+    override def writes(o: MappedValues) = {
+      Json.obj(
+        "key" -> o.key,
+        "values" -> Json.arr(o.map.values)
+      )
+    }
 
-  def acceptCandidate(): FieldState = {
-    assert(candidate.nonEmpty, "No candidate to accept!")
-    FieldState(candidate.get)
+      override def reads(json: JsValue) = {
+        throw new NotImplementedError() //todo
+      }
+    }
+
   }
 
-  def isDirty: Boolean = candidate.nonEmpty
-}
+  /**
+   * Holds information abiuyt a field.
+   *
+   * @param metadata    immutable stuff that's known about a field.n
+   * @param fieldState  what we start with.
+   */
+  case class FieldContainer(val metadata: FieldMetadata, fieldState: FieldState) {
+    val value: String = fieldState.value
+
+    //  private var fieldState: FieldState = FieldState(initialValue)
+
+    def toField: Field = {
+      //todo probably cant make this here.
+      throw new NotImplementedError() //todo
+    }
+
+    def updateCandidate(value: String): FieldContainer = {
+      copy(fieldState = fieldState.setCandidate(value))
+    }
+
+    def candidate: Option[String] = fieldState.candidate
+
+    def acceptCandidate(): FieldContainer = {
+      copy(fieldState = fieldState.acceptCandidate())
+    }
+
+    def state: FieldState = fieldState
+  }
+
+  object FieldContainer {
+    def apply(fieldMetadata: FieldMetadata, initialValue: String): FieldContainer = new FieldContainer(fieldMetadata, FieldState(initialValue))
+
+    implicit val fmtFieldState: OFormat[FieldState] = Json.format[FieldState]
+    implicit val fmtFieldMetadata: OFormat[FieldMetadata] = Json.format[FieldMetadata]
+    implicit val fmtFieldContainer: OFormat[FieldContainer] = Json.format[FieldContainer]
+
+
+  }
+
+
+  /**
+   * Mutable
+   *
+   * @param value current value.
+   */
+  case class FieldState(value: String, candidate: Option[String] = None) {
+
+    def setCandidate(value: String): FieldState = copy(candidate = Option(value))
+
+    def acceptCandidate(): FieldState = {
+      assert(candidate.nonEmpty, "No candidate to accept!")
+      FieldState(candidate.get)
+    }
+
+    def isDirty: Boolean = candidate.nonEmpty
+  }

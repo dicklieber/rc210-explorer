@@ -19,15 +19,17 @@ package net.wa9nnn.rc210.data
 
 import net.wa9nnn.rc210.PortKey
 import org.specs2.mutable.Specification
+import play.api.libs.json.Json
 
 class MappedValuesSpec extends Specification {
   "MappedValues" >> {
+    val fieldName = "fieldA"
+    val fieldMetadataA = FieldMetadata(fieldName, "8300")
+    val initialValue = "-initial-"
+
     "Happy Path" >> {
-      val fieldName = "fieldA"
-      val metadata = FieldMetadata("aField", "8300")
-      val initialValue = "-initial-"
-      val mappedValues = new MappedValues()
-      mappedValues.setupField(fieldName, metadata, initialValue)
+       val mappedValues = new MappedValues(PortKey(2))
+      mappedValues.setupField( fieldMetadataA, initialValue)
 
       val fieldContainer: FieldContainer = mappedValues.container(fieldName)
       fieldContainer.value must beEqualTo(initialValue)
@@ -44,6 +46,33 @@ class MappedValuesSpec extends Specification {
       val fieldStateAccepted: FieldState = mappedValues.container(fieldName).state
       fieldStateAccepted.value must beEqualTo(value2)
       fieldStateAccepted.candidate must beNone
+    }
+    "toJson" >> {
+      val mappedValues = new MappedValues((PortKey(2)))
+      mappedValues.setupField(fieldMetadataA, initialValue)
+      mappedValues.setupField(FieldMetadata("field2", "1234"), "xyzzy")
+      val json = Json.toJson(mappedValues)
+      val sJson = Json.prettyPrint(json)
+sJson must beEqualTo ("""{
+                        |  "key" : "port2",
+                        |  "values" : [ [ {
+                        |    "metadata" : {
+                        |      "name" : "field2",
+                        |      "command" : "1234"
+                        |    },
+                        |    "fieldState" : {
+                        |      "value" : "xyzzy"
+                        |    }
+                        |  }, {
+                        |    "metadata" : {
+                        |      "name" : "fieldA",
+                        |      "command" : "8300"
+                        |    },
+                        |    "fieldState" : {
+                        |      "value" : "-initial-"
+                        |    }
+                        |  } ] ]
+                        |}""".stripMargin)
     }
   }
 }

@@ -17,10 +17,12 @@
 
 package net.wa9nnn.rc210.data
 
+import net.wa9nnn.rc210.PortKey
+
 class DataStore {
   val ports = new MappedValuesSeq("Ports", 3)
   val schedules = new MappedValuesSeq("Schedules", 40)
-  val nonSeqedFields = new MappedValues()
+  val nonSeqedFields = new MappedValues(PortKey(2))
 
   def setup(parsedValue: ParsedValue, fieldMetadata: FieldMetadata): Unit = {
 /*
