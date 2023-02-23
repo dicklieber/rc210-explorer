@@ -74,6 +74,8 @@ object KeyFormats {
         WordKey(number)
       case "dtmf" =>
         DtmfMacroKey(number)
+      case "misc" =>
+        MiscKey()
     }
   }
 
@@ -133,6 +135,16 @@ object KeyFormats {
     }
   }
 
+//  implicit val fmtWordKey: Format[MiscKey] = new Format[MiscKey] {
+//    def writes(key: MiscKey): JsValue = {
+//      JsString(key.toString)
+//    }
+//
+//    override def reads(json: JsValue) = {
+//      throw new NotImplementedError() //todo
+//    }
+//  }
+
 
   implicit val fmtKey: Format[Key] = new Format[Key] {
     override def reads(json: JsValue): JsResult[Key] = {
@@ -151,6 +163,7 @@ object KeyFormats {
     buildKey(kind, number.toInt)
   }
 
+/*
   private def keyConetwmmon(json: JsValue) = {
     try {
       val key = parseString(json.as[String])
@@ -160,6 +173,7 @@ object KeyFormats {
       case e: IllegalArgumentException => JsError(e.getMessage)
     }
   }
+*/
 
   implicit val fmtItemValue: OFormat[ItemValue] = Json.format[ItemValue]
 

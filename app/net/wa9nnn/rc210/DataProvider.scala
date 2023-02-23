@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210
 
 import net.wa9nnn.rc210.command.{Command, CommandParser, ItemValue}
-import net.wa9nnn.rc210.data.Rc210Data
+import net.wa9nnn.rc210.data.{FieldKey, FieldMetadata, Rc210Data}
 import net.wa9nnn.rc210.data.macros.MacroExtractor
 import net.wa9nnn.rc210.data.schedules.ScheduleExtractor
 import net.wa9nnn.rc210.data.vocabulary.MessageMacroExtractor
@@ -38,16 +38,22 @@ class DataProvider @Inject()() {
       stream: InputStream =>
         val memory: Memory = MemoryArray(stream).get
 
-        val result: Seq[ItemValue] = Command
+
+        val itemValues: Array[ItemValue] = Command
           .values()
           .flatMap { command =>
             CommandParser(command, memory)
-          }.toIndexedSeq
-        //        result.foreach(println(_))
+          }
+        var rc210Data = Rc210Data(itemValues)
 
-        val grouped = result
-          .filter(_.key.isDefined)
-          .groupBy(_.key.get.number)
+        val mappedValues = rc210Data.mappedValues
+        itemValues.foreach{itemValue =>
+
+          val fieldKey = FieldKey(itemValue.commandId.name(), itemValue.key)
+          val metadata = FieldMetadata(fieldKey, itemValue.commandId.getBase)
+
+          mappedValues.setupField(metadata,itemValue.head )
+        }
 
 
         val extractors = Seq(
@@ -55,7 +61,6 @@ class DataProvider @Inject()() {
           new ScheduleExtractor(),
           new MessageMacroExtractor()
         )
-        var rc210Data = Rc210Data(itemValues = result)
         extractors.foreach {
           extractor: MemoryExtractor =>
             rc210Data = extractor(memory, rc210Data)

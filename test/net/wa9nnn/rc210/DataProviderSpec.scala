@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210
 
 import net.wa9nnn.rc210.data.Rc210Data
+import net.wa9nnn.rc210.data.mapped.FieldContainer
 import net.wa9nnn.rc210.fixtures.WithMemory
 
 class DataProviderSpec extends WithMemory {
@@ -31,5 +32,22 @@ class DataProviderSpec extends WithMemory {
       triggersForMacro1 must haveLength(1)
       triggersForMacro3 must haveLength(2)
     }
+
+    "port keys" >> {
+      val fieldsForPort: Seq[FieldContainer] = rc210Data.mappedValues.fieldsForKey(PortKey(1))
+      fieldsForPort.foreach(container =>
+      println(container)
+      )
+      fieldsForPort must haveLength(26)
+    }
+
+    "Known keys" >> {
+      val knownKeys = rc210Data.mappedValues.knownKeys
+      knownKeys.foreach{k =>
+        println(k)
+      }
+      pending
+    }
+
   }
 }

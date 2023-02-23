@@ -29,12 +29,19 @@ import scala.util.matching.Regex
  * @param kind   e.g. port, schedule, macro.
  * @param number 1 to N
  */
-sealed abstract class Key(val kind: String, val number: Int) extends CellProvider {
+sealed abstract class Key(val kind: String, val number: Int) extends CellProvider with Ordered[Key] {
   val index: Int = number - 1
 
   override def toString: String = s"$kind$number"
 
   override def toCell: Cell = Cell(toString).withCssClass(kind)
+
+  override def compare(that: Key): Int = {
+    var ret = kind compareTo(that.kind)
+    if (ret == 0)
+      ret = number compareTo that.number
+    ret
+  }
 
 }
 
@@ -69,6 +76,9 @@ case class WordKey(override val number: Int) extends Key("word", number) {
 
 case class DtmfMacroKey(override val number: Int) extends Key("dtmfMacro", number) {
   //  assert(index <= 255, "Words numbers are 0 through 255")
+}
+
+case class MiscKey() extends Key("misc", 0) {
 }
 
 

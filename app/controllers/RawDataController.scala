@@ -53,7 +53,7 @@ class RawDataController @Inject()(val controllerComponents: ControllerComponents
   def items(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
 
     val itemValues = dataProvider.rc210Data.itemValues
-        val schedulesTable = Table(ItemValue.header(itemValues.length), itemValues.map(_.toRow))
+        val schedulesTable = Table(ItemValue.header(itemValues.length), itemValues.toIndexedSeq.map(_.toRow))
         Ok(views.html.dat(Seq(schedulesTable)))
   }
 

@@ -19,8 +19,7 @@ package net.wa9nnn.rc210.command
 
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
 import net.wa9nnn.rc210.command.ItemValue.Values
-import net.wa9nnn.rc210.{Key, PortKey}
-import net.wa9nnn.rc210.KeyFormats._
+import net.wa9nnn.rc210.{Key, MiscKey, PortKey}
 
 import scala.util.{Failure, Success, Try}
 
@@ -28,21 +27,20 @@ import scala.util.{Failure, Success, Try}
  *
  * @param values                 as parsed or inputted.
  * @param key                    used when there is more than one [[ItemValue]].
- * @param maybeMessage           if there was an error porsing or from processing the form value. This can be localized.
+ * @param maybeMessage           if there was an error parsing or from processing the form value. This can be localized.
  */
-case class ItemValue(commandId: Command, values: Values, key: Option[Key] = None, maybeMessage: Option[L10NMessage] = None) extends Ordered[ItemValue] with RowSource{
+case class ItemValue(commandId: Command, values: Values, key:Key = MiscKey(), maybeMessage: Option[L10NMessage] = None) extends Ordered[ItemValue] with RowSource{
 
   def head: String = values.headOption.getOrElse("?")
 
-  def withKey(key: Key): ItemValue = copy(key = Option(key))
-  def withPort(number:Int): ItemValue = copy(key = Option(PortKey(number)))
+  def withKey(key: Key): ItemValue = copy(key = key)
+  def withPort(number:Int): ItemValue = copy(key = PortKey(number))
 
   def withError(l10NMessage: L10NMessage): ItemValue = copy(maybeMessage = Option(l10NMessage))
 
   override def toString: String = {
-    val sVIn = key.map(p => s" vIndex: $p").getOrElse("")
-    val sError = maybeMessage.map(e => s" error: $maybeMessage").getOrElse("")
-    s"commandId: $commandId value: ${values.mkString(", ")}$sVIn$sError)"
+//    val sError = maybeMessage.map(e => s" error: $maybeMessage").getOrElse("")
+    s"commandId: $commandId  key:$key value: ${values.mkString(", ")}"
   }
 
   override def compare(that: ItemValue): Int = commandId compareTo that.commandId

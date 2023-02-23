@@ -3,12 +3,14 @@ package net.wa9nnn.rc210.data
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.command.ItemValue
 import net.wa9nnn.rc210.data.macros.MacroNode
+import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.schedules.Schedule
 import net.wa9nnn.rc210.data.vocabulary.MessageMacroNode
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.{MacroKey, MessageMacroKey}
 
-case class Rc210Data(itemValues: Seq[ItemValue] = Seq.empty,
+case class Rc210Data(itemValues: Array[ItemValue] = Array.empty,
+                      mappedValues:MappedValues = new MappedValues,
                      macros: Seq[MacroNode] = Seq.empty,
                      schedules: Seq[Schedule] = Seq.empty,
                      messageMacros: Seq[MessageMacroNode] = Seq.empty) extends LazyLogging {

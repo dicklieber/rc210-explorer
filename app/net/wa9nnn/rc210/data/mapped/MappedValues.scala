@@ -50,6 +50,7 @@ class MappedValues() {
       .map { fieldKey => fieldKey.key }
       .toSet
       .toSeq
+      .sorted
   }
 
   def acceptCandidate(fieldKey: FieldKey): Unit = {
