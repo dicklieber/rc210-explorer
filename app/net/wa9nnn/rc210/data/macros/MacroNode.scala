@@ -18,7 +18,7 @@ case class MacroNode(key: MacroKey, dtmf: Dtmf, functions: Seq[FunctionKey]) ext
   override def toRow: Row = {
     val sFunctionString = functions
       .map { fk =>
-        fk.index
+        fk.number
       }.mkString(" ")
     Row(key.toCell, dtmf, sFunctionString)
       .withId(key.toString)

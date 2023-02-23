@@ -9,8 +9,8 @@ class DtmfMacroExractorSpecNode extends WithMemory {
     "apply" in {
       val dtmfMacros: DtmfMacros = DtmfMacroExractor(memory)
       val ordered = dtmfMacros.ordered
-      ordered.head.index must beEqualTo (1)
-      ordered.last.index must beEqualTo (90)
+      ordered.head.number must beEqualTo (1)
+      ordered.last.number must beEqualTo (90)
     }
   }
 }

@@ -26,45 +26,49 @@ import scala.util.matching.Regex
 
 /**
  *
- * @param kind  e.g. port, schedule, macro.
- * @param index 1 to N
+ * @param kind   e.g. port, schedule, macro.
+ * @param number 1 to N
  */
-sealed abstract class Key(val kind: String, val index: Int) extends CellProvider{
-  override def toString: String = s"$kind$index"
+sealed abstract class Key(val kind: String, val number: Int) extends CellProvider {
+  val index: Int = number - 1
+
+  override def toString: String = s"$kind$number"
 
   override def toCell: Cell = Cell(toString).withCssClass(kind)
 
 }
 
-case class PortKey(override val index: Int) extends Key("port", index) {
-  assert(index <= 3, "Port numbers are 1 through 3")
+case class PortKey(override val number: Int) extends Key("port", number) {
+  assert(number <= 3, "Port numbers are 1 through 3")
 }
 
-case class AlarmKey(override val index: Int) extends Key("alarm", index) {
-  assert(index <= 5, "Alarm numbers are 1 through 5")
+case class AlarmKey(override val number: Int) extends Key("alarm", number) {
+  assert(number <= 5, "Alarm numbers are 1 through 5")
 }
 
-case class MacroKey(override val index: Int) extends Key("macro", index) {
-  assert(index <= 105, s"Macro numbers are 1 through 105, can't do $index")
+case class MacroKey(override val number: Int) extends Key("macro", number) {
+  assert(number <= 105, s"Macro numbers are 1 through 105, can't do $number")
 }
 
 
-case class MessageMacroKey(override val index: Int) extends Key("messageMacro", index) {
-  assert(index <= 90, "MessageMacro numbers are 1 through 70")
+case class MessageMacroKey(override val number: Int) extends Key("messageMacro", number) {
+  assert(number <= 90, "MessageMacro numbers are 1 through 70")
 }
 
-case class FunctionKey(override val index: Int) extends Key("function", index) {
-  assert(index <= 1005, "Function numbers are 1 through 1005 ")
+case class FunctionKey(override val number: Int) extends Key("function", number) {
+  assert(number <= 1005, "Function numbers are 1 through 1005 ")
 }
 
-case class ScheduleKey(override val index: Int) extends Key("schedule", index) {
-  assert(index <= 40, "Schedule numbers are 1 through 40")
+case class ScheduleKey(override val number: Int) extends Key("schedule", number) {
+  assert(number <= 40, "Schedule numbers are 1 through 40")
 }
-case class WordKey(override val index: Int) extends Key("word", index) {
-  assert(index <= 255, "Words numbers are 0 through 255")
+
+case class WordKey(override val number: Int) extends Key("word", number) {
+  assert(number <= 255, "Words numbers are 0 through 255")
 }
-case class DtmfMacroKey(override val index: Int) extends Key("dtmfMacro", index) {
-//  assert(index <= 255, "Words numbers are 0 through 255")
+
+case class DtmfMacroKey(override val number: Int) extends Key("dtmfMacro", number) {
+  //  assert(index <= 255, "Words numbers are 0 through 255")
 }
 
 

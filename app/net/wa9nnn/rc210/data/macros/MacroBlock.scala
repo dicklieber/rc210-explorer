@@ -107,7 +107,7 @@ object MacroBlock {
         TableInACell(table)
           .withRowSpan(functions.length)
           .withCssClass("flowMacroBottom flowMacroLeft flowMacroTop")
-          .withToolTip(s"Macro Command ${macroKey.index}")
+          .withToolTip(s"Macro Command ${macroKey.number}")
 
       }
 

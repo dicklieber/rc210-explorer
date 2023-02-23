@@ -135,7 +135,7 @@ object KeyFormats {
 
   implicit val fmtKey: Format[Key] = new Format[Key] {
     override def reads(json: JsValue): JsResult[Key] = {
-      keyCommon(json)
+      throw new NotImplementedError() //todo
     }
 
     override def writes(key: Key): JsValue = {
@@ -143,10 +143,14 @@ object KeyFormats {
     }
   }
 
-  private def keyCommon(json: JsValue) = {
+  def parseString(string:String):Key = {
+    val r(kind, number) = string
+    buildKey(kind, number.toInt)
+  }
+  private def keyConetwmmon(json: JsValue) = {
     try {
-      val r(kind, number) = json.as[String]
-      JsSuccess(buildKey(kind, number.toInt))
+      val key = parseString(json.as[String])
+      JsSuccess(key)
     }
     catch {
       case e: IllegalArgumentException => JsError(e.getMessage)

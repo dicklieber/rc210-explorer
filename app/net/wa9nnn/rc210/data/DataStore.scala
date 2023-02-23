@@ -15,23 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.vocabulary
+package net.wa9nnn.rc210.data
 
-import net.wa9nnn.rc210.WordKey
-import org.specs2.mutable.Specification
+class DataStore {
+  val ports = new MappedValuesSeq("Ports", 3)
+  val schedules = new MappedValuesSeq("Schedules", 40)
+  val nonSeqedFields = new MappedValues()
 
-class VocabularySpec extends Specification {
-  "Vocabulary" should {
+  def setup(parsedValue: ParsedValue, fieldMetadata: FieldMetadata): Unit = {
+/*
+    if (parsedValue.fieldKey.key.isDefined) {
 
-    "byText" in {
-      Vocabulary("Zero") must beEqualTo (Phrase(WordKey(0), "Zero"))
-      val phrase = Vocabulary("DVR10")
-      phrase.wordKey.number must beEqualTo (245)
-      phrase.string must beEqualTo ("DVR10")
-    }
-
-    "byNumber" in {
-      Vocabulary(WordKey(0)).string must beEqualTo ("Zero")
-    }
+    } else
+      nonSeqedFields.setupField(parsedValue, fieldMetadata)
+*/
   }
 }

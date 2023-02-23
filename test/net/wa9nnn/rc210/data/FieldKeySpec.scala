@@ -15,23 +15,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.vocabulary
+package net.wa9nnn.rc210.data
 
-import net.wa9nnn.rc210.WordKey
+import net.wa9nnn.rc210.MacroKey
 import org.specs2.mutable.Specification
 
-class VocabularySpec extends Specification {
-  "Vocabulary" should {
+class FieldKeySpec extends Specification {
 
-    "byText" in {
-      Vocabulary("Zero") must beEqualTo (Phrase(WordKey(0), "Zero"))
-      val phrase = Vocabulary("DVR10")
-      phrase.wordKey.number must beEqualTo (245)
-      phrase.string must beEqualTo ("DVR10")
+  "FieldKeySpec" should {
+    "without key" in {
+      val fieldKey = FieldKey("afield")
+      val param = fieldKey.param
+
+      val backAgain = FieldKey.fromParam(param)
+      backAgain must beEqualTo(fieldKey)
+    }
+    "with key" in {
+      val mk = MacroKey(42)
+      val fieldKey = FieldKey("afield", mk)
+      val param = fieldKey.param
+
+      val backAgain = FieldKey.fromParam(param)
+      backAgain must beEqualTo(fieldKey)
     }
 
-    "byNumber" in {
-      Vocabulary(WordKey(0)).string must beEqualTo ("Zero")
+    "fromParam" in {
+      ok
     }
   }
 }

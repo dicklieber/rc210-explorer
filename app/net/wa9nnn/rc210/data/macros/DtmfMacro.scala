@@ -39,7 +39,7 @@ object DtmfMacroExractor {
 case class DtmfMacros(a: Seq[(MacroKey, Dtmf)]) {
   private val map: Map[MacroKey, Dtmf] = a.toMap
   val ordered: Seq[MacroKey] = map.keys.toSeq.sortBy { k =>
-    (k.kind, k.index)
+    (k.kind, k.number)
   }
 
   def apply(macroKey: MacroKey): Dtmf = {

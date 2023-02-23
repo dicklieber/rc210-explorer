@@ -47,7 +47,7 @@ class DataProvider @Inject()() {
 
         val grouped = result
           .filter(_.key.isDefined)
-          .groupBy(_.key.get.index)
+          .groupBy(_.key.get.number)
 
 
         val extractors = Seq(
