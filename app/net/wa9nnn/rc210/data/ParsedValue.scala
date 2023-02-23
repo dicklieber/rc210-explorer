@@ -17,47 +17,61 @@
 
 package net.wa9nnn.rc210.data
 
+import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.{Key, KeyFormats}
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{Format, JsResult, JsString, JsValue}
 
-import scala.util.matching.Regex
+import scala.util.Try
 
-
-case class FieldKey(name: String, key: Option[Key]) {
+/**
+ * Identifies a field value
+ *
+ * @param fieldName name of field. Shown in UIs
+ * @param key       qualifier for the field.
+ */
+case class FieldKey(fieldName: String, key: Key) {
   /**
-   * can identify this in a HTTP param.
+   * can identify this in a HTTP param or as a JSON name.
    */
-  val param: String = s"$name${key.map(":" + _.toString).getOrElse("")}"
+  val param: String = s"$fieldName|$key"
 }
 
 object FieldKey {
 
-  def apply(fieldName: String): FieldKey = {
-    new FieldKey(fieldName, None)
-  }
+  implicit val fmtFieldKey: Format[FieldKey] = new Format[FieldKey] {
+    override def writes(o: FieldKey) = JsString(o.param)
 
-  def apply(fieldName: String, key: Key): FieldKey = {
-    new FieldKey(fieldName, Option(key))
+
+
+/*
+    override def reads(json: JsValue): JsResult[FieldKey] = {
+      JsResult.fromTry(Try {
+        KeyFormats.parseString(json.as[String])
+      })
+    }
+*/
+
+    override def reads(json: JsValue): JsResult[FieldKey] = {
+      JsResult.fromTry(Try {
+        fromParam(json.as[String])
+      })
+    }
   }
 
   def fromParam(param: String): FieldKey = {
-    val xx: Iterator[Regex.Match] = r.findAllMatchIn(param)
-    val m: Regex.Match = xx.next()
-    val n = m.group(1)
-    val k = m.group(2)
-    FieldKey(n, Option(k).map(KeyFormats.parseString))
+    val r(fieldName, sKey) = param
+    FieldKey(fieldName, KeyFormats.parseString(sKey))
   }
 
-  private val r = """([a-zA-Z]+):?(:?(.+))?""".r
-
+  private val r = """([a-zA-Z]+)\|(.*)""".r
 }
 
 /**
  *
- * @param name    this is key within a [[MappedValues]].
- * @param command to be sent to an RC-210.
+ * @param fieldKey    this is key within a [[MappedValues]].
+ * @param command     to be sent to an RC-210.
  */
-case class FieldMetadata(name: String, command: String)
+case class FieldMetadata(fieldKey: FieldKey, command: String)
 
 
 case class ParsedValue(fieldKey: FieldKey, value: String)

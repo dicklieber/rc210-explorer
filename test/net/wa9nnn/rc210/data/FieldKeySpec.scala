@@ -19,28 +19,30 @@ package net.wa9nnn.rc210.data
 
 import net.wa9nnn.rc210.MacroKey
 import org.specs2.mutable.Specification
+import play.api.libs.json.{JsValue, Json}
 
 class FieldKeySpec extends Specification {
 
   "FieldKeySpec" should {
-    "without key" in {
-      val fieldKey = FieldKey("afield")
-      val param = fieldKey.param
-
-      val backAgain = FieldKey.fromParam(param)
-      backAgain must beEqualTo(fieldKey)
-    }
+    val mk = MacroKey(42)
+    val fieldKey = FieldKey("afield", mk)
     "with key" in {
-      val mk = MacroKey(42)
-      val fieldKey = FieldKey("afield", mk)
       val param = fieldKey.param
 
       val backAgain = FieldKey.fromParam(param)
       backAgain must beEqualTo(fieldKey)
     }
 
-    "fromParam" in {
-      ok
+    "json round trip" in {
+      val json: JsValue = Json.toJson(fieldKey)
+      val sJson = json.as[String]
+      sJson must beEqualTo ("afield|macro42")
+
+/*
+      val value1: JsValue = Json.parse(sJson)
+      val backAgain = value1.as[FieldKey]
+      backAgain must beEqualTo (fieldKey)
+*/
     }
   }
 }

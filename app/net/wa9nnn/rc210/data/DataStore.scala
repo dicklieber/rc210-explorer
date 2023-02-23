@@ -18,11 +18,11 @@
 package net.wa9nnn.rc210.data
 
 import net.wa9nnn.rc210.PortKey
+import net.wa9nnn.rc210.data.mapped.MappedValues
 
 class DataStore {
-  val ports = new MappedValuesSeq("Ports", 3)
-  val schedules = new MappedValuesSeq("Schedules", 40)
-  val nonSeqedFields = new MappedValues(PortKey(2))
+  val ports = new MappedValues()
+  val schedules = new MappedValues()
 
   def setup(parsedValue: ParsedValue, fieldMetadata: FieldMetadata): Unit = {
 /*

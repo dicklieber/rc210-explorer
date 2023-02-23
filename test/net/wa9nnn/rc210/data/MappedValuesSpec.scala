@@ -18,58 +18,61 @@
 package net.wa9nnn.rc210.data
 
 import net.wa9nnn.rc210.PortKey
+import net.wa9nnn.rc210.data.mapped.{FieldContainer, FieldState, MappedValues}
 import org.specs2.mutable.Specification
 import play.api.libs.json.Json
 
 class MappedValuesSpec extends Specification {
   "MappedValues" >> {
     val fieldName = "fieldA"
-    val fieldMetadataA = FieldMetadata(fieldName, "8300")
+    val portKey = PortKey(3)
+    val fieldKey = FieldKey(fieldName, portKey)
+    val fieldMetadataA = FieldMetadata(fieldKey, "8300")
     val initialValue = "-initial-"
 
     "Happy Path" >> {
-       val mappedValues = new MappedValues(PortKey(2))
+       val mappedValues = new MappedValues()
       mappedValues.setupField( fieldMetadataA, initialValue)
 
-      val fieldContainer: FieldContainer = mappedValues.container(fieldName)
+      val fieldContainer: FieldContainer = mappedValues.container(fieldKey)
       fieldContainer.value must beEqualTo(initialValue)
       fieldContainer.state.candidate must beNone
       // Update the value
       val value2 = "Value 2"
-      mappedValues.update(fieldName, value2)
-      val fieldState = mappedValues.container(fieldName).state
+      mappedValues.update(fieldKey, value2)
+      val fieldState = mappedValues.container(fieldKey).state
       fieldState.value must beEqualTo(initialValue)
       fieldState.candidate must beSome(value2)
 
       // Accept the value
-      mappedValues.acceptCandidate(fieldName)
-      val fieldStateAccepted: FieldState = mappedValues.container(fieldName).state
+      mappedValues.acceptCandidate(fieldKey)
+      val fieldStateAccepted: FieldState = mappedValues.container(fieldKey).state
       fieldStateAccepted.value must beEqualTo(value2)
       fieldStateAccepted.candidate must beNone
     }
     "toJson" >> {
-      val mappedValues = new MappedValues((PortKey(2)))
+      val mappedValues = new MappedValues()
       mappedValues.setupField(fieldMetadataA, initialValue)
-      mappedValues.setupField(FieldMetadata("field2", "1234"), "xyzzy")
+      val fieldKey2 = FieldKey("field2", portKey)
+      mappedValues.setupField(FieldMetadata(fieldKey2, "1234"), "xyzzy")
       val json = Json.toJson(mappedValues)
       val sJson = Json.prettyPrint(json)
 sJson must beEqualTo ("""{
-                        |  "key" : "port2",
                         |  "values" : [ [ {
                         |    "metadata" : {
-                        |      "name" : "field2",
-                        |      "command" : "1234"
-                        |    },
-                        |    "fieldState" : {
-                        |      "value" : "xyzzy"
-                        |    }
-                        |  }, {
-                        |    "metadata" : {
-                        |      "name" : "fieldA",
+                        |      "fieldKey" : "fieldA|port3",
                         |      "command" : "8300"
                         |    },
                         |    "fieldState" : {
                         |      "value" : "-initial-"
+                        |    }
+                        |  }, {
+                        |    "metadata" : {
+                        |      "fieldKey" : "field2|port3",
+                        |      "command" : "1234"
+                        |    },
+                        |    "fieldState" : {
+                        |      "value" : "xyzzy"
                         |    }
                         |  } ] ]
                         |}""".stripMargin)

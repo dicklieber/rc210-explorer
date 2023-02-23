@@ -27,6 +27,7 @@ import net.wa9nnn.rc210.data.schedules.{DayOfWeek, MonthOfYear, Schedule}
 import net.wa9nnn.rc210.data.vocabulary.MessageMacroNode
 import play.api.libs.json._
 
+import scala.util.Try
 import scala.util.matching.Regex
 
 object KeyFormats {
@@ -97,6 +98,7 @@ object KeyFormats {
     def writes(key: FunctionKey): JsValue = {
       JsString(key.toString)
     }
+
     override def reads(json: JsValue) = {
       throw new NotImplementedError() //todo
     }
@@ -132,10 +134,11 @@ object KeyFormats {
   }
 
 
-
   implicit val fmtKey: Format[Key] = new Format[Key] {
     override def reads(json: JsValue): JsResult[Key] = {
-      throw new NotImplementedError() //todo
+      JsResult.fromTry(Try {
+        KeyFormats.parseString(json.as[String])
+      })
     }
 
     override def writes(key: Key): JsValue = {
@@ -143,10 +146,11 @@ object KeyFormats {
     }
   }
 
-  def parseString(string:String):Key = {
+  def parseString(string: String): Key = {
     val r(kind, number) = string
     buildKey(kind, number.toInt)
   }
+
   private def keyConetwmmon(json: JsValue) = {
     try {
       val key = parseString(json.as[String])
