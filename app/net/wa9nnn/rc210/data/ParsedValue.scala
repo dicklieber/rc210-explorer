@@ -29,11 +29,18 @@ import scala.util.Try
  * @param fieldName name of field. Shown in UIs
  * @param key       qualifier for the field.
  */
-case class FieldKey(fieldName: String, key: Key) {
+case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey] {
   /**
    * can identify this in a HTTP param or as a JSON name.
    */
   val param: String = s"$fieldName|$key"
+
+  override def compare(that: FieldKey): Int = {
+    var ret = key compareTo(that.key)
+    if (ret == 0)
+      ret = fieldName.compareTo(that.fieldName)
+    ret
+  }
 }
 
 object FieldKey {

@@ -23,6 +23,7 @@ import net.wa9nnn.rc210.command.ItemValue
 import net.wa9nnn.rc210.data.Rc210Data
 import net.wa9nnn.rc210.data.functions.{FunctionNode, FunctionsProvider}
 import net.wa9nnn.rc210.data.macros.MacroNode
+import net.wa9nnn.rc210.data.mapped.{FieldContainer, MappedValues}
 import net.wa9nnn.rc210.data.schedules.Schedule
 import net.wa9nnn.rc210.data.vocabulary.{MessageMacroNode, Phrase, Vocabulary}
 import play.api.mvc._
@@ -47,21 +48,30 @@ class RawDataController @Inject()(val controllerComponents: ControllerComponents
    * a path of `/`.
    */
   def functions(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-        val schedulesTable = Table(FunctionNode.header(functions.functions.length), functions.functions.map(_.toRow))
-        Ok(views.html.dat(Seq(schedulesTable)))
+    val schedulesTable = Table(FunctionNode.header(functions.functions.length), functions.functions.map(_.toRow))
+    Ok(views.html.dat(Seq(schedulesTable)))
   }
+
   def items(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
 
     val itemValues = dataProvider.rc210Data.itemValues
-        val schedulesTable = Table(ItemValue.header(itemValues.length), itemValues.toIndexedSeq.map(_.toRow))
-        Ok(views.html.dat(Seq(schedulesTable)))
+    val schedulesTable = Table(ItemValue.header(itemValues.length), itemValues.toIndexedSeq.map(_.toRow))
+    Ok(views.html.dat(Seq(schedulesTable)))
+  }
+
+  def mappedItems(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+
+    val mappedValues: MappedValues = dataProvider.rc210Data.mappedValues
+    val dump = mappedValues.dump
+    val table = Table(FieldContainer.header(dump.length), dump.map(_.toRow))
+    Ok(views.html.dat(Seq(table)))
   }
 
   def macros(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     val rc210Data: Rc210Data = dataProvider.rc210Data
     val macros = rc210Data.macros
     val macrosTable = Table(MacroNode.header(macros.length), macros.map(_.toRow))
-        Ok(views.html.dat(Seq(macrosTable)))
+    Ok(views.html.dat(Seq(macrosTable)))
   }
 
 
@@ -71,11 +81,13 @@ class RawDataController @Inject()(val controllerComponents: ControllerComponents
     val macrosTable = Table(Schedule.header(schedules.length), schedules.map(_.toRow))
     Ok(views.html.dat(Seq(macrosTable)))
   }
+
   def messageMacros(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     val messageMacros: Seq[MessageMacroNode] = dataProvider.rc210Data.messageMacros
     val macrosTable = Table(MessageMacroNode.header(messageMacros.length), messageMacros.map(_.toRow))
     Ok(views.html.dat(Seq(macrosTable)))
   }
+
   def vocabulary(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
 
     val phrases = Vocabulary.phrases

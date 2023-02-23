@@ -34,7 +34,7 @@ case class ItemValue(commandId: Command, values: Values, key:Key = MiscKey(), ma
   def head: String = values.headOption.getOrElse("?")
 
   def withKey(key: Key): ItemValue = copy(key = key)
-  def withPort(number:Int): ItemValue = copy(key = PortKey(number))
+  def withPort(number:Int): ItemValue = copy(key = PortKey(number + 1))
 
   def withError(l10NMessage: L10NMessage): ItemValue = copy(maybeMessage = Option(l10NMessage))
 

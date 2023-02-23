@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.data.mapped
 
+import com.wa9nnn.util.tableui.{Header, Row, RowSource}
 import net.wa9nnn.rc210.data.FieldMetadata
 import play.api.data.Field
 import play.api.libs.json.{Json, OFormat}
@@ -27,7 +28,7 @@ import play.api.libs.json.{Json, OFormat}
  * @param metadata    immutable stuff that's known about a field.n
  * @param fieldState  what we start with.
  */
-case class FieldContainer(val metadata: FieldMetadata, fieldState: FieldState) {
+case class FieldContainer(val metadata: FieldMetadata, fieldState: FieldState) extends RowSource with Ordered[FieldContainer] {
   val value: String = fieldState.value
 
   //  private var fieldState: FieldState = FieldState(initialValue)
@@ -48,9 +49,18 @@ case class FieldContainer(val metadata: FieldMetadata, fieldState: FieldState) {
   }
 
   def state: FieldState = fieldState
+
+  override def toRow: Row =
+    Row(metadata.fieldKey.key.toCell, metadata.fieldKey.fieldName, fieldState.value, fieldState.candidate, metadata.command)
+
+  override def compare(that: FieldContainer): Int = {
+    metadata.fieldKey compareTo(that.metadata.fieldKey)
+  }
 }
 
 object FieldContainer {
+  def header(count:Int): Header = Header(s"Mapped Values ($count)", "Key", "Field Name", "Current", "Candidate", "Command")
+
   def apply(fieldMetadata: FieldMetadata, initialValue: String): FieldContainer = new FieldContainer(fieldMetadata, FieldState(initialValue))
 
   implicit val fmtFieldState: OFormat[FieldState] = Json.format[FieldState]

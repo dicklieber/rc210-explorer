@@ -31,6 +31,12 @@ import scala.util.Try
 class MappedValues() {
   private val fieldMap = new TrieMap[FieldKey, FieldContainer]
 
+  def dump:Seq[FieldContainer] = {
+    fieldMap.values
+      .toSeq
+      .sorted
+  }
+
   def container(fieldKey: FieldKey): FieldContainer = fieldMap(fieldKey)
 
   /**

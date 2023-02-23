@@ -59,7 +59,7 @@ class MessageMacroExtractor extends MemoryExtractor {
       .zipWithIndex
       .map { case (words, k) =>
         val w = words.takeWhile(_ != 0)
-        MessageMacroNode(MessageMacroKey(k), w.map(WordKey))
+        MessageMacroNode(MessageMacroKey(k + 1), w.map(WordKey))
       }
       .toSeq
 

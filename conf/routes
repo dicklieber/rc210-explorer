@@ -5,6 +5,7 @@
 
 # An example controller showing a sample home page
 GET        /itemValues           controllers.RawDataController.items()
+GET        /mappedValues           controllers.RawDataController.mappedItems()
 GET        /schedules            controllers.RawDataController.schedules()
 GET        /functions            controllers.RawDataController.functions()
 GET        /macros               controllers.RawDataController.macros()

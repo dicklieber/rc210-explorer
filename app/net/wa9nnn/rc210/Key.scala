@@ -46,7 +46,7 @@ sealed abstract class Key(val kind: String, val number: Int) extends CellProvide
 }
 
 case class PortKey(override val number: Int) extends Key("port", number) {
-  assert(number <= 3, "Port numbers are 1 through 3")
+  assert((1 to 3).contains(number), "Port numbers are 1 through 3")
 }
 
 case class AlarmKey(override val number: Int) extends Key("alarm", number) {
@@ -67,7 +67,7 @@ case class FunctionKey(override val number: Int) extends Key("function", number)
 }
 
 case class ScheduleKey(override val number: Int) extends Key("schedule", number) {
-  assert(number <= 40, "Schedule numbers are 1 through 40")
+  assert((1 to 40).contains(number), "Schedule numbers are 1 through 40")
 }
 
 case class WordKey(override val number: Int) extends Key("word", number) {
