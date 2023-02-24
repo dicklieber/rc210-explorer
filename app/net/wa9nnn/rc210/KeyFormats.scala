@@ -26,6 +26,7 @@ import net.wa9nnn.rc210.data.named.{NamedData, NamedKey}
 import net.wa9nnn.rc210.data.schedules.{DayOfWeek, MonthOfYear, Schedule}
 import net.wa9nnn.rc210.data.vocabulary.MessageMacroNode
 import play.api.libs.json._
+import play.api.mvc.PathBindable
 
 import scala.util.Try
 import scala.util.matching.Regex
@@ -135,15 +136,15 @@ object KeyFormats {
     }
   }
 
-//  implicit val fmtWordKey: Format[MiscKey] = new Format[MiscKey] {
-//    def writes(key: MiscKey): JsValue = {
-//      JsString(key.toString)
-//    }
-//
-//    override def reads(json: JsValue) = {
-//      throw new NotImplementedError() //todo
-//    }
-//  }
+  //  implicit val fmtWordKey: Format[MiscKey] = new Format[MiscKey] {
+  //    def writes(key: MiscKey): JsValue = {
+  //      JsString(key.toString)
+  //    }
+  //
+  //    override def reads(json: JsValue) = {
+  //      throw new NotImplementedError() //todo
+  //    }
+  //  }
 
 
   implicit val fmtKey: Format[Key] = new Format[Key] {
@@ -163,17 +164,20 @@ object KeyFormats {
     buildKey(kind, number.toInt)
   }
 
-/*
-  private def keyConetwmmon(json: JsValue) = {
-    try {
-      val key = parseString(json.as[String])
-      JsSuccess(key)
+
+  implicit def keyPathBinder(implicit intBinder: PathBindable[Key]): PathBindable[Key] = new PathBindable[Key] {
+    override def bind(key: String, fromPath: String): Either[String, Key] = {
+      try {
+        Right(parseString(fromPath))
+      } catch {
+        case e: Exception =>
+          Left(e.getMessage)
+      }
     }
-    catch {
-      case e: IllegalArgumentException => JsError(e.getMessage)
-    }
+
+    override def unbind(key: String, rcKey: Key): String =
+      rcKey.toString
   }
-*/
 
   implicit val fmtItemValue: OFormat[ItemValue] = Json.format[ItemValue]
 

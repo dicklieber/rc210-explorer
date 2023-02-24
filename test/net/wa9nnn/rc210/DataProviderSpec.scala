@@ -40,6 +40,13 @@ class DataProviderSpec extends WithMemory {
       )
       fieldsForPort must haveLength(26)
     }
+    "misc keys" >> {
+      val miscFields: Seq[FieldContainer] = rc210Data.mappedValues.fieldsForKey(MiscKey())
+      miscFields.foreach(container =>
+      println(container)
+      )
+      miscFields must haveLength(26)
+    }
 
     "Known keys" >> {
       val knownKeys = rc210Data.mappedValues.knownKeys

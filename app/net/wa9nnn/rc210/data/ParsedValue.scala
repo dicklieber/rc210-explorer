@@ -17,9 +17,11 @@
 
 package net.wa9nnn.rc210.data
 
+import net.wa9nnn.rc210.KeyFormats.parseString
 import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.{Key, KeyFormats}
 import play.api.libs.json.{Format, JsResult, JsString, JsValue}
+import play.api.mvc.PathBindable
 
 import scala.util.Try
 
@@ -36,7 +38,7 @@ case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey] {
   val param: String = s"$fieldName|$key"
 
   override def compare(that: FieldKey): Int = {
-    var ret = key compareTo(that.key)
+    var ret = key.toString compareTo(that.key.toString)
     if (ret == 0)
       ret = fieldName.compareTo(that.fieldName)
     ret
@@ -63,6 +65,20 @@ object FieldKey {
         fromParam(json.as[String])
       })
     }
+  }
+
+  implicit def fieldKeyPathBinder(implicit intBinder: PathBindable[FieldKey]): PathBindable[FieldKey] = new PathBindable[FieldKey] {
+    override def bind(key:String, fromPath: String): Either[String, FieldKey] = {
+      try {
+        Right(fromParam(fromPath))
+      } catch {
+        case e: Exception =>
+          Left(e.getMessage)
+      }
+    }
+
+    override def unbind(key: String, fieldKey: FieldKey): String =
+      fieldKey.param
   }
 
   def fromParam(param: String): FieldKey = {

@@ -19,7 +19,10 @@ package net.wa9nnn.rc210.data.mapped
 
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
 import net.wa9nnn.rc210.data.FieldMetadata
-import play.api.data.Field
+import net.wa9nnn.rc210.util.CamelToWords
+import play.api.data.format.Formats.parsing
+import play.api.data.format.Formatter
+import play.api.data.{Field, FieldMapping, Form, FormError, ObjectMapping1, WrappedMapping}
 import play.api.libs.json.{Json, OFormat}
 
 /**
@@ -33,10 +36,10 @@ case class FieldContainer(val metadata: FieldMetadata, fieldState: FieldState) e
 
   //  private var fieldState: FieldState = FieldState(initialValue)
 
-  def toField: Field = {
-    //todo probably cant make this here.
-    throw new NotImplementedError() //todo
-  }
+  /*  def toField: Field = {
+      val form = Form[FieldContainer](FieldMapping(key = "xyzzy"))
+  Field(form)
+    }*/
 
   def updateCandidate(value: String): FieldContainer = {
     copy(fieldState = fieldState.setCandidate(value))
@@ -54,16 +57,27 @@ case class FieldContainer(val metadata: FieldMetadata, fieldState: FieldState) e
     Row(metadata.fieldKey.key.toCell, metadata.fieldKey.fieldName, fieldState.value, fieldState.candidate, metadata.command)
 
   override def compare(that: FieldContainer): Int = {
-    metadata.fieldKey compareTo(that.metadata.fieldKey)
+    metadata.fieldKey compareTo (that.metadata.fieldKey)
   }
+
+  def prettyName: String = CamelToWords(metadata.fieldKey.fieldName)
 }
 
 object FieldContainer {
-  def header(count:Int): Header = Header(s"Mapped Values ($count)", "Key", "Field Name", "Current", "Candidate", "Command")
+  def header(count: Int): Header = Header(s"Mapped Values ($count)", "Key", "Field Name", "Current", "Candidate", "Command")
 
   def apply(fieldMetadata: FieldMetadata, initialValue: String): FieldContainer = new FieldContainer(fieldMetadata, FieldState(initialValue))
 
   implicit val fmtFieldState: OFormat[FieldState] = Json.format[FieldState]
   implicit val fmtFieldMetadata: OFormat[FieldMetadata] = Json.format[FieldMetadata]
   implicit val fmtFieldContainer: OFormat[FieldContainer] = Json.format[FieldContainer]
+
+  /*implicit object FieldFormatter extends Formatter[FieldContainer] {
+    override val format: Option[(String, Nil.type)] = Some(("Expected Format FieldContriner", Nil))
+
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Callsign] = parsing(Callsign(_), "error.callsign", Nil)(key, data)
+
+    override def unbind(key: String, value: Callsign) = Map(key -> value.toString)
+  }*/
+
 }

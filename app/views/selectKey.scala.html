@@ -1,0 +1,10 @@
+@import net.wa9nnn.rc210.Key
+@(knownKeys: Seq[Key])
+
+@main("Select Key") {
+    @for(key <- knownKeys) {
+        <div class="mb-3">
+            <a href="@routes.FieldEditorController.editFields(key.toString)">@key.toString</a>
+        </div>
+    }
+}

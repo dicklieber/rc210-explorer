@@ -1,0 +1,20 @@
+@import net.wa9nnn.rc210.data.mapped.FieldContainer
+@import views.html.helper._
+@(fieldContainers: Seq[FieldContainer])
+
+@main("Misc Fields") {
+
+    @form( action = routes.FieldEditorController.save()) {
+        @for(fieldContainer <- fieldContainers) {
+            <div class="mb-3">
+            @defining(fieldContainer.metadata.fieldKey.param) { param =>
+                <label for="@param:" class="form-label">@fieldContainer.prettyName</label>
+                <input name="@param" id="@param" value="@fieldContainer.value" class="form-control">
+            }
+            </div>
+
+        }
+        <button type="submit">Save</button>
+    }
+}
+

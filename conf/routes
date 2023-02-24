@@ -4,16 +4,19 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET        /itemValues           controllers.RawDataController.items()
-GET        /mappedValues           controllers.RawDataController.mappedItems()
-GET        /schedules            controllers.RawDataController.schedules()
-GET        /functions            controllers.RawDataController.functions()
-GET        /macros               controllers.RawDataController.macros()
-GET        /messageMacros        controllers.RawDataController.messageMacros()
-GET        /vocabulary           controllers.RawDataController.vocabulary()
-GET        /downloadjson         controllers.IOController.downloadJson()
-GET        /flow                 controllers.Flow2Controller.flow()
-GET        /                     controllers.LandingController.index()
+GET         /selectField        controllers.FieldEditorController.selectKey()
+GET         /editfields/:key        controllers.FieldEditorController.editFields(key:String)
+POST        /saveFields             controllers.FieldEditorController.save()
+GET         /itemValues             controllers.RawDataController.items()
+GET         /mappedValues           controllers.RawDataController.mappedItems()
+GET         /schedules              controllers.RawDataController.schedules()
+GET         /functions              controllers.RawDataController.functions()
+GET         /macros                 controllers.RawDataController.macros()
+GET         /messageMacros          controllers.RawDataController.messageMacros()
+GET         /vocabulary             controllers.RawDataController.vocabulary()
+GET         /downloadjson           controllers.IOController.downloadJson()
+GET         /flow                   controllers.Flow2Controller.flow()
+GET         /                       controllers.LandingController.index()
 
 # Map static resources from the /public folder to the /assets URL path
-GET        /assets/*file         controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file           controllers.Assets.versioned(path="/public", file: Asset)

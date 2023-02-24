@@ -27,7 +27,8 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
       "-feature",
       "-deprecation",
       "-Xfatal-warnings",
-      "-Ymacro-annotations"
+      "-Ymacro-annotations",
+      "-Xlog-implicits"
     )
 
   )
@@ -54,15 +55,11 @@ libraryDependencies ++= Seq(
   "com.fazecast" % "jSerialComm" % "[2.0.0,3.0.0)",
   "io.suzaku" %% "boopickle" % "1.4.0",
   "org.fusesource.jansi" % "jansi" % "2.4.0",
-
-
-  //  "org.scala-lang.modules" %% "scala-xml" % "2.1.0",
 )
 
 
-
-// Adds additional packages into Twirl
-//TwirlKeys.templateImports += "net.wa9nnn.controllers._"
-
-// Adds additional packages into conf/routes
-// play.sbt.routes.RoutesKeys.routesImport += "net.wa9nnn.binders._"
+routesImport ++= Seq(
+  "net.wa9nnn.rc210.Key",
+  "net.wa9nnn.rc210.KeyFormats._",
+  "net.wa9nnn.rc210.data.FieldKey._",
+)
