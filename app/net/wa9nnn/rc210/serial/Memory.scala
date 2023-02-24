@@ -1,5 +1,6 @@
 package net.wa9nnn.rc210.serial
 
+import net.wa9nnn.rc210.data.FieldKey
 import play.api.libs.json.{Json, OFormat}
 
 import java.io.{InputStream, PrintWriter}
@@ -17,6 +18,10 @@ import scala.util.{Try, Using}
  * @param stamp   when we did this.
  */
 case class MemoryArray(data: Array[Int], comment: String = "", stamp: Instant = Instant.now()) extends Memory {
+
+  data.view(42)
+
+
   /**
    *
    * @param slice part of [[Memory]] we are interested in.
@@ -56,12 +61,12 @@ case class MemoryArray(data: Array[Int], comment: String = "", stamp: Instant = 
  * @param length how much to slice. 0
  * @param name   as used in [[akka.io.Dns.Command]] and, pefhaps,  other places.
  */
-case class SlicePos(offset: Int = 0, length: Int = 1, name: String = "") {
+case class SlicePos(offset: Int = 0, length: Int = 1, fieldKey:Option[FieldKey] = None) {
   def until: Int = offset + length
 
-  def apply(requested: Int): SlicePos = {
-    SlicePos(offset + length, requested)
-  }
+//  def apply(requested: Int): SlicePos = {
+//    SlicePos(offset + length, requested)
+//  }
 
   override def toString: String = s"$offset to $until"
 }
@@ -81,7 +86,7 @@ object SlicePos {
     val offset = sOffset.toInt
     val end = sEnd .toInt
     val len = end - offset
-    new SlicePos(offset, len + 1, name)
+    new SlicePos(offset, len + 1)
   }
 
   implicit val fmtSlicePos: OFormat[SlicePos] = Json.format[SlicePos]

@@ -9,8 +9,7 @@ import net.wa9nnn.rc210.data.vocabulary.MessageMacroNode
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.{MacroKey, MessageMacroKey}
 
-case class Rc210Data(itemValues: Array[ItemValue] = Array.empty,
-                      mappedValues:MappedValues = new MappedValues,
+case class Rc210Data(mappedValues: MappedValues = new MappedValues,
                      macros: Seq[MacroNode] = Seq.empty,
                      schedules: Seq[Schedule] = Seq.empty,
                      messageMacros: Seq[MessageMacroNode] = Seq.empty) extends LazyLogging {
@@ -24,9 +23,9 @@ case class Rc210Data(itemValues: Array[ItemValue] = Array.empty,
     val scheds = schedules.filter(_.triggerEnabled)
     val macroDtmfs = macros.filter(_.triggerEnabled)
     //todo There are other TriggerNodes
-   val potentialTriggers: Seq[TriggerNode] = scheds ++: macroDtmfs
-   val filteredforMacro =  potentialTriggers.filter(candidate =>
-        candidate.macroToRun == macroKey)
+    val potentialTriggers: Seq[TriggerNode] = scheds ++: macroDtmfs
+    val filteredforMacro = potentialTriggers.filter(candidate =>
+      candidate.macroToRun == macroKey)
 
     logger.trace("Looking for triggers for {}", macroKey)
     filteredforMacro.foreach { t =>

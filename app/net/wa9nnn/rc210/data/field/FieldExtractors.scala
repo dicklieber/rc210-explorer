@@ -15,21 +15,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data
+package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.PortKey
-import net.wa9nnn.rc210.data.mapped.MappedValues
+import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.serial.Slice
 
-class DataStore {
-  val ports = new MappedValues()
-  val schedules = new MappedValues()
+/**
+ */
+object FieldExtractors extends LazyLogging {
+  def apply(exractorName: String, slice: Slice): String = {
+    exractorName match {
+      case "dtmf" =>
+        new String(slice.data
+          .takeWhile(_ != 0)
+          .map(_.toChar) //todo how about A-D?
+          .toArray
+        )
+        // more go here
+      case x =>
+        throw new IllegalArgumentException("Don't have a fieldExtractor named: x!")
 
-  def setup(parsedValue: ParsedValue, fieldMetadata: FieldMetadata): Unit = {
-/*
-    if (parsedValue.fieldKey.key.isDefined) {
-
-    } else
-      nonSeqedFields.setupField(parsedValue, fieldMetadata)
-*/
+    }
   }
 }

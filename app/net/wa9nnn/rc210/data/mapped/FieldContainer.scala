@@ -18,11 +18,8 @@
 package net.wa9nnn.rc210.data.mapped
 
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
-import net.wa9nnn.rc210.data.FieldMetadata
+import net.wa9nnn.rc210.data.field.FieldMetadata
 import net.wa9nnn.rc210.util.CamelToWords
-import play.api.data.format.Formats.parsing
-import play.api.data.format.Formatter
-import play.api.data.{Field, FieldMapping, Form, FormError, ObjectMapping1, WrappedMapping}
 import play.api.libs.json.{Json, OFormat}
 
 /**
@@ -34,12 +31,6 @@ import play.api.libs.json.{Json, OFormat}
 case class FieldContainer(val metadata: FieldMetadata, fieldState: FieldState) extends RowSource with Ordered[FieldContainer] {
   val value: String = fieldState.value
 
-  //  private var fieldState: FieldState = FieldState(initialValue)
-
-  /*  def toField: Field = {
-      val form = Form[FieldContainer](FieldMapping(key = "xyzzy"))
-  Field(form)
-    }*/
 
   def updateCandidate(value: String): FieldContainer = {
     copy(fieldState = fieldState.setCandidate(value))
@@ -54,7 +45,7 @@ case class FieldContainer(val metadata: FieldMetadata, fieldState: FieldState) e
   def state: FieldState = fieldState
 
   override def toRow: Row =
-    Row(metadata.fieldKey.key.toCell, metadata.fieldKey.fieldName, fieldState.value, fieldState.candidate, metadata.command)
+    Row(metadata.fieldKey.key.toCell, metadata.fieldKey.fieldName, fieldState.value, fieldState.candidate, metadata.template)
 
   override def compare(that: FieldContainer): Int = {
     metadata.fieldKey compareTo (that.metadata.fieldKey)

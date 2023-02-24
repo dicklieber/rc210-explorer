@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data
 
 import net.wa9nnn.rc210.PortKey
+import net.wa9nnn.rc210.data.field.FieldMetadata
 import net.wa9nnn.rc210.data.mapped.{FieldContainer, FieldState, MappedValues}
 import org.specs2.mutable.Specification
 import play.api.libs.json.Json

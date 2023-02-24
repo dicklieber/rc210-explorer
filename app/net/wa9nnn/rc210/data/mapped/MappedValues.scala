@@ -19,7 +19,8 @@ package net.wa9nnn.rc210.data.mapped
 
 import com.fasterxml.jackson.module.scala.deser.overrides.TrieMap
 import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.data.{FieldKey, FieldMetadata}
+import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.field.FieldMetadata
 import play.api.libs.json.{JsArray, JsResult, JsValue, Json, OFormat}
 
 import scala.util.Try
@@ -31,7 +32,7 @@ import scala.util.Try
 class MappedValues() {
   private val fieldMap = new TrieMap[FieldKey, FieldContainer]
 
-  def dump:Seq[FieldContainer] = {
+  def dump: Seq[FieldContainer] = {
     fieldMap.values
       .toSeq
       .sorted

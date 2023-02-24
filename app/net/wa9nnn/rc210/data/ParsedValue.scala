@@ -89,12 +89,5 @@ object FieldKey {
   private val r = """([a-zA-Z]+)\|(.*)""".r
 }
 
-/**
- *
- * @param fieldKey    this is key within a [[MappedValues]].
- * @param command     to be sent to an RC-210.
- */
-case class FieldMetadata(fieldKey: FieldKey, command: String)
-
 
 case class ParsedValue(fieldKey: FieldKey, value: String)

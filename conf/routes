@@ -7,7 +7,6 @@
 GET         /selectField        controllers.FieldEditorController.selectKey()
 GET         /editfields/:key        controllers.FieldEditorController.editFields(key:String)
 POST        /saveFields             controllers.FieldEditorController.save()
-GET         /itemValues             controllers.RawDataController.items()
 GET         /mappedValues           controllers.RawDataController.mappedItems()
 GET         /schedules              controllers.RawDataController.schedules()
 GET         /functions              controllers.RawDataController.functions()

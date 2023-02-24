@@ -9,7 +9,6 @@ class SlicePosSpec extends Specification {
       val slicePos = SlicePos("//DTMFEnable - 70-72")
       slicePos.offset must beEqualTo(70)
       slicePos.length must beEqualTo(3)
-      slicePos.name must beEqualTo("DTMFEnable")
     }
   }
 }
