@@ -21,7 +21,7 @@ import com.wa9nnn.util.tableui.{Cell, Row, Table, TableInACell}
 import net.wa9nnn.rc210.data.Rc210Data
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.named.NamedManager
-import net.wa9nnn.rc210.{FunctionKey, Key, MacroKey, MessageMacroKey}
+import net.wa9nnn.rc210.key.{FunctionKey, Key, MacroKey, MessageMacroKey}
 
 /**
  * Build function rows for a [[MacroNode]]

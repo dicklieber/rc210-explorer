@@ -17,13 +17,13 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.KeyFormats
 import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.key.KeyFormats
 import net.wa9nnn.rc210.serial.Memory
 
 import scala.util.Try
 
-case class FieldDefinition(fieldName: String, kind: String, offset: Int, bytesPreField: Int, extractor: FieldExtractor, template: String) {
+case class FieldDefinition(fieldName: String, kind: String, offset: Int, extractor: FieldExtractor, template: String) {
   def apply(memory: Memory): Seq[(FieldMetadata, Try[String])] = {
     val tempKey = KeyFormats.buildKey(kind, 1) // just to get maxN
     val howMany = tempKey.maxN

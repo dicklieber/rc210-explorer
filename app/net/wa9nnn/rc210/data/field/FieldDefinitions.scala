@@ -22,17 +22,21 @@ import net.wa9nnn.rc210.data.field.FieldExtractors._
 object FieldDefinitions {
   // template ${value}  ${bool} ${port}
   val fields: Seq[FieldDefinition] = Seq(
-    FieldDefinition(fieldName = "SitePrefix", kind = "misc", offset = 0, bytesPreField = 4, bool, template = "*2108${value}"),
-    FieldDefinition(fieldName = "TTPadTest", kind = "misc", offset = 4, bytesPreField = 6, extractor = dtmf, template = "*2093${value}"),
-    FieldDefinition(fieldName = "SayHours", kind = "misc", offset = 10, bytesPreField = 1, bool, template = "*5104${bool}"),
-    FieldDefinition(fieldName = "HangTime1", kind = "port", offset = 11, bytesPreField = 1, extractor = int8, template = "*10001${value}"),
-    FieldDefinition(fieldName = "HangTime2", kind = "port", offset = 14, bytesPreField = 1, extractor = int8, template = "*10002${value}"),
-    FieldDefinition(fieldName = "HangTime3", kind = "port", offset = 17, bytesPreField = 1, extractor = int8, template = "*10003${value}"),
-    FieldDefinition(fieldName = "IIDMinutes", kind = "port", offset = 20, bytesPreField = 1, extractor = int8, template = "*1002${value}"),
-    FieldDefinition(fieldName = "PIDMinutes", kind = "port", offset = 23, bytesPreField = 1, extractor = int8, template = "*1002${value}"),
-    FieldDefinition(fieldName = "TxEnable", kind = "port", offset = 26, bytesPreField = 1, extractor = bool, template = "${port}111${bool}"),
-    FieldDefinition(fieldName = "DTMFCoverTone", kind = "port", offset = 29, bytesPreField = 1, extractor = bool, template = "${port}113${bool}"),
-    FieldDefinition(fieldName = "DTMFMuteTimer", kind = "port", offset = 32, bytesPreField = 2, extractor = int16, template = "${port}*1006${bool}"),
+    FieldDefinition(fieldName = "SitePrefix", kind = "misc", offset = 0, bool, template = "*2108${value}"),
+    FieldDefinition(fieldName = "TTPadTest", kind = "misc", offset = 4, extractor = dtmf, template = "*2093${value}"),
+    FieldDefinition(fieldName = "SayHours", kind = "misc", offset = 10, bool, template = "*5104${bool}"),
+    FieldDefinition(fieldName = "HangTime1", kind = "port", offset = 11, extractor = int8, template = "*10001${value}"),
+    FieldDefinition(fieldName = "HangTime2", kind = "port", offset = 14, extractor = int8, template = "*10002${value}"),
+    FieldDefinition(fieldName = "HangTime3", kind = "port", offset = 17, extractor = int8, template = "*10003${value}"),
+    FieldDefinition(fieldName = "IIDMinutes", kind = "port", offset = 20, extractor = int8, template = "*1002${value}"),
+    FieldDefinition(fieldName = "PIDMinutes", kind = "port", offset = 23, extractor = int8, template = "*1002${value}"),
+    FieldDefinition(fieldName = "TxEnable", kind = "port", offset = 26, extractor = bool, template = "${port}111${bool}"),
+    FieldDefinition(fieldName = "DTMFCoverTone", kind = "port", offset = 29, extractor = bool, template = "${port}113${bool}"),
+    FieldDefinition(fieldName = "DTMFMuteTimer", kind = "port", offset = 32, extractor = int16, template = "${port}*1006${bool}"),
+    FieldDefinition(fieldName = "Kerchunk", kind = "port", offset = 38, extractor = bool, template = "${port}*115${bool}"),
+    FieldDefinition(fieldName = "KerchunkTimer", kind = "port", offset = 41, extractor = int16, template = "${port}*1008${value}"),
+    FieldDefinition(fieldName = "MuteDigitSelect", kind = "misc", offset = 47, extractor = int8, template = "${port}*2090${value}"),
+    FieldDefinition(fieldName = "CTCSSDuringID", kind = "port", offset = 47, extractor = int8, template = "${port}*2090${value}"),
 
 
   )

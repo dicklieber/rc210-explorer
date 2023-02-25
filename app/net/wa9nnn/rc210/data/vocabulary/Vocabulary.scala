@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.vocabulary
 
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
-import net.wa9nnn.rc210.WordKey
+import net.wa9nnn.rc210.key.WordKey
 
 import scala.io.BufferedSource
 import scala.util.{Failure, Success, Using}

@@ -17,9 +17,9 @@
 
 package net.wa9nnn.rc210.data
 
-import net.wa9nnn.rc210.KeyFormats.parseString
+import net.wa9nnn.rc210.key.KeyFormats.parseString
 import net.wa9nnn.rc210.data.mapped.MappedValues
-import net.wa9nnn.rc210.{Key, KeyFormats}
+import net.wa9nnn.rc210.key.{Key, KeyFormats}
 import play.api.libs.json.{Format, JsResult, JsString, JsValue}
 import play.api.mvc.PathBindable
 

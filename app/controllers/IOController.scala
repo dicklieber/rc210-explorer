@@ -20,7 +20,7 @@ package controllers
 import net.wa9nnn.rc210.DataProvider
 import play.api.libs.json.Json
 import play.api.mvc._
-import net.wa9nnn.rc210.KeyFormats._
+import net.wa9nnn.rc210.key.KeyFormats._
 
 import javax.inject.{Inject, Singleton}
 

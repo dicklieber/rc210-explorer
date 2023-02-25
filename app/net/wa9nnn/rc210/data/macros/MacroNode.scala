@@ -4,9 +4,10 @@ import com.google.inject.multibindings.{ProvidesIntoMap, ProvidesIntoSet}
 import com.wa9nnn.util.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.{Dtmf, Rc210Data}
+import net.wa9nnn.rc210.key.{FunctionKey, MacroKey}
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
-import net.wa9nnn.rc210.{Extractor, FunctionKey, MacroKey, MemoryExtractor}
+import net.wa9nnn.rc210.{Extractor, MemoryExtractor}
 
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Singleton

@@ -2,10 +2,10 @@ package net.wa9nnn.rc210.data.functions
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
-import net.wa9nnn.rc210.{FunctionKey, Key, MacroKey, MessageMacroKey}
 import play.api.libs.json._
-import net.wa9nnn.rc210.KeyFormats._
+import net.wa9nnn.rc210.key.KeyFormats._
 import net.wa9nnn.rc210.data.Rc210Data
+import net.wa9nnn.rc210.key.{FunctionKey, Key, MacroKey, MessageMacroKey}
 
 import java.io.InputStream
 import javax.inject.Singleton

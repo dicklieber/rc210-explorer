@@ -2,8 +2,9 @@ package net.wa9nnn.rc210.data
 
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table, TableInACell}
 import net.wa9nnn.rc210.data.FlowTableBuilder.macroRowHeaderCell
-import net.wa9nnn.rc210.{DataProvider, MacroKey}
+import net.wa9nnn.rc210.DataProvider
 import net.wa9nnn.rc210.data.functions.{FunctionNode, FunctionsProvider}
+import net.wa9nnn.rc210.key.MacroKey
 import net.wa9nnn.rc210.model.TriggerNode
 import views.html.macroRowHeader
 

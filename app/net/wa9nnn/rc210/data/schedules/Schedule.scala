@@ -5,7 +5,8 @@ import com.wa9nnn.util.tableui.{Header, Row}
 import net.wa9nnn.rc210.data.Rc210Data
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
-import net.wa9nnn.rc210.{MacroKey, MemoryExtractor, ScheduleKey}
+import net.wa9nnn.rc210.MemoryExtractor
+import net.wa9nnn.rc210.key.{MacroKey, ScheduleKey}
 
 import java.time.LocalTime
 import javax.inject.Singleton

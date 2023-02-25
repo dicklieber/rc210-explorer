@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210
+package net.wa9nnn.rc210.key
 
 import com.wa9nnn.util.JsonFormatUtils.javaEnumFormat
 import net.wa9nnn.rc210.command._
@@ -57,6 +57,7 @@ object KeyFormats {
 
   val r: Regex = """([a-zA-Z]+)(\d+)""".r
 
+
   def buildKey(kind: String, number: Int): Key = {
     kind match {
       case "port" =>
@@ -79,6 +80,7 @@ object KeyFormats {
         MiscKey()
     }
   }
+
 
   implicit val fmtMacroKey: Format[MacroKey] = new Format[MacroKey] {
     def writes(key: MacroKey): JsValue = {
@@ -136,16 +138,6 @@ object KeyFormats {
     }
   }
 
-  //  implicit val fmtWordKey: Format[MiscKey] = new Format[MiscKey] {
-  //    def writes(key: MiscKey): JsValue = {
-  //      JsString(key.toString)
-  //    }
-  //
-  //    override def reads(json: JsValue) = {
-  //      throw new NotImplementedError() //todo
-  //    }
-  //  }
-
 
   implicit val fmtKey: Format[Key] = new Format[Key] {
     override def reads(json: JsValue): JsResult[Key] = {
@@ -178,6 +170,7 @@ object KeyFormats {
     override def unbind(key: String, rcKey: Key): String =
       rcKey.toString
   }
+
 
   implicit val fmtItemValue: OFormat[ItemValue] = Json.format[ItemValue]
 

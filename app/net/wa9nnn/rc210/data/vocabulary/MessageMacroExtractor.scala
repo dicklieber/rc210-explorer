@@ -21,7 +21,8 @@ import com.wa9nnn.util.tableui._
 import net.wa9nnn.rc210.data.Rc210Data
 import net.wa9nnn.rc210.model.Node
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
-import net.wa9nnn.rc210.{MemoryExtractor, MessageMacroKey, WordKey}
+import net.wa9nnn.rc210.MemoryExtractor
+import net.wa9nnn.rc210.key.{MessageMacroKey, WordKey}
 
 case class MessageMacroNode(key: MessageMacroKey, words: Seq[WordKey]) extends RowSource with Node with CellProvider {
   override def toRow: Row = {

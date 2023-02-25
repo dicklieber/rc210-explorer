@@ -18,9 +18,9 @@
 package net.wa9nnn.rc210.data.mapped
 
 import com.fasterxml.jackson.module.scala.deser.overrides.TrieMap
-import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.FieldMetadata
+import net.wa9nnn.rc210.key.Key
 import play.api.libs.json.{JsArray, JsResult, JsValue, Json, OFormat}
 
 import scala.util.Try
