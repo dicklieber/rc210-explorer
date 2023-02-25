@@ -18,7 +18,14 @@
 package net.wa9nnn.rc210.data.field
 
 object FieldDefinitions {
+  // template $ value  b is boolean true == 1
   val fields: Seq[FieldDefinition] = Seq(
-    FieldDefinition(fieldName = "SitePrefix", kind = "misc", offset = 0, bytesPreField = 4, extractorName = "dtmf", template = "*2108$", howMany = 1)
+    FieldDefinition(fieldName = "SitePrefix", kind = "misc", offset = 0, bytesPreField = 4, extractorName = "dtmf", template = "*2108$", howMany = 1),
+    FieldDefinition(fieldName = "TTPadTest", kind = "misc", offset = 4, bytesPreField = 6, extractorName = "dtmf", template = "*2093", howMany = 1),
+    FieldDefinition(fieldName = "SayHours", kind = "misc", offset = 10, bytesPreField = 1, extractorName = "bool", template = "*5104b", howMany = 1),
+    FieldDefinition(fieldName = "HangTime1", kind = "port", offset = 11, bytesPreField = 1, extractorName = "int8", template = "*10001$", howMany = 3),
+    FieldDefinition(fieldName = "HangTime2", kind = "port", offset = 14, bytesPreField = 1, extractorName = "int8", template = "*10002$", howMany = 3),
+    FieldDefinition(fieldName = "HangTime3", kind = "port", offset = 17, bytesPreField = 1, extractorName = "int8", template = "*10003$", howMany = 3),
+
   )
 }

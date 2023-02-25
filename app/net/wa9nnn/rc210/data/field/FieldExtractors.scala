@@ -31,6 +31,11 @@ object FieldExtractors extends LazyLogging {
           .map(_.toChar) //todo how about A-D?
           .toArray
         )
+      case "bool" =>
+        (slice.head > 0).toString
+      case "int8" =>
+        slice.head.toString
+
         // more go here
       case x =>
         throw new IllegalArgumentException("Don't have a fieldExtractor named: x!")

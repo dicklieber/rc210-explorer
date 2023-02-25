@@ -29,8 +29,9 @@ case class FieldDefinition(fieldName: String, kind: String, offset: Int, bytesPr
       n <- 1 to howMany
     } yield {
       val fieldKey = FieldKey(fieldName, KeyFormats.buildKey(kind, n))
+      val start = offset + bytesPreField * (n - 1)
       val length = bytesPreField * howMany
-      val slicePos = SlicePos(offset, length)
+      val slicePos = SlicePos(start, bytesPreField)
       val slice: Slice = memory(slicePos)
 
       val triedValue = Try {
