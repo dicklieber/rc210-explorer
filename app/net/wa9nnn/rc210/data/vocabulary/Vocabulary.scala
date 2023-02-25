@@ -54,7 +54,7 @@ object Vocabulary {
   def apply(string: String): Phrase = byText(string)
 
   /**
-   * Loopup by Key
+   * Lookup by Key
    */
   def apply(wordKey: WordKey): Phrase = byKey(wordKey)
 }

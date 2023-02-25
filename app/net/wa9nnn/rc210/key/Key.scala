@@ -18,8 +18,7 @@
 package net.wa9nnn.rc210.key
 
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
-import net.wa9nnn.rc210.key.KeyKinds._
-import net.wa9nnn.rc210.key.KeyKinds.KeyKind
+import net.wa9nnn.rc210.key.KeyKind._
 /**
  *
  * @param kind   e.g. port, schedule, macro.
@@ -29,9 +28,10 @@ import net.wa9nnn.rc210.key.KeyKinds.KeyKind
 sealed abstract class Key(val kind: KeyKind, val number: Int, val maxN: Int) extends CellProvider with Ordered[Key] {
   val index: Int = number - 1
 
-  override def toString: String = s"$kind$number"
+  override def toString: String = s"${kind.getName}$number"
 
-  override def toCell: Cell = Cell(toString).withCssClass(kind.name)
+  override def toCell: Cell = Cell(toString)
+    .withCssClass(kind.getName)
 
   override def compare(that: Key): Int = {
     var ret = kind compareTo that.kind

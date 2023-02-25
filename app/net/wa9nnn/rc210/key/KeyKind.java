@@ -15,23 +15,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.vocabulary
+package net.wa9nnn.rc210.key;
 
-import net.wa9nnn.rc210.key.WordKey
-import org.specs2.mutable.Specification
+public enum KeyKind {
 
-class VocabularySpec extends Specification {
-  "Vocabulary" should {
+    alarmKey(5, "alarm"),
+    dtmfMacroKey(5, "dtmfMacro"),
+    functionKey(1005, "function"),
+    macroKey(105, "macro"),
+    messageMacroKey(90, "messageMacro"),
+    miscKey(1, "misc"),
+    portKey(3, "port"),
+    scheduleKey(40, "schedule"),
+    wordKey(256, "word");
 
-    "byText" in {
-      Vocabulary("Zero") must beEqualTo (Phrase(WordKey(1), "Zero"))
-      val phrase = Vocabulary("DVR10")
-      phrase.wordKey.number must beEqualTo (246)
-      phrase.string must beEqualTo ("DVR10")
+    private final int maxN;
+    private final String name;
+
+    KeyKind(int maxN, String name) {
+        this.maxN = maxN;
+        this.name = name;
     }
 
-    "byNumber" in {
-      Vocabulary(WordKey(1)).string must beEqualTo ("Zero")
+    public int getMaxN() {
+        return maxN;
     }
-  }
+
+    public String getName() {
+        return name;
+    }
 }

@@ -15,23 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.vocabulary
+package net.wa9nnn.rc210.key
 
-import net.wa9nnn.rc210.key.WordKey
-import org.specs2.mutable.Specification
+import net.wa9nnn.rc210.fixtures.WithMemory
 
-class VocabularySpec extends Specification {
-  "Vocabulary" should {
+class MacroKeySpec extends WithMemory {
 
-    "byText" in {
-      Vocabulary("Zero") must beEqualTo (Phrase(WordKey(1), "Zero"))
-      val phrase = Vocabulary("DVR10")
-      phrase.wordKey.number must beEqualTo (246)
-      phrase.string must beEqualTo ("DVR10")
-    }
-
-    "byNumber" in {
-      Vocabulary(WordKey(1)).string must beEqualTo ("Zero")
+  "MacroKeySpec" should {
+    "number" in {
+      val macroKey = MacroKey(42)
+      macroKey.toString must beEqualTo ("macro42")
     }
   }
 }

@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.data
 
-import net.wa9nnn.rc210.MacroKey
+import net.wa9nnn.rc210.key.MacroKey
 import org.specs2.mutable.Specification
 import play.api.libs.json.{JsValue, Json}
 

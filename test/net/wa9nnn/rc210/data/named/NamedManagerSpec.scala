@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.named
 
 import com.typesafe.config.{Config, ConfigFactory, ConfigValue}
-import net.wa9nnn.rc210.MacroKey
+import net.wa9nnn.rc210.key.MacroKey
 import org.specs2.mutable.Specification
 import org.specs2.mock._
 
