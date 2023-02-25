@@ -17,11 +17,11 @@
 
 package net.wa9nnn.rc210.data.mapped
 
-import com.wa9nnn.util.tableui.{Header, Row, RowSource}
+import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
 import net.wa9nnn.rc210.data.field.FieldMetadata
 import net.wa9nnn.rc210.util.CamelToWords
 import play.api.libs.json.{Json, OFormat}
-
+import scala.jdk.CollectionConverters._
 /**
  * Holds information about a field.
  *
@@ -30,7 +30,15 @@ import play.api.libs.json.{Json, OFormat}
  */
 case class FieldContainer(val metadata: FieldMetadata, fieldState: FieldState) extends RowSource with Ordered[FieldContainer] {
   val value: String = fieldState.value
+  val bool:Boolean = value == "true"
 
+  import org.apache.commons.text.StringSubstitutor
+  lazy val map: Map[String, String] = Seq(
+    "value" -> value,
+    "bool" -> (if(bool) "1" else "0"),
+    "port" -> metadata.fieldKey.key.number.toString
+  ).toMap
+  lazy val substitutor = new StringSubstitutor(map.asJava)
 
   def updateCandidate(value: String): FieldContainer = {
     copy(fieldState = fieldState.setCandidate(value))
@@ -44,8 +52,20 @@ case class FieldContainer(val metadata: FieldMetadata, fieldState: FieldState) e
 
   def state: FieldState = fieldState
 
+  lazy val command:String = {
+    //todo color token and replacement parts <span> s
+    substitutor.replace(metadata.template)
+  }
+
   override def toRow: Row =
-    Row(metadata.fieldKey.key.toCell, metadata.fieldKey.fieldName, fieldState.value, fieldState.candidate, metadata.template)
+    Row(metadata.fieldKey.key.toCell,
+      Cell(CamelToWords(metadata.fieldKey.fieldName))
+      .withToolTip(s"Actual field name: ${metadata.fieldKey.fieldName}"),
+      fieldState.value,
+      fieldState.candidate,
+      metadata.template,
+      command
+    )
 
   override def compare(that: FieldContainer): Int = {
     metadata.fieldKey compareTo (that.metadata.fieldKey)
@@ -55,7 +75,7 @@ case class FieldContainer(val metadata: FieldMetadata, fieldState: FieldState) e
 }
 
 object FieldContainer {
-  def header(count: Int): Header = Header(s"Mapped Values ($count)", "Key", "Field Name", "Current", "Candidate", "Command")
+  def header(count: Int): Header = Header(s"Mapped Values ($count)", "Key", "Field Name", "Current", "Candidate", "Template", "Command")
 
   def apply(fieldMetadata: FieldMetadata, initialValue: String): FieldContainer = new FieldContainer(fieldMetadata, FieldState(initialValue))
 

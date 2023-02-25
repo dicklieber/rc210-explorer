@@ -27,5 +27,10 @@ class CamelToWordsSpec extends WithMemory {
       val words = CamelToWords(in)
       words must beEqualTo ("Guest Macro Range")
     }
+
+    "HangTime3" >> {
+      val str = CamelToWords("HangTime3")
+      str must beEqualTo ("Hang Time 3")
+    }
   }
 }

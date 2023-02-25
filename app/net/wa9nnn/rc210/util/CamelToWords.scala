@@ -22,7 +22,7 @@ import scala.util.matching.Regex
 object CamelToWords {
 
   // Thanks to https://www.baeldung.com/java-camel-case-title-case-to-words
-  private val regex: Regex = """(([A-Z]?[a-z]+)|([A-Z]))""".r
+  private val regex: Regex = """(([A-Z]?[a-z]+)|([A-Z\d]))""".r
 
   /**
    * Convert camel-case to words

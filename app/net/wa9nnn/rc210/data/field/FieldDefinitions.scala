@@ -18,14 +18,19 @@
 package net.wa9nnn.rc210.data.field
 
 object FieldDefinitions {
-  // template $ value  b is boolean true == 1
+  // template ${value}  ${bool} ${port}
   val fields: Seq[FieldDefinition] = Seq(
-    FieldDefinition(fieldName = "SitePrefix", kind = "misc", offset = 0, bytesPreField = 4, extractorName = "dtmf", template = "*2108$", howMany = 1),
-    FieldDefinition(fieldName = "TTPadTest", kind = "misc", offset = 4, bytesPreField = 6, extractorName = "dtmf", template = "*2093", howMany = 1),
-    FieldDefinition(fieldName = "SayHours", kind = "misc", offset = 10, bytesPreField = 1, extractorName = "bool", template = "*5104b", howMany = 1),
-    FieldDefinition(fieldName = "HangTime1", kind = "port", offset = 11, bytesPreField = 1, extractorName = "int8", template = "*10001$", howMany = 3),
-    FieldDefinition(fieldName = "HangTime2", kind = "port", offset = 14, bytesPreField = 1, extractorName = "int8", template = "*10002$", howMany = 3),
-    FieldDefinition(fieldName = "HangTime3", kind = "port", offset = 17, bytesPreField = 1, extractorName = "int8", template = "*10003$", howMany = 3),
+    FieldDefinition(fieldName = "SitePrefix", kind = "misc", offset = 0, bytesPreField = 4, extractorName = "dtmf", template = "*2108${value}", howMany = 1),
+    FieldDefinition(fieldName = "TTPadTest", kind = "misc", offset = 4, bytesPreField = 6, extractorName = "dtmf", template = "*2093${value}", howMany = 1),
+    FieldDefinition(fieldName = "SayHours", kind = "misc", offset = 10, bytesPreField = 1, extractorName = "bool", template = "*5104${bool}", howMany = 1),
+    FieldDefinition(fieldName = "HangTime1", kind = "port", offset = 11, bytesPreField = 1, extractorName = "int8", template = "*10001${value}", howMany = 3),
+    FieldDefinition(fieldName = "HangTime2", kind = "port", offset = 14, bytesPreField = 1, extractorName = "int8", template = "*10002${value}", howMany = 3),
+    FieldDefinition(fieldName = "HangTime3", kind = "port", offset = 17, bytesPreField = 1, extractorName = "int8", template = "*10003${value}", howMany = 3),
+    FieldDefinition(fieldName = "IIDMinutes", kind = "port", offset = 20, bytesPreField = 1, extractorName = "int8", template = "*1002${value}", howMany = 3),
+    FieldDefinition(fieldName = "PIDMinutes", kind = "port", offset = 23, bytesPreField = 1, extractorName = "int8", template = "*1002${value}", howMany = 3),
+    FieldDefinition(fieldName = "TxEnable", kind = "port", offset = 26, bytesPreField = 1, extractorName = "bool", template = "${port}111${bool}", howMany = 3),
+    FieldDefinition(fieldName = "DTMFCoverTone", kind = "port", offset = 29, bytesPreField = 1, extractorName = "bool", template = "${port}113${bool}", howMany = 3),
+
 
   )
 }

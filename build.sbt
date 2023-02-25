@@ -55,6 +55,7 @@ libraryDependencies ++= Seq(
   "com.fazecast" % "jSerialComm" % "[2.0.0,3.0.0)",
   "io.suzaku" %% "boopickle" % "1.4.0",
   "org.fusesource.jansi" % "jansi" % "2.4.0",
+  "org.apache.commons" % "commons-text" % "1.10.0",
 )
 
 
