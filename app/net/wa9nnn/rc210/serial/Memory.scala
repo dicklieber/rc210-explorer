@@ -62,6 +62,7 @@ case class MemoryArray(data: Array[Int], comment: String = "", stamp: Instant = 
  * @param name   as used in [[akka.io.Dns.Command]] and, pefhaps,  other places.
  */
 case class SlicePos(offset: Int = 0, length: Int = 1, fieldKey:Option[FieldKey] = None) {
+
   def until: Int = offset + length
 
 //  def apply(requested: Int): SlicePos = {

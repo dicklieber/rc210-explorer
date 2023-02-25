@@ -59,7 +59,7 @@ class DataProvider @Inject()() extends LazyLogging {
      rc210Data
  } match {
    case Failure(exception) =>
-     logger.error("LINitial loading", exception)
+     logger.error("Initial loading", exception)
      Rc210Data()
    case Success(value: Rc210Data) =>
      value

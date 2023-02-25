@@ -18,18 +18,18 @@
 package net.wa9nnn.rc210
 
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
-import play.api.libs.json._
-import KeyFormats._
-
-
-import scala.util.matching.Regex
 
 /**
  *
  * @param kind   e.g. port, schedule, macro.
  * @param number 1 to N
+ * @param maxN   how many can we have of this key,
  */
-sealed abstract class Key(val kind: String, val number: Int) extends CellProvider with Ordered[Key] {
+sealed abstract class Key(val kind: String, val number: Int, val maxN: Int) extends CellProvider with Ordered[Key] {
+
+  validate()
+
+  def validate():Unit = assert((1 to maxN).contains(number), s"Key numbers are 1 through $maxN")
   val index: Int = number - 1
 
   override def toString: String = s"$kind$number"
@@ -37,7 +37,7 @@ sealed abstract class Key(val kind: String, val number: Int) extends CellProvide
   override def toCell: Cell = Cell(toString).withCssClass(kind)
 
   override def compare(that: Key): Int = {
-    var ret = kind compareTo(that.kind)
+    var ret = kind compareTo that.kind
     if (ret == 0)
       ret = number compareTo that.number
     ret
@@ -45,40 +45,29 @@ sealed abstract class Key(val kind: String, val number: Int) extends CellProvide
 
 }
 
-case class PortKey(override val number: Int) extends Key("port", number) {
-  assert((1 to 3).contains(number), "Port numbers are 1 through 3")
-}
+case class PortKey(override val number: Int) extends Key("port", number, 3)
 
-case class AlarmKey(override val number: Int) extends Key("alarm", number) {
-  assert(number <= 5, "Alarm numbers are 1 through 5")
-}
+case class AlarmKey(override val number: Int) extends Key("alarm", number, 5)
 
-case class MacroKey(override val number: Int) extends Key("macro", number) {
-  assert(number <= 105, s"Macro numbers are 1 through 105, can't do $number")
+case class MacroKey(override val number: Int) extends Key("macro", number, 105) {
+  assert(number <= maxN, s"Macro numbers are 1 through $maxN, can't do $number")
 }
 
 
-case class MessageMacroKey(override val number: Int) extends Key("messageMacro", number) {
-  assert(number <= 90, "MessageMacro numbers are 1 through 70")
-}
+case class MessageMacroKey(override val number: Int) extends Key("messageMacro", number, 90)
 
-case class FunctionKey(override val number: Int) extends Key("function", number) {
-  assert(number <= 1005, "Function numbers are 1 through 1005 ")
-}
+case class FunctionKey(override val number: Int) extends Key("function", number, 1005)
 
-case class ScheduleKey(override val number: Int) extends Key("schedule", number) {
-  assert((1 to 40).contains(number), "Schedule numbers are 1 through 40")
-}
+case class ScheduleKey(override val number: Int) extends Key("schedule", number, 40)
 
-case class WordKey(override val number: Int) extends Key("word", number) {
-  assert(number <= 255, "Words numbers are 0 through 255")
-}
+case class WordKey(override val number: Int) extends Key("word", number, 256)
 
-case class DtmfMacroKey(override val number: Int) extends Key("dtmfMacro", number) {
-  //  assert(index <= 255, "Words numbers are 0 through 255")
-}
+case class DtmfMacroKey(override val number: Int) extends Key("dtmfMacro", number, 256)
 
-case class MiscKey() extends Key("misc", 0) {
+/**
+ * There can be any number of [[MiscKey()]] but they don't index into a map by themselves. MaxN just indicate o=how many to extract for a given fieldname.
+ */
+case class MiscKey() extends Key("misc", 0, 1) {
+  override def validate(): Unit = {} // misc is always valid.
 }
-
 

@@ -19,23 +19,25 @@ package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.KeyFormats
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.serial.{Memory, Slice, SlicePos}
+import net.wa9nnn.rc210.serial.Memory
 
 import scala.util.Try
 
-case class FieldDefinition(fieldName: String, kind: String, offset: Int, bytesPreField: Int, extractorName: String, template: String, howMany: Int = 1) {
+case class FieldDefinition(fieldName: String, kind: String, offset: Int, bytesPreField: Int, extractor: FieldExtractor, template: String) {
   def apply(memory: Memory): Seq[(FieldMetadata, Try[String])] = {
+    val tempKey = KeyFormats.buildKey(kind, 1) // just to get maxN
+    val howMany = tempKey.maxN
+
+    var start = offset
     for {
       n <- 1 to howMany
     } yield {
       val fieldKey = FieldKey(fieldName, KeyFormats.buildKey(kind, n))
-      val start = offset + bytesPreField * (n - 1)
-      val length = bytesPreField * howMany
-      val slicePos = SlicePos(start, bytesPreField)
-      val slice: Slice = memory(slicePos)
-
+//      val start = offset + bytesPreField * (n - 1)
       val triedValue = Try {
-        FieldExtractors(extractorName, slice)
+        val er: ExtractResult = extractor(memory, start)
+        start = er.newOffset
+        er.value
       }
       FieldMetadata(fieldKey, template) -> triedValue
     }
