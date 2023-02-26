@@ -18,6 +18,8 @@
 package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.command.ItemValue
+import net.wa9nnn.rc210.command.ItemValue.Values
 import net.wa9nnn.rc210.serial.{Memory, Slice, SlicePos}
 
 ///**
@@ -86,6 +88,29 @@ object FieldExtractors {
       val iterator = slice.iterator
       val intValue = iterator.next() + iterator.next() * 256
       intValue.toString
+    }
+  }
+
+  val twoint16: FieldExtractor = new FieldExtractor(4) {
+    override def extract(slice: Slice) = {
+     val grouped =  slice.grouped(2)
+      grouped.map {slice =>
+          int16.extract(slice)
+        }
+        .mkString(" ")
+    }
+  }
+  val unlock: FieldExtractor = new FieldExtractor(9) {
+    override def extract(slice: Slice): String = {
+      slice
+        .data
+        .grouped(9).zipWithIndex
+        .map { case (v, port) =>
+          val value: Array[Char] = v.takeWhile(_ != 0).map(_.toChar).toArray
+          new String(value)
+        }
+        .toSeq
+        .mkString(" ")
     }
   }
 

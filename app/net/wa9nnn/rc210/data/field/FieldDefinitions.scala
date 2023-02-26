@@ -36,9 +36,17 @@ object FieldDefinitions {
     FieldDefinition(fieldName = "DTMFMuteTimer", kind = portKey, offset = 32, extractor = int16, template = "${port}*1006${bool}"),
     FieldDefinition(fieldName = "Kerchunk", kind = portKey, offset = 38, extractor = bool, template = "${port}*115${bool}"),
     FieldDefinition(fieldName = "KerchunkTimer", kind = portKey, offset = 41, extractor = int16, template = "${port}*1008${value}"),
-    FieldDefinition(fieldName = "MuteDigitSelect", kind = miscKey, offset = 47, extractor = int8, template = "${port}*2090${value}"),
+    FieldDefinition(fieldName = "MuteDigitSe˚lect", kind = miscKey, offset = 47, extractor = int8, template = "${port}*2090${value}"),
     FieldDefinition(fieldName = "CTCSSDuringID", kind = portKey, offset = 47, extractor = int8, template = "${port}*2090${value}"),
     FieldDefinition(fieldName = "TimeoutPorts", kind = miscKey, offset = 54, extractor = int8, template = "${port}*2051${value}"),
+    FieldDefinition(fieldName = "SpeechDelay", kind = miscKey, offset = 55, extractor = int16, template = "${port}*1019${value}"),
+    FieldDefinition(fieldName = "CTCSSEncodePolarity", kind = miscKey, offset = 57, extractor = bool, template = "${port}*1021${value}"),
+    FieldDefinition(fieldName = "GuestMacroRange", kind = miscKey, offset = 60, extractor = twoint16, template = "${port}*4009${value}"),
+    FieldDefinition(fieldName = "DTMFCOSControl", kind = portKey, offset = 67, extractor = bool, template = "${port}22{bool}"),
+    FieldDefinition(fieldName = "DTMFRequireTone", kind = portKey, offset = 73, extractor = bool, template = "${port}17{bool}"),
+    FieldDefinition(fieldName = "Unlock", kind = portKey, offset = 76, extractor = unlock, template = "${port}17{bool}"),
+    FieldDefinition(fieldName = "SpeechIDOverride", kind = portKey, offset = 103, extractor = bool, template = "${port}18{bool}"),
+    FieldDefinition(fieldName = "CwTone1", kind = portKey, offset = 106, extractor = twoint16, template = "${port}*8001'{bool}"),
 
 
   )

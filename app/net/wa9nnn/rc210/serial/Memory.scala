@@ -1,6 +1,5 @@
 package net.wa9nnn.rc210.serial
 
-import net.wa9nnn.rc210.data.FieldKey
 import play.api.libs.json.{Json, OFormat}
 
 import java.io.{InputStream, PrintWriter}
@@ -28,7 +27,7 @@ case class MemoryArray(data: Array[Int], comment: String = "", stamp: Instant = 
    * @return requested [[Array]].
    */
   def apply(slice: SlicePos): Slice = {
-    Slice(data.slice(slice.offset, slice.until).toIndexedSeq, slice)
+    Slice(data.slice(slice.offset, slice.until).toIndexedSeq)
   }
 
   /**
@@ -59,9 +58,9 @@ case class MemoryArray(data: Array[Int], comment: String = "", stamp: Instant = 
  *
  * @param offset in [[Memory]].
  * @param length how much to slice. 0
- * @param name   as used in [[akka.io.Dns.Command]] and, pefhaps,  other places.
+ * @param fieldKey   as used in [[Command]] and, pefhaps,  other places.
  */
-case class SlicePos(offset: Int = 0, length: Int = 1, fieldKey:Option[FieldKey] = None) {
+case class SlicePos(offset: Int = 0, length: Int = 1) {
 
   def until: Int = offset + length
 
@@ -99,11 +98,11 @@ object SlicePos {
  * @param data     from the pos in [[Memory]]
  * @param slicePos that was requested.
  */
-case class Slice(data: Seq[Int] = Seq.empty, slicePos: SlicePos = SlicePos()) {
+case class Slice(data: Seq[Int] = Seq.empty) {
   def length: Int = data.length
 
   override def toString: String = {
-    s"$slicePos => ${data.mkString(",")}"
+   data.mkString(",")
   }
 
   def iterator: Iterator[Int] = {
@@ -112,6 +111,12 @@ case class Slice(data: Seq[Int] = Seq.empty, slicePos: SlicePos = SlicePos()) {
 
   def head: Int = {
     data.head
+  }
+
+  def grouped(n:Int):Seq[Slice]= {
+    data.grouped(2)
+      .map(Slice(_))
+      .toSeq
   }
 }
 
@@ -128,8 +133,7 @@ object Slice {
       .map { s: String =>
         s.trim.toInt
       }.toIndexedSeq
-    new Slice(seq,
-      SlicePos())
+    new Slice(seq)
   }
 
   implicit val fmtSlice: OFormat[Slice] = Json.format[Slice]
