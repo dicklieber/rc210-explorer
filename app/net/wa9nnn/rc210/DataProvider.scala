@@ -19,7 +19,7 @@ package net.wa9nnn.rc210
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.Rc210Data
-import net.wa9nnn.rc210.data.field.{FieldDefinitions, FieldMetadata}
+import net.wa9nnn.rc210.data.field.{FieldDefinition, FieldDefinitions, FieldMetadata}
 import net.wa9nnn.rc210.data.macros.MacroExtractor
 import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.schedules.ScheduleExtractor
@@ -40,7 +40,7 @@ class DataProvider @Inject()() extends LazyLogging {
      val mappedValues: MappedValues = new MappedValues()
      var rc210Data: Rc210Data = Rc210Data(mappedValues)
 
-     FieldDefinitions.fields.foreach { fieldDefinition =>
+     FieldDefinitions.fields.foreach { fieldDefinition: FieldDefinition =>
        fieldDefinition.apply(memory)
          .foreach { case (fieldMetadata: FieldMetadata, triedValue) =>
            mappedValues.setupField(fieldMetadata, triedValue.recover(e => e.getMessage).get)

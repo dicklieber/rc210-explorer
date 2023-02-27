@@ -41,12 +41,20 @@ object FieldDefinitions {
     FieldDefinition(fieldName = "TimeoutPorts", kind = miscKey, offset = 54, extractor = int8, template = "${port}*2051${value}"),
     FieldDefinition(fieldName = "SpeechDelay", kind = miscKey, offset = 55, extractor = int16, template = "${port}*1019${value}"),
     FieldDefinition(fieldName = "CTCSSEncodePolarity", kind = miscKey, offset = 57, extractor = bool, template = "${port}*1021${value}"),
-    FieldDefinition(fieldName = "GuestMacroRange", kind = miscKey, offset = 60, extractor = twoint16, template = "${port}*4009${value}"),
-    FieldDefinition(fieldName = "DTMFCOSControl", kind = portKey, offset = 67, extractor = bool, template = "${port}22{bool}"),
-    FieldDefinition(fieldName = "DTMFRequireTone", kind = portKey, offset = 73, extractor = bool, template = "${port}17{bool}"),
-    FieldDefinition(fieldName = "Unlock", kind = portKey, offset = 76, extractor = unlock, template = "${port}17{bool}"),
-    FieldDefinition(fieldName = "SpeechIDOverride", kind = portKey, offset = 103, extractor = bool, template = "${port}18{bool}"),
-    FieldDefinition(fieldName = "CwTone1", kind = portKey, offset = 106, extractor = twoint16, template = "${port}*8001'{bool}"),
+    FieldDefinition(fieldName = "GuestMacroRange", kind = miscKey, offset = 60, extractor = cwTones, template = "${port}*4009${value}"),
+    FieldDefinition(fieldName = "DTMFCOSControl", kind = portKey, offset = 67, extractor = bool, template = "${port}22${bool}"),
+    FieldDefinition(fieldName = "DTMFRequireTone", kind = portKey, offset = 73, extractor = bool, template = "${port}17${bool}"),
+    FieldDefinition(fieldName = "Unlock", kind = portKey, offset = 76, extractor = unlock, template = "${port}17${bool}"),
+    FieldDefinition(fieldName = "SpeechIDOverride", kind = portKey, offset = 103, extractor = bool, template = "${port}18${bool}"),
+  //todo  CwTone1 & CwTone2 span two blocks! Gag!  FieldDefinition(fieldName = "CwTone1", kind = portKey, offset = 106, extractor = cwTones, template = "${port}*8001'{bool}"),
+    FieldDefinition(fieldName = "CWSpeed", kind = portKey, offset = 118, extractor = int8, template = "${port}*8000${value}"),
+    FieldDefinition(fieldName = "CTCSSDecode", kind = portKey, offset = 136, extractor = bool, template = "${port}112${bool}"),
+    FieldDefinition(fieldName = "MonitorMix", kind = portKey, offset = 139, extractor = bool, template = "${port}119${bool}"),
+    //AuxAudioTimer - 142-147 //todo how does this match up with the macro to run?
+    FieldDefinition(fieldName = "InActiveTimeout", kind = portKey, offset = 148, extractor = int8, template = "${port}*1005${bool}"),
+    FieldDefinition(fieldName = "Speechoverride", kind = portKey, offset = 151, extractor = int8, template = "${port}*120${bool}"),
+    FieldDefinition(fieldName = "EncodeTimer", kind = portKey, offset = 151, extractor = int8, template = "${port}*1007${value}"),
+    FieldDefinition(fieldName = "RepeatMode", kind = portKey, offset = 157, extractor = int8, template = "${port}14${bool}"),
 
 
   )

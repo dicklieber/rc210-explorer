@@ -38,7 +38,7 @@ class FieldExtractorsSpec extends WithMemory with DataTables {
       Seq(88, 2, 0, 0 ) ! "600 0" |
       Seq(0,0,0,0) ! "0 0" |> { (bytes, result: String) =>
       val slice = Slice(bytes)
-      val str = FieldExtractors.twoint16.extract(slice)
+      val str = FieldExtractors.cwTones.extract(slice)
       println(s"$slice => $str")
       str must beEqualTo(result)
     }
