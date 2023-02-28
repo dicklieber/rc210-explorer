@@ -21,6 +21,7 @@ public enum KeyKind {
 
     alarmKey(5, "alarm"),
     dtmfMacroKey(5, "dtmfMacro"),
+    coourtesyToneKey(10, "courtesytone"),
     functionKey(1005, "function"),
     macroKey(105, "macro"),
     messageMacroKey(90, "messageMacro"),

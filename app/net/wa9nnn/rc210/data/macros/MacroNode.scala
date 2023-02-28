@@ -50,18 +50,11 @@ object MacroNode {
 //@ProvidesIntoSet
 //@Singleton
 class MacroExtractor extends MemoryExtractor {
-  println("MacroExtractor")
   def apply(memory: Memory, rc210Data: Rc210Data): Rc210Data = {
     val dtmfMacroMap: DtmfMacros = DtmfMacroExractor(memory)
     val mai = new AtomicInteger(1)
 
-    /**
-     *
-     * @param macroSlicePos         the functions in macro.
-     * @param memory                from the RC-210
-     * @param bytesPerMacro         how many slots in a macro.
-     * @return the macros with functions, dtmf code
-     */
+
     def macroBuilder(macroSlicePos: SlicePos, memory: Memory, bytesPerMacro: Int) = {
       memory(macroSlicePos).data
         .grouped(bytesPerMacro)

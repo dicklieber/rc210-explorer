@@ -56,7 +56,7 @@ object KeyFormats {
     }
   }
 
-  val r: Regex = """([a-zA-Z]+)(\d+)""".r
+  val r: Regex = """([a-zA-Z]+)(\d+)?""".r
 
 
   def buildKey(keyKind: KeyKind, number: Int): Key = {
@@ -71,6 +71,7 @@ object KeyFormats {
       case KeyKind.portKey => PortKey(number)
       case KeyKind.scheduleKey => ScheduleKey(number)
       case KeyKind.wordKey => WordKey(number)
+      case KeyKind.coourtesyToneKey => CourtesyToneKey(number)
     }
   }
 
@@ -169,8 +170,9 @@ object KeyFormats {
   }
 
   def parseString(string: String): Key = {
-    val r(kind, number) = string
-    buildKey(kind, number.toInt)
+    val r(kind, sNnumber) = string
+    val number: Int = Option(sNnumber).map(_.toInt).getOrElse(0)
+    buildKey(kind, number)
   }
 
 

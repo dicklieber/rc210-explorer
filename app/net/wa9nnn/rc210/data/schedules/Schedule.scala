@@ -15,7 +15,7 @@ import javax.inject.Singleton
  *
  * @param key          e.g "schedule5"
  * @param dayOfWeek    See [[DayOfWeek]]
- * @param weekInMonth e.g 1 == 1st week in month.
+ * @param weekInMonth  e.g 1 == 1st week in month.
  * @param monthOfYear  See [[MonthOfYear]]
  * @param localTime    illegal times are None.
  * @param macroToRun   e.g. "macro42"
@@ -35,9 +35,9 @@ case class Schedule(key: ScheduleKey,
 
   override val nodeEnabled: Boolean = localTime.nonEmpty
 
-   val description: String = {
-    localTime.map{localTime =>
-      val week = weekInMonth.map{week =>
+  val description: String = {
+    localTime.map { localTime =>
+      val week = weekInMonth.map { week =>
         s" Week: $week"
       }.getOrElse("")
       s"$monthOfYear$week on $dayOfWeek at $localTime"
@@ -61,17 +61,14 @@ object Schedule {
 
 
 }
+
 @Singleton
-class ScheduleExtractor extends LazyLogging with MemoryExtractor{
-  def apply(memory:Memory, rc210Data: Rc210Data): Rc210Data = {
+class ScheduleExtractor extends LazyLogging with MemoryExtractor {
+  def apply(memory: Memory, rc210Data: Rc210Data): Rc210Data = {
     // dim0 setpoint row, dim1 is piece column
 
-    /**
-     * Extract one piece of a schedules.
-     *
-     * @param php  where in the [[Memory]]
-     * @return one int for each setpoint.
-     */
+
+
     def collect(php: String): Seq[Int] = {
       memory(SlicePos(php)).data
     }

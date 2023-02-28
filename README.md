@@ -15,7 +15,7 @@ But I do know [Scala](https://www.scala-lang.org) a modern functional programmin
 -- Show relationships between the varous part of the configuration. F
 - Run on the JVM, run anywhere. But I'll proably only test on the Mac, Linux and maybe Microsoft Windows 11
 - Data is persisted in JSON text files. No database required.
-- Use the [Play Framework](https://www.playframework.com)
+- Use the [Play Framework](https://www.playframework.com) 
 
 
 ./rc210-explorer -Dplay.http.secret.key='QCY?tAnfIlR6CTf:G3gk?aZ?iwrNwnxf:90Latabg@5241AB`R5W:1uDFN];Ik@n

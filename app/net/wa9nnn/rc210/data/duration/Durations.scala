@@ -27,7 +27,7 @@ import java.time.Duration
  * RC-210 data has a variety of durations. They are all handled as integers but
  * the units vary e.g. minutes, seconds, tenths of seconds etc.
  * We have a specific type for each kind.  This allows the UI to determine how to interact with the user
- * based on the type. The underlying type is a java [[Duration]], which makes display the actual duration to the user easy.
+ * based on the type. The underlying type is a java [[java.time.Duration]], which makes display the actual duration to the user easy.
  */
 sealed trait RCDuration {
   def duration: Duration

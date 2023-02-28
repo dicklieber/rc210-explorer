@@ -77,7 +77,7 @@ object HangTimeParser extends Parser {
     }
 
     for {
-      case (b, port) <- ports.zipWithIndex
+       (b, port) <- ports.zipWithIndex
     } yield {
       val values: Seq[Int] = b.result()
       val iv = ItemValue(command, Seq.empty)

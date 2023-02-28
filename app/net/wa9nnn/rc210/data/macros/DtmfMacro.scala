@@ -8,19 +8,15 @@ import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * Extract Dtmf to Macro mappings.
- * These are spread out in variouos places in [[Memory]] to se get them all then build a map to macros can access them
+ * These are spread out in variouos places in [[net.wa9nnn.rc210.serial.Memory]] to se get them all then build a map to macros can access them
  */
 object DtmfMacroExractor {
 
   def apply(implicit memory: Memory): DtmfMacros = {
     val mai = new AtomicInteger(1) // cause macro numbers start at 1
-    /**
-     * These are always 5 bytes
-     *
-     * @param slicePos   with some number of 5 int groups.
-     * @param memory     from RC-210
-     */
-    def dtmfMap(slicePos: SlicePos, memory: Memory): Seq[(MacroKey, Dtmf)] = {
+
+
+   def dtmfMap(slicePos: SlicePos, memory: Memory): Seq[(MacroKey, Dtmf)] = {
       val macrosSlice = memory(slicePos)
       macrosSlice.data
         .grouped(5)

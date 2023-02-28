@@ -60,9 +60,12 @@ case class ScheduleKey(override val number: Int) extends Key(scheduleKey, number
 case class WordKey(override val number: Int) extends Key(wordKey, number, 256)
 
 case class DtmfMacroKey(override val number: Int) extends Key(dtmfMacroKey, number, 256)
+case class CourtesyToneKey(override val number: Int) extends Key(dtmfMacroKey, number, 256)
 
 /**
- * There can be any number of [[MiscKey()]] but they don't index into a map by themselves. MaxN just indicate o=how many to extract for a given fieldname.
+ * There can be any number of [[MiscKey]] but they don't index into a map by themselves. MaxN just indicate o=how many to extract for a given fieldname.
  */
-case class MiscKey() extends Key(miscKey, 0, 1)
+case class MiscKey() extends Key(miscKey, 0, 1) {
+  override def toString: String = miscKey.getName
+}
 

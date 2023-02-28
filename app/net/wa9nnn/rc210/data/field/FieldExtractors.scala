@@ -50,13 +50,6 @@ import net.wa9nnn.rc210.serial.{Memory, Slice, SlicePos}
 
 abstract class FieldExtractor(bytesPreField: Int) {
 
-  /**
-   *
-   * @param memory source.
-   * @param offset where to start in [[Memory]]
-   * @return extracted string and new position in [[Memory]]
-   * @throws IllegalArgumentException
-   */
   def apply(memory: Memory, offset: Int): ExtractResult = {
     val slicePos = SlicePos(offset, bytesPreField)
     ExtractResult(extract(memory(slicePos)), slicePos.until)
@@ -93,10 +86,10 @@ object FieldExtractors {
 
   val cwTones: FieldExtractor = new FieldExtractor(4) {
     override def extract(slice: Slice) = {
-     val grouped =  slice.grouped(2)
-      grouped.map {slice =>
-          int16.extract(slice)
-        }
+      val grouped = slice.grouped(2)
+      grouped.map { slice =>
+        int16.extract(slice)
+      }
         .mkString(" ")
     }
   }

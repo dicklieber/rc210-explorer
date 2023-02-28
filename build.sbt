@@ -4,10 +4,11 @@ organization := "net.wa9nnn"
 
 version := "1.0-SNAPSHOT"
 
+enablePlugins(JavaServerAppPackaging)
+
 lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
   .settings(
     scalaVersion := "2.13.10",
-
     buildInfoKeys :=
       Seq[BuildInfoKey](
         name, version, scalaVersion, sbtVersion,
@@ -23,11 +24,13 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
     //    docusaurDir := (ThisBuild / baseDirectory).value / "website",
     //    docusaurBuildDir := docusaurDir.value / "build",
 
+    mappings in (Compile, packageDoc) := Seq(),
+
     scalacOptions ++= Seq(
       "-feature",
       "-deprecation",
       "-Xfatal-warnings",
-      "-Ymacro-annotations",
+//      "-Ymacro-annotations",
       "-Xlog-implicits"
     )
 

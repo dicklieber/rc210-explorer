@@ -29,7 +29,7 @@ object Vocabulary {
       .map { line: String =>
         val n = line.take(3)
         val t = line.drop(4).trim
-        Phrase(WordKey(n.toInt + 1), t)
+        Phrase(WordKey(n.toInt), t)
       }
       .toSeq
       .sortBy(_.string)

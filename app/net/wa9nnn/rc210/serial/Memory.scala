@@ -21,11 +21,6 @@ case class MemoryArray(data: Array[Int], comment: String = "", stamp: Instant = 
   data.view(42)
 
 
-  /**
-   *
-   * @param slice part of [[Memory]] we are interested in.
-   * @return requested [[Array]].
-   */
   def apply(slice: SlicePos): Slice = {
     Slice(data.slice(slice.offset, slice.until).toIndexedSeq)
   }
@@ -144,7 +139,7 @@ object MemoryArray {
   val r: Regex = """(.*):\s+(.*)""".r
 
   /**
-   * Read from a file produced by [[MemoryArray.save()]].
+   * Read from a file produced by MemoryArray.save().
    *
    * @param path where to read from.
    * @return the data or an exception.

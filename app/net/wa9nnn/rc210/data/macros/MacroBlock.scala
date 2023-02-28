@@ -35,15 +35,7 @@ object MacroBlock {
     implicit val functions: Seq[FunctionKey] = macroNode.functions
 
 
-    /**
-     * Builds one function row for the flow table.
-     *
-     * @param functionKey       to render
-     * @param maybeMacroKey     Some if 1st row, will add top border. Can also be marked as last.
-     * @param last              true if last or only row, will add bottom border
-     * @return
-     */
-    def buildRow(functionKey: FunctionKey, maybeMacroKey: Option[MacroKey] = None, last: Boolean = false): Row = {
+ def buildRow(functionKey: FunctionKey, maybeMacroKey: Option[MacroKey] = None, last: Boolean = false): Row = {
 
       /**
        * Right extension td to a function td.

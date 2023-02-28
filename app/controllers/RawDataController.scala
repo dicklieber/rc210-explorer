@@ -84,7 +84,7 @@ class RawDataController @Inject()(val controllerComponents: ControllerComponents
 
   def vocabulary(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
 
-    val phrases = Vocabulary.phrases
+    val phrases = Vocabulary.phrases.sortBy(_.wordKey)
     val macrosTable = Table(Phrase.header(phrases.length), phrases.map(_.toRow))
     Ok(views.html.dat(Seq(macrosTable)))
   }
