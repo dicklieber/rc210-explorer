@@ -17,12 +17,14 @@
 
 package net.wa9nnn.rc210.data.mapped
 
-import com.fasterxml.jackson.module.scala.deser.overrides.TrieMap
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.{FieldMetadata, FieldValue}
 import net.wa9nnn.rc210.key.Key
-import play.api.libs.json.{JsArray, JsResult, JsValue, Json, OFormat}
+import play.api.libs.json.JsArray
+import play.api.libs.json.Json
+import play.api.libs.json._
 
+import scala.collection.concurrent.TrieMap
 import scala.collection.mutable
 import scala.util.Try
 
@@ -34,7 +36,7 @@ class MappedValues() {
   private val metadataMap = new TrieMap[FieldKey, FieldMetadata]
   private val valueMap = new TrieMap[FieldKey, FieldValue]
 
-  def allMetadatas:Seq[FieldMetadata] = metadataMap.values.toSeq.sortBy(_.fieldKey)
+  def allMetadatas: Seq[FieldMetadata] = metadataMap.values.toSeq.sortBy(_.fieldKey)
 
   /**
    *
@@ -48,7 +50,7 @@ class MappedValues() {
       .sortBy(_.fieldKey.fieldName)
   }
 
-  def valueForKey(fieldKey: FieldKey):Option[FieldValue] = {
+  def valueForKey(fieldKey: FieldKey): Option[FieldValue] = {
     valueMap.get(fieldKey)
   }
 
@@ -60,10 +62,10 @@ class MappedValues() {
       .sortBy[String](_.toString)
   }
 
-//  def acceptCandidate(fieldKey: FieldKey): Unit = {
-//    val container = metadataMap(fieldKey)
-//    metadataMap.put(fieldKey, container.acceptCandidate())
-//  }
+  //  def acceptCandidate(fieldKey: FieldKey): Unit = {
+  //    val container = metadataMap(fieldKey)
+  //    metadataMap.put(fieldKey, container.acceptCandidate())
+  //  }
 
   /**
    * Add a new entry.
@@ -91,21 +93,25 @@ class MappedValues() {
 
   def toJson: JsArray = {
     import play.api.libs.json._
-throw new NotImplementedError() //todo
-/*
     Json.arr(
       valueMap.values
     )
-*/
   }
 }
 
 object MappedValues {
+  import play.api.libs.json._
+
   implicit val fmtMappedValues: OFormat[MappedValues] = new OFormat[MappedValues] {
 
-    override def writes(o: MappedValues) = {
-      Json.obj(
-        "values" -> Json.arr(o.valueMap.toSeq)
+    override def writes(mappedValues: MappedValues): JsObject = {
+       JsObject(
+        mappedValues
+          .valueMap
+          .values
+          .toSeq
+          .sortBy(_.fieldKey.fieldName)
+          .map(fieldValue => fieldValue.fieldKey.param -> JsString(fieldValue.value))
       )
     }
 
