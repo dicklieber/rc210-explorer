@@ -19,11 +19,11 @@ package controllers
 
 import com.wa9nnn.util.tableui.Table
 import net.wa9nnn.rc210.DataProvider
-import net.wa9nnn.rc210.command.ItemValue
 import net.wa9nnn.rc210.data.Rc210Data
+import net.wa9nnn.rc210.data.field.FieldMetadata
 import net.wa9nnn.rc210.data.functions.{FunctionNode, FunctionsProvider}
 import net.wa9nnn.rc210.data.macros.MacroNode
-import net.wa9nnn.rc210.data.mapped.{FieldContainer, MappedValues}
+import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.schedules.Schedule
 import net.wa9nnn.rc210.data.vocabulary.{MessageMacroNode, Phrase, Vocabulary}
 import play.api.mvc._
@@ -56,8 +56,12 @@ class RawDataController @Inject()(val controllerComponents: ControllerComponents
   def mappedItems(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
 
     val mappedValues: MappedValues = dataProvider.rc210Data.mappedValues
-    val dump = mappedValues.dump
-    val table = Table(FieldContainer.header(dump.length), dump.map(_.toRow))
+    val allMetadatas = mappedValues.allMetadatas
+
+    val table = Table(FieldMetadata.header(allMetadatas.length), allMetadatas.map { fieldMetadata =>
+      val maybeFieldValue = mappedValues.valueForKey(fieldMetadata.fieldKey)
+      fieldMetadata.toRow(maybeFieldValue)
+    })
     Ok(views.html.dat(Seq(table)))
   }
 

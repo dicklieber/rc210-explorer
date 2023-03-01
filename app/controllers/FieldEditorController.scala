@@ -17,10 +17,10 @@
 
 package controllers
 
-import net.wa9nnn.rc210.data.functions.FunctionsProvider
-import net.wa9nnn.rc210.data.mapped.FieldContainer
-import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.DataProvider
+import net.wa9nnn.rc210.data.field.{FieldMetadata, FieldValue}
+import net.wa9nnn.rc210.data.functions.FunctionsProvider
+import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.key.KeyFormats
 import play.api.mvc._
 
@@ -52,10 +52,10 @@ class FieldEditorController @Inject()(implicit val controllerComponents: Control
       implicit val rc210Data = dataProvider.rc210Data
       val mappedValues = rc210Data.mappedValues
 
-      val fields: Seq[FieldContainer] = mappedValues.fieldsForKey(key)
+      val fields: Seq[FieldMetadata] = mappedValues.fieldsForKey(key)
 
 
-      Ok(views.html.fieldsEditor(fields))
+      Ok(views.html.fieldsEditor(fields, mappedValues))
   }
 
 

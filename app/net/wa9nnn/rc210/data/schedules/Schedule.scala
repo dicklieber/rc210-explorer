@@ -14,14 +14,14 @@ import javax.inject.Singleton
 /**
  *
  * @param key          e.g "schedule5"
- * @param dayOfWeek    See [[DayOfWeek]]
+ * @param dayOfWeek    See [[DayOfWeekJaca]]
  * @param weekInMonth  e.g 1 == 1st week in month.
  * @param monthOfYear  See [[MonthOfYear]]
  * @param localTime    illegal times are None.
  * @param macroToRun   e.g. "macro42"
  */
 case class Schedule(key: ScheduleKey,
-                    dayOfWeek: DayOfWeek,
+                    dayOfWeek: DayOfWeekJaca,
                     weekInMonth: Option[Int],
                     monthOfYear: MonthOfYear,
                     localTime: Option[LocalTime],
@@ -88,7 +88,7 @@ class ScheduleExtractor extends LazyLogging with MemoryExtractor {
 
       Schedule(
         key = ScheduleKey(setPoint + 1),
-        dayOfWeek = parts.head.asInstanceOf[DayOfWeek],
+        dayOfWeek = parts.head.asInstanceOf[DayOfWeekJaca],
         weekInMonth = parts(1).asInstanceOf[Option[Int]],
         monthOfYear = parts(2).asInstanceOf[MonthOfYear],
         localTime = {

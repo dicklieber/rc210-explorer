@@ -17,9 +17,11 @@
 
 package net.wa9nnn.rc210.data
 
+import com.wa9nnn.util.tableui.{Cell, CellProvider}
 import net.wa9nnn.rc210.key.KeyFormats.parseString
 import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.key.{Key, KeyFormats}
+import net.wa9nnn.rc210.util.CamelToWords
 import play.api.libs.json.{Format, JsResult, JsString, JsValue}
 import play.api.mvc.PathBindable
 
@@ -31,17 +33,22 @@ import scala.util.Try
  * @param fieldName name of field. Shown in UIs
  * @param key       qualifier for the field.
  */
-case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey] {
+case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey] with CellProvider{
   /**
    * can identify this in a HTTP param or as a JSON name.
    */
   val param: String = s"$fieldName|$key"
+  val prettyName:String = CamelToWords(fieldName)
 
   override def compare(that: FieldKey): Int = {
     var ret = key.toString compareTo(that.key.toString)
     if (ret == 0)
       ret = fieldName.compareTo(that.fieldName)
     ret
+  }
+
+  override def toCell: Cell = {
+    Cell(prettyName)
   }
 }
 

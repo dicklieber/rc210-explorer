@@ -1,0 +1,10 @@
+@import net.wa9nnn.rc210.data.field.UiInfo
+@import net.wa9nnn.rc210.data.field.FieldValue
+@(uiInfo: UiInfo, fieldValue: FieldValue)
+<div class="mb-3">
+    @defining(fieldValue.fieldKey.param) { param =>
+        <label for="@param:" class="form-label">@fieldValue.fieldKey.fieldName</label>
+        <input name="@param" id="@param" value="@param" @if(fieldValue.bool) { checked } class="form-control">
+    }
+</div>
+

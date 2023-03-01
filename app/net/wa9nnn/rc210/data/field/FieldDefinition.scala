@@ -18,12 +18,28 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.field.UiType.UiType
 import net.wa9nnn.rc210.key.{KeyFormats, KeyKind}
 import net.wa9nnn.rc210.serial.Memory
 
 import scala.util.Try
 
-case class FieldDefinition(fieldName: String, kind: KeyKind, offset: Int, extractor: FieldExtractor, template: String) {
+/**
+ * //todo move offset to beginning.
+ * @param fieldName
+ * @param kind
+ * @param offset
+ * @param extractor
+ * @param template
+ * @param uiType
+ * @param maybeOptions
+ */
+case class FieldDefinition(fieldName: String, kind: KeyKind, offset: Int, extractor: FieldExtractor, template: String, uiType: UiType = UiType.number, maybeOptions: Option[FieldSelect] = None) {
+  def withOptions(fieldSelect: FieldSelect): FieldDefinition = {
+    assert(uiType == UiType.select, s"Only a ${UiType.select} can have options!")
+    copy(maybeOptions = Option(fieldSelect))
+  }
+
   def apply(memory: Memory): Seq[(FieldMetadata, Try[String])] = {
 
     var start = offset
@@ -31,21 +47,15 @@ case class FieldDefinition(fieldName: String, kind: KeyKind, offset: Int, extrac
       n <- 1 to kind.getMaxN
     } yield {
       val fieldKey = FieldKey(fieldName, KeyFormats.buildKey(kind, n))
-//      val start = offset + bytesPreField * (n - 1)
+      //      val start = offset + bytesPreField * (n - 1)
       val triedValue = Try {
         val er: ExtractResult = extractor(memory, start)
         start = er.newOffset
         er.value
       }
-      FieldMetadata(fieldKey, template) -> triedValue
+      FieldMetadata(fieldKey, template, uiType, None) -> triedValue
     }
   }
 
 }
 
-case class FieldMetadata(fieldKey: FieldKey, template: String) {
-
-  def apply(value: String): String =
-    template.replace("$", value)
-
-}

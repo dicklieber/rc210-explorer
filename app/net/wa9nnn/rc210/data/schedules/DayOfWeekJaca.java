@@ -1,6 +1,6 @@
 package net.wa9nnn.rc210.data.schedules;
 
-public enum DayOfWeek {
+public enum DayOfWeekJaca {
     EveryDay,
     Monday,
     Tuesday,
