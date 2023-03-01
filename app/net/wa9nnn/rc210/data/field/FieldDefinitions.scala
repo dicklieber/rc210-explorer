@@ -23,9 +23,9 @@ import net.wa9nnn.rc210.key.KeyKind._
 object FieldDefinitions {
   // template ${value}  ${bool} ${port}
   val fields: Seq[FieldDefinition] = Seq(
-    FieldDefinition(fieldName = "SitePrefix", kind = miscKey, offset = 0, extractor = dtmf, template = "*2108${value}", UiType.number),
-    FieldDefinition(fieldName = "TTPadTest", kind = miscKey, offset = 4, extractor = dtmf, template = "*2093${value}"),
-    FieldDefinition(fieldName = "SayHours", kind = miscKey, offset = 10, bool, template = "*5104${bool}"),
+    FieldDefinition(fieldName = "SitePrefix", kind = miscKey, offset = 0, extractor = dtmf, template = "*2108${value}", UiDtmf(3)),
+    FieldDefinition(fieldName = "TTPadTest", kind = miscKey, offset = 4, extractor = dtmf, template = "*2093${value}", UiDtmf(5)),
+    FieldDefinition(fieldName = "SayHours", kind = miscKey, offset = 10, bool, template = "*5104${bool}", UiInfo.checkBox),
     FieldDefinition(fieldName = "HangTime1", kind = portKey, offset = 11, extractor = int8, template = "*10001${value}"),
     FieldDefinition(fieldName = "HangTime2", kind = portKey, offset = 14, extractor = int8, template = "*10002${value}"),
     FieldDefinition(fieldName = "HangTime3", kind = portKey, offset = 17, extractor = int8, template = "*10003${value}"),

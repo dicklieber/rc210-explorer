@@ -17,25 +17,39 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.data.field.UiRender.{UiRender, number}
+import net.wa9nnn.rc210.data.field.FieldExtractors.{int16, int8}
+import net.wa9nnn.rc210.data.field.UiRender.{UiRender, dtmf, number}
 
 import scala.util.Try
 
-class UiInfo(rend: UiRender, val options: Option[FieldSelect] = None, validate: String => Try[String]) {
+class UiInfo(val rend: UiRender, val fieldExtractor:FieldExtractor, val options: Option[FieldSelect] = None, validate: String => Try[String]) {
   def doString(s: String): Try[String] = {
     validate(s)
   }
 }
 
 object UiInfo {
-  val checkBox: UiInfo = new UiInfo(rend = UiRender.checkbox, validate = (s: String) => Try(s)) // always valid.
+  val default: UiNumber =  UiNumber(256)
+  val checkBox: UiInfo = new UiInfo(rend = UiRender.checkbox,
+    FieldExtractors.bool,
+    validate = (s: String) => Try(s)) // always valid.
 
 }
 
-case class UiNumber(max: Int) extends UiInfo(rend = number, validate = (s: String) => {
+case class UiNumber(max: Int) extends UiInfo(
+  rend = number,
+  fieldExtractor = if(max > 255) int16 else int8,
+  validate = (s: String) => {
   val int = s.toInt
   Try {
     if (int > max) throw new IllegalArgumentException(s"Must be 1 to $max but found: $int")
+    else
+      s
+  }
+})
+case class UiDtmf(max: Int) extends UiInfo(rend = dtmf, validate = (s: String) => {
+  Try {
+    if (s.length > max) throw new IllegalArgumentException(s"Must be 1 to $max digits but found: $s ${s.length}")
     else
       s
   }
@@ -44,5 +58,5 @@ case class UiNumber(max: Int) extends UiInfo(rend = number, validate = (s: Strin
 
 object UiRender extends Enumeration {
   type UiRender = Value
-  val checkbox, number, select = Value
+  val checkbox, number, select, dtmf = Value
 }

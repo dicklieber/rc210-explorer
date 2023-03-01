@@ -34,11 +34,7 @@ import scala.util.Try
  * @param uiType
  * @param maybeOptions
  */
-case class FieldDefinition(fieldName: String, kind: KeyKind, offset: Int, extractor: FieldExtractor, template: String, uiType: UiType = UiType.number, maybeOptions: Option[FieldSelect] = None) {
-  def withOptions(fieldSelect: FieldSelect): FieldDefinition = {
-    assert(uiType == UiType.select, s"Only a ${UiType.select} can have options!")
-    copy(maybeOptions = Option(fieldSelect))
-  }
+case class FieldDefinition(fieldName: String, kind: KeyKind, offset: Int, extractor: FieldExtractor, template: String, uiInfo: UiInfo = UiInfo.default) {
 
   def apply(memory: Memory): Seq[(FieldMetadata, Try[String])] = {
 
