@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.Dtmf.dtmfDigits
-import net.wa9nnn.rc210.data.field.FieldExtractors.{dtmf, int16, int8}
+import net.wa9nnn.rc210.data.field.FieldExtractors.{dtmf, int16, int8, twoInts, unlock}
 import net.wa9nnn.rc210.data.field.UiRender._
 
 import scala.util.Try
@@ -40,9 +40,13 @@ object UiInfo {
   } // always valid.
 
   override def toString: String = "checkBox"
+
+  val unlockCode: UiUnlockCode = UiUnlockCode()
+
 }
 
-case class UiNumber(max: Int, unit:String) extends UiInfo(
+
+case class UiNumber(max: Int, unit: String) extends UiInfo(
   uiRender = number,
   fieldExtractor = if (max > 256) int16 else int8,
   validate = (s: String) => {
@@ -69,4 +73,23 @@ case class UiDtmf(max: Int) extends UiInfo(uiRender = dtmfKeys, fieldExtractor =
   override val prompt: String = s"1 to $max digits"
 }
 
+case class UiTwoNumbers(sPrompt: String) extends UiInfo(
+  uiRender = UiRender.twoStrings,
+  fieldExtractor = twoInts,
+  validate = { (s: String) =>
+    throw new NotImplementedError() //todo
+  }
+) {
+  override val prompt: String = sPrompt
 
+}
+case class UiUnlockCode() extends UiInfo(
+  uiRender = UiRender.number,
+  fieldExtractor = unlock,
+  validate = { (s: String) =>
+    throw new NotImplementedError() //todo
+  }
+) {
+  override val prompt: String = "1 to 8 digits"
+
+}

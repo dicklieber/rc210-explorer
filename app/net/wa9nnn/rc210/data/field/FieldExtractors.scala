@@ -95,7 +95,7 @@ object FieldExtractors {
 
   }
 
-  val cwTones: FieldExtractor = new FieldExtractor(4) {
+  val twoInts: FieldExtractor = new FieldExtractor(4) {
     override def extract(slice: Slice) = {
       val grouped = slice.grouped(2)
       grouped.map { slice =>

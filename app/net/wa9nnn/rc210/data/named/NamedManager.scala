@@ -19,23 +19,22 @@ package net.wa9nnn.rc210.data.named
 
 import com.fasterxml.jackson.module.scala.deser.overrides.TrieMap
 import com.typesafe.config.Config
-import play.api.libs.json.Json
-import net.wa9nnn.rc210.key.KeyFormats._
 import net.wa9nnn.rc210.key.Key
+import net.wa9nnn.rc210.key.KeyFormats._
+import play.api.libs.json.Json
 
 import java.nio.file.{Files, Paths}
 import javax.inject.{Inject, Singleton}
-import scala.collection.mutable
 
 @Singleton
-class NamedManager @Inject()(config: Config) {
+class NamedManager @Inject()(config: Config) extends NamedSource{
   private val path = Paths.get(config.getString("vizRc210.dataDir"))
   private val namedFile = path.resolve("named.json")
   Files.createDirectories(path)
 
   private val map = new TrieMap[Key, String]
 
-  def apply(key: Key): String = map.getOrElse(key, key.toString)
+  override def apply(key: Key): String = map.getOrElse(key, key.toString)
 
   def apply(key: Key, str: String): Unit = {
     if (str.nonEmpty)
@@ -59,3 +58,7 @@ class NamedManager @Inject()(config: Config) {
 case class NamedKey(key: Key, name: String)
 
 case class NamedData(data: Seq[NamedKey])
+
+trait NamedSource {
+  def apply(key: Key):String
+}

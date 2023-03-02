@@ -17,11 +17,31 @@
 
 package net.wa9nnn.rc210.data.field
 
+import net.wa9nnn.rc210.data.named.NamedSource
+
 import scala.util.Try
 
-class FieldSelect(choices: String*) extends UiInfo(UiRender.select,
+class FieldSelect(options: Seq[SelectOption]) extends UiInfo(UiRender.select,
   fieldExtractor = FieldExtractors.int8,
   validate = (s: String) => Try(s)
 ) {
   override val prompt: String = "-select-"
+
+
+  def options(namedSource: NamedSource): Seq[SelectOption] = {
+    options
+  }
 }
+
+object FieldSelect {
+  def apply(simple: String*): FieldSelect = {
+    val r: Seq[SelectOption] = simple
+      .zipWithIndex
+      .map { case (string, index) =>
+        SelectOption(index, string)
+      }
+    new FieldSelect(r)
+  }
+}
+
+case class SelectOption(value: Int, display: String)

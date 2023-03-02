@@ -16,9 +16,11 @@
  */
 
 package net.wa9nnn.rc210.data.field
+import net.wa9nnn.rc210.data.named.NamedSource
+import net.wa9nnn.rc210.key.{KeyKind, MacroKey}
 
 object SelectOptions {
-  val dayOfWeek: FieldSelect = new FieldSelect(
+  val dayOfWeek: FieldSelect =  FieldSelect(
     "EveryDay",
     "Monday",
     "Tuesday",
@@ -30,9 +32,20 @@ object SelectOptions {
     "Weekdays",
     "Weekends"
   )
-  val dtmfMuteDigit: FieldSelect = new FieldSelect(
+  val dtmfMuteDigit: FieldSelect =  FieldSelect(
     "-select-",
     "1st digit",
     "2ndt digit")
 
+  val macroSelect :FieldSelect = new FieldSelect(Seq.empty) {
+    override def options(namedSource: NamedSource) = {
+      for{
+        number <- 1 to KeyKind.macroKey.getMaxN
+        macroKey = MacroKey(number)
+
+      }yield {
+        SelectOption(number, namedSource(macroKey))
+      }
+    }
+  }
 }

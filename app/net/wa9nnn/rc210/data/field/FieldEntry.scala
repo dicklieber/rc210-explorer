@@ -46,6 +46,11 @@ case class FieldEntry(fieldValue: FieldValue, fieldMetadata: FieldMetadata) exte
       "v" -> (() => fieldValue.current),
       "b" -> (() => bool),
       "n" -> (() => fieldValue.fieldKey.key.number.toString),
+      "S" -> (() => fieldValue
+        .current
+        .toCharArray
+        .mkString(" "))
+      ,
     ).toMap
 
     map.foldLeft(fieldMetadata.template) { (command: String, tr) =>

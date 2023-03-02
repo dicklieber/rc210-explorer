@@ -65,5 +65,5 @@ package object fieldDefintionSugar {
 
 object UiRender extends Enumeration {
   type UiRender = Value
-  val checkbox, number, select, dtmfKeys = Value
+  val checkbox, number, select, dtmfKeys, twoStrings = Value
 }

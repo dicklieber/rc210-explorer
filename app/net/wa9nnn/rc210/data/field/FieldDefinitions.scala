@@ -17,7 +17,8 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.data.field.UiInfo.checkBox
+import net.wa9nnn.rc210.data.field.SelectOptions.macroSelect
+import net.wa9nnn.rc210.data.field.UiInfo.{checkBox, unlockCode}
 import net.wa9nnn.rc210.key.KeyKind._
 
 object FieldDefinitions {
@@ -42,7 +43,26 @@ object FieldDefinitions {
     (48, "CTCSS During ID", portKey, "*n2089") % checkBox,
     (54, "Timeout Ports", miscKey, "*2051b") % checkBox,
     (55, "Speech Delay", miscKey, "*1019v") % UiNumber(600, "Seconds"),
-    (57, "CTCSS Encode Polarity", miscKey, "*1021v") % UiNumber(255, "Seconds 254:Never 255:Off"),
+    (57, "CTCSS Encode Polarity", portKey, "*1021v") % checkBox,
+    (60, "Guest Macro Range", portKey, "*4009v") % UiTwoNumbers("<from macro> <to macro>"),
+    (67, "DTMF COS Control", portKey, "n22b") % checkBox,
+    (73, "DTMF Require Tone", portKey, "n17b") % checkBox,
+    (76, "Unlock", portKey, "* 9 0 0 0 S") % unlockCode,
+    (103, "Speech ID Override", portKey, "n20b") % checkBox,
+    //todo  CwTone1 & CwTone2 span two blocks! Gag!  FieldDefinition(fieldName = "CwTone1", kind = portKey, offset = 106, extractor = cwTones, template = "${port}*8001'{bool}"),
+    (118, "CWS Speed", portKey, "n*8000b") % checkBox,
+    (136, "CTCSS Decode", portKey, "n112b") % checkBox,
+    (139, "Monitor Mix", portKey, "n119b") % checkBox,
+    //AuxAudioTimer - 142-147 //todo how does this match up with the macro to run?
+    (148, "Inactivity Timeout", portKey, "n*1005") % UiNumber(255, "minutes"),
+    (151, "Speech Override", portKey, "n*120v") % UiNumber(255, "minutes"),
+    (154, "Encode Timer", portKey, "n*1007") % UiNumber(255, "minutes"),
+    (157, "Repeat Mode", portKey, "n14b") % checkBox,
+    (160, "Timeout Timer", portKey, "n*1001v") % UiNumber(32767, "seconds"),
+    (166, "DTMF Mute", portKey, "n*1001v") % checkBox,
+    (169, "Alarm Enable", portKey, "n191b") % checkBox,
+    (174, "Alarm Macro Low", alarmKey, "*2101 n v") % macroSelect,
+
   )
 
 }
