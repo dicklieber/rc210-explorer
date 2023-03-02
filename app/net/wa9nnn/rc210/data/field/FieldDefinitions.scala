@@ -39,6 +39,10 @@ object FieldDefinitions {
     (38, "Kerchunk", portKey, "n15b") % checkBox,
     (41, "Kerchunk Timer", portKey, "n1018b") % UiNumber(6000, "milliseconds"),
     (47, "Mute Digit Select", miscKey, "*2090v") % SelectOptions.dtmfMuteDigit,
+    (48, "CTCSS During ID", portKey, "*n2089") % checkBox,
+    (54, "Timeout Ports", miscKey, "*2051b") % checkBox,
+    (55, "Speech Delay", miscKey, "*1019v") % UiNumber(600, "Seconds"),
+    (57, "CTCSS Encode Polarity", miscKey, "*1021v") % UiNumber(255, "Seconds 254:Never 255:Off"),
   )
 
 }
