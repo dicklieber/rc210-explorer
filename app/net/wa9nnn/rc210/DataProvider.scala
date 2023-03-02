@@ -18,12 +18,13 @@
 package net.wa9nnn.rc210
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.Rc210Data
-import net.wa9nnn.rc210.data.field.{FieldDefinition, FieldDefinitions, FieldMetadata}
+import net.wa9nnn.rc210.data.field.{FieldDefinitions, FieldMetadata}
 import net.wa9nnn.rc210.data.macros.MacroExtractor
 import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.schedules.ScheduleExtractor
 import net.wa9nnn.rc210.data.vocabulary.MessageMacroExtractor
+import net.wa9nnn.rc210.data.{FieldKey, Rc210Data}
+import net.wa9nnn.rc210.key.KeyFormats
 import net.wa9nnn.rc210.serial.{Memory, MemoryArray}
 
 import java.io.InputStream
@@ -35,35 +36,43 @@ class DataProvider @Inject()() extends LazyLogging {
 
 
   val rc210Data: Rc210Data = (Using(getClass.getResourceAsStream("/MemFixedtxt.txt")) {
-   stream: InputStream =>
-     val memory: Memory = MemoryArray(stream).get
-     val mappedValues: MappedValues = new MappedValues()
-     var rc210Data: Rc210Data = Rc210Data(mappedValues)
+    stream: InputStream =>
+      val memory: Memory = MemoryArray(stream).get
+      val mappedValues: MappedValues = new MappedValues()
+      var rc210Data: Rc210Data = Rc210Data(mappedValues)
 
-     FieldDefinitions.fields.foreach { fieldDefinition: FieldDefinition =>
-       fieldDefinition.apply(memory)
-         .foreach { case (fieldMetadata: FieldMetadata, triedValue) =>
-           mappedValues.setupField(fieldMetadata, triedValue.recover(e => e.getMessage).get)
-         }
-       val extractors: Seq[MemoryExtractor] = Seq(
-         new MacroExtractor(),
-         new ScheduleExtractor(),
-         new MessageMacroExtractor()
-       )
-       extractors.foreach { extractor =>
-         rc210Data = extractor(memory, rc210Data)
-       }
+      FieldDefinitions.fields.foreach { fieldMetadata: FieldMetadata =>
+        var start = fieldMetadata.offset
+        for (n <- 1 to fieldMetadata.kind.getMaxN) {
+          val fieldKey: FieldKey = new FieldKey(fieldMetadata.fieldName, KeyFormats.buildKey(fieldMetadata.kind, n))
+          val extractResult = fieldMetadata.extractor(memory, start)
+          start = extractResult.newOffset
+          mappedValues.setupField(fieldKey = fieldKey,
+            fieldMetadata = fieldMetadata,
+            initialValue = extractResult.value
+          )
+        }
 
 
-     }
-     rc210Data
- } match {
-   case Failure(exception) =>
-     logger.error("Initial loading", exception)
-     Rc210Data()
-   case Success(value: Rc210Data) =>
-     value
- })
+        val extractors: Seq[MemoryExtractor] = Seq(
+          new MacroExtractor(),
+          new ScheduleExtractor(),
+          new MessageMacroExtractor()
+        )
+        extractors.foreach { extractor =>
+          rc210Data = extractor(memory, rc210Data)
+        }
+
+
+      }
+      rc210Data
+  } match {
+    case Failure(exception) =>
+      logger.error("Initial loading", exception)
+      Rc210Data()
+    case Success(value: Rc210Data) =>
+      value
+  })
 }
 
 trait MemoryExtractor {

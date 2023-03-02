@@ -56,6 +56,10 @@ abstract class FieldExtractor(bytesPreField: Int) {
   }
 
   def extract(slice: Slice): String
+
+  override def toString: String = name
+
+  val name:String
 }
 
 object FieldExtractors {
@@ -68,13 +72,18 @@ object FieldExtractors {
         .map(_.toChar) //todo how about A-D?
         .toArray
       )
+
+    override val name: String = "dtmf"
   }
   val bool: FieldExtractor = new FieldExtractor(1) {
     override def extract(slice: Slice): String = (slice.head > 0).toString
+    override val name: String = "bool"
   }
 
   val int8: FieldExtractor = new FieldExtractor(1) {
     override def extract(slice: Slice) = slice.head.toString
+    override val name: String = "int8"
+
   }
   val int16: FieldExtractor = new FieldExtractor(2) {
     override def extract(slice: Slice) = {
@@ -82,6 +91,8 @@ object FieldExtractors {
       val intValue = iterator.next() + iterator.next() * 256
       intValue.toString
     }
+    override val name: String = "int16"
+
   }
 
   val cwTones: FieldExtractor = new FieldExtractor(4) {
@@ -92,6 +103,8 @@ object FieldExtractors {
       }
         .mkString(" ")
     }
+    override val name: String = "cwTones"
+
   }
   val unlock: FieldExtractor = new FieldExtractor(9) {
     override def extract(slice: Slice): String = {
@@ -105,6 +118,8 @@ object FieldExtractors {
         .toSeq
         .mkString(" ")
     }
+    override val name: String = "unlock"
+
   }
 
 }

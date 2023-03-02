@@ -17,32 +17,25 @@
 
 package net.wa9nnn.rc210.data.field
 
+import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
 import net.wa9nnn.rc210.data.FieldKey
-import play.api.libs.json.{Json, OFormat}
 
-/**
- *
- * @param value current value.
- */
-case class FieldValue(fieldKey: FieldKey, value: String, candidate: Option[String] = None) {
-  def cssClass: String = if(dirty) "dirtyValue" else ""
+case class FieldEntry(fieldValue: FieldValue, fieldMetadata: FieldMetadata) extends RowSource{
+  def fieldKey: FieldKey = fieldValue.fieldKey
 
-  def current: String = candidate.getOrElse(value)
-
-  def bool: Boolean = value == "true"
-
-  def setCandidate(value: String): FieldValue = copy(candidate = Option(value))
-
-  def acceptCandidate(): FieldValue = {
-    assert(candidate.nonEmpty, "No candidate to accept!")
-    copy(value = candidate.get, candidate = None)
-  }
-
-  def dirty: Boolean = candidate.nonEmpty
+  override def toRow: Row = Row(
+    fieldKey.toCell,
+    fieldMetadata.offset,
+    fieldMetadata.extractor.name,
+    fieldMetadata.uiRender,
+    fieldMetadata.selectOptions.map(_.toString()),
+    fieldMetadata.template,
+    Cell(fieldValue.current)
+      .withCssClass(fieldValue.cssClass),
+    "//todo"
+  )
 }
 
-object FieldValue {
-  implicit val fmtFieldValue: OFormat[FieldValue] = Json.format[FieldValue]
-
-
+object FieldEntry {
+  def header(count:Int)= Header(s"Fields ($count)", "FieldKey", "Offset", "Extractor", "UI", "Select Options", "Template", "Value", "Command")
 }

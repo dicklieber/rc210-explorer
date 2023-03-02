@@ -20,7 +20,7 @@ package controllers
 import com.wa9nnn.util.tableui.Table
 import net.wa9nnn.rc210.DataProvider
 import net.wa9nnn.rc210.data.Rc210Data
-import net.wa9nnn.rc210.data.field.FieldMetadata
+import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.functions.{FunctionNode, FunctionsProvider}
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.mapped.MappedValues
@@ -56,12 +56,12 @@ class RawDataController @Inject()(val controllerComponents: ControllerComponents
   def mappedItems(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
 
     val mappedValues: MappedValues = dataProvider.rc210Data.mappedValues
-    val allMetadatas = mappedValues.allMetadatas
+    val allEntries: Seq[FieldEntry] = mappedValues
+      .all
+      .toSeq
+      .sortBy(_.fieldKey)
 
-    val table = Table(FieldMetadata.header(allMetadatas.length), allMetadatas.map { fieldMetadata =>
-      val maybeFieldValue = mappedValues.valueForKey(fieldMetadata.fieldKey)
-      fieldMetadata.toRow(maybeFieldValue)
-    })
+    val table: Table = Table(FieldEntry.header(allEntries.length), allEntries.map(_.toRow))
     Ok(views.html.dat(Seq(table)))
   }
 

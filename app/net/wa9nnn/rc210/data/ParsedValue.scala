@@ -37,8 +37,8 @@ case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey] with 
   /**
    * can identify this in a HTTP param or as a JSON name.
    */
-  val param: String = s"$fieldName|$key"
-  val prettyName:String = CamelToWords(fieldName)
+  val param: String = s"$fieldName|$key".replaceAll(" ", "")
+  val prettyName:String = fieldName
 
   override def compare(that: FieldKey): Int = {
     var ret = key.kind compareTo(that.key.kind)

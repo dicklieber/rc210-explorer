@@ -17,14 +17,15 @@
 
 package net.wa9nnn.rc210
 
-import net.wa9nnn.rc210.data.Rc210Data
-import net.wa9nnn.rc210.data.mapped.FieldContainer
 import net.wa9nnn.rc210.fixtures.WithMemory
-import net.wa9nnn.rc210.key.{MacroKey, MiscKey, PortKey}
 
 class DataProviderSpec extends WithMemory {
-
   "DataProvider" should {
+    failure
+  }
+}
+
+/*
     val rc210Data: Rc210Data = new DataProvider().rc210Data
     "rc210Data" in {
       val triggersForMacro1 = rc210Data.triggers(MacroKey(1))
@@ -57,5 +58,5 @@ class DataProviderSpec extends WithMemory {
       pending
     }
 
-  }
-}
+  }*/
+//}

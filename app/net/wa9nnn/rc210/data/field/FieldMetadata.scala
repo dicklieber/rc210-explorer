@@ -1,42 +1,37 @@
-/*
- * Copyright (C) 2023  Dick Lieber, WA9NNN
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package net.wa9nnn.rc210.data.field
 
-import com.wa9nnn.util.tableui.{Header, Row}
-import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.UiType.UiType
+import net.wa9nnn.rc210.data.field.UiRender.UiRender
+import net.wa9nnn.rc210.key.KeyKind
+import net.wa9nnn.rc210.serial.Memory
 
 import scala.jdk.CollectionConverters._
-
-/**
- * Whats needed to work with a [[FieldValue]]
- *  - render as an RC-210 command string.
- *  - render as an  HTML input. Using a Twirl template.
- *  - Validate a field from HTML form value.
- *
- * @param fieldKey      id for this field.
- * @param template      for an RC-210 Command string
- * @param uiType        render hint.
- * @param selectOptions required if [[uiType]] is select.
- */
-case class FieldMetadata(fieldKey: FieldKey, template: String, uiType: UiType, selectOptions: Option[FieldSelect]) {
+import scala.util.Try
 
 
+case class FieldMetadata(offset: Int,
+                         fieldName: String,
+                         kind: KeyKind,
+                         template: String,
+                         extractor: FieldExtractor = FieldExtractors.int16,
+                         uiRender: UiRender = UiRender.number,
+                         selectOptions: Option[FieldSelect] = None
+                     ) {
+
+
+  def %(uiRender: UiRender): FieldMetadata = {
+    copy(uiRender = uiRender)
+  }
+
+  def %(selectOptions: FieldSelect): FieldMetadata = {
+    copy(selectOptions = Option(selectOptions))
+  }
+
+  def %(uiInfo: UiInfo): FieldMetadata = {
+    val uiRender = uiInfo.uiRender
+    val extractor = uiInfo.fieldExtractor
+
+    copy(uiRender = uiRender, extractor = extractor)
+  }
 
   /**
    * template e.g. "$n*2121$b" becomes "3*21210" or  "*2091$b" becomes "*2091$1"
@@ -45,7 +40,7 @@ case class FieldMetadata(fieldKey: FieldKey, template: String, uiType: UiType, s
    * @return
    */
   def command(fieldValue: FieldValue): String = {
-    assert(fieldValue.isDirty, "No candidate for command!*")
+    assert(fieldValue.dirty, "No candidate for command!*")
     val sValue = fieldValue.candidate.getOrElse(throw new IllegalStateException("No candidate to send!"))
     val bool: String = if (sValue == "true") "1"
     else
@@ -62,18 +57,7 @@ case class FieldMetadata(fieldKey: FieldKey, template: String, uiType: UiType, s
     substitutor.replace(template)
   }
 
-  def toRow(fieldValue:Option[ FieldValue]):Row = {
-    Row(fieldKey.toCell,fieldKey.key.toCell, fieldValue.map(_.value).getOrElse("Missing") )
+  def validate(): Unit = {
+
   }
-
-}
-
-object FieldMetadata {
-  def header(count:Int):Header = Header(s"Mapped ($count)", "Field","Key",  "Value")
-}
-
-
-object UiType extends Enumeration {
-  type UiType = Value
-  val checkBox, number, dtmf, select = Value
 }

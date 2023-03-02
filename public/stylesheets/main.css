@@ -173,3 +173,7 @@ body {
 .flowMacroCell{
     border:2px solid dimgray;
 }
+
+.dirtyValue {
+    background: #cccc33;
+}

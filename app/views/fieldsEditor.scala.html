@@ -1,17 +1,15 @@
-@import net.wa9nnn.rc210.data.field.FieldValue
 @import views.html.helper._
-@import net.wa9nnn.rc210.data.field.FieldMetadata
-@import net.wa9nnn.rc210.data.mapped.MappedValues
-@(fieldMetadatas: Seq[FieldMetadata], mappedValues: MappedValues)
+@import net.wa9nnn.rc210.data.field.FieldEntry
+@(fieldEntries: Seq[FieldEntry])
 
-    @main("Misc Fields") {
+    @main("Fields") {
 
         @form(action = routes.FieldEditorController.save()) {
-            @for(fieldMetadata <- fieldMetadatas) {
+            @for(fieldEntry <- fieldEntries) {
                 <div class="mb-3">
-                @defining(fieldMetadata.fieldKey.param) { param =>
-                    <label for="@param:" class="form-label">@fieldMetadata.fieldKey.prettyName</label>
-                    <input name="@param" id="@param" value="@mappedValues.valueForKey(fieldMetadata.fieldKey)" class="form-control">
+                @defining(fieldEntry.fieldKey.param) { param =>
+                    <label for="@param" class="form-label">@fieldEntry.fieldKey.prettyName</label>
+                    <input name="@param" id="@param" value="@fieldEntry.fieldValue.current" class="form-control @if(fieldEntry.fieldValue.dirty){ dirtyValue }">
                 }
                 </div>
 

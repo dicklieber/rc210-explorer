@@ -17,12 +17,11 @@
 
 package net.wa9nnn.rc210.data.mapped
 
+import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.{FieldMetadata, FieldValue}
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldMetadata, FieldValue}
 import net.wa9nnn.rc210.key.Key
 import play.api.libs.json.JsArray
-import play.api.libs.json.Json
-import play.api.libs.json._
 
 import scala.collection.concurrent.TrieMap
 import scala.collection.mutable
@@ -36,15 +35,21 @@ class MappedValues() {
   private val metadataMap = new TrieMap[FieldKey, FieldMetadata]
   private val valueMap = new TrieMap[FieldKey, FieldValue]
 
-  def allMetadatas: Seq[FieldMetadata] = metadataMap.values.toSeq.sortBy(_.fieldKey)
+
+  def all: Iterator[FieldEntry] = {
+    metadataMap.iterator.map { case (fieldKey: FieldKey, fieldMetadata: FieldMetadata) =>
+      val fieldValue = valueMap(fieldKey)
+      FieldEntry(fieldValue, fieldMetadata)
+    }
+  }
 
   /**
    *
    * @param key of interest
    * @return order by field name.
    */
-  def fieldsForKey(key: Key): Seq[FieldMetadata] = {
-    metadataMap.values
+  def fieldsForKey(key: Key): Seq[FieldEntry] = {
+    all.iterator
       .filter(_.fieldKey.key == key)
       .toSeq
       .sortBy(_.fieldKey.fieldName)
@@ -62,10 +67,9 @@ class MappedValues() {
       .sortBy[String](_.toString)
   }
 
-  //  def acceptCandidate(fieldKey: FieldKey): Unit = {
-  //    val container = metadataMap(fieldKey)
-  //    metadataMap.put(fieldKey, container.acceptCandidate())
-  //  }
+    def acceptCandidate(fieldKey: FieldKey): Unit = {
+      valueMap.put(fieldKey, valueMap(fieldKey).acceptCandidate())
+    }
 
   /**
    * Add a new entry.
@@ -73,9 +77,10 @@ class MappedValues() {
    * @param initialValue         it's initial value
    * @param fieldMetadata        fixed stuff we know about the field.
    */
-  def setupField(fieldMetadata: FieldMetadata, initialValue: String): Unit = {
-    val fieldKey: FieldKey = fieldMetadata.fieldKey
+  def setupField(fieldKey: FieldKey, fieldMetadata: FieldMetadata, initialValue: String): Unit = {
+
     assert(!metadataMap.contains(fieldKey), s"Map already has a FieldMetadata for key: $fieldKey")
+    assert(!valueMap.contains(fieldKey), s"Map already has a FieldValue for key: $fieldKey")
     metadataMap.put(fieldKey, fieldMetadata)
     valueMap.put(fieldKey, FieldValue(fieldKey, initialValue))
   }
@@ -100,12 +105,13 @@ class MappedValues() {
 }
 
 object MappedValues {
+
   import play.api.libs.json._
 
   implicit val fmtMappedValues: OFormat[MappedValues] = new OFormat[MappedValues] {
 
     override def writes(mappedValues: MappedValues): JsObject = {
-       JsObject(
+      JsObject(
         mappedValues
           .valueMap
           .values
@@ -130,5 +136,6 @@ object MappedValues {
   }
 
 }
+
 
 

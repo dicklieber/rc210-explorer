@@ -18,7 +18,6 @@
 package controllers
 
 import net.wa9nnn.rc210.DataProvider
-import net.wa9nnn.rc210.data.field.{FieldMetadata, FieldValue}
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.key.KeyFormats
@@ -52,18 +51,15 @@ class FieldEditorController @Inject()(implicit val controllerComponents: Control
       implicit val rc210Data = dataProvider.rc210Data
       val mappedValues = rc210Data.mappedValues
 
-      val fields: Seq[FieldMetadata] = mappedValues.fieldsForKey(key)
-
-
-      Ok(views.html.fieldsEditor(fields, mappedValues))
+      Ok(views.html.fieldsEditor(mappedValues.fieldsForKey(key)))
   }
 
 
   def save(): Action[AnyContent] = Action { request: Request[AnyContent] =>
     val body: AnyContent = request.body
     val formUrlEncoded = body.asFormUrlEncoded
-    val value: Option[Map[String, Seq[String]]] = formUrlEncoded
-    //    val jsonBody: Option[JsValue] = body.asJson
+//    val value: Option[Map[String, Seq[String]]] = formUrlEncoded
+//        val jsonBody: Option[JsValue] = body.asJson
 
     Ok("todo")
   }
