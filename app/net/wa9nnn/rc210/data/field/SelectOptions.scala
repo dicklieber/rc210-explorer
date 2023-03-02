@@ -15,20 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.schedules
+package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.data.field.FieldSelect
+object SelectOptions {
+  val dayOfWeek: FieldSelect = new FieldSelect(
+    "EveryDay",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+    "Weekdays",
+    "Weekends"
+  )
+  val dtmfMuteDigit: FieldSelect = new FieldSelect(
+    "-select-",
+    "1st digit",
+    "2ndt digit")
 
-object DayOfWeek extends FieldSelect {
-  type DayOfWeek = Value
-  val EveryDay,
-  Monday,
-  Tuesday,
-  Wednesday,
-  Thursday,
-  Friday,
-  Saturday,
-  Sunday,
-  Weekdays,
-  Weekends = Value
 }

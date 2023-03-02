@@ -19,10 +19,6 @@ case class FieldMetadata(offset: Int,
   def extract(memory: Memory, start: Int) = uiInfo.fieldExtractor(memory, start)
 
 
-  def %(selectOptions: FieldSelect): FieldMetadata = {
-    copy(selectOptions = Option(selectOptions))
-  }
-
   def %(uiInfo: UiInfo): FieldMetadata = {
     copy(uiInfo = uiInfo)
   }

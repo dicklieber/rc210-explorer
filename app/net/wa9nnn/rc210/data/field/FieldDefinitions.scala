@@ -36,6 +36,9 @@ object FieldDefinitions {
     (26, "Tx Enable", portKey, "n11b") % checkBox,
     (29, "DTMF Cover Tone", portKey, "n13b") % checkBox,
     (32, "DTMF Mute Timer", portKey, "n*1006v") % UiNumber(999, "100 milliseconds"),
+    (38, "Kerchunk", portKey, "n15b") % checkBox,
+    (41, "Kerchunk Timer", portKey, "n1018b") % UiNumber(6000, "milliseconds"),
+    (47, "Mute Digit Select", miscKey, "*2090v") % SelectOptions.dtmfMuteDigit,
   )
 
 }

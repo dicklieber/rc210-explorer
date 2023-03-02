@@ -42,14 +42,14 @@ case class FieldEntry(fieldValue: FieldValue, fieldMetadata: FieldMetadata) exte
     val bool: String = if (fieldValue.current == "true") "1"
     else
       "0"
-    val map = Seq(
-      "v" -> fieldValue.current,
-      "b" -> bool,
-      "n" -> fieldValue.fieldKey.key.number.toString
+    val map: Map[String, () => String] = Seq(
+      "v" -> (() => fieldValue.current),
+      "b" -> (() => bool),
+      "n" -> (() => fieldValue.fieldKey.key.number.toString),
     ).toMap
 
-    map.foldLeft(fieldMetadata.template) { (command: String, tr: (String, String)) =>
-      val str = command.replaceAll(tr._1, tr._2)
+    map.foldLeft(fieldMetadata.template) { (command: String, tr) =>
+      val str: String = command.replaceAll(tr._1, (tr._2()))
       str
     }
     //todo color token and replacement parts <span> s

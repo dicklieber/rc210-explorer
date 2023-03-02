@@ -17,6 +17,11 @@
 
 package net.wa9nnn.rc210.data.field
 
-class FieldSelect extends Enumeration {
+import scala.util.Try
 
+class FieldSelect(choices: String*) extends UiInfo(UiRender.select,
+  fieldExtractor = FieldExtractors.int8,
+  validate = (s: String) => Try(s)
+) {
+  override val prompt: String = "-select-"
 }
