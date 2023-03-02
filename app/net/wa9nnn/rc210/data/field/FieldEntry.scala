@@ -20,22 +20,43 @@ package net.wa9nnn.rc210.data.field
 import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
 import net.wa9nnn.rc210.data.FieldKey
 
-case class FieldEntry(fieldValue: FieldValue, fieldMetadata: FieldMetadata) extends RowSource{
+
+case class FieldEntry(fieldValue: FieldValue, fieldMetadata: FieldMetadata) extends RowSource {
   def fieldKey: FieldKey = fieldValue.fieldKey
 
   override def toRow: Row = Row(
-    fieldKey.toCell,
+    fieldKey.prettyName,
+    fieldKey.key.toCell,
     fieldMetadata.offset,
-    fieldMetadata.extractor.name,
-    fieldMetadata.uiRender,
+    fieldMetadata.uiInfo.fieldExtractor.name,
+    fieldMetadata.uiInfo.uiRender,
+    fieldMetadata.uiInfo.toString,
     fieldMetadata.selectOptions.map(_.toString()),
     fieldMetadata.template,
     Cell(fieldValue.current)
       .withCssClass(fieldValue.cssClass),
-    "//todo"
+    command
   )
+
+  def command: String = {
+    val bool: String = if (fieldValue.current == "true") "1"
+    else
+      "0"
+    val map = Seq(
+      "V" -> fieldValue.current,
+      "B" -> bool,
+      "N" -> fieldValue.fieldKey.key.number.toString
+    ).toMap
+
+    map.foldLeft(fieldMetadata.template) { (command: String, tr: (String, String)) =>
+      val str = command.replaceAll(tr._1, tr._2)
+      str
+    }
+    //todo color token and replacement parts <span> s
+  }
 }
 
+
 object FieldEntry {
-  def header(count:Int)= Header(s"Fields ($count)", "FieldKey", "Offset", "Extractor", "UI", "Select Options", "Template", "Value", "Command")
+  def header(count: Int): Header = Header(s"Fields ($count)", "FieldName", "Key", "Offset", "Extractor", "render", "UI", "Select Options", "Template", "Value", "Command")
 }

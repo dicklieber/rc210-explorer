@@ -25,6 +25,7 @@ import play.api.libs.json.{Json, OFormat}
  * @param value current value.
  */
 case class FieldValue(fieldKey: FieldKey, value: String, candidate: Option[String] = None) {
+
   def cssClass: String = if(dirty) "dirtyValue" else ""
 
   def current: String = candidate.getOrElse(value)

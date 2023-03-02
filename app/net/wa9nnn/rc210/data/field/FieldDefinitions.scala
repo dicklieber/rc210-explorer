@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.data.field.FieldExtractors._
+import net.wa9nnn.rc210.data.field.UiInfo.checkBox
 import net.wa9nnn.rc210.key.KeyKind._
 
 object FieldDefinitions {
@@ -25,8 +25,9 @@ object FieldDefinitions {
   import fieldDefintionSugar.FieldDefintionSugar._
 
   val fields: Seq[FieldMetadata] = Seq(
-    (0, "Site Prefix", miscKey, "*2108${value}") % UiDtmf(3),
-    (4, "TT PadTest", portKey, "*2093${value}") % UiDtmf(5),
+    (0, "Site Prefix", miscKey, "*2108V") % UiDtmf(3),
+    (4, "TT PadTest", miscKey, "*2093V") % UiDtmf(5),
+    (10, "Say Hours", miscKey, "*5104B") % checkBox,
   )
 
 }

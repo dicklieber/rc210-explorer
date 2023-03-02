@@ -50,7 +50,7 @@ case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey] with 
   }
 
   override def toCell: Cell = {
-    Cell(prettyName)
+    Cell(param)
   }
 }
 

@@ -45,7 +45,7 @@ class DataProvider @Inject()() extends LazyLogging {
         var start = fieldMetadata.offset
         for (n <- 1 to fieldMetadata.kind.getMaxN) {
           val fieldKey: FieldKey = new FieldKey(fieldMetadata.fieldName, KeyFormats.buildKey(fieldMetadata.kind, n))
-          val extractResult = fieldMetadata.extractor(memory, start)
+          val extractResult = fieldMetadata.extract(memory, start)
           start = extractResult.newOffset
           mappedValues.setupField(fieldKey = fieldKey,
             fieldMetadata = fieldMetadata,
