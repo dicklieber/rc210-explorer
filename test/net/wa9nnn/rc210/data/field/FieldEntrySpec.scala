@@ -29,7 +29,9 @@ class FieldEntrySpec extends Specification with DataTables {
         1 ! "A2345" ! "*2093A2345" |
         2 ! "true" ! "*51041" |
         2 ! "false" ! "*51040" |
-        3 ! "42" ! "*1000142" |> { (fdIndex, value, expectedCommand: String) =>
+        3 ! "42" ! "2*1000142" |
+        8 ! "false" ! "2110" |
+        8 ! "true" ! "2111" |> { (fdIndex, value, expectedCommand: String) =>
 
         val metadata = FieldDefinitions.fields(fdIndex)
         val fieldKey = metadata.fieldKey(2)

@@ -28,9 +28,12 @@ object FieldDefinitions {
     (0, "Site Prefix", miscKey, "*2108v") % UiDtmf(3),
     (4, "TT PadTest", miscKey, "*2093v") % UiDtmf(5),
     (10, "Say Hours", miscKey, "*5104b") % checkBox,
-    (11, "Hang Time 1", portKey, "*10001v"),
-    (14, "Hang Time 2", portKey, "*10002v"),
-    (17, "Hang Time 3", portKey, "*10003v"),
+    (11, "Hang Time 1", portKey, "n*10001v"),
+    (14, "Hang Time 2", portKey, "n*10002v"),
+    (17, "Hang Time 3", portKey, "n*10003v"),
+    (20, "Initial ID Timer  ", portKey, "n*1000v") % UiNumber(255),
+    (23, "Pending ID Timer  ", portKey, "n*1003v") % UiNumber(255),
+    (26, "Tx Enable", portKey, "n11b") % checkBox
   )
 
 }
