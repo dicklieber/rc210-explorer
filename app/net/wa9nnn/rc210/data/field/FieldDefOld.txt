@@ -4,7 +4,7 @@
   val fields: Seq[FieldDefinitionOLD] = Seq(
     FieldDefinitionOLD(fieldName = "SitePrefix", kind = miscKey, offset = 0, extractor = dtmf, template = "*2108${value}", UiDtmf(3)),
     FieldDefinitionOLD(fieldName = "TTPadTest", kind = miscKey, offset = 4, extractor = dtmf, template = "*2093${value}", UiDtmf(5)),
-    FieldDefinitionOLD(fieldName = "SayHours", kind = miscKey, offset = 10, bool, template = c, UiInfo.checkBox),
+    FieldDefinitionOLD(fieldName = "SayHours", kind = miscKey, offset = 10, bool, template = "*5104${bool}", UiInfo.checkBox),
     FieldDefinitionOLD(fieldName = "HangTime1", kind = portKey, offset = 11, extractor = int8, template = "*10001${value}"),
     FieldDefinitionOLD(fieldName = "HangTime2", kind = portKey, offset = 14, extractor = int8, template = "*10002${value}"),
     FieldDefinitionOLD(fieldName = "HangTime3", kind = portKey, offset = 17, extractor = int8, template = "*10003${value}"),

@@ -43,9 +43,9 @@ case class FieldEntry(fieldValue: FieldValue, fieldMetadata: FieldMetadata) exte
     else
       "0"
     val map = Seq(
-      "V" -> fieldValue.current,
-      "B" -> bool,
-      "N" -> fieldValue.fieldKey.key.number.toString
+      "v" -> fieldValue.current,
+      "b" -> bool,
+      "n" -> fieldValue.fieldKey.key.number.toString
     ).toMap
 
     map.foldLeft(fieldMetadata.template) { (command: String, tr: (String, String)) =>

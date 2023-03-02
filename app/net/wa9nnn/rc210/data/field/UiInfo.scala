@@ -40,7 +40,7 @@ object UiInfo {
 
 case class UiNumber(max: Int) extends UiInfo(
   uiRender = number,
-  fieldExtractor = if (max > 255) int16 else int8,
+  fieldExtractor = if (max > 256) int16 else int8,
   validate = (s: String) => {
     val int = s.toInt
     Try {

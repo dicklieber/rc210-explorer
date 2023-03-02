@@ -17,20 +17,28 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.data.field.UiInfo.checkBox
-import net.wa9nnn.rc210.key.KeyKind._
+import org.specs2.matcher.DataTables
+import org.specs2.mutable.Specification
 
-object FieldDefinitions {
+class FieldEntrySpec extends Specification with DataTables {
 
-  import fieldDefintionSugar.FieldDefintionSugar._
+  "FieldEntry" should {
+    "command" >> {
+      "Index" || "Value" | "Command" |
+        0 ! "ABC" ! "*2108ABC" |
+        1 ! "A2345" ! "*2093A2345" |
+        2 ! "true" ! "*51041" |
+        2 ! "false" ! "*51040" |
+        3 ! "42" ! "*1000142" |> { (fdIndex, value, expectedCommand: String) =>
 
-  val fields: Seq[FieldMetadata] = Seq(
-    (0, "Site Prefix", miscKey, "*2108v") % UiDtmf(3),
-    (4, "TT PadTest", miscKey, "*2093v") % UiDtmf(5),
-    (10, "Say Hours", miscKey, "*5104b") % checkBox,
-    (11, "Hang Time 1", portKey, "*10001v"),
-    (14, "Hang Time 2", portKey, "*10002v"),
-    (17, "Hang Time 3", portKey, "*10003v"),
-  )
+        val metadata = FieldDefinitions.fields(fdIndex)
+        val fieldKey = metadata.fieldKey(2)
+        val fieldEntry = FieldEntry(FieldValue(fieldKey, value), metadata)
+        val command = fieldEntry.command
+        command must beEqualTo(expectedCommand)
+      }
+    }
 
+
+  }
 }
