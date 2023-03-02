@@ -30,7 +30,7 @@ case class FieldEntry(fieldValue: FieldValue, fieldMetadata: FieldMetadata) exte
     fieldMetadata.offset,
     fieldMetadata.uiInfo.fieldExtractor.name,
     fieldMetadata.uiInfo.uiRender,
-    fieldMetadata.uiInfo.toString,
+    fieldMetadata.uiInfo.prompt,
     fieldMetadata.selectOptions.map(_.toString()),
     fieldMetadata.template,
     Cell(fieldValue.current)
@@ -58,5 +58,5 @@ case class FieldEntry(fieldValue: FieldValue, fieldMetadata: FieldMetadata) exte
 
 
 object FieldEntry {
-  def header(count: Int): Header = Header(s"Fields ($count)", "FieldName", "Key", "Offset", "Extractor", "render", "UI", "Select Options", "Template", "Value", "Command")
+  def header(count: Int): Header = Header(s"Fields ($count)", "FieldName", "Key", "Offset", "Extractor", "render", "Prompt", "Select Options", "Template", "Value", "Command")
 }

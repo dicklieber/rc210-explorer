@@ -31,9 +31,11 @@ object FieldDefinitions {
     (11, "Hang Time 1", portKey, "n*10001v"),
     (14, "Hang Time 2", portKey, "n*10002v"),
     (17, "Hang Time 3", portKey, "n*10003v"),
-    (20, "Initial ID Timer  ", portKey, "n*1000v") % UiNumber(255),
-    (23, "Pending ID Timer  ", portKey, "n*1003v") % UiNumber(255),
-    (26, "Tx Enable", portKey, "n11b") % checkBox
+    (20, "Initial ID Timer  ", portKey, "n*1000v") % UiNumber(255, "minutes"),
+    (23, "Pending ID Timer  ", portKey, "n*1003v") % UiNumber(255, "minutes"),
+    (26, "Tx Enable", portKey, "n11b") % checkBox,
+    (29, "DTMF Cover Tone", portKey, "n13b") % checkBox,
+    (32, "DTMF Mute Timer", portKey, "n*1006v") % UiNumber(999, "100 milliseconds"),
   )
 
 }

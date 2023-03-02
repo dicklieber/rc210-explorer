@@ -23,22 +23,26 @@ import net.wa9nnn.rc210.data.field.UiRender._
 
 import scala.util.Try
 
-class UiInfo(val uiRender: UiRender, val fieldExtractor: FieldExtractor, validate: String => Try[String]) {
+abstract class UiInfo(val uiRender: UiRender, val fieldExtractor: FieldExtractor, validate: String => Try[String]) {
   def doString(s: String): Try[String] = {
     validate(s)
   }
+
+  val prompt: String
 }
 
 object UiInfo {
-  val default: UiNumber = UiNumber(256)
+  val default: UiNumber = UiNumber(256, "")
   val checkBox: UiInfo = new UiInfo(uiRender = UiRender.checkbox,
     FieldExtractors.bool,
-    validate = (s: String) => Try(s)) // always valid.
+    validate = (s: String) => Try(s)) {
+    override val prompt = "true or false"
+  } // always valid.
 
   override def toString: String = "checkBox"
 }
 
-case class UiNumber(max: Int) extends UiInfo(
+case class UiNumber(max: Int, unit:String) extends UiInfo(
   uiRender = number,
   fieldExtractor = if (max > 256) int16 else int8,
   validate = (s: String) => {
@@ -50,7 +54,8 @@ case class UiNumber(max: Int) extends UiInfo(
     }
   }
 ) {
-  override def toString: String = s"1 to $max"
+
+  override val prompt = s"1 to $max $unit"
 }
 
 case class UiDtmf(max: Int) extends UiInfo(uiRender = dtmfKeys, fieldExtractor = dtmf, validate = (s: String) => {
@@ -60,7 +65,8 @@ case class UiDtmf(max: Int) extends UiInfo(uiRender = dtmfKeys, fieldExtractor =
       s
   }
 }) {
-  override def toString: String = s"1 to $max digits"
+
+  override val prompt: String = s"1 to $max digits"
 }
 
 
