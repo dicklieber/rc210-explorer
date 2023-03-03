@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.data.field.SelectOptions.{macroSelect, radioType}
+import net.wa9nnn.rc210.data.field.SelectOptions.{macroSelect, radioType, yaesuType}
 import net.wa9nnn.rc210.data.field.UiInfo.{checkBox, unlockCode}
 import net.wa9nnn.rc210.key.KeyKind._
 
@@ -83,8 +83,8 @@ object FieldDefinitions {
 
     // Courtesy Tone special handling.  *31CT Delay to segment 1 * duration of segment 1 * Tone 1 * Tone 2 *
 
-    (1176, "Radio Type", miscKey, "n*2083 v") % radioType,
-    (1176, "Yaesu Type", miscKey, "n*2084 v") % radioType,
+    (1176, "Radio Type", miscKey, "n*2083 v") % UiSelect(radioType),
+    (1176, "Yaesu Type", miscKey, "n*2084 v") % UiSelect(yaesuType),
     (1177, "Fan Timeout", miscKey, "n*1004v") % radioType,
     //DTMFRegenPrefix1 - 1179-1185 need  special handling. part of IRLP stuff.
     (1186, "Clock 24 Hours", miscKey, "n*5103") % checkBox,

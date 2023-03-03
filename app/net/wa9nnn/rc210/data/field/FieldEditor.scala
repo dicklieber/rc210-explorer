@@ -18,33 +18,24 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.named.NamedManager
-import play.twirl.api.Html
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
 class FieldEditor @Inject()(implicit namedManager: NamedManager) {
   def apply(fieldEntry: FieldEntry): String = {
-    val str1 = fieldEntry.fieldMetadata.uiInfo.uiRender match {
-      case net.wa9nnn.rc210.data.field.UiRender.checkbox => {
-        val f: Html = views.html.fieldCheckbox(fieldEntry)
-        f.toString()
-      }
-      case net.wa9nnn.rc210.data.field.UiRender.number => {
+    fieldEntry.fieldMetadata.uiInfo.uiRender match {
+      case net.wa9nnn.rc210.data.field.UiRender.checkbox =>
+        views.html.fieldCheckbox(fieldEntry).toString()
+      case net.wa9nnn.rc210.data.field.UiRender.number =>
         views.html.fieldNumber(fieldEntry).toString()
-      }
-      case net.wa9nnn.rc210.data.field.UiRender.select => {
-        val appendable = views.html.fieldSelect(fieldEntry)
-        val str = appendable.toString()
-        str
-      }
-      case net.wa9nnn.rc210.data.field.UiRender.dtmfKeys => {
+      case net.wa9nnn.rc210.data.field.UiRender.select =>
+        views.html.fieldSelect(fieldEntry).toString()
+      case net.wa9nnn.rc210.data.field.UiRender.dtmfKeys =>
         "dtmf"
-      }
       case net.wa9nnn.rc210.data.field.UiRender.twoStrings => {
         "2strings"
       }
     }
-    str1
   }
 }
