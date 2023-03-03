@@ -16,11 +16,12 @@
  */
 
 package net.wa9nnn.rc210.data.field
+
 import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.key.{KeyKind, MacroKey}
 
 object SelectOptions {
-  val dayOfWeek: FieldSelect =  FieldSelect(
+  val dayOfWeek: FieldSelect = FieldSelect(
     "EveryDay",
     "Monday",
     "Tuesday",
@@ -32,18 +33,37 @@ object SelectOptions {
     "Weekdays",
     "Weekends"
   )
-  val dtmfMuteDigit: FieldSelect =  FieldSelect(
-    "-select-",
-    "1st digit",
-    "2ndt digit")
+  val dtmfMuteDigit: FieldSelect = new FieldSelect(
+    Seq(SelectOption(1, "1st digit"),
+      SelectOption(2, "2ndt digit"))
+  )
+  val radioType: FieldSelect = new FieldSelect(
+    Seq(
+      SelectOption(1, "Kenwood"),
+      SelectOption(2, "Icom"),
+      SelectOption(3, "Yaesu"),
+      SelectOption(4, "Kenwood V7a"),
+      SelectOption(5, "Doug Hall RBI - 1"),
+      SelectOption(7, "Kenwood g707"),
+      SelectOption(8, "Kenwood 271 A"),
+      SelectOption(9, "Kenwood V71a")
+    )
+  )
+  val yaesuType: FieldSelect = new FieldSelect(
+    Seq(
+      SelectOption(1, "FT-100D"),
+      SelectOption(2, "FT817, FT-857, FT-897"),
+      SelectOption(3, "FT847"),
+    )
+  )
 
-  val macroSelect :FieldSelect = new FieldSelect(Seq.empty) {
+  val macroSelect: FieldSelect = new FieldSelect(Seq.empty) {
     override def options(namedSource: NamedSource) = {
-      for{
+      for {
         number <- 1 to KeyKind.macroKey.getMaxN
         macroKey = MacroKey(number)
 
-      }yield {
+      } yield {
         SelectOption(number, namedSource(macroKey))
       }
     }

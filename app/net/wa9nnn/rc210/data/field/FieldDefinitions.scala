@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.data.field.SelectOptions.macroSelect
+import net.wa9nnn.rc210.data.field.SelectOptions.{macroSelect, radioType}
 import net.wa9nnn.rc210.data.field.UiInfo.{checkBox, unlockCode}
 import net.wa9nnn.rc210.key.KeyKind._
 
@@ -62,7 +62,76 @@ object FieldDefinitions {
     (166, "DTMF Mute", portKey, "n*1001v") % checkBox,
     (169, "Alarm Enable", portKey, "n191b") % checkBox,
     (174, "Alarm Macro Low", alarmKey, "*2101 n v") % macroSelect,
+    (179, "Alarm Macro High", alarmKey, "*2102 n v") % macroSelect,
+    (184, "Vref", alarmKey, "*2065 n v") % UiNumber(255, "todo three numbers?"),//*2065 4 9 6
+    //###########################################################################################  //todo
+    ///For meters, we gather all the parameters needed, then assemble them to actually store
+    //###########################################################################################
 
+    //MeterFaceName - 186-201
+    //    *2064 C * M* X1* Y1* X2* Y2* C= Channel 1 to 8 M=Meter Type 0 to 6 X1, Y1, X2, Y2 represent two calibration points. There must be 6 parameters entered to define a meter face, each value ending with *.
+
+    (322, "Rx Rcv Macro Active", alarmKey, "*2113 1 v") % UiNumber(255, "todo three numbers?"),//*2065 4 9 6
+    (325, "Rx Rcv Macro Low", alarmKey, "*2113  v") % UiNumber(255, "todo three numbers?"),//*2065 4 9 6
+    //P1, P2, P3CWDI1 - 328-357
+    //P1, P2, P3CWD2 - 358-402
+    //P1, P2, P3INITIALID1 - 403-483
+    //P1, P2, P3INITIALID2 - 484-549
+    //P1, P2, P3INITIALID3 - 550-615
+
+    //SetPointDOW - 616-655  handled in Schedule.
+
+    // Courtesy Tone special handling.  *31CT Delay to segment 1 * duration of segment 1 * Tone 1 * Tone 2 *
+
+    (1176, "Radio Type", miscKey, "n*2083 v") % radioType,
+    (1176, "Yaesu Type", miscKey, "n*2084 v") % radioType,
+    (1177, "Fan Timeout", miscKey, "n*1004v") % radioType,
+    //DTMFRegenPrefix1 - 1179-1185 need  special handling. part of IRLP stuff.
+    (1186, "Clock 24 Hours", miscKey, "n*5103") % checkBox,
+    (1187, "Fan Select", miscKey, "n*2119b") % checkBox,
+    (1188, "DTMF Duration", miscKey, "n*2106b") % checkBox,
+    (1189, "DTMF Pause", miscKey, "n*2107b") % checkBox,
+    //DTMFStrings - 1190-1409 special handling
+    //DVRSecondLow - 1410-1473
+    //DVRTrack - 1474-1493
+    //DVRRowsUsed - 1494-1533
+    (1534, "Allow Terminator Speech", miscKey, "n*2091b") % checkBox,
+    //RemoteRadioMode - 1535-1544
+    (1534, "AutoPatch Port", miscKey, "n*2116v") % checkBox,
+    (1534, "AutoPatch Port Mute", miscKey, "n270") % checkBox,
+    //GeneralTimers1_3 - 1553-1558
+    //GeneralTimers4_6 - 1559-1564
+    //GeneralTimer1_3Macro - 1565-1567
+    //GeneralTimer4_6Macro - 1568-1570
+    (1571, "Program Prefix", miscKey, "n*2109") % UiDtmf(4),
+    //Phrase - 1576-1975 Handled as MessageMacros.
+    //IDExtras - 1976-1984 needs special handling
+    //MacroPortLimit - 3425-3514 needs special handling probably should be a part of MacroNode
+    (3515, "Speak Pending ID Timer", portKey, "n*1019v") % UiNumber(600, "seconds"),
+    (3521, "Enable Speech ID", portKey, "n*8008b") % checkBox,
+    (3524, "Guest Macro Enable", portKey, "n280b") % checkBox,
+    (3525, "Remote Base Prefix", portKey, "n*2060v") % UiDtmf(5),
+    (3531, "Lock Code", miscKey, "n*9010v") % UiDtmf(4),
+    (3536, "Terminator", miscKey, "n9020v") % UiDtmf(1),
+    //ClockCorrection - 3538-3539 Humm, only two bytes but doc shows:  Docs shows this as *5105! Not *5101! In any event needs some special handling.
+    (3540, "Say Year", miscKey, "n*5102b") % checkBox,
+    (3541, "P1 Tail Message", portKey, "n*2110 1 v") % macroSelect,
+    (3544, "P2 Tail Message", portKey, "n*2110 2 v") % macroSelect,
+    (3547, "P3 Tail Message", portKey, "n*2110 3 v") % macroSelect,
+    (3550, "TailMessageNumber", portKey, "n*2111v") % macroSelect,
+    (3553, "Tail Timer", portKey, "n*1020v") % UiNumber(999, "tails 0 disables"),
+    (3559, "Tail Counter", portKey, "n*2112v") % UiNumber(999, "tails 0 disables"),
+    //FreqString - 3562-3641	remote base stuff
+    //    FieldDefinition(fieldName = "FreqString", kind = portKey, offset = 3562, extractor = int8, template = "2112${value}"),
+    //RemoteCTCSS - 3642-3651
+    //CTCSSMode - 3652-3661
+    //DTMFRegenPort1 - 3662 IRLP
+    //DTMFRegenMacro1 - 3663 IRLP
+    //APHangupCode - 3564-3669	 autopatch
+    (3670, "Use DR1", portKey, "n*2124b") % checkBox,
+    (3671, "Timeout Reset Select", portKey, "nv") % checkBox,
+
+    //todo finish
   )
 
 }
