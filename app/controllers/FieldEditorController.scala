@@ -19,6 +19,7 @@ package controllers
 
 import net.wa9nnn.rc210.DataProvider
 import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.field.FieldEditor
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.key.KeyFormats
@@ -29,7 +30,7 @@ import scala.collection.immutable
 
 class FieldEditorController @Inject()(implicit val controllerComponents: ControllerComponents,
                                       dataProvider: DataProvider,
-                                      namedManager: NamedManager,
+                                      fieldEditor: FieldEditor,
                                       functionsProvider: FunctionsProvider) extends BaseController {
 
 
@@ -67,7 +68,9 @@ class FieldEditorController @Inject()(implicit val controllerComponents: Control
         case Some(fieldEntry) =>
           Ok(views.html.fieldsEditor(Seq(fieldEntry)))
         case None =>
-          NotFound{s"No key: $sKey"}
+          NotFound {
+            s"No key: $sKey"
+          }
       }
 
   }

@@ -61,8 +61,8 @@ object FieldDefinitions {
     (160, "Timeout Timer", portKey, "n*1001v") % UiNumber(32767, "seconds"),
     (166, "DTMF Mute", portKey, "n*1001v") % checkBox,
     (169, "Alarm Enable", portKey, "n191b") % checkBox,
-    (174, "Alarm Macro Low", alarmKey, "*2101 n v") % macroSelect,
-    (179, "Alarm Macro High", alarmKey, "*2102 n v") % macroSelect,
+    (174, "Alarm Macro Low", alarmKey, "*2101 n v") % UiSelect(macroSelect),
+    (179, "Alarm Macro High", alarmKey, "*2102 n v") % UiSelect(macroSelect),
     (184, "Vref", alarmKey, "*2065 n v") % UiNumber(255, "todo three numbers?"),//*2065 4 9 6
     //###########################################################################################  //todo
     ///For meters, we gather all the parameters needed, then assemble them to actually store
@@ -115,10 +115,10 @@ object FieldDefinitions {
     (3536, "Terminator", miscKey, "n9020v") % UiDtmf(1),
     //ClockCorrection - 3538-3539 Humm, only two bytes but doc shows:  Docs shows this as *5105! Not *5101! In any event needs some special handling.
     (3540, "Say Year", miscKey, "n*5102b") % checkBox,
-    (3541, "P1 Tail Message", portKey, "n*2110 1 v") % macroSelect,
-    (3544, "P2 Tail Message", portKey, "n*2110 2 v") % macroSelect,
-    (3547, "P3 Tail Message", portKey, "n*2110 3 v") % macroSelect,
-    (3550, "TailMessageNumber", portKey, "n*2111v") % macroSelect,
+    (3541, "P1 Tail Message", portKey, "n*2110 1 v") % UiSelect(macroSelect),
+    (3544, "P2 Tail Message", portKey, "n*2110 2 v") % UiSelect(macroSelect),
+    (3547, "P3 Tail Message", portKey, "n*2110 3 v") % UiSelect(macroSelect),
+    (3550, "TailMessageNumber", portKey, "n*2111v") % UiSelect(macroSelect),
     (3553, "Tail Timer", portKey, "n*1020v") % UiNumber(999, "tails 0 disables"),
     (3559, "Tail Counter", portKey, "n*2112v") % UiNumber(999, "tails 0 disables"),
     //FreqString - 3562-3641	remote base stuff

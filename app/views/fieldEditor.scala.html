@@ -1,5 +1,6 @@
 @import net.wa9nnn.rc210.data.field.FieldEntry
-@(fieldEntry: FieldEntry)
+@import net.wa9nnn.rc210.data.named.NamedManager
+@(fieldEntry: FieldEntry)(implicit namedManager: NamedManager)
 @(fieldEntry.fieldMetadata.uiInfo.uiRender match {
     case net.wa9nnn.rc210.data.field.UiRender.checkbox => {
         views.html.fieldCheckbox(fieldEntry)
@@ -9,7 +10,7 @@
     }
 
     case net.wa9nnn.rc210.data.field.UiRender.select => {
-        "select"
+        views.html.fieldSelect(fieldEntry)
     }
     case net.wa9nnn.rc210.data.field.UiRender.dtmfKeys => {
         "dtmf"

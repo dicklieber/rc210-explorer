@@ -1,6 +1,7 @@
-@import views.html.helper._
 @import net.wa9nnn.rc210.data.field.FieldEntry
-@(fieldEntries: Seq[FieldEntry])
+@import views.html.helper._
+@import net.wa9nnn.rc210.data.field.FieldEditor
+@(fieldEntries: Seq[FieldEntry])(implicit fieldEditor: FieldEditor)
 
     @main("Fields") {
 
@@ -9,12 +10,11 @@
                 <div>
                 @defining(fieldEntry.fieldKey.param) { param =>
                     <label for="@param" class="form-label">@fieldEntry.fieldKey.fieldName</label>
-                        @fieldEditor(fieldEntry)
-                }
+                @Html(fieldEditor(fieldEntry))
                 </div>
 
             }
-            <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            }
         }
     }
-

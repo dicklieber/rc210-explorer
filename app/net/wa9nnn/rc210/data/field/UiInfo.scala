@@ -93,3 +93,13 @@ case class UiUnlockCode() extends UiInfo(
   override val prompt: String = "1 to 8 digits"
 
 }
+case class UiSelect(fieldSelect: FieldSelect) extends UiInfo(
+  uiRender = UiRender.select,
+  fieldExtractor = unlock,
+  validate = { (s: String) =>
+    throw new NotImplementedError() //todo
+  }
+) {
+  override val prompt: String = "1 to 8 digits"
+
+}
