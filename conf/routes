@@ -4,9 +4,10 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET         /selectField        controllers.FieldEditorController.selectKey()
+GET         /selectField            controllers.FieldEditorController.selectKey()
 GET         /editfields/:key        controllers.FieldEditorController.editFields(key:String)
 POST        /saveFields             controllers.FieldEditorController.save()
+GET         /edit/:key              controllers.FieldEditorController.editOne(key:String)
 GET         /mappedValues           controllers.RawDataController.mappedItems()
 GET         /schedules              controllers.RawDataController.schedules()
 GET         /functions              controllers.RawDataController.functions()

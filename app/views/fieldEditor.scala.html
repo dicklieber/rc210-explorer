@@ -1,0 +1,21 @@
+@import net.wa9nnn.rc210.data.field.FieldEntry
+@(fieldEntry: FieldEntry)
+@(fieldEntry.fieldMetadata.uiInfo.uiRender match {
+    case net.wa9nnn.rc210.data.field.UiRender.checkbox => {
+        views.html.fieldCheckbox(fieldEntry)
+    }
+    case net.wa9nnn.rc210.data.field.UiRender.number => {
+        views.html.fieldNumber(fieldEntry)
+    }
+
+    case net.wa9nnn.rc210.data.field.UiRender.select => {
+        "select"
+    }
+    case net.wa9nnn.rc210.data.field.UiRender.dtmfKeys => {
+        "dtmf"
+    }
+    case net.wa9nnn.rc210.data.field.UiRender.twoStrings => {
+        "2strings"
+    }
+}
+        )

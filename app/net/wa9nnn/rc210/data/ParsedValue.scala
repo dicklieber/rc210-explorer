@@ -18,15 +18,11 @@
 package net.wa9nnn.rc210.data
 
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
-import net.wa9nnn.rc210.key.KeyFormats.parseString
-import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.key.{Key, KeyFormats}
-import net.wa9nnn.rc210.util.CamelToWords
 import play.api.libs.json.{Format, JsResult, JsString, JsValue}
 import play.api.mvc.PathBindable
 
 import scala.util.Try
-
 /**
  * Identifies a field value
  *
@@ -34,11 +30,12 @@ import scala.util.Try
  * @param key       qualifier for the field.
  */
 case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey] with CellProvider{
+  assert(!fieldName.contains('|'), "Field Name can't contain '|'!")
+  assert(!fieldName.contains('~'), "Field Name can't contain '~'!")
   /**
    * can identify this in a HTTP param or as a JSON name.
    */
-  val param: String = s"$fieldName|$key".replaceAll(" ", "")
-  val prettyName:String = fieldName
+  val param: String = s"${fieldName}|$key".replaceAll(" ", "~")
 
   override def compare(that: FieldKey): Int = {
     var ret = key.kind compareTo(that.key.kind)
@@ -58,16 +55,6 @@ object FieldKey {
 
   implicit val fmtFieldKey: Format[FieldKey] = new Format[FieldKey] {
     override def writes(o: FieldKey) = JsString(o.param)
-
-
-
-/*
-    override def reads(json: JsValue): JsResult[FieldKey] = {
-      JsResult.fromTry(Try {
-        KeyFormats.parseString(json.as[String])
-      })
-    }
-*/
 
     override def reads(json: JsValue): JsResult[FieldKey] = {
       JsResult.fromTry(Try {
@@ -91,11 +78,12 @@ object FieldKey {
   }
 
   def fromParam(param: String): FieldKey = {
-    val r(fieldName, sKey) = param
+    val spacesBack = param.replaceAll("~", " ")
+    val r(fieldName, sKey) = spacesBack
     FieldKey(fieldName, KeyFormats.parseString(sKey))
   }
 
-  private val r = """([a-zA-Z]+)\|(.*)""".r
+  private val r = """(.+)\|(.*)""".r
 }
 
 

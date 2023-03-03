@@ -18,14 +18,16 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
+import controllers.routes
 import net.wa9nnn.rc210.data.FieldKey
 
 
 case class FieldEntry(fieldValue: FieldValue, fieldMetadata: FieldMetadata) extends RowSource {
-  def fieldKey: FieldKey = fieldValue.fieldKey
+  val fieldKey: FieldKey = fieldValue.fieldKey
+  val param: String = fieldKey.param
 
   override def toRow: Row = Row(
-    fieldKey.prettyName,
+    fieldKey.fieldName,
     fieldKey.key.toCell,
     fieldMetadata.offset,
     fieldMetadata.uiInfo.fieldExtractor.name,
@@ -35,6 +37,10 @@ case class FieldEntry(fieldValue: FieldValue, fieldMetadata: FieldMetadata) exte
     fieldMetadata.template,
     Cell(fieldValue.current)
       .withCssClass(fieldValue.cssClass),
+    Cell("")
+      .withImage(routes.Assets.versioned("images/pencil-square.png").url)
+      .withUrl(routes.FieldEditorController.editOne(fieldKey.param).url)
+      .withToolTip("Edit this field"),
     command
   )
 
@@ -63,5 +69,5 @@ case class FieldEntry(fieldValue: FieldValue, fieldMetadata: FieldMetadata) exte
 
 
 object FieldEntry {
-  def header(count: Int): Header = Header(s"Fields ($count)", "FieldName", "Key", "Offset", "Extractor", "render", "Prompt", "Select Options", "Template", "Value", "Command")
+  def header(count: Int): Header = Header(s"Fields ($count)", "FieldName", "Key", "Offset", "Extractor", "render", "Prompt", "Select Options", "Template", "Value", " ", "Command")
 }

@@ -18,12 +18,14 @@
 package controllers
 
 import net.wa9nnn.rc210.DataProvider
+import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.key.KeyFormats
 import play.api.mvc._
 
 import javax.inject.Inject
+import scala.collection.immutable
 
 class FieldEditorController @Inject()(implicit val controllerComponents: ControllerComponents,
                                       dataProvider: DataProvider,
@@ -35,13 +37,13 @@ class FieldEditorController @Inject()(implicit val controllerComponents: Control
     implicit request: Request[AnyContent] =>
 
 
-
       implicit val rc210Data = dataProvider.rc210Data
       val mappedValues = rc210Data.mappedValues
       val knownKeys = mappedValues.knownKeys
 
       Ok(views.html.selectKey(knownKeys))
   }
+
   def editFields(sKey: String): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
 
@@ -54,13 +56,32 @@ class FieldEditorController @Inject()(implicit val controllerComponents: Control
       Ok(views.html.fieldsEditor(mappedValues.fieldsForKey(key)))
   }
 
+  def editOne(sKey: String): Action[AnyContent] = Action {
+    implicit request: Request[AnyContent] =>
+
+
+      implicit val rc210Data = dataProvider.rc210Data
+
+      val fieldKey: FieldKey = FieldKey.fromParam(sKey)
+      rc210Data.mappedValues.entity(fieldKey) match {
+        case Some(fieldEntry) =>
+          Ok(views.html.fieldsEditor(Seq(fieldEntry)))
+        case None =>
+          NotFound{s"No key: $sKey"}
+      }
+
+  }
+
 
   def save(): Action[AnyContent] = Action { request: Request[AnyContent] =>
     val body: AnyContent = request.body
-    val formUrlEncoded = body.asFormUrlEncoded
-//    val value: Option[Map[String, Seq[String]]] = formUrlEncoded
-//        val jsonBody: Option[JsValue] = body.asJson
+    val formUrlEncoded: Option[Map[String, Seq[String]]] = body.asFormUrlEncoded
+    val lines: immutable.Iterable[String] = for {
+      case (name, values) <- formUrlEncoded.get
+    } yield {
+      s"""$name, "${values.mkString(",")}"\n"""
+    }
 
-    Ok("todo")
+    Ok(lines.mkString("\n"))
   }
 }

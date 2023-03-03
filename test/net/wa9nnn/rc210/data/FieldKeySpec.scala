@@ -21,12 +21,21 @@ import net.wa9nnn.rc210.key.MacroKey
 import org.specs2.mutable.Specification
 import play.api.libs.json.{JsValue, Json}
 
+
 class FieldKeySpec extends Specification {
 
   "FieldKeySpec" should {
     val mk = MacroKey(42)
     val fieldKey = FieldKey("afield", mk)
     "with key" in {
+      val param = fieldKey.param
+
+      val backAgain = FieldKey.fromParam(param)
+      backAgain must beEqualTo(fieldKey)
+    }
+
+    "with space in name" in {
+      val fieldKey = FieldKey("Groucho Marx", mk)
       val param = fieldKey.param
 
       val backAgain = FieldKey.fromParam(param)

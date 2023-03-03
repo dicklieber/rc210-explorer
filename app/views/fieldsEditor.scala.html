@@ -6,15 +6,15 @@
 
         @form(action = routes.FieldEditorController.save()) {
             @for(fieldEntry <- fieldEntries) {
-                <div class="mb-3">
+                <div>
                 @defining(fieldEntry.fieldKey.param) { param =>
-                    <label for="@param" class="form-label">@fieldEntry.fieldKey.prettyName</label>
-                    <input name="@param" id="@param" value="@fieldEntry.fieldValue.current" class="form-control @if(fieldEntry.fieldValue.dirty){ dirtyValue }">
+                    <label for="@param" class="form-label">@fieldEntry.fieldKey.fieldName</label>
+                        @fieldEditor(fieldEntry)
                 }
                 </div>
 
             }
-            <button type="submit">Save</button>
+            <button type="submit" class="btn btn-primary">Save</button>
         }
     }
 
