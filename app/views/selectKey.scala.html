@@ -4,6 +4,7 @@
 @main("Select Key") {
     @for(key <- knownKeys) {
         <div class="mb-3">
+            <a href="@routes.FieldEditorController.editCards(key.toString)">@key.toString</a>
             <a href="@routes.FieldEditorController.editFields(key.toString)">@key.toString</a>
         </div>
     }

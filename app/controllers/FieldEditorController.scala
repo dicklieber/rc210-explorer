@@ -56,6 +56,17 @@ class FieldEditorController @Inject()(implicit val controllerComponents: Control
 
       Ok(views.html.fieldsEditor(mappedValues.fieldsForKey(key)))
   }
+  def editCards(sKey: String): Action[AnyContent] = Action {
+    implicit request: Request[AnyContent] =>
+
+
+      val key = KeyFormats.parseString(sKey)
+
+      implicit val rc210Data = dataProvider.rc210Data
+      val mappedValues = rc210Data.mappedValues
+
+      Ok(views.html.cards(mappedValues.fieldsForKey(key)))
+  }
 
   def editOne(sKey: String): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>

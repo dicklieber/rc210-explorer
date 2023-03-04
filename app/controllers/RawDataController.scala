@@ -65,6 +65,7 @@ class RawDataController @Inject()(val controllerComponents: ControllerComponents
     Ok(views.html.dat(Seq(table)))
   }
 
+
   def macros(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     val rc210Data: Rc210Data = dataProvider.rc210Data
     val macros = rc210Data.macros
