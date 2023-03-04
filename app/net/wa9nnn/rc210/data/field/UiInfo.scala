@@ -18,38 +18,63 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.Dtmf.dtmfDigits
-import net.wa9nnn.rc210.data.field.FieldExtractors.{dtmf, int16, int8, twoInts, unlock}
+import net.wa9nnn.rc210.data.field
+import net.wa9nnn.rc210.data.field.FieldExtractors.{dtmf, int16, int8, twoInts}
 import net.wa9nnn.rc210.data.field.UiRender._
 
 import scala.util.Try
 
-abstract class UiInfo(val uiRender: UiRender, val fieldExtractor: FieldExtractor, validate: String => Try[String]) {
+trait UiInfo {
+  val uiRender: UiRender
+  val fieldExtractor: FieldExtractor
+  val validate: String => Try[String]
+  val selectOptions: Seq[SelectOption] = Seq.empty
+
+
   def doString(s: String): Try[String] = {
     validate(s)
   }
 
-  val prompt: String
+  val prompt: String = ""
 }
 
 object UiInfo {
   val default: UiNumber = UiNumber(256, "")
-  val checkBox: UiInfo = new UiInfo(uiRender = UiRender.checkbox,
-    FieldExtractors.bool,
-    validate = (s: String) => Try(s)) {
+  val checkBox: UiInfo = new UiInfo {
+    val uiRender = UiRender.checkbox
+    override val fieldExtractor: FieldExtractor = FieldExtractors.bool
+    val validate = (s: String) => Try(s)
     override val prompt = "true or false"
-  } // always valid.
 
-  override def toString: String = "checkBox"
+    override def toString: String = "checkBox"
+  }
 
-  val unlockCode: UiUnlockCode = UiUnlockCode()
+  val twoNumbers: UiInfo = new UiInfo {
+    val uiRender: UiRender = UiRender.twoStrings
+    val fieldExtractor: FieldExtractor = twoInts
+    override val validate: String => Try[String] = (s: String) =>
+      throw new NotImplementedError() //todo
+    override val prompt = "<from macro> <to macro>"
+  }
 
+  val unlockCode: UiInfo = new UiInfo {
+    override val uiRender = UiRender.dtmfKeys
+    override val fieldExtractor: FieldExtractor = FieldExtractors.dtmf
+    override val validate: String => Try[String] = (s: String) =>
+      throw new NotImplementedError() //todo
+    override val prompt: String = "1 to 8 digits"
+  }
 }
 
-
-case class UiNumber(max: Int, unit: String) extends UiInfo(
-  uiRender = number,
-  fieldExtractor = if (max > 256) int16 else int8,
-  validate = (s: String) => {
+/**
+ *
+ * @param max  largest value.
+ * @param unit e.g. seconds, minutes etc.
+ */
+case class UiNumber(max: Int, unit: String) extends UiInfo {
+  val uiRender: UiRender = number
+  val fieldExtractor: FieldExtractor = if (max > 256) int16 else int8
+  val validate: String => Try[String] = (s: String) => {
     val int = s.toInt
     Try {
       if (int > max) throw new IllegalArgumentException(s"Must be 1 to $max but found: $int")
@@ -57,49 +82,31 @@ case class UiNumber(max: Int, unit: String) extends UiInfo(
         s
     }
   }
-) {
-
   override val prompt = s"1 to $max $unit"
 }
 
-case class UiDtmf(max: Int) extends UiInfo(uiRender = dtmfKeys, fieldExtractor = dtmf, validate = (s: String) => {
-  Try {
-    if (s.length > max) throw new IllegalArgumentException(s"Must be 1 to $max digits but found: $s ${s.length}")
-    else
-      s
-  }
-}) {
+case class UiDtmf(max: Int) extends UiInfo {
+  val uiRender: UiRender = dtmfKeys
+  val fieldExtractor: FieldExtractor = dtmf
+  override val validate: String => Try[String] = (s: String) =>
+    Try {
+      if (s.length > max) throw new IllegalArgumentException(s"Must be 1 to $max digits but found: $s ${s.length}")
+      else
+        s
+    }
 
   override val prompt: String = s"1 to $max digits"
 }
 
-case class UiTwoNumbers(sPrompt: String) extends UiInfo(
-  uiRender = UiRender.twoStrings,
-  fieldExtractor = twoInts,
-  validate = { (s: String) =>
-    throw new NotImplementedError() //todo
-  }
-) {
-  override val prompt: String = sPrompt
 
-}
-case class UiUnlockCode() extends UiInfo(
-  uiRender = UiRender.number,
-  fieldExtractor = unlock,
-  validate = { (s: String) =>
-    throw new NotImplementedError() //todo
-  }
-) {
-  override val prompt: String = "1 to 8 digits"
+/*
+  case class UiSelect(fieldSelect: FieldSelect) extends UiInfo {
+    val uiRender: field.UiRender.Value = UiRender.select
+    val fieldExtractor: FieldExtractor = FieldExtractors.int8
+    val validate: String => Try[String] = { (s: String) =>
+      throw new NotImplementedError() //todo
+    }
+    override val prompt: String = "Choose from choices."
 
-}
-case class UiSelect(fieldSelect: FieldSelect) extends UiInfo(
-  uiRender = UiRender.select,
-  fieldExtractor = unlock,
-  validate = { (s: String) =>
-    throw new NotImplementedError() //todo
   }
-) {
-  override val prompt: String = "1 to 8 digits"
-
-}
+*/

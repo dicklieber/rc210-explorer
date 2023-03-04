@@ -25,7 +25,6 @@ import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.named.{NamedData, NamedKey}
 import net.wa9nnn.rc210.data.schedules.{DayOfWeekJaca, MonthOfYear, Schedule}
 import net.wa9nnn.rc210.data.vocabulary.MessageMacroNode
-import net.wa9nnn.rc210.key.KeyKind
 import play.api.libs.json._
 import play.api.mvc.PathBindable
 
@@ -59,7 +58,8 @@ object KeyFormats {
   val r: Regex = """([a-zA-Z]+)(\d+)?""".r
 
 
-  def buildKey(keyKind: KeyKind, number: Int): Key = {
+/*
+  def buildKey(keyKind: KeyKindVal, number: Int): Key = {
 
     keyKind match {
       case KeyKind.alarmKey => AlarmKey(number)
@@ -71,9 +71,10 @@ object KeyFormats {
       case KeyKind.portKey => PortKey(number)
       case KeyKind.scheduleKey => ScheduleKey(number)
       case KeyKind.wordKey => WordKey(number)
-      case KeyKind.coourtesyToneKey => CourtesyToneKey(number)
+      case KeyKind.courtesyToneKey => CourtesyToneKey(number)
     }
   }
+*/
 
 
   def buildKey(kind: String, number: Int): Key = {

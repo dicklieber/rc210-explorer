@@ -24,7 +24,7 @@ import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.schedules.ScheduleExtractor
 import net.wa9nnn.rc210.data.vocabulary.MessageMacroExtractor
 import net.wa9nnn.rc210.data.{FieldKey, Rc210Data}
-import net.wa9nnn.rc210.key.KeyFormats
+import net.wa9nnn.rc210.key.{KeyFactory, KeyFormats}
 import net.wa9nnn.rc210.serial.{Memory, MemoryArray}
 
 import java.io.InputStream
@@ -43,8 +43,8 @@ class DataProvider @Inject()() extends LazyLogging {
 
       FieldDefinitions.fields.foreach { fieldMetadata: FieldMetadata =>
         var start = fieldMetadata.offset
-        for (n <- 1 to fieldMetadata.kind.getMaxN) {
-          val fieldKey: FieldKey = new FieldKey(fieldMetadata.fieldName, KeyFormats.buildKey(fieldMetadata.kind, n))
+        for (n <- 1 to fieldMetadata.kind.maxN) {
+          val fieldKey: FieldKey = new FieldKey(fieldMetadata.fieldName, KeyFactory(fieldMetadata.kind, n))
           val extractResult = fieldMetadata.extract(memory, start)
           start = extractResult.newOffset
           mappedValues.setupField(fieldKey = fieldKey,

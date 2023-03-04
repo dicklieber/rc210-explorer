@@ -1,12 +1,8 @@
-@import com.wa9nnn.util.tableui.html.renderTable
-@import net.wa9nnn.rc210.data.named.NamedManager
-@import net.wa9nnn.rc210.data.macros.MacroNode
 @import com.wa9nnn.util.tableui.html.renderTableBodyRows
-@import net.wa9nnn.rc210.data.functions.FunctionsProvider
 @import net.wa9nnn.rc210.data.Rc210Data
-@import com.wa9nnn.util.tableui.Row
-@import com.wa9nnn.util.tableui.Cell
-@import net.wa9nnn.rc210.data.macros.MacroBlock
+@import net.wa9nnn.rc210.data.functions.FunctionsProvider
+@import net.wa9nnn.rc210.data.macros.{MacroBlock, MacroNode}
+@import net.wa9nnn.rc210.data.named.NamedManager
 @(macroNodes: Seq[MacroNode])(implicit namedManager: NamedManager, functionsProvider: FunctionsProvider, rc210Data: Rc210Data)
 
 @main("RCP Dat") {

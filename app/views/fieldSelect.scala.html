@@ -1,12 +1,12 @@
 @import net.wa9nnn.rc210.data.named.NamedManager
 @import net.wa9nnn.rc210.data.field.FieldEntry
 @import net.wa9nnn.rc210.data.field.UiSelect
-@import net.wa9nnn.rc210.data.field.FieldSelect
+@import net.wa9nnn.rc210.data.field.UiSelect
 @(fieldEntry: FieldEntry)(implicit namedManager: NamedManager)
 <div class="fieldNumber">
     @defining(fieldEntry.param) { param =>
         <select name="@param" id="@param" class="form-select" aria-label="Default select example">
-        @defining(fieldEntry.fieldMetadata.uiInfo.asInstanceOf[FieldSelect].fieldSelect.options(namedManager)) { options =>
+        @defining(fieldEntry.fieldMetadata.uiInfo.asInstanceOf[UiSelect].options(namedManager)) { options =>
             @for(opt <- options) {
                 <option value="@opt.value">@opt.display</option>
             }

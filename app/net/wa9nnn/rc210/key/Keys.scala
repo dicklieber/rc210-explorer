@@ -15,34 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.key;
+package net.wa9nnn.rc210.key
 
-public enum KeyKind {
+import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
 
-    alarmKey(5, "alarm"),
-    dtmfMacroKey(5, "dtmfMacro"),
-    coourtesyToneKey(10, "courtesytone"),
-    functionKey(1005, "function"),
-    macroKey(105, "macro"),
-    messageMacroKey(90, "messageMacro"),
-    miscKey(1, "misc"),
-    portKey(3, "port"),
-    scheduleKey(40, "schedule"),
-    wordKey(256, "word");
-
-    private final int maxN;
-    private final String name;
-
-    KeyKind(int maxN, String name) {
-        this.maxN = maxN;
-        this.name = name;
-    }
-
-    public int getMaxN() {
-        return maxN;
-    }
-
-    public String getName() {
-        return name;
-    }
+/**
+ * All of the possible keys for every [[KeyKind]] and maxNs.
+ */
+object Keys {
+  val availableKeys: Seq[Key] = {
+    (for {
+      f <- KeyKindEnum.values
+      keyKind = f.asInstanceOf[KeyKind]
+      number <- 1 to keyKind.maxN
+    } yield {
+      keyKind.apply[Key](number)
+    }).toSeq
+  }
 }

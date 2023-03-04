@@ -18,20 +18,26 @@
 package net.wa9nnn.rc210.key
 
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
-import net.wa9nnn.rc210.key.KeyKind._
-/**
- *
- * @param kind   e.g. port, schedule, macro.
- * @param number 1 to N
- * @param maxN   how many can we have of this key,
- */
-sealed abstract class Key(val kind: KeyKind, val number: Int, val maxN: Int) extends CellProvider with Ordered[Key] {
-  val index: Int = number - 1
+import net.wa9nnn.rc210.key.KeyKindEnum._
 
-  override def toString: String = s"${kind.getName}$number"
+/**
+ * Most things in this program are identified by a [[Key]].
+ * Each kind of item has a specific type of Key as declared below.
+ *
+ * All have a swtring form e.g. "port2 these are uwsed in JSON for of a key etc.
+ * @param kind   e.g. port, schedule, macro.
+ * @param number 1 to maxN in [[KeyKind]]
+ */
+sealed abstract class Key(val kind: KeyKind, val number: Int) extends CellProvider with Ordered[Key] {
+
+  val name: String = kind
+    .toString()
+    .dropRight(3) // remove trailing "Key"
+
+  override val toString: String = s"$name$number"
 
   override def toCell: Cell = Cell(toString)
-    .withCssClass(kind.getName)
+    .withCssClass(kind.toString)
 
   override def compare(that: Key): Int = {
     var ret = kind compareTo that.kind
@@ -39,33 +45,28 @@ sealed abstract class Key(val kind: KeyKind, val number: Int, val maxN: Int) ext
       ret = number compareTo that.number
     ret
   }
-
 }
 
-case class PortKey(override val number: Int) extends Key(portKey, number, 3)
+case class PortKey(override val number: Int) extends Key(portKey, number)
 
-case class AlarmKey(override val number: Int) extends Key(alarmKey, number, 5)
+case class AlarmKey(override val number: Int) extends Key(alarmKey, number)
 
-case class MacroKey(override val number: Int) extends Key(macroKey, number, 105) {
-  assert(number <= maxN, s"Macro numbers are 1 through $maxN, can't do $number")
-}
+case class MacroKey(override val number: Int) extends Key(macroKey, number)
 
+case class MessageMacroKey(override val number: Int) extends Key(messageMacroKey, number)
 
-case class MessageMacroKey(override val number: Int) extends Key(messageMacroKey, number, 90)
+case class FunctionKey(override val number: Int) extends Key(functionKey, number)
 
-case class FunctionKey(override val number: Int) extends Key(functionKey, number, 1005)
+case class ScheduleKey(override val number: Int) extends Key(scheduleKey, number)
 
-case class ScheduleKey(override val number: Int) extends Key(scheduleKey, number, 40)
+case class WordKey(override val number: Int) extends Key(wordKey, number)
 
-case class WordKey(override val number: Int) extends Key(wordKey, number, 256)
+case class DtmfMacroKey(override val number: Int) extends Key(dtmfMacroKey, number)
 
-case class DtmfMacroKey(override val number: Int) extends Key(dtmfMacroKey, number, 256)
-case class CourtesyToneKey(override val number: Int) extends Key(dtmfMacroKey, number, 256)
+case class CourtesyToneKey(override val number: Int) extends Key(dtmfMacroKey, number)
 
 /**
  * There can be any number of [[MiscKey]] but they don't index into a map by themselves. MaxN just indicate o=how many to extract for a given fieldname.
  */
-case class MiscKey() extends Key(miscKey, 0, 1) {
-  override def toString: String = miscKey.getName
-}
+case class MiscKey(override val number: Int = 1) extends Key(miscKey, number)
 

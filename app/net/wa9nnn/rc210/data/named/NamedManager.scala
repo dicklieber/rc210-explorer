@@ -46,6 +46,8 @@ class NamedManager @Inject()(config: Config) extends NamedSource{
   }
 
 
+
+
   private def save(): Unit = {
     val namedData = NamedData(map.map { case (key, str) =>
       NamedKey(key, str)

@@ -15,27 +15,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.vocabulary
+package controllers
 
-import net.wa9nnn.rc210.key.WordKey
-import org.specs2.mutable.Specification
+import net.wa9nnn.rc210.DataProvider
+import net.wa9nnn.rc210.data.functions.FunctionsProvider
+import net.wa9nnn.rc210.data.macros.MacroNode
+import net.wa9nnn.rc210.data.named.NamedManager
+import play.api.mvc._
 
-class VocabularySpec extends Specification {
-  "Vocabulary" should {
+import javax.inject.Inject
 
-    "byText" in {
-      Vocabulary("Zero") must beEqualTo (Phrase(WordKey(0), "Zero"))
-      val phrase = Vocabulary("DVR10")
-      phrase.wordKey.number must beEqualTo (245)
-      phrase.string must beEqualTo ("DVR10")
-    }
+class NamedController @Inject()(implicit val controllerComponents: ControllerComponents,
+                                namedManager: NamedManager) extends BaseController {
 
-    "last" >> {
-      Vocabulary(WordKey(255)).string must beEqualTo ("DVR20")
-    }
+  def index(): Action[AnyContent] = Action {
+    implicit request: Request[AnyContent] =>
 
-    "byNumber" in {
-      Vocabulary(WordKey(0)).string must beEqualTo ("Zero")
-    }
+
+      NotImplemented
   }
 }

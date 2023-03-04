@@ -18,8 +18,8 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.field.SelectOptions.{macroSelect, radioType, yaesuType}
-import net.wa9nnn.rc210.data.field.UiInfo.{checkBox, unlockCode}
-import net.wa9nnn.rc210.key.KeyKind._
+import net.wa9nnn.rc210.data.field.UiInfo.{twoNumbers, _}
+import net.wa9nnn.rc210.key.KeyKindEnum._
 
 object FieldDefinitions {
 
@@ -44,7 +44,7 @@ object FieldDefinitions {
     (54, "Timeout Ports", miscKey, "*2051b") % checkBox,
     (55, "Speech Delay", miscKey, "*1019v") % UiNumber(600, "Seconds"),
     (57, "CTCSS Encode Polarity", portKey, "*1021v") % checkBox,
-    (60, "Guest Macro Range", portKey, "*4009v") % UiTwoNumbers("<from macro> <to macro>"),
+    (60, "Guest Macro Range", portKey, "*4009v") % twoNumbers,
     (67, "DTMF COS Control", portKey, "n22b") % checkBox,
     (73, "DTMF Require Tone", portKey, "n17b") % checkBox,
     (76, "Unlock", portKey, "* 9 0 0 0 S") % unlockCode,
@@ -61,8 +61,8 @@ object FieldDefinitions {
     (160, "Timeout Timer", portKey, "n*1001v") % UiNumber(32767, "seconds"),
     (166, "DTMF Mute", portKey, "n*1001v") % checkBox,
     (169, "Alarm Enable", portKey, "n191b") % checkBox,
-    (174, "Alarm Macro Low", alarmKey, "*2101 n v") % UiSelect(macroSelect),
-    (179, "Alarm Macro High", alarmKey, "*2102 n v") % UiSelect(macroSelect),
+    (174, "Alarm Macro Low", alarmKey, "*2101 n v") % macroSelect,
+    (179, "Alarm Macro High", alarmKey, "*2102 n v") % macroSelect,
     (184, "Vref", alarmKey, "*2065 n v") % UiNumber(255, "todo three numbers?"),//*2065 4 9 6
     //###########################################################################################  //todo
     ///For meters, we gather all the parameters needed, then assemble them to actually store
@@ -83,9 +83,9 @@ object FieldDefinitions {
 
     // Courtesy Tone special handling.  *31CT Delay to segment 1 * duration of segment 1 * Tone 1 * Tone 2 *
 
-    (1176, "Radio Type", miscKey, "n*2083 v") % UiSelect(radioType),
-    (1176, "Yaesu Type", miscKey, "n*2084 v") % UiSelect(yaesuType),
-    (1177, "Fan Timeout", miscKey, "n*1004v") % radioType,
+    (1176, "Radio Type", miscKey, "n*2083 v") % radioType,
+    (1176, "Yaesu Type", miscKey, "n*2084 v") % yaesuType,
+    (1177, "Fan Timeout", miscKey, "n*1004v") % UiNumber(255, "Minutes"),
     //DTMFRegenPrefix1 - 1179-1185 need  special handling. part of IRLP stuff.
     (1186, "Clock 24 Hours", miscKey, "n*5103") % checkBox,
     (1187, "Fan Select", miscKey, "n*2119b") % checkBox,
@@ -115,10 +115,10 @@ object FieldDefinitions {
     (3536, "Terminator", miscKey, "n9020v") % UiDtmf(1),
     //ClockCorrection - 3538-3539 Humm, only two bytes but doc shows:  Docs shows this as *5105! Not *5101! In any event needs some special handling.
     (3540, "Say Year", miscKey, "n*5102b") % checkBox,
-    (3541, "P1 Tail Message", portKey, "n*2110 1 v") % UiSelect(macroSelect),
-    (3544, "P2 Tail Message", portKey, "n*2110 2 v") % UiSelect(macroSelect),
-    (3547, "P3 Tail Message", portKey, "n*2110 3 v") % UiSelect(macroSelect),
-    (3550, "TailMessageNumber", portKey, "n*2111v") % UiSelect(macroSelect),
+    (3541, "P1 Tail Message", portKey, "n*2110 1 v") % macroSelect,
+    (3544, "P2 Tail Message", portKey, "n*2110 2 v") % macroSelect,
+    (3547, "P3 Tail Message", portKey, "n*2110 3 v") % macroSelect,
+    (3550, "TailMessageNumber", portKey, "n*2111v") % macroSelect,
     (3553, "Tail Timer", portKey, "n*1020v") % UiNumber(999, "tails 0 disables"),
     (3559, "Tail Counter", portKey, "n*2112v") % UiNumber(999, "tails 0 disables"),
     //FreqString - 3562-3641	remote base stuff

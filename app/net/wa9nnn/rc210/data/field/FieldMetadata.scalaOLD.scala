@@ -33,7 +33,7 @@ import scala.jdk.CollectionConverters._
  * @param uiType        render hint.
  * @param selectOptions required if [[uiType]] is select.
  */
-case class FieldMetadataXYZZY(fieldKey: FieldKey, template: String, selectOptions: Option[FieldSelect]) {
+case class FieldMetadataXYZZY(fieldKey: FieldKey, template: String, selectOptions: Option[UiSelect]) {
 
 
 

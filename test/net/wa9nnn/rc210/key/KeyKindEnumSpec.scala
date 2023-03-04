@@ -15,33 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.field
+package net.wa9nnn.rc210.key
 
-import net.wa9nnn.rc210.data.named.NamedSource
+import net.wa9nnn.rc210.key.KeyKindEnum.portKey
+import org.specs2.mutable.Specification
 
-import scala.util.Try
+class KeyKindEnumSpec extends Specification {
 
-class FieldSelect(options: Seq[SelectOption]) extends UiInfo(UiRender.select,
-  fieldExtractor = FieldExtractors.int8,
-  validate = (s: String) => Try(s)
-) {
-  override val prompt: String = "-select-"
-
-
-  def options(namedSource: NamedSource): Seq[SelectOption] = {
-    options
+  "KeyKindEnum" should {
+    "instantiate a key" in {
+      val value1: PortKey = portKey[PortKey](2)
+      value1.number must beEqualTo (2)
+      value1.toString must beEqualTo ("port2")
+    }
   }
 }
-
-object FieldSelect {
-  def apply(simple: String*): FieldSelect = {
-    val r: Seq[SelectOption] = simple
-      .zipWithIndex
-      .map { case (string, index) =>
-        SelectOption(index, string)
-      }
-    new FieldSelect(r)
-  }
-}
-
-case class SelectOption(value: Int, display: String)
