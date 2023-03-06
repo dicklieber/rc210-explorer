@@ -21,13 +21,26 @@ package net.wa9nnn.rc210.key
  * Metadata for the various [[Key]]s
  */
 object KeyKindEnum extends Enumeration {
+  def keyKinds: Seq[KeyKind] = {
+    values
+      .toIndexedSeq
+      .map(_.asInstanceOf[KeyKind])
+      .sorted[KeyKind]
+  }
+
   /**
    * Provides metadata about the [[Key]] types
    *
    * @param maxN numbered key instances can go from 1 from 1 to maxN,
    * @param instantiate create an instance of the Key for this [[KeyKind]] and number.
    */
-  case class KeyKind(maxN: Int, instantiate: Int => Key) extends super.Val {
+  case class KeyKind(maxN: Int, instantiate: Int => Key) extends super.Val with Ordered [Value]{
+
+    override def compareTo(that: KeyKindEnum.Value): Int = toString() compareTo that.toString
+
+    def shortName:String = toString()
+      .dropRight(3)
+      .capitalize
 
     def apply[T](number: Int): T = {
       instantiate(number).asInstanceOf[T]
@@ -41,9 +54,9 @@ object KeyKindEnum extends Enumeration {
   val macroKey: KeyKind = KeyKind(105, MacroKey)
   val messageMacroKey: KeyKind = KeyKind(90, MessageMacroKey)
   val miscKey: KeyKind = KeyKind(1, MiscKey)
+  val wordKey: KeyKind = KeyKind(256, WordKey)
   val portKey: KeyKind = KeyKind(3, PortKey)
   val scheduleKey: KeyKind = KeyKind(40, ScheduleKey)
-  val wordKey: KeyKind = KeyKind(256, WordKey)
 
 }
 

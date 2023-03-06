@@ -18,49 +18,91 @@
 package net.wa9nnn.rc210.data.named
 
 import com.fasterxml.jackson.module.scala.deser.overrides.TrieMap
-import com.typesafe.config.Config
+import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.key.Key
 import net.wa9nnn.rc210.key.KeyFormats._
 import play.api.libs.json.Json
 
-import java.nio.file.{Files, Paths}
-import javax.inject.{Inject, Singleton}
+import java.io.IOException
+import java.nio.file.{Files, Path, Paths}
+import javax.inject.{Inject, Named, Singleton}
 
 @Singleton
-class NamedManager @Inject()(config: Config) extends NamedSource{
-  private val path = Paths.get(config.getString("vizRc210.dataDir"))
-  private val namedFile = path.resolve("named.json")
-  Files.createDirectories(path)
+class NamedManager @Inject()( @Named("vizRc210.namedDataFile") namedFilePath:String) extends NamedSource with LazyLogging {
+
+  private val namedFile: Path = Paths.get(namedFilePath)
+    try {
+      val created = Files.createDirectories(namedFile.getParent)
+      logger.trace(s"Created parent: $created")
+    } catch {
+      case e:Throwable =>
+        logger.error(e.getMessage)
+    }
 
   private val map = new TrieMap[Key, String]
+  def size: Int = map.size
+  load()
 
   override def apply(key: Key): String = map.getOrElse(key, key.toString)
 
-  def apply(key: Key, str: String): Unit = {
-    if (str.nonEmpty)
-      map.put(key, str)
-    else {
-      map.remove(key)
-      save()
+  def update(data:Iterable[NamedKey]): Unit = {
+    data.foreach{nk =>
+      val name = nk.name
+      val key = nk.key
+      if (name.nonEmpty)
+        map.put(key, name)
+      else {
+        map.remove(key)
+      }
     }
+    save()
   }
 
-
+  def get(key: Key): Option[String] = map.get(key)
 
 
   private def save(): Unit = {
     val namedData = NamedData(map.map { case (key, str) =>
       NamedKey(key, str)
-    }.toSeq)
+    }
+      .toSeq
+    .sorted)
     val sJson = Json.prettyPrint(Json.toJson(namedData))
     Files.writeString(namedFile, sJson)
+    logger.trace("Saved named data to: {}", namedFile.toFile.toString)
+
+  }
+
+  private def load():Unit = {
+
+    try {
+      logger.trace("Loading named data from: {}", namedFile.toFile.toString)
+      if(Files.isReadable(namedFile) &&  Files.size(namedFile)  > 0L) {
+        val namedData = Json.parse(Files.readAllBytes(namedFile)).as[NamedData]
+        namedData
+          .data
+          .foreach { nd =>
+            map.put(nd.key, nd.name)
+            logger.debug(s"Loaded $size names from $namedFile")
+          }
+      }else{
+        logger.info(s"sEmpty named.json file: $namedFile")
+      }
+    } catch {
+      case e:IOException =>
+        logger.error(e.getMessage)
+    }
+
   }
 }
 
-case class NamedKey(key: Key, name: String)
+
+case class NamedKey(key: Key, name: String) extends Ordered[NamedKey] {
+  override def compare(that: NamedKey): Int = key compareTo that.key
+}
 
 case class NamedData(data: Seq[NamedKey])
 
 trait NamedSource {
-  def apply(key: Key):String
+  def apply(key: Key): String
 }

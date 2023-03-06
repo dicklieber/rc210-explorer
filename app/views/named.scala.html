@@ -1,0 +1,42 @@
+@import net.wa9nnn.rc210.data.named.NamedKey
+@import net.wa9nnn.rc210.key.KeyKindEnum
+@import views.html.helper._
+@(keyKindIndex: Int, namedKeys: Seq[NamedKey])
+
+@main("Named") {
+    @form(action = routes.NamedController.edit()) {
+        <select>
+@*        <select class="form-select form-select-sm" aria-label="KeyKind" name="keyKind">*@
+        @for(kk <- KeyKindEnum.keyKinds) {
+
+            @defining(if(kk.id == (keyKindIndex)) " selected" else " ") { selec =>
+                <option value="@kk.id" @selec >@kk.shortName</option>
+            }
+        }
+        </select>
+        <table>
+            <thead>
+                <tr>
+                    <td>Number</td>
+                    <td>Name</td>
+                </tr>
+            </thead>
+            <tbody>
+            @for(namedKey <- namedKeys) {
+                <tr>
+                @defining(namedKey.key.toCell) { cell =>
+                    <td class='@cell.cssClass.mkString(" ")'> @cell.value</td>
+                    <td>
+                        <input value="@namedKey.name" name="@namedKey.key.toString">
+                    </td>
+                }
+                </tr>
+            }
+            </tbody>
+
+        </table>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+
+    }
+}

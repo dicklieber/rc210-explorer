@@ -32,4 +32,9 @@ object Keys {
       keyKind.apply[Key](number)
     }).toSeq
   }
+
+  def apply(keyKind: KeyKind) :Seq[Key] = {
+    availableKeys
+      .filter(_.kind.eq(keyKind))
+  }
 }

@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.named
 
 import com.typesafe.config.{Config, ConfigFactory, ConfigValue}
-import net.wa9nnn.rc210.key.MacroKey
+import net.wa9nnn.rc210.key.{MacroKey, PortKey}
 import org.specs2.mutable.Specification
 import org.specs2.mock._
 
@@ -27,15 +27,28 @@ import java.nio.file.{Files, Path}
 class NamedManagerSpec extends Specification with Mockito {
 
   private val configMock: Config = mock[Config]
-  private val path: Path = Files.createTempFile("vizrc210", "")
-  configMock.getString("vizRc210.dataDir").returns(path.toString)
-  val namedManager = new NamedManager(configMock)
-  "NamedManager" should {
-    "save" in {
-      namedManager.apply(MacroKey(42), "named42named")
-      println(path)
+  private val path: Path = Files.createTempFile("vizrc210", "named.json")
+   val bool: Boolean = Files.exists(path)
+  private val filePath: String = path.toString
+  val namedManager = new NamedManager(filePath)
+  val key = PortKey(2)
 
-      ok
+  "NamedManager" should {
+//    "save" in {
+//      namedManager.apply(MacroKey(42), "named42named")
+//      println(path)
+//
+//      ok
+//    }
+    "round trip" >> {
+      namedManager.size must beEqualTo (0)
+      val keyValue = "Groucho"
+      namedManager.apply(key, keyValue)
+      namedManager(key) must beEqualTo (keyValue)
+      namedManager(key) must beEqualTo (keyValue)
+      val newInstance = new NamedManager(filePath)
+      newInstance.size must beEqualTo (1)
+      newInstance(key) must beEqualTo (keyValue)
     }
   }
 }

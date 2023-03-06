@@ -35,8 +35,8 @@
 
   <!-- Off these ones as they are annoying, and anyway we manage configuration ourselves -->
   <logger name="net.wa9nnn.rc210.data.schedules.ScheduleNode" level="INFO" />
-  <logger name="net.wa9nnn.rc210.serial.RC210Download" level="TRACE" />
-  <logger name="net.wa9nnn.rc210.command" level="TRACE" />
+  <logger name="net.wa9nnn.rc210.serial.RC210Download" level="INFO" />
+  <logger name="net.wa9nnn.rc210.data.named.NamedManager" level="TRACE" />
 
   <root level="INFO">
     <appender-ref ref="ASYNCFILE" />

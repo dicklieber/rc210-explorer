@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.key
 
-import net.wa9nnn.rc210.key.KeyKindEnum.portKey
+import net.wa9nnn.rc210.key.KeyKindEnum.{KeyKind, portKey}
 import org.specs2.mutable.Specification
 
 class KeyKindEnumSpec extends Specification {
@@ -27,6 +27,14 @@ class KeyKindEnumSpec extends Specification {
       val value1: PortKey = portKey[PortKey](2)
       value1.number must beEqualTo (2)
       value1.toString must beEqualTo ("port2")
+    }
+
+    "ordered" >> {
+      val keyKinds: Seq[KeyKind] = KeyKindEnum.keyKinds
+      keyKinds.foreach{d =>
+        println(d)
+      }
+      ok
     }
   }
 }

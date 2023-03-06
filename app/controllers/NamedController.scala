@@ -20,18 +20,53 @@ package controllers
 import net.wa9nnn.rc210.DataProvider
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.MacroNode
-import net.wa9nnn.rc210.data.named.NamedManager
+import net.wa9nnn.rc210.data.named
+import net.wa9nnn.rc210.data.named.{NamedKey, NamedManager}
+import net.wa9nnn.rc210.key.{Key, KeyFormats, KeyKindEnum, Keys}
+import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
+import play.api.data.Form
 import play.api.mvc._
+import play.api.data._
+import play.api.data.Forms._
 
 import javax.inject.Inject
+import play.api.data.validation.Constraints._
+
+import scala.collection.immutable
 
 class NamedController @Inject()(implicit val controllerComponents: ControllerComponents,
                                 namedManager: NamedManager) extends BaseController {
 
+
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-
-
-      NotImplemented
+      Ok(views.html.named(0, Seq.empty))
   }
+
+  def edit: Action[AnyContent] = Action { implicit request =>
+
+    val kv: Map[String, String] = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }
+
+    namedManager.update(kv.removed("keyKind").map { case (key, value) =>
+      val key1 = KeyFormats.parseString(key)
+      NamedKey(key1, value)
+    })
+
+
+    val kkIndex: Int = kv("keyKind").toInt
+    val selectedKeyKind: KeyKind = KeyKindEnum(kkIndex).asInstanceOf[KeyKind]
+
+    val keys: Seq[Key] = Keys(selectedKeyKind)
+    val namedKeys: Seq[NamedKey] = keys
+      .map { key =>
+        NamedKey(key, namedManager.get(key).getOrElse(""))
+      }
+    Ok(views.html.named(kkIndex, namedKeys))
+
+  }
+
 }
+
+case class NamedMetadata(selectedKeyKind: Int, namedKeys: Seq[NamedKey])
+
+
