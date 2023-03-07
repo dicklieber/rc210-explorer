@@ -83,11 +83,11 @@ class NamedManager @Inject()( @Named("vizRc210.namedDataFile") namedFilePath:Str
           .data
           .foreach { nd =>
             map.put(nd.key, nd.name)
-            logger.debug(s"Loaded $size names from $namedFile")
           }
       }else{
         logger.info(s"sEmpty named.json file: $namedFile")
       }
+      logger.debug(s"Loaded $size names from $namedFile")
     } catch {
       case e:IOException =>
         logger.error(e.getMessage)

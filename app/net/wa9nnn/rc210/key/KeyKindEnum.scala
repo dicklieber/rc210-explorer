@@ -27,6 +27,22 @@ object KeyKindEnum extends Enumeration {
       .map(_.asInstanceOf[KeyKind])
       .sorted[KeyKind]
   }
+  def namebleKeyKinds: Seq[KeyKind] = {
+    keyKinds.filter(_.nameable)
+  }
+
+  def createKey(keyKindName:String, number:Int): Key = {
+    val maybeValue: Option[KeyKindEnum.Value] = KeyKindEnum.values.find(_.asInstanceOf[KeyKind].matches(keyKindName))
+    maybeValue.map(v =>
+      v.asInstanceOf[KeyKind]
+        .instantiate(number)
+
+    ).getOrElse{
+      println(keyKindName)
+      throw new IllegalArgumentException(s"Can't make Key for KeyKind: $keyKindName Number: $number")
+  }
+
+  }
 
   /**
    * Provides metadata about the [[Key]] types
@@ -34,11 +50,15 @@ object KeyKindEnum extends Enumeration {
    * @param maxN numbered key instances can go from 1 from 1 to maxN,
    * @param instantiate create an instance of the Key for this [[KeyKind]] and number.
    */
-  case class KeyKind(maxN: Int, instantiate: Int => Key) extends super.Val with Ordered [Value]{
+  case class KeyKind(maxN: Int, instantiate: Int => Key, nameable:Boolean = true) extends super.Val with Ordered [Value]{
+    def matches(keyKindName: String): Boolean = {
+     keyKindName == prettyName
+    }
+
 
     override def compareTo(that: KeyKindEnum.Value): Int = toString() compareTo that.toString
 
-    def shortName:String = toString()
+    def prettyName:String = toString()
       .dropRight(3)
       .capitalize
 
@@ -50,11 +70,11 @@ object KeyKindEnum extends Enumeration {
   val alarmKey: KeyKind = KeyKind(5,  AlarmKey)
   val dtmfMacroKey: KeyKind = KeyKind(195, DtmfMacroKey)
   val courtesyToneKey: KeyKind = KeyKind(10, CourtesyToneKey)
-  val functionKey: KeyKind = KeyKind(1005, FunctionKey)
+  val functionKey: KeyKind = KeyKind(1005, FunctionKey, nameable = false)
   val macroKey: KeyKind = KeyKind(105, MacroKey)
   val messageMacroKey: KeyKind = KeyKind(90, MessageMacroKey)
   val miscKey: KeyKind = KeyKind(1, MiscKey)
-  val wordKey: KeyKind = KeyKind(256, WordKey)
+  val wordKey: KeyKind = KeyKind(256, WordKey, nameable = false)
   val portKey: KeyKind = KeyKind(3, PortKey)
   val scheduleKey: KeyKind = KeyKind(40, ScheduleKey)
 

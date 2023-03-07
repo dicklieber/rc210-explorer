@@ -17,22 +17,12 @@
 
 package controllers
 
-import net.wa9nnn.rc210.DataProvider
-import net.wa9nnn.rc210.data.functions.FunctionsProvider
-import net.wa9nnn.rc210.data.macros.MacroNode
-import net.wa9nnn.rc210.data.named
 import net.wa9nnn.rc210.data.named.{NamedKey, NamedManager}
-import net.wa9nnn.rc210.key.{Key, KeyFormats, KeyKindEnum, Keys}
 import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
-import play.api.data.Form
+import net.wa9nnn.rc210.key.{Key, KeyFormats, KeyKindEnum, Keys}
 import play.api.mvc._
-import play.api.data._
-import play.api.data.Forms._
 
 import javax.inject.Inject
-import play.api.data.validation.Constraints._
-
-import scala.collection.immutable
 
 class NamedController @Inject()(implicit val controllerComponents: ControllerComponents,
                                 namedManager: NamedManager) extends BaseController {
@@ -40,11 +30,10 @@ class NamedController @Inject()(implicit val controllerComponents: ControllerCom
 
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      Ok(views.html.named(0, Seq.empty))
+      Ok(views.html.named(None, Seq.empty))
   }
 
   def edit: Action[AnyContent] = Action { implicit request =>
-
     val kv: Map[String, String] = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }
 
     namedManager.update(kv.removed("keyKind").map { case (key, value) =>
@@ -61,10 +50,8 @@ class NamedController @Inject()(implicit val controllerComponents: ControllerCom
       .map { key =>
         NamedKey(key, namedManager.get(key).getOrElse(""))
       }
-    Ok(views.html.named(kkIndex, namedKeys))
-
+    Ok(views.html.named(Option(kkIndex), namedKeys))
   }
-
 }
 
 case class NamedMetadata(selectedKeyKind: Int, namedKeys: Seq[NamedKey])

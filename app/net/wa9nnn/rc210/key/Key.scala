@@ -30,9 +30,7 @@ import net.wa9nnn.rc210.key.KeyKindEnum._
  */
 sealed abstract class Key(val kind: KeyKind, val number: Int) extends CellProvider with Ordered[Key] {
 
-  val name: String = kind
-    .toString()
-    .dropRight(3) // remove trailing "Key"
+  val name: String = kind.prettyName
 
   override val toString: String = s"$name$number"
 
@@ -56,7 +54,6 @@ case class MacroKey(override val number: Int) extends Key(macroKey, number)
 case class MessageMacroKey(override val number: Int) extends Key(messageMacroKey, number)
 
 case class FunctionKey(override val number: Int) extends Key(functionKey, number)
-
 case class ScheduleKey(override val number: Int) extends Key(scheduleKey, number)
 
 case class WordKey(override val number: Int) extends Key(wordKey, number)

@@ -77,7 +77,9 @@ object KeyFormats {
 */
 
 
+/*
   def buildKey(kind: String, number: Int): Key = {
+
     kind match {
       case "port" =>
         PortKey(number)
@@ -93,12 +95,13 @@ object KeyFormats {
         FunctionKey(number)
       case "word" =>
         WordKey(number)
-      case "dtmf" =>
+      case "dtmfMacro" =>
         DtmfMacroKey(number)
       case "misc" =>
         MiscKey()
     }
   }
+*/
 
 
   implicit val fmtMacroKey: Format[MacroKey] = new Format[MacroKey] {
@@ -173,7 +176,7 @@ object KeyFormats {
   def parseString(string: String): Key = {
     val r(kind, sNnumber) = string
     val number: Int = Option(sNnumber).map(_.toInt).getOrElse(0)
-    buildKey(kind, number)
+    KeyKindEnum.createKey(kind, number)
   }
 
 
