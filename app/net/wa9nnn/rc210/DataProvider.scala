@@ -17,8 +17,10 @@
 
 package net.wa9nnn.rc210
 
+import akka.actor.ActorRef
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.field.{FieldDefinitions, FieldMetadata}
+import net.wa9nnn.rc210.data.ValuesActor.InitialData
+import net.wa9nnn.rc210.data.field.{ExtractResult, FieldDefinitions, FieldEntry, FieldMetadata, FieldValue}
 import net.wa9nnn.rc210.data.macros.MacroExtractor
 import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.schedules.ScheduleExtractor
@@ -28,42 +30,31 @@ import net.wa9nnn.rc210.key.{KeyFactory, KeyFormats}
 import net.wa9nnn.rc210.serial.{Memory, MemoryArray}
 
 import java.io.InputStream
-import javax.inject.{Inject, Singleton}
+import javax.inject.{Inject, Named, Singleton}
 import scala.util.{Failure, Success, Using}
 
 @Singleton
-class DataProvider @Inject()() extends LazyLogging {
+class DataProvider @Inject()(@Named("values-actor") valuesActor: ActorRef) extends LazyLogging {
 
 
   val rc210Data: Rc210Data = (Using(getClass.getResourceAsStream("/MemFixedtxt.txt")) {
     stream: InputStream =>
       val memory: Memory = MemoryArray(stream).get
-      val mappedValues: MappedValues = new MappedValues()
-      var rc210Data: Rc210Data = Rc210Data(mappedValues)
+      //      val mappedValues: MappedValues = new MappedValues()
+      var rc210Data: Rc210Data = Rc210Data()
 
       FieldDefinitions.fields.foreach { fieldMetadata: FieldMetadata =>
         var start = fieldMetadata.offset
-        for (n <- 1 to fieldMetadata.kind.maxN) {
+        val r: Seq[FieldEntry] = for {
+          n <- 1 to fieldMetadata.kind.maxN
+        } yield {
           val fieldKey: FieldKey = new FieldKey(fieldMetadata.fieldName, KeyFactory(fieldMetadata.kind, n))
-          val extractResult = fieldMetadata.extract(memory, start)
+          val extractResult: ExtractResult = fieldMetadata.extract(memory, start)
           start = extractResult.newOffset
-          mappedValues.setupField(fieldKey = fieldKey,
-            fieldMetadata = fieldMetadata,
-            initialValue = extractResult.value
-          )
+
+          FieldEntry(FieldValue(fieldKey, extractResult.value), fieldMetadata)
         }
-
-
-        val extractors: Seq[MemoryExtractor] = Seq(
-          new MacroExtractor(),
-          new ScheduleExtractor(),
-          new MessageMacroExtractor()
-        )
-        extractors.foreach { extractor =>
-          rc210Data = extractor(memory, rc210Data)
-        }
-
-
+        valuesActor ! InitialData(r)
       }
       rc210Data
   } match {

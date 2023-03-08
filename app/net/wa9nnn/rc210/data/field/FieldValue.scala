@@ -18,13 +18,14 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.ValuesActor.ValueMessage
 import play.api.libs.json.{Json, OFormat}
 
 /**
  *
  * @param value current value.
  */
-case class FieldValue(fieldKey: FieldKey, value: String, candidate: Option[String] = None) {
+case class FieldValue(fieldKey: FieldKey, value: String, candidate: Option[String] = None) extends ValueMessage{
 
   def cssClass: String = if(dirty) "dirtyValue" else ""
 

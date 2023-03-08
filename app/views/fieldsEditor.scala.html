@@ -1,7 +1,8 @@
 @import net.wa9nnn.rc210.data.field.FieldEntry
 @import views.html.helper._
 @import net.wa9nnn.rc210.data.field.FieldEditor
-@(fieldEntries: Seq[FieldEntry])(implicit fieldEditor: FieldEditor)
+@import net.wa9nnn.rc210.key.Key
+@(key:Key, fieldEntries: Seq[FieldEntry])(implicit fieldEditor: FieldEditor)
 
 @main("Fields") {
 

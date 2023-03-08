@@ -8,10 +8,10 @@ import net.wa9nnn.rc210.data.vocabulary.MessageMacroNode
 import net.wa9nnn.rc210.key.{MacroKey, MessageMacroKey}
 import net.wa9nnn.rc210.model.TriggerNode
 
-case class Rc210Data(mappedValues: MappedValues = new MappedValues,
-                     macros: Seq[MacroNode] = Seq.empty,
-                     schedules: Seq[Schedule] = Seq.empty,
-                     messageMacros: Seq[MessageMacroNode] = Seq.empty) extends LazyLogging {
+case class Rc210Data(
+                      macros: Seq[MacroNode] = Seq.empty,
+                      schedules: Seq[Schedule] = Seq.empty,
+                      messageMacros: Seq[MessageMacroNode] = Seq.empty) extends LazyLogging {
 
   val enabledTriggers: Seq[TriggerNode] = {
     schedules

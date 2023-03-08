@@ -23,6 +23,7 @@ class Module(environment: Environment, configuration: Configuration) extends Sca
   override def configure(): Unit = {
 
     install(new ConfigModule(configuration))
+    install(new ActorModule)
     // Got to be a way to this this automatically without having to specify each implementation.
 /*
     val publishers = ScalaMultibinder.newSetBinder[MemoryExtractor](binder)

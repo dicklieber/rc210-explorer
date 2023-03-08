@@ -19,6 +19,7 @@ package net.wa9nnn.rc210.data.mapped
 
 import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
 import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.ValuesActor.SetValues
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldMetadata, FieldValue}
 import net.wa9nnn.rc210.key.Key
 import play.api.libs.json.JsArray
@@ -36,11 +37,11 @@ class MappedValues() {
   private val valueMap = new TrieMap[FieldKey, FieldValue]
 
 
-  def all: Iterator[FieldEntry] = {
+  def all: Seq[FieldEntry] = {
     metadataMap.iterator.map { case (fieldKey: FieldKey, fieldMetadata: FieldMetadata) =>
       val fieldValue = valueMap(fieldKey)
       FieldEntry(fieldValue, fieldMetadata)
-    }
+    }.toSeq
   }
 
   def entity(fieldKey: FieldKey): Option[FieldEntry] = {
@@ -102,8 +103,13 @@ class MappedValues() {
      */
     def update(key: FieldKey, value: String): Unit = {
       val fieldValue: FieldValue = valueMap.getOrElse(key, throw new IllegalStateException(s"Field for key: $key has not been setup, must invoke setupField first!"))
-      valueMap.put(key, fieldValue.setCandidate(value))
+      valueMap.put(key, fieldValue.setCandidate(fieldValue.value))
     }
+  def update(setValues:SetValues):Unit =
+    setValues.values
+      .foreach{sv =>
+        update(sv.fieldKey, sv.value)
+      }
 
     def toJson: JsArray = {
       import play.api.libs.json._

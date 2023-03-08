@@ -19,19 +19,22 @@ package controllers
 
 import net.wa9nnn.rc210.DataProvider
 import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.ValuesActor.{SetValue, SetValues}
 import net.wa9nnn.rc210.data.field.FieldEditor
-import net.wa9nnn.rc210.data.functions.FunctionsProvider
-import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.key.KeyFormats
 import play.api.mvc._
+import akka.actor._
+import akka.pattern.ask
+import akka.util.Timeout
+import play.api.routing.sird.?
 
-import javax.inject.Inject
+import javax.inject._
 import scala.collection.immutable
 
 class FieldEditorController @Inject()(implicit val controllerComponents: ControllerComponents,
                                       dataProvider: DataProvider,
-                                      fieldEditor: FieldEditor,
-                                      functionsProvider: FunctionsProvider) extends BaseController {
+                                      @Named("values-actor") valuesActor: ActorRef,
+                                      fieldEditor: FieldEditor) extends BaseController {
 
 
   def selectKey(): Action[AnyContent] = Action {
@@ -54,8 +57,9 @@ class FieldEditorController @Inject()(implicit val controllerComponents: Control
       implicit val rc210Data = dataProvider.rc210Data
       val mappedValues = rc210Data.mappedValues
 
-      Ok(views.html.fieldsEditor(mappedValues.fieldsForKey(key)))
+      Ok(views.html.fieldsEditor(key, mappedValues.fieldsForKey(key)))
   }
+
   def editCards(sKey: String): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
 
@@ -77,25 +81,30 @@ class FieldEditorController @Inject()(implicit val controllerComponents: Control
       val fieldKey: FieldKey = FieldKey.fromParam(sKey)
       rc210Data.mappedValues.entity(fieldKey) match {
         case Some(fieldEntry) =>
-          Ok(views.html.fieldsEditor(Seq(fieldEntry)))
+          Ok(views.html.fieldsEditor(fieldKey.key, Seq(fieldEntry)))
         case None =>
           NotFound {
             s"No key: $sKey"
           }
       }
-
   }
 
 
   def save(): Action[AnyContent] = Action { request: Request[AnyContent] =>
     val body: AnyContent = request.body
     val formUrlEncoded: Option[Map[String, Seq[String]]] = body.asFormUrlEncoded
-    val lines: immutable.Iterable[String] = for {
-      case (name, values) <- formUrlEncoded.get
+
+
+    val s: immutable.Iterable[SetValue] = for {
+      case (sKey, values) <- formUrlEncoded.get
+      value <- values.headOption
     } yield {
-      s"""$name, "${values.mkString(",")}"\n"""
+      val fieldKey: FieldKey = FieldKey.fromParam(sKey)
+      SetValue(fieldKey, value)
     }
 
-    Ok(lines.mkString("\n"))
+    valuesActor ! SetValues(s.toIndexedSeq)
+//    Redirect(routes.FieldEditorController.editFields()
+      Ok("//todo")
   }
 }

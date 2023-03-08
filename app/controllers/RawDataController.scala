@@ -17,9 +17,12 @@
 
 package controllers
 
+import akka.actor.ActorRef
+import akka.util.Timeout
 import com.wa9nnn.util.tableui.Table
 import net.wa9nnn.rc210.DataProvider
 import net.wa9nnn.rc210.data.Rc210Data
+import net.wa9nnn.rc210.data.ValuesActor.AllDataEnteries
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.functions.{FunctionNode, FunctionsProvider}
 import net.wa9nnn.rc210.data.macros.MacroNode
@@ -27,18 +30,29 @@ import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.schedules.Schedule
 import net.wa9nnn.rc210.data.vocabulary.{MessageMacroNode, Phrase, Vocabulary}
 import play.api.mvc._
+import scala.concurrent.ExecutionContext
 
 import javax.inject._
+import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.duration.DurationInt
+import scala.concurrent.impl.Promise
+import scala.util.{Failure, Success}
+import akka.actor.typed.scaladsl.AskPattern._
+import akka.http.scaladsl.model.HttpHeader.ParsingResult.Ok
+import akka.pattern.ask
+import akka.util.Timeout
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
  * application's home page.
  */
 @Singleton
-class RawDataController @Inject()(val controllerComponents: ControllerComponents, functions: FunctionsProvider, dataProvider: DataProvider) extends BaseController {
+class RawDataController @Inject()(val controllerComponents: ControllerComponents,
+                                  functions: FunctionsProvider,
+                                  dataProvider: DataProvider,
+                                  @Named("values-actor") valuesActor: ActorRef) (implicit ec: ExecutionContext)extends BaseController {
 
-
-  //  private val datFile: DatFile = datFileSource.datFile()
+  implicit val timeout: Timeout = 5.seconds
 
   /**
    * Create an Action to render an HTML page.
@@ -53,16 +67,12 @@ class RawDataController @Inject()(val controllerComponents: ControllerComponents
   }
 
 
-  def mappedItems(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+  def mappedItems(): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
 
-    val mappedValues: MappedValues = dataProvider.rc210Data.mappedValues
-    val allEntries: Seq[FieldEntry] = mappedValues
-      .all
-      .toSeq
-      .sortBy(_.fieldKey)
-
-    val table: Table = Table(FieldEntry.header(allEntries.length), allEntries.map(_.toRow))
-    Ok(views.html.dat(Seq(table)))
+    (valuesActor ? AllDataEnteries).mapTo[Seq[FieldEntry]].map { allEntries: Seq[FieldEntry] =>
+      val table: Table = Table(FieldEntry.header(allEntries.length), allEntries.map(_.toRow))
+      Ok(views.html.dat(Seq(table)))
+    }
   }
 
 
