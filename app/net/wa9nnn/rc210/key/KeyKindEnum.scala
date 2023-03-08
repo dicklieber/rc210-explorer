@@ -21,6 +21,14 @@ package net.wa9nnn.rc210.key
  * Metadata for the various [[Key]]s
  */
 object KeyKindEnum extends Enumeration {
+
+
+  def apply(sKeyKind:String): KeyKind = withName(sKeyKind).asInstanceOf[KeyKind]
+
+  /**
+   *
+    * @return all [[KeyKind]]s in al[pha order.
+   */
   def keyKinds: Seq[KeyKind] = {
     values
       .toIndexedSeq

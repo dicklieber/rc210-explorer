@@ -1,11 +1,12 @@
-@import net.wa9nnn.rc210.key.Key
-@(knownKeys: Seq[Key])
+@import net.wa9nnn.rc210.key.KeyKindEnum
+@()
 
 @main("Select Key") {
-    @for(key <- knownKeys) {
+XYZZY: @KeyKindEnum.keyKinds.head.toString()
+
+    @for(keyKind <- KeyKindEnum.keyKinds) {
         <div class="mb-3">
-            <a href="@routes.FieldEditorController.editCards(key.toString)">@key.toString</a>
-            <a href="@routes.FieldEditorController.editFields(key.toString)">@key.toString</a>
+            <a href="@routes.FieldEditorController.editFields(keyKind.toString)">@keyKind.toString</a>
         </div>
     }
 }

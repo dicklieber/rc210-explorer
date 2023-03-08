@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.mapped
 
 import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.ValuesActor.SetValues
+import net.wa9nnn.rc210.data.ValuesStore.SetValues
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldMetadata, FieldValue}
 import net.wa9nnn.rc210.key.Key
 import play.api.libs.json.JsArray
@@ -32,16 +32,21 @@ import scala.util.Try
  * Holds most values are simple key->value.
  * Does not include more complex fields e.g.Macro
  */
-class MappedValues() {
+class MappedValues(fieldEntries: Seq[FieldEntry]) {
   private val metadataMap = new TrieMap[FieldKey, FieldMetadata]
   private val valueMap = new TrieMap[FieldKey, FieldValue]
 
+  fieldEntries.foreach {fieldEntry =>
+    val fieldKey = fieldEntry.fieldKey
+    metadataMap.put(fieldKey, fieldEntry.fieldMetadata)
+    valueMap.put(fieldKey, fieldEntry.fieldValue)
+  }
 
   def all: Seq[FieldEntry] = {
     metadataMap.iterator.map { case (fieldKey: FieldKey, fieldMetadata: FieldMetadata) =>
       val fieldValue = valueMap(fieldKey)
       FieldEntry(fieldValue, fieldMetadata)
-    }.toSeq
+    }.toSeq.sorted
   }
 
   def entity(fieldKey: FieldKey): Option[FieldEntry] = {
@@ -69,88 +74,88 @@ class MappedValues() {
     valueMap.get(fieldKey)
   }
 
-    def knownKeys: Seq[Key] = {
-      metadataMap.keys
-        .map { fieldKey => fieldKey.key }
-        .toSet
-        .toSeq
-        .sortBy[String](_.toString)
-    }
+  //    def knownKeys: Seq[Key] = {
+  //      metadataMap.keys
+  //        .map { fieldKey => fieldKey.key }
+  //        .toSet
+  //        .toSeq
+  //        .sortBy[String](_.toString)
+  //    }
 
-    def acceptCandidate(fieldKey: FieldKey): Unit = {
-      valueMap.put(fieldKey, valueMap(fieldKey).acceptCandidate())
-    }
+  def acceptCandidate(fieldKey: FieldKey): Unit = {
+    valueMap.put(fieldKey, valueMap(fieldKey).acceptCandidate())
+  }
 
-    /**
-     * Add a new entry.
-     *
-     * @param initialValue         it's initial value
-     * @param fieldMetadata        fixed stuff we know about the field.
-     */
-    def setupField(fieldKey: FieldKey, fieldMetadata: FieldMetadata, initialValue: String): Unit = {
+  //    /**
+  //     * Add a new entry.
+  //     *
+  //     * @param initialValue         it's initial value
+  //     * @param fieldMetadata        fixed stuff we know about the field.
+  //     */
+  //    def setupField(fieldKey: FieldKey, fieldMetadata: FieldMetadata, initialValue: String): Unit = {
+  //
+  //      assert(!metadataMap.contains(fieldKey), s"Map already has a FieldMetadata for key: $fieldKey")
+  //      assert(!valueMap.contains(fieldKey), s"Map already has a FieldValue for key: $fieldKey")
+  //      metadataMap.put(fieldKey, fieldMetadata)
+  //      valueMap.put(fieldKey, FieldValue(fieldKey, initialValue))
+  //    }
 
-      assert(!metadataMap.contains(fieldKey), s"Map already has a FieldMetadata for key: $fieldKey")
-      assert(!valueMap.contains(fieldKey), s"Map already has a FieldValue for key: $fieldKey")
-      metadataMap.put(fieldKey, fieldMetadata)
-      valueMap.put(fieldKey, FieldValue(fieldKey, initialValue))
-    }
+  /**
+   * set a new candidate.
+   *
+   * @param key   of field.
+   * @param value new candidate.
+   */
+  def update(key: FieldKey, value: String): Unit = {
+    val fieldValue: FieldValue = valueMap.getOrElse(key, throw new IllegalStateException(s"Field for key: $key has not been setup, must invoke setupField first!"))
+    valueMap.put(key, fieldValue.setCandidate(fieldValue.value))
+  }
 
-    /**
-     * set a new candidate.
-     *
-     * @param key   of field.
-     * @param value new candidate.
-     */
-    def update(key: FieldKey, value: String): Unit = {
-      val fieldValue: FieldValue = valueMap.getOrElse(key, throw new IllegalStateException(s"Field for key: $key has not been setup, must invoke setupField first!"))
-      valueMap.put(key, fieldValue.setCandidate(fieldValue.value))
-    }
-  def update(setValues:SetValues):Unit =
+  def update(setValues: SetValues): Unit =
     setValues.values
-      .foreach{sv =>
+      .foreach { sv =>
         update(sv.fieldKey, sv.value)
       }
 
-    def toJson: JsArray = {
-      import play.api.libs.json._
-      Json.arr(
-        valueMap.values
+  def toJson: JsArray = {
+    import play.api.libs.json._
+    Json.arr(
+      valueMap.values
+    )
+  }
+}
+
+object MappedValues {
+
+  import play.api.libs.json._
+
+  implicit val fmtMappedValues: OFormat[MappedValues] = new OFormat[MappedValues] {
+
+    override def writes(mappedValues: MappedValues): JsObject = {
+      JsObject(
+        mappedValues
+          .valueMap
+          .values
+          .toSeq
+          .sortBy(_.fieldKey.fieldName)
+          .map(fieldValue => fieldValue.fieldKey.param -> JsString(fieldValue.value))
       )
     }
-  }
 
-  object MappedValues {
-
-    import play.api.libs.json._
-
-    implicit val fmtMappedValues: OFormat[MappedValues] = new OFormat[MappedValues] {
-
-      override def writes(mappedValues: MappedValues): JsObject = {
-        JsObject(
-          mappedValues
-            .valueMap
-            .values
-            .toSeq
-            .sortBy(_.fieldKey.fieldName)
-            .map(fieldValue => fieldValue.fieldKey.param -> JsString(fieldValue.value))
-        )
-      }
-
-      override def reads(json: JsValue): JsResult[MappedValues] = {
-        JsResult.fromTry(Try {
-          val mappedValues = new MappedValues()
-          val map: mutable.Map[FieldKey, FieldValue] = mappedValues.valueMap
-          val containers: Seq[FieldValue] = json.as[Seq[FieldValue]]
-          containers.foreach(fieldMetadata =>
-            map.put(fieldMetadata.fieldKey, fieldMetadata)
-          )
-          mappedValues
-        }
-        )
-      }
+    override def reads(json: JsValue): JsResult[MappedValues] = {
+      throw new NotImplementedError() //todo
+//      JsResult.fromTry(Try {
+//        val values: Seq[FieldValue] = json.as[Seq[FieldValue]]
+//        values.foreach(fieldMetadata =>
+//          map.put(fieldMetadata.fieldKey, fieldMetadata)
+//        )
+//        mappedValues
+//      }
+//      )
     }
-
   }
+
+}
 
 
 

@@ -1,11 +1,11 @@
-@import net.wa9nnn.rc210.data.field.FieldEntry
+@import net.wa9nnn.rc210.data.field.{FieldEditor, FieldEntry}
+@import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
 @import views.html.helper._
-@import net.wa9nnn.rc210.data.field.FieldEditor
-@import net.wa9nnn.rc210.key.Key
-@(key:Key, fieldEntries: Seq[FieldEntry])(implicit fieldEditor: FieldEditor)
+@(keyKind:KeyKind, fieldEntries: Seq[FieldEntry])(implicit fieldEditor: FieldEditor)
 
 @main("Fields") {
-
+@*//todo allow changing keykind*@
+    <h1>@keyKind.prettyName</h1>
     @form(action = routes.FieldEditorController.save()) {
         @for(fieldEntry <- fieldEntries) {
             <div>

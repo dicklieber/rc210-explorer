@@ -18,49 +18,50 @@
 package net.wa9nnn.rc210.data
 
 import akka.actor.Actor
-import akka.actor.typed.Behavior
-import akka.actor.typed.javadsl.Behaviors
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.ValuesActor.{AllDataEnteries, SetValue, SetValues}
+import net.wa9nnn.rc210.DataProvider
+import net.wa9nnn.rc210.data.ValuesStore.{AllDataEnteries, InitialData, SetValues, Value, Values}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.mapped.MappedValues
-import play.api.Configuration
+import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
 
 import javax.inject.Inject
 
 /**/
-object ValuesActor extends LazyLogging {
-  trait ValueMessage
+object ValuesStore extends LazyLogging {
+  trait ValueStoreMessage
 
   case class SetValue(fieldKey: FieldKey, value: String)
 
-  case class SetValues(values: Seq[SetValue])
+  case class SetValues(values: Seq[SetValue]) extends ValueStoreMessage
 
   case object AllDataEnteries
+  case class Values(keyKind: KeyKind) extends ValueStoreMessage
+  case class Value(keyKind: FieldKey) extends ValueStoreMessage
 
-  case class InitialData(data:Seq[FieldEntry]) extends ValueMessage
+  case class InitialData(data:Seq[FieldEntry]) extends ValueStoreMessage
 }
 
 
-class ValuesActor @Inject()() extends Actor with LazyLogging {
-  val values = new MappedValues()
+class ValuesStore @Inject()(dataProvider: DataProvider) extends Actor with LazyLogging {
+  var values: MappedValues = new MappedValues(dataProvider.ife)
 
   def receive: Receive = {
-    case fv: SetValue =>
-      values.update(fv.fieldKey, fv.value)
-
+    case Value(fieldKey) =>
+      sender() ! values.entity(fieldKey)
+    case Values(keyKind: KeyKind) =>
+      val result: Seq[FieldEntry] = values.all.filter(_.fieldKey.key.kind == keyKind)
+      sender() ! result
     case setValues: SetValues =>
       values.update(setValues)
     case AllDataEnteries =>
-      sender() ! values.all.toSeq
+      sender() ! values.all
 
-    case _ =>
-      logger.warn("Received something i don't know")
+    case InitialData(fieldEntries: Seq[FieldEntry]) =>
+      values =  new MappedValues(fieldEntries)
+
+    case x =>
+      logger.warn(s"Received something i don't know: $x")
   }
 }
 
-//  def receive = {
-//    case GetConfig =>
-//      sender() ! config
-//  }
-//}

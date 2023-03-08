@@ -17,78 +17,55 @@
 
 package controllers
 
-import net.wa9nnn.rc210.DataProvider
-import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.ValuesActor.{SetValue, SetValues}
-import net.wa9nnn.rc210.data.field.FieldEditor
-import net.wa9nnn.rc210.key.KeyFormats
-import play.api.mvc._
 import akka.actor._
 import akka.pattern.ask
 import akka.util.Timeout
-import play.api.routing.sird.?
+import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.ValuesStore.{SetValue, SetValues, Value, Values}
+import net.wa9nnn.rc210.data.field.{FieldEditor, FieldEntry}
+import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
+import net.wa9nnn.rc210.key.{Key, KeyKindEnum}
+import play.api.mvc._
+import play.twirl.api.Html
 
 import javax.inject._
 import scala.collection.immutable
+import scala.concurrent.ExecutionContext
+import scala.concurrent.duration.DurationInt
 
-class FieldEditorController @Inject()(implicit val controllerComponents: ControllerComponents,
-                                      dataProvider: DataProvider,
-                                      @Named("values-actor") valuesActor: ActorRef,
-                                      fieldEditor: FieldEditor) extends BaseController {
+class FieldEditorController @Inject()(val controllerComponents: ControllerComponents,
+                                      @Named("values-actor") valuesStore: ActorRef
+                                     )(implicit ec: ExecutionContext, fieldEditor: FieldEditor)
+  extends BaseController {
+
+  implicit val timeout: Timeout = 5.seconds
+
+    def selectKey(): Action[AnyContent] = Action {
+      val html: Html = views.html.selectKey()
+      Ok(html)
+    }
 
 
-  def selectKey(): Action[AnyContent] = Action {
-    implicit request: Request[AnyContent] =>
+  def editFields(sKeyKind: String): Action[AnyContent] = Action.async {
+    val keyKind: KeyKind = KeyKindEnum(sKeyKind)
 
-
-      implicit val rc210Data = dataProvider.rc210Data
-      val mappedValues = rc210Data.mappedValues
-      val knownKeys = mappedValues.knownKeys
-
-      Ok(views.html.selectKey(knownKeys))
+    (valuesStore ? Values(keyKind)).mapTo[Seq[FieldEntry]].map { fes: Seq[FieldEntry] =>
+      Ok(views.html.fieldsEditor(keyKind, fes))
+    }
   }
 
-  def editFields(sKey: String): Action[AnyContent] = Action {
-    implicit request: Request[AnyContent] =>
+  import play.api.mvc.Action
 
-
-      val key = KeyFormats.parseString(sKey)
-
-      implicit val rc210Data = dataProvider.rc210Data
-      val mappedValues = rc210Data.mappedValues
-
-      Ok(views.html.fieldsEditor(key, mappedValues.fieldsForKey(key)))
-  }
-
-  def editCards(sKey: String): Action[AnyContent] = Action {
-    implicit request: Request[AnyContent] =>
-
-
-      val key = KeyFormats.parseString(sKey)
-
-      implicit val rc210Data = dataProvider.rc210Data
-      val mappedValues = rc210Data.mappedValues
-
-      Ok(views.html.cards(mappedValues.fieldsForKey(key)))
-  }
-
-  def editOne(sKey: String): Action[AnyContent] = Action {
-    implicit request: Request[AnyContent] =>
-
-
-      implicit val rc210Data = dataProvider.rc210Data
+  def editOne(sKey: String): Action[AnyContent] = Action.async {
 
       val fieldKey: FieldKey = FieldKey.fromParam(sKey)
-      rc210Data.mappedValues.entity(fieldKey) match {
-        case Some(fieldEntry) =>
-          Ok(views.html.fieldsEditor(fieldKey.key, Seq(fieldEntry)))
-        case None =>
-          NotFound {
-            s"No key: $sKey"
-          }
-      }
-  }
+      val key: Key = fieldKey.key
 
+      (valuesStore ? Value(fieldKey)).mapTo[Seq[FieldEntry]].map { fes: Seq[FieldEntry] =>
+        Ok(views.html.fieldsEditor(key.kind, fes))
+      }
+
+  }
 
   def save(): Action[AnyContent] = Action { request: Request[AnyContent] =>
     val body: AnyContent = request.body
@@ -103,8 +80,10 @@ class FieldEditorController @Inject()(implicit val controllerComponents: Control
       SetValue(fieldKey, value)
     }
 
-    valuesActor ! SetValues(s.toIndexedSeq)
-//    Redirect(routes.FieldEditorController.editFields()
-      Ok("//todo")
+    valuesStore ! SetValues(s.toIndexedSeq)
+    //    Redirect(routes.FieldEditorController.editFields()
+    Ok("//todo")
   }
+
+
 }

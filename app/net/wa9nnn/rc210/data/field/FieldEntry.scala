@@ -22,7 +22,7 @@ import controllers.routes
 import net.wa9nnn.rc210.data.FieldKey
 
 
-case class FieldEntry(fieldValue: FieldValue, fieldMetadata: FieldMetadata) extends RowSource {
+case class FieldEntry(fieldValue: FieldValue, fieldMetadata: FieldMetadata) extends RowSource with Ordered[FieldEntry] {
   val fieldKey: FieldKey = fieldValue.fieldKey
   val param: String = fieldKey.param
 
@@ -65,6 +65,8 @@ case class FieldEntry(fieldValue: FieldValue, fieldMetadata: FieldMetadata) exte
     }
     //todo color token and replacement parts <span> s
   }
+
+  override def compare(that: FieldEntry): Int = fieldKey compare( that.fieldKey)
 }
 
 

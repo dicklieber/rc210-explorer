@@ -18,29 +18,22 @@
 package controllers
 
 import akka.actor.ActorRef
+import akka.pattern.ask
 import akka.util.Timeout
 import com.wa9nnn.util.tableui.Table
 import net.wa9nnn.rc210.DataProvider
 import net.wa9nnn.rc210.data.Rc210Data
-import net.wa9nnn.rc210.data.ValuesActor.AllDataEnteries
+import net.wa9nnn.rc210.data.ValuesStore.AllDataEnteries
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.functions.{FunctionNode, FunctionsProvider}
 import net.wa9nnn.rc210.data.macros.MacroNode
-import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.schedules.Schedule
 import net.wa9nnn.rc210.data.vocabulary.{MessageMacroNode, Phrase, Vocabulary}
 import play.api.mvc._
-import scala.concurrent.ExecutionContext
 
 import javax.inject._
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationInt
-import scala.concurrent.impl.Promise
-import scala.util.{Failure, Success}
-import akka.actor.typed.scaladsl.AskPattern._
-import akka.http.scaladsl.model.HttpHeader.ParsingResult.Ok
-import akka.pattern.ask
-import akka.util.Timeout
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
@@ -50,7 +43,8 @@ import akka.util.Timeout
 class RawDataController @Inject()(val controllerComponents: ControllerComponents,
                                   functions: FunctionsProvider,
                                   dataProvider: DataProvider,
-                                  @Named("values-actor") valuesActor: ActorRef) (implicit ec: ExecutionContext)extends BaseController {
+                                  @Named("values-actor") valuesActor: ActorRef) (implicit ec: ExecutionContext)
+  extends BaseController {
 
   implicit val timeout: Timeout = 5.seconds
 
@@ -65,6 +59,8 @@ class RawDataController @Inject()(val controllerComponents: ControllerComponents
     val schedulesTable = Table(FunctionNode.header(functions.functions.length), functions.functions.map(_.toRow))
     Ok(views.html.dat(Seq(schedulesTable)))
   }
+
+
 
 
   def mappedItems(): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>

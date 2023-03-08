@@ -17,12 +17,12 @@
  */
 
 import com.google.inject.AbstractModule
-import net.wa9nnn.rc210.data.ValuesActor
+import net.wa9nnn.rc210.data.ValuesStore
 import play.api.libs.concurrent.AkkaGuiceSupport
 
 
 class ActorModule extends AbstractModule with AkkaGuiceSupport {
   override def configure = {
-    bindActor[ValuesActor]("values-actor")
+    bindActor[ValuesStore]("values-actor")
   }
 }

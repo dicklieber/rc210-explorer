@@ -5,7 +5,7 @@
 
 # An example controller showing a sample home page
 GET         /selectField            controllers.FieldEditorController.selectKey()
-GET         /editCards/:key         controllers.FieldEditorController.editCards(key:String)
+#GET         /editCards/:key         controllers.FieldEditorController.editCards(key:String)
 GET         /editfields/:key        controllers.FieldEditorController.editFields(key:String)
 POST        /saveFields             controllers.FieldEditorController.save()
 GET         /edit/:key              controllers.FieldEditorController.editOne(key:String)
