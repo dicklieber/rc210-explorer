@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.command
 
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
 import net.wa9nnn.rc210.command.ItemValue.Values
-import net.wa9nnn.rc210.key.{Key, MiscKey, PortKey}
+import net.wa9nnn.rc210.key.{Key, CommonKey, PortKey}
 
 import scala.util.{Failure, Success, Try}
 
@@ -29,7 +29,7 @@ import scala.util.{Failure, Success, Try}
  * @param key                    used when there is more than one [[ItemValue]].
  * @param maybeMessage           if there was an error parsing or from processing the form value. This can be localized.
  */
-case class ItemValue(commandId: Command, values: Values, key:Key = MiscKey(), maybeMessage: Option[L10NMessage] = None) extends Ordered[ItemValue] with RowSource{
+case class ItemValue(commandId: Command, values: Values, key:Key = CommonKey(), maybeMessage: Option[L10NMessage] = None) extends Ordered[ItemValue] with RowSource{
 
   def head: String = values.headOption.getOrElse("?")
 

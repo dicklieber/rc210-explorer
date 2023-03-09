@@ -63,7 +63,7 @@ case class DtmfMacroKey(override val number: Int) extends Key(dtmfMacroKey, numb
 case class CourtesyToneKey(override val number: Int) extends Key(dtmfMacroKey, number)
 
 /**
- * There can be any number of [[MiscKey]] but they don't index into a map by themselves. MaxN just indicate o=how many to extract for a given fieldname.
+ * There can be any number of [[CommonKey]] but they don't index into a map by themselves. MaxN just indicate o=how many to extract for a given fieldname.
  */
-case class MiscKey(override val number: Int = 1) extends Key(miscKey, number)
+case class CommonKey(override val number: Int = 1) extends Key(commonKey, number)
 

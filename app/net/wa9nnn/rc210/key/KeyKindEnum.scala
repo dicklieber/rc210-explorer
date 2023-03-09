@@ -83,7 +83,7 @@ object KeyKindEnum extends Enumeration {
   val functionKey: KeyKind = KeyKind(1005, FunctionKey, nameable = false)
   val macroKey: KeyKind = KeyKind(105, MacroKey)
   val messageMacroKey: KeyKind = KeyKind(70, MessageMacroKey)
-  val miscKey: KeyKind = KeyKind(1, MiscKey)
+  val commonKey: KeyKind = KeyKind(1, CommonKey)
   val wordKey: KeyKind = KeyKind(256, WordKey, nameable = false)
   val portKey: KeyKind = KeyKind(3, PortKey)
   val scheduleKey: KeyKind = KeyKind(40, ScheduleKey)

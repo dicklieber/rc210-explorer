@@ -24,12 +24,12 @@ import net.wa9nnn.rc210.data.ValuesStore
 import net.wa9nnn.rc210.data.ValuesStore.ValuesForKey
 import net.wa9nnn.rc210.data.field.{FieldEditor, FieldEntry}
 import net.wa9nnn.rc210.data.named.{NamedKey, NamedManager}
-import net.wa9nnn.rc210.key.KeyKindEnum.{KeyKind, macroKey}
-import net.wa9nnn.rc210.key.{Key, KeyFormats, KeyKindEnum, Keys}
+import net.wa9nnn.rc210.key.KeyKindEnum.{KeyKind, commonKey, macroKey}
+import net.wa9nnn.rc210.key.{CommonKey, Key, KeyFormats, KeyKindEnum, Keys}
 import play.api.mvc._
 
 import javax.inject._
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
 
 class EditorController @Inject()(val controllerComponents: ControllerComponents,
@@ -46,23 +46,39 @@ class EditorController @Inject()(val controllerComponents: ControllerComponents,
     val nk: Seq[NamedKey] = Keys.apply(keyKind).map { key =>
       NamedKey(key, namedManager.get(key).getOrElse(""))
     }
+    if (keyKind == KeyKindEnum.commonKey)
+      Redirect(routes.EditorController.edit(sKeyKind, CommonKey(1).toString))
+    else
+      Ok(views.html.editor(keyKind, nk, Seq.empty))
 
-    Ok(views.html.editor(keyKind, nk, Seq.empty))
   }
 
   def edit(sKeyKind: String, sMaybeKey: String): Action[AnyContent] = Action.async {
     val keyKind: KeyKind = KeyKindEnum.apply(sKeyKind)
 
+    val maybeKey: Option[Key] = sMaybeKey match {
+      case "" if keyKind == commonKey =>
+        Option(CommonKey())
+      case "" =>
+        // Nothing to edit until user selects a Key.
+        None
+      case sKey =>
+        //Edit key user selected.
+        Option(KeyFormats.parseString(sKey))
+    }
+
+
     val nk: Seq[NamedKey] = Keys.apply(keyKind).map { key =>
       NamedKey(key, namedManager.get(key).getOrElse(""))
     }
 
-    val key: Key = Option.when(sMaybeKey.nonEmpty)(KeyFormats.parseString(sMaybeKey)).get
-
-    (valuesStore ? ValuesForKey(key)).mapTo[Seq[FieldEntry]]
-      .map { keys: Seq[FieldEntry] =>
-        Ok(views.html.editor(keyKind, nk, keys))
-      }
+    maybeKey match {
+      case Some(key) =>
+        (valuesStore ? ValuesForKey(key)).mapTo[Seq[FieldEntry]]
+          .map { entries: Seq[FieldEntry] =>
+            Ok(views.html.editor(keyKind, nk, entries))
+          }
+      case None => Future(Ok(views.html.editor(keyKind, nk, Seq.empty)))
+    }
   }
-
 }
