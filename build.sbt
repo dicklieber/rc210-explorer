@@ -63,7 +63,10 @@ libraryDependencies ++= Seq(
 
 
 //routesImport ++= Seq(
-//  "net.wa9nnn.rc210.Key",
-//  "net.wa9nnn.rc210.KeyFormats._",
-//  "net.wa9nnn.rc210.data.FieldKey._",
+//  "net.wa9nnn.rc210.key.KeyFormats.keyPathBinder._",
+//  "net.wa9nnn.rc210.key.KeyFormats.keyPathBinder",
+//  "net.wa9nnn.rc210.key.Key",
+//  "net.wa9nnn.rc210.key.KeyKindEnum.KeyKind",
+//  "net.wa9nnn.rc210.key.KeyFormats.keyKindPathBinder",
+//  "net.wa9nnn.rc210.key.KeyFormats.keyKindPathBinder._",
 //)

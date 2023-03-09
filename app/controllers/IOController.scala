@@ -20,12 +20,10 @@ package controllers
 import akka.actor.ActorRef
 import akka.pattern.ask
 import akka.util.Timeout
-import net.wa9nnn.rc210.DataProvider
 import net.wa9nnn.rc210.data.ValuesStore.AllDataEnteries
-import net.wa9nnn.rc210.data.field.{FieldEditor, FieldEntry}
+import net.wa9nnn.rc210.data.field.FieldEntry
 import play.api.libs.json.{JsObject, JsString, Json}
 import play.api.mvc._
-import net.wa9nnn.rc210.key.KeyFormats._
 
 import javax.inject.{Inject, Named, Singleton}
 import scala.concurrent.ExecutionContext

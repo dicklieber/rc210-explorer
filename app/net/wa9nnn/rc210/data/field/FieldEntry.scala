@@ -39,7 +39,7 @@ case class FieldEntry(fieldValue: FieldValue, fieldMetadata: FieldMetadata) exte
       .withCssClass(fieldValue.cssClass),
     Cell("")
       .withImage(routes.Assets.versioned("images/pencil-square.png").url)
-      .withUrl(routes.FieldEditorController.editOne(fieldKey.param).url)
+//      .withUrl(routes.FieldEditorController.editOne(fieldKey.param).url)
       .withToolTip("Edit this field"),
     command
   )

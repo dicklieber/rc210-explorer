@@ -4,6 +4,7 @@
 * two arguments, a `String` for the title of the page and an `Html`
 * object to insert into the body of the page.
 *@
+@import net.wa9nnn.rc210.key.KeyKindEnum
 @(title: String)(content: Html)
 <!doctype html>
 <html lang="en">
@@ -19,8 +20,16 @@
         </head>
     <script src="@routes.Assets.versioned("javascripts/jquery-3.6.3.min.js")"></script>
     <body>
-        @* And here's where we render the `Html` object containing
-        * the page content. *@
+        <div class="container-fluid ">
+            <ul class="nav">
+            @for(keyKind <- KeyKindEnum.namebleKeyKinds) {
+                <li class="nav-item">
+                    <a class="nav-link" href="@routes.EditorController.editUnselected(keyKind.prettyName)">@keyKind.prettyName</a>
+                </li>
+            }
+            </ul>
+        </div>
+
         <div class="container">
         @content
         </div>

@@ -21,10 +21,9 @@ import akka.actor._
 import akka.pattern.ask
 import akka.util.Timeout
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.ValuesStore.{SetValue, SetValues, Value, Values}
+import net.wa9nnn.rc210.data.ValuesStore.{SetValue, SetValues, Value, ValuesForKey}
 import net.wa9nnn.rc210.data.field.{FieldEditor, FieldEntry}
-import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
-import net.wa9nnn.rc210.key.{Key, KeyKindEnum}
+import net.wa9nnn.rc210.key.{Key, KeyFormats}
 import play.api.mvc._
 import play.twirl.api.Html
 
@@ -46,11 +45,10 @@ class FieldEditorController @Inject()(val controllerComponents: ControllerCompon
     }
 
 
-  def editFields(sKeyKind: String): Action[AnyContent] = Action.async {
-    val keyKind: KeyKind = KeyKindEnum(sKeyKind)
-
-    (valuesStore ? Values(keyKind)).mapTo[Seq[FieldEntry]].map { fes: Seq[FieldEntry] =>
-      Ok(views.html.fieldsEditor(keyKind, fes))
+  def editFields(sKey: String): Action[AnyContent] = Action.async {
+    val key: Key = KeyFormats.parseString(sKey)
+    (valuesStore ? ValuesForKey(key)).mapTo[Seq[FieldEntry]].map { fes: Seq[FieldEntry] =>
+      Ok(views.html.fieldsEditor(key, fes))
     }
   }
 
@@ -62,9 +60,8 @@ class FieldEditorController @Inject()(val controllerComponents: ControllerCompon
       val key: Key = fieldKey.key
 
       (valuesStore ? Value(fieldKey)).mapTo[Seq[FieldEntry]].map { fes: Seq[FieldEntry] =>
-        Ok(views.html.fieldsEditor(key.kind, fes))
+        Ok(views.html.fieldsEditor(key, fes))
       }
-
   }
 
   def save(): Action[AnyContent] = Action { request: Request[AnyContent] =>
@@ -84,6 +81,4 @@ class FieldEditorController @Inject()(val controllerComponents: ControllerCompon
     //    Redirect(routes.FieldEditorController.editFields()
     Ok("//todo")
   }
-
-
 }

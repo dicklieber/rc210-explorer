@@ -1,21 +1,29 @@
 @import net.wa9nnn.rc210.data.field.{FieldEditor, FieldEntry}
 @import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
 @import views.html.helper._
-@(keyKind:KeyKind, fieldEntries: Seq[FieldEntry])(implicit fieldEditor: FieldEditor)
+@import net.wa9nnn.rc210.key.Key
+@(key:Key, fieldEntries: Seq[FieldEntry])(implicit fieldEditor: FieldEditor)
 
-@main("Fields") {
-@*//todo allow changing keykind*@
-    <h1>@keyKind.prettyName</h1>
-    @form(action = routes.FieldEditorController.save()) {
-        @for(fieldEntry <- fieldEntries) {
-            <div>
-            @defining(fieldEntry.fieldKey.param) { param =>
-                <label for="@param" class="form-label">@fieldEntry.fieldKey.fieldName</label>
-            @Html(fieldEditor(fieldEntry))
-            </div>
+    @main("Fields") {
+        <h1>@key.toString</h1>
+
+        @form(action = routes.FieldEditorController.save()) {
+            <table>
+            @for(fieldEntry <- fieldEntries) {
+                <tr>
+                @defining(fieldEntry.fieldKey.param) { param =>
+                    <td>
+                        <label for="@param">@fieldEntry.fieldKey.fieldName</label>
+                    </td>
+                    <td>
+                    @Html(fieldEditor(fieldEntry))
+                    </td>
+                </tr>
+
+            }
+            }
+            </table>
+            <button type="submit" class="btn btn-primary">Save</button>
 
         }
-        }
-        <button type="submit" class="btn btn-primary">Save</button>
     }
-}

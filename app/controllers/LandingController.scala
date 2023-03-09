@@ -24,4 +24,8 @@ class LandingController @Inject()(val controllerComponents: ControllerComponents
     Ok(views.html.landing())
   }
 
+
+  def tabs: Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+    Ok(views.html.tabs())
+  }
 }

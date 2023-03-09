@@ -1,0 +1,38 @@
+@import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
+@import net.wa9nnn.rc210.data.field.FieldEntry
+@import net.wa9nnn.rc210.data.named.NamedKey
+@import net.wa9nnn.rc210.data.field.FieldEditor
+@(keyKind: KeyKind, keys: Seq[NamedKey], fieldEntries: Seq[FieldEntry])(implicit fieldEditor: FieldEditor)
+@tabbedmain("") {
+    <div class="row">
+        <div class="numbers col">
+            <p>Keys</p>
+            @for(namedKey <- keys) {
+                <div class="row">
+                    <div class="col">
+                        <a href='@routes.EditorController.edit(keyKind.prettyName, namedKey.key.toString)'>@namedKey.key.number
+                            : @namedKey.name</a>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="fieldEditor col">
+            <p>FieldEditor</p>
+            @for(fieldEntry <- fieldEntries) {
+                <div class="row">
+                    <div class="col">
+                    @fieldEntry.fieldKey.fieldName
+                    </div>
+                    <div class="col">
+                    @Html(fieldEditor(fieldEntry))
+
+                    </div>
+                </div>
+            }
+
+        </div>
+        <div class="changes col">
+            <p>changes</p>
+        </div>
+    </div>
+}

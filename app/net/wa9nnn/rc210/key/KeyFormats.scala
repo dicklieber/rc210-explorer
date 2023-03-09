@@ -25,6 +25,7 @@ import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.named.{NamedData, NamedKey}
 import net.wa9nnn.rc210.data.schedules.{DayOfWeekJaca, MonthOfYear, Schedule}
 import net.wa9nnn.rc210.data.vocabulary.MessageMacroNode
+import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
 import play.api.libs.json._
 import play.api.mvc.PathBindable
 
@@ -192,6 +193,20 @@ object KeyFormats {
 
     override def unbind(key: String, rcKey: Key): String =
       rcKey.toString
+  }
+
+  implicit def keyKindPathBinder(implicit intBinder: PathBindable[KeyKind]): PathBindable[KeyKind] = new PathBindable[KeyKind] {
+    override def bind(key: String, fromPath: String): Either[String, KeyKind] = {
+      try {
+        Right(KeyKindEnum.apply(fromPath))
+      } catch {
+        case e: Exception =>
+          Left(e.getMessage)
+      }
+    }
+
+    override def unbind(key: String, rcKey: KeyKind): String =
+      rcKey.prettyName
   }
 
 

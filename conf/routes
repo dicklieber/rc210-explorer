@@ -1,26 +1,25 @@
+
 # Routes
 # This file defines all application routes (Higher priority routes first)
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
-
-# An example controller showing a sample home page
-GET         /selectField            controllers.FieldEditorController.selectKey()
-#GET         /editCards/:key         controllers.FieldEditorController.editCards(key:String)
-GET         /editfields/:key        controllers.FieldEditorController.editFields(key:String)
-POST        /saveFields             controllers.FieldEditorController.save()
-GET         /edit/:key              controllers.FieldEditorController.editOne(key:String)
-GET         /mappedValues           controllers.RawDataController.mappedItems()
-#GET         /cards                  controllers.FieldEditorController.cards(key:String)
-GET         /schedules              controllers.RawDataController.schedules()
-GET         /functions              controllers.RawDataController.functions()
-GET         /macros                 controllers.RawDataController.macros()
-GET         /messageMacros          controllers.RawDataController.messageMacros()
-GET         /vocabulary             controllers.RawDataController.vocabulary()
-GET         /downloadjson           controllers.IOController.downloadJson()
-GET         /flow                   controllers.Flow2Controller.flow()
-POST         /namedEdit        controllers.NamedController.edit()
-GET         /named                  controllers.NamedController.index()
-GET         /                       controllers.LandingController.index()
+GET         /selectField               controllers.FieldEditorController.selectKey()
+GET         /editfields/:key           controllers.FieldEditorController.editFields(key:String)
+POST        /saveFields                controllers.FieldEditorController.save()
+GET         /mappedValues              controllers.RawDataController.mappedItems()
+GET         /schedules                 controllers.RawDataController.schedules()
+GET         /functions                 controllers.RawDataController.functions()
+GET         /macros                    controllers.RawDataController.macros()
+GET         /messageMacros             controllers.RawDataController.messageMacros()
+GET         /vocabulary                controllers.RawDataController.vocabulary()
+GET         /downloadjson              controllers.IOController.downloadJson()
+GET         /flow                      controllers.Flow2Controller.flow()
+POST        /namedEdit                 controllers.NamedController.edit()
+GET         /named                     controllers.NamedController.index()
+GET         /edit/:keyKind/:key        controllers.EditorController.edit(keyKind:String, key:String)
+GET         /edit/:keyKind             controllers.EditorController.editUnselected(keyKind:String)
+GET         /tabs                      controllers.LandingController.tabs()
+GET         /                          controllers.LandingController.index()
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file           controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file              controllers.Assets.versioned(path="/public", file: Asset)

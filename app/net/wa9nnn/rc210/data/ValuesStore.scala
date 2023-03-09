@@ -20,9 +20,10 @@ package net.wa9nnn.rc210.data
 import akka.actor.Actor
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.DataProvider
-import net.wa9nnn.rc210.data.ValuesStore.{AllDataEnteries, InitialData, SetValues, Value, Values}
+import net.wa9nnn.rc210.data.ValuesStore.{AllDataEnteries, InitialData, SetValues, Value, Values, ValuesForKey}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.mapped.MappedValues
+import net.wa9nnn.rc210.key.Key
 import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
 
 import javax.inject.Inject
@@ -37,6 +38,7 @@ object ValuesStore extends LazyLogging {
 
   case object AllDataEnteries
   case class Values(keyKind: KeyKind) extends ValueStoreMessage
+  case class ValuesForKey(key:Key) extends ValueStoreMessage
   case class Value(keyKind: FieldKey) extends ValueStoreMessage
 
   case class InitialData(data:Seq[FieldEntry]) extends ValueStoreMessage
@@ -56,6 +58,9 @@ class ValuesStore @Inject()(dataProvider: DataProvider) extends Actor with LazyL
       values.update(setValues)
     case AllDataEnteries =>
       sender() ! values.all
+    case ValuesForKey(key) =>
+      sender() !  values.all.filter(_.fieldKey.key == key)
+
 
     case InitialData(fieldEntries: Seq[FieldEntry]) =>
       values =  new MappedValues(fieldEntries)

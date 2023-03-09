@@ -23,8 +23,10 @@ package net.wa9nnn.rc210.key
 object KeyKindEnum extends Enumeration {
 
 
-  def apply(sKeyKind:String): KeyKind = withName(sKeyKind).asInstanceOf[KeyKind]
-
+  def apply(sKeyKind:String): KeyKind = values.find { v =>
+    val keyKind = v.asInstanceOf[KeyKind]
+    keyKind.prettyName equalsIgnoreCase (sKeyKind)
+  }.get.asInstanceOf[KeyKind]
   /**
    *
     * @return all [[KeyKind]]s in al[pha order.
@@ -76,7 +78,7 @@ object KeyKindEnum extends Enumeration {
   }
 
   val alarmKey: KeyKind = KeyKind(5,  AlarmKey)
-  val dtmfMacroKey: KeyKind = KeyKind(195, DtmfMacroKey)
+  val dtmfMacroKey: KeyKind = KeyKind(195, DtmfMacroKey, nameable = false)
   val courtesyToneKey: KeyKind = KeyKind(10, CourtesyToneKey)
   val functionKey: KeyKind = KeyKind(1005, FunctionKey, nameable = false)
   val macroKey: KeyKind = KeyKind(105, MacroKey)
