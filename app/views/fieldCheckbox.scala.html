@@ -1,9 +1,10 @@
 @import net.wa9nnn.rc210.data.field.FieldEntry
+@import net.wa9nnn.rc210.data.field.FieldBoolean
 @(fieldEntry: FieldEntry)
 <div class="fieldCheckbox">
     @defining(fieldEntry.param) { param =>
         <input type="checkbox"  onchange="handleClick(this, '@param')"
-        class="form-check-input" @if(fieldEntry.fieldValue.bool) {checked}>
+        class="form-check-input" @if(fieldEntry.fieldValue.asInstanceOf[FieldBoolean].value) {checked}>
         <input type="hidden" name="@param" id="@param" value="XYZZY">
     }
 </div>

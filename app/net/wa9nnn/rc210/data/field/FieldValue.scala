@@ -19,32 +19,41 @@ package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.ValuesStore.ValueStoreMessage
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{Format, JsResult, JsString, JsValue, Json, OFormat}
 
 /**
  *
- * @param value current value.
+ * @param contents current value.
  */
-case class FieldValue(fieldKey: FieldKey, value: String, candidate: Option[String] = None) extends ValueStoreMessage{
+case class FieldValue(fieldKey: FieldKey, contents: FieldContents, candidate: Option[FieldContents] = None) {
 
   def cssClass: String = if(dirty) "dirtyValue" else ""
 
-  def current: String = candidate.getOrElse(value)
+  def current: FieldContents = candidate.getOrElse(contents)
 
-  def bool: Boolean = value == "true"
+//  def bool: Boolean = value == "true"
 
-  def setCandidate(value: String): FieldValue = copy(candidate = Option(value))
+  def setCandidate(value: FieldContents): FieldValue = copy(candidate = Option(value))
 
   def acceptCandidate(): FieldValue = {
     assert(candidate.nonEmpty, "No candidate to accept!")
-    copy(value = candidate.get, candidate = None)
+    copy(contents = candidate.get, candidate = None)
   }
 
   def dirty: Boolean = candidate.nonEmpty
 }
 
 object FieldValue {
-  implicit val fmtFieldValue: OFormat[FieldValue] = Json.format[FieldValue]
+  implicit val fmtFieldValue:
+    Format[FieldValue] = new Format[FieldValue]{
+    override def writes(o: FieldValue): JsValue = o.contents.toJsValue
+
+    override def reads(json: JsValue): JsResult[FieldValue] = {
+
+      throw new NotImplementedError() //todo
+    }
+  }
 
 
 }
+

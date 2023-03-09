@@ -17,16 +17,13 @@
 
 package net.wa9nnn.rc210.data.mapped
 
-import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.ValuesStore.SetValues
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldMetadata, FieldValue}
+import net.wa9nnn.rc210.data.ValuesStore.{ParamValue, ParamValues}
+import net.wa9nnn.rc210.data.field.{FieldContents, FieldEntry, FieldMetadata, FieldValue}
 import net.wa9nnn.rc210.key.Key
 import play.api.libs.json.JsArray
 
 import scala.collection.concurrent.TrieMap
-import scala.collection.mutable
-import scala.util.Try
 
 /**
  * Holds most values are simple key->value.
@@ -36,7 +33,7 @@ class MappedValues(fieldEntries: Seq[FieldEntry]) {
   private val metadataMap = new TrieMap[FieldKey, FieldMetadata]
   private val valueMap = new TrieMap[FieldKey, FieldValue]
 
-  fieldEntries.foreach {fieldEntry =>
+  fieldEntries.foreach { fieldEntry =>
     val fieldKey = fieldEntry.fieldKey
     metadataMap.put(fieldKey, fieldEntry.fieldMetadata)
     valueMap.put(fieldKey, fieldEntry.fieldValue)
@@ -103,18 +100,21 @@ class MappedValues(fieldEntries: Seq[FieldEntry]) {
   /**
    * set a new candidate.
    *
-   * @param key   of field.
-   * @param value new candidate.
+   * @param key      of field.
+   * @param contents new candidate.
    */
-  def update(key: FieldKey, value: String): Unit = {
+  def update(key: FieldKey, contents: FieldContents): Unit = {
     val fieldValue: FieldValue = valueMap.getOrElse(key, throw new IllegalStateException(s"Field for key: $key has not been setup, must invoke setupField first!"))
-    valueMap.put(key, fieldValue.setCandidate(fieldValue.value))
+    valueMap.put(key, fieldValue.setCandidate(fieldValue.contents))
   }
 
-  def update(setValues: SetValues): Unit =
+  def update(setValues: ParamValues): Unit =
     setValues.values
-      .foreach { sv =>
-        update(sv.fieldKey, sv.value)
+      .foreach { paramValue: ParamValue =>
+
+        //todo convert param to contents base on metadata
+        throw new NotImplementedError() //todo
+//        update(paramValue.fieldKey, paramValue.contents)
       }
 
   def toJson: JsArray = {
@@ -138,20 +138,20 @@ object MappedValues {
           .values
           .toSeq
           .sortBy(_.fieldKey.fieldName)
-          .map(fieldValue => fieldValue.fieldKey.param -> JsString(fieldValue.value))
+          .map(fieldValue => fieldValue.fieldKey.param ->  fieldValue.contents.toJsValue)
       )
     }
 
     override def reads(json: JsValue): JsResult[MappedValues] = {
       throw new NotImplementedError() //todo
-//      JsResult.fromTry(Try {
-//        val values: Seq[FieldValue] = json.as[Seq[FieldValue]]
-//        values.foreach(fieldMetadata =>
-//          map.put(fieldMetadata.fieldKey, fieldMetadata)
-//        )
-//        mappedValues
-//      }
-//      )
+      //      JsResult.fromTry(Try {
+      //        val values: Seq[FieldValue] = json.as[Seq[FieldValue]]
+      //        values.foreach(fieldMetadata =>
+      //          map.put(fieldMetadata.fieldKey, fieldMetadata)
+      //        )
+      //        mappedValues
+      //      }
+      //      )
     }
   }
 

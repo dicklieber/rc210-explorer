@@ -54,7 +54,7 @@ class DataProvider @Inject()() extends LazyLogging {
     val extractResult: ExtractResult = fieldMetadata.extract(memory, start)
     start = extractResult.newOffset // move to next position in memory
     val fieldKey: FieldKey = new FieldKey(fieldMetadata.fieldName, KeyFactory(fieldMetadata.kind, number))
-    FieldEntry(FieldValue(fieldKey, extractResult.value), fieldMetadata)
+    FieldEntry(FieldValue(fieldKey, extractResult.contents), fieldMetadata)
   }
   var rc210Data: Rc210Data = Rc210Data() //todo get rid of Rc210Data.
 }

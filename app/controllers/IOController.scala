@@ -22,7 +22,7 @@ import akka.pattern.ask
 import akka.util.Timeout
 import net.wa9nnn.rc210.data.ValuesStore.AllDataEnteries
 import net.wa9nnn.rc210.data.field.FieldEntry
-import play.api.libs.json.{JsObject, JsString, Json}
+import play.api.libs.json.{JsObject, Json}
 import play.api.mvc._
 
 import javax.inject.{Inject, Named, Singleton}
@@ -42,7 +42,7 @@ class IOController @Inject()(val controllerComponents: ControllerComponents,
         val jsObject = JsObject(
           entries
             .sortBy(_.fieldKey.fieldName)
-            .map(fieldValue => fieldValue.fieldKey.param -> JsString(fieldValue.fieldValue.value))
+            .map(fieldValue => fieldValue.fieldKey.param -> fieldValue.fieldValue.contents.toJsValue)
         )
         val sJson = Json.prettyPrint(jsObject)
 

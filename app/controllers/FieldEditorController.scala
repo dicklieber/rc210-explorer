@@ -21,7 +21,7 @@ import akka.actor._
 import akka.pattern.ask
 import akka.util.Timeout
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.ValuesStore.{SetValue, SetValues, Value, ValuesForKey}
+import net.wa9nnn.rc210.data.ValuesStore.{ParamValue, ParamValues, Value, ValuesForKey}
 import net.wa9nnn.rc210.data.field.{FieldEditor, FieldEntry}
 import net.wa9nnn.rc210.key.{Key, KeyFormats}
 import play.api.mvc._
@@ -69,15 +69,16 @@ class FieldEditorController @Inject()(val controllerComponents: ControllerCompon
     val formUrlEncoded: Option[Map[String, Seq[String]]] = body.asFormUrlEncoded
 
 
-    val s: immutable.Iterable[SetValue] = for {
+    val s: immutable.Iterable[ParamValue] = for {
       case (sKey, values) <- formUrlEncoded.get
       value <- values.headOption
     } yield {
       val fieldKey: FieldKey = FieldKey.fromParam(sKey)
-      SetValue(fieldKey, value)
+      //todo param to FieldContents goes here.
+      ParamValue(fieldKey, value)
     }
 
-    valuesStore ! SetValues(s.toIndexedSeq)
+    valuesStore ! ParamValues(s.toIndexedSeq)
     //    Redirect(routes.FieldEditorController.editFields()
     Ok("//todo")
   }

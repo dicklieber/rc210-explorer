@@ -41,30 +41,30 @@ case class FieldEntry(fieldValue: FieldValue, fieldMetadata: FieldMetadata) exte
       .withImage(routes.Assets.versioned("images/pencil-square.png").url)
 //      .withUrl(routes.FieldEditorController.editOne(fieldKey.param).url)
       .withToolTip("Edit this field"),
-    command
+    fieldValue.contents.toCommand(this)
   )
 
-  def command: String = {
-    val bool: String = if (fieldValue.current == "true") "1"
-    else
-      "0"
-    val map: Map[String, () => String] = Seq(
-      "v" -> (() => fieldValue.current),
-      "b" -> (() => bool),
-      "n" -> (() => fieldValue.fieldKey.key.number.toString),
-      "S" -> (() => fieldValue
-        .current
-        .toCharArray
-        .mkString(" "))
-      ,
-    ).toMap
-
-    map.foldLeft(fieldMetadata.template) { (command: String, tr) =>
-      val str: String = command.replaceAll(tr._1, (tr._2()))
-      str
-    }
-    //todo color token and replacement parts <span> s
-  }
+//  def command: String = {
+//    val bool: String = if (fieldValue.current == "true") "1"
+//    else
+//      "0"
+//    val map: Map[String, () => String] = Seq(
+//      "v" -> (() => fieldValue.current),
+//      "b" -> (() => bool),
+//      "n" -> (() => fieldValue.fieldKey.key.number.toString),
+//      "S" -> (() => fieldValue
+//        .current
+//        .toCharArray
+//        .mkString(" "))
+//      ,
+//    ).toMap
+//
+//    map.foldLeft(fieldMetadata.template) { (command: String, tr) =>
+//      val str: String = command.replaceAll(tr._1, (tr._2()))
+//      str
+//    }
+//    //todo color token and replacement parts <span> s
+//  }
 
   override def compare(that: FieldEntry): Int = fieldKey compare( that.fieldKey)
 }

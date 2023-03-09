@@ -20,8 +20,8 @@ package net.wa9nnn.rc210.data
 import akka.actor.Actor
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.DataProvider
-import net.wa9nnn.rc210.data.ValuesStore.{AllDataEnteries, InitialData, SetValues, Value, Values, ValuesForKey}
-import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.ValuesStore.{AllDataEnteries, InitialData, ParamValues, Value, Values, ValuesForKey}
+import net.wa9nnn.rc210.data.field.{FieldContents, FieldEntry}
 import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.key.Key
 import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
@@ -32,16 +32,20 @@ import javax.inject.Inject
 object ValuesStore extends LazyLogging {
   trait ValueStoreMessage
 
-  case class SetValue(fieldKey: FieldKey, value: String)
 
-  case class SetValues(values: Seq[SetValue]) extends ValueStoreMessage
+  case class ParamValue(fieldKey: FieldKey, value:String) extends ValueStoreMessage
 
-  case object AllDataEnteries
+  case class ParamValues(values: Seq[ParamValue]) extends ValueStoreMessage
+
+  case object AllDataEnteries extends ValueStoreMessage
+
   case class Values(keyKind: KeyKind) extends ValueStoreMessage
-  case class ValuesForKey(key:Key) extends ValueStoreMessage
+
+  case class ValuesForKey(key: Key) extends ValueStoreMessage
+
   case class Value(keyKind: FieldKey) extends ValueStoreMessage
 
-  case class InitialData(data:Seq[FieldEntry]) extends ValueStoreMessage
+  case class InitialData(data: Seq[FieldEntry]) extends ValueStoreMessage
 }
 
 
@@ -54,16 +58,16 @@ class ValuesStore @Inject()(dataProvider: DataProvider) extends Actor with LazyL
     case Values(keyKind: KeyKind) =>
       val result: Seq[FieldEntry] = values.all.filter(_.fieldKey.key.kind == keyKind)
       sender() ! result
-    case setValues: SetValues =>
-      values.update(setValues)
+    case paramValues: ParamValues =>
+      values.update(paramValues)
     case AllDataEnteries =>
       sender() ! values.all
     case ValuesForKey(key) =>
-      sender() !  values.all.filter(_.fieldKey.key == key)
+      sender() ! values.all.filter(_.fieldKey.key == key)
 
 
     case InitialData(fieldEntries: Seq[FieldEntry]) =>
-      values =  new MappedValues(fieldEntries)
+      values = new MappedValues(fieldEntries)
 
     case x =>
       logger.warn(s"Received something i don't know: $x")

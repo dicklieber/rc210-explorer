@@ -2,11 +2,14 @@ package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row}
+import javafx.print.PrinterJob.JobStatus
 import net.wa9nnn.rc210.data.Rc210Data
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 import net.wa9nnn.rc210.MemoryExtractor
+import net.wa9nnn.rc210.data.field.FieldContents
 import net.wa9nnn.rc210.key.{MacroKey, ScheduleKey}
+import play.api.libs.json.{JsValue, Json, OFormat}
 
 import java.time.LocalTime
 import javax.inject.Singleton
@@ -26,7 +29,7 @@ case class Schedule(key: ScheduleKey,
                     monthOfYear: MonthOfYear,
                     localTime: Option[LocalTime],
                     macroToRun: MacroKey)
-  extends TriggerNode {
+  extends FieldContents with TriggerNode {
 
 
   override def toRow: Row = {
@@ -54,19 +57,21 @@ case class Schedule(key: ScheduleKey,
 
   override def triggerDescription: String = toString
 
+  override def toJsValue: JsValue = Json.toJson(this)
 }
 
 object Schedule {
   def header(count: Int): Header = Header(s"Schedules ($count)", "SetPoint", "Macro", "DOW", "WeekInMonth", "MonthOfYear", "LocalTime")
 
+  import net.wa9nnn.rc210.key.KeyFormats._
 
+  implicit val fmtSchedule: OFormat[Schedule] = Json.format[Schedule]
 }
 
 @Singleton
 class ScheduleExtractor extends LazyLogging with MemoryExtractor {
   def apply(memory: Memory, rc210Data: Rc210Data): Rc210Data = {
     // dim0 setpoint row, dim1 is piece column
-
 
 
     def collect(php: String): Seq[Int] = {
