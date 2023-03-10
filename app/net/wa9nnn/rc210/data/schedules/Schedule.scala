@@ -3,13 +3,14 @@ package net.wa9nnn.rc210.data.schedules
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row}
 import javafx.print.PrinterJob.JobStatus
-import net.wa9nnn.rc210.data.Rc210Data
+import net.wa9nnn.rc210.data.{FieldKey, Rc210Data}
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 import net.wa9nnn.rc210.MemoryExtractor
-import net.wa9nnn.rc210.data.field.FieldContents
+import net.wa9nnn.rc210.data.field.{FieldContents, UiInfo}
 import net.wa9nnn.rc210.key.{MacroKey, ScheduleKey}
 import play.api.libs.json.{JsValue, Json, OFormat}
+import play.twirl.api.Html
 
 import java.time.LocalTime
 import javax.inject.Singleton
@@ -58,6 +59,10 @@ case class Schedule(key: ScheduleKey,
   override def triggerDescription: String = toString
 
   override def toJsValue: JsValue = Json.toJson(this)
+
+  override val commandStringValue: String = ???
+
+  override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo): Html = ???
 }
 
 object Schedule {

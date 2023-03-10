@@ -43,7 +43,7 @@ class NamedManagerSpec extends Specification with Mockito {
     "round trip" >> {
       namedManager.size must beEqualTo (0)
       val keyValue = "Groucho"
-      namedManager.apply(key, keyValue)
+      namedManager.update(Seq(NamedKey(key, keyValue)))
       namedManager(key) must beEqualTo (keyValue)
       namedManager(key) must beEqualTo (keyValue)
       val newInstance = new NamedManager(filePath)

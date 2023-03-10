@@ -1,9 +1,8 @@
 @import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
 @import net.wa9nnn.rc210.data.field.FieldEntry
 @import net.wa9nnn.rc210.data.named.NamedKey
-@import net.wa9nnn.rc210.data.field.FieldEditor
 @import net.wa9nnn.rc210.key.CommonKey
-@(keyKind: KeyKind, keys: Seq[NamedKey], fieldEntries: Seq[FieldEntry])(implicit fieldEditor: FieldEditor)
+@(keyKind: KeyKind, keys: Seq[NamedKey], fieldEntries: Seq[FieldEntry])
 @tabbedmain("") {
     @if(keyKind.maxN != 1) {
         <div class="row">
@@ -27,7 +26,7 @@
                 @fieldEntry.fieldKey.fieldName
                 </div>
                 <div class="col">
-                @Html(fieldEditor(fieldEntry))
+                @Html(fieldEntry.fieldValue.contents.toHtmlField(fieldEntry.fieldKey, fieldEntry.fieldMetadata.uiInfo).toString())
 
                 </div>
             </div>

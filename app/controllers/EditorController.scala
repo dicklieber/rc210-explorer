@@ -20,22 +20,21 @@ package controllers
 import akka.actor._
 import akka.pattern.ask
 import akka.util.Timeout
-import net.wa9nnn.rc210.data.ValuesStore
 import net.wa9nnn.rc210.data.ValuesStore.ValuesForKey
-import net.wa9nnn.rc210.data.field.{FieldEditor, FieldEntry}
+import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.named.{NamedKey, NamedManager}
-import net.wa9nnn.rc210.key.KeyKindEnum.{KeyKind, commonKey, macroKey}
-import net.wa9nnn.rc210.key.{CommonKey, Key, KeyFormats, KeyKindEnum, Keys}
+import net.wa9nnn.rc210.key.KeyKindEnum.{KeyKind, commonKey}
+import net.wa9nnn.rc210.key._
 import play.api.mvc._
 
 import javax.inject._
-import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
+import scala.concurrent.{ExecutionContext, Future}
 
 class EditorController @Inject()(val controllerComponents: ControllerComponents,
                                  @Named("values-actor") valuesStore: ActorRef,
                                  namedManager: NamedManager
-                                )(implicit ec: ExecutionContext, fieldEditor: FieldEditor)
+                                )(implicit ec: ExecutionContext)
   extends BaseController {
 
   implicit val timeout: Timeout = 5.seconds

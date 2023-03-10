@@ -17,34 +17,34 @@
 
 package net.wa9nnn.rc210.data.field
 
+import net.wa9nnn.rc210.data.FieldKey
 import play.api.libs.json._
+import play.twirl.api.Html
+import views.html._
 
-trait FieldContents{
-  def toJsValue:JsValue
+/**
+ * Holds the value for a field.
+ * Knows how to render as HTML control or string for JSON, showing to a user or RC-210 Command,
+ */
+trait FieldContents {
+  def toJsValue: JsValue
 
-  def toCommand(fieldEntry: FieldEntry): String = {
-    val number = fieldEntry.fieldKey.key.number.toString
-    var  bool: String = "0"
-    var dtmf:String = ""
-    var int:Int = Int.MinValue
+  def commandBoolDigit: String = throw new IllegalStateException(" Not a boolean!")
 
-    fieldEntry.fieldValue.contents match {
-      case FieldBoolean(value) =>
-        bool = if(value) "1" else "0"
-      case FieldDtmf(value) =>
-        dtmf = value.toCharArray.mkString(" ")
-      case FieldInt(v) =>
-        int = v
-      case _ =>
-    }
+  val commandStringValue: String
+
+  def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo): Html
+
+  def toCommand(fieldKey: FieldKey, commandTemplate: String): String = {
+
     val map: Map[String, () => String] = Seq(
-      "v" -> (() => int.toString),
-      "b" -> (() => bool),
-      "n" -> (() => number),
-      "S" -> (() => dtmf)  // dtmf digits space seperated.
+      "v" -> (() => commandStringValue),
+      "b" -> (() => commandBoolDigit),
+      "n" -> (() => fieldKey.key.number.toString),
+      "S" -> (() => commandStringValue.toCharArray.mkString(" ")) // dtmf digits space seperated.
     ).toMap
 
-    map.foldLeft(fieldEntry.fieldMetadata.template) { (command: String, tr) =>
+    map.foldLeft(commandTemplate) { (command: String, tr) =>
       val str: String = command.replaceAll(tr._1, tr._2())
       str
     }
@@ -53,18 +53,66 @@ trait FieldContents{
 
 
 }
+
 // simple field are defined here. More complex ones like [[net.wa9nnn.rc210.data.schedules.Schedule]] are elsewhere.
 case class FieldInt(value: Int) extends FieldContents {
   override def toJsValue: JsValue = JsNumber(BigDecimal.int2bigDecimal(value))
+
+  override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo): Html = {
+    fieldNumber(fieldKey.param, value)
+  }
+
+  override val commandStringValue: String = value.toString
+
+  override def commandBoolDigit: String = throw new IllegalStateException("Not a boolean!")
+
 }
+
 case class FieldDtmf(value: String) extends FieldContents {
   override def toJsValue: JsValue = JsString(value)
+
+  override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo): Html = {
+    fieldDtmf(fieldKey.param, value)
+  }
+
+  override val commandStringValue: String = value
 }
+
 case class FieldBoolean(value: Boolean) extends FieldContents {
   override def toJsValue: JsValue = JsBoolean(value)
+
+  override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo): Html =
+    fieldCheckbox(fieldKey.param, value)
+
+  override val commandStringValue: String = {
+    if (value) "1" else "0"
+  }
 }
-case class FieldSeqInts(value:Int *) extends FieldContents {
+
+case class FieldSeqInts(value: Int*) extends FieldContents {
   override def toJsValue: JsValue = {
     JsArray(value.map((int: Int) => JsNumber(BigDecimal.int2bigDecimal(int))))
   }
+
+  override val commandStringValue: String = toString
+
+  override def toCommand(fieldKey: FieldKey, commandTemplate: String): String = super.toCommand(fieldKey, commandTemplate)
+
+
+  override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo): Html = {
+    fieldString(fieldKey.param, toString)
+  }
+
+  override def toString: String = value.map(_.toString).mkString(" ")
+}
+
+case class FieldSelect(value: Int) extends FieldContents {
+  override def toJsValue: JsValue = JsNumber(value)
+
+  override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo): Html = {
+    views.html.fieldSelect(value = value, paramId = fieldKey.param, options = uiInfo.selectOptions)
+  }
+
+  override val commandStringValue: String = value.toString
+
 }

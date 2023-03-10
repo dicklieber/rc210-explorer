@@ -1,8 +1,6 @@
-@import net.wa9nnn.rc210.data.field.FieldEntry
-@(fieldEntry: FieldEntry)
-<div  class="fieldNumber">
-    @defining(fieldEntry.param) { param =>
-        <input id="@param" class="form-control" name="@param" value="@fieldEntry.fieldValue.current">
-    }
+
+@(paramId: String, number:Int)
+<div class="fieldNumber">
+    <input id="@paramId" class="form-control" name="@paramId" value="@number">
 </div>
 

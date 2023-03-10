@@ -25,8 +25,12 @@ object FieldDefinitions {
 
   import fieldDefintionSugar.FieldDefintionSugar._
 
+  /**
+   * Everything about each field.
+   */
   val fields: Seq[FieldMetadata] = Seq(
-    (0, "Site Prefix", commonKey, "*2108v") % UiDtmf(3),
+    //offset  Name        KindOfKey     commandTemplate  how to render and parse
+    (0,       "Site Prefix", commonKey, "*2108v") %     UiDtmf(3),
     (4, "TT PadTest", commonKey, "*2093v") % UiDtmf(5),
     (10, "Say Hours", commonKey, "*5104b") % checkBox,
     (11, "Hang Time 1", portKey, "n*10001v"),
@@ -63,7 +67,7 @@ object FieldDefinitions {
     (169, "Alarm Enable", portKey, "n191b") % checkBox,
     (174, "Alarm Macro Low", alarmKey, "*2101 n v") % macroSelect,
     (179, "Alarm Macro High", alarmKey, "*2102 n v") % macroSelect,
-    (184, "Vref", alarmKey, "*2065 n v") % UiNumber(255, "todo three numbers?"),//*2065 4 9 6
+    (184, "Vref", alarmKey, "*2065 n v") % UiNumber(255, "todo three numbers?"), //*2065 4 9 6
     //###########################################################################################  //todo
     ///For meters, we gather all the parameters needed, then assemble them to actually store
     //###########################################################################################
@@ -71,8 +75,8 @@ object FieldDefinitions {
     //MeterFaceName - 186-201
     //    *2064 C * M* X1* Y1* X2* Y2* C= Channel 1 to 8 M=Meter Type 0 to 6 X1, Y1, X2, Y2 represent two calibration points. There must be 6 parameters entered to define a meter face, each value ending with *.
 
-    (322, "Rx Rcv Macro Active", alarmKey, "*2113 1 v") % UiNumber(255, "todo three numbers?"),//*2065 4 9 6
-    (325, "Rx Rcv Macro Low", alarmKey, "*2113  v") % UiNumber(255, "todo three numbers?"),//*2065 4 9 6
+    (322, "Rx Rcv Macro Active", alarmKey, "*2113 1 v") % UiNumber(255, "todo three numbers?"), //*2065 4 9 6
+    (325, "Rx Rcv Macro Low", alarmKey, "*2113  v") % UiNumber(255, "todo three numbers?"), //*2065 4 9 6
     //P1, P2, P3CWDI1 - 328-357
     //P1, P2, P3CWD2 - 358-402
     //P1, P2, P3INITIALID1 - 403-483

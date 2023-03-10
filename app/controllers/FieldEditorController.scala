@@ -21,8 +21,8 @@ import akka.actor._
 import akka.pattern.ask
 import akka.util.Timeout
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.ValuesStore.{ParamValue, ParamValues, Value, ValuesForKey}
-import net.wa9nnn.rc210.data.field.{FieldEditor, FieldEntry}
+import net.wa9nnn.rc210.data.ValuesStore.{ParamValue, ParamValues, ValuesForKey}
+import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.key.{Key, KeyFormats}
 import play.api.mvc._
 import play.twirl.api.Html
@@ -34,7 +34,7 @@ import scala.concurrent.duration.DurationInt
 
 class FieldEditorController @Inject()(val controllerComponents: ControllerComponents,
                                       @Named("values-actor") valuesStore: ActorRef
-                                     )(implicit ec: ExecutionContext, fieldEditor: FieldEditor)
+                                     )(implicit ec: ExecutionContext)
   extends BaseController {
 
   implicit val timeout: Timeout = 5.seconds
@@ -53,16 +53,6 @@ class FieldEditorController @Inject()(val controllerComponents: ControllerCompon
   }
 
   import play.api.mvc.Action
-
-  def editOne(sKey: String): Action[AnyContent] = Action.async {
-
-      val fieldKey: FieldKey = FieldKey.fromParam(sKey)
-      val key: Key = fieldKey.key
-
-      (valuesStore ? Value(fieldKey)).mapTo[Seq[FieldEntry]].map { fes: Seq[FieldEntry] =>
-        Ok(views.html.fieldsEditor(key, fes))
-      }
-  }
 
   def save(): Action[AnyContent] = Action { request: Request[AnyContent] =>
     val body: AnyContent = request.body

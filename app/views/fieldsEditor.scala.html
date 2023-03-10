@@ -1,8 +1,7 @@
-@import net.wa9nnn.rc210.data.field.{FieldEditor, FieldEntry}
-@import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
-@import views.html.helper._
+@import net.wa9nnn.rc210.data.field.FieldEntry
 @import net.wa9nnn.rc210.key.Key
-@(key:Key, fieldEntries: Seq[FieldEntry])(implicit fieldEditor: FieldEditor)
+@import views.html.helper._
+@(key:Key, fieldEntries: Seq[FieldEntry])
 
     @main("Fields") {
         <h1>@key.toString</h1>
@@ -16,7 +15,7 @@
                         <label for="@param">@fieldEntry.fieldKey.fieldName</label>
                     </td>
                     <td>
-                    @Html(fieldEditor(fieldEntry))
+                    @Html(fieldEntry.fieldValue.contents.toHtmlField(fieldEntry.fieldKey,fieldEntry.fieldMetadata.uiInfo ).toString())
                     </td>
                 </tr>
 

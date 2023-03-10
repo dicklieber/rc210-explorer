@@ -22,6 +22,10 @@ import net.wa9nnn.rc210.data.named.NamedSource
 
 import scala.util.Try
 
+/**
+ * Field is a selction of enumerated values
+ * @param options
+ */
 class UiSelect(options:Seq[SelectOption]) extends UiInfo{
 
   override val uiRender: UiRender = UiRender.select
@@ -32,6 +36,9 @@ class UiSelect(options:Seq[SelectOption]) extends UiInfo{
   def options(namedSource: NamedSource): Seq[SelectOption] = {
     options
   }
+
+  def displayForId(id:Int):String = options(id).display
+  def idForDisplay(display:String):Int = options.indexWhere(_.display == display)
 }
 
 object UiSelect {
@@ -45,4 +52,9 @@ object UiSelect {
   }
 }
 
-case class SelectOption(value: Int, display: String)
+/**
+ * used in an HTML <select> e.g. <option value="@opt.value">@opt.display</option>
+ * @param id internal
+ * @param display what user of JSON sees.
+ */
+case class SelectOption(id: Int, display: String)

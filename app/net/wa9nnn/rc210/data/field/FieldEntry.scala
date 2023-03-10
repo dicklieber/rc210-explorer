@@ -41,7 +41,7 @@ case class FieldEntry(fieldValue: FieldValue, fieldMetadata: FieldMetadata) exte
       .withImage(routes.Assets.versioned("images/pencil-square.png").url)
 //      .withUrl(routes.FieldEditorController.editOne(fieldKey.param).url)
       .withToolTip("Edit this field"),
-    fieldValue.contents.toCommand(this)
+    fieldValue.contents.toCommand(fieldKey, fieldMetadata.template)
   )
 
 //  def command: String = {
@@ -66,7 +66,7 @@ case class FieldEntry(fieldValue: FieldValue, fieldMetadata: FieldMetadata) exte
 //    //todo color token and replacement parts <span> s
 //  }
 
-  override def compare(that: FieldEntry): Int = fieldKey compare( that.fieldKey)
+  override def compare(that: FieldEntry): Int = fieldKey compare that.fieldKey
 }
 
 
