@@ -32,7 +32,6 @@ class UiSelect(fixedOptions: Seq[SelectOption]) extends UiInfo {
   override val uiRender: UiRender = UiRender.select
   val fieldExtractor: FieldExtractor = SelectExtractor()
   val validate: String => Try[String] = (s: String) => Try(s)
-  override val prompt: String = "-select-"
 
   override def options()(implicit namedSource: NamedSource): Seq[SelectOption] = {
     fixedOptions

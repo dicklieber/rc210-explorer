@@ -124,6 +124,7 @@ body {
     background-color: palegoldenrod;
 }
 
+
 .alarm {
     background-color: #ffbecc;
 }
@@ -152,28 +153,36 @@ body {
 }
 
 .flowMacroLeft {
-    border-left:2px solid dimgray;
+    border-left: 2px solid dimgray;
 
 }
 
 .flowMacroRight {
-    border-right:2px solid dimgray;
+    border-right: 2px solid dimgray;
 
 }
 
 .flowMacroTop {
-    border-top:2px solid dimgray;
+    border-top: 2px solid dimgray;
 
 }
 
 .flowMacroBottom {
-    border-bottom:2px solid dimgray;
+    border-bottom: 2px solid dimgray;
 
 }
-.flowMacroCell{
-    border:2px solid dimgray;
+
+.flowMacroCell {
+    border: 2px solid dimgray;
 }
 
 .dirtyValue {
     background: #cccc33;
+}
+
+.fieldPrompt {
+    white-space:  nowrap;
+}
+.fieldLabel {
+    white-space:  nowrap;
 }

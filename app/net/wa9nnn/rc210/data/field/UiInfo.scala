@@ -44,7 +44,6 @@ object UiInfo {
     val uiRender = UiRender.checkbox
     override val fieldExtractor: FieldExtractor = FieldExtractors.bool
     val validate = (s: String) => Try(s)
-    override val prompt = "true or false"
 
     override def toString: String = "checkBox"
   }

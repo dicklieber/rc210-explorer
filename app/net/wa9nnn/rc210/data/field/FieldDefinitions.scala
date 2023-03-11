@@ -122,7 +122,7 @@ object FieldDefinitions {
     (3541, "P1 Tail Message", portKey, "n*2110 1 v") % macroSelect,
     (3544, "P2 Tail Message", portKey, "n*2110 2 v") % macroSelect,
     (3547, "P3 Tail Message", portKey, "n*2110 3 v") % macroSelect,
-    (3550, "TailMessageNumber", portKey, "n*2111v") % macroSelect,
+    (3550, "Tail Message Number", portKey, "n*2111v") % macroSelect,
     (3553, "Tail Timer", portKey, "n*1020v") % UiNumber(999, "tails 0 disables"),
     (3559, "Tail Counter", portKey, "n*2112v") % UiNumber(999, "tails 0 disables"),
     //FreqString - 3562-3641	remote base stuff

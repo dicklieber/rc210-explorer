@@ -19,12 +19,19 @@
             </div>
             }
     <div class="fieldEditor col">
-        <table class="table-bordered">
+        <table class="table table-bordered ">
+            <thead class="table-dark">
+                <tr>
+                    <td>Field</td>
+                    <td>Value</td>
+                    <td>Prompt</td>
+                </tr>
+            </thead>
         @for(fieldEntry <- fieldEntries) {
             <tr>
-                <td>@fieldEntry.fieldKey.fieldName</td>
+                <td class="fieldLabel" >@fieldEntry.fieldKey.fieldName</td>
                 <td>@Html(fieldEntry.fieldValue.contents.toHtmlField(fieldEntry.fieldKey, fieldEntry.fieldMetadata.uiInfo).toString())</td>
-                <td>@fieldEntry.fieldMetadata.uiInfo.prompt</td>
+                <td class="fieldPrompt">@fieldEntry.fieldMetadata.uiInfo.prompt</td>
 
             </tr>
         }
