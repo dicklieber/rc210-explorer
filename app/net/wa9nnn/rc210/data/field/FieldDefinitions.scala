@@ -30,7 +30,7 @@ object FieldDefinitions {
    */
   val fields: Seq[FieldMetadata] = Seq(
     //offset  Name        KindOfKey     commandTemplate  how to render and parse
-    (0,       "Site Prefix", commonKey, "*2108v") %     UiDtmf(3),
+    (0, "Site Prefix", commonKey, "*2108v") % UiDtmf(3),
     (4, "TT PadTest", commonKey, "*2093v") % UiDtmf(5),
     (10, "Say Hours", commonKey, "*5104b") % checkBox,
     (11, "Hang Time 1", portKey, "n*10001v"),
@@ -54,7 +54,7 @@ object FieldDefinitions {
     (76, "Unlock", portKey, "* 9 0 0 0 S") % unlockCode,
     (103, "Speech ID Override", portKey, "n20b") % checkBox,
     //todo  CwTone1 & CwTone2 span two blocks! Gag!  FieldDefinition(fieldName = "CwTone1", kind = portKey, offset = 106, extractor = cwTones, template = "${port}*8001'{bool}"),
-    (118, "CWS Speed", portKey, "n*8000b") % checkBox,
+    (118, "CWS Speed", portKey, "n*8000b") % UiRange(5, 22, "wpm"),
     (136, "CTCSS Decode", portKey, "n112b") % checkBox,
     (139, "Monitor Mix", portKey, "n119b") % checkBox,
     //AuxAudioTimer - 142-147 //todo how does this match up with the macro to run?
@@ -138,6 +138,6 @@ object FieldDefinitions {
     //todo finish
   )
 
-  def forOffset(offset:Int):FieldMetadata = fields.find(_.offset == offset).get
+  def forOffset(offset: Int): FieldMetadata = fields.find(_.offset == offset).get
 
 }

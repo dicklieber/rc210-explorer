@@ -83,6 +83,23 @@ case class UiNumber(max: Int, unit: String) extends UiInfo {
     }
   }
   override val prompt = s"1 to $max $unit"
+}/**
+ *
+ * @param max  largest value.
+ * @param unit e.g. seconds, minutes etc.
+ */
+case class UiRange(min:Int, max: Int, unit: String) extends UiInfo {
+  val uiRender: UiRender = number
+  val fieldExtractor: FieldExtractor = if (max > 256) int16 else int8
+  val validate: String => Try[String] = (s: String) => {
+    val int = s.toInt
+    Try {
+      if (int < min || int > max) throw new IllegalArgumentException(s"Must be $min to $max but found: $int")
+      else
+        s
+    }
+  }
+  override val prompt = s"1 to $max $unit"
 }
 
 case class UiDtmf(max: Int) extends UiInfo {

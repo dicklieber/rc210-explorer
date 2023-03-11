@@ -58,6 +58,8 @@ object SelectOptions {
     )
   )
 
+
+
   val macroSelect: UiSelect = new UiSelect(Seq.empty) {
 
     override val fieldExtractor = SelectExtractor()
