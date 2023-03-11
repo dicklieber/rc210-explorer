@@ -2,28 +2,31 @@
 @import net.wa9nnn.rc210.key.Key
 @import views.html.helper._
 @import net.wa9nnn.rc210.data.named.NamedSource
-@(key:Key, fieldEntries: Seq[FieldEntry])(implicit namedSource: NamedSource)
+@(key: Key, fieldEntries: Seq[FieldEntry])(implicit namedSource: NamedSource)
 
-    @main("Fields") {
-        <h1>@key.toString</h1>
+@main("Fields") {
+    <h1>@key.toString</h1>
 
-        @form(action = routes.FieldEditorController.save()) {
-            <table>
-            @for(fieldEntry <- fieldEntries) {
-                <tr>
-                @defining(fieldEntry.fieldKey.param) { param =>
-                    <td>
-                        <label for="@param">@fieldEntry.fieldKey.fieldName</label>
-                    </td>
-                    <td>
-                    @Html(fieldEntry.fieldValue.contents.toHtmlField(fieldEntry.fieldKey,fieldEntry.fieldMetadata.uiInfo ).toString())
-                    </td>
-                </tr>
-
-            }
-            }
-            </table>
-            <button type="submit" class="btn btn-primary">Save</button>
+    @form(action = routes.FieldEditorController.save()) {
+        <table class="table-bordered">
+        @for(fieldEntry <- fieldEntries) {
+            <tr>
+            @defining(fieldEntry.fieldKey.param) { param =>
+                <td>
+                    <label for="@param">@fieldEntry.fieldKey.fieldName</label>
+                </td>
+                <td>
+                @Html(fieldEntry.fieldValue.contents.toHtmlField(fieldEntry.fieldKey, fieldEntry.fieldMetadata.uiInfo).toString())
+                </td>
+                <td>
+                @fieldEntry.fieldMetadata.uiInfo.prompt
+                </td>
+            </tr>
 
         }
+        }
+        </table>
+        <button type="submit" class="btn btn-primary">Save</button>
+
     }
+}
