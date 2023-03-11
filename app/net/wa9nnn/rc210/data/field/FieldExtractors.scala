@@ -28,11 +28,11 @@ import java.awt.BufferCapabilities
  * @param bytesPerField how much to slice pff.
  */
 
-abstract class FieldExtractor(bytesPerField: Int) {
+abstract class FieldExtractor(val bytesPerField: Int) {
 
-  def apply(memory: Memory, offset: Int): ExtractResult = {
+  def apply(memory: Memory, offset: Int): FieldContents = {
     val slicePos = SlicePos(offset, bytesPerField)
-    ExtractResult(extract(memory(slicePos)), slicePos.until)
+    extract(memory(slicePos))
   }
 
   def extract(slice: Slice): FieldContents
@@ -94,5 +94,3 @@ case class DtmfExtractor(maxDigits: Int) extends FieldExtractor(maxDigits + 1) w
   override val name: String = "dtmf"
 }
 
-
-case class ExtractResult(contents: FieldContents, newOffset: Int)

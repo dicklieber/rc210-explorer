@@ -53,12 +53,11 @@ class DataProvider @Inject()() extends LazyLogging {
     yzzy = {start = fieldMetadata.offset;3}
     number <- 1 to fieldMetadata.kind.maxN
   } yield {
-
-    val extractResult: ExtractResult = fieldMetadata.extract(memory, start)
+    val start = fieldMetadata.offset + fieldMetadata.uiInfo.fieldExtractor.bytesPerField * (number -1)
+    val fieldContents: FieldContents = fieldMetadata.extract(memory, start)
     val fieldKey: FieldKey = new FieldKey(fieldMetadata.fieldName, KeyFactory(fieldMetadata.kind, number))
-    val r = FieldEntry(FieldValue(fieldKey, extractResult.contents), fieldMetadata)
+    val r = FieldEntry(FieldValue(fieldKey, fieldContents), fieldMetadata)
     logger.trace("FieldEntry: start: {}  fieldEntry: {}", start.toString, r.toString)
-    start = extractResult.newOffset // move to next position in memory
     r
   }
   var rc210Data: Rc210Data = Rc210Data() //todo get rid of Rc210Data.

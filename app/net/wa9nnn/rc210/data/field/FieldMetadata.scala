@@ -13,7 +13,7 @@ case class FieldMetadata(offset: Int,
                          uiInfo: UiInfo = UiInfo.default,
                          selectOptions: Option[UiSelect] = None
                         ) {
-  def extract(memory: Memory, start: Int): ExtractResult = uiInfo.fieldExtractor(memory, start)
+  def extract(memory: Memory, start: Int): FieldContents = uiInfo.fieldExtractor(memory, start)
 
 
   def %(uiInfo: UiInfo): FieldMetadata = {
