@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.serial.Slice
 import play.api.libs.json._
 import play.twirl.api.Html
 import views.html._
@@ -28,6 +29,7 @@ import views.html._
  */
 trait FieldContents {
   def toJsValue: JsValue
+  val slice:Slice
 
   def commandBoolDigit: String = throw new IllegalStateException(" Not a boolean!")
 
@@ -51,11 +53,11 @@ trait FieldContents {
     //todo color token and replacement parts <span> s
   }
 
-
+  override def toString: String = s"$commandStringValue"
 }
 
 // simple field are defined here. More complex ones like [[net.wa9nnn.rc210.data.schedules.Schedule]] are elsewhere.
-case class FieldInt(value: Int) extends FieldContents {
+case class FieldInt(slice:Slice, value: Int) extends FieldContents {
   override def toJsValue: JsValue = JsNumber(BigDecimal.int2bigDecimal(value))
 
   override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo): Html = {
@@ -68,7 +70,7 @@ case class FieldInt(value: Int) extends FieldContents {
 
 }
 
-case class FieldDtmf(value: String) extends FieldContents {
+case class FieldDtmf(slice:Slice,value: String) extends FieldContents {
   override def toJsValue: JsValue = JsString(value)
 
   override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo): Html = {
@@ -78,7 +80,7 @@ case class FieldDtmf(value: String) extends FieldContents {
   override val commandStringValue: String = value
 }
 
-case class FieldBoolean(value: Boolean) extends FieldContents {
+case class FieldBoolean(slice:Slice,value: Boolean) extends FieldContents {
   override def toJsValue: JsValue = JsBoolean(value)
 
   override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo): Html =
@@ -89,7 +91,7 @@ case class FieldBoolean(value: Boolean) extends FieldContents {
   }
 }
 
-case class FieldSeqInts(value: Int*) extends FieldContents {
+case class FieldSeqInts(slice:Slice, value: Int*) extends FieldContents {
   override def toJsValue: JsValue = {
     JsArray(value.map((int: Int) => JsNumber(BigDecimal.int2bigDecimal(int))))
   }
@@ -106,7 +108,7 @@ case class FieldSeqInts(value: Int*) extends FieldContents {
   override def toString: String = value.map(_.toString).mkString(" ")
 }
 
-case class FieldSelect(value: Int) extends FieldContents {
+case class FieldSelect(slice:Slice, value: Int ) extends FieldContents {
   override def toJsValue: JsValue = JsNumber(value)
 
   override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo): Html = {

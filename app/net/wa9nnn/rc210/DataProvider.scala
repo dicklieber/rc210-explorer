@@ -22,6 +22,7 @@ import net.wa9nnn.rc210.data.field._
 import net.wa9nnn.rc210.data.{FieldKey, Rc210Data}
 import net.wa9nnn.rc210.key.KeyFactory
 import net.wa9nnn.rc210.serial.{Memory, MemoryArray}
+import org.slf4j.MDC
 
 import java.io.InputStream
 import javax.inject.{Inject, Singleton}
@@ -46,15 +47,19 @@ class DataProvider @Inject()() extends LazyLogging {
   //  //      val mappedValues: MappedValues = new MappedValues()
   //  var rc210Data: Rc210Data = Rc210Data()
 
-  private var start = FieldDefinitions.fields.head.offset
+  private var start = -1
   val ife: Seq[FieldEntry] = for {
     fieldMetadata <- FieldDefinitions.fields
+    yzzy = {start = fieldMetadata.offset;3}
     number <- 1 to fieldMetadata.kind.maxN
   } yield {
+
     val extractResult: ExtractResult = fieldMetadata.extract(memory, start)
-    start = extractResult.newOffset // move to next position in memory
     val fieldKey: FieldKey = new FieldKey(fieldMetadata.fieldName, KeyFactory(fieldMetadata.kind, number))
-    FieldEntry(FieldValue(fieldKey, extractResult.contents), fieldMetadata)
+    val r = FieldEntry(FieldValue(fieldKey, extractResult.contents), fieldMetadata)
+    logger.trace("FieldEntry: start: {}  fieldEntry: {}", start.toString, r.toString)
+    start = extractResult.newOffset // move to next position in memory
+    r
   }
   var rc210Data: Rc210Data = Rc210Data() //todo get rid of Rc210Data.
 }

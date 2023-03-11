@@ -18,8 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.Dtmf.dtmfDigits
-import net.wa9nnn.rc210.data.field
-import net.wa9nnn.rc210.data.field.FieldExtractors.{dtmf, int16, int8, twoInts}
+import net.wa9nnn.rc210.data.field.FieldExtractors.{int16, int8, twoInts}
 import net.wa9nnn.rc210.data.field.UiRender._
 
 import scala.util.Try
@@ -59,7 +58,7 @@ object UiInfo {
 
   val unlockCode: UiInfo = new UiInfo {
     override val uiRender = UiRender.dtmfKeys
-    override val fieldExtractor: FieldExtractor = FieldExtractors.dtmf
+    override val fieldExtractor: FieldExtractor = DtmfExtractor(8)
     override val validate: String => Try[String] = (s: String) =>
       throw new NotImplementedError() //todo
     override val prompt: String = "1 to 8 digits"
@@ -87,7 +86,7 @@ case class UiNumber(max: Int, unit: String) extends UiInfo {
 
 case class UiDtmf(max: Int) extends UiInfo {
   val uiRender: UiRender = dtmfKeys
-  val fieldExtractor: FieldExtractor = dtmf
+  val fieldExtractor: FieldExtractor = DtmfExtractor(max)
   override val validate: String => Try[String] = (s: String) =>
     Try {
       if (s.length > max) throw new IllegalArgumentException(s"Must be 1 to $max digits but found: $s ${s.length}")

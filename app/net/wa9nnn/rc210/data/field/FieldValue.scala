@@ -41,6 +41,8 @@ case class FieldValue(fieldKey: FieldKey, contents: FieldContents, candidate: Op
   }
 
   def dirty: Boolean = candidate.nonEmpty
+
+  override def toString: String = s"${fieldKey.param} contents: ${contents.toString} ${contents.getClass}"
 }
 
 object FieldValue {

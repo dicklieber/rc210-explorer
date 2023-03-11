@@ -138,4 +138,6 @@ object FieldDefinitions {
     //todo finish
   )
 
+  def forOffset(offset:Int):FieldMetadata = fields.find(_.offset == offset).get
+
 }

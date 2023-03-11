@@ -26,6 +26,9 @@ case class FieldEntry(fieldValue: FieldValue, fieldMetadata: FieldMetadata) exte
   val fieldKey: FieldKey = fieldValue.fieldKey
   val param: String = fieldKey.param
 
+
+  override def toString: String = fieldValue.toString
+
   override def toRow: Row = Row(
     fieldKey.fieldName,
     fieldKey.key.toCell,
@@ -43,28 +46,6 @@ case class FieldEntry(fieldValue: FieldValue, fieldMetadata: FieldMetadata) exte
       .withToolTip("Edit this field"),
     fieldValue.contents.toCommand(fieldKey, fieldMetadata.template)
   )
-
-//  def command: String = {
-//    val bool: String = if (fieldValue.current == "true") "1"
-//    else
-//      "0"
-//    val map: Map[String, () => String] = Seq(
-//      "v" -> (() => fieldValue.current),
-//      "b" -> (() => bool),
-//      "n" -> (() => fieldValue.fieldKey.key.number.toString),
-//      "S" -> (() => fieldValue
-//        .current
-//        .toCharArray
-//        .mkString(" "))
-//      ,
-//    ).toMap
-//
-//    map.foldLeft(fieldMetadata.template) { (command: String, tr) =>
-//      val str: String = command.replaceAll(tr._1, (tr._2()))
-//      str
-//    }
-//    //todo color token and replacement parts <span> s
-//  }
 
   override def compare(that: FieldEntry): Int = fieldKey compare that.fieldKey
 }

@@ -21,8 +21,9 @@ case class MemoryArray(data: Array[Int], comment: String = "", stamp: Instant = 
   data.view(42)
 
 
-  def apply(slice: SlicePos): Slice = {
-    Slice(data.slice(slice.offset, slice.until).toIndexedSeq)
+  def apply(slicePos: SlicePos): Slice = {
+    val seq = data.slice(slicePos.offset, slicePos.until).toIndexedSeq
+    Slice(seq, Option(slicePos))
   }
 
   /**
@@ -93,11 +94,11 @@ object SlicePos {
  * @param data     from the pos in [[Memory]]
  * @param slicePos that was requested.
  */
-case class Slice(data: Seq[Int] = Seq.empty) {
+case class Slice(data: Seq[Int] = Seq.empty, slicePos:Option[SlicePos] = None) {
   def length: Int = data.length
 
   override def toString: String = {
-   data.mkString(",")
+   s"${data.mkString(",")}  SlicePos: ${slicePos.getOrElse("none")}"
   }
 
   def iterator: Iterator[Int] = {
@@ -128,7 +129,7 @@ object Slice {
       .map { s: String =>
         s.trim.toInt
       }.toIndexedSeq
-    new Slice(seq)
+     Slice(seq)
   }
 
   implicit val fmtSlice: OFormat[Slice] = Json.format[Slice]

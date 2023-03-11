@@ -5,7 +5,7 @@ import com.wa9nnn.util.tableui.{Header, Row}
 import javafx.print.PrinterJob.JobStatus
 import net.wa9nnn.rc210.data.{FieldKey, Rc210Data}
 import net.wa9nnn.rc210.model.TriggerNode
-import net.wa9nnn.rc210.serial.{Memory, SlicePos}
+import net.wa9nnn.rc210.serial.{Memory, Slice, SlicePos}
 import net.wa9nnn.rc210.MemoryExtractor
 import net.wa9nnn.rc210.data.field.{FieldContents, UiInfo}
 import net.wa9nnn.rc210.key.{MacroKey, ScheduleKey}
@@ -24,7 +24,7 @@ import javax.inject.Singleton
  * @param localTime    illegal times are None.
  * @param macroToRun   e.g. "macro42"
  */
-case class Schedule(key: ScheduleKey,
+case class Schedule(slice:Slice, key: ScheduleKey,
                     dayOfWeek: DayOfWeekJaca,
                     weekInMonth: Option[Int],
                     monthOfYear: MonthOfYear,
@@ -96,7 +96,7 @@ class ScheduleExtractor extends LazyLogging with MemoryExtractor {
 
       val parts = scheduleBuilder.getSetpointRow(setPoint)
 
-      Schedule(
+      Schedule(Slice(),
         key = ScheduleKey(setPoint + 1),
         dayOfWeek = parts.head.asInstanceOf[DayOfWeekJaca],
         weekInMonth = parts(1).asInstanceOf[Option[Int]],
