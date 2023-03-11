@@ -62,7 +62,7 @@ case class FieldInt(slice:Slice, value: Int) extends FieldContents {
   override def toJsValue: JsValue = JsNumber(BigDecimal.int2bigDecimal(value))
 
   override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo)(implicit namedSource:NamedSource): Html = {
-    fieldNumber(fieldKey.param, value)
+    fieldNumber(fieldKey.param, value, uiInfo.prompt)
   }
 
   override val commandStringValue: String = value.toString

@@ -1,6 +1,9 @@
 
-@(paramId: String, number:Int)
+@(paramId: String, number:Int, units:String)
 <div class="fieldNumber">
+    <div class="row">
     <input id="@paramId" class="form-control" name="@paramId" value="@number">
+        <label for="@paramId" class="d-flex justify-content-end align-items-end pe-3">@units</label>
+    </div>
 </div>
 
