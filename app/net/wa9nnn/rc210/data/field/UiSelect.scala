@@ -18,27 +18,28 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.field.UiRender.UiRender
-import net.wa9nnn.rc210.data.named.NamedSource
+import net.wa9nnn.rc210.data.named.{NamedManager, NamedSource}
 
 import scala.util.Try
 
 /**
  * Field is a selction of enumerated values
+ *
  * @param options
  */
-class UiSelect(options:Seq[SelectOption]) extends UiInfo{
+class UiSelect(fixedOptions: Seq[SelectOption]) extends UiInfo {
 
   override val uiRender: UiRender = UiRender.select
-  val fieldExtractor:FieldExtractor = FieldExtractors.int8
+  val fieldExtractor: FieldExtractor = SelectExtractor()
   val validate: String => Try[String] = (s: String) => Try(s)
   override val prompt: String = "-select-"
 
-  def options(namedSource: NamedSource): Seq[SelectOption] = {
-    options
+  override def options()(implicit namedSource: NamedSource): Seq[SelectOption] = {
+    fixedOptions
   }
 
-  def displayForId(id:Int):String = options(id).display
-  def idForDisplay(display:String):Int = options.indexWhere(_.display == display)
+  /*  def displayForId(id:Int):String = options(id).display
+    def idForDisplay(display:String):Int = options.indexWhere(_.display == display)*/
 }
 
 object UiSelect {
@@ -54,7 +55,8 @@ object UiSelect {
 
 /**
  * used in an HTML <select> e.g. <option value="@opt.value">@opt.display</option>
- * @param id internal
+ *
+ * @param id      internal
  * @param display what user of JSON sees.
  */
 case class SelectOption(id: Int, display: String)

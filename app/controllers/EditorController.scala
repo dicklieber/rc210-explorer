@@ -32,9 +32,8 @@ import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
 
 class EditorController @Inject()(val controllerComponents: ControllerComponents,
-                                 @Named("values-actor") valuesStore: ActorRef,
-                                 namedManager: NamedManager
-                                )(implicit ec: ExecutionContext)
+                                 @Named("values-actor") valuesStore: ActorRef
+                                )(implicit ec: ExecutionContext, namedManager: NamedManager)
   extends BaseController {
 
   implicit val timeout: Timeout = 5.seconds

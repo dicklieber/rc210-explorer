@@ -23,6 +23,7 @@ import akka.util.Timeout
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.ValuesStore.{ParamValue, ParamValues, ValuesForKey}
 import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.key.{Key, KeyFormats}
 import play.api.mvc._
 import play.twirl.api.Html
@@ -34,7 +35,7 @@ import scala.concurrent.duration.DurationInt
 
 class FieldEditorController @Inject()(val controllerComponents: ControllerComponents,
                                       @Named("values-actor") valuesStore: ActorRef
-                                     )(implicit ec: ExecutionContext)
+                                     )(implicit ec: ExecutionContext, namedManager: NamedManager)
   extends BaseController {
 
   implicit val timeout: Timeout = 5.seconds

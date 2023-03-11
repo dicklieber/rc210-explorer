@@ -17,8 +17,8 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.data.named.NamedSource
-import net.wa9nnn.rc210.key.KeyKindEnum.{KeyKind, macroKey}
+import net.wa9nnn.rc210.data.named.{NamedManager, NamedSource}
+import net.wa9nnn.rc210.key.KeyKindEnum.macroKey
 import net.wa9nnn.rc210.key.MacroKey
 
 object SelectOptions {
@@ -59,7 +59,10 @@ object SelectOptions {
   )
 
   val macroSelect: UiSelect = new UiSelect(Seq.empty) {
-    override def options(namedSource: NamedSource) = {
+
+    override val fieldExtractor = SelectExtractor()
+
+    override def options()(implicit namedSource: NamedSource) = {
       for {
         number <- 1 to macroKey.maxN
         macroKey = MacroKey(number)

@@ -2,13 +2,13 @@ package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row}
-import javafx.print.PrinterJob.JobStatus
-import net.wa9nnn.rc210.data.{FieldKey, Rc210Data}
-import net.wa9nnn.rc210.model.TriggerNode
-import net.wa9nnn.rc210.serial.{Memory, Slice, SlicePos}
 import net.wa9nnn.rc210.MemoryExtractor
 import net.wa9nnn.rc210.data.field.{FieldContents, UiInfo}
+import net.wa9nnn.rc210.data.named.NamedSource
+import net.wa9nnn.rc210.data.{FieldKey, Rc210Data}
 import net.wa9nnn.rc210.key.{MacroKey, ScheduleKey}
+import net.wa9nnn.rc210.model.TriggerNode
+import net.wa9nnn.rc210.serial.{Memory, Slice, SlicePos}
 import play.api.libs.json.{JsValue, Json, OFormat}
 import play.twirl.api.Html
 
@@ -24,7 +24,7 @@ import javax.inject.Singleton
  * @param localTime    illegal times are None.
  * @param macroToRun   e.g. "macro42"
  */
-case class Schedule(slice:Slice, key: ScheduleKey,
+case class Schedule(slice: Slice, key: ScheduleKey,
                     dayOfWeek: DayOfWeekJaca,
                     weekInMonth: Option[Int],
                     monthOfYear: MonthOfYear,
@@ -60,9 +60,10 @@ case class Schedule(slice:Slice, key: ScheduleKey,
 
   override def toJsValue: JsValue = Json.toJson(this)
 
-  override val commandStringValue: String = ???
+  override val commandStringValue: String = "//todo"
 
-  override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo): Html = ???
+  override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo)(implicit namedSource: NamedSource)
+  : Html = Html("//todo")
 }
 
 object Schedule {

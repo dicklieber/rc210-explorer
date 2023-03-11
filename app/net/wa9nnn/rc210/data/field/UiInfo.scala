@@ -20,6 +20,7 @@ package net.wa9nnn.rc210.data.field
 import net.wa9nnn.rc210.data.Dtmf.dtmfDigits
 import net.wa9nnn.rc210.data.field.FieldExtractors.{int16, int8, twoInts}
 import net.wa9nnn.rc210.data.field.UiRender._
+import net.wa9nnn.rc210.data.named.{NamedManager, NamedSource}
 
 import scala.util.Try
 
@@ -27,7 +28,7 @@ trait UiInfo {
   val uiRender: UiRender
   val fieldExtractor: FieldExtractor
   val validate: String => Try[String]
-  val selectOptions: Seq[SelectOption] = Seq.empty
+  def options() (implicit namedSpoource:NamedSource):Seq[SelectOption] = Seq.empty
 
 
   def doString(s: String): Try[String] = {

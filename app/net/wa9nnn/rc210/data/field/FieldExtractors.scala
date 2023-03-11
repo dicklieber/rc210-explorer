@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.data.field.FieldExtractors.int8
 import net.wa9nnn.rc210.serial.{Memory, Slice, SlicePos}
 
 import java.awt.BufferCapabilities
@@ -87,6 +88,19 @@ case class DtmfExtractor(maxDigits: Int) extends FieldExtractor(maxDigits + 1) w
       .toArray
     )
     )
+    logger.trace("extract: {} from slice: {}", r, slice)
+    r
+  }
+
+  override val name: String = "dtmf"
+}
+
+// Select field
+case class SelectExtractor() extends FieldExtractor(1) with LazyLogging {
+  override def extract(slice: Slice): FieldContents = {
+
+    val contents: Int = int8.extract(slice).asInstanceOf[FieldInt].value
+    val r = FieldSelect(slice, contents)
     logger.trace("extract: {} from slice: {}", r, slice)
     r
   }

@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.serial.Slice
 import play.api.libs.json._
 import play.twirl.api.Html
@@ -35,7 +36,7 @@ trait FieldContents {
 
   val commandStringValue: String
 
-  def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo): Html
+  def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo)(implicit namedSource: NamedSource): Html
 
   def toCommand(fieldKey: FieldKey, commandTemplate: String): String = {
 
@@ -60,7 +61,7 @@ trait FieldContents {
 case class FieldInt(slice:Slice, value: Int) extends FieldContents {
   override def toJsValue: JsValue = JsNumber(BigDecimal.int2bigDecimal(value))
 
-  override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo): Html = {
+  override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo)(implicit namedSource:NamedSource): Html = {
     fieldNumber(fieldKey.param, value)
   }
 
@@ -73,7 +74,7 @@ case class FieldInt(slice:Slice, value: Int) extends FieldContents {
 case class FieldDtmf(slice:Slice,value: String) extends FieldContents {
   override def toJsValue: JsValue = JsString(value)
 
-  override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo): Html = {
+  override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo)(implicit namedSource:NamedSource): Html = {
     fieldDtmf(fieldKey.param, value)
   }
 
@@ -83,7 +84,7 @@ case class FieldDtmf(slice:Slice,value: String) extends FieldContents {
 case class FieldBoolean(slice:Slice,value: Boolean) extends FieldContents {
   override def toJsValue: JsValue = JsBoolean(value)
 
-  override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo): Html =
+  override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo)(implicit namedSource:NamedSource): Html =
     fieldCheckbox(fieldKey.param, value)
 
   override val commandStringValue: String = {
@@ -101,7 +102,7 @@ case class FieldSeqInts(slice:Slice, value: Int*) extends FieldContents {
   override def toCommand(fieldKey: FieldKey, commandTemplate: String): String = super.toCommand(fieldKey, commandTemplate)
 
 
-  override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo): Html = {
+  override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo)(implicit namedSource:NamedSource): Html = {
     fieldString(fieldKey.param, toString)
   }
 
@@ -111,8 +112,8 @@ case class FieldSeqInts(slice:Slice, value: Int*) extends FieldContents {
 case class FieldSelect(slice:Slice, value: Int ) extends FieldContents {
   override def toJsValue: JsValue = JsNumber(value)
 
-  override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo): Html = {
-    views.html.fieldSelect(value = value, paramId = fieldKey.param, options = uiInfo.selectOptions)
+  override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo)(implicit namedSource: NamedSource): Html = {
+    views.html.fieldSelect(value = value, paramId = fieldKey.param, options = uiInfo.options())
   }
 
   override val commandStringValue: String = value.toString

@@ -2,7 +2,8 @@
 @import net.wa9nnn.rc210.data.field.FieldEntry
 @import net.wa9nnn.rc210.data.named.NamedKey
 @import net.wa9nnn.rc210.key.CommonKey
-@(keyKind: KeyKind, keys: Seq[NamedKey], fieldEntries: Seq[FieldEntry])
+@import net.wa9nnn.rc210.data.named.NamedSource
+@(keyKind: KeyKind, keys: Seq[NamedKey], fieldEntries: Seq[FieldEntry])(implicit namedSource: NamedSource)
 @tabbedmain("") {
     @if(keyKind.maxN != 1) {
         <div class="row">
