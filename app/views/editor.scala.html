@@ -4,7 +4,7 @@
 @import net.wa9nnn.rc210.key.CommonKey
 @import net.wa9nnn.rc210.data.named.NamedSource
 @(keyKind: KeyKind, keys: Seq[NamedKey], fieldEntries: Seq[FieldEntry])(implicit namedSource: NamedSource)
-@tabbedmain("") {
+@tabbedmain(keyKind     ) {
     @if(keyKind.maxN != 1) {
         <div class="row">
             <div class="numbers col">
