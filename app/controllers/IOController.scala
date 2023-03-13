@@ -20,7 +20,7 @@ package controllers
 import akka.actor.ActorRef
 import akka.pattern.ask
 import akka.util.Timeout
-import net.wa9nnn.rc210.data.ValuesStore.AllDataEnteries
+import net.wa9nnn.rc210.data.ValuesStore.AllDataEntries
 import net.wa9nnn.rc210.data.field.FieldEntry
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc._
@@ -36,7 +36,7 @@ class IOController @Inject()(val controllerComponents: ControllerComponents,
 
   def downloadJson(): Action[AnyContent] = Action.async {
 
-    (valuesStore ? AllDataEnteries)
+    (valuesStore ? AllDataEntries)
       .mapTo[Seq[FieldEntry]]
       .map { entries =>
         val jsObject = JsObject(

@@ -48,8 +48,8 @@ class FieldEditorController @Inject()(val controllerComponents: ControllerCompon
 
   def editFields(sKey: String): Action[AnyContent] = Action.async {
     val key: Key = KeyFormats.parseString(sKey)
-    (valuesStore ? ValuesForKey(key)).mapTo[Seq[FieldEntry]].map { fes: Seq[FieldEntry] =>
-      Ok(views.html.fieldsEditor(key, fes))
+    (valuesStore ? ValuesForKey(key)).mapTo[Seq[FieldEntry]].map { fieldEntries: Seq[FieldEntry] =>
+      Ok(views.html.fieldsEditor(key, fieldEntries))
     }
   }
 

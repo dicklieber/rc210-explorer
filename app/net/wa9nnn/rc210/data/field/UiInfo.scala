@@ -20,13 +20,13 @@ package net.wa9nnn.rc210.data.field
 import net.wa9nnn.rc210.data.Dtmf.dtmfDigits
 import net.wa9nnn.rc210.data.field.FieldExtractors.{int16, int8, twoInts}
 import net.wa9nnn.rc210.data.field.UiRender._
-import net.wa9nnn.rc210.data.named.{NamedManager, NamedSource}
+import net.wa9nnn.rc210.data.named.NamedSource
 
 import scala.util.Try
 
 trait UiInfo {
   val uiRender: UiRender
-  val fieldExtractor: FieldExtractor
+  val fieldExtractor: SimpleFieldExtractor
   val validate: String => Try[String]
   def options() (implicit namedSpoource:NamedSource):Seq[SelectOption] = Seq.empty
 
@@ -42,7 +42,7 @@ object UiInfo {
   val default: UiNumber = UiNumber(256, "")
   val checkBox: UiInfo = new UiInfo {
     val uiRender = UiRender.checkbox
-    override val fieldExtractor: FieldExtractor = FieldExtractors.bool
+    override val fieldExtractor: SimpleFieldExtractor = FieldExtractors.bool
     val validate = (s: String) => Try(s)
 
     override def toString: String = "checkBox"
@@ -50,7 +50,7 @@ object UiInfo {
 
   val twoNumbers: UiInfo = new UiInfo {
     val uiRender: UiRender = UiRender.twoStrings
-    val fieldExtractor: FieldExtractor = twoInts
+    val fieldExtractor: SimpleFieldExtractor = twoInts
     override val validate: String => Try[String] = (s: String) =>
       throw new NotImplementedError() //todo
     override val prompt = "<from macro> <to macro>"
@@ -58,7 +58,7 @@ object UiInfo {
 
   val unlockCode: UiInfo = new UiInfo {
     override val uiRender = UiRender.dtmfKeys
-    override val fieldExtractor: FieldExtractor = DtmfExtractor(8)
+    override val fieldExtractor: SimpleFieldExtractor = DtmfExtractor(8)
     override val validate: String => Try[String] = (s: String) =>
       throw new NotImplementedError() //todo
     override val prompt: String = "1 to 8 digits"
@@ -72,7 +72,7 @@ object UiInfo {
  */
 case class UiNumber(max: Int, unit: String) extends UiInfo {
   val uiRender: UiRender = number
-  val fieldExtractor: FieldExtractor = if (max > 256) int16 else int8
+  val fieldExtractor: SimpleFieldExtractor = if (max > 256) int16 else int8
   val validate: String => Try[String] = (s: String) => {
     val int = s.toInt
     Try {
@@ -89,7 +89,7 @@ case class UiNumber(max: Int, unit: String) extends UiInfo {
  */
 case class UiRange(min:Int, max: Int, unit: String) extends UiInfo {
   val uiRender: UiRender = number
-  val fieldExtractor: FieldExtractor = if (max > 256) int16 else int8
+  val fieldExtractor: SimpleFieldExtractor = if (max > 256) int16 else int8
   val validate: String => Try[String] = (s: String) => {
     val int = s.toInt
     Try {
@@ -103,7 +103,7 @@ case class UiRange(min:Int, max: Int, unit: String) extends UiInfo {
 
 case class UiDtmf(max: Int) extends UiInfo {
   val uiRender: UiRender = dtmfKeys
-  val fieldExtractor: FieldExtractor = DtmfExtractor(max)
+  val fieldExtractor: SimpleFieldExtractor = DtmfExtractor(max)
   override val validate: String => Try[String] = (s: String) =>
     Try {
       if (s.length > max) throw new IllegalArgumentException(s"Must be 1 to $max digits but found: $s ${s.length}")

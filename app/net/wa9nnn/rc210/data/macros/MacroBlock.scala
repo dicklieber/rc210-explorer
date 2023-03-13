@@ -17,11 +17,9 @@
 
 package net.wa9nnn.rc210.data.macros
 
-import com.wa9nnn.util.tableui.{Cell, Row, Table, TableInACell}
-import net.wa9nnn.rc210.data.Rc210Data
+import com.wa9nnn.util.tableui.Row
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.named.NamedManager
-import net.wa9nnn.rc210.key.{FunctionKey, Key, MacroKey, MessageMacroKey}
 
 /**
  * Build function rows for a [[MacroNode]]
@@ -29,9 +27,9 @@ import net.wa9nnn.rc210.key.{FunctionKey, Key, MacroKey, MessageMacroKey}
  */
 object MacroBlock {
   def apply(macroNode: MacroNode)(implicit namedManager: NamedManager,
-                                  rc210Data: Rc210Data,
                                   functionsProvider: FunctionsProvider): Seq[Row] = {
 
+/*
     implicit val functions: Seq[FunctionKey] = macroNode.functions
 
 
@@ -130,12 +128,11 @@ object MacroBlock {
     }
     functionRows
 //    functionRows :+ seperatorRow
+*/
+    Seq.empty //todo
   }
 
 
-  val seperatorRow = Row(Seq(Cell("")
-    .withColSpan(3)
-  ))
   //    .withCssClass("border-bottom border-3 border-secondary"))
   //  )
 }

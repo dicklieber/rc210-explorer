@@ -1,21 +1,28 @@
 package net.wa9nnn.rc210.data
 
-import com.wa9nnn.util.tableui.{Cell, Header, Row, Table, TableInACell}
-import net.wa9nnn.rc210.data.FlowTableBuilder.macroRowHeaderCell
+import akka.actor.ActorRef
+import akka.pattern.ask
+import com.wa9nnn.util.tableui._
 import net.wa9nnn.rc210.DataProvider
+import net.wa9nnn.rc210.data.FlowTableBuilder.macroRowHeaderCell
+import net.wa9nnn.rc210.data.ValuesStore.Values
 import net.wa9nnn.rc210.data.functions.{FunctionNode, FunctionsProvider}
-import net.wa9nnn.rc210.key.MacroKey
+import net.wa9nnn.rc210.data.macros.MacroNode
+import net.wa9nnn.rc210.data.named.NamedManager
+import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
+import net.wa9nnn.rc210.key.{KeyKindEnum, MacroKey}
 import net.wa9nnn.rc210.model.TriggerNode
 import views.html.macroRowHeader
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{Inject, Named, Singleton}
+import scala.concurrent.ExecutionContext
 
 @Singleton
-class FlowTableBuilder @Inject()(functions: FunctionsProvider, dataProvider: DataProvider) {
+class FlowTableBuilder @Inject()(functions: FunctionsProvider, @Named("values-actor") valuesActor: ActorRef) (implicit ec: ExecutionContext, namedManager: NamedManager){
   def apply(): Table = {
 
-    val rc210Data = dataProvider.rc210Data
-    val rows: Seq[Row] = rc210Data.macros.map { macroNode =>
+/*
+    val rows: Seq[Row] =  (valuesActor ? Values(KeyKindEnum.macroKey)).mapTo[Seq[MacroNode]].map{macroNode: Seq[MacroNode] =>
       val macroFunctionsTable: Table = {
         val functionRows = macroNode.functions.flatMap { functionKey =>
           functions(functionKey).map(_.toRow)
@@ -31,9 +38,10 @@ class FlowTableBuilder @Inject()(functions: FunctionsProvider, dataProvider: Dat
       val macroFunctionTable: Cell = TableInACell(macroFunctionsTable)
       Row(Seq( macroRowHeaderCell(macroNode.key),  triggersCell, macroFunctionTable))
     }
+*/
     val header = Header("Flow", "Macro", "Triggers", "Functions")
 
-    Table(header, rows)
+    Table(header, Seq.empty)
 
   }
 }

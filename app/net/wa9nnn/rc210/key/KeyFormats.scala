@@ -19,12 +19,10 @@ package net.wa9nnn.rc210.key
 
 import com.wa9nnn.util.JsonFormatUtils.javaEnumFormat
 import net.wa9nnn.rc210.command._
-import net.wa9nnn.rc210.data.Rc210Data
 import net.wa9nnn.rc210.data.functions.FunctionNode
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.named.{NamedData, NamedKey}
 import net.wa9nnn.rc210.data.schedules.{DayOfWeekJaca, MonthOfYear, Schedule}
-import net.wa9nnn.rc210.data.vocabulary.MessageMacroNode
 import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
 import play.api.libs.json._
 import play.api.mvc.PathBindable
@@ -222,9 +220,7 @@ object KeyFormats {
   implicit val fmtSchedule: OFormat[Schedule] = Json.format[Schedule]
 
   implicit val fmtMacro: OFormat[MacroNode] = Json.format[MacroNode]
-  implicit val fmtMessageMacro: OFormat[MessageMacroNode] = Json.format[MessageMacroNode]
 
 
-  implicit val fmtRc210Data: OFormat[Rc210Data] = Json.format[Rc210Data]
 
 }

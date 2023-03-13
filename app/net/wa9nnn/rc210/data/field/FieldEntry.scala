@@ -20,31 +20,31 @@ package net.wa9nnn.rc210.data.field
 import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
 import controllers.routes
 import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.named.NamedSource
+import play.twirl.api.Html
 
 
 case class FieldEntry(fieldValue: FieldValue, fieldMetadata: FieldMetadata) extends RowSource with Ordered[FieldEntry] {
   val fieldKey: FieldKey = fieldValue.fieldKey
   val param: String = fieldKey.param
+  val prompt:String = fieldMetadata.prompt
 
+
+  def toHtml()(implicit namedSource: NamedSource):String ={
+    fieldMetadata.fieldHtml(fieldKey, fieldValue.contents)
+  }
 
   override def toString: String = fieldValue.toString
 
   override def toRow: Row = Row(
     fieldKey.fieldName,
     fieldKey.key.toCell,
-    fieldMetadata.offset,
-    fieldMetadata.uiInfo.fieldExtractor.name,
-    fieldMetadata.uiInfo.uiRender,
-    fieldMetadata.uiInfo.prompt,
-    fieldMetadata.selectOptions.map(_.toString()),
-    fieldMetadata.template,
     Cell(fieldValue.current)
       .withCssClass(fieldValue.cssClass),
     Cell("")
       .withImage(routes.Assets.versioned("images/pencil-square.png").url)
-//      .withUrl(routes.FieldEditorController.editOne(fieldKey.param).url)
-      .withToolTip("Edit this field"),
-    fieldValue.contents.toCommand(fieldKey, fieldMetadata.template)
+      //      .withUrl(routes.FieldEditorController.editOne(fieldKey.param).url)
+      .withToolTip("Edit this field")
   )
 
   override def compare(that: FieldEntry): Int = fieldKey compare that.fieldKey
@@ -52,5 +52,5 @@ case class FieldEntry(fieldValue: FieldValue, fieldMetadata: FieldMetadata) exte
 
 
 object FieldEntry {
-  def header(count: Int): Header = Header(s"Fields ($count)", "FieldName", "Key", "Offset", "Extractor", "render", "Prompt", "Select Options", "Template", "Value", " ", "Command")
+  def header(count: Int): Header = Header(s"Fields ($count)", "FieldName", "Key", "Value")
 }

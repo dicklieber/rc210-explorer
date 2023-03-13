@@ -15,25 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.ports
+package net.wa9nnn.rc210.data.field
 
-import com.wa9nnn.util.tableui.Row
-import net.wa9nnn.rc210.key.PortKey
-import net.wa9nnn.rc210.model.Node
-
-case class PortNode(key: PortKey,
-                    hangTimes: Seq[Int], //HangTime1 - 11-13 //HangTime2 - 14-16 //HangTime3 - 17-19
-                    iIdMinutes: Int, //IIDMinutes - 20-22
-                    pendingIdMinutes: Int, //PIDMinutes - 23-25
-                    txEnble: Boolean, //TxEnable- 26-28
-                    dtmfCoverTone: Boolean, //DTMFCovertone - 29-31 1/10 of seconds
-                    //DTMFMuteTimer - 32-37
-
-                   ) extends Node {
-
-  override def toRow: Row = throw new NotImplementedError() //todo
+object UiRender extends Enumeration {
+  type UiRender = Value
+  val checkbox, number, select, dtmfKeys, twoStrings, schedule, macroRender = Value
 }
-
-
-
-

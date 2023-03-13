@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.data.named.{NamedManager, NamedSource}
+import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.key.KeyKindEnum.macroKey
 import net.wa9nnn.rc210.key.MacroKey
 

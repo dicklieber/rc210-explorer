@@ -1,59 +1,39 @@
 package net.wa9nnn.rc210.data.macros
 
-import com.google.inject.multibindings.{ProvidesIntoMap, ProvidesIntoSet}
-import com.wa9nnn.util.tableui.{Header, Row, Table}
-import net.wa9nnn.rc210.data.functions.FunctionsProvider
-import net.wa9nnn.rc210.data.{Dtmf, Rc210Data}
-import net.wa9nnn.rc210.key.{FunctionKey, MacroKey}
-import net.wa9nnn.rc210.model.TriggerNode
+import com.typesafe.scalalogging.LazyLogging
+import com.wa9nnn.util.tableui.Header
+import net.wa9nnn.rc210.MemoryExtractor
+import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.field._
+import net.wa9nnn.rc210.data.named.NamedSource
+import net.wa9nnn.rc210.key.KeyKindEnum.{KeyKind, macroKey}
+import net.wa9nnn.rc210.key.{FunctionKey, KeyKindEnum, MacroKey}
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
-import net.wa9nnn.rc210.{Extractor, MemoryExtractor}
+import play.twirl.api.Html
 
 import java.util.concurrent.atomic.AtomicInteger
-import javax.inject.Singleton
 
-case class MacroNode(key: MacroKey, dtmf: Dtmf, functions: Seq[FunctionKey]) extends TriggerNode {
-  override def nodeEnabled: Boolean = functions.nonEmpty
+case class MacroNode(key: MacroKey, functions: Seq[FunctionKey]) extends FieldContents {
+  def enabled: Boolean = functions.nonEmpty
 
 
-  override def toRow: Row = {
-    val sFunctionString = functions
-      .map { fk =>
-        fk.number
-      }.mkString(" ")
-    Row(key.toCell, dtmf, sFunctionString)
-      .withId(key.toString)
+  import net.wa9nnn.rc210.key.KeyFormats._
+  import play.api.libs.json._
+
+  override def toJsValue: JsValue = Json.toJson(functions)
+
+  override val commandStringValue: String = "*4002 10 * 162 * 187 * 122 * 347" // todo
+
+  override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo)(implicit namedSource: NamedSource): Html = {
+    Html(functions.map(_.toString).mkString(" "))
   }
-
-
-  def table()(implicit rc210Data: Rc210Data, functionsProvider: FunctionsProvider): Table = {
-    Table(Seq.empty, for {
-      functionKey <- functions
-      f <- functionsProvider(functionKey)
-    } yield {
-      f.toRow
-    })
-  }
-
-  override def macroToRun: MacroKey = key
-
-  override def triggerEnabled: Boolean = dtmf.enabled
-
-  override def triggerDescription: String = s"Run on DTMF: $dtmf"
 }
 
-object MacroNode {
+object MacroNode extends LazyLogging with MemoryExtractor with FieldMetadata {
   def header(count: Int): Header = Header(s"Macros ($count)", "Key", "DTMF", "Functions")
 
-}
-
-//@ProvidesIntoSet
-//@Singleton
-class MacroExtractor extends MemoryExtractor {
-  def apply(memory: Memory, rc210Data: Rc210Data): Rc210Data = {
-    val dtmfMacroMap: DtmfMacros = DtmfMacroExractor(memory)
+  override def extract(memory: Memory): Seq[FieldEntry] = {
     val mai = new AtomicInteger(1)
-
 
     def macroBuilder(macroSlicePos: SlicePos, memory: Memory, bytesPerMacro: Int) = {
       memory(macroSlicePos).data
@@ -61,16 +41,30 @@ class MacroExtractor extends MemoryExtractor {
         .map { bytes =>
           val functions: Seq[FunctionKey] = bytes.takeWhile(_ != 0).map(fn => FunctionKey(fn))
           val macroKey = MacroKey(mai.getAndIncrement())
-          MacroNode(macroKey, dtmfMacroMap(macroKey), functions)
+          MacroNode(macroKey,  functions)
         }.toSeq
     }
 
-    val longMacros: Seq[MacroNode] = macroBuilder(SlicePos("//Macro - 1985-2624"), memory, 16)
-    val shortMacros: Seq[MacroNode] = macroBuilder(SlicePos("//ShortMacro - 2825-3174"), memory, 7)
+    val macros: Seq[MacroNode] = macroBuilder(SlicePos("//Macro - 1985-2624"), memory, 16)
+      .concat(macroBuilder(SlicePos("//ShortMacro - 2825-3174"), memory, 7))
 
-    rc210Data.copy(macros = longMacros.concat(shortMacros))
-
+    val r: Seq[FieldEntry] = macros.map { m: MacroNode =>
+      val fieldKey = FieldKey("Macro", m.key)
+      val fieldValue = FieldValue(fieldKey, m)
+      FieldEntry(fieldValue, this)
+    }
+    r
   }
+  //*4002 10 * 162 * 187 * 122 * 347
+  //*2050 xxx yyyyyyyy where xxx is the 3 digit Macro number (001-105) and yyyyyyyy is the DTMF code up to 8 digits
+
+
+  override val fieldName: String = "Macro"
+  override val kind: KeyKind = macroKey
+
+  override def prompt: String = ""
+
+  override def fieldHtml(fieldKey: FieldKey, fieldContents: FieldContents)(implicit namedSource: NamedSource): Html = ???
 }
 
 

@@ -22,13 +22,10 @@ import akka.pattern.ask
 import akka.util.Timeout
 import com.wa9nnn.util.tableui.Table
 import net.wa9nnn.rc210.DataProvider
-import net.wa9nnn.rc210.data.Rc210Data
-import net.wa9nnn.rc210.data.ValuesStore.AllDataEnteries
+import net.wa9nnn.rc210.data.ValuesStore.AllDataEntries
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.functions.{FunctionNode, FunctionsProvider}
-import net.wa9nnn.rc210.data.macros.MacroNode
-import net.wa9nnn.rc210.data.schedules.Schedule
-import net.wa9nnn.rc210.data.vocabulary.{MessageMacroNode, Phrase, Vocabulary}
+import net.wa9nnn.rc210.data.vocabulary.{Phrase, Vocabulary}
 import play.api.mvc._
 
 import javax.inject._
@@ -42,7 +39,6 @@ import scala.concurrent.duration.DurationInt
 @Singleton
 class RawDataController @Inject()(val controllerComponents: ControllerComponents,
                                   functions: FunctionsProvider,
-                                  dataProvider: DataProvider,
                                   @Named("values-actor") valuesActor: ActorRef) (implicit ec: ExecutionContext)
   extends BaseController {
 
@@ -65,33 +61,16 @@ class RawDataController @Inject()(val controllerComponents: ControllerComponents
 
   def mappedItems(): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
 
-    (valuesActor ? AllDataEnteries).mapTo[Seq[FieldEntry]].map { allEntries: Seq[FieldEntry] =>
+    (valuesActor ? AllDataEntries).mapTo[Seq[FieldEntry]].map { allEntries: Seq[FieldEntry] =>
       val table: Table = Table(FieldEntry.header(allEntries.length), allEntries.map(_.toRow))
       Ok(views.html.dat(Seq(table)))
     }
   }
 
 
-  def macros(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    val rc210Data: Rc210Data = dataProvider.rc210Data
-    val macros = rc210Data.macros
-    val macrosTable = Table(MacroNode.header(macros.length), macros.map(_.toRow))
-    Ok(views.html.dat(Seq(macrosTable)))
-  }
 
 
-  def schedules(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    val rc210Data: Rc210Data = dataProvider.rc210Data
-    val schedules = rc210Data.schedules
-    val macrosTable = Table(Schedule.header(schedules.length), schedules.map(_.toRow))
-    Ok(views.html.dat(Seq(macrosTable)))
-  }
 
-  def messageMacros(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    val messageMacros: Seq[MessageMacroNode] = dataProvider.rc210Data.messageMacros
-    val macrosTable = Table(MessageMacroNode.header(messageMacros.length), messageMacros.map(_.toRow))
-    Ok(views.html.dat(Seq(macrosTable)))
-  }
 
   def vocabulary(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
 

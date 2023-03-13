@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.field.UiRender.UiRender
-import net.wa9nnn.rc210.data.named.{NamedManager, NamedSource}
+import net.wa9nnn.rc210.data.named.NamedSource
 
 import scala.util.Try
 
@@ -30,7 +30,7 @@ import scala.util.Try
 class UiSelect(fixedOptions: Seq[SelectOption]) extends UiInfo {
 
   override val uiRender: UiRender = UiRender.select
-  val fieldExtractor: FieldExtractor = SelectExtractor()
+  val fieldExtractor: SimpleFieldExtractor = SelectExtractor()
   val validate: String => Try[String] = (s: String) => Try(s)
 
   override def options()(implicit namedSource: NamedSource): Seq[SelectOption] = {

@@ -3,17 +3,17 @@ package net.wa9nnn.rc210.data.schedules
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row}
 import net.wa9nnn.rc210.MemoryExtractor
-import net.wa9nnn.rc210.data.field.{FieldContents, UiInfo}
+import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.field._
 import net.wa9nnn.rc210.data.named.NamedSource
-import net.wa9nnn.rc210.data.{FieldKey, Rc210Data}
-import net.wa9nnn.rc210.key.{MacroKey, ScheduleKey}
+import net.wa9nnn.rc210.key.KeyKindEnum.{KeyKind, scheduleKey}
+import net.wa9nnn.rc210.key.{KeyKindEnum, MacroKey, ScheduleKey}
 import net.wa9nnn.rc210.model.TriggerNode
-import net.wa9nnn.rc210.serial.{Memory, Slice, SlicePos}
-import play.api.libs.json.{JsValue, Json, OFormat}
+import net.wa9nnn.rc210.serial.{Memory, SlicePos}
+import play.api.libs.json.{JsString, JsValue}
 import play.twirl.api.Html
 
 import java.time.LocalTime
-import javax.inject.Singleton
 
 /**
  *
@@ -24,7 +24,7 @@ import javax.inject.Singleton
  * @param localTime    illegal times are None.
  * @param macroToRun   e.g. "macro42"
  */
-case class Schedule(slice: Slice, key: ScheduleKey,
+case class Schedule(key: ScheduleKey,
                     dayOfWeek: DayOfWeekJaca,
                     weekInMonth: Option[Int],
                     monthOfYear: MonthOfYear,
@@ -58,27 +58,28 @@ case class Schedule(slice: Slice, key: ScheduleKey,
 
   override def triggerDescription: String = toString
 
-  override def toJsValue: JsValue = Json.toJson(this)
+  override def toJsValue: JsValue = JsString(description)
 
   override val commandStringValue: String = "//todo"
 
   override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo)(implicit namedSource: NamedSource)
-  : Html = Html("//todo")
+  : String = "//todo"
+
+
 }
 
-object Schedule {
+object Schedule extends LazyLogging with MemoryExtractor with FieldMetadata {
   def header(count: Int): Header = Header(s"Schedules ($count)", "SetPoint", "Macro", "DOW", "WeekInMonth", "MonthOfYear", "LocalTime")
 
-  import net.wa9nnn.rc210.key.KeyFormats._
 
-  implicit val fmtSchedule: OFormat[Schedule] = Json.format[Schedule]
-}
+  override val fieldName: String = "Schedule"
+  override val kind: KeyKind = scheduleKey
 
-@Singleton
-class ScheduleExtractor extends LazyLogging with MemoryExtractor {
-  def apply(memory: Memory, rc210Data: Rc210Data): Rc210Data = {
-    // dim0 setpoint row, dim1 is piece column
 
+
+  //  implicit val fmtSchedule: OFormat[Schedule] = Json.format[Schedule]
+
+  override def extract(memory: Memory): Seq[FieldEntry] = {
 
     def collect(php: String): Seq[Int] = {
       memory(SlicePos(php)).data
@@ -93,12 +94,15 @@ class ScheduleExtractor extends LazyLogging with MemoryExtractor {
     scheduleBuilder.putMacro(collect("//SetPointMacro - 776-815"))
 
     //DoSetPoint - 816-855
-    val r: Seq[Schedule] = for (setPoint <- 0 until 40) yield {
+    for (setPoint <- 0 until 40) yield {
 
       val parts = scheduleBuilder.getSetpointRow(setPoint)
 
-      Schedule(Slice(),
-        key = ScheduleKey(setPoint + 1),
+
+      //*4001 S * DOW * MOY * Hours * Minutes * Macro
+      val key: ScheduleKey = KeyKindEnum.scheduleKey[ScheduleKey](setPoint + 1)
+
+      val schedule = Schedule(key,
         dayOfWeek = parts.head.asInstanceOf[DayOfWeekJaca],
         weekInMonth = parts(1).asInstanceOf[Option[Int]],
         monthOfYear = parts(2).asInstanceOf[MonthOfYear],
@@ -117,8 +121,18 @@ class ScheduleExtractor extends LazyLogging with MemoryExtractor {
         },
         macroToRun = parts(5).asInstanceOf[MacroKey]
       )
+
+      val fieldValue = FieldValue(FieldKey("Schedule", key), schedule)
+      FieldEntry(fieldValue, this)
     }
-    rc210Data.copy(schedules = r)
+  }
+
+  override def prompt: String = ""
+
+  override def fieldHtml(fieldKey: FieldKey, fieldContents: FieldContents)(implicit namedSource: NamedSource): String = {
+    val schedule = fieldContents.asInstanceOf[Schedule]
+    //todo Schedule form needs it's own save
+    ""
   }
 }
 

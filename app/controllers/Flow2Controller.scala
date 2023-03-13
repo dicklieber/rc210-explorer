@@ -27,7 +27,6 @@ import play.api.mvc._
 import javax.inject.Inject
 
 class Flow2Controller @Inject()(implicit val controllerComponents: ControllerComponents,
-                                dataProvider: DataProvider,
                                 namedManager: NamedManager,
                                 functionsProvider: FunctionsProvider) extends BaseController {
 
@@ -35,12 +34,12 @@ class Flow2Controller @Inject()(implicit val controllerComponents: ControllerCom
     implicit request: Request[AnyContent] =>
 
 
-      implicit val rc210Data = dataProvider.rc210Data
-
-      val macroNodes: Seq[MacroNode] = rc210Data
-        .macros
-        .filter(_.nodeEnabled)
-
-      Ok(views.html.flow(macroNodes))
+//todo get from store
+//      val macroNodes: Seq[MacroNode] = rc210Data
+//        .macros
+//        .filter(_.nodeEnabled)
+//
+//      Ok(views.html.flow(macroNodes))
+      Ok(views.html.flow(Seq.empty))
   }
 }

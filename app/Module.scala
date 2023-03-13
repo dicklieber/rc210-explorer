@@ -1,9 +1,5 @@
 
-import net.codingwell.scalaguice.{ScalaModule, ScalaMultibinder}
-import net.wa9nnn.rc210.MemoryExtractor
-import net.wa9nnn.rc210.data.macros.MacroExtractor
-import net.wa9nnn.rc210.data.schedules.ScheduleExtractor
-import net.wa9nnn.rc210.data.vocabulary.MessageMacroExtractor
+import net.codingwell.scalaguice.ScalaModule
 import play.api.{Configuration, Environment}
 
 /**

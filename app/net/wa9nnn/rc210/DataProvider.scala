@@ -18,11 +18,10 @@
 package net.wa9nnn.rc210
 
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.data.{FieldKey, Rc210Data}
 import net.wa9nnn.rc210.key.KeyFactory
 import net.wa9nnn.rc210.serial.{Memory, MemoryArray}
-import org.slf4j.MDC
 
 import java.io.InputStream
 import javax.inject.{Inject, Singleton}
@@ -32,7 +31,7 @@ import scala.util.{Failure, Success, Using}
 class DataProvider @Inject()() extends LazyLogging {
 
 
-  val memory: MemoryArray = (Using(getClass.getResourceAsStream("/MemFixedtxt.txt"))) {
+  implicit val memory: MemoryArray = (Using(getClass.getResourceAsStream("/MemFixedtxt.txt"))) {
     stream: InputStream =>
       MemoryArray(stream).get
   } match {
@@ -44,23 +43,30 @@ class DataProvider @Inject()() extends LazyLogging {
       value
   }
 
+
   //  //      val mappedValues: MappedValues = new MappedValues()
   //  var rc210Data: Rc210Data = Rc210Data()
 
+
   private var start = -1
-  val ife: Seq[FieldEntry] = for {
-    fieldMetadata <- FieldDefinitions.fields
-    yzzy = {start = fieldMetadata.offset;3}
+  private val ife: Seq[FieldEntry] = for {
+    fieldMetadata <- FieldDefinitions.simplefields
     number <- 1 to fieldMetadata.kind.maxN
   } yield {
-    val start = fieldMetadata.offset + fieldMetadata.uiInfo.fieldExtractor.bytesPerField * (number -1)
-    val fieldContents: FieldContents = fieldMetadata.extract(memory, start)
+    val start = fieldMetadata.offset + fieldMetadata.uiInfo.fieldExtractor.bytesPerField * (number - 1)
+    val fieldContents: FieldContents = fieldMetadata.extract( start)
     val fieldKey: FieldKey = new FieldKey(fieldMetadata.fieldName, KeyFactory(fieldMetadata.kind, number))
     val r = FieldEntry(FieldValue(fieldKey, fieldContents), fieldMetadata)
     logger.trace("FieldEntry: start: {}  fieldEntry: {}", start.toString, r.toString)
     r
   }
-  var rc210Data: Rc210Data = Rc210Data() //todo get rid of Rc210Data.
+
+  private val values: Seq[FieldEntry] = FieldDefinitions.complexFd.flatMap(_.extract(memory))
+
+  val initialValues: Seq[FieldEntry] = ife ++:  values
+
+
+
 }
 
 
@@ -71,5 +77,5 @@ trait MemoryExtractor {
    * @param rc210Data internal to have our data appended to it.
    * @return the inputted rc210Data with our data inserted into it.
    */
-  def apply(memory: Memory, rc210Data: Rc210Data): Rc210Data
+  def extract(memory: Memory): Seq[FieldEntry]
 }

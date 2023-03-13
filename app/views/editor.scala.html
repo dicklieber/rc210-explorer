@@ -4,7 +4,7 @@
 @import net.wa9nnn.rc210.key.CommonKey
 @import net.wa9nnn.rc210.data.named.NamedSource
 @(keyKind: KeyKind, keys: Seq[NamedKey], fieldEntries: Seq[FieldEntry])(implicit namedSource: NamedSource)
-@tabbedmain(keyKind     ) {
+@tabbedmain(keyKind) {
     @if(keyKind.maxN != 1) {
         <div class="row">
             <div class="numbers col">
@@ -17,8 +17,10 @@
                 </div>
             }
             </div>
-            }
+        </div>
+    }
     <div class="fieldEditor col">
+    @if(fieldEntries.length > 1) {
         <table class="table table-bordered ">
             <thead class="table-dark">
                 <tr>
@@ -27,18 +29,21 @@
                     <td>Prompt</td>
                 </tr>
             </thead>
-        @for(fieldEntry <- fieldEntries) {
-            <tr>
-                <td class="fieldLabel" >@fieldEntry.fieldKey.fieldName</td>
-                <td>@Html(fieldEntry.fieldValue.contents.toHtmlField(fieldEntry.fieldKey, fieldEntry.fieldMetadata.uiInfo).toString())</td>
-                <td class="fieldPrompt">@fieldEntry.fieldMetadata.uiInfo.prompt</td>
+            @for(fieldEntry <- fieldEntries) {
+                <tr>
+                    <td class="fieldLabel" >@fieldEntry.fieldKey.fieldName</td>
+                    <td>@Html(fieldEntry.toHtml())</td>
+                    <td class="fieldPrompt">@fieldEntry.prompt</td>
 
-            </tr>
-        }
+                </tr>
+            }
         </table>
+    } else {
+        @Html(fieldEntries.head.toHtml())
+    }
     </div>
     <div class="changes col">
         <p>changes</p>
     </div>
-</div>
+    </div>
 }

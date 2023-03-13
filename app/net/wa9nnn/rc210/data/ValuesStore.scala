@@ -20,7 +20,7 @@ package net.wa9nnn.rc210.data
 import akka.actor.Actor
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.DataProvider
-import net.wa9nnn.rc210.data.ValuesStore.{AllDataEnteries, InitialData, ParamValues, Value, Values, ValuesForKey}
+import net.wa9nnn.rc210.data.ValuesStore.{AllDataEntries, InitialData, ParamValues, Value, Values, ValuesForKey}
 import net.wa9nnn.rc210.data.field.{FieldContents, FieldEntry}
 import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.key.Key
@@ -37,7 +37,7 @@ object ValuesStore extends LazyLogging {
 
   case class ParamValues(values: Seq[ParamValue]) extends ValueStoreMessage
 
-  case object AllDataEnteries extends ValueStoreMessage
+  case object AllDataEntries extends ValueStoreMessage
 
   case class Values(keyKind: KeyKind) extends ValueStoreMessage
 
@@ -50,7 +50,7 @@ object ValuesStore extends LazyLogging {
 
 
 class ValuesStore @Inject()(dataProvider: DataProvider) extends Actor with LazyLogging {
-  var values: MappedValues = new MappedValues(dataProvider.ife)
+  var values: MappedValues = new MappedValues(dataProvider.initialValues)
 
   def receive: Receive = {
     case Value(fieldKey) =>
@@ -60,7 +60,7 @@ class ValuesStore @Inject()(dataProvider: DataProvider) extends Actor with LazyL
       sender() ! result
     case paramValues: ParamValues =>
       values.update(paramValues)
-    case AllDataEnteries =>
+    case AllDataEntries =>
       sender() ! values.all
     case ValuesForKey(key) =>
       sender() ! values.all.filter(_.fieldKey.key == key)

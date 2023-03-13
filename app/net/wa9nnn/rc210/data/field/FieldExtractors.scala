@@ -21,15 +21,13 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.field.FieldExtractors.int8
 import net.wa9nnn.rc210.serial.{Memory, Slice, SlicePos}
 
-import java.awt.BufferCapabilities
-
 /**
  * FieldExtractors know how to parse a part of [[Memory]] and produce a [[FieldContents]]
  *
  * @param bytesPerField how much to slice pff.
  */
 
-abstract class FieldExtractor(val bytesPerField: Int) {
+abstract class SimpleFieldExtractor(val bytesPerField: Int) {
 
   def apply(memory: Memory, offset: Int): FieldContents = {
     val slicePos = SlicePos(offset, bytesPerField)
@@ -45,18 +43,18 @@ abstract class FieldExtractor(val bytesPerField: Int) {
 
 object FieldExtractors {
 
-  val bool: FieldExtractor = new FieldExtractor(1) {
+  val bool: SimpleFieldExtractor = new SimpleFieldExtractor(1) {
     override def extract(slice: Slice): FieldContents = FieldBoolean(slice, (slice.head > 0))
 
     override val name: String = "bool"
   }
 
-  val int8: FieldExtractor = new FieldExtractor(1) {
+  val int8: SimpleFieldExtractor = new SimpleFieldExtractor(1) {
     override def extract(slice: Slice) = FieldInt(slice, slice.head)
 
     override val name: String = "int8"
   }
-  val int16: FieldExtractor = new FieldExtractor(2) {
+  val int16: SimpleFieldExtractor = new SimpleFieldExtractor(2) {
     override def extract(slice: Slice): FieldInt = {
       val iterator = slice.iterator
       val intValue = iterator.next() + iterator.next() * 256
@@ -66,7 +64,7 @@ object FieldExtractors {
     override val name: String = "int16"
   }
 
-  val twoInts: FieldExtractor = new FieldExtractor(4) {
+  val twoInts: SimpleFieldExtractor = new SimpleFieldExtractor(4) {
     override def extract(slice: Slice): FieldContents = {
       val ints = slice.grouped(2).map { slice =>
         int16.extract(slice)
@@ -80,7 +78,7 @@ object FieldExtractors {
 }
 
 // this works for any number up to 8 digits
-case class DtmfExtractor(maxDigits: Int) extends FieldExtractor(maxDigits + 1) with LazyLogging {
+case class DtmfExtractor(maxDigits: Int) extends SimpleFieldExtractor(maxDigits + 1) with LazyLogging {
   override def extract(slice: Slice): FieldContents = {
     val r = FieldDtmf(slice, new String(slice.data
       .takeWhile(_ != 0)
@@ -96,7 +94,7 @@ case class DtmfExtractor(maxDigits: Int) extends FieldExtractor(maxDigits + 1) w
 }
 
 // Select field
-case class SelectExtractor() extends FieldExtractor(1) with LazyLogging {
+case class SelectExtractor() extends SimpleFieldExtractor(1) with LazyLogging {
   override def extract(slice: Slice): FieldContents = {
 
     val contents: Int = int8.extract(slice).asInstanceOf[FieldInt].value
