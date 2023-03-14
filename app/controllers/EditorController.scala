@@ -18,6 +18,7 @@
 package controllers
 
 import akka.util.Timeout
+import net.wa9nnn.rc210.data.field.SelectOption
 import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.named.{NamedKey, NamedManager}
 import net.wa9nnn.rc210.key.KeyKindEnum.{KeyKind, commonKey}

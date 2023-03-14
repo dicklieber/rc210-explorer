@@ -3,9 +3,11 @@
 @import net.wa9nnn.rc210.data.schedules.Schedule
 @import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
 @import net.wa9nnn.rc210.data.schedules.DayOfWeekJava
-@import net.wa9nnn.rc210.data.field.SelectOption
 @import net.wa9nnn.rc210.data.schedules.MonthOfYear
-@(schedule: Schedule, keyKind: KeyKind)
+@import net.wa9nnn.rc210.data.field.SelectOptions
+@import net.wa9nnn.rc210.data.field.SelectOption
+
+@(schedule: Schedule, keyKind: KeyKind))
 
 <div class="container">
     @form(action = routes.ScheduleController.save()) {
@@ -31,9 +33,17 @@
                 </tr>
                 <tr>
                     <td>Time</td>
-                    <td><input type="time" name="localTime" value="@schedule.localTime.getOrElse("")></td>
+                    <td><input type="time" name="localTime" value="@schedule.localTime.getOrElse("")"></td>
+                </tr>
+                <tr>
+                    <td>Macro To Run</td>
+                    @defining(SelectOptions.selectOptions.macroSelect.options()) { o: Seq[SelectOption] =>
+                        <td>@fieldSelect(schedule.macroToRun.number, "macro", o)
+                    </td>
+                    }
                 </tr>
             </tbody>
         </table>
-    }
+        <input type="submit" value="save">
+        }
 </div>

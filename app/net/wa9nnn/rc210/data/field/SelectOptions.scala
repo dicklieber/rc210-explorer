@@ -77,4 +77,9 @@ class SelectOptions @Inject()(implicit namedManager: NamedManager) {
       }
     }
   }
+
+  SelectOptions.selectOptions = this}
+
+object SelectOptions {
+  var selectOptions:SelectOptions = _
 }
