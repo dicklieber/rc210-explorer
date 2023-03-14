@@ -1,0 +1,39 @@
+@import views.html.helper._
+@import helper._
+@import net.wa9nnn.rc210.data.schedules.Schedule
+@import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
+@import net.wa9nnn.rc210.data.schedules.DayOfWeekJava
+@import net.wa9nnn.rc210.data.field.SelectOption
+@import net.wa9nnn.rc210.data.schedules.MonthOfYear
+@(schedule: Schedule, keyKind: KeyKind)
+
+<div class="container">
+    @form(action = routes.ScheduleController.save()) {
+        <table>
+            <tbody>
+                <tr>
+                    <td>Schedule</td>
+                    <td>@schedule.fieldKey.key</td>
+                </tr>
+                <tr>
+                    <td>Day of Week</td>
+                    <td>@fieldSelect(schedule.dayOfWeek.ordinal(), "dayOfWeek", DayOfWeekJava.values().toIndexedSeq.map { f => SelectOption(f.ordinal(), f.toString) })</td>
+                </tr>
+                <tr>
+                    <td>Week In Month</td>
+                    <td><input type="range" name="weekInMonth" value="@schedule.weekInMonth"
+                    min="0" max="5"
+                    ></td>
+                </tr>
+                <tr>
+                    <td>Day of Week</td>
+                    <td>@fieldSelect(schedule.monthOfYear.ordinal(), "monthOfYear", MonthOfYear.values().toIndexedSeq.map { f => SelectOption(f.ordinal(), f.toString) })</td>
+                </tr>
+                <tr>
+                    <td>Time</td>
+                    <td><input type="time" name="localTime" value="@schedule.localTime.getOrElse("")></td>
+                </tr>
+            </tbody>
+        </table>
+    }
+</div>

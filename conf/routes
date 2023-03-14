@@ -19,6 +19,7 @@ GET         /named                     controllers.NamedController.index()
 GET         /edit/:keyKind/:key        controllers.EditorController.edit(keyKind:String, key:String)
 GET         /edit/:keyKind             controllers.EditorController.editUnselected(keyKind:String)
 GET         /tabs                      controllers.LandingController.tabs()
+POST        /schedule/save             controllers.ScheduleController.save()
 GET         /                          controllers.LandingController.index()
 
 # Map static resources from the /public folder to the /assets URL path

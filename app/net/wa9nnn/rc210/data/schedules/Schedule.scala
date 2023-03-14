@@ -69,7 +69,9 @@ case class Schedule(fieldKey: FieldKey,
    * @param fieldEntry all the metadata.
    * @return html
    */
-  override def toHtmlField(fieldEntry: FieldEntry): String = ???
+  override def toHtmlField(fieldEntry: FieldEntry): String =
+    views.html.schedule(this, scheduleKey).toString()
+
 
   override val key: Key = fieldKey.key
 }
