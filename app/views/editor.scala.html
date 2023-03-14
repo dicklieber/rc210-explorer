@@ -3,85 +3,93 @@
 @import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
 @(keyKind: KeyKind, keys: Seq[NamedKey], fieldEntries: Seq[FieldEntry])(implicit namedSource: NamedSource)
 @tabbedmain(keyKind) {
-@*    <table>
-        <tr>
-            <td>
-            @if(keyKind.maxN != 1) {
-                <div class="col">
-                @for(namedKey <- keys) {
-                    <a href='@routes.EditorController.edit(keyKind.prettyName, namedKey.key.toString)'>@namedKey.key.number @namedKey.name</a>
-                    <br/>
-                }
-                </div>
-            }
-            </td>
-            <td>
-            @if(fieldEntries.length > 1) {
-                <table class="table table-bordered ">
-                    <thead class="table-dark">
-                        <tr>
-                            <td>Field</td>
-                            <td>Value</td>
-                            <td>Prompt</td>
-                        </tr>
-                    </thead>
-                    @for(fieldEntry <- fieldEntries) {
-                        <tr>
-                            <td class="fieldLabel" >@fieldEntry.fieldKey.fieldName</td>
-                            <td>@Html(fieldEntry.toHtml)</td>
-                            <td class="fieldPrompt">fieldEntry.prompt</td>
+    @* <table>
+    <tr>
+    <td>
+    @if(keyKind.maxN != 1) {
+    <div class="col">
+    @for(namedKey <- keys) {
+    <a href='@routes.EditorController.edit(keyKind.prettyName, namedKey.key.toString)'>@namedKey.key.number @namedKey.name</a>
+    <br/>
+    }
+    </div>
+    }
+    </td>
+    <td>
+    @if(fieldEntries.length > 1) {
+    <table class="table table-bordered ">
+    <thead class="table-dark">
+    <tr>
+    <td>Field</td>
+    <td>Value</td>
+    <td>Prompt</td>
+    </tr>
+    </thead>
+    @for(fieldEntry <- fieldEntries) {
+    <tr>
+    <td class="fieldLabel" >@fieldEntry.fieldKey.fieldName</td>
+    <td>@Html(fieldEntry.toHtml)</td>
+    <td class="fieldPrompt">fieldEntry.prompt</td>
 
-                        </tr>
-                    }
-                </table>
-            } else {
-                @Html(fieldEntries.headOption.map(_.toHtml).getOrElse(""))
-            }
+    </tr>
+    }
+    </table>
+    } else {
+    @Html(fieldEntries.headOption.map(_.toHtml).getOrElse(""))
+    }
 
-            </td>
-            <td>
-                <p>changes</p>
-            </td>
-        </tr>
+    </td>
+    <td>
+    <p>changes</p>
+    </td>
+    </tr>
     </table>*@
-
-
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
+            <div class="col col-md-auto ">
             @if(keyKind.maxN != 1) {
-                <div class="col">
-                @for(namedKey <- keys) {
-                    <a href='@routes.EditorController.edit(keyKind.prettyName, namedKey.key.toString)'>@namedKey.key.number @namedKey.name</a>
-                    <br/>
-                }
-                </div>
-            }
-
-            <div class="fieldEditor col border border-primary">
-            @if(fieldEntries.length > 1) {
-                <table class="table table-bordered ">
-                    <thead class="table-dark">
-                        <tr>
-                            <td>Field</td>
-                            <td>Value</td>
-                            <td>Prompt</td>
-                        </tr>
-                    </thead>
-                    @for(fieldEntry <- fieldEntries) {
-                        <tr>
-                            <td class="fieldLabel" >@fieldEntry.fieldKey.fieldName</td>
-                            <td>@Html(fieldEntry.toHtml)</td>
-                            <td class="fieldPrompt">fieldEntry.prompt</td>
-
-                        </tr>
+                <fieldset>
+                    <legend>Keys</legend>
+                    <div class="col">
+                    @for(namedKey <- keys) {
+                        <a href='@routes.EditorController.edit(keyKind.prettyName, namedKey.key.toString)'>@namedKey.key.number @namedKey.name</a>
+                        <br/>
                     }
-                </table>
-            } else {
-                @Html(fieldEntries.headOption.map(_.toHtml).getOrElse(""))
+                    </div>
+                </fieldset>
             }
             </div>
-            <div class="changes col">
-                <p>changes</p>
+            <div class="fieldEditor col border border-primary">
+                <fieldset>
+                    <legend>Fields</legend>
+
+                    @if(fieldEntries.length > 1) {
+                        <table class="table table-bordered ">
+                            <thead class="table-dark">
+                                <tr>
+                                    <td>Field</td>
+                                    <td>Value</td>
+                                    <td>Prompt</td>
+                                </tr>
+                            </thead>
+                            @for(fieldEntry <- fieldEntries) {
+                                <tr>
+                                    <td class="fieldLabel" >@fieldEntry.fieldKey.fieldName</td>
+                                    <td>@Html(fieldEntry.toHtml)</td>
+                                    <td class="fieldPrompt">fieldEntry.prompt</td>
+
+                                </tr>
+                            }
+                        </table>
+                    } else {
+                        @Html(fieldEntries.headOption.map(_.toHtml).getOrElse(""))
+                    }
+                </fieldset>
+            </div>
+            <div class=" col border border-primary">
+                <fieldset>
+                    <legend>Changes</legend>
+                </fieldset>
             </div>
         </div>
     </div>

@@ -81,6 +81,24 @@
     justify-content: left;
 }
 
+
+
+
+legend {
+    font-size: 1.2em !important;
+    font-weight: normal !important;
+    text-align: left !important;
+    width:auto !important;
+    padding:0 10px;
+    border-bottom:none;
+    float:none !important;
+}
+fieldset {
+    border-color: #0d6efd !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+}
+
 body {
     /*background: #f5f5f5;*/
     color: #555;
