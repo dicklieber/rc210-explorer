@@ -28,7 +28,7 @@ trait UiInfo {
   val uiRender: UiRender
   val fieldExtractor: SimpleFieldExtractor
   val validate: String => Try[String]
-  def options() (implicit namedSpoource:NamedSource):Seq[SelectOption] = Seq.empty
+  def options() :Seq[SelectOption] = Seq.empty
 
 
   def doString(s: String): Try[String] = {

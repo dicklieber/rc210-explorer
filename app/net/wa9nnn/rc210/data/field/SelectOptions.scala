@@ -17,11 +17,15 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.data.named.NamedSource
-import net.wa9nnn.rc210.key.KeyKindEnum.macroKey
+import com.google.inject.Inject
+import net.wa9nnn.rc210.data.named.{NamedManager, NamedSource}
+import net.wa9nnn.rc210.key.KeyKindEnum.{macroKey, namebleKeyKinds}
 import net.wa9nnn.rc210.key.MacroKey
 
-object SelectOptions {
+import javax.inject.Singleton
+
+@Singleton
+class SelectOptions @Inject()(implicit namedManager: NamedManager) {
   val dayOfWeek: UiSelect = UiSelect(
     "EveryDay",
     "Monday",
@@ -59,18 +63,17 @@ object SelectOptions {
   )
 
 
-
   val macroSelect: UiSelect = new UiSelect(Seq.empty) {
 
     override val fieldExtractor = SelectExtractor()
 
-    override def options()(implicit namedSource: NamedSource) = {
+    override def options() = {
       for {
         number <- 1 to macroKey.maxN
         macroKey = MacroKey(number)
 
       } yield {
-        SelectOption(number, namedSource(macroKey))
+        SelectOption(number, namedManager(macroKey))
       }
     }
   }

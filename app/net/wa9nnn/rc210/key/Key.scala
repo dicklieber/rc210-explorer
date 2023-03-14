@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.key
 
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
+import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.key.KeyKindEnum._
 
 /**
@@ -31,6 +32,7 @@ import net.wa9nnn.rc210.key.KeyKindEnum._
 sealed abstract class Key(val kind: KeyKind, val number: Int) extends CellProvider with Ordered[Key] {
 
   val name: String = kind.prettyName
+  def fieldKey[T](fieldName: String): FieldKey = FieldKey(fieldName, this)
 
   override val toString: String = s"$name$number"
 

@@ -15,20 +15,8 @@ import play.api.{Configuration, Environment}
  * This uses scala-guice. https://github.com/codingwell/scala-guice for details.
  */
 class Module(environment: Environment, configuration: Configuration) extends ScalaModule {
-
   override def configure(): Unit = {
-
     install(new ConfigModule(configuration))
-    install(new ActorModule)
-    // Got to be a way to this this automatically without having to specify each implementation.
-/*
-    val publishers = ScalaMultibinder.newSetBinder[MemoryExtractor](binder)
-    publishers.addBinding.to[MacroExtractor]
-    publishers.addBinding.to[ScheduleExtractor]
-    publishers.addBinding.to[MessageMacroExtractor]
-*/
-
-
   }
 }
 

@@ -5,27 +5,25 @@ import com.wa9nnn.util.tableui.{Header, Row}
 import net.wa9nnn.rc210.MemoryExtractor
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.data.named.NamedSource
-import net.wa9nnn.rc210.key.KeyKindEnum.{KeyKind, scheduleKey}
-import net.wa9nnn.rc210.key.{KeyKindEnum, MacroKey, ScheduleKey}
+import net.wa9nnn.rc210.key.KeyKindEnum._
+import net.wa9nnn.rc210.key.{Key, KeyKindEnum, MacroKey, ScheduleKey}
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 import play.api.libs.json.{JsString, JsValue}
-import play.twirl.api.Html
 
 import java.time.LocalTime
 
 /**
  *
- * @param key          e.g "schedule5"
- * @param dayOfWeek    See [[DayOfWeekJaca]]
+ * @param fieldKey         for [[ScheduleKey]]
+ * @param dayOfWeek    See [[DayOfWeekJava]]
  * @param weekInMonth  e.g 1 == 1st week in month.
  * @param monthOfYear  See [[MonthOfYear]]
  * @param localTime    illegal times are None.
  * @param macroToRun   e.g. "macro42"
  */
-case class Schedule(key: ScheduleKey,
-                    dayOfWeek: DayOfWeekJaca,
+case class Schedule(fieldKey: FieldKey,
+                    dayOfWeek: DayOfWeekJava,
                     weekInMonth: Option[Int],
                     monthOfYear: MonthOfYear,
                     localTime: Option[LocalTime],
@@ -58,26 +56,26 @@ case class Schedule(key: ScheduleKey,
 
   override def triggerDescription: String = toString
 
-  override def toJsValue: JsValue = JsString(description)
+  override def toJsValue: JsValue = JsString(description) //todo JsObject of Schedule.
 
-  override val commandStringValue: String = "//todo"
+  /**
+   * Render this value as an RD-210 command string.
+   */
+  override def toCommand(fieldEntry: FieldEntry): String = ???
 
-  override def toHtmlField(fieldKey: FieldKey, uiInfo: UiInfo)(implicit namedSource: NamedSource)
-  : String = "//todo"
+  /**
+   * Render as HTML. Either a single field of an entire HTML Form.
+   *
+   * @param fieldEntry all the metadata.
+   * @return html
+   */
+  override def toHtmlField(fieldEntry: FieldEntry): String = ???
 
-
+  override val key: Key = fieldKey.key
 }
 
-object Schedule extends LazyLogging with MemoryExtractor with FieldMetadata {
+object Schedule extends LazyLogging with MemoryExtractor  {
   def header(count: Int): Header = Header(s"Schedules ($count)", "SetPoint", "Macro", "DOW", "WeekInMonth", "MonthOfYear", "LocalTime")
-
-
-  override val fieldName: String = "Schedule"
-  override val kind: KeyKind = scheduleKey
-
-
-
-  //  implicit val fmtSchedule: OFormat[Schedule] = Json.format[Schedule]
 
   override def extract(memory: Memory): Seq[FieldEntry] = {
 
@@ -100,10 +98,10 @@ object Schedule extends LazyLogging with MemoryExtractor with FieldMetadata {
 
 
       //*4001 S * DOW * MOY * Hours * Minutes * Macro
-      val key: ScheduleKey = KeyKindEnum.scheduleKey[ScheduleKey](setPoint + 1)
 
-      val schedule = Schedule(key,
-        dayOfWeek = parts.head.asInstanceOf[DayOfWeekJaca],
+      val fieldKey = FieldKey("Schedule", ScheduleKey(setPoint + 1))
+      val schedule = Schedule( fieldKey,
+        dayOfWeek = parts.head.asInstanceOf[DayOfWeekJava],
         weekInMonth = parts(1).asInstanceOf[Option[Int]],
         monthOfYear = parts(2).asInstanceOf[MonthOfYear],
         localTime = {
@@ -121,21 +119,15 @@ object Schedule extends LazyLogging with MemoryExtractor with FieldMetadata {
         },
         macroToRun = parts(5).asInstanceOf[MacroKey]
       )
-
-      val fieldValue = FieldValue(FieldKey("Schedule", key), schedule)
-      FieldEntry(fieldValue, this)
+      FieldEntry(this, fieldKey, schedule)
     }
   }
 
   override def prompt: String = ""
 
-  override def fieldHtml(fieldKey: FieldKey, fieldContents: FieldContents)(implicit namedSource: NamedSource): String = {
-    val schedule = fieldContents.asInstanceOf[Schedule]
-    //todo Schedule form needs it's own save
-    ""
-  }
+  override val fieldName: String = "Schedule"
+  override val kind: KeyKind = scheduleKey
 }
-
 
 
 

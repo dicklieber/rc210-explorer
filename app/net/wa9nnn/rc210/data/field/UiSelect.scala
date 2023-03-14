@@ -27,13 +27,13 @@ import scala.util.Try
  *
  * @param options
  */
-class UiSelect(fixedOptions: Seq[SelectOption]) extends UiInfo {
+class UiSelect(fixedOptions: Seq[SelectOption])(implicit namedSource: NamedSource) extends UiInfo {
 
   override val uiRender: UiRender = UiRender.select
   val fieldExtractor: SimpleFieldExtractor = SelectExtractor()
   val validate: String => Try[String] = (s: String) => Try(s)
 
-  override def options()(implicit namedSource: NamedSource): Seq[SelectOption] = {
+  override def options(): Seq[SelectOption] = {
     fixedOptions
   }
 
@@ -42,7 +42,7 @@ class UiSelect(fixedOptions: Seq[SelectOption]) extends UiInfo {
 }
 
 object UiSelect {
-  def apply(simple: String*): UiSelect = {
+  def apply(simple: String*)(implicit namedSource: NamedSource): UiSelect = {
     val r: Seq[SelectOption] = simple
       .zipWithIndex
       .map { case (string, index) =>

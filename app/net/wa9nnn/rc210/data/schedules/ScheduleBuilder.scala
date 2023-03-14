@@ -32,10 +32,10 @@ class ScheduleBuilder extends LazyLogging {
         chars match {
           case Array(dow) =>
             array(setPoint)(colWeekInMonth) = None
-            array(setPoint)(colDow) = DayOfWeekJaca.values()(sDow.toInt)
+            array(setPoint)(colDow) = DayOfWeekJava.values()(sDow.toInt)
           case Array(wInMo, dow) =>
             array(setPoint)(colWeekInMonth) = Option(wInMo.toString.toInt)
-            array(setPoint)(colDow) = DayOfWeekJaca.values()(dow.toString.toInt)
+            array(setPoint)(colDow) = DayOfWeekJava.values()(dow.toString.toInt)
           case x =>
             logger.error(s"DOW must be 1 or 2 chars, got $sDow")
         }

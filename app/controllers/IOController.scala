@@ -17,39 +17,29 @@
 
 package controllers
 
-import akka.actor.ActorRef
-import akka.pattern.ask
 import akka.util.Timeout
-import net.wa9nnn.rc210.data.ValuesStore.AllDataEntries
-import net.wa9nnn.rc210.data.field.FieldEntry
-import play.api.libs.json.{JsObject, Json}
+import net.wa9nnn.rc210.data.mapped.MappedValues
+import play.api.libs.json.Json
 import play.api.mvc._
 
-import javax.inject.{Inject, Named, Singleton}
-import scala.concurrent.ExecutionContext
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
 
 @Singleton
 class IOController @Inject()(val controllerComponents: ControllerComponents,
-                             @Named("values-actor") valuesStore: ActorRef)(implicit ec: ExecutionContext) extends BaseController {
+                             mappedValues: MappedValues) extends BaseController {
   implicit val timeout: Timeout = 5.seconds
 
-  def downloadJson(): Action[AnyContent] = Action.async {
+  def downloadJson(): Action[AnyContent] = Action {
+    val jsObject = Json.arr(
+      mappedValues.all
+        .map(fieldEntry => fieldEntry.fieldKey.param -> fieldEntry.toJson)
+    )
+    val sJson = Json.prettyPrint(jsObject)
 
-    (valuesStore ? AllDataEntries)
-      .mapTo[Seq[FieldEntry]]
-      .map { entries =>
-        val jsObject = JsObject(
-          entries
-            .sortBy(_.fieldKey.fieldName)
-            .map(fieldValue => fieldValue.fieldKey.param -> fieldValue.fieldValue.contents.toJsValue)
-        )
-        val sJson = Json.prettyPrint(jsObject)
-
-        Ok(sJson).withHeaders(
-          "Content-Type" -> "text/json",
-          "Content-Disposition" -> s"""attachment; filename="rc210.json""""
-        )
-      }
+    Ok(sJson).withHeaders(
+      "Content-Type" -> "text/json",
+      "Content-Disposition" -> s"""attachment; filename="rc210.json""""
+    )
   }
 }

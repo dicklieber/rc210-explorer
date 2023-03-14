@@ -1,17 +1,10 @@
 package net.wa9nnn.rc210.data
 
 import akka.actor.ActorRef
-import akka.pattern.ask
 import com.wa9nnn.util.tableui._
-import net.wa9nnn.rc210.DataProvider
-import net.wa9nnn.rc210.data.FlowTableBuilder.macroRowHeaderCell
-import net.wa9nnn.rc210.data.ValuesStore.Values
-import net.wa9nnn.rc210.data.functions.{FunctionNode, FunctionsProvider}
-import net.wa9nnn.rc210.data.macros.MacroNode
+import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.named.NamedManager
-import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
-import net.wa9nnn.rc210.key.{KeyKindEnum, MacroKey}
-import net.wa9nnn.rc210.model.TriggerNode
+import net.wa9nnn.rc210.key.MacroKey
 import views.html.macroRowHeader
 
 import javax.inject.{Inject, Named, Singleton}

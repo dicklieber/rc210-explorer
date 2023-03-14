@@ -17,19 +17,15 @@
 
 package controllers
 
-import akka.actor.ActorRef
-import akka.pattern.ask
 import akka.util.Timeout
 import com.wa9nnn.util.tableui.Table
-import net.wa9nnn.rc210.DataProvider
-import net.wa9nnn.rc210.data.ValuesStore.AllDataEntries
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.functions.{FunctionNode, FunctionsProvider}
+import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.vocabulary.{Phrase, Vocabulary}
 import play.api.mvc._
 
 import javax.inject._
-import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationInt
 
 /**
@@ -39,7 +35,7 @@ import scala.concurrent.duration.DurationInt
 @Singleton
 class RawDataController @Inject()(val controllerComponents: ControllerComponents,
                                   functions: FunctionsProvider,
-                                  @Named("values-actor") valuesActor: ActorRef) (implicit ec: ExecutionContext)
+                                  mappedValues: MappedValues)
   extends BaseController {
 
   implicit val timeout: Timeout = 5.seconds
@@ -51,28 +47,19 @@ class RawDataController @Inject()(val controllerComponents: ControllerComponents
    * will be called when the application receives a `GET` request with
    * a path of `/`.
    */
-  def functions(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+  def functions(): Action[AnyContent] = Action {
     val schedulesTable = Table(FunctionNode.header(functions.functions.length), functions.functions.map(_.toRow))
     Ok(views.html.dat(Seq(schedulesTable)))
   }
 
+  def mappedItems(): Action[AnyContent] = Action {
 
-
-
-  def mappedItems(): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
-
-    (valuesActor ? AllDataEntries).mapTo[Seq[FieldEntry]].map { allEntries: Seq[FieldEntry] =>
-      val table: Table = Table(FieldEntry.header(allEntries.length), allEntries.map(_.toRow))
-      Ok(views.html.dat(Seq(table)))
-    }
+    val allEntries = mappedValues.all
+    val table: Table = Table(FieldEntry.header(allEntries.length), allEntries.map(_.toRow))
+    Ok(views.html.dat(Seq(table)))
   }
 
-
-
-
-
-
-  def vocabulary(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+  def vocabulary(): Action[AnyContent] = Action {
 
     val phrases = Vocabulary.phrases.sortBy(_.wordKey)
     val macrosTable = Table(Phrase.header(phrases.length), phrases.map(_.toRow))

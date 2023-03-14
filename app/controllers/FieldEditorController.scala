@@ -17,60 +17,44 @@
 
 package controllers
 
-import akka.actor._
-import akka.pattern.ask
-import akka.util.Timeout
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.ValuesStore.{ParamValue, ParamValues, ValuesForKey}
-import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.key.{Key, KeyFormats}
-import play.api.mvc._
+import play.api.mvc.{Action, _}
 import play.twirl.api.Html
 
 import javax.inject._
-import scala.collection.immutable
-import scala.concurrent.ExecutionContext
-import scala.concurrent.duration.DurationInt
 
 class FieldEditorController @Inject()(val controllerComponents: ControllerComponents,
-                                      @Named("values-actor") valuesStore: ActorRef
-                                     )(implicit ec: ExecutionContext, namedManager: NamedManager)
+                                      mappedValues: MappedValues
+                                     )(implicit enamedManager: NamedManager)
   extends BaseController {
 
-  implicit val timeout: Timeout = 5.seconds
 
-    def selectKey(): Action[AnyContent] = Action {
-      val html: Html = views.html.selectKey()
-      Ok(html)
-    }
-
-
-  def editFields(sKey: String): Action[AnyContent] = Action.async {
-    val key: Key = KeyFormats.parseString(sKey)
-    (valuesStore ? ValuesForKey(key)).mapTo[Seq[FieldEntry]].map { fieldEntries: Seq[FieldEntry] =>
-      Ok(views.html.fieldsEditor(key, fieldEntries))
-    }
+  def selectKey(): Action[AnyContent] = Action {
+    val html: Html = views.html.selectKey()
+    Ok(html)
   }
 
-  import play.api.mvc.Action
 
-  def save(): Action[AnyContent] = Action { request: Request[AnyContent] =>
+  def editFields(sKey: String): Action[AnyContent] = Action {
+    val key: Key = KeyFormats.parseString(sKey)
+    Ok(views.html.fieldsEditor(key, mappedValues.apply(key)))
+  }
+
+  def save(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     val body: AnyContent = request.body
     val formUrlEncoded: Option[Map[String, Seq[String]]] = body.asFormUrlEncoded
 
 
-    val s: immutable.Iterable[ParamValue] = for {
-      case (sKey, values) <- formUrlEncoded.get
-      value <- values.headOption
-    } yield {
-      val fieldKey: FieldKey = FieldKey.fromParam(sKey)
-      //todo param to FieldContents goes here.
-      ParamValue(fieldKey, value)
-    }
+    formUrlEncoded
+      .get
+      .foreach { case (sKey, values) =>
+        val fieldKey: FieldKey = FieldKey.fromParam(sKey)
 
-    valuesStore ! ParamValues(s.toIndexedSeq)
-    //    Redirect(routes.FieldEditorController.editFields()
-    Ok("//todo")
+        mappedValues.apply(fieldKey, values.headOption.getOrElse(throw new IllegalArgumentException(s"No value for param: $sKey")))
+      }
+    Ok
   }
 }

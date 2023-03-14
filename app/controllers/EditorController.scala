@@ -17,11 +17,8 @@
 
 package controllers
 
-import akka.actor._
-import akka.pattern.ask
 import akka.util.Timeout
-import net.wa9nnn.rc210.data.ValuesStore.ValuesForKey
-import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.named.{NamedKey, NamedManager}
 import net.wa9nnn.rc210.key.KeyKindEnum.{KeyKind, commonKey}
 import net.wa9nnn.rc210.key._
@@ -29,11 +26,10 @@ import play.api.mvc._
 
 import javax.inject._
 import scala.concurrent.duration.DurationInt
-import scala.concurrent.{ExecutionContext, Future}
 
 class EditorController @Inject()(val controllerComponents: ControllerComponents,
-                                 @Named("values-actor") valuesStore: ActorRef
-                                )(implicit ec: ExecutionContext, namedManager: NamedManager)
+                                 mappedValues: MappedValues
+                                )(implicit namedManager: NamedManager)
   extends BaseController {
 
   implicit val timeout: Timeout = 5.seconds
@@ -45,13 +41,13 @@ class EditorController @Inject()(val controllerComponents: ControllerComponents,
       NamedKey(key, namedManager.get(key).getOrElse(""))
     }
     if (keyKind == KeyKindEnum.commonKey)
-      Redirect(routes.EditorController.edit(sKeyKind, CommonKey(1).toString))
+      Redirect(routes.EditorController.edit(sKeyKind, CommonKey().toString))
     else
       Ok(views.html.editor(keyKind, nk, Seq.empty))
 
   }
 
-  def edit(sKeyKind: String, sMaybeKey: String): Action[AnyContent] = Action.async {
+  def edit(sKeyKind: String, sMaybeKey: String): Action[AnyContent] = Action {
     val keyKind: KeyKind = KeyKindEnum.apply(sKeyKind)
 
     val maybeKey: Option[Key] = sMaybeKey match {
@@ -71,12 +67,11 @@ class EditorController @Inject()(val controllerComponents: ControllerComponents,
     }
 
     maybeKey match {
-      case Some(key) =>
-        (valuesStore ? ValuesForKey(key)).mapTo[Seq[FieldEntry]]
-          .map { entries: Seq[FieldEntry] =>
-            Ok(views.html.editor(keyKind, nk, entries))
-          }
-      case None => Future(Ok(views.html.editor(keyKind, nk, Seq.empty)))
+      case Some(key: Key) =>
+        Ok(views.html.editor(keyKind, nk, mappedValues(key)))
+
+      case None =>
+        Ok(views.html.editor(keyKind, nk, Seq.empty))
     }
   }
 }

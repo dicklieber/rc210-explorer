@@ -109,6 +109,8 @@ class NamedManager @Inject()(@Named("vizRc210.namedDataFile") namedFilePath: Str
   }
 }
 
+object NamedSource
+
 
 case class NamedKey(key: Key, name: String) extends Ordered[NamedKey] {
   override def compare(that: NamedKey): Int = key compareTo that.key

@@ -17,103 +17,127 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.named.NamedSource
-import net.wa9nnn.rc210.serial.Slice
 import play.api.libs.json._
 import views.html._
 
 /**
  * Holds the value for a field.
  * Knows how to render as HTML control or string for JSON, showing to a user or RC-210 Command,
+ * Has enough metadata needed yo render
  */
 trait FieldContents {
+
   def toJsValue: JsValue
 
-  def commandBoolDigit: String = throw new IllegalStateException(" Not a boolean!")
+  /**
+   * Render this value as an RD-210 command string.
+   */
+  def toCommand(fieldEntry: FieldEntry): String
 
-  val commandStringValue: String
+  /**
+   * Render as HTML. Either a single field of an entire HTML Form.
+   *
+   * @param fieldEntry all the metadata.
+   * @return html
+   */
 
-  def toHtmlField(fieldKey: FieldKey)(implicit namedSource: NamedSource): String
+  def toHtmlField(fieldEntry: FieldEntry): String
 
-  def toCommand(fieldKey: FieldKey, commandTemplate: String): String = {
+  //  def toCommand(fieldKey: FieldKey, commandTemplate: String): String = {
+  //
+  //    val map: Map[String, () => String] = Seq(
+  //      "v" -> (() => commandStringValue),
+  //      "b" -> (() => commandBoolDigit),
+  //      "n" -> (() => fieldKey.key.number.toString),
+  //      "S" -> (() => commandStringValue.toCharArray.mkString(" ")) // dtmf digits space seperated.
+  //    ).toMap
+  //
+  //    map.foldLeft(commandTemplate) { (command: String, tr) =>
+  //      val str: String = command.replaceAll(tr._1, tr._2())
+  //      str
+  //    }
+  //    //todo color token and replacement parts <span> s
+  //  }
 
-    val map: Map[String, () => String] = Seq(
-      "v" -> (() => commandStringValue),
-      "b" -> (() => commandBoolDigit),
-      "n" -> (() => fieldKey.key.number.toString),
-      "S" -> (() => commandStringValue.toCharArray.mkString(" ")) // dtmf digits space seperated.
-    ).toMap
-
-    map.foldLeft(commandTemplate) { (command: String, tr) =>
-      val str: String = command.replaceAll(tr._1, tr._2())
-      str
-    }
-    //todo color token and replacement parts <span> s
-  }
-
-  override def toString: String = s"$commandStringValue"
 }
 
 // simple field are defined here. More complex ones like [[net.wa9nnn.rc210.data.schedules.Schedule]] are elsewhere.
-case class FieldInt(slice: Slice, value: Int) extends FieldContents {
+case class FieldInt(value: Int) extends FieldContents {
   override def toJsValue: JsValue = JsNumber(BigDecimal.int2bigDecimal(value))
 
-  override def toHtmlField(fieldKey: FieldKey)(implicit namedSource: NamedSource): String = {
-    fieldNumber(fieldKey.param, value).toString()
+  /**
+   * Render as HTML for this field.
+   * This is typically just one form field for [[SimpleFieldExtractor]] fields.
+   * For complex fields like [[net.wa9nnn.rc210.data.schedules.Schedule]] it's an entire HTML form.
+   *
+   * @return
+   */
+  def toHtmlField(fieldEntry: FieldEntry): String = {
+    fieldNumber(fieldEntry.param, value).toString()
   }
 
-  override val commandStringValue: String = value.toString
-
-  override def commandBoolDigit: String = throw new IllegalStateException("Not a boolean!")
-
+  override def toCommand(fieldEntry: FieldEntry): String = ???
 }
 
-case class FieldDtmf(slice: Slice, value: String) extends FieldContents {
+
+case class FieldDtmf(value: String) extends FieldContents {
   override def toJsValue: JsValue = JsString(value)
 
-  override def toHtmlField(fieldKey: FieldKey)(implicit namedSource: NamedSource): String = {
-    fieldDtmf(fieldKey.param, value).toString()
+  def toHtmlField(fieldEntry: FieldEntry): String = {
+    fieldDtmf(fieldEntry.param, value).toString()
   }
 
-  override val commandStringValue: String = value
+  /**
+   * Render this value as an RD-210 command string.
+   */
+  override def toCommand(fieldEntry: FieldEntry): String = ???
+
 }
 
-case class FieldBoolean(slice: Slice, value: Boolean) extends FieldContents {
+case class FieldBoolean( value: Boolean) extends FieldContents {
   override def toJsValue: JsValue = JsBoolean(value)
 
-  override def toHtmlField(fieldKey: FieldKey)(implicit namedSource: NamedSource): String =
-    fieldCheckbox(fieldKey.param, value).toString()
-
-  override val commandStringValue: String = {
-    if (value) "1" else "0"
+  override def toHtmlField(fieldEntry: FieldEntry): String = {
+    fieldCheckbox(fieldEntry.param, value).toString()
   }
+
+  /**
+   * Render this value as an RD-210 command string.
+   */
+  override def toCommand(fieldEntry: FieldEntry): String = ???
+
 }
 
-case class FieldSeqInts(slice: Slice, value: Int*) extends FieldContents {
+case class FieldSeqInts( value: Int*) extends FieldContents {
   override def toJsValue: JsValue = {
     JsArray(value.map((int: Int) => JsNumber(BigDecimal.int2bigDecimal(int))))
   }
 
-  override val commandStringValue: String = toString
+  /**
+   * Render this value as an RD-210 command string.
+   */
+  override def toCommand(fieldEntry: FieldEntry): String = ???
 
-  override def toCommand(fieldKey: FieldKey, commandTemplate: String): String = super.toCommand(fieldKey, commandTemplate)
 
-
-  override def toHtmlField(fieldKey: FieldKey)(implicit namedSource: NamedSource): String = {
-    fieldString(fieldKey.param, toString).toString()
+  override def toHtmlField(fieldEntry: FieldEntry): String = {
+    fieldString(fieldEntry.param, toString).toString()
   }
 
-  override def toString: String = value.map(_.toString).mkString(" ")
 }
 
-case class FieldSelect(slice: Slice, value: Int, options: Seq[SelectOption]) extends FieldContents {
-  override def toJsValue: JsValue = JsNumber(value)
+case class FieldSelect( value: Int) extends FieldContents {
+  override def toJsValue: JsValue = Json.toJson(value)
 
-  override def toHtmlField(fieldKey: FieldKey)(implicit namedSource: NamedSource): String = {
-    views.html.fieldSelect(value = value, paramId = fieldKey.param, options).toString()
+  override def toHtmlField(fieldEntry: FieldEntry): String = {
+    views.html.fieldSelect(value = value,
+      paramId = fieldEntry.param,
+      options = fieldEntry.fieldDefinition.uiInfo.options()).toString()
   }
 
-  override val commandStringValue: String = value.toString
+  /**
+   * Render this value as an RD-210 command string.
+   */
+  override def toCommand(fieldEntry: FieldEntry): String = ???
 
 }

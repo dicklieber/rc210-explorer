@@ -22,18 +22,23 @@ import net.wa9nnn.rc210.data.field.FieldExtractors.int8
 import net.wa9nnn.rc210.serial.{Memory, Slice, SlicePos}
 
 /**
- * FieldExtractors know how to parse a part of [[Memory]] and produce a [[FieldContents]]
+ * FieldExtractors know how to parse a [[Slice]] of [[Memory]] and produce a [[FieldContents]]
  *
- * @param bytesPerField how much to slice pff.
+ * @param bytesPerField how much to slice pff for this field.
  */
 
 abstract class SimpleFieldExtractor(val bytesPerField: Int) {
 
-  def apply(memory: Memory, offset: Int): FieldContents = {
-    val slicePos = SlicePos(offset, bytesPerField)
-    extract(memory(slicePos))
+  def apply(memory: Memory, offset: Int): (FieldContents, Slice) = {
+    val slice = memory(SlicePos(offset, bytesPerField))
+    extract(slice) -> slice
   }
 
+  /**
+   * in sub class.
+   * @param slice within [[Memory]]
+   * @return
+   */
   def extract(slice: Slice): FieldContents
 
   override def toString: String = name
@@ -44,13 +49,13 @@ abstract class SimpleFieldExtractor(val bytesPerField: Int) {
 object FieldExtractors {
 
   val bool: SimpleFieldExtractor = new SimpleFieldExtractor(1) {
-    override def extract(slice: Slice): FieldContents = FieldBoolean(slice, (slice.head > 0))
+    override def extract(slice: Slice): FieldContents = FieldBoolean(slice.head > 0)
 
     override val name: String = "bool"
   }
 
   val int8: SimpleFieldExtractor = new SimpleFieldExtractor(1) {
-    override def extract(slice: Slice) = FieldInt(slice, slice.head)
+    override def extract(slice: Slice) = FieldInt( slice.head)
 
     override val name: String = "int8"
   }
@@ -58,7 +63,7 @@ object FieldExtractors {
     override def extract(slice: Slice): FieldInt = {
       val iterator = slice.iterator
       val intValue = iterator.next() + iterator.next() * 256
-      FieldInt(slice, intValue)
+      FieldInt( intValue)
     }
 
     override val name: String = "int16"
@@ -69,7 +74,7 @@ object FieldExtractors {
       val ints = slice.grouped(2).map { slice =>
         int16.extract(slice)
       }
-      FieldSeqInts(slice, ints.map { f => f.asInstanceOf[FieldInt].value }: _*)
+      FieldSeqInts( ints.map { f => f.asInstanceOf[FieldInt].value }: _*)
     }
 
     override val name: String = "cwTones"
@@ -80,15 +85,13 @@ object FieldExtractors {
 // this works for any number up to 8 digits
 case class DtmfExtractor(maxDigits: Int) extends SimpleFieldExtractor(maxDigits + 1) with LazyLogging {
   override def extract(slice: Slice): FieldContents = {
-    val r = FieldDtmf(slice, new String(slice.data
+    FieldDtmf( new String(slice.data
       .takeWhile(_ != 0)
       .map(_.toChar) //todo how about A-D?
       .toArray
-    )
-    )
-    logger.trace("extract: {} from slice: {}", r, slice)
-    r
+    ))
   }
+
 
   override val name: String = "dtmf"
 }
@@ -98,7 +101,7 @@ case class SelectExtractor() extends SimpleFieldExtractor(1) with LazyLogging {
   override def extract(slice: Slice): FieldContents = {
 
     val contents: Int = int8.extract(slice).asInstanceOf[FieldInt].value
-    val r = FieldSelect(slice, contents)
+    val r = FieldSelect( contents)
     logger.trace("extract: {} from slice: {}", r, slice)
     r
   }

@@ -20,27 +20,41 @@ package net.wa9nnn.rc210.data.field
 import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
 import controllers.routes
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.named.NamedSource
-import play.twirl.api.Html
+import play.api.libs.json.{JsValue, Json}
 
 
-case class FieldEntry(fieldValue: FieldValue, fieldMetadata: FieldMetadata) extends RowSource with Ordered[FieldEntry] {
-  val fieldKey: FieldKey = fieldValue.fieldKey
+/**
+ *
+ * @param fieldDefinition sopecifc to this entry. e.g. template, name etc.
+ * @param fieldValue the value.
+ * @param candidate the,potential, next value.
+ */
+case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fieldValue: FieldContents, candidate: Option[FieldContents] = None) extends RowSource with Ordered[FieldEntry] {
+  def setCandidate(value: String): FieldEntry = {
+    //todo deal with string when putting a candidate.
+    // copy(candidate = Option(newValue))
+//   copy(candidate = Option())
+    throw new NotImplementedError() //todo
+  }
+
+  def acceptCandidate(): FieldEntry = copy(
+    candidate = None,
+    fieldValue = candidate.getOrElse(throw new IllegalStateException(s"No candidate to accept!")))
+
   val param: String = fieldKey.param
-  val prompt:String = fieldMetadata.prompt
+  val prompt: String = fieldDefinition.prompt
 
+ def toCommand: String = fieldValue.toCommand(this)
 
-  def toHtml()(implicit namedSource: NamedSource):String ={
-    fieldMetadata.fieldHtml(fieldKey, fieldValue.contents)
+  def toHtml: String = {
+    fieldValue.toHtmlField(this)
   }
 
   override def toString: String = fieldValue.toString
 
   override def toRow: Row = Row(
     fieldKey.fieldName,
-    fieldKey.key.toCell,
-    Cell(fieldValue.current)
-      .withCssClass(fieldValue.cssClass),
+    fieldKey.toCell,
     Cell("")
       .withImage(routes.Assets.versioned("images/pencil-square.png").url)
       //      .withUrl(routes.FieldEditorController.editOne(fieldKey.param).url)
@@ -48,6 +62,13 @@ case class FieldEntry(fieldValue: FieldValue, fieldMetadata: FieldMetadata) exte
   )
 
   override def compare(that: FieldEntry): Int = fieldKey compare that.fieldKey
+
+  def toJson: JsValue = {
+    Json.obj(
+      "value" -> fieldValue.toJsValue,
+      //      "candidate" -> candidate.map(_.toJsValue).getOrElse(JsNull)
+    )
+  }
 }
 
 
