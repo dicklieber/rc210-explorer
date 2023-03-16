@@ -4,15 +4,18 @@
 @import views.html.helper._
 @import net.wa9nnn.rc210.data.field.SelectEnumerationHelper
 @import net.wa9nnn.rc210.data.schedules.DayOfWeek
+@import net.wa9nnn.rc210.data.schedules.MonthOfYear
+@import net.wa9nnn.rc210.data.field.SelectKeyHelper
 @(schedule: Schedule, keyKind: KeyKind))
 
 <div class="container">
     @form(action = routes.ScheduleController.save()) {
+        <input type="hidden" name="key" value="@schedule.key">
         <table>
             <tbody>
                 <tr>
                     <td>Schedule</td>
-                    <td>@schedule.fieldKey.key</td>
+                    <td>@schedule.key</td>
                 </tr>
                 <tr>
                     <td>Day of Week</td>
@@ -26,7 +29,7 @@
                 </tr>
                 <tr>
                     <td>Day of Week</td>
-@*                    <td>@fieldSelect(schedule.monthOfYear.ordinal(), "monthOfYear", MonthOfYear.values().toIndexedSeq.map { f => SelectOption(f.ordinal(), f.toString) })</td>*@
+                    <td>@Html(SelectEnumerationHelper(MonthOfYear, schedule.monthOfYear.toString, "monthOfYear"))</td>
                 </tr>
                 <tr>
                     <td>Time</td>
@@ -34,10 +37,7 @@
                 </tr>
                 <tr>
                     <td>Macro To Run</td>
-                    @defining(SelectOptions.selectOptions.macroSelect.options()) { o: Seq[SelectOption] =>
-@*                        <td>@fieldSelect(schedule.macroToRun.number, "macro", o)*@
-                    </td>
-                    }
+                    <td>@Html(SelectKeyHelper( schedule.macroToRun, "macroToRun"))</td>
                 </tr>
             </tbody>
         </table>

@@ -17,13 +17,48 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.key.Key
+import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.key.{Key, KeyFormats}
 
-import java.util
+import java.time.LocalTime
+
+
+object FormHelpers {
+  //  implicit def form2String(name: String)(implicit map: Map[String, Seq[String]]): String = {
+  //    map(name).head
+  //  }
+
+  def form2OptInt(name: String)(implicit map: Map[String, Seq[String]]): Option[Int] = {
+    val option: Option[String] = map(name).headOption
+    val value: Option[Int] = option.map { s => s.toInt }
+    value
+  }
+
+  def form2FieldKey(name: String)(implicit map: Map[String, Seq[String]]): FieldKey = {
+    val value: Seq[String] = map(name)
+    FieldKey.fromParam(value.head)
+  }
+
+  def form2Key[T <: Key](name: String)(implicit map: Map[String, Seq[String]]): T = {
+    val value: Seq[String] = map(name)
+    KeyFormats.parseString(value.head).asInstanceOf[T]
+  }
+
+  def form2OptTime(name: String)(implicit map: Map[String, Seq[String]]): Option[LocalTime] = {
+    val value = map(name)
+    for {
+      value: String <- map(name)
+      if !value.isEmpty
+    } yield {
+      LocalTime.parse(value)
+    }
+  }.headOption
+}
 
 object SelectEnumerationHelper {
-  def apply(idValue: String, enumeration: Enumeration): enumeration.Value = {
-    enumeration.withName(idValue)
+  def apply(enumeration: Enumeration, name: String)(implicit map: Map[String, Seq[String]]): enumeration.Value = {
+    val value: Seq[String] = map(name)
+    enumeration.withName(value.head)
   }
 
   /**
@@ -67,4 +102,11 @@ object SelectKeyHelper {
     }
     views.html.fieldSelect(param, options).toString()
   }
+
+  def apply[T](name: String)(implicit map: Map[String, Seq[String]]): T = {
+    val value: Seq[String] = map(name)
+    KeyFormats.parseString(value.head).asInstanceOf[T]
+  }
+
+
 }

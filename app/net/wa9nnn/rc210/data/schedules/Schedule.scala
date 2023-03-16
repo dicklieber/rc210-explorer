@@ -6,6 +6,7 @@ import net.wa9nnn.rc210.MemoryExtractor
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field._
 import net.wa9nnn.rc210.data.schedules.DayOfWeek.DayOfWeek
+import net.wa9nnn.rc210.data.schedules.MonthOfYear.MonthOfYear
 import net.wa9nnn.rc210.key.KeyKindEnum._
 import net.wa9nnn.rc210.key.{Key, MacroKey, ScheduleKey}
 import net.wa9nnn.rc210.model.TriggerNode
@@ -16,19 +17,14 @@ import java.time.LocalTime
 
 /**
  *
- * @param fieldKey         for [[ScheduleKey]]
+ * @param key         for [[ScheduleKey]]
  * @param dayOfWeek    See [[DayOfWeekJava]]
  * @param weekInMonth  e.g 1 == 1st week in month.
  * @param monthOfYear  See [[MonthOfYear]]
  * @param localTime    illegal times are None.
  * @param macroToRun   e.g. "macro42"
  */
-case class Schedule(fieldKey: FieldKey,
-                    dayOfWeek: DayOfWeek,
-                    weekInMonth: Option[Int],
-                    monthOfYear: MonthOfYear,
-                    localTime: Option[LocalTime],
-                    macroToRun: MacroKey)
+case class Schedule(key: ScheduleKey, dayOfWeek: DayOfWeek, weekInMonth: Option[Int], monthOfYear: MonthOfYear, localTime: Option[LocalTime], macroToRun: MacroKey)
   extends FieldContents with TriggerNode {
 
 
@@ -74,7 +70,6 @@ case class Schedule(fieldKey: FieldKey,
     views.html.schedule(this, scheduleKey).toString()
 
 
-  override val key: Key = fieldKey.key
 }
 
 object Schedule extends LazyLogging with MemoryExtractor  {
@@ -102,27 +97,21 @@ object Schedule extends LazyLogging with MemoryExtractor  {
 
       //*4001 S * DOW * MOY * Hours * Minutes * Macro
 
-      val fieldKey = FieldKey("Schedule", ScheduleKey(setPoint + 1))
-      val schedule = Schedule( fieldKey,
-        dayOfWeek =   DayOfWeek(parts(0).asInstanceOf[Int]),
-        weekInMonth = parts(1).asInstanceOf[Option[Int]],
-        monthOfYear = parts(2).asInstanceOf[MonthOfYear],
-        localTime = {
-          val hour: Int = parts(3).asInstanceOf[Int]
-          val minute: Int = parts(4).asInstanceOf[Int]
-          try {
-            Option.when(hour < 25) {
-              LocalTime.of(hour, minute)
-            }
-          } catch {
-            case _: Exception =>
-              logger.error(s"setPoint: $setPoint hour: $hour, minute: $minute")
-              None
+      val key = ScheduleKey(setPoint + 1)
+      val schedule = Schedule(key, dayOfWeek = DayOfWeek(parts(0).asInstanceOf[Int]), weekInMonth = parts(1).asInstanceOf[Option[Int]], monthOfYear = parts(2).asInstanceOf[MonthOfYear], localTime = {
+        val hour: Int = parts(3).asInstanceOf[Int]
+        val minute: Int = parts(4).asInstanceOf[Int]
+        try {
+          Option.when(hour < 25) {
+            LocalTime.of(hour, minute)
           }
-        },
-        macroToRun = parts(5).asInstanceOf[MacroKey]
-      )
-      FieldEntry(this, fieldKey, schedule)
+        } catch {
+          case _: Exception =>
+            logger.error(s"setPoint: $setPoint hour: $hour, minute: $minute")
+            None
+        }
+      }, macroToRun = parts(5).asInstanceOf[MacroKey])
+      FieldEntry(this, FieldKey("Schedule",key), schedule)
     }
   }
 

@@ -215,7 +215,6 @@ object KeyFormats {
   implicit val fmtNamed: OFormat[NamedKey] = Json.format[NamedKey]
   implicit val fmtNamedData: OFormat[NamedData] = Json.format[NamedData]
 
-  implicit val fmtMOY: Format[MonthOfYear] = javaEnumFormat[MonthOfYear]
 
   implicit val fmtSchedule: OFormat[Schedule] = Json.format[Schedule]
 

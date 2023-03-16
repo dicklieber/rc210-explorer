@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.mapped
 
 import net.wa9nnn.rc210.DataProvider
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.field.{FieldContents, FieldEntry}
 import net.wa9nnn.rc210.key.Key
 import play.api.libs.json.JsArray
 
@@ -65,6 +65,10 @@ class MappedValues @Inject()(dataProvider: DataProvider) {
   def apply(fieldKey: FieldKey, value: String): Unit = {
     val entry: FieldEntry = map(fieldKey)
     map.put(fieldKey, entry.setCandidate(value))
+  }
+  def apply(fieldKey: FieldKey, fieldContents: FieldContents): Unit = {
+    val entry: FieldEntry = map(fieldKey)
+    map.put(fieldKey, entry.copy(fieldValue = fieldContents)) // todo candidate
   }
 
   def toJson: JsArray = {

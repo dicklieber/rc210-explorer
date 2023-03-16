@@ -45,7 +45,7 @@ class ScheduleBuilder extends LazyLogging {
   def putMoy(moys: Seq[Int]): Unit = {
     moys.zipWithIndex
       .foreach { case (moy, setPoint) =>
-        array(setPoint)(colMoy) = MonthOfYear.values()(moy)
+        array(setPoint)(colMoy) = MonthOfYear.apply(moy)
       }
   }
 
