@@ -1,5 +1,5 @@
-@import net.wa9nnn.rc210.data.field.SelectOption2
-@(paramId: String, options: Seq[SelectOption2])
+@import net.wa9nnn.rc210.data.field.SelectOption
+@(paramId: String, options: Seq[SelectOption])
 <div class="fieldNumber">
     <select name="@paramId" id="@paramId" class="form-select" aria-label="Default select example">
     @for(opt <- options) {

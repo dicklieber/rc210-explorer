@@ -17,7 +17,6 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.data.named.NamedSource
 import play.api.libs.json._
 import views.html._
 
@@ -130,12 +129,12 @@ case class FieldSelect( value: Int) extends FieldContents {
   override def toJsValue: JsValue = Json.toJson(value)
 
   override def toHtmlField(fieldEntry: FieldEntry): String = {
-/*
-    views.html.fieldSelect(value = value,
+    val value1: FieldContents = fieldEntry.fieldValue
+    val options: Seq[SelectOption] = fieldEntry.fieldDefinition.uiInfo.options()
+
+    views.html.fieldSelect(
       paramId = fieldEntry.param,
       options = fieldEntry.fieldDefinition.uiInfo.options()).toString()
-*/
-    throw new NotImplementedError() //todo
   }
 
   /**

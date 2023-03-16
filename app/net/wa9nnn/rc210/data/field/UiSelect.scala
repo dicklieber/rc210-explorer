@@ -46,15 +46,8 @@ object UiSelect {
     val r: Seq[SelectOption] = simple
       .zipWithIndex
       .map { case (string, index) =>
-        SelectOption(index , string)
+        SelectOption(index, string)
       }
     new UiSelect(r)
   }
 }
-
-/**
- * used in an HTML <select> e.g. <option value="@opt.value">@opt.display</option>
- *
- * @param id      internal
- * @param display what user of JSON sees.
- */

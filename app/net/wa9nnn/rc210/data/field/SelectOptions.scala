@@ -17,27 +17,16 @@
 
 package net.wa9nnn.rc210.data.field
 
+import akka.io.Tcp.SO
 import com.google.inject.Inject
-import net.wa9nnn.rc210.data.named.{NamedManager, NamedSource}
-import net.wa9nnn.rc210.key.KeyKindEnum.{macroKey, namebleKeyKinds}
+import net.wa9nnn.rc210.data.named.NamedManager
+import net.wa9nnn.rc210.key.KeyKindEnum.macroKey
 import net.wa9nnn.rc210.key.MacroKey
 
 import javax.inject.Singleton
 
 @Singleton
 class SelectOptions @Inject()(implicit namedManager: NamedManager) {
-  val dayOfWeek: UiSelect = UiSelect(
-    "EveryDay",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-    "Weekdays",
-    "Weekends"
-  )
   val dtmfMuteDigit: UiSelect = new UiSelect(
     Seq(SelectOption(1, "1st digit"),
       SelectOption(2, "2ndt digit"))
@@ -78,10 +67,23 @@ class SelectOptions @Inject()(implicit namedManager: NamedManager) {
     }
   }
 
-  SelectOptions.selectOptions = this}
-
-object SelectOptions {
-  var selectOptions:SelectOptions = _
+  SelectOptions.selectOptions = this
 }
 
-case class SelectOption(id:Int, display:String)
+object SelectOptions {
+  var selectOptions: SelectOptions = _
+}
+
+case class SelectOption(id:String, display: String, selected: Boolean = false) {
+  def select: SelectOption = copy(selected = true)
+
+  def html: String = {
+    val s: String = if (selected) " selected " else " "
+    s"""<option value="$id" $s >$display</option>"""
+  }
+}
+
+object SelectOption {
+  def apply(id:Int, display: String) :SelectOption = new SelectOption(id.toString, display)
+
+}

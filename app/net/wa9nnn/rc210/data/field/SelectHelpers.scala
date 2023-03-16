@@ -45,7 +45,7 @@ object FormHelpers {
   }
 
   def form2OptTime(name: String)(implicit map: Map[String, Seq[String]]): Option[LocalTime] = {
-    val value = map(name)
+    val value: Seq[String] = map(name)
     for {
       value: String <- map(name)
       if !value.isEmpty
@@ -70,8 +70,8 @@ object SelectEnumerationHelper {
    * @return
    */
   def apply[T](enumeration: Enumeration, current: String, param: String): String = {
-    val options: Seq[SelectOption2] = enumeration.values.toSeq.map { e: enumeration.Value =>
-      val opt = SelectOption2(e.toString, e.toString)
+    val options: Seq[SelectOption] = enumeration.values.toSeq.map { e: enumeration.Value =>
+      val opt = SelectOption(e.toString, e.toString)
       if (e.toString == current)
         opt.select
       else
@@ -94,7 +94,7 @@ object SelectKeyHelper {
 
     val keys: Seq[Key] = current.kind.allKeys
     val options = keys.map { k: Key =>
-      val opt = SelectOption2(k.toString, k.toString)
+      val opt = SelectOption(k.toString, k.toString)
       if (k == current)
         opt.select
       else

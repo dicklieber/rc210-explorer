@@ -20,7 +20,6 @@ package net.wa9nnn.rc210.data.field
 import net.wa9nnn.rc210.data.Dtmf.dtmfDigits
 import net.wa9nnn.rc210.data.field.FieldExtractors.{int16, int8, twoInts}
 import net.wa9nnn.rc210.data.field.UiRender._
-import net.wa9nnn.rc210.data.named.NamedSource
 
 import scala.util.Try
 
