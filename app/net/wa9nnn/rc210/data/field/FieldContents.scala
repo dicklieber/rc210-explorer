@@ -130,9 +130,12 @@ case class FieldSelect( value: Int) extends FieldContents {
   override def toJsValue: JsValue = Json.toJson(value)
 
   override def toHtmlField(fieldEntry: FieldEntry): String = {
+/*
     views.html.fieldSelect(value = value,
       paramId = fieldEntry.param,
       options = fieldEntry.fieldDefinition.uiInfo.options()).toString()
+*/
+    throw new NotImplementedError() //todo
   }
 
   /**

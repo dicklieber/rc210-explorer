@@ -22,7 +22,8 @@ import net.wa9nnn.rc210.command._
 import net.wa9nnn.rc210.data.functions.FunctionNode
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.named.{NamedData, NamedKey}
-import net.wa9nnn.rc210.data.schedules.{DayOfWeekJava, MonthOfYear, Schedule}
+import net.wa9nnn.rc210.data.schedules.DayOfWeek.DayOfWeek
+import net.wa9nnn.rc210.data.schedules.{MonthOfYear, Schedule}
 import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
 import play.api.libs.json._
 import play.api.mvc.PathBindable
@@ -214,7 +215,6 @@ object KeyFormats {
   implicit val fmtNamed: OFormat[NamedKey] = Json.format[NamedKey]
   implicit val fmtNamedData: OFormat[NamedData] = Json.format[NamedData]
 
-  implicit val fmtDOW: Format[DayOfWeekJava] = javaEnumFormat[DayOfWeekJava]
   implicit val fmtMOY: Format[MonthOfYear] = javaEnumFormat[MonthOfYear]
 
   implicit val fmtSchedule: OFormat[Schedule] = Json.format[Schedule]

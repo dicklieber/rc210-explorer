@@ -23,13 +23,14 @@ package net.wa9nnn.rc210.key
 object KeyKindEnum extends Enumeration {
 
 
-  def apply(sKeyKind:String): KeyKind = values.find { v =>
+  def apply(sKeyKind: String): KeyKind = values.find { v =>
     val keyKind = v.asInstanceOf[KeyKind]
     keyKind.prettyName equalsIgnoreCase (sKeyKind)
   }.get.asInstanceOf[KeyKind]
+
   /**
    *
-    * @return all [[KeyKind]]s in al[pha order.
+   * @return all [[KeyKind]]s in al[pha order.
    */
   def keyKinds: Seq[KeyKind] = {
     values
@@ -37,38 +38,51 @@ object KeyKindEnum extends Enumeration {
       .map(_.asInstanceOf[KeyKind])
       .sorted[KeyKind]
   }
+
   def namebleKeyKinds: Seq[KeyKind] = {
     keyKinds.filter(_.nameable)
   }
 
-  def createKey(keyKindName:String, number:Int): Key = {
+  def createKey(keyKindName: String, number: Int): Key = {
     val maybeValue: Option[KeyKindEnum.Value] = KeyKindEnum.values.find(_.asInstanceOf[KeyKind].matches(keyKindName))
     maybeValue.map(v =>
       v.asInstanceOf[KeyKind]
         .instantiate(number)
 
-    ).getOrElse{
+    ).getOrElse {
       println(keyKindName)
       throw new IllegalArgumentException(s"Can't make Key for KeyKind: $keyKindName Number: $number")
-  }
+    }
 
   }
 
   /**
    * Provides metadata about the [[Key]] types
    *
-   * @param maxN numbered key instances can go from 1 from 1 to maxN,
+   * @param maxN        numbered key instances can go from 1 from 1 to maxN,
    * @param instantiate create an instance of the Key for this [[KeyKind]] and number.
    */
-  case class KeyKind(maxN: Int, instantiate: Int => Key, nameable:Boolean = true) extends super.Val with Ordered [Value]{
+  case class KeyKind(maxN: Int, instantiate: Int => Key, nameable: Boolean = true) extends super.Val with Ordered[Value] {
+    /**
+     * All possible keys for this kind.
+     */
+    lazy val allKeys: Seq[Key] = {
+      for {
+        number <- 1 to maxN
+      } yield {
+        val r: Key = apply[Key](number)
+        r
+      }
+    }
+
     def matches(keyKindName: String): Boolean = {
-     keyKindName == prettyName
+      keyKindName == prettyName
     }
 
 
     override def compareTo(that: KeyKindEnum.Value): Int = toString() compareTo that.toString
 
-    def prettyName:String = toString()
+    def prettyName: String = toString()
       .dropRight(3)
       .capitalize
 
@@ -77,7 +91,7 @@ object KeyKindEnum extends Enumeration {
     }
   }
 
-  val alarmKey: KeyKind = KeyKind(5,  AlarmKey)
+  val alarmKey: KeyKind = KeyKind(5, AlarmKey)
   val dtmfMacroKey: KeyKind = KeyKind(195, DtmfMacroKey, nameable = false)
   val courtesyToneKey: KeyKind = KeyKind(10, CourtesyToneKey)
   val functionKey: KeyKind = KeyKind(1005, FunctionKey, nameable = false)

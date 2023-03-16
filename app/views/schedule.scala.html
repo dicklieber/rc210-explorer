@@ -1,12 +1,9 @@
-@import views.html.helper._
-@import helper._
+@import net.wa9nnn.rc210.data.field.{SelectOption, SelectOptions}
 @import net.wa9nnn.rc210.data.schedules.Schedule
 @import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
-@import net.wa9nnn.rc210.data.schedules.DayOfWeekJava
-@import net.wa9nnn.rc210.data.schedules.MonthOfYear
-@import net.wa9nnn.rc210.data.field.SelectOptions
-@import net.wa9nnn.rc210.data.field.SelectOption
-
+@import views.html.helper._
+@import net.wa9nnn.rc210.data.field.SelectEnumerationHelper
+@import net.wa9nnn.rc210.data.schedules.DayOfWeek
 @(schedule: Schedule, keyKind: KeyKind))
 
 <div class="container">
@@ -19,7 +16,7 @@
                 </tr>
                 <tr>
                     <td>Day of Week</td>
-                    <td>@fieldSelect(schedule.dayOfWeek.ordinal(), "dayOfWeek", DayOfWeekJava.values().toIndexedSeq.map { f => SelectOption(f.ordinal(), f.toString) })</td>
+                    <td>@Html(SelectEnumerationHelper(DayOfWeek, schedule.dayOfWeek.toString, "dayOfWeek"))</td>
                 </tr>
                 <tr>
                     <td>Week In Month</td>
@@ -29,7 +26,7 @@
                 </tr>
                 <tr>
                     <td>Day of Week</td>
-                    <td>@fieldSelect(schedule.monthOfYear.ordinal(), "monthOfYear", MonthOfYear.values().toIndexedSeq.map { f => SelectOption(f.ordinal(), f.toString) })</td>
+@*                    <td>@fieldSelect(schedule.monthOfYear.ordinal(), "monthOfYear", MonthOfYear.values().toIndexedSeq.map { f => SelectOption(f.ordinal(), f.toString) })</td>*@
                 </tr>
                 <tr>
                     <td>Time</td>
@@ -38,7 +35,7 @@
                 <tr>
                     <td>Macro To Run</td>
                     @defining(SelectOptions.selectOptions.macroSelect.options()) { o: Seq[SelectOption] =>
-                        <td>@fieldSelect(schedule.macroToRun.number, "macro", o)
+@*                        <td>@fieldSelect(schedule.macroToRun.number, "macro", o)*@
                     </td>
                     }
                 </tr>

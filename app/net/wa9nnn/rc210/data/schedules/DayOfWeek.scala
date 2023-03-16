@@ -15,27 +15,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.vocabulary
+package net.wa9nnn.rc210.data.schedules
 
-import net.wa9nnn.rc210.key.WordKey
-import org.specs2.mutable.Specification
+import net.wa9nnn.rc210.key.Key
+import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue}
 
-class VocabularySpec extends Specification {
-  "Vocabulary" should {
+object DayOfWeek extends Enumeration {
+  type DayOfWeek = Value
+  val EveryDay,
+  Monday,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday,
+  Sunday,
+  Weekdays,
+  Weekends = Value
 
-    "byText" in {
-      Vocabulary("Zero") must beEqualTo (Phrase(WordKey(0), "Zero"))
-      val phrase = Vocabulary("DVR10")
-      phrase.wordKey.number must beEqualTo (245)
-      phrase.string must beEqualTo ("DVR10")
+  implicit val fmtDayOfWeek: Format[DayOfWeek] = new Format[DayOfWeek] {
+    override def reads(json: JsValue): JsResult[DayOfWeek] = {
+      val str = json.as[String]
+      JsSuccess(DayOfWeek.withName(str))
     }
 
-    "last" >> {
-      Vocabulary(WordKey(255)).string must beEqualTo ("DVR20")
-    }
-
-    "byNumber" in {
-      Vocabulary(WordKey(0)).string must beEqualTo ("Zero")
-    }
+    override def writes(o: DayOfWeek): JsValue =
+      JsString(o.toString)
   }
 }

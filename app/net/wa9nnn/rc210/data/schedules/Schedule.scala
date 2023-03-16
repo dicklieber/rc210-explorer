@@ -5,8 +5,9 @@ import com.wa9nnn.util.tableui.{Header, Row}
 import net.wa9nnn.rc210.MemoryExtractor
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field._
+import net.wa9nnn.rc210.data.schedules.DayOfWeek.DayOfWeek
 import net.wa9nnn.rc210.key.KeyKindEnum._
-import net.wa9nnn.rc210.key.{Key, KeyKindEnum, MacroKey, ScheduleKey}
+import net.wa9nnn.rc210.key.{Key, MacroKey, ScheduleKey}
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 import play.api.libs.json.{JsString, JsValue}
@@ -23,7 +24,7 @@ import java.time.LocalTime
  * @param macroToRun   e.g. "macro42"
  */
 case class Schedule(fieldKey: FieldKey,
-                    dayOfWeek: DayOfWeekJava,
+                    dayOfWeek: DayOfWeek,
                     weekInMonth: Option[Int],
                     monthOfYear: MonthOfYear,
                     localTime: Option[LocalTime],
@@ -96,14 +97,14 @@ object Schedule extends LazyLogging with MemoryExtractor  {
     //DoSetPoint - 816-855
     for (setPoint <- 0 until 40) yield {
 
-      val parts = scheduleBuilder.getSetpointRow(setPoint)
+      val parts: Seq[Any] = scheduleBuilder.getSetpointRow(setPoint)
 
 
       //*4001 S * DOW * MOY * Hours * Minutes * Macro
 
       val fieldKey = FieldKey("Schedule", ScheduleKey(setPoint + 1))
       val schedule = Schedule( fieldKey,
-        dayOfWeek = parts.head.asInstanceOf[DayOfWeekJava],
+        dayOfWeek =   DayOfWeek(parts(0).asInstanceOf[Int]),
         weekInMonth = parts(1).asInstanceOf[Option[Int]],
         monthOfYear = parts(2).asInstanceOf[MonthOfYear],
         localTime = {

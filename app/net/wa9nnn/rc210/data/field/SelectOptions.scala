@@ -83,3 +83,5 @@ class SelectOptions @Inject()(implicit namedManager: NamedManager) {
 object SelectOptions {
   var selectOptions:SelectOptions = _
 }
+
+case class SelectOption(id:Int, display:String)

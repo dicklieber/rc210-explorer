@@ -46,7 +46,7 @@ object UiSelect {
     val r: Seq[SelectOption] = simple
       .zipWithIndex
       .map { case (string, index) =>
-        SelectOption(index, string)
+        SelectOption(index , string)
       }
     new UiSelect(r)
   }
@@ -58,4 +58,3 @@ object UiSelect {
  * @param id      internal
  * @param display what user of JSON sees.
  */
-case class SelectOption(id: Int, display: String)
