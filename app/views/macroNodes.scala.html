@@ -4,15 +4,33 @@
 @import views.html.helper._
 
 @import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
+@import net.wa9nnn.rc210.key.MacroKey
 @(macroNodes: Seq[MacroNode], keyKind: KeyKind)(implicit functionProvider: FunctionsProvider, namedSource: NamedSource)
 
 @tabbedmain(keyKind) {
     <div class="container">
     @form(action = routes.MacroNodeController.save()) {
         <table class="table table-bordered w-auto">
+            <thead class="table-primary">
+                <tr>
+                    <td>&nbsp;</td>
+                    <td title="Number or name">Macro</td>
+                    <td title="DTMF that will invoke thjis macro">DTMF</td>
+                    <td>Function</td>
+                </tr>
+            </thead>
         @for(macroNode <- macroNodes) {
             <tr>
-                <td>@macroNode.key</td>
+                <td>
+                    <button type="button" class="bi bi-pencil-square btn p-0"
+                    onclick="window.location.href='@routes.MacroNodeController.edit(macroNode.key.asInstanceOf[MacroKey])'"></button>
+                </td>
+                <td title="@macroNode.key.toString">
+                @namedSource.get(macroNode.key).getOrElse(macroNode.key.number)
+                </td>
+                <td class="text-end">
+                    @macroNode.dtmf
+                </td>
                 <td>
                     <table class="table table-bordered table-sm w-auto" >
                     @for(functionKey <- macroNode.functions) {

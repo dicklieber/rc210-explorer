@@ -95,7 +95,7 @@ object KeyKindEnum extends Enumeration {
   val dtmfMacroKey: KeyKind = KeyKind(195, DtmfMacroKey, nameable = false)
   val courtesyToneKey: KeyKind = KeyKind(10, CourtesyToneKey)
   val functionKey: KeyKind = KeyKind(1005, FunctionKey, nameable = false)
-  val macroKey: KeyKind = KeyKind(105, MacroKey)
+  val macroKey: KeyKind = KeyKind(105, MacroKey(_))
   val messageMacroKey: KeyKind = KeyKind(70, MessageMacroKey)
   val commonKey: KeyKind = KeyKind(1, CommonKey)
   val wordKey: KeyKind = KeyKind(256, WordKey, nameable = false)

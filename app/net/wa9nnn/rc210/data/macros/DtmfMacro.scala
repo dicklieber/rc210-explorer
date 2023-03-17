@@ -12,11 +12,11 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 object DtmfMacroExractor {
 
-  def apply(implicit memory: Memory): DtmfMacros = {
+  def apply( memory: Memory): DtmfMacros = {
     val mai = new AtomicInteger(1) // cause macro numbers start at 1
 
 
-   def dtmfMap(slicePos: SlicePos, memory: Memory): Seq[(MacroKey, Dtmf)] = {
+   def dtmfMap(slicePos: SlicePos): Seq[(MacroKey, Dtmf)] = {
       val macrosSlice = memory(slicePos)
       macrosSlice.data
         .grouped(5)
@@ -26,8 +26,8 @@ object DtmfMacroExractor {
         }
     }
 
-    val longMacroDtmf = dtmfMap(SlicePos("//MacroRecallCode - 2625-2824"), memory)
-    val shortMacroDtmf = dtmfMap(SlicePos("//ShortMacroRecallCode - 3175-3424"), memory)
+    val longMacroDtmf = dtmfMap(SlicePos("//MacroRecallCode - 2625-2824"))
+    val shortMacroDtmf = dtmfMap(SlicePos("//ShortMacroRecallCode - 3175-3424"))
     DtmfMacros(longMacroDtmf.concat(shortMacroDtmf))
   }
 }
@@ -38,7 +38,7 @@ case class DtmfMacros(a: Seq[(MacroKey, Dtmf)]) {
     (k.kind, k.number)
   }
 
-  def apply(macroKey: MacroKey): Dtmf = {
-    map.getOrElse(macroKey, Dtmf())
+  def apply(macroKey: MacroKey): Option[Dtmf] = {
+    map.get(macroKey)
   }
 }

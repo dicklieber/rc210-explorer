@@ -120,4 +120,6 @@ case class NamedData(data: Seq[NamedKey])
 
 trait NamedSource {
   def apply(key: Key): String
+  def get(key: Key): Option[String]
+
 }

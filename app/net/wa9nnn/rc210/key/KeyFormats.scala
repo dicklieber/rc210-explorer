@@ -180,19 +180,7 @@ object KeyFormats {
   }
 
 
-  implicit def keyPathBinder(implicit intBinder: PathBindable[Key]): PathBindable[Key] = new PathBindable[Key] {
-    override def bind(key: String, fromPath: String): Either[String, Key] = {
-      try {
-        Right(parseString(fromPath))
-      } catch {
-        case e: Exception =>
-          Left(e.getMessage)
-      }
-    }
 
-    override def unbind(key: String, rcKey: Key): String =
-      rcKey.toString
-  }
 
   implicit def keyKindPathBinder(implicit intBinder: PathBindable[KeyKind]): PathBindable[KeyKind] = new PathBindable[KeyKind] {
     override def bind(key: String, fromPath: String): Either[String, KeyKind] = {

@@ -10,6 +10,7 @@ GET         /mappedValues              controllers.RawDataController.mappedItems
 #GET         /schedules                 controllers.RawDataController.schedules()
 GET         /functions                 controllers.RawDataController.functions()
 GET         /macros                    controllers.MacroNodeController.index()
+GET         /macro/edit/:key           controllers.MacroNodeController.edit(key:MacroKey)
 POST        /macro/save                controllers.MacroNodeController.save()
 #GET         /messageMacros             controllers.RawDataController.messageMacros()
 GET         /vocabulary                controllers.RawDataController.vocabulary()

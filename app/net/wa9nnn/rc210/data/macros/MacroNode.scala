@@ -3,7 +3,7 @@ package net.wa9nnn.rc210.data.macros
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row}
 import net.wa9nnn.rc210.MemoryExtractor
-import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.{Dtmf, FieldKey}
 import net.wa9nnn.rc210.data.field._
 import net.wa9nnn.rc210.key.KeyKindEnum.{KeyKind, macroKey, scheduleKey}
 import net.wa9nnn.rc210.key.{FunctionKey, Key, KeyKindEnum, MacroKey}
@@ -12,7 +12,13 @@ import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 
 import java.util.concurrent.atomic.AtomicInteger
 
-case class MacroNode(fieldKey: FieldKey, functions: Seq[FunctionKey]) extends FieldContents  with TriggerNode{
+/**
+ *
+ * @param fieldKey unique id for this macro.
+ * @param functions that this kacro oinvokes.
+ * @param dtmf that can invoke this macro.
+ */
+case class MacroNode(fieldKey: FieldKey, functions: Seq[FunctionKey], dtmf: Option[Dtmf] = None) extends FieldContents  with TriggerNode{
   def enabled: Boolean = functions.nonEmpty
 
 
@@ -58,6 +64,8 @@ object MacroNode extends LazyLogging with MemoryExtractor with FieldDefinition {
   def header(count: Int): Header = Header(s"Macros ($count)", "Key",  "Functions")
 
   override def extract(memory: Memory): Seq[FieldEntry] = {
+
+    val dtmfMap: DtmfMacros = DtmfMacroExractor( memory)
     val mai = new AtomicInteger(1)
 
     def macroBuilder(macroSlicePos: SlicePos, memory: Memory, bytesPerMacro: Int) = {
@@ -67,7 +75,7 @@ object MacroNode extends LazyLogging with MemoryExtractor with FieldDefinition {
           val functions: Seq[FunctionKey] = bytes.takeWhile(_ != 0).map(fn => FunctionKey(fn))
           val key: MacroKey = KeyKindEnum.macroKey[MacroKey](mai.getAndIncrement())
           val fieldKey = key.fieldKey("Macro")
-          MacroNode(fieldKey, functions)
+          MacroNode(fieldKey, functions, dtmfMap(key))
         }.toSeq
     }
 

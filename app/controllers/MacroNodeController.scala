@@ -17,6 +17,7 @@
 
 package controllers
 
+import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.mapped.MappedValues
@@ -39,6 +40,12 @@ class MacroNodeController @Inject()(val controllerComponents: ControllerComponen
       fieldEntry.fieldValue.asInstanceOf[MacroNode]
     }
     Ok(macroNodes(value,KeyKindEnum.macroKey))
+  }
+  def edit(key:MacroKey): Action[AnyContent] = Action { implicit request =>
+
+println(key)
+
+    Ok("")
   }
 
   def save(): Action[AnyContent] = Action { implicit request =>

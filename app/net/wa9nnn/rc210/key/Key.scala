@@ -20,18 +20,23 @@ package net.wa9nnn.rc210.key
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.key.KeyKindEnum._
+import play.api.mvc.PathBindable
+
+import javax.xml.bind.DatatypeConverter.parseString
 
 /**
  * Most things in this program are identified by a [[Key]].
  * Each kind of item has a specific type of Key as declared below.
  *
  * All have a swtring form e.g. "port2 these are uwsed in JSON for of a key etc.
+ *
  * @param kind   e.g. port, schedule, macro.
  * @param number 1 to maxN in [[KeyKind]]
  */
 sealed abstract class Key(val kind: KeyKind, val number: Int) extends CellProvider with Ordered[Key] {
 
   val name: String = kind.prettyName
+
   def fieldKey[T](fieldName: String): FieldKey = FieldKey(fieldName, this)
 
   override val toString: String = s"$name$number"
@@ -53,9 +58,45 @@ case class AlarmKey(override val number: Int) extends Key(alarmKey, number)
 
 case class MacroKey(override val number: Int) extends Key(macroKey, number)
 
+/*
+object MacroKey {
+  implicit def keyPathBinder(implicit intBinder: PathBindable[MacroKey]): PathBindable[MacroKey] = new PathBindable[MacroKey] {
+    override def bind(sKey: String, fromPath: String): Either[String, MacroKey] = {
+      throw new NotImplementedError() //todo
+/*
+      try {
+        Right(KeyFormats.parseString(parseString(fromPath)).asInstanceOf[MacroKey])
+      } catch {
+        case e: Exception =>
+          Left(e.getMessage)
+      }
+*/
+    }
+
+    override def unbind(key: String, rcKey: MacroKey): String =
+      rcKey.toString
+  }
+}
+*/
+object MacroKey {
+  implicit def pathBinder: PathBindable[MacroKey] = new PathBindable[MacroKey] {
+    override def bind(key: String, value: String): Either[String, MacroKey] = {
+
+      Right(KeyFormats.parseString(value).asInstanceOf[MacroKey])
+    }
+
+    override def unbind(key: String, macroKey: MacroKey): String = {
+      macroKey.toString
+    }
+  }
+}
+
+
+
 case class MessageMacroKey(override val number: Int) extends Key(messageMacroKey, number)
 
 case class FunctionKey(override val number: Int) extends Key(functionKey, number)
+
 case class ScheduleKey(override val number: Int) extends Key(scheduleKey, number)
 
 case class WordKey(override val number: Int) extends Key(wordKey, number)
