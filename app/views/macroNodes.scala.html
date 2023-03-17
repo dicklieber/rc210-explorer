@@ -5,7 +5,7 @@
 
 @import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
 @import net.wa9nnn.rc210.key.MacroKey
-@(macroNodes: Seq[MacroNode], keyKind: KeyKind)(implicit functionProvider: FunctionsProvider, namedSource: NamedSource)
+@(macroNodes: Seq[MacroNode], keyKind: KeyKind)(implicit functionsProvider: FunctionsProvider, namedSource: NamedSource)
 
 @tabbedmain(keyKind) {
     <div class="container">
@@ -36,7 +36,7 @@
                     @for(functionKey <- macroNode.functions) {
                         <tr>
                             <td class="text-end">@functionKey.number</td>
-                            <td>@functionProvider(functionKey).map(_.description).getOrElse("???")</td>
+                            <td>@functionsProvider(functionKey).map(_.description).getOrElse("???")</td>
                         </tr>
                     }
                     </table>

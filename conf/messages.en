@@ -3,3 +3,6 @@
 constraint.required=Required
 toolarge={0} is too long, max: {1}
 tooLong={0} is to long, max (1)!
+
+format.dtmf=Touch tone digits
+schedule.dtmf= sdtmf

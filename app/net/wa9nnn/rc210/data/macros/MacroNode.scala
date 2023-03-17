@@ -14,11 +14,11 @@ import java.util.concurrent.atomic.AtomicInteger
 
 /**
  *
- * @param fieldKey unique id for this macro.
+ * @param fieldKey  unique id for this macro.
  * @param functions that this kacro oinvokes.
- * @param dtmf that can invoke this macro.
+ * @param dtmf      that can invoke this macro.
  */
-case class MacroNode(fieldKey: FieldKey, functions: Seq[FunctionKey], dtmf: Option[Dtmf] = None) extends FieldContents  with TriggerNode{
+case class MacroNode(key: MacroKey, functions: Seq[FunctionKey], dtmf: Option[Dtmf] = None) extends FieldContents with TriggerNode {
   def enabled: Boolean = functions.nonEmpty
 
 
@@ -52,20 +52,16 @@ case class MacroNode(fieldKey: FieldKey, functions: Seq[FunctionKey], dtmf: Opti
   override def triggerDescription: String = ???
 
   override def toRow: Row = {
-  throw new NotImplementedError() //todo
+    throw new NotImplementedError() //todo
   }
-
-  val key: Key = fieldKey.key
-
-
 }
 
 object MacroNode extends LazyLogging with MemoryExtractor with FieldDefinition {
-  def header(count: Int): Header = Header(s"Macros ($count)", "Key",  "Functions")
+  def header(count: Int): Header = Header(s"Macros ($count)", "Key", "Functions")
 
   override def extract(memory: Memory): Seq[FieldEntry] = {
 
-    val dtmfMap: DtmfMacros = DtmfMacroExractor( memory)
+    val dtmfMap: DtmfMacros = DtmfMacroExractor(memory)
     val mai = new AtomicInteger(1)
 
     def macroBuilder(macroSlicePos: SlicePos, memory: Memory, bytesPerMacro: Int) = {
@@ -74,8 +70,7 @@ object MacroNode extends LazyLogging with MemoryExtractor with FieldDefinition {
         .map { bytes =>
           val functions: Seq[FunctionKey] = bytes.takeWhile(_ != 0).map(fn => FunctionKey(fn))
           val key: MacroKey = KeyKindEnum.macroKey[MacroKey](mai.getAndIncrement())
-          val fieldKey = key.fieldKey("Macro")
-          MacroNode(fieldKey, functions, dtmfMap(key))
+          MacroNode(key, functions, dtmfMap(key))
         }.toSeq
     }
 
@@ -83,7 +78,7 @@ object MacroNode extends LazyLogging with MemoryExtractor with FieldDefinition {
       .concat(macroBuilder(SlicePos("//ShortMacro - 2825-3174"), memory, 7))
 
     val r: Seq[FieldEntry] = macros.map { m: MacroNode =>
-      FieldEntry(this,m.fieldKey, m )
+      FieldEntry(this, FieldKey("Schedule", m.key), m)
     }
     r
   }
@@ -95,7 +90,7 @@ object MacroNode extends LazyLogging with MemoryExtractor with FieldDefinition {
   override val kind: KeyKind = macroKey
 
   override def prompt: String = ""
-//  override def fieldHtml(fieldKey: FieldKey, fieldContents: FieldContents)(implicit namedSource: NamedSource): Html = ???
+  //  override def fieldHtml(fieldKey: FieldKey, fieldContents: FieldContents)(implicit namedSource: NamedSource): Html = ???
 }
 
 

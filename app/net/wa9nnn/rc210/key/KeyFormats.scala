@@ -178,6 +178,11 @@ object KeyFormats {
     val number: Int = Option(sNnumber).map(_.toInt).getOrElse(0)
     KeyKindEnum.createKey(kind, number)
   }
+  def apply[T](string: String): T = {
+    val r(kind, sNnumber) = string
+    val number: Int = Option(sNnumber).map(_.toInt).getOrElse(0)
+    KeyKindEnum.createKey(kind, number).asInstanceOf[T]
+  }
 
 
 

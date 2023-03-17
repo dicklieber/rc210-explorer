@@ -17,54 +17,75 @@
 
 package controllers
 
-import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.field.{FieldContents, FieldEntry}
+import net.wa9nnn.rc210.data.{Dtmf, FieldKey}
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.mapped.MappedValues
-import net.wa9nnn.rc210.data.named.NamedManager
-import net.wa9nnn.rc210.key.{KeyKindEnum, MacroKey}
+import net.wa9nnn.rc210.data.named.{NamedManager, NamedSource}
+import net.wa9nnn.rc210.key.{FunctionKey, KeyKindEnum, MacroKey}
+import play.api.data.Forms._
+import play.api.data._
 import play.api.mvc._
 import views.html.macroNodes
+
+import javax.inject.Inject
+import play.api.i18n._
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton()
-class MacroNodeController @Inject()(val controllerComponents: ControllerComponents,
+class MacroNodeController @Inject()(val mcc: MessagesControllerComponents,
                                     mappedValues: MappedValues
-                                   )(implicit namedManager: NamedManager, functionsProvider: FunctionsProvider) extends BaseController {
+                                   )(implicit namedSource: NamedManager, functionsProvider: FunctionsProvider) extends MessagesAbstractController(mcc) {
 
+  import net.wa9nnn.rc210.data.field.Formatters._
+
+  val macroForm: Form[MacroNode] = Form(
+    mapping(
+      "key" -> of[MacroKey],
+      "functions" -> seq(of[FunctionKey]),
+      "dtmf" -> optional(of[Dtmf])
+    )(MacroNode.apply)(MacroNode.unapply)
+  )
+  val editForm: Form[MacroEdit] = Form(
+    mapping(
+      "schedule" -> macroForm.mapping,
+      "name" -> text
+    )(MacroEdit.apply)(MacroEdit.unapply)
+  )
 
   def index(): Action[AnyContent] = Action { implicit request =>
 
     val value: Seq[MacroNode] = mappedValues.apply(KeyKindEnum.macroKey).map { fieldEntry =>
       fieldEntry.fieldValue.asInstanceOf[MacroNode]
     }
-    Ok(macroNodes(value,KeyKindEnum.macroKey))
+    Ok(macroNodes(value, KeyKindEnum.macroKey))
   }
-  def edit(key:MacroKey): Action[AnyContent] = Action { implicit request =>
 
-println(key)
+  def edit(key: MacroKey): Action[AnyContent] = Action { implicit request =>
 
-    Ok("")
+    val fieldKey = FieldKey("Schedule", key)
+    val maybeEntry: Option[FieldEntry] = mappedValues(fieldKey)
+
+    val macroNode: MacroNode = maybeEntry.get.fieldValue.asInstanceOf[MacroNode]
+
+//    val macroNode = MacroNode(key, Seq.empty, Option(Dtmf("12A")))
+    val name = namedSource(key)
+
+    val filledInForm = editForm.fill(MacroEdit(macroNode, name))
+    val field = filledInForm("scheduke.functions")
+
+
+    Ok(views.html.macroEditor(filledInForm))
   }
 
   def save(): Action[AnyContent] = Action { implicit request =>
     implicit val valuesMap = request.body.asFormUrlEncoded.get
-    /*
-
-      val schedule =   Schedule(key = form2Key("key"),
-          dayOfWeek = SelectEnumerationHelper(DayOfWeek, "dayOfWeek"),
-          weekInMonth = form2OptInt("weekInMonth"),
-          monthOfYear = SelectEnumerationHelper(MonthOfYear, "monthOfYear"),
-          localTime = form2OptTime("localTime"),
-          macroToRun = SelectKeyHelper("macroToRun"))
-
-        val fieldKey = FieldKey("Schedule", schedule.key)
-        mappedValues.apply(fieldKey, schedule)
-    */
 
     val sKeyKind = KeyKindEnum.macroKey.toString()
     Redirect(routes.EditorController.edit(sKeyKind, MacroKey(1).toString))
   }
-
 }
+
+case class MacroEdit(macroNode: MacroNode, name: String)

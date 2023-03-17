@@ -1,0 +1,45 @@
+@import net.wa9nnn.rc210.data.named.NamedSource
+@import net.wa9nnn.rc210.key.KeyKindEnum
+@import net.wa9nnn.rc210.data.functions.FunctionsProvider
+@(editForm: Form[MacroEdit])(implicit namedSource: NamedSource, functionsProvider: FunctionsProvider, messagesProvider: MessagesProvider)
+    @tabbedmain(KeyKindEnum.macroKey) {
+        <div class="row">
+            <div class="col col-md-auto ">
+                <div class="row">
+                    <h2>Macro</h2>
+                    @editForm("schedule.key").value
+                    @helper.inputText(editForm("name"))
+
+                </div>
+                <h2>DTMF</h2>
+                @helper.inputText(editForm("schedule.dtmf"))
+
+            </div>
+            <div class="col col-md-auto ">
+                <h2>Currently assigned functions</h2>
+                <ul>
+                @helper.repeat(editForm("schedule.functions")) { f =>
+                    <li>@f.value</li>
+                }
+                </ul>
+            </div>
+            <div class="col col-md-auto ">
+                <h2>Available Functions</h2>
+
+                <div class="dropdown">
+                    <button onclick="myFunction()" class="dropbtn">Dropdown</button>
+                    <div id="myDropdown" class="dropdown-content">
+                        <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+                        <ul>
+                        @for( function <- functionsProvider.functions) {
+                            <li>@function.key.number @function.description)</li>
+                        }
+                        </ul>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    }
