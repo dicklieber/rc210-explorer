@@ -42,9 +42,9 @@ object Formatters {
   implicit object FunctionKeyFormatter extends Formatter[FunctionKey] {
     override val format: Option[(String, Nil.type)] = Some(("format.functionKey", Nil))
 
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], FunctionKey] = parsing(KeyFormats[FunctionKey], "error.url", Nil)(key, data)
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], FunctionKey] = parsing(s => FunctionKey(s.toInt), "error.url", Nil)(key, data)
 
-    override def unbind(key: String, value: FunctionKey): Map[String, String] = Map(key -> value.toString)
+    override def unbind(key: String, value: FunctionKey): Map[String, String] = Map(key -> value.number.toString)
   }
 
   implicit object DtmfFormatter extends Formatter[Dtmf] {

@@ -66,3 +66,8 @@ a.dropbtn {
 .dropdown a:hover {background-color: #ddd;}
 
 .show {display: block;}
+
+
+.functionList td{
+    padding-right: 14px;
+}

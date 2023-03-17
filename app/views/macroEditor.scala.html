@@ -1,6 +1,7 @@
 @import net.wa9nnn.rc210.data.named.NamedSource
 @import net.wa9nnn.rc210.key.KeyKindEnum
 @import net.wa9nnn.rc210.data.functions.FunctionsProvider
+@import net.wa9nnn.rc210.key.FunctionKey
 @(editForm: Form[MacroEdit])(implicit namedSource: NamedSource, functionsProvider: FunctionsProvider, messagesProvider: MessagesProvider)
     @tabbedmain(KeyKindEnum.macroKey) {
         <div class="row">
@@ -15,26 +16,35 @@
                 @helper.inputText(editForm("schedule.dtmf"))
 
             </div>
-            <div class="col col-md-auto ">
+            <div class="col col-md-auto functionList">
                 <h2>Currently assigned functions</h2>
-                <ul>
+                <table>
                 @helper.repeat(editForm("schedule.functions")) { f =>
-                    <li>@f.value</li>
+                    @defining(functionsProvider.apply(FunctionKey(f.value.get.toInt)).get) { function =>
+                        <tr>
+                        <tr>
+                            <td class="text-end">@function.key.number</td>
+                            <td class="text-nowrap">@function.description</td>
+                        </tr>
+
+                    }
                 }
-                </ul>
+                </table>
             </div>
             <div class="col col-md-auto ">
                 <h2>Available Functions</h2>
 
                 <div class="dropdown">
-                    <button onclick="myFunction()" class="dropbtn">Dropdown</button>
-                    <div id="myDropdown" class="dropdown-content">
+                    <div id="myDropdown" class="dropdown-content show functionList">
                         <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
-                        <ul>
-                        @for( function <- functionsProvider.functions) {
-                            <li>@function.key.number @function.description)</li>
+                        <table>
+                        @for(function <- functionsProvider.functions) {
+                            <tr>
+                                <td class="text-end">@function.key.number</td>
+                                <td class="text-nowrap">@function.description</td>
+                            </tr>
                         }
-                        </ul>
+                        </table>
                     </div>
                 </div>
 
