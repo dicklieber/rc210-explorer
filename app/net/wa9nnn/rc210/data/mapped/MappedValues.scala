@@ -21,6 +21,7 @@ import net.wa9nnn.rc210.DataProvider
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.{FieldContents, FieldEntry}
 import net.wa9nnn.rc210.key.Key
+import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
 import play.api.libs.json.JsArray
 
 import javax.inject.{Inject, Singleton}
@@ -42,6 +43,12 @@ class MappedValues @Inject()(dataProvider: DataProvider) {
     map.values.toSeq.sorted
   }
 
+
+  def apply(keyKind: KeyKind):Seq[FieldEntry]={
+  map.values.filter(_.fieldKey.key.kind == keyKind)
+    .toSeq
+    .sortBy(_.fieldKey)
+  }
   def apply(fieldKey: FieldKey): Option[FieldEntry] = {
     map.values.find(_.fieldKey == fieldKey)
   }

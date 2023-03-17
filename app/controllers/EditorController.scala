@@ -18,6 +18,7 @@
 package controllers
 
 import akka.util.Timeout
+import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.named.{NamedKey, NamedManager}
 import net.wa9nnn.rc210.key.KeyKindEnum.{KeyKind, commonKey}
@@ -29,7 +30,7 @@ import scala.concurrent.duration.DurationInt
 
 class EditorController @Inject()(val controllerComponents: ControllerComponents,
                                  mappedValues: MappedValues
-                                )(implicit namedManager: NamedManager)
+                                )(implicit namedManager: NamedManager, functionsProvider: FunctionsProvider)
   extends BaseController {
 
   implicit val timeout: Timeout = 5.seconds
@@ -37,13 +38,19 @@ class EditorController @Inject()(val controllerComponents: ControllerComponents,
 
   def editUnselected(sKeyKind: String): Action[AnyContent] = Action {
     val keyKind: KeyKind = KeyKindEnum.apply(sKeyKind)
-    val nk: Seq[NamedKey] = Keys.apply(keyKind).map { key =>
-      NamedKey(key, namedManager.get(key).getOrElse(""))
+    keyKind match {
+
+      case net.wa9nnn.rc210.key.KeyKindEnum.macroKey =>
+        Redirect(routes.MacroNodeController.index())
+      case _ =>
+        val nk: Seq[NamedKey] = Keys.apply(keyKind).map { key =>
+          NamedKey(key, namedManager.get(key).getOrElse(""))
+        }
+        if (keyKind == KeyKindEnum.commonKey)
+          Redirect(routes.EditorController.edit(sKeyKind, CommonKey().toString))
+        else
+          Ok(views.html.editor(keyKind, nk, Seq.empty))
     }
-    if (keyKind == KeyKindEnum.commonKey)
-      Redirect(routes.EditorController.edit(sKeyKind, CommonKey().toString))
-    else
-      Ok(views.html.editor(keyKind, nk, Seq.empty))
 
   }
 

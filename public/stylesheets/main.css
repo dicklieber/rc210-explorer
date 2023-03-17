@@ -53,6 +53,11 @@
     border: 1px solid black;
 }
 
+.functionsTable{
+    border-collapse: collapse;
+    border: 1px;
+}
+
 .number {
     text-align: right;
     white-space: nowrap;

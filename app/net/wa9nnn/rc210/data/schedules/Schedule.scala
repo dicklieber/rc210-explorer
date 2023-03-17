@@ -68,8 +68,6 @@ case class Schedule(key: ScheduleKey, dayOfWeek: DayOfWeek, weekInMonth: Option[
    */
   override def toHtmlField(fieldEntry: FieldEntry): String =
     views.html.schedule(this, scheduleKey).toString()
-
-
 }
 
 object Schedule extends LazyLogging with MemoryExtractor  {

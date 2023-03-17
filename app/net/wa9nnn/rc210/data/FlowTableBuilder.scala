@@ -15,21 +15,21 @@ class FlowTableBuilder @Inject()(functions: FunctionsProvider, @Named("values-ac
   def apply(): Table = {
 
 /*
-    val rows: Seq[Row] =  (valuesActor ? Values(KeyKindEnum.macroKey)).mapTo[Seq[MacroNode]].map{macroNode: Seq[MacroNode] =>
+    val rows: Seq[Row] =  (valuesActor ? Values(KeyKindEnum.macroKey)).mapTo[Seq[MacroNode]].map{macroNodes: Seq[MacroNode] =>
       val macroFunctionsTable: Table = {
-        val functionRows = macroNode.functions.flatMap { functionKey =>
+        val functionRows = macroNodes.functions.flatMap { functionKey =>
           functions(functionKey).map(_.toRow)
         }
         Table(FunctionNode.header(functionRows.length), functionRows)
       }
       val triggerTable: Table = {
-        val triggers: Seq[TriggerNode] = rc210Data.triggers(macroNode.key)
+        val triggers: Seq[TriggerNode] = rc210Data.triggers(macroNodes.key)
 
         Table(TriggerNode.header(triggers.length), triggers.map(_.triggerRow))
       }
       val triggersCell: Cell = TableInACell(triggerTable)
       val macroFunctionTable: Cell = TableInACell(macroFunctionsTable)
-      Row(Seq( macroRowHeaderCell(macroNode.key),  triggersCell, macroFunctionTable))
+      Row(Seq( macroRowHeaderCell(macroNodes.key),  triggersCell, macroFunctionTable))
     }
 */
     val header = Header("Flow", "Macro", "Triggers", "Functions")

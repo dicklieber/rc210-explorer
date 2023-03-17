@@ -1,0 +1,31 @@
+@import net.wa9nnn.rc210.data.functions.FunctionsProvider
+@import net.wa9nnn.rc210.data.macros.MacroNode
+@import net.wa9nnn.rc210.data.named.NamedSource
+@import views.html.helper._
+
+@import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
+@(macroNodes: Seq[MacroNode], keyKind: KeyKind)(implicit functionProvider: FunctionsProvider, namedSource: NamedSource)
+
+@tabbedmain(keyKind) {
+    <div class="container">
+    @form(action = routes.MacroNodeController.save()) {
+        <table class="table table-bordered w-auto">
+        @for(macroNode <- macroNodes) {
+            <tr>
+                <td>@macroNode.key</td>
+                <td>
+                    <table class="table table-bordered table-sm w-auto" >
+                    @for(functionKey <- macroNode.functions) {
+                        <tr>
+                            <td class="text-end">@functionKey.number</td>
+                            <td>@functionProvider(functionKey).map(_.description).getOrElse("???")</td>
+                        </tr>
+                    }
+                    </table>
+                </td>
+            </tr>
+        }
+        </table>
+    }
+    </div>
+}

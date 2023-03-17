@@ -1,7 +1,8 @@
 @import net.wa9nnn.rc210.data.field.FieldEntry
 @import net.wa9nnn.rc210.data.named.{NamedKey, NamedSource}
 @import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
-@(keyKind: KeyKind, keys: Seq[NamedKey], fieldEntries: Seq[FieldEntry])(implicit namedSource: NamedSource)
+@import net.wa9nnn.rc210.data.functions.FunctionsProvider
+@(keyKind: KeyKind, keys: Seq[NamedKey], fieldEntries: Seq[FieldEntry])(implicit namedSource: NamedSource, functionsProvider: FunctionsProvider)
 @tabbedmain(keyKind) {
     @* <table>
     <tr>

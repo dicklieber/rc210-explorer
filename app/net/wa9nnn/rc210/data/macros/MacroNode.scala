@@ -5,8 +5,8 @@ import com.wa9nnn.util.tableui.{Header, Row}
 import net.wa9nnn.rc210.MemoryExtractor
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.key.KeyKindEnum.{KeyKind, macroKey}
-import net.wa9nnn.rc210.key.{FunctionKey, KeyKindEnum, MacroKey}
+import net.wa9nnn.rc210.key.KeyKindEnum.{KeyKind, macroKey, scheduleKey}
+import net.wa9nnn.rc210.key.{FunctionKey, Key, KeyKindEnum, MacroKey}
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 
@@ -35,7 +35,9 @@ case class MacroNode(fieldKey: FieldKey, functions: Seq[FunctionKey]) extends Fi
    * @param fieldEntry all the metadata.
    * @return html
    */
-  override def toHtmlField(fieldEntry: FieldEntry): String = ???
+  override def toHtmlField(fieldEntry: FieldEntry): String = {
+    throw new NotImplementedError() //todo
+  }
 
   override def macroToRun: MacroKey = ???
 
@@ -43,10 +45,11 @@ case class MacroNode(fieldKey: FieldKey, functions: Seq[FunctionKey]) extends Fi
 
   override def triggerDescription: String = ???
 
-  override def toRow: Row = ???
+  override def toRow: Row = {
+  throw new NotImplementedError() //todo
+  }
 
-  val key = fieldKey.key
-
+  val key: Key = fieldKey.key
 
 
 }

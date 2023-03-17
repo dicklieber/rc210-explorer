@@ -30,7 +30,7 @@ object MacroBlock {
                                   functionsProvider: FunctionsProvider): Seq[Row] = {
 
 /*
-    implicit val functions: Seq[FunctionKey] = macroNode.functions
+    implicit val functions: Seq[FunctionKey] = macroNodes.functions
 
 
  def buildRow(functionKey: FunctionKey, maybeMacroKey: Option[MacroKey] = None, last: Boolean = false): Row = {
@@ -67,7 +67,7 @@ object MacroBlock {
       }
 
       def macroCell() = {
-        val macroKey = macroNode.key
+        val macroKey = macroNodes.key
         Cell(namedManager(macroKey))
           .withToolTip(s"Macro Command $macroKey")
           .withRowSpan(functions.length)
@@ -76,7 +76,7 @@ object MacroBlock {
       }
 
       def buildTriggersCell: Cell = {
-        val macroKey = macroNode.key
+        val macroKey = macroNodes.key
         val triggerRows = rc210Data
           .triggers(macroKey)
           .map { triggerNode =>
@@ -114,14 +114,14 @@ object MacroBlock {
       case 0 =>
         Seq.empty
       case 1 =>
-        Seq(buildRow(functions.head, Option(macroNode.key), last = true))
+        Seq(buildRow(functions.head, Option(macroNodes.key), last = true))
       case 2 =>
         Seq(
-          buildRow(functions.head, Option(macroNode.key)),
+          buildRow(functions.head, Option(macroNodes.key)),
           buildRow(functions(1), last = true)
         )
       case _ =>
-        buildRow(functions.head, Option(macroNode.key)) +: functions
+        buildRow(functions.head, Option(macroNodes.key)) +: functions
           .drop(1)
           .dropRight(1)
           .map(buildRow(_)) :+ buildRow(functions.last, last = true)
