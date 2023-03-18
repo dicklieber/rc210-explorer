@@ -1,12 +1,48 @@
+@import net.wa9nnn.rc210.data.functions.FunctionsProvider
 @import net.wa9nnn.rc210.data.named.NamedSource
 @import net.wa9nnn.rc210.key.KeyKindEnum
-@import net.wa9nnn.rc210.data.functions.FunctionsProvider
-@import net.wa9nnn.rc210.key.FunctionKey
 @(editForm: Form[MacroEdit])(implicit namedSource: NamedSource, functionsProvider: FunctionsProvider, messagesProvider: MessagesProvider)
+
     @tabbedmain(KeyKindEnum.macroKey) {
+
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/bala.DualSelectList.css")">
+
+        <script src="@routes.Assets.versioned("javascripts/bala.DualSelectList.jquery.js")" type="text/javascript"></script>
+
+
+        <script>
+                $(document).ready(function () {
+
+                    var dsl = $('#functionDualListBox').DualSelectList({
+
+                        // Change Item from pure String to an Json Object.
+                        // the "value" field will be displayed on the list.
+                        'candidateItems': [{'id': 0, 'value': 'Item 01'},
+                            {'id': 1, 'value': 'Item 02'},
+                            {'id': 2, 'value': 'Item 03'},
+                            {'id': 3, 'value': 'Item 04'},
+                            {'id': 4, 'value': 'Item 05'}],
+                        'selectionItems': [{'id': 5, 'value': 'Item 06'},
+                            {'id': 6, 'value': 'Item 07'},
+                            {'id': 7, 'value': 'Item 08'}],
+                        'colors': {
+                            'itemText': 'white',
+                            'itemBackground': 'rgb(0, 51, 204)',
+                            'itemHoverBackground': '#0066ff'
+                        }
+                    });
+
+
+                    // dsl.setCandidate(items);
+                    // dsl.setSelection(items);
+                })
+        </script>
+
         <div class="row">
             <div class="col col-md-auto ">
                 <div class="row">
+
+
                     <h2>Macro</h2>
                     @editForm("schedule.key").value
                     @helper.inputText(editForm("name"))
@@ -16,40 +52,46 @@
                 @helper.inputText(editForm("schedule.dtmf"))
 
             </div>
-            <div class="col col-md-auto functionList">
-                <h2>Currently assigned functions</h2>
-                <table>
-                @helper.repeat(editForm("schedule.functions")) { f =>
-                    @defining(functionsProvider.apply(FunctionKey(f.value.get.toInt)).get) { function =>
-                        <tr>
-                        <tr>
-                            <td class="text-end">@function.key.number</td>
-                            <td class="text-nowrap">@function.description</td>
-                        </tr>
+            <div id="functionDualListBox" class="col col-md-auto functionList"></div>
 
-                    }
-                }
-                </table>
+            @*
+
+            <div class="col col-md-auto functionList">
+            <h2>Currently assigned functions</h2>
+            <table>
+            @helper.repeat(editForm("schedule.functions")) { f =>
+            @defining(functionsProvider.apply(FunctionKey(f.value.get.toInt)).get) { function =>
+            <tr>
+            <tr class="functionDrag">
+            <td class="text-end">@function.key.number</td>
+            <td class="text-nowrap">@function.description</td>
+            </tr>
+
+            }
+            }
+            </table>
             </div>
             <div class="col col-md-auto ">
-                <h2>Available Functions</h2>
+            <h2>Available Functions</h2>
 
-                <div class="dropdown">
-                    <div id="myDropdown" class="dropdown-content show functionList">
-                        <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
-                        <table>
-                        @for(function <- functionsProvider.functions) {
-                            <tr>
-                                <td class="text-end">@function.key.number</td>
-                                <td class="text-nowrap">@function.description</td>
-                            </tr>
-                        }
-                        </table>
-                    </div>
-                </div>
-
-
+            <div class="dropdown">
+            <div id="myDropdown" class="dropdown-content show functionList">
+            <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+            <table>
+            @for(function <- functionsProvider.functions) {
+            <tr class="functionDrag>
+            <td class="text-end">@function.key.number</td>
+            <td class="text-nowrap">@function.description</td>
+            </tr>
+            }
+            </table>
+            </div>
             </div>
 
+            </div>
+            *@
+
         </div>
+
+
     }
