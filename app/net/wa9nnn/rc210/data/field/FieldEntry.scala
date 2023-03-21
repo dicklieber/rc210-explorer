@@ -53,13 +53,15 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
   override def toString: String = fieldValue.toString
 
   override def toRow: Row = Row(
-    fieldKey.fieldName,
     fieldKey.toCell,
-    Cell("")
-      .withImage(routes.Assets.versioned("images/pencil-square.png").url)
-      //      .withUrl(routes.FieldEditorController.editOne(fieldKey.param).url)
-      .withToolTip("Edit this field")
+    fieldValue.display,
+    candidate.map(_.toString).getOrElse("-")
   )
+//    Cell("")
+//      .withImage(routes.Assets.versioned("images/pencil-square.png").url)
+//      //      .withUrl(routes.FieldEditorController.editOne(fieldKey.param).url)
+//      .withToolTip("Edit this field")
+//  )
 
   override def compare(that: FieldEntry): Int = fieldKey compare that.fieldKey
 

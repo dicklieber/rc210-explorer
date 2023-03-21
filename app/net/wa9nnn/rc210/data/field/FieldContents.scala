@@ -17,6 +17,8 @@
 
 package net.wa9nnn.rc210.data.field
 
+import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.key.Key
 import play.api.libs.json._
 import views.html._
 
@@ -28,6 +30,8 @@ import views.html._
 trait FieldContents {
 
   def toJsValue: JsValue
+
+  def display: String
 
   /**
    * Render this value as an RD-210 command string.
@@ -61,6 +65,12 @@ trait FieldContents {
 
 }
 
+trait FieldWithFieldKey[K <: Key] extends FieldContents {
+  val key: K
+  val fieldName: String
+  lazy val fieldkey: FieldKey = FieldKey(fieldName, key)
+}
+
 // simple field are defined here. More complex ones like [[net.wa9nnn.rc210.data.schedules.Schedule]] are elsewhere.
 case class FieldInt(value: Int) extends FieldContents {
   override def toJsValue: JsValue = JsNumber(BigDecimal.int2bigDecimal(value))
@@ -77,6 +87,8 @@ case class FieldInt(value: Int) extends FieldContents {
   }
 
   override def toCommand(fieldEntry: FieldEntry): String = ???
+
+  override def display: String = value.toString
 }
 
 
@@ -92,9 +104,10 @@ case class FieldDtmf(value: String) extends FieldContents {
    */
   override def toCommand(fieldEntry: FieldEntry): String = ???
 
+  override def display: String = value
 }
 
-case class FieldBoolean( value: Boolean) extends FieldContents {
+case class FieldBoolean(value: Boolean) extends FieldContents {
   override def toJsValue: JsValue = JsBoolean(value)
 
   override def toHtmlField(fieldEntry: FieldEntry): String = {
@@ -106,9 +119,10 @@ case class FieldBoolean( value: Boolean) extends FieldContents {
    */
   override def toCommand(fieldEntry: FieldEntry): String = ???
 
+  override def display: String = value.toString
 }
 
-case class FieldSeqInts( value: Int*) extends FieldContents {
+case class FieldSeqInts(value: Int*) extends FieldContents {
   override def toJsValue: JsValue = {
     JsArray(value.map((int: Int) => JsNumber(BigDecimal.int2bigDecimal(int))))
   }
@@ -123,9 +137,10 @@ case class FieldSeqInts( value: Int*) extends FieldContents {
     fieldString(fieldEntry.param, toString).toString()
   }
 
+  override def display: String = value.map(_.toString).mkString(" ")
 }
 
-case class FieldSelect( value: Int) extends FieldContents {
+case class FieldSelect(value: Int) extends FieldContents {
   override def toJsValue: JsValue = Json.toJson(value)
 
   override def toHtmlField(fieldEntry: FieldEntry): String = {
@@ -142,4 +157,5 @@ case class FieldSelect( value: Int) extends FieldContents {
    */
   override def toCommand(fieldEntry: FieldEntry): String = ???
 
+  override def display: String = value.toString
 }

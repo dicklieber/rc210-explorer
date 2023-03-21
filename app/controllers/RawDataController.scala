@@ -18,7 +18,7 @@
 package controllers
 
 import akka.util.Timeout
-import com.wa9nnn.util.tableui.Table
+import com.wa9nnn.util.tableui.{Header, Table}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.functions.{FunctionNode, FunctionsProvider}
 import net.wa9nnn.rc210.data.mapped.MappedValues
@@ -64,6 +64,15 @@ class RawDataController @Inject()(val controllerComponents: ControllerComponents
     val phrases = Vocabulary.phrases.sortBy(_.wordKey)
     val macrosTable = Table(Phrase.header(phrases.length), phrases.map(_.toRow))
     Ok(views.html.dat(Seq(macrosTable)))
+
   }
 
+  def dumpFields(): Action[AnyContent] = Action {
+
+    val rows = mappedValues.all.map(_.toRow)
+    val table = Table(Header(s"All Fields (${rows.length})", "Field Key", "Value", "Candidate"), rows)
+
+    Ok(views.html.dat(Seq(table)))
+
+  }
 }

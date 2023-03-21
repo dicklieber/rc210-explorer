@@ -74,7 +74,7 @@ class MappedValues @Inject()(dataProvider: DataProvider) {
     map.put(fieldKey, entry.setCandidate(value))
   }
   def apply(fieldKey: FieldKey, fieldContents: FieldContents): Unit = {
-    val entry: FieldEntry = map(fieldKey)
+    val entry: FieldEntry = map.getOrElse(fieldKey,throw new IllegalArgumentException(s"N value for $fieldKey"))
     map.put(fieldKey, entry.copy(fieldValue = fieldContents)) // todo candidate
   }
 

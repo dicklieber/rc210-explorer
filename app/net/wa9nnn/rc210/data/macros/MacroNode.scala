@@ -18,7 +18,8 @@ import java.util.concurrent.atomic.AtomicInteger
  * @param functions that this kacro oinvokes.
  * @param dtmf      that can invoke this macro.
  */
-case class MacroNode(key: MacroKey, functions: Seq[FunctionKey], dtmf: Option[Dtmf] = None) extends FieldContents with TriggerNode {
+case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dtmf: Option[Dtmf] = None) extends FieldWithFieldKey[MacroKey] with TriggerNode {
+
   def enabled: Boolean = functions.nonEmpty
 
 
@@ -54,6 +55,10 @@ case class MacroNode(key: MacroKey, functions: Seq[FunctionKey], dtmf: Option[Dt
   override def toRow: Row = {
     throw new NotImplementedError() //todo
   }
+
+  override val fieldName: String = "Macro"
+
+  override def display: String = functions.map(_.toString).mkString(" ")
 }
 
 object MacroNode extends LazyLogging with MemoryExtractor with FieldDefinition {
@@ -78,7 +83,7 @@ object MacroNode extends LazyLogging with MemoryExtractor with FieldDefinition {
       .concat(macroBuilder(SlicePos("//ShortMacro - 2825-3174"), memory, 7))
 
     val r: Seq[FieldEntry] = macros.map { m: MacroNode =>
-      FieldEntry(this, FieldKey("Schedule", m.key), m)
+      FieldEntry(this, m.fieldkey, m)
     }
     r
   }
