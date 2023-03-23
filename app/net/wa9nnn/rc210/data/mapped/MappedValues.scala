@@ -20,7 +20,8 @@ package net.wa9nnn.rc210.data.mapped
 import net.wa9nnn.rc210.DataProvider
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.{FieldContents, FieldEntry}
-import net.wa9nnn.rc210.key.{Key, KeyKind}
+import net.wa9nnn.rc210.key.KeyFactory.Key
+import net.wa9nnn.rc210.key.KeyKind
 import play.api.libs.json.JsArray
 
 import javax.inject.{Inject, Singleton}
@@ -67,6 +68,7 @@ class MappedValues @Inject()(dataProvider: DataProvider) {
   def acceptCandidate(fieldKey: FieldKey): Unit = {
     map.put(fieldKey, map(fieldKey).acceptCandidate())
   }
+
 
   def apply(fieldKey: FieldKey, value: String): Unit = {
     val entry: FieldEntry = map(fieldKey)

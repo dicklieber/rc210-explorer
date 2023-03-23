@@ -1,7 +1,7 @@
 package net.wa9nnn.rc210.data.macros
 
 import net.wa9nnn.rc210.data.Dtmf
-import net.wa9nnn.rc210.key.MacroKey
+import net.wa9nnn.rc210.key.KeyFactory.MacroKey
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 
 import java.util.concurrent.atomic.AtomicInteger

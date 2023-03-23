@@ -18,7 +18,8 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.key.{Key, KeyFactory, KeyFormats}
+import net.wa9nnn.rc210.key.KeyFactory
+import net.wa9nnn.rc210.key.KeyFactory.Key
 
 import java.time.LocalTime
 

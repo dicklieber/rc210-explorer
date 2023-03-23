@@ -23,6 +23,7 @@ import net.wa9nnn.rc210.data.functions.FunctionNode
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.named.{NamedData, NamedKey}
 import net.wa9nnn.rc210.data.schedules.Schedule
+import net.wa9nnn.rc210.key.KeyFactory.{FunctionKey, MacroKey, MessageMacroKey, ScheduleKey, WordKey, Key}
 import play.api.libs.json._
 import play.api.mvc.PathBindable
 
@@ -55,51 +56,6 @@ object KeyFormats {
 
   val r: Regex = """([a-zA-Z]+)(\d+)?""".r
 
-
-/*
-  def buildKey(keyKind: KeyKindVal, number: Int): Key = {
-
-    keyKind match {
-      case KeyKind.alarmKey => AlarmKey(number)
-      case KeyKind.dtmfMacroKey => DtmfMacroKey(number)
-      case KeyKind.functionKey => FunctionKey(number)
-      case KeyKind.macroKey => MacroKey(number)
-      case KeyKind.messageMacroKey => MessageMacroKey(number)
-      case KeyKind.miscKey => MiscKey()
-      case KeyKind.portKey => PortKey(number)
-      case KeyKind.scheduleKey => ScheduleKey(number)
-      case KeyKind.wordKey => WordKey(number)
-      case KeyKind.courtesyToneKey => CourtesyToneKey(number)
-    }
-  }
-*/
-
-
-/*
-  def buildKey(kind: String, number: Int): Key = {
-
-    kind match {
-      case "port" =>
-        PortKey(number)
-      case "alarm" =>
-        AlarmKey(number)
-      case "macro" =>
-        MacroKey(number)
-      case "messageMacro" =>
-        MessageMacroKey(number)
-      case "schedule" =>
-        ScheduleKey(number)
-      case "function" =>
-        FunctionKey(number)
-      case "word" =>
-        WordKey(number)
-      case "dtmfMacro" =>
-        DtmfMacroKey(number)
-      case "misc" =>
-        MiscKey()
-    }
-  }
-*/
 
 
   implicit val fmtMacroKey: Format[MacroKey] = new Format[MacroKey] {

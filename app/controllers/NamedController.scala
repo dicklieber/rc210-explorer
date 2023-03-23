@@ -18,7 +18,8 @@
 package controllers
 
 import net.wa9nnn.rc210.data.named.{NamedKey, NamedManager}
-import net.wa9nnn.rc210.key.{Key, KeyFactory, KeyKind}
+import net.wa9nnn.rc210.key.KeyFactory.Key
+import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.mvc._
 
 import javax.inject.Inject
@@ -36,7 +37,7 @@ class NamedController @Inject()(implicit val controllerComponents: ControllerCom
     val kv: Map[String, String] = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }
 
     namedManager.update(kv.removed("keyKind").map { case (key, value) =>
-      val key1 = KeyFactory(key)
+      val key1: Key = KeyFactory(key)
       NamedKey(key1, value)
     })
 

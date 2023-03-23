@@ -17,8 +17,7 @@
 
 package net.wa9nnn.rc210.data.named
 
-import net.wa9nnn.rc210.key.Key
-import play.api.libs.json.{Format, Json, OFormat}
+import net.wa9nnn.rc210.key.KeyFactory.Key
 
 case class NamedKey(key: Key, name: String) extends Ordered[NamedKey] {
   override def compare(that: NamedKey): Int = key compareTo that.key
@@ -26,8 +25,4 @@ case class NamedKey(key: Key, name: String) extends Ordered[NamedKey] {
 
 case class NamedData(data: Seq[NamedKey])
 
-object NamedData {
-  import net.wa9nnn.rc210.key.KeyFormats._
-  implicit val fmtNamedKey: Format[NamedKey] = Json.format[NamedKey]
-  implicit val fmtNamedData: Format[NamedData] = Json.format[NamedData]
-}
+

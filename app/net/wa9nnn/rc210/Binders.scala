@@ -17,7 +17,8 @@
 
 package net.wa9nnn.rc210
 
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind, MacroKey}
+import net.wa9nnn.rc210.key.KeyFactory.MacroKey
+import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.mvc.PathBindable
 
 object Binders {

@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.field
 
 import com.google.inject.Inject
 import net.wa9nnn.rc210.data.named.NamedManager
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind, MacroKey}
+import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 
 import javax.inject.Singleton
 

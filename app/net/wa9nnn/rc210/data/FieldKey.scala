@@ -18,7 +18,8 @@
 package net.wa9nnn.rc210.data
 
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
-import net.wa9nnn.rc210.key.{Key, KeyFactory, KeyFormats}
+import net.wa9nnn.rc210.key.KeyFactory
+import net.wa9nnn.rc210.key.KeyFactory.Key
 import play.api.libs.json.{Format, JsResult, JsString, JsValue}
 import play.api.mvc.PathBindable
 

@@ -19,7 +19,8 @@ package net.wa9nnn.rc210.command
 
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
 import net.wa9nnn.rc210.command.ItemValue.Values
-import net.wa9nnn.rc210.key.{Key, CommonKey, PortKey}
+import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.key.KeyFactory.{Key, PortKey}
 
 import scala.util.{Failure, Success, Try}
 
@@ -29,12 +30,12 @@ import scala.util.{Failure, Success, Try}
  * @param key                    used when there is more than one [[ItemValue]].
  * @param maybeMessage           if there was an error parsing or from processing the form value. This can be localized.
  */
-case class ItemValue(commandId: Command, values: Values, key:Key = CommonKey(), maybeMessage: Option[L10NMessage] = None) extends Ordered[ItemValue] with RowSource{
+case class ItemValue(commandId: Command, values: Values, key:Key = KeyFactory(KeyKind.commonKey, 1), maybeMessage: Option[L10NMessage] = None) extends Ordered[ItemValue] with RowSource{
 
   def head: String = values.headOption.getOrElse("?")
 
   def withKey(key: Key): ItemValue = copy(key = key)
-  def withPort(number:Int): ItemValue = copy(key = PortKey(number + 1))
+  def withPort(number:Int): ItemValue = copy(key = KeyFactory(KeyKind.macroKey, number + 1))
 
   def withError(l10NMessage: L10NMessage): ItemValue = copy(maybeMessage = Option(l10NMessage))
 

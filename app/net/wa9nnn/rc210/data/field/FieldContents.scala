@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.key.Key
+import net.wa9nnn.rc210.key.KeyFactory.Key
 import play.api.libs.json._
 import views.html._
 

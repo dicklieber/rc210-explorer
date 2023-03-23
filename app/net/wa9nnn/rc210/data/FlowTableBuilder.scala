@@ -4,7 +4,7 @@ import akka.actor.ActorRef
 import com.wa9nnn.util.tableui._
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.named.NamedManager
-import net.wa9nnn.rc210.key.MacroKey
+import net.wa9nnn.rc210.key.KeyFactory.MacroKey
 import views.html.macroRowHeader
 
 import javax.inject.{Inject, Named, Singleton}

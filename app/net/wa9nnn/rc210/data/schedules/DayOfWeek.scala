@@ -17,8 +17,7 @@
 
 package net.wa9nnn.rc210.data.schedules
 
-import net.wa9nnn.rc210.key.Key
-import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue}
+import play.api.libs.json._
 
 object DayOfWeek extends Enumeration {
   type DayOfWeek = Value

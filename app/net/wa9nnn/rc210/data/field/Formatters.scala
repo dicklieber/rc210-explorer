@@ -18,8 +18,11 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.Dtmf
-import net.wa9nnn.rc210.key.{FunctionKey, Key, KeyFactory, KeyFormats, MacroKey}
+import net.wa9nnn.rc210.data.named.{NamedData, NamedKey}
+import net.wa9nnn.rc210.key.KeyFactory
+import net.wa9nnn.rc210.key.KeyFactory._
 import play.api.data.FormError
+import play.api.libs.json.{Json, OFormat}
 
 /**
  * URL formatters.
@@ -27,8 +30,8 @@ import play.api.data.FormError
  */
 object Formatters {
 
-  import play.api.data.format.Formatter
   import play.api.data.format.Formats._
+  import play.api.data.format.Formatter
 
   implicit object MacroKeyFormatter extends Formatter[MacroKey] {
     override val format: Option[(String, Nil.type)] = Some(("format.macrokey", Nil))
@@ -55,5 +58,17 @@ object Formatters {
     override def unbind(key: String, value: Dtmf): Map[String, String] = Map(key -> value.toString)
   }
 
-
+  implicit val fmtMacroKey: OFormat[MacroKey] = Json.format[MacroKey]
+  implicit val fmtAlarmKey: OFormat[AlarmKey] = Json.format[AlarmKey]
+  implicit val fmtScheduleKey: OFormat[ScheduleKey] = Json.format[ScheduleKey]
+  implicit val fmtCommonKey: OFormat[CommonKey] = Json.format[CommonKey]
+  implicit val fmtFunctionKey: OFormat[FunctionKey] = Json.format[FunctionKey]
+  implicit val fmtMessageMacroKey: OFormat[MessageMacroKey] = Json.format[MessageMacroKey]
+  implicit val fmtWordKey: OFormat[WordKey] = Json.format[WordKey]
+  implicit val fmtCourtesyToneKey: OFormat[CourtesyToneKey] = Json.format[CourtesyToneKey]
+  implicit val fmtPortKey: OFormat[PortKey] = Json.format[PortKey]
+  implicit val fmtDtmfMacroKey: OFormat[DtmfMacroKey] = Json.format[DtmfMacroKey]
+  implicit val fmKey: OFormat[Key] = Json.format[Key]
+  implicit val fmtNamedKey: OFormat[NamedKey] = Json.format[NamedKey]
+  implicit val fmtNamedData: OFormat[NamedData] = Json.format[NamedData]
 }

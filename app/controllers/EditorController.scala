@@ -21,9 +21,11 @@ import akka.util.Timeout
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.named.{NamedKey, NamedManager}
+import net.wa9nnn.rc210.key.KeyFactory.Key
+import net.wa9nnn.rc210.key.KeyKind._
 import net.wa9nnn.rc210.key._
 import play.api.mvc._
-import KeyKind._
+
 import javax.inject._
 import scala.concurrent.duration.DurationInt
 class EditorController @Inject()(val controllerComponents: ControllerComponents,
@@ -44,7 +46,7 @@ class EditorController @Inject()(val controllerComponents: ControllerComponents,
           NamedKey(key, namedManager.get(key).getOrElse(""))
         }
         if (keyKind == KeyKind.commonKey)
-          Redirect(routes.EditorController.edit(keyKind, CommonKey().toString))
+          Redirect(routes.EditorController.edit(keyKind, KeyFactory(KeyKind.commonKey, 1).toString))
         else
           Ok(views.html.editor(keyKind, nk, Seq.empty))
     }
@@ -55,7 +57,7 @@ class EditorController @Inject()(val controllerComponents: ControllerComponents,
 
     val maybeKey: Option[Key] = sMaybeKey match {
       case "" if keyKind == commonKey =>
-        Option(CommonKey())
+        Option(KeyFactory(KeyKind.commonKey, 1))
       case "" =>
         // Nothing to edit until user selects a Key.
         None

@@ -18,7 +18,8 @@
 package net.wa9nnn.rc210.data.vocabulary
 
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
-import net.wa9nnn.rc210.key.WordKey
+import net.wa9nnn.rc210.key.KeyFactory.WordKey
+import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 
 import scala.io.BufferedSource
 import scala.util.{Failure, Success, Using}
@@ -29,7 +30,7 @@ object Vocabulary {
       .map { line: String =>
         val n = line.take(3)
         val t = line.drop(4).trim
-        Phrase(WordKey(n.toInt), t)
+        Phrase(KeyFactory(KeyKind.wordKey, n.toInt), t)
       }
       .toSeq
       .sortBy(_.string)

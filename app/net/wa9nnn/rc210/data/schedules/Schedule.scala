@@ -7,7 +7,8 @@ import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field._
 import net.wa9nnn.rc210.data.schedules.DayOfWeek.DayOfWeek
 import net.wa9nnn.rc210.data.schedules.MonthOfYear.MonthOfYear
-import net.wa9nnn.rc210.key.{KeyKind, MacroKey, ScheduleKey}
+import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, ScheduleKey}
+import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 import play.api.libs.json.{JsString, JsValue}
@@ -96,7 +97,7 @@ object Schedule extends LazyLogging with MemoryExtractor {
 
       //*4001 S * DOW * MOY * Hours * Minutes * Macro
 
-      val key = ScheduleKey(setPoint + 1)
+      val key: ScheduleKey = KeyFactory(KeyKind.scheduleKey, setPoint + 1)
       val schedule = Schedule(key, dayOfWeek = DayOfWeek(parts(0).asInstanceOf[Int]), weekInMonth = parts(1).asInstanceOf[Option[Int]], monthOfYear = parts(2).asInstanceOf[MonthOfYear], localTime = {
         val hour: Int = parts(3).asInstanceOf[Int]
         val minute: Int = parts(4).asInstanceOf[Int]

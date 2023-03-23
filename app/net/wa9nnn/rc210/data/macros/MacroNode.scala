@@ -5,7 +5,8 @@ import com.wa9nnn.util.tableui.{Header, Row}
 import net.wa9nnn.rc210.MemoryExtractor
 import net.wa9nnn.rc210.data.Dtmf
 import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.key.{FunctionKey, KeyFactory, KeyKind, MacroKey}
+import net.wa9nnn.rc210.key.KeyFactory.{FunctionKey, MacroKey}
+import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 

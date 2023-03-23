@@ -23,14 +23,14 @@ import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.named.NamedManager
-import net.wa9nnn.rc210.key.{FunctionKey, KeyFactory, KeyFormats, KeyKind, MacroKey}
+import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.mvc._
 import views.html.macroNodes
 
 import javax.inject.{Inject, Singleton}
 import scala.util.Try
 import scala.util.matching.Regex
-
+import net.wa9nnn.rc210.key.KeyFactory._
 @Singleton()
 class MacroNodeController @Inject()(val mcc: MessagesControllerComponents,
                                     mappedValues: MappedValues

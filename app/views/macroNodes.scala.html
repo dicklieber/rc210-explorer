@@ -1,10 +1,9 @@
 @import net.wa9nnn.rc210.data.functions.FunctionsProvider
 @import net.wa9nnn.rc210.data.macros.MacroNode
-@import views.html.helper._
-
-@import net.wa9nnn.rc210.key.MacroKey
 @import net.wa9nnn.rc210.data.named.NamedSource
 @import net.wa9nnn.rc210.key.KeyKind
+@import views.html.helper._
+@import net.wa9nnn.rc210.key.KeyFactory.MacroKey
 @(macroNodes: Seq[MacroNode], keyKind: KeyKind)(implicit functionsProvider: FunctionsProvider, namedSource: NamedSource)
 
 @tabbedmain(keyKind) {
@@ -15,7 +14,7 @@
                 <tr>
                     <td>&nbsp;</td>
                     <td title="Number or name">Macro</td>
-                    <td title="DTMF that will invoke thjis macro">DTMF</td>
+                    <td title="DTMF that will invoke this macro">DTMF</td>
                     <td>Function</td>
                 </tr>
             </thead>

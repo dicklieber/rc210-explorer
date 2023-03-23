@@ -1,7 +1,7 @@
 package net.wa9nnn.rc210.model
 
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
-import net.wa9nnn.rc210.key.{Key, MacroKey}
+import net.wa9nnn.rc210.key.KeyFactory.{Key, MacroKey}
 
 trait Node extends RowSource {
   val key: Key

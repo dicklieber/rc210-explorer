@@ -1,0 +1,1895 @@
+[
+  [
+    [
+      "Alarm~Macro~High|alarmKey1",
+      {
+        "value": 1
+      }
+    ],
+    [
+      "Alarm~Macro~Low|alarmKey1",
+      {
+        "value": 1
+      }
+    ],
+    [
+      "Rx~Rcv~Macro~Active|alarmKey1",
+      {
+        "value": 90
+      }
+    ],
+    [
+      "Rx~Rcv~Macro~Low|alarmKey1",
+      {
+        "value": 90
+      }
+    ],
+    [
+      "Vref|alarmKey1",
+      {
+        "value": 244
+      }
+    ],
+    [
+      "Alarm~Macro~High|alarmKey2",
+      {
+        "value": 1
+      }
+    ],
+    [
+      "Alarm~Macro~Low|alarmKey2",
+      {
+        "value": 1
+      }
+    ],
+    [
+      "Rx~Rcv~Macro~Active|alarmKey2",
+      {
+        "value": 90
+      }
+    ],
+    [
+      "Rx~Rcv~Macro~Low|alarmKey2",
+      {
+        "value": 90
+      }
+    ],
+    [
+      "Vref|alarmKey2",
+      {
+        "value": 1
+      }
+    ],
+    [
+      "Alarm~Macro~High|alarmKey3",
+      {
+        "value": 1
+      }
+    ],
+    [
+      "Alarm~Macro~Low|alarmKey3",
+      {
+        "value": 1
+      }
+    ],
+    [
+      "Rx~Rcv~Macro~Active|alarmKey3",
+      {
+        "value": 90
+      }
+    ],
+    [
+      "Rx~Rcv~Macro~Low|alarmKey3",
+      {
+        "value": 90
+      }
+    ],
+    [
+      "Vref|alarmKey3",
+      {
+        "value": 0
+      }
+    ],
+    [
+      "Alarm~Macro~High|alarmKey4",
+      {
+        "value": 1
+      }
+    ],
+    [
+      "Alarm~Macro~Low|alarmKey4",
+      {
+        "value": 1
+      }
+    ],
+    [
+      "Rx~Rcv~Macro~Active|alarmKey4",
+      {
+        "value": 90
+      }
+    ],
+    [
+      "Rx~Rcv~Macro~Low|alarmKey4",
+      {
+        "value": 52
+      }
+    ],
+    [
+      "Vref|alarmKey4",
+      {
+        "value": 0
+      }
+    ],
+    [
+      "Alarm~Macro~High|alarmKey5",
+      {
+        "value": 1
+      }
+    ],
+    [
+      "Alarm~Macro~Low|alarmKey5",
+      {
+        "value": 1
+      }
+    ],
+    [
+      "Rx~Rcv~Macro~Active|alarmKey5",
+      {
+        "value": 90
+      }
+    ],
+    [
+      "Rx~Rcv~Macro~Low|alarmKey5",
+      {
+        "value": 21
+      }
+    ],
+    [
+      "Vref|alarmKey5",
+      {
+        "value": 0
+      }
+    ],
+    [
+      "Macro|macroKey1",
+      {
+        "value": [
+          "functionKey165",
+          "functionKey196",
+          "functionKey85",
+          "functionKey4",
+          "functionKey27",
+          "functionKey60"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey2",
+      {
+        "value": [
+          "functionKey165",
+          "functionKey85",
+          "functionKey197",
+          "functionKey198"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey3",
+      {
+        "value": [
+          "functionKey165",
+          "functionKey85",
+          "functionKey127"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey4",
+      {
+        "value": [
+          "functionKey165",
+          "functionKey85",
+          "functionKey197",
+          "functionKey198"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey5",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey6",
+      {
+        "value": [
+          "functionKey165",
+          "functionKey85",
+          "functionKey130"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey7",
+      {
+        "value": [
+          "functionKey162",
+          "functionKey192"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey8",
+      {
+        "value": [
+          "functionKey162",
+          "functionKey193"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey9",
+      {
+        "value": [
+          "functionKey165",
+          "functionKey85",
+          "functionKey255",
+          "functionKey255",
+          "functionKey255",
+          "functionKey52",
+          "functionKey255",
+          "functionKey255",
+          "functionKey255",
+          "functionKey53",
+          "functionKey195"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey10",
+      {
+        "value": [
+          "functionKey165",
+          "functionKey85",
+          "functionKey255",
+          "functionKey255",
+          "functionKey255",
+          "functionKey92",
+          "functionKey255",
+          "functionKey255",
+          "functionKey255",
+          "functionKey93",
+          "functionKey194"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey11",
+      {
+        "value": [
+          "functionKey163",
+          "functionKey60"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey12",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey13",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey14",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey15",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey16",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey17",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey18",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey19",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey20",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey21",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey22",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey23",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey24",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey25",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey26",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey27",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey28",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey29",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey30",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey31",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey32",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey33",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey34",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey35",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey36",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey37",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey38",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey39",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey40",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey41",
+      {
+        "value": [
+          "functionKey162",
+          "functionKey116"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey42",
+      {
+        "value": [
+          "functionKey162",
+          "functionKey126"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey43",
+      {
+        "value": [
+          "functionKey162",
+          "functionKey127"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey44",
+      {
+        "value": [
+          "functionKey162",
+          "functionKey128"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey45",
+      {
+        "value": [
+          "functionKey162",
+          "functionKey129"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey46",
+      {
+        "value": [
+          "functionKey162",
+          "functionKey187",
+          "functionKey189"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey47",
+      {
+        "value": [
+          "functionKey162",
+          "functionKey130"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey48",
+      {
+        "value": [
+          "functionKey162",
+          "functionKey13",
+          "functionKey190",
+          "functionKey194"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey49",
+      {
+        "value": [
+          "functionKey162",
+          "functionKey190",
+          "functionKey195",
+          "functionKey16"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey50",
+      {
+        "value": [
+          "functionKey162",
+          "functionKey181"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey51",
+      {
+        "value": [
+          "functionKey163",
+          "functionKey116"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey52",
+      {
+        "value": [
+          "functionKey163",
+          "functionKey126"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey53",
+      {
+        "value": [
+          "functionKey163",
+          "functionKey127"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey54",
+      {
+        "value": [
+          "functionKey163",
+          "functionKey128"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey55",
+      {
+        "value": [
+          "functionKey163",
+          "functionKey129"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey56",
+      {
+        "value": [
+          "functionKey163",
+          "functionKey188",
+          "functionKey189"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey57",
+      {
+        "value": [
+          "functionKey163",
+          "functionKey130"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey58",
+      {
+        "value": [
+          "functionKey163",
+          "functionKey14",
+          "functionKey191",
+          "functionKey194"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey59",
+      {
+        "value": [
+          "functionKey163",
+          "functionKey191",
+          "functionKey195",
+          "functionKey17"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey60",
+      {
+        "value": [
+          "functionKey163",
+          "functionKey182"
+        ]
+      }
+    ],
+    [
+      "Macro|macroKey61",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey62",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey63",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey64",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey65",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey66",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey67",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey68",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey69",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey70",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey71",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey72",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey73",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey74",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey75",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey76",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey77",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey78",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey79",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey80",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey81",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey82",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey83",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey84",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey85",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey86",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey87",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey88",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey89",
+      {
+        "value": []
+      }
+    ],
+    [
+      "Macro|macroKey90",
+      {
+        "value": [
+          "functionKey13"
+        ]
+      }
+    ],
+    [
+      "Allow~Terminator~Speech|commonKey1",
+      {
+        "value": false
+      }
+    ],
+    [
+      "AutoPatch~Port|commonKey1",
+      {
+        "value": false
+      }
+    ],
+    [
+      "AutoPatch~Port~Mute|commonKey1",
+      {
+        "value": false
+      }
+    ],
+    [
+      "Clock~24~Hours|commonKey1",
+      {
+        "value": false
+      }
+    ],
+    [
+      "DTMF~Duration|commonKey1",
+      {
+        "value": true
+      }
+    ],
+    [
+      "DTMF~Pause|commonKey1",
+      {
+        "value": true
+      }
+    ],
+    [
+      "Fan~Select|commonKey1",
+      {
+        "value": false
+      }
+    ],
+    [
+      "Fan~Timeout|commonKey1",
+      {
+        "value": 0
+      }
+    ],
+    [
+      "Lock~Code|commonKey1",
+      {
+        "value": "#"
+      }
+    ],
+    [
+      "Mute~Digit~Select|commonKey1",
+      {
+        "value": 1
+      }
+    ],
+    [
+      "Program~Prefix|commonKey1",
+      {
+        "value": "1DC2"
+      }
+    ],
+    [
+      "Radio~Type|commonKey1",
+      {
+        "value": 8
+      }
+    ],
+    [
+      "Say~Hours|commonKey1",
+      {
+        "value": false
+      }
+    ],
+    [
+      "Say~Year|commonKey1",
+      {
+        "value": false
+      }
+    ],
+    [
+      "Site~Prefix|commonKey1",
+      {
+        "value": "ABC"
+      }
+    ],
+    [
+      "Speech~Delay|commonKey1",
+      {
+        "value": 1233
+      }
+    ],
+    [
+      "TT~PadTest|commonKey1",
+      {
+        "value": "12"
+      }
+    ],
+    [
+      "Terminator|commonKey1",
+      {
+        "value": "D"
+      }
+    ],
+    [
+      "Timeout~Ports|commonKey1",
+      {
+        "value": false
+      }
+    ],
+    [
+      "Yaesu~Type|commonKey1",
+      {
+        "value": 8
+      }
+    ],
+    [
+      "Alarm~Enable|portKey1",
+      {
+        "value": false
+      }
+    ],
+    [
+      "CTCSS~Decode|portKey1",
+      {
+        "value": true
+      }
+    ],
+    [
+      "CTCSS~During~ID|portKey1",
+      {
+        "value": true
+      }
+    ],
+    [
+      "CTCSS~Encode~Polarity|portKey1",
+      {
+        "value": false
+      }
+    ],
+    [
+      "CWS~Speed|portKey1",
+      {
+        "value": 20
+      }
+    ],
+    [
+      "DTMF~COS~Control|portKey1",
+      {
+        "value": false
+      }
+    ],
+    [
+      "DTMF~Cover~Tone|portKey1",
+      {
+        "value": false
+      }
+    ],
+    [
+      "DTMF~Mute|portKey1",
+      {
+        "value": true
+      }
+    ],
+    [
+      "DTMF~Mute~Timer|portKey1",
+      {
+        "value": 10
+      }
+    ],
+    [
+      "DTMF~Require~Tone|portKey1",
+      {
+        "value": true
+      }
+    ],
+    [
+      "Enable~Speech~ID|portKey1",
+      {
+        "value": true
+      }
+    ],
+    [
+      "Encode~Timer|portKey1",
+      {
+        "value": 35
+      }
+    ],
+    [
+      "Guest~Macro~Enable|portKey1",
+      {
+        "value": false
+      }
+    ],
+    [
+      "Guest~Macro~Range|portKey1",
+      {
+        "value": [
+          12336,
+          12337
+        ]
+      }
+    ],
+    [
+      "Hang~Time~1|portKey1",
+      {
+        "value": 11
+      }
+    ],
+    [
+      "Hang~Time~2|portKey1",
+      {
+        "value": 12
+      }
+    ],
+    [
+      "Hang~Time~3|portKey1",
+      {
+        "value": 13
+      }
+    ],
+    [
+      "Inactivity~Timeout|portKey1",
+      {
+        "value": 0
+      }
+    ],
+    [
+      "Initial~ID~Timer~~|portKey1",
+      {
+        "value": 11
+      }
+    ],
+    [
+      "Kerchunk|portKey1",
+      {
+        "value": true
+      }
+    ],
+    [
+      "Kerchunk~Timer|portKey1",
+      {
+        "value": 250
+      }
+    ],
+    [
+      "Monitor~Mix|portKey1",
+      {
+        "value": true
+      }
+    ],
+    [
+      "P1~Tail~Message|portKey1",
+      {
+        "value": 1
+      }
+    ],
+    [
+      "P2~Tail~Message|portKey1",
+      {
+        "value": 1
+      }
+    ],
+    [
+      "P3~Tail~Message|portKey1",
+      {
+        "value": 1
+      }
+    ],
+    [
+      "Pending~ID~Timer~~|portKey1",
+      {
+        "value": 10
+      }
+    ],
+    [
+      "Remote~Base~Prefix|portKey1",
+      {
+        "value": "5"
+      }
+    ],
+    [
+      "Repeat~Mode|portKey1",
+      {
+        "value": true
+      }
+    ],
+    [
+      "Speak~Pending~ID~Timer|portKey1",
+      {
+        "value": 60
+      }
+    ],
+    [
+      "Speech~ID~Override|portKey1",
+      {
+        "value": false
+      }
+    ],
+    [
+      "Speech~Override|portKey1",
+      {
+        "value": 1
+      }
+    ],
+    [
+      "Tail~Counter|portKey1",
+      {
+        "value": 0
+      }
+    ],
+    [
+      "Tail~Message~Number|portKey1",
+      {
+        "value": 0
+      }
+    ],
+    [
+      "Tail~Timer|portKey1",
+      {
+        "value": 0
+      }
+    ],
+    [
+      "Timeout~Reset~Select|portKey1",
+      {
+        "value": false
+      }
+    ],
+    [
+      "Timeout~Timer|portKey1",
+      {
+        "value": 0
+      }
+    ],
+    [
+      "Tx~Enable|portKey1",
+      {
+        "value": true
+      }
+    ],
+    [
+      "Unlock|portKey1",
+      {
+        "value": "72726"
+      }
+    ],
+    [
+      "Use~DR1|portKey1",
+      {
+        "value": false
+      }
+    ],
+    [
+      "Alarm~Enable|portKey2",
+      {
+        "value": false
+      }
+    ],
+    [
+      "CTCSS~Decode|portKey2",
+      {
+        "value": false
+      }
+    ],
+    [
+      "CTCSS~During~ID|portKey2",
+      {
+        "value": true
+      }
+    ],
+    [
+      "CTCSS~Encode~Polarity|portKey2",
+      {
+        "value": false
+      }
+    ],
+    [
+      "CWS~Speed|portKey2",
+      {
+        "value": 20
+      }
+    ],
+    [
+      "DTMF~COS~Control|portKey2",
+      {
+        "value": false
+      }
+    ],
+    [
+      "DTMF~Cover~Tone|portKey2",
+      {
+        "value": false
+      }
+    ],
+    [
+      "DTMF~Mute|portKey2",
+      {
+        "value": true
+      }
+    ],
+    [
+      "DTMF~Mute~Timer|portKey2",
+      {
+        "value": 10
+      }
+    ],
+    [
+      "DTMF~Require~Tone|portKey2",
+      {
+        "value": false
+      }
+    ],
+    [
+      "Enable~Speech~ID|portKey2",
+      {
+        "value": true
+      }
+    ],
+    [
+      "Encode~Timer|portKey2",
+      {
+        "value": 35
+      }
+    ],
+    [
+      "Guest~Macro~Enable|portKey2",
+      {
+        "value": true
+      }
+    ],
+    [
+      "Guest~Macro~Range|portKey2",
+      {
+        "value": [
+          12345,
+          0
+        ]
+      }
+    ],
+    [
+      "Hang~Time~1|portKey2",
+      {
+        "value": 40
+      }
+    ],
+    [
+      "Hang~Time~2|portKey2",
+      {
+        "value": 40
+      }
+    ],
+    [
+      "Hang~Time~3|portKey2",
+      {
+        "value": 40
+      }
+    ],
+    [
+      "Inactivity~Timeout|portKey2",
+      {
+        "value": 0
+      }
+    ],
+    [
+      "Initial~ID~Timer~~|portKey2",
+      {
+        "value": 22
+      }
+    ],
+    [
+      "Kerchunk|portKey2",
+      {
+        "value": true
+      }
+    ],
+    [
+      "Kerchunk~Timer|portKey2",
+      {
+        "value": 250
+      }
+    ],
+    [
+      "Monitor~Mix|portKey2",
+      {
+        "value": true
+      }
+    ],
+    [
+      "P1~Tail~Message|portKey2",
+      {
+        "value": 1
+      }
+    ],
+    [
+      "P2~Tail~Message|portKey2",
+      {
+        "value": 1
+      }
+    ],
+    [
+      "P3~Tail~Message|portKey2",
+      {
+        "value": 1
+      }
+    ],
+    [
+      "Pending~ID~Timer~~|portKey2",
+      {
+        "value": 10
+      }
+    ],
+    [
+      "Remote~Base~Prefix|portKey2",
+      {
+        "value": "#"
+      }
+    ],
+    [
+      "Repeat~Mode|portKey2",
+      {
+        "value": true
+      }
+    ],
+    [
+      "Speak~Pending~ID~Timer|portKey2",
+      {
+        "value": 60
+      }
+    ],
+    [
+      "Speech~ID~Override|portKey2",
+      {
+        "value": true
+      }
+    ],
+    [
+      "Speech~Override|portKey2",
+      {
+        "value": 1
+      }
+    ],
+    [
+      "Tail~Counter|portKey2",
+      {
+        "value": 12544
+      }
+    ],
+    [
+      "Tail~Message~Number|portKey2",
+      {
+        "value": 0
+      }
+    ],
+    [
+      "Tail~Timer|portKey2",
+      {
+        "value": 0
+      }
+    ],
+    [
+      "Timeout~Reset~Select|portKey2",
+      {
+        "value": false
+      }
+    ],
+    [
+      "Timeout~Timer|portKey2",
+      {
+        "value": 0
+      }
+    ],
+    [
+      "Tx~Enable|portKey2",
+      {
+        "value": true
+      }
+    ],
+    [
+      "Unlock|portKey2",
+      {
+        "value": "72727"
+      }
+    ],
+    [
+      "Use~DR1|portKey2",
+      {
+        "value": false
+      }
+    ],
+    [
+      "Alarm~Enable|portKey3",
+      {
+        "value": false
+      }
+    ],
+    [
+      "CTCSS~Decode|portKey3",
+      {
+        "value": false
+      }
+    ],
+    [
+      "CTCSS~During~ID|portKey3",
+      {
+        "value": false
+      }
+    ],
+    [
+      "CTCSS~Encode~Polarity|portKey3",
+      {
+        "value": false
+      }
+    ],
+    [
+      "CWS~Speed|portKey3",
+      {
+        "value": 20
+      }
+    ],
+    [
+      "DTMF~COS~Control|portKey3",
+      {
+        "value": false
+      }
+    ],
+    [
+      "DTMF~Cover~Tone|portKey3",
+      {
+        "value": false
+      }
+    ],
+    [
+      "DTMF~Mute|portKey3",
+      {
+        "value": false
+      }
+    ],
+    [
+      "DTMF~Mute~Timer|portKey3",
+      {
+        "value": 10
+      }
+    ],
+    [
+      "DTMF~Require~Tone|portKey3",
+      {
+        "value": false
+      }
+    ],
+    [
+      "Enable~Speech~ID|portKey3",
+      {
+        "value": false
+      }
+    ],
+    [
+      "Encode~Timer|portKey3",
+      {
+        "value": 1
+      }
+    ],
+    [
+      "Guest~Macro~Enable|portKey3",
+      {
+        "value": false
+      }
+    ],
+    [
+      "Guest~Macro~Range|portKey3",
+      {
+        "value": [
+          0,
+          257
+        ]
+      }
+    ],
+    [
+      "Hang~Time~1|portKey3",
+      {
+        "value": 31
+      }
+    ],
+    [
+      "Hang~Time~2|portKey3",
+      {
+        "value": 32
+      }
+    ],
+    [
+      "Hang~Time~3|portKey3",
+      {
+        "value": 33
+      }
+    ],
+    [
+      "Inactivity~Timeout|portKey3",
+      {
+        "value": 0
+      }
+    ],
+    [
+      "Initial~ID~Timer~~|portKey3",
+      {
+        "value": 33
+      }
+    ],
+    [
+      "Kerchunk|portKey3",
+      {
+        "value": false
+      }
+    ],
+    [
+      "Kerchunk~Timer|portKey3",
+      {
+        "value": 250
+      }
+    ],
+    [
+      "Monitor~Mix|portKey3",
+      {
+        "value": false
+      }
+    ],
+    [
+      "P1~Tail~Message|portKey3",
+      {
+        "value": 1
+      }
+    ],
+    [
+      "P2~Tail~Message|portKey3",
+      {
+        "value": 1
+      }
+    ],
+    [
+      "P3~Tail~Message|portKey3",
+      {
+        "value": 1
+      }
+    ],
+    [
+      "Pending~ID~Timer~~|portKey3",
+      {
+        "value": 10
+      }
+    ],
+    [
+      "Remote~Base~Prefix|portKey3",
+      {
+        "value": ""
+      }
+    ],
+    [
+      "Repeat~Mode|portKey3",
+      {
+        "value": false
+      }
+    ],
+    [
+      "Speak~Pending~ID~Timer|portKey3",
+      {
+        "value": 60
+      }
+    ],
+    [
+      "Speech~ID~Override|portKey3",
+      {
+        "value": false
+      }
+    ],
+    [
+      "Speech~Override|portKey3",
+      {
+        "value": 0
+      }
+    ],
+    [
+      "Tail~Counter|portKey3",
+      {
+        "value": 13364
+      }
+    ],
+    [
+      "Tail~Message~Number|portKey3",
+      {
+        "value": 3
+      }
+    ],
+    [
+      "Tail~Timer|portKey3",
+      {
+        "value": 0
+      }
+    ],
+    [
+      "Timeout~Reset~Select|portKey3",
+      {
+        "value": false
+      }
+    ],
+    [
+      "Timeout~Timer|portKey3",
+      {
+        "value": 300
+      }
+    ],
+    [
+      "Tx~Enable|portKey3",
+      {
+        "value": false
+      }
+    ],
+    [
+      "Unlock|portKey3",
+      {
+        "value": "72728"
+      }
+    ],
+    [
+      "Use~DR1|portKey3",
+      {
+        "value": false
+      }
+    ],
+    [
+      "Schedule|scheduleKey1",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey2",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey3",
+      {
+        "value": "EveryMonth on EveryDay at 07:00"
+      }
+    ],
+    [
+      "Schedule|scheduleKey4",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey5",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey6",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey7",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey8",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey9",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey10",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey11",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey12",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey13",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey14",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey15",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey16",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey17",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey18",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey19",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey20",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey21",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey22",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey23",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey24",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey25",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey26",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey27",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey28",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey29",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey30",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey31",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey32",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey33",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey34",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey35",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey36",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey37",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey38",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey39",
+      {
+        "value": "-disabled-"
+      }
+    ],
+    [
+      "Schedule|scheduleKey40",
+      {
+        "value": "-disabled-"
+      }
+    ]
+  ]
+]

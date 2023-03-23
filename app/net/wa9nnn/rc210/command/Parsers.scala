@@ -3,7 +3,7 @@ package net.wa9nnn.rc210.command
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.command.ItemValue.Values
 import net.wa9nnn.rc210.command.Parsers.{ParsedValues, procSeq}
-import net.wa9nnn.rc210.key.AlarmKey
+import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.Slice
 
 import scala.util.Try
@@ -162,7 +162,7 @@ object AlarmBoolParser extends Parser {
       .grouped(1).zipWithIndex
       .map { case (v, i) =>
         procSeq(command, v)
-          .withKey( AlarmKey(i + 4))
+          .withKey(  KeyFactory(KeyKind.alarmKey, i + 4))
       }
       .toSeq
   }

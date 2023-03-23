@@ -1,7 +1,7 @@
 package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.key.MacroKey
+import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 
 class ScheduleBuilder extends LazyLogging {
   // colXXX index into n2 dimension of array.
@@ -66,7 +66,7 @@ class ScheduleBuilder extends LazyLogging {
   def putMacro(macroNumbers: Seq[Int]): Unit = {
     macroNumbers.zipWithIndex
       .foreach { case (macroNumber, setPoint) =>
-        array(setPoint)(colMacro) = MacroKey(macroNumber)
+        array(setPoint)(colMacro) =  KeyFactory(KeyKind.macroKey,macroNumber)
       }
   }
 
