@@ -3,10 +3,9 @@ package net.wa9nnn.rc210.data.macros
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row}
 import net.wa9nnn.rc210.MemoryExtractor
-import net.wa9nnn.rc210.data.{Dtmf, FieldKey}
+import net.wa9nnn.rc210.data.Dtmf
 import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.key.KeyKindEnum.{KeyKind, macroKey, scheduleKey}
-import net.wa9nnn.rc210.key.{FunctionKey, Key, KeyKindEnum, MacroKey}
+import net.wa9nnn.rc210.key.{FunctionKey, KeyFactory, KeyKind, MacroKey}
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 
@@ -14,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 /**
  *
- * @param fieldKey  unique id for this macro.
+ * @param key       unique id for this macro.
  * @param functions that this kacro oinvokes.
  * @param dtmf      that can invoke this macro.
  */
@@ -74,7 +73,7 @@ object MacroNode extends LazyLogging with MemoryExtractor with FieldDefinition {
         .grouped(bytesPerMacro)
         .map { bytes =>
           val functions: Seq[FunctionKey] = bytes.takeWhile(_ != 0).map(fn => FunctionKey(fn))
-          val key: MacroKey = KeyKindEnum.macroKey[MacroKey](mai.getAndIncrement())
+          val key: MacroKey = KeyFactory(KeyKind.macroKey, mai.getAndIncrement())
           MacroNode(key, functions, dtmfMap(key))
         }.toSeq
     }
@@ -92,7 +91,7 @@ object MacroNode extends LazyLogging with MemoryExtractor with FieldDefinition {
 
 
   override val fieldName: String = "Macro"
-  override val kind: KeyKind = macroKey
+  override val kind: KeyKind = KeyKind.macroKey
 
   override def prompt: String = ""
   //  override def fieldHtml(fieldKey: FieldKey, fieldContents: FieldContents)(implicit namedSource: NamedSource): Html = ???

@@ -21,13 +21,11 @@ import akka.util.Timeout
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.named.{NamedKey, NamedManager}
-import net.wa9nnn.rc210.key.KeyKindEnum.{KeyKind, commonKey}
 import net.wa9nnn.rc210.key._
 import play.api.mvc._
-
+import KeyKind._
 import javax.inject._
 import scala.concurrent.duration.DurationInt
-
 class EditorController @Inject()(val controllerComponents: ControllerComponents,
                                  mappedValues: MappedValues
                                 )(implicit namedManager: NamedManager, functionsProvider: FunctionsProvider)
@@ -36,26 +34,24 @@ class EditorController @Inject()(val controllerComponents: ControllerComponents,
   implicit val timeout: Timeout = 5.seconds
 
 
-  def editUnselected(sKeyKind: String): Action[AnyContent] = Action {
-    val keyKind: KeyKind = KeyKindEnum.apply(sKeyKind)
+  def editUnselected(keyKind: KeyKind): Action[AnyContent] = Action {
     keyKind match {
 
-      case net.wa9nnn.rc210.key.KeyKindEnum.macroKey =>
+      case KeyKind.macroKey =>
         Redirect(routes.MacroNodeController.index())
       case _ =>
-        val nk: Seq[NamedKey] = Keys.apply(keyKind).map { key =>
+        val nk: Seq[NamedKey] = KeyFactory(keyKind).map { key =>
           NamedKey(key, namedManager.get(key).getOrElse(""))
         }
-        if (keyKind == KeyKindEnum.commonKey)
-          Redirect(routes.EditorController.edit(sKeyKind, CommonKey().toString))
+        if (keyKind == KeyKind.commonKey)
+          Redirect(routes.EditorController.edit(keyKind, CommonKey().toString))
         else
           Ok(views.html.editor(keyKind, nk, Seq.empty))
     }
 
   }
 
-  def edit(sKeyKind: String, sMaybeKey: String): Action[AnyContent] = Action {
-    val keyKind: KeyKind = KeyKindEnum.apply(sKeyKind)
+  def edit(keyKind: KeyKind, sMaybeKey: String): Action[AnyContent] = Action {
 
     val maybeKey: Option[Key] = sMaybeKey match {
       case "" if keyKind == commonKey =>
@@ -65,11 +61,11 @@ class EditorController @Inject()(val controllerComponents: ControllerComponents,
         None
       case sKey =>
         //Edit key user selected.
-        Option(KeyFormats.parseString(sKey))
+        Option(KeyFactory(sKey))
     }
 
 
-    val nk: Seq[NamedKey] = Keys.apply(keyKind).map { key =>
+    val nk: Seq[NamedKey] = KeyFactory(keyKind).map { key =>
       NamedKey(key, namedManager.get(key).getOrElse(""))
     }
 

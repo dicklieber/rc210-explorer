@@ -1,61 +1,69 @@
 @import net.wa9nnn.rc210.data.named.NamedKey
-@import net.wa9nnn.rc210.key.KeyKindEnum
 @import views.html.helper._
-@(keyKindIndex: Option[Int], namedKeys: Seq[NamedKey])
+@import net.wa9nnn.rc210.key.KeyKind
+@(selectedKeyKind: Option[KeyKind], namedKeys: Seq[NamedKey])
 
 
-@main("Named") {
+    @main("Named") {
 
-    <head>
-        <script type='text/javascript'>
-                $(document).ready(function () {
-                    $('#keyKind').change(function () {
-                        $('#named').submit();
+        <head>
+            <script type='text/javascript'>
+                    $(document).ready(function () {
+                        $('#keyKind').change(function () {
+                            $('#named').submit();
+                        });
                     });
-                });
-        </script>
-    </head>
-    @form(action = routes.NamedController.edit(), Symbol("id") -> "named") {
-        <select name="keyKind" id="keyKind">
-            @* <select class="form-select form-select-sm" aria-label="KeyKind" name="keyKind">*@
-            @(keyKindIndex: Option[Int], namedKeys: Seq[NamedKey])
-            @if(keyKindIndex.isEmpty) {
-                <option selected>-Choose-</option>
-            }
-            @for(kk <- KeyKindEnum.namebleKeyKinds) {
-                @defining(if(kk.id == (keyKindIndex.getOrElse(-1))) " selected" else " ") { selec =>
-                    <option value="@kk.id" @selec >@kk.prettyName</option>
+            </script>
+        </head>
+        @form(action = routes.NamedController.edit(), Symbol("id") -> "named") {
+            <select name="keyKind" id="keyKind">
+                @* <select class="form-select form-select-sm" aria-label="KeyKind" name="keyKind">*@
+@*//                @(keyKindIndex: Option[Int], namedKeys: Seq[NamedKey])*@
+                @if(selectedKeyKind.isEmpty) {
+                    <option selected>-Choose-</option>
                 }
-            }
-        </select>
-        @if(namedKeys.nonEmpty) {
-            <button type="submit" class="btn btn-primary">Save</button>
+                @for(kk <- KeyKind.values().filter(_.isNameable)) {
+                    @defining(
+                        (for {
+                            skk <- selectedKeyKind
+                                    if (skk == kk)
+                        } yield {
+                            " selected "
+                        }).getOrElse("")
 
-            <table>
-                @* <table class="table table-bordered table-sm">*@
-                <thead>
-                    <tr>
-                        <td>Number</td>
-                        <td>Name</td>
-                    </tr>
-                </thead>
-                <tbody>
-                @for(namedKey <- namedKeys) {
-                    <tr>
-                    @defining(namedKey.key.toCell) { cell =>
-                        <td class='@cell.cssClass.mkString(" ")'> @cell.value</td>
-                        <td>
-                            <input value="@namedKey.name" name="@namedKey.key.toString">
-                        </td>
+                    ) { selec =>
+                        <option value="@kk" @selec >@kk.toString</option>
                     }
-                    </tr>
                 }
-                </tbody>
+            </select>
+            @if(namedKeys.nonEmpty) {
+                <button type="submit" class="btn btn-primary">Save</button>
 
-            </table>
+                <table>
+                    @* <table class="table table-bordered table-sm">*@
+                    <thead>
+                        <tr>
+                            <td>Number</td>
+                            <td>Name</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @for(namedKey <- namedKeys) {
+                        <tr>
+                        @defining(namedKey.key.toCell) { cell =>
+                            <td class='@cell.cssClass.mkString(" ")'> @cell.value</td>
+                            <td>
+                                <input value="@namedKey.name" name="@namedKey.key.toString">
+                            </td>
+                        }
+                        </tr>
+                    }
+                    </tbody>
+
+                </table>
+            }
+
+
         }
 
-
     }
-
-}

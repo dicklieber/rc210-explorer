@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data
 
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
-import net.wa9nnn.rc210.key.{Key, KeyFormats}
+import net.wa9nnn.rc210.key.{Key, KeyFactory, KeyFormats}
 import play.api.libs.json.{Format, JsResult, JsString, JsValue}
 import play.api.mvc.PathBindable
 
@@ -80,7 +80,7 @@ object FieldKey {
   def fromParam(param: String): FieldKey = {
     val spacesBack = param.replaceAll("~", " ")
     val r(fieldName, sKey) = spacesBack
-    FieldKey(fieldName, KeyFormats.parseString(sKey))
+    FieldKey(fieldName, KeyFactory(sKey))
   }
 
   private val r = """(.+)\|(.*)""".r

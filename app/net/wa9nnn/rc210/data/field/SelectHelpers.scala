@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.key.{Key, KeyFormats}
+import net.wa9nnn.rc210.key.{Key, KeyFactory, KeyFormats}
 
 import java.time.LocalTime
 
@@ -41,14 +41,14 @@ object FormHelpers {
 
   def form2Key[T <: Key](name: String)(implicit map: Map[String, Seq[String]]): T = {
     val value: Seq[String] = map(name)
-    KeyFormats.parseString(value.head).asInstanceOf[T]
+    KeyFactory(value.head)
   }
 
   def form2OptTime(name: String)(implicit map: Map[String, Seq[String]]): Option[LocalTime] = {
-    val value: Seq[String] = map(name)
+    //    val value: Seq[String] = map(name)
     for {
       value: String <- map(name)
-      if !value.isEmpty
+      if value.nonEmpty
     } yield {
       LocalTime.parse(value)
     }
@@ -92,7 +92,7 @@ object SelectKeyHelper {
    */
   def apply(current: Key, param: String): String = {
 
-    val keys: Seq[Key] = current.kind.allKeys
+    val keys: Seq[Key] = KeyFactory(current.kind)
     val options = keys.map { k: Key =>
       val opt = SelectOption(k.toString, k.toString)
       if (k == current)
@@ -105,8 +105,6 @@ object SelectKeyHelper {
 
   def apply[T](name: String)(implicit map: Map[String, Seq[String]]): T = {
     val value: Seq[String] = map(name)
-    KeyFormats.parseString(value.head).asInstanceOf[T]
+    KeyFactory(value.head)
   }
-
-
 }

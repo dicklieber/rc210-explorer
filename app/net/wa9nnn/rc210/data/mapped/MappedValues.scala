@@ -20,8 +20,7 @@ package net.wa9nnn.rc210.data.mapped
 import net.wa9nnn.rc210.DataProvider
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.{FieldContents, FieldEntry}
-import net.wa9nnn.rc210.key.Key
-import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
+import net.wa9nnn.rc210.key.{Key, KeyKind}
 import play.api.libs.json.JsArray
 
 import javax.inject.{Inject, Singleton}

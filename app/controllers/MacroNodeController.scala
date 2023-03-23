@@ -17,20 +17,19 @@
 
 package controllers
 
-import net.wa9nnn.rc210.data.{Dtmf, FieldKey}
+import net.wa9nnn.rc210.data.Dtmf
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.named.NamedManager
-import net.wa9nnn.rc210.key.{FunctionKey, KeyFormats, KeyKindEnum, MacroKey}
-import play.api.libs.Files
+import net.wa9nnn.rc210.key.{FunctionKey, KeyFactory, KeyFormats, KeyKind, MacroKey}
 import play.api.mvc._
 import views.html.macroNodes
 
-import java.nio.file.Files
 import javax.inject.{Inject, Singleton}
 import scala.util.Try
+import scala.util.matching.Regex
 
 @Singleton()
 class MacroNodeController @Inject()(val mcc: MessagesControllerComponents,
@@ -40,10 +39,10 @@ class MacroNodeController @Inject()(val mcc: MessagesControllerComponents,
 
   def index(): Action[AnyContent] = Action { implicit request =>
 
-    val value: Seq[MacroNode] = mappedValues.apply(KeyKindEnum.macroKey).map { fieldEntry =>
+    val value: Seq[MacroNode] = mappedValues.apply(KeyKind.macroKey).map { fieldEntry =>
       fieldEntry.fieldValue.asInstanceOf[MacroNode]
     }
-    Ok(macroNodes(value, KeyKindEnum.macroKey))
+    Ok(macroNodes(value, KeyKind.macroKey))
   }
 
   def edit(key: MacroKey): Action[AnyContent] = Action { implicit request =>
@@ -64,7 +63,7 @@ class MacroNodeController @Inject()(val mcc: MessagesControllerComponents,
 
     val dataParts: Map[String, Seq[String]] = valuesMap.dataParts
     val sKey = dataParts("key").head
-    val key:MacroKey = KeyFormats(sKey)
+    val key:MacroKey = KeyFactory(sKey)
     val dtmf: Option[Dtmf] = dataParts("dtmf").map(Dtmf(_)).headOption
 
     val functions: Seq[FunctionKey] = dataParts("functionIds")
@@ -78,17 +77,16 @@ class MacroNodeController @Inject()(val mcc: MessagesControllerComponents,
       }
 
 
-    val sKeyKind = KeyKindEnum.macroKey.toString()
 
     val newMacroNode = MacroNode(key, functions, dtmf)
 
     mappedValues(newMacroNode.fieldkey, newMacroNode)
-    Redirect(routes.EditorController.edit(sKeyKind, key.toString))
+    Redirect(routes.EditorController.edit(KeyKind.macroKey, key.toString))
   }
 }
 
 object MacroNodeController {
-  val r = """[^\d]*(\d*)""".r
+  val r: Regex = """[^\d]*(\d*)""".r
 }
 
 case class MacroEdit(macroNode: MacroNode, name: String)

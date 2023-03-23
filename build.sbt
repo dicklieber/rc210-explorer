@@ -1,4 +1,4 @@
-
+import play.sbt.routes.RoutesKeys.routesImport
 name := """rc210-explorer"""
 organization := "net.wa9nnn"
 
@@ -24,13 +24,13 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
     //    docusaurDir := (ThisBuild / baseDirectory).value / "website",
     //    docusaurBuildDir := docusaurDir.value / "build",
 
-    mappings in (Compile, packageDoc) := Seq(),
+    mappings in(Compile, packageDoc) := Seq(),
 
     scalacOptions ++= Seq(
       "-feature",
       "-deprecation",
       "-Xfatal-warnings",
-//      "-Ymacro-annotations",
+      //      "-Ymacro-annotations",
       "-Xlog-implicits"
     )
 
@@ -62,7 +62,6 @@ libraryDependencies ++= Seq(
 )
 
 
-routesImport ++= Seq(
-  "net.wa9nnn.rc210.key.MacroKey",
-  "net.wa9nnn.rc210.key.MacroKey.pathBinder"
-)
+routesImport += "net.wa9nnn.rc210.Binders._"
+routesImport += "net.wa9nnn.rc210.key.MacroKey"
+routesImport += "net.wa9nnn.rc210.key.KeyKind"

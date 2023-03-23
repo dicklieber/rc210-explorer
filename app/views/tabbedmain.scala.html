@@ -4,8 +4,7 @@
 * two arguments, a `String` for the title of the page and an `Html`
 * object to insert into the body of the page.
 *@
-@import net.wa9nnn.rc210.key.KeyKindEnum
-@import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
+@import net.wa9nnn.rc210.key.KeyKind
 @(activeKeyKind:KeyKind)(content: Html)
 <!doctype html>
 <html lang="en">
@@ -27,9 +26,9 @@
         <div >
 @*        <div class="container-fluid ">*@
             <ul class="nav nav-pills">
-            @for(keyKind <- KeyKindEnum.namebleKeyKinds) {
+            @for(keyKind <- KeyKind.values()) {
                 <li class="nav-item">
-                    <a class="nav-link  @if(keyKind == activeKeyKind) { active }" href="@routes.EditorController.editUnselected(keyKind.prettyName)">@keyKind.prettyName</a>
+                    <a class="nav-link  @if(keyKind == activeKeyKind) { active }" href="@routes.EditorController.editUnselected(keyKind)">@keyKind.toString</a>
                 </li>
             }
             </ul>

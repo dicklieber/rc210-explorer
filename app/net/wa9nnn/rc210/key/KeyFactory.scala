@@ -17,10 +17,52 @@
 
 package net.wa9nnn.rc210.key
 
-import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
-
+/**
+ * All keys live here
+ * They are all created at startup.
+ * Instances can only be obtained by calling methods on the object.
+ */
 object KeyFactory {
-  def apply[T <: Key](keyKind: KeyKind, number: Int): Key = {
-    keyKind(number).asInstanceOf[T]
+
+  private val keys: Seq[Key] = {
+    {
+      for {
+        keyKind <- KeyKind.values().toIndexedSeq
+        number <- (1 to keyKind.maxN)
+      } yield {
+        keyKind match {
+          case KeyKind.alarmKey => AlarmKey(number)
+          case KeyKind.dtmfMacroKey => DtmfMacroKey(number)
+          case KeyKind.courtesyToneKey => CourtesyToneKey(number)
+          case KeyKind.functionKey => FunctionKey(number)
+          case KeyKind.macroKey => MacroKey(number)
+          case KeyKind.messageMacroKey => MessageMacroKey(number)
+          case KeyKind.commonKey => CommonKey()
+          case KeyKind.wordKey => WordKey(number)
+          case KeyKind.portKey => PortKey(number)
+          case KeyKind.scheduleKey => ScheduleKey(number)
+        }
+      }
+    }
+  }
+
+  private val map: Map[String, Key] = keys.map { k =>
+    k.toString -> k }.toMap
+
+  def apply[K <: Key](sKey: String): K = {
+    map.getOrElse(sKey, throw new IllegalArgumentException(s"No key for : $sKey!")).asInstanceOf[K]
+  }
+
+  def apply[K <: Key](keyKind: KeyKind, number: Int): K = {
+    apply(keyKind.skey(number))
+  }
+
+  val availableKeys: Seq[Key] = {
+    keys
+  }
+
+  def apply(keyKind: KeyKind): Seq[Key] = {
+    availableKeys
+      .filter(_.kind.eq(keyKind))
   }
 }

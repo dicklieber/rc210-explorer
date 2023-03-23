@@ -22,27 +22,25 @@ import net.wa9nnn.rc210.command._
 import net.wa9nnn.rc210.data.functions.FunctionNode
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.named.{NamedData, NamedKey}
-import net.wa9nnn.rc210.data.schedules.DayOfWeek.DayOfWeek
-import net.wa9nnn.rc210.data.schedules.{MonthOfYear, Schedule}
-import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
+import net.wa9nnn.rc210.data.schedules.Schedule
 import play.api.libs.json._
 import play.api.mvc.PathBindable
 
 import scala.util.Try
 import scala.util.matching.Regex
-
+import scala.language.postfixOps
 object KeyFormats {
 
   implicit val fmtFunction: Format[FunctionNode] = new Format[FunctionNode] {
     override def reads(json: JsValue): JsResult[FunctionNode] = {
 
       try {
-        val jsKey: Key = (json \ "key").as[Key]
+        val jsKey: FunctionKey = (json \ "key").as[Key].asInstanceOf[FunctionKey]
 
         val sdesc: String = (json \ "description").as[String]
         val sdest: Option[Key] = (json \ "destination").asOpt[Key]
 
-        val f = FunctionNode(jsKey.asInstanceOf[FunctionKey], sdesc, sdest)
+        val f = FunctionNode(jsKey, sdesc, sdest)
         JsSuccess(f)
       }
       catch {
@@ -164,7 +162,7 @@ object KeyFormats {
   implicit val fmtKey: Format[Key] = new Format[Key] {
     override def reads(json: JsValue): JsResult[Key] = {
       JsResult.fromTry(Try {
-        KeyFormats.parseString(json.as[String])
+       KeyFactory[Key](json.as[String])
       })
     }
 
@@ -173,32 +171,18 @@ object KeyFormats {
     }
   }
 
-  def parseString(string: String): Key = {
-    val r(kind, sNnumber) = string
-    val number: Int = Option(sNnumber).map(_.toInt).getOrElse(0)
-    KeyKindEnum.createKey(kind, number)
-  }
-  def apply[T](string: String): T = {
-    val r(kind, sNnumber) = string
-    val number: Int = Option(sNnumber).map(_.toInt).getOrElse(0)
-    KeyKindEnum.createKey(kind, number).asInstanceOf[T]
-  }
-
-
-
-
   implicit def keyKindPathBinder(implicit intBinder: PathBindable[KeyKind]): PathBindable[KeyKind] = new PathBindable[KeyKind] {
     override def bind(key: String, fromPath: String): Either[String, KeyKind] = {
       try {
-        Right(KeyKindEnum.apply(fromPath))
+        Right(KeyKind.valueOf(fromPath))
       } catch {
         case e: Exception =>
           Left(e.getMessage)
       }
     }
 
-    override def unbind(key: String, rcKey: KeyKind): String =
-      rcKey.prettyName
+    override def unbind(key: String, keyKind: KeyKind): String =
+      keyKind.toString
   }
 
 

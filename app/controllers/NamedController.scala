@@ -18,8 +18,7 @@
 package controllers
 
 import net.wa9nnn.rc210.data.named.{NamedKey, NamedManager}
-import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
-import net.wa9nnn.rc210.key.{Key, KeyFormats, KeyKindEnum, Keys}
+import net.wa9nnn.rc210.key.{Key, KeyFactory, KeyKind}
 import play.api.mvc._
 
 import javax.inject.Inject
@@ -37,20 +36,19 @@ class NamedController @Inject()(implicit val controllerComponents: ControllerCom
     val kv: Map[String, String] = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }
 
     namedManager.update(kv.removed("keyKind").map { case (key, value) =>
-      val key1 = KeyFormats.parseString(key)
+      val key1 = KeyFactory(key)
       NamedKey(key1, value)
     })
 
 
-    val kkIndex: Int = kv("keyKind").toInt
-    val selectedKeyKind: KeyKind = KeyKindEnum(kkIndex).asInstanceOf[KeyKind]
+    val selectedKeyKind: KeyKind = KeyKind.valueOf(kv("keyKind"))
 
-    val keys: Seq[Key] = Keys(selectedKeyKind)
+    val keys: Seq[Key] = KeyFactory(selectedKeyKind)
     val namedKeys: Seq[NamedKey] = keys
       .map { key =>
         NamedKey(key, namedManager.get(key).getOrElse(""))
       }
-    Ok(views.html.named(Option(kkIndex), namedKeys))
+    Ok(views.html.named(Option(selectedKeyKind), namedKeys))
   }
 }
 

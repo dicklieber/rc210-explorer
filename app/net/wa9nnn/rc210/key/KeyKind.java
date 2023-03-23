@@ -15,16 +15,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.key
+package net.wa9nnn.rc210.key;
 
-import org.specs2.mutable.Specification
+public enum KeyKind {
 
-class KeysSpec extends Specification {
+    alarmKey(5),
 
-  "Keys" should {
-    "availableKeys" in {
-      val a = Keys.availableKeys
-      ok
+    dtmfMacroKey(195, false),
+    courtesyToneKey(10),
+    functionKey(1005, false),
+    macroKey(105),
+    messageMacroKey(70),
+    commonKey(1),
+    wordKey(256, false),
+    portKey(3),
+    scheduleKey(40);
+
+    private final int MaxN;
+    private boolean nameable = true;
+
+    public boolean isNameable() {
+        return nameable;
     }
-  }
+
+
+    KeyKind(int maxN) {
+        this.MaxN = maxN;
+
+    }
+
+    KeyKind(int maxN, boolean nameable) {
+        this.MaxN = maxN;
+        this.nameable = nameable;
+    }
+
+
+    public int maxN() {
+        return MaxN;
+    }
+
+    public String skey(int number) {
+        return toString() + number;
+    }
+
 }

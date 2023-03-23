@@ -15,26 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.key
+package net.wa9nnn.rc210.data.named
 
-import net.wa9nnn.rc210.key.KeyKindEnum.{KeyKind, portKey}
-import org.specs2.mutable.Specification
+import net.wa9nnn.rc210.key.Key
+import play.api.libs.json.{Format, Json, OFormat}
 
-class KeyKindEnumSpec extends Specification {
+case class NamedKey(key: Key, name: String) extends Ordered[NamedKey] {
+  override def compare(that: NamedKey): Int = key compareTo that.key
+}
 
-  "KeyKindEnum" should {
-    "instantiate a key" in {
-      val value1: PortKey = portKey[PortKey](2)
-      value1.number must beEqualTo (2)
-      value1.toString must beEqualTo ("port2")
-    }
+case class NamedData(data: Seq[NamedKey])
 
-    "ordered" >> {
-      val keyKinds: Seq[KeyKind] = KeyKindEnum.keyKinds
-      keyKinds.foreach{d =>
-        println(d)
-      }
-      ok
-    }
-  }
+object NamedData {
+  import net.wa9nnn.rc210.key.KeyFormats._
+  implicit val fmtNamedKey: Format[NamedKey] = Json.format[NamedKey]
+  implicit val fmtNamedData: Format[NamedData] = Json.format[NamedData]
 }

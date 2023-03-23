@@ -20,8 +20,8 @@ package controllers
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.named.NamedManager
-import net.wa9nnn.rc210.key.{Key, KeyFormats}
-import play.api.mvc.{Action, _}
+import net.wa9nnn.rc210.key.{Key, KeyFactory}
+import play.api.mvc._
 import play.twirl.api.Html
 
 import javax.inject._
@@ -39,7 +39,7 @@ class FieldEditorController @Inject()(val controllerComponents: ControllerCompon
 
 
   def editFields(sKey: String): Action[AnyContent] = Action {
-    val key: Key = KeyFormats.parseString(sKey)
+    val key: Key = KeyFactory(sKey)
     Ok(views.html.fieldsEditor(key, mappedValues.apply(key)))
   }
 

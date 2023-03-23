@@ -24,6 +24,7 @@ import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.data.schedules.{DayOfWeek, MonthOfYear, Schedule}
 import play.api.mvc._
 import net.wa9nnn.rc210.data.field.FormHelpers._
+import net.wa9nnn.rc210.key.KeyKind
 
 import javax.inject.{Inject, Singleton}
 
@@ -46,7 +47,6 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
     val fieldKey = FieldKey("Schedule", schedule.key)
     mappedValues.apply(fieldKey, schedule)
 
-    val sKeyKind = schedule.key.kind.prettyName
-    Redirect(routes.EditorController.edit(sKeyKind, schedule.key.toString))
+    Redirect(routes.EditorController.edit(KeyKind.scheduleKey, schedule.key.toString))
   }
 }

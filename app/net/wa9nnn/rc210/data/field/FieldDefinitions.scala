@@ -22,7 +22,7 @@ import net.wa9nnn.rc210.data.field.UiInfo._
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.data.schedules.Schedule
-import net.wa9nnn.rc210.key.KeyKindEnum._
+import net.wa9nnn.rc210.key.KeyKind._
 
 import javax.inject.{Inject, Singleton}
 

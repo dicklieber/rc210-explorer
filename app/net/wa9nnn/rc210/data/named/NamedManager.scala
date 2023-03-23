@@ -19,14 +19,20 @@ package net.wa9nnn.rc210.data.named
 
 import com.fasterxml.jackson.module.scala.deser.overrides.TrieMap
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.key.Key
-import net.wa9nnn.rc210.key.KeyFormats._
-import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
-import play.api.libs.json.Json
+import net.wa9nnn.rc210.key.{Key, KeyKind}
+import play.api.libs.json.{Json, OFormat}
 
 import java.io.IOException
 import java.nio.file.{Files, Path, Paths}
 import javax.inject.{Inject, Named, Singleton}
+
+
+trait NamedSource {
+  def apply(key: Key): String
+
+  def get(key: Key): Option[String]
+
+}
 
 @Singleton
 class NamedManager @Inject()(@Named("vizRc210.namedDataFile") namedFilePath: String) extends NamedSource with LazyLogging {
@@ -109,17 +115,6 @@ class NamedManager @Inject()(@Named("vizRc210.namedDataFile") namedFilePath: Str
   }
 }
 
-object NamedSource
 
 
-case class NamedKey(key: Key, name: String) extends Ordered[NamedKey] {
-  override def compare(that: NamedKey): Int = key compareTo that.key
-}
 
-case class NamedData(data: Seq[NamedKey])
-
-trait NamedSource {
-  def apply(key: Key): String
-  def get(key: Key): Option[String]
-
-}

@@ -1,10 +1,9 @@
-@import net.wa9nnn.rc210.key.KeyKindEnum
+@import net.wa9nnn.rc210.key.KeyKind
 @()
 
 @main("Select Key") {
-XYZZY: @KeyKindEnum.keyKinds.head.toString()
 
-    @for(keyKind <- KeyKindEnum.keyKinds) {
+    @for(keyKind <- KeyKind.values()) {
         <div class="mb-3">
             <a href="@routes.FieldEditorController.editFields(keyKind.toString)">@keyKind.toString</a>
         </div>

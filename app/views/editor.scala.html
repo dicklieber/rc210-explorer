@@ -1,7 +1,8 @@
 @import net.wa9nnn.rc210.data.field.FieldEntry
-@import net.wa9nnn.rc210.data.named.{NamedKey, NamedSource}
-@import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
 @import net.wa9nnn.rc210.data.functions.FunctionsProvider
+@import net.wa9nnn.rc210.key.KeyKind
+@import net.wa9nnn.rc210.data.named.NamedKey
+@import net.wa9nnn.rc210.data.named.NamedSource
 @(keyKind: KeyKind, keys: Seq[NamedKey], fieldEntries: Seq[FieldEntry])(implicit namedSource: NamedSource, functionsProvider: FunctionsProvider)
 @tabbedmain(keyKind) {
     <div class="container-fluid">
@@ -12,7 +13,7 @@
                     <legend>Keys</legend>
                     <div class="col">
                     @for(namedKey <- keys) {
-                        <a href='@routes.EditorController.edit(keyKind.prettyName, namedKey.key.toString)'>@namedKey.key.number @namedKey.name</a>
+                        <a href='@routes.EditorController.edit(keyKind, namedKey.key.toString)'>@namedKey.key.number @namedKey.name</a>
                         <br/>
                     }
                     </div>

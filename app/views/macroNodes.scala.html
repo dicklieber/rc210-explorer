@@ -1,10 +1,10 @@
 @import net.wa9nnn.rc210.data.functions.FunctionsProvider
 @import net.wa9nnn.rc210.data.macros.MacroNode
-@import net.wa9nnn.rc210.data.named.NamedSource
 @import views.html.helper._
 
-@import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
 @import net.wa9nnn.rc210.key.MacroKey
+@import net.wa9nnn.rc210.data.named.NamedSource
+@import net.wa9nnn.rc210.key.KeyKind
 @(macroNodes: Seq[MacroNode], keyKind: KeyKind)(implicit functionsProvider: FunctionsProvider, namedSource: NamedSource)
 
 @tabbedmain(keyKind) {
@@ -26,7 +26,7 @@
                     onclick="window.location.href='@routes.MacroNodeController.edit(macroNode.key.asInstanceOf[MacroKey])'"></button>
                 </td>
                 <td title="@macroNode.key.toString">
-                @namedSource.get(macroNode.key).getOrElse(macroNode.key.number)
+                @namedSource(macroNode.key)
                 </td>
                 <td class="text-end">
                     @macroNode.dtmf

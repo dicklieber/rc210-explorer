@@ -17,11 +17,9 @@
 
 package net.wa9nnn.rc210.data.field
 
-import akka.io.Tcp.SO
 import com.google.inject.Inject
 import net.wa9nnn.rc210.data.named.NamedManager
-import net.wa9nnn.rc210.key.KeyKindEnum.macroKey
-import net.wa9nnn.rc210.key.MacroKey
+import net.wa9nnn.rc210.key.{KeyFactory, KeyKind, MacroKey}
 
 import javax.inject.Singleton
 
@@ -57,12 +55,9 @@ class SelectOptions @Inject()(implicit namedManager: NamedManager) {
     override val fieldExtractor = SelectExtractor()
 
     override def options() = {
-      for {
-        number <- 1 to macroKey.maxN
-        macroKey = MacroKey(number)
 
-      } yield {
-        SelectOption(number, namedManager(macroKey))
+      KeyFactory.apply(KeyKind.macroKey).map{mk =>
+        SelectOption(mk.toString, namedManager(mk))
       }
     }
   }

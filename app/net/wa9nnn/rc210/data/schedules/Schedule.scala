@@ -7,8 +7,7 @@ import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field._
 import net.wa9nnn.rc210.data.schedules.DayOfWeek.DayOfWeek
 import net.wa9nnn.rc210.data.schedules.MonthOfYear.MonthOfYear
-import net.wa9nnn.rc210.key.KeyKindEnum._
-import net.wa9nnn.rc210.key.{Key, MacroKey, ScheduleKey}
+import net.wa9nnn.rc210.key.{KeyKind, MacroKey, ScheduleKey}
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 import play.api.libs.json.{JsString, JsValue}
@@ -17,7 +16,7 @@ import java.time.LocalTime
 
 /**
  *
- * @param key         for [[ScheduleKey]]
+ * @param key          for [[ScheduleKey]]
  * @param dayOfWeek    See [[DayOfWeekJava]]
  * @param weekInMonth  e.g 1 == 1st week in month.
  * @param monthOfYear  See [[MonthOfYear]]
@@ -67,12 +66,12 @@ case class Schedule(key: ScheduleKey, dayOfWeek: DayOfWeek, weekInMonth: Option[
    * @return html
    */
   override def toHtmlField(fieldEntry: FieldEntry): String =
-    views.html.schedule(this, scheduleKey).toString()
+    views.html.schedule(this, key.kind).toString()
 
   override def display: String = description
 }
 
-object Schedule extends LazyLogging with MemoryExtractor  {
+object Schedule extends LazyLogging with MemoryExtractor {
   def header(count: Int): Header = Header(s"Schedules ($count)", "SetPoint", "Macro", "DOW", "WeekInMonth", "MonthOfYear", "LocalTime")
 
   override def extract(memory: Memory): Seq[FieldEntry] = {
@@ -111,14 +110,14 @@ object Schedule extends LazyLogging with MemoryExtractor  {
             None
         }
       }, macroToRun = parts(5).asInstanceOf[MacroKey])
-      FieldEntry(this, FieldKey("Schedule",key), schedule)
+      FieldEntry(this, FieldKey("Schedule", key), schedule)
     }
   }
 
   override def prompt: String = ""
 
   override val fieldName: String = "Schedule"
-  override val kind: KeyKind = scheduleKey
+  override val kind: KeyKind = KeyKind.scheduleKey
 }
 
 

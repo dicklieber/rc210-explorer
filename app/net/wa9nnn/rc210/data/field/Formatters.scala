@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.Dtmf
-import net.wa9nnn.rc210.key.{FunctionKey, Key, KeyFormats, MacroKey}
+import net.wa9nnn.rc210.key.{FunctionKey, Key, KeyFactory, KeyFormats, MacroKey}
 import play.api.data.FormError
 
 /**
@@ -33,7 +33,7 @@ object Formatters {
   implicit object MacroKeyFormatter extends Formatter[MacroKey] {
     override val format: Option[(String, Nil.type)] = Some(("format.macrokey", Nil))
 
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], MacroKey] = parsing(KeyFormats[MacroKey], "error.url", Nil)(key, data)
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], MacroKey] = parsing(s => KeyFactory(s), "error.url", Nil)(key, data)
 
     override def unbind(key: String, value: MacroKey): Map[String, String] = Map(key -> value.toString)
   }

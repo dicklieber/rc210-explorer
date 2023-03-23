@@ -1,11 +1,11 @@
 @import net.wa9nnn.rc210.data.functions.FunctionsProvider
 @import net.wa9nnn.rc210.data.named.NamedSource
-@import net.wa9nnn.rc210.key.KeyKindEnum
 @import views.html.helper.form
 @import net.wa9nnn.rc210.data.macros.MacroNode
+@import net.wa9nnn.rc210.key.KeyKind
 @(macroNode: MacroNode, name: String)(implicit namedSource: NamedSource, functionsProvider: FunctionsProvider, messagesProvider: MessagesProvider)
 
-@tabbedmain(KeyKindEnum.macroKey) {
+@tabbedmain(KeyKind.macroKey) {
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
     <script src="@routes.Assets.versioned("javascripts/macroNode.js")"></script>

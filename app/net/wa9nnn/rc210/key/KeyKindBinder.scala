@@ -17,24 +17,22 @@
 
 package net.wa9nnn.rc210.key
 
-import net.wa9nnn.rc210.key.KeyKindEnum.KeyKind
+import play.api.mvc.PathBindable
+
 
 /**
- * All of the possible keys for every [[KeyKind]] and maxNs.
+ * Codec to allow non-string types i routes.conf definitions.
  */
-object Keys {
-  val availableKeys: Seq[Key] = {
-    (for {
-      f <- KeyKindEnum.values
-      keyKind = f.asInstanceOf[KeyKind]
-      number <- 1 to keyKind.maxN
-    } yield {
-      keyKind.apply[Key](number)
-    }).toSeq
-  }
+object KeyKindBinder {
 
-  def apply(keyKind: KeyKind) :Seq[Key] = {
-    availableKeys
-      .filter(_.kind.eq(keyKind))
+  implicit def keyKindPathBinder: PathBindable[KeyKind] = new PathBindable[KeyKind] {
+    override def bind(key: String, value: String): Either[String, KeyKind] = {
+
+      Right(KeyKind.valueOf(value))
+    }
+
+    override def unbind(key: String, macroKey: KeyKind): String = {
+      macroKey.toString
+    }
   }
 }
