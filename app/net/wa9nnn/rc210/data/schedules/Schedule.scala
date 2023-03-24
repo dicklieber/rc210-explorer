@@ -115,7 +115,6 @@ object Schedule extends LazyLogging with MemoryExtractor {
     }
   }
 
-  override def prompt: String = ""
 
   override val fieldName: String = "Schedule"
   override val kind: KeyKind = KeyKind.scheduleKey

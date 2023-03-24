@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.data.field
 
+import com.wa9nnn.util.tableui.Cell
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.key.KeyFactory.Key
 import play.api.libs.json._
@@ -46,6 +47,15 @@ trait FieldContents {
    */
 
   def toHtmlField(fieldEntry: FieldEntry): String
+
+   def toCell(fieldEntry: FieldEntry): Cell = {
+     val html: String = toHtmlField(fieldEntry)
+     Cell.rawHtml(html)
+   }
+
+  def update(paramValue: String): FieldContents = {
+    throw new NotImplementedError() //todo
+  }
 
   //  def toCommand(fieldKey: FieldKey, commandTemplate: String): String = {
   //
@@ -83,8 +93,9 @@ case class FieldInt(value: Int) extends FieldContents {
    * @return
    */
   def toHtmlField(fieldEntry: FieldEntry): String = {
-    fieldNumber(fieldEntry.param, value).toString()
+    fieldNumber(fieldEntry).toString()
   }
+
 
   override def toCommand(fieldEntry: FieldEntry): String = ???
 
@@ -96,8 +107,9 @@ case class FieldDtmf(value: String) extends FieldContents {
   override def toJsValue: JsValue = JsString(value)
 
   def toHtmlField(fieldEntry: FieldEntry): String = {
-    fieldDtmf(fieldEntry.param, value).toString()
+    fieldDtmf(fieldEntry).toString()
   }
+
 
   /**
    * Render this value as an RD-210 command string.
@@ -111,7 +123,7 @@ case class FieldBoolean(value: Boolean) extends FieldContents {
   override def toJsValue: JsValue = JsBoolean(value)
 
   override def toHtmlField(fieldEntry: FieldEntry): String = {
-    fieldCheckbox(fieldEntry.param, value).toString()
+    fieldCheckbox(fieldEntry).toString()
   }
 
   /**
@@ -120,6 +132,7 @@ case class FieldBoolean(value: Boolean) extends FieldContents {
   override def toCommand(fieldEntry: FieldEntry): String = ???
 
   override def display: String = value.toString
+
 }
 
 case class FieldSeqInts(value: Int*) extends FieldContents {
@@ -134,8 +147,9 @@ case class FieldSeqInts(value: Int*) extends FieldContents {
 
 
   override def toHtmlField(fieldEntry: FieldEntry): String = {
-    fieldString(fieldEntry.param, toString).toString()
+    fieldString(fieldEntry).toString()
   }
+  override def toCell(fieldEntry: FieldEntry): Cell = Cell.rawHtml(toHtmlField(fieldEntry))
 
   override def display: String = value.map(_.toString).mkString(" ")
 }
@@ -144,12 +158,7 @@ case class FieldSelect(value: Int) extends FieldContents {
   override def toJsValue: JsValue = Json.toJson(value)
 
   override def toHtmlField(fieldEntry: FieldEntry): String = {
-    val value1: FieldContents = fieldEntry.fieldValue
-    val options: Seq[SelectOption] = fieldEntry.fieldDefinition.uiInfo.options()
-
-    views.html.fieldSelect(
-      paramId = fieldEntry.param,
-      options = fieldEntry.fieldDefinition.uiInfo.options()).toString()
+    views.html.fieldSelect(fieldEntry).toString()
   }
 
   /**
@@ -158,4 +167,6 @@ case class FieldSelect(value: Int) extends FieldContents {
   override def toCommand(fieldEntry: FieldEntry): String = ???
 
   override def display: String = value.toString
+
+  override def toCell(fieldEntry: FieldEntry): Cell = ???
 }

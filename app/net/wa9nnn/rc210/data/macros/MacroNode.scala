@@ -94,8 +94,6 @@ object MacroNode extends LazyLogging with MemoryExtractor with FieldDefinition {
   override val fieldName: String = "Macro"
   override val kind: KeyKind = KeyKind.macroKey
 
-  override def prompt: String = ""
-  //  override def fieldHtml(fieldKey: FieldKey, fieldContents: FieldContents)(implicit namedSource: NamedSource): Html = ???
 }
 
 

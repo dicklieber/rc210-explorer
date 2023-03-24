@@ -5,7 +5,7 @@ import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.{Memory, Slice}
 
 trait FieldDefinition {
-  def prompt: String
+  def prompt: String = ""
   val fieldName: String
   val kind: KeyKind
   val uiInfo:UiInfo = UiInfo.default

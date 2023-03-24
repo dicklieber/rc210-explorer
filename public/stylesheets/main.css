@@ -1,4 +1,6 @@
-
+.valueCell{
+    display: block;
+}
 .sadMessage {
     font-weight: bold;
     font-size: 14px;
@@ -8,6 +10,7 @@
 .parenthetic {
     font-size: small;
     color: darkgrey;
+    font-weight: lighter;
     font-weight: lighter;
     font-style: italic;
     opacity: 75;

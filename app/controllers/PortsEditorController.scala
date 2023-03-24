@@ -22,9 +22,8 @@ import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.named.NamedManager
-import net.wa9nnn.rc210.key.KeyFactory.PortKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
-import play.api.mvc.{Action, AnyContent, BaseController, ControllerComponents, Request}
+import play.api.mvc._
 
 import javax.inject.Inject
 
@@ -49,10 +48,7 @@ class PortsEditorController @Inject()(implicit val controllerComponents: Control
         val cells: Seq[Cell] = for {
           number <- (1 to KeyKind.portKey.maxN())
         } yield {
-          val portKey:PortKey = KeyFactory(KeyKind.portKey, number)
-          val fieldEntry = map(FieldKey(fieldName, portKey))
-
-          Cell.rawHtml(fieldEntry.toHtml)
+          map(FieldKey(fieldName, KeyFactory(KeyKind.portKey, number))).toCell
         }
 
         Row(fieldName, cells: _*)

@@ -45,9 +45,9 @@ class FieldDefinitions @Inject()(implicit selectOptions: SelectOptions) {
     SimpleField(23, "Pending ID Timer  ", portKey, "n*1003v", UiNumber(255, "minutes")),
     SimpleField(26, "Tx Enable", portKey, "n11b", checkBox),
     SimpleField(29, "DTMF Cover Tone", portKey, "n13b", checkBox),
-    SimpleField(32, "DTMF Mute Timer", portKey, "n*1006v", UiNumber(999, "100 milliseconds")),
+    SimpleField(32, "DTMF Mute Timer", portKey, "n*1006v", UiNumber(999, "100 ms")),
     SimpleField(38, "Kerchunk", portKey, "n15b", checkBox),
-    SimpleField(41, "Kerchunk Timer", portKey, "n1018b", UiNumber(6000, "milliseconds")),
+    SimpleField(41, "Kerchunk Timer", portKey, "n1018b", UiNumber(6000, "ms")),
     SimpleField(47, "Mute Digit Select", commonKey, "*2090v", selectOptions.dtmfMuteDigit),
     SimpleField(48, "CTCSS During ID", portKey, "*n2089", checkBox),
     SimpleField(54, "Timeout Ports", commonKey, "*2051b", checkBox),
@@ -128,8 +128,8 @@ class FieldDefinitions @Inject()(implicit selectOptions: SelectOptions) {
     SimpleField(3544, "P2 Tail Message", portKey, "n*2110 2 v", selectOptions.macroSelect),
     SimpleField(3547, "P3 Tail Message", portKey, "n*2110 3 v", selectOptions.macroSelect),
     SimpleField(3550, "Tail Message Number", portKey, "n*2111v", selectOptions.macroSelect),
-    SimpleField(3553, "Tail Timer", portKey, "n*1020v", UiNumber(999, "tails 0 disables")),
-    SimpleField(3559, "Tail Counter", portKey, "n*2112v", UiNumber(999, "tails 0 disables")),
+    SimpleField(3553, "Tail Timer", portKey, "n*1020v", UiNumber(999, "tails")),
+    SimpleField(3559, "Tail Counter", portKey, "n*2112v", UiNumber(999, "tails", "0 disables")),
     //FreqString - 3562-3641	remote base stuff
     //    FieldDefinition(fieldName = "FreqString", kind = portKey, offset = 3562, extractor = int8, template = "2112${value}")),
     //RemoteCTCSS - 3642-3651

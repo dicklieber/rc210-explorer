@@ -1,3 +1,10 @@
-@(paramId: String, number: Int)
-<input id="@paramId" class="form-control" name="@paramId" value="@number">
+@import net.wa9nnn.rc210.data.field.FieldEntry
+@import scala.math.Numeric.Implicits.infixNumericOps
+@(fieldEntry: FieldEntry)
 
+    @defining(fieldEntry.param) { paramid =>
+        <div class="valueCell">
+            <input id="@paramid" class="" name="@paramid" value="@fieldEntry.fieldValue.display" title="@fieldEntry.prompt">
+            @fieldEntry.unit
+        </div>
+    }

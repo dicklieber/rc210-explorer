@@ -17,24 +17,23 @@
 
 package net.wa9nnn.rc210.data.field
 
-import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
-import controllers.routes
+import com.wa9nnn.util.tableui._
 import net.wa9nnn.rc210.data.FieldKey
 import play.api.libs.json.{JsValue, Json}
 
 
 /**
  *
- * @param fieldDefinition sopecifc to this entry. e.g. template, name etc.
- * @param fieldValue the value.
- * @param candidate the,potential, next value.
+ * @param fieldDefinition specific to this entry. e.g. template, name etc.
+ * @param fieldValue      the value.
+ * @param candidate       the,potential, next value.
  */
-case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fieldValue: FieldContents, candidate: Option[FieldContents] = None) extends RowSource with Ordered[FieldEntry] {
-  def setCandidate(value: String): FieldEntry = {
-    //todo deal with string when putting a candidate.
-    // copy(candidate = Option(newValue))
-//   copy(candidate = Option())
-    throw new NotImplementedError() //todo
+case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fieldValue: FieldContents, candidate: Option[FieldContents] = None)
+  extends RowSource with Ordered[FieldEntry] with CellProvider {
+  val unit = fieldDefinition.uiInfo.unit
+
+  def setCandidate(newValue: String): FieldEntry = {
+     copy(candidate = Option(fieldValue.update(newValue)))
   }
 
   def acceptCandidate(): FieldEntry = copy(
@@ -44,10 +43,14 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
   val param: String = fieldKey.param
   val prompt: String = fieldDefinition.prompt
 
- def toCommand: String = fieldValue.toCommand(this)
+  def toCommand: String = fieldValue.toCommand(this)
 
   def toHtml: String = {
     fieldValue.toHtmlField(this)
+  }
+
+  def toCell: Cell = {
+    Cell.rawHtml(s"$toHtml")
   }
 
   override def toString: String = fieldValue.toString
@@ -57,11 +60,11 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
     fieldValue.display,
     candidate.map(_.toString).getOrElse("-")
   )
-//    Cell("")
-//      .withImage(routes.Assets.versioned("images/pencil-square.png").url)
-//      //      .withUrl(routes.FieldEditorController.editOne(fieldKey.param).url)
-//      .withToolTip("Edit this field")
-//  )
+  //    Cell("")
+  //      .withImage(routes.Assets.versioned("images/pencil-square.png").url)
+  //      //      .withUrl(routes.FieldEditorController.editOne(fieldKey.param).url)
+  //      .withToolTip("Edit this field")
+  //  )
 
   override def compare(that: FieldEntry): Int = fieldKey compare that.fieldKey
 

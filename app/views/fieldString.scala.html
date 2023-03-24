@@ -1,6 +1,7 @@
-
-@(paramId: String, value:String)
-<div class="fieldNumber">
-    <input id="@paramId" class="form-control" name="@paramId" value="@value">
-</div>
-
+@import net.wa9nnn.rc210.data.field.FieldEntry
+@(fieldEntry: FieldEntry)
+    @defining(fieldEntry.param) { paramid =>
+        <div class="fieldNumber valueCell">
+            <input id="@paramid" class="" name="@paramid" value="@fieldEntry.fieldValue.display" title="@fieldEntry.prompt">
+        </div>
+    }

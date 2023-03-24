@@ -78,7 +78,8 @@ object SelectEnumerationHelper {
       else
         opt
     }
-    views.html.fieldSelect(param, options).toString()
+    throw new NotImplementedError() //todo
+//    views.html.fieldSelect(param, options).toString()
   }
 }
 
@@ -101,7 +102,8 @@ object SelectKeyHelper {
       else
         opt
     }
-    views.html.fieldSelect(param, options).toString()
+    throw new NotImplementedError() //todo
+//    views.html.fieldSelect(param, options).toString()
   }
 
   def apply[T](name: String)(implicit map: Map[String, Seq[String]]): T = {

@@ -27,7 +27,8 @@ trait UiInfo {
   val uiRender: UiRender
   val fieldExtractor: SimpleFieldExtractor
   val validate: String => Try[String]
-  def options() :Seq[SelectOption] = Seq.empty
+
+  def options(): Seq[SelectOption] = Seq.empty
 
 
   def doString(s: String): Try[String] = {
@@ -35,6 +36,7 @@ trait UiInfo {
   }
 
   val prompt: String = ""
+  val unit: String = ""
 }
 
 object UiInfo {
@@ -60,7 +62,7 @@ object UiInfo {
     override val fieldExtractor: SimpleFieldExtractor = DtmfExtractor(8)
     override val validate: String => Try[String] = (s: String) =>
       throw new NotImplementedError() //todo
-    override val prompt: String = "1 to 8 digits"
+    override val prompt = "1 to 8 digits"
   }
 }
 
@@ -69,7 +71,7 @@ object UiInfo {
  * @param max  largest value.
  * @param unit e.g. seconds, minutes etc.
  */
-case class UiNumber(max: Int, unit: String) extends UiInfo {
+case class UiNumber(max: Int, override val unit: String, tootltip: String = "") extends UiInfo {
   val uiRender: UiRender = number
   val fieldExtractor: SimpleFieldExtractor = if (max > 256) int16 else int8
   val validate: String => Try[String] = (s: String) => {
@@ -80,13 +82,18 @@ case class UiNumber(max: Int, unit: String) extends UiInfo {
         s
     }
   }
-  override val prompt = s"1 to $max $unit"
-}/**
+  override val prompt: String = if (tootltip.isEmpty)
+    s"1 to $max $unit"
+  else
+    tootltip
+}
+
+/**
  *
  * @param max  largest value.
  * @param unit e.g. seconds, minutes etc.
  */
-case class UiRange(min:Int, max: Int, unit: String) extends UiInfo {
+case class UiRange(min: Int, max: Int, override val unit: String) extends UiInfo {
   val uiRender: UiRender = number
   val fieldExtractor: SimpleFieldExtractor = if (max > 256) int16 else int8
   val validate: String => Try[String] = (s: String) => {
@@ -110,18 +117,6 @@ case class UiDtmf(max: Int) extends UiInfo {
         s
     }
 
-  override val prompt: String = s"1 to $max digits"
+  override val prompt = s"1 to $max digits"
 }
 
-
-/*
-  case class UiSelect(fieldSelect: FieldSelect) extends UiInfo {
-    val uiRender: field.UiRender.Value = UiRender.select
-    val fieldExtractor: FieldExtractor = FieldExtractors.int8
-    val validate: String => Try[String] = { (s: String) =>
-      throw new NotImplementedError() //todo
-    }
-    override val prompt: String = "Choose from choices."
-
-  }
-*/

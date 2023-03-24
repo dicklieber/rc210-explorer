@@ -1,6 +1,6 @@
 @import net.wa9nnn.rc210.data.field.{FieldBoolean, FieldDtmf, FieldEntry}
-@(paramId: String, value: String)
-<div class="fieldDtmf">
-    <input name="@paramId" id="@paramId" value="@value" >
+@(fieldEntry: FieldEntry)
+<div class="valueCell">
+    <input name="@fieldEntry.param" id="@fieldEntry.param" value="@fieldEntry.fieldValue.display" title="@fieldEntry.prompt">
 </div>
 
