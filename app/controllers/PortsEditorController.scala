@@ -30,6 +30,12 @@ import javax.inject.Inject
 class PortsEditorController @Inject()(implicit val controllerComponents: ControllerComponents, mappedValues: MappedValues,
                                       namedManager: NamedManager) extends BaseController {
 
+  def save(): Action[AnyContent] = Action {
+    implicit request: Request[AnyContent] =>
+      val kv: Map[String, String] = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }
+
+    Ok("todo")
+  }
 
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
@@ -67,7 +73,7 @@ class PortsEditorController @Inject()(implicit val controllerComponents: Control
       val header = Header("Ports", "Field" +: colHeaders: _*)
       val table = Table(header, rows)
 
-      Ok(views.html.dat(Seq(table)))
+      Ok(views.html.ports(table))
   }
 
 }

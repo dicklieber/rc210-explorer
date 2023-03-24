@@ -1,0 +1,14 @@
+@import com.wa9nnn.util.tableui.Table
+@import com.wa9nnn.util.tableui.html.renderTable
+@import views.html.helper._
+
+@(table: Table)
+
+@main("RC Flow") {
+
+    @form(action = routes.PortsEditorController.save()) {
+        <input type="submit" name="save" value="Save">
+        @renderTable(table.withCssClass("tablesorter"))
+        <input type="submit" name="save" value="Save">
+    }
+}
