@@ -4,9 +4,10 @@
 @import net.wa9nnn.rc210.key.KeyKind
 @import views.html.helper._
 @import net.wa9nnn.rc210.key.KeyFactory.MacroKey
+@import net.wa9nnn.rc210.ui.Tabs
 @(macroNodes: Seq[MacroNode], keyKind: KeyKind)(implicit functionsProvider: FunctionsProvider, namedSource: NamedSource)
 
-@tabbedmain(keyKind) {
+@tabbedmain(Tabs.macrosTab) {
     <div class="container">
     @form(action = routes.MacroNodeController.save()) {
         <table class="table table-bordered w-auto">

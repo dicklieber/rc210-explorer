@@ -81,7 +81,7 @@ class MacroNodeController @Inject()(val mcc: MessagesControllerComponents,
     val newMacroNode = MacroNode(key, functions, dtmf)
 
     mappedValues(newMacroNode.fieldkey, newMacroNode)
-    Redirect(routes.EditorController.edit(KeyKind.macroKey, key.toString))
+    Redirect(routes.MacroNodeController.index())
   }
 }
 

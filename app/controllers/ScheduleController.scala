@@ -34,10 +34,14 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
                                   )(implicit namedManager: NamedManager) extends BaseController {
 
 
+  def index(): Action[AnyContent] = Action { implicit request =>
+    Ok("todo ScheduleController")
+  }
+
   def save(): Action[AnyContent] = Action { implicit request =>
     implicit val valuesMap = request.body.asFormUrlEncoded.get
 
-  val schedule =   Schedule(key = form2Key("key"),
+    val schedule = Schedule(key = form2Key("key"),
       dayOfWeek = SelectEnumerationHelper(DayOfWeek, "dayOfWeek"),
       weekInMonth = form2OptInt("weekInMonth"),
       monthOfYear = SelectEnumerationHelper(MonthOfYear, "monthOfYear"),
@@ -46,7 +50,7 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
 
     val fieldKey = FieldKey("Schedule", schedule.key)
     mappedValues.apply(fieldKey, schedule)
-
-    Redirect(routes.EditorController.edit(KeyKind.scheduleKey, schedule.key.toString))
+    Ok("todo after edit save schedule")
+    //    Redirect(routes.EditorController.edit(KeyKind.scheduleKey, schedule.key.toString))
   }
 }
