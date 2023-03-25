@@ -35,7 +35,8 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
 
 
   def index(): Action[AnyContent] = Action { implicit request =>
-    Ok("todo ScheduleController")
+    val schedules = mappedValues.apply(KeyKind.scheduleKey).map(_.fieldValue.asInstanceOf[Schedule])
+    Ok(views.html.schedules(schedules))
   }
 
   def save(): Action[AnyContent] = Action { implicit request =>

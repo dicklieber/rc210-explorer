@@ -2,9 +2,10 @@
 @import com.wa9nnn.util.tableui.html.renderTable
 @import views.html.helper._
 
+@import net.wa9nnn.rc210.ui.Tabs
 @(table: Table)
 
-@main("RC Flow") {
+@tabbedmain(Tabs.portsTab) {
 
     @form(action = routes.PortsEditorController.save()) {
         <input type="submit" name="save" value="Save">
