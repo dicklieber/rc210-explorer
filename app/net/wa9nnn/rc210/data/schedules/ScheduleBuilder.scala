@@ -1,16 +1,18 @@
 package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.util.SelectField
 
 class ScheduleBuilder extends LazyLogging {
   // colXXX index into n2 dimension of array.
-  private val colDow = 0
-  private val colWeekInMonth = 1
-  private val colMoy = 2
-  private val colHours = 3
-  private val colMinutes = 4
-  private val colMacro = 5
+  val colDow = 0
+  val colWeekInMonth = 1
+  val colMoy = 2
+  val colHours = 3
+  val colMinutes = 4
+  val colMacro = 5
 
   private val array = Array.ofDim[Any](40, 6)
 
@@ -34,7 +36,7 @@ class ScheduleBuilder extends LazyLogging {
             array(setPoint)(colWeekInMonth) = None
             array(setPoint)(colDow) = sDow.toInt
           case Array(wInMo, dow) =>
-            array(setPoint)(colWeekInMonth) = Option(wInMo.toString.toInt)
+            array(setPoint)(colWeekInMonth) = wInMo.toString.toInt
             array(setPoint)(colDow) = dow.toString.toInt
           case x =>
             logger.error(s"DOW must be 1 or 2 chars, got $sDow")
@@ -45,7 +47,7 @@ class ScheduleBuilder extends LazyLogging {
   def putMoy(moys: Seq[Int]): Unit = {
     moys.zipWithIndex
       .foreach { case (moy, setPoint) =>
-        array(setPoint)(colMoy) = MonthOfYear.apply(moy)
+        array(setPoint)(colMoy) = moy
       }
   }
 

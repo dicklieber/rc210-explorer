@@ -1,50 +1,14 @@
-@import net.wa9nnn.rc210.data.functions.FunctionsProvider
-@import net.wa9nnn.rc210.data.macros.MacroNode
+@import com.wa9nnn.util.tableui.Table
+@import com.wa9nnn.util.tableui.html.renderTable
 @import net.wa9nnn.rc210.data.named.NamedSource
-@import net.wa9nnn.rc210.key.KeyKind
-@import views.html.helper._
-@import net.wa9nnn.rc210.key.KeyFactory.MacroKey
 @import net.wa9nnn.rc210.ui.Tabs
-@import net.wa9nnn.rc210.data.schedules.Schedule
-@(schedules: Seq[Schedule])(implicit namedSource: NamedSource)
+@import views.html.helper._
+@(table:Table)(implicit namedSource: NamedSource)
 
 @tabbedmain(Tabs.schedulesTab) {
-    <div class="container">
     @form(action = routes.ScheduleController.save()) {
-        <table class="table table-bordered w-auto">
-            <thead class="table-primary">
-                <tr>
-                    <td title="Number or name">Schedule</td>
-                    <td >Day Of Week</td>
-                    <td >Week</td>
-                    <td >Month</td>
-                    <td>Time</td>
-                    <td title="Run this Macro when the schedule triggers.">Macro</td>
-                </tr>
-            </thead>
-            @for(schedule <- schedules) {
-                <tr>
-                    <td title="@schedule.key.toString">
-                    @namedSource(schedule.key)
-                    </td>
-                    <td class="text-end">
-                    @schedule.dayOfWeek
-                    </td>
-                    <td class="text-end">
-                    @schedule.weekInMonth
-                    </td>
-                    <td class="text-end">
-                    @schedule.monthOfYear
-                    </td>
-                    <td class="text-end">
-                    @schedule.localTime
-                    </td>
-                    <td class="text-end">
-                    @schedule.macroToRun
-                    </td>
-                </tr>
-            }
-        </table>
+        <input type="submit" name="save" value="Save">
+        @renderTable(table.withCssClass("tablesorter"))
+        <input type="submit" name="save" value="Save">
     }
-    </div>
 }

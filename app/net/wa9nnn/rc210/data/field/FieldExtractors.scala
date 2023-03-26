@@ -96,16 +96,5 @@ case class DtmfExtractor(maxDigits: Int) extends SimpleFieldExtractor(maxDigits 
   override val name: String = "dtmf"
 }
 
-// Select field
-case class SelectExtractor() extends SimpleFieldExtractor(1) with LazyLogging {
-  override def extract(slice: Slice): FieldContents = {
 
-    val contents: Int = int8.extract(slice).asInstanceOf[FieldInt].value
-    val r = FieldSelect( contents)
-    logger.trace("extract: {} from slice: {}", r, slice)
-    r
-  }
-
-  override val name: String = "dtmf"
-}
 

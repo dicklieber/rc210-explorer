@@ -17,14 +17,14 @@
 
 package controllers
 
+import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.{SelectEnumerationHelper, SelectKeyHelper}
+import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.named.NamedManager
-import net.wa9nnn.rc210.data.schedules.{DayOfWeek, MonthOfYear, Schedule}
+import net.wa9nnn.rc210.data.schedules.Schedule
+import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.mvc._
-import net.wa9nnn.rc210.data.field.FormHelpers._
-import net.wa9nnn.rc210.key.KeyKind
 
 import javax.inject.{Inject, Singleton}
 
@@ -34,23 +34,54 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
                                   )(implicit namedManager: NamedManager) extends BaseController {
 
 
-  def index(): Action[AnyContent] = Action { implicit request =>
-    val schedules = mappedValues.apply(KeyKind.scheduleKey).map(_.fieldValue.asInstanceOf[Schedule])
-    Ok(views.html.schedules(schedules))
+  def index(): Action[AnyContent] = Action {
+    implicit request: Request[AnyContent] =>
+
+      val entries: Seq[FieldEntry] = mappedValues(KeyKind.scheduleKey)
+      val rows = entries.map { fieldEntry: FieldEntry =>
+        val schedule: Schedule = fieldEntry.fieldValue.asInstanceOf[Schedule]
+        val dow: Cell = Cell.rawHtml(schedule.dayOfWeek.toHtmlField(fieldEntry))
+        val weekInMonth: Cell = Cell.rawHtml(s"""<input type="range" name="Week" min="0" max="5">""")
+        val woy: Cell = Cell.rawHtml(schedule.monthOfYear.toHtmlField(fieldEntry))
+        val localTime: Cell = Cell.rawHtml((s"""<input type="time" name="Time" value="${schedule.localTime}">"""))
+        val macroToRun: Cell = schedule.macroToRun.toCell //todo need a macroselect control.
+
+        Row(Seq(
+          schedule.key.toCell,
+          dow,
+          weekInMonth,
+          woy,
+          localTime,
+          macroToRun
+        ))
+      }
+      val columnHeaders: Seq[Cell] = for {
+        portKey <- KeyFactory(KeyKind.portKey)
+      } yield
+        namedManager.get(portKey) match {
+          case Some(value) =>
+            Cell(value)
+              .withToolTip(s"Port ${portKey.number}")
+
+          case None => Cell(portKey.toString)
+        }
+
+      val table = Table(Header("Schedules", columnHeaders: _*), rows)
+      Ok(views.html.schedules(table))
   }
 
   def save(): Action[AnyContent] = Action { implicit request =>
     implicit val valuesMap = request.body.asFormUrlEncoded.get
 
-    val schedule = Schedule(key = form2Key("key"),
-      dayOfWeek = SelectEnumerationHelper(DayOfWeek, "dayOfWeek"),
-      weekInMonth = form2OptInt("weekInMonth"),
-      monthOfYear = SelectEnumerationHelper(MonthOfYear, "monthOfYear"),
-      localTime = form2OptTime("localTime"),
-      macroToRun = SelectKeyHelper("macroToRun"))
-
-    val fieldKey = FieldKey("Schedule", schedule.key)
-    mappedValues.apply(fieldKey, schedule)
+    //    val schedule = Schedule(key = form2Key("key"),
+    //      dayOfWeek = SelectField(ScheduleEnums.dayOfWeek, "dayOfWeek"),
+    //      weekInMonth = form2OptInt("weekInMonth"),
+    //      monthOfYear = SelectEnumerationHelper(MonthOfYear, "monthOfYear"),
+    //      localTime = form2OptTime("localTime"),
+    //      macroToRun = SelectKeyHelper("macroToRun"))
+    //
+    //    val fieldKey = FieldKey("Schedule", schedule.key)
+    //    mappedValues.apply(fieldKey, schedule)
     Ok("todo after edit save schedule")
     //    Redirect(routes.EditorController.edit(KeyKind.scheduleKey, schedule.key.toString))
   }

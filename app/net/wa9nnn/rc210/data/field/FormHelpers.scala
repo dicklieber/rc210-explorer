@@ -20,6 +20,7 @@ package net.wa9nnn.rc210.data.field
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.key.KeyFactory
 import net.wa9nnn.rc210.key.KeyFactory.Key
+import net.wa9nnn.rc210.util.SelectOption
 
 import java.time.LocalTime
 
@@ -56,33 +57,6 @@ object FormHelpers {
   }.headOption
 }
 
-object SelectEnumerationHelper {
-  def apply(enumeration: Enumeration, name: String)(implicit map: Map[String, Seq[String]]): enumeration.Value = {
-    val value: Seq[String] = map(name)
-    enumeration.withName(value.head)
-  }
-
-  /**
-   * Generate HTML for an [[Enumeration]]
-   *
-   * @param enumeration for field.
-   * @param current     it's current value.
-   * @param param       will be key for POSTed data.
-   * @return
-   */
-  def apply[T](enumeration: Enumeration, current: String, param: String): String = {
-    val options: Seq[SelectOption] = enumeration.values.toSeq.map { e: enumeration.Value =>
-      val opt = SelectOption(e.toString, e.toString)
-      if (e.toString == current)
-        opt.select
-      else
-        opt
-    }
-    throw new NotImplementedError() //todo
-//    views.html.fieldSelect(param, options).toString()
-  }
-}
-
 
 object SelectKeyHelper {
   /**
@@ -95,15 +69,16 @@ object SelectKeyHelper {
   def apply(current: Key, param: String): String = {
 
     val keys: Seq[Key] = KeyFactory(current.kind)
+
     val options = keys.map { k: Key =>
-      val opt = SelectOption(k.toString, k.toString)
+      val opt = SelectOption(k.number, k.toString)
       if (k == current)
-        opt.select
+        opt.copy(selected = true)
       else
         opt
     }
     throw new NotImplementedError() //todo
-//    views.html.fieldSelect(param, options).toString()
+    //    views.html.fieldSelect(param, options).toString()
   }
 
   def apply[T](name: String)(implicit map: Map[String, Seq[String]]): T = {

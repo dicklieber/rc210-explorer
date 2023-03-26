@@ -5,12 +5,11 @@ import com.wa9nnn.util.tableui.{Header, Row}
 import net.wa9nnn.rc210.MemoryExtractor
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.data.schedules.DayOfWeek.DayOfWeek
-import net.wa9nnn.rc210.data.schedules.MonthOfYear.MonthOfYear
 import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, ScheduleKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
+import net.wa9nnn.rc210.util.SelectField
 import play.api.libs.json.{JsString, JsValue}
 
 import java.time.LocalTime
@@ -18,13 +17,18 @@ import java.time.LocalTime
 /**
  *
  * @param key          for [[ScheduleKey]]
- * @param dayOfWeek    See [[DayOfWeekJava]]
+ * @param dayOfWeek
  * @param weekInMonth  e.g 1 == 1st week in month.
- * @param monthOfYear  See [[MonthOfYear]]
+ * @param monthOfYear
  * @param localTime    illegal times are None.
  * @param macroToRun   e.g. "macro42"
  */
-case class Schedule(key: ScheduleKey, dayOfWeek: DayOfWeek, weekInMonth: Option[Int], monthOfYear: MonthOfYear, localTime: Option[LocalTime], macroToRun: MacroKey)
+case class Schedule(key: ScheduleKey,
+                    dayOfWeek: SelectField,
+                    weekInMonth: Option[Int],
+                    monthOfYear: SelectField,
+                    localTime: Option[LocalTime],
+                    macroToRun: MacroKey)
   extends FieldContents with TriggerNode {
 
 
@@ -36,9 +40,7 @@ case class Schedule(key: ScheduleKey, dayOfWeek: DayOfWeek, weekInMonth: Option[
 
   val description: String = {
     localTime.map { localTime =>
-      val week = weekInMonth.map { week =>
-        s" Week: $week"
-      }.getOrElse("")
+      val week = s" Week: $weekInMonth"
       s"$monthOfYear$week on $dayOfWeek at $localTime"
     }
       .getOrElse("-disabled-")
@@ -67,7 +69,8 @@ case class Schedule(key: ScheduleKey, dayOfWeek: DayOfWeek, weekInMonth: Option[
    * @return html
    */
   override def toHtmlField(fieldEntry: FieldEntry): String =
-    views.html.schedule(this, key.kind).toString()
+    throw new NotImplementedError() //todo
+//    views.html.schedule(this, key.kind).toString()
 
   override def display: String = description
 }
@@ -98,19 +101,26 @@ object Schedule extends LazyLogging with MemoryExtractor {
       //*4001 S * DOW * MOY * Hours * Minutes * Macro
 
       val key: ScheduleKey = KeyFactory(KeyKind.scheduleKey, setPoint + 1)
-      val schedule = Schedule(key, dayOfWeek = DayOfWeek(parts(0).asInstanceOf[Int]), weekInMonth = parts(1).asInstanceOf[Option[Int]], monthOfYear = parts(2).asInstanceOf[MonthOfYear], localTime = {
-        val hour: Int = parts(3).asInstanceOf[Int]
-        val minute: Int = parts(4).asInstanceOf[Int]
-        try {
-          Option.when(hour < 25) {
-            LocalTime.of(hour, minute)
+      val dow: SelectField = SelectField(ScheduleEnums.dayOfWeek, FieldKey("dayOfWeek", key), parts(scheduleBuilder.colDow).asInstanceOf[Int])
+      val moy: SelectField = SelectField(ScheduleEnums.monthOfYear, FieldKey("monthOfYear", key), parts(scheduleBuilder.colMoy).asInstanceOf[Int])
+      val schedule = Schedule(key,
+        dayOfWeek = dow,
+        weekInMonth = parts(1).asInstanceOf[Option[Int]],
+        monthOfYear = moy,
+        localTime = {
+          val hour: Int = parts(3).asInstanceOf[Int]
+          val minute: Int = parts(4).asInstanceOf[Int]
+          try {
+            Option.when(hour < 25) {
+              LocalTime.of(hour, minute)
+            }
+          } catch {
+            case _: Exception =>
+              logger.error(s"setPoint: $setPoint hour: $hour, minute: $minute")
+              None
           }
-        } catch {
-          case _: Exception =>
-            logger.error(s"setPoint: $setPoint hour: $hour, minute: $minute")
-            None
-        }
-      }, macroToRun = parts(5).asInstanceOf[MacroKey])
+        },
+        macroToRun = parts(5).asInstanceOf[MacroKey])
       FieldEntry(this, FieldKey("Schedule", key), schedule)
     }
   }

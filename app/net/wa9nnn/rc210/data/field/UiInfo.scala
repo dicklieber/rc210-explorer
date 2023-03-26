@@ -19,17 +19,12 @@ package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.Dtmf.dtmfDigits
 import net.wa9nnn.rc210.data.field.FieldExtractors.{int16, int8, twoInts}
-import net.wa9nnn.rc210.data.field.UiRender._
 
 import scala.util.Try
 
 trait UiInfo {
-  val uiRender: UiRender
   val fieldExtractor: SimpleFieldExtractor
   val validate: String => Try[String]
-
-  def options(): Seq[SelectOption] = Seq.empty
-
 
   def doString(s: String): Try[String] = {
     validate(s)
@@ -40,9 +35,13 @@ trait UiInfo {
 }
 
 object UiInfo {
+  val macroSelect: UiInfo = new UiInfo{
+    override val fieldExtractor: SimpleFieldExtractor = FieldExtractors.int8
+    override val validate: String => Try[String] = (s: String) => Try(s)
+  }
+
   val default: UiNumber = UiNumber(256, "")
   val checkBox: UiInfo = new UiInfo {
-    val uiRender = UiRender.checkbox
     override val fieldExtractor: SimpleFieldExtractor = FieldExtractors.bool
     val validate = (s: String) => Try(s)
 
@@ -50,7 +49,6 @@ object UiInfo {
   }
 
   val twoNumbers: UiInfo = new UiInfo {
-    val uiRender: UiRender = UiRender.twoStrings
     val fieldExtractor: SimpleFieldExtractor = twoInts
     override val validate: String => Try[String] = (s: String) =>
       throw new NotImplementedError() //todo
@@ -58,7 +56,6 @@ object UiInfo {
   }
 
   val unlockCode: UiInfo = new UiInfo {
-    override val uiRender = UiRender.dtmfKeys
     override val fieldExtractor: SimpleFieldExtractor = DtmfExtractor(8)
     override val validate: String => Try[String] = (s: String) =>
       throw new NotImplementedError() //todo
@@ -72,7 +69,6 @@ object UiInfo {
  * @param unit e.g. seconds, minutes etc.
  */
 case class UiNumber(max: Int, override val unit: String, tootltip: String = "") extends UiInfo {
-  val uiRender: UiRender = number
   val fieldExtractor: SimpleFieldExtractor = if (max > 256) int16 else int8
   val validate: String => Try[String] = (s: String) => {
     val int = s.toInt
@@ -94,7 +90,6 @@ case class UiNumber(max: Int, override val unit: String, tootltip: String = "") 
  * @param unit e.g. seconds, minutes etc.
  */
 case class UiRange(min: Int, max: Int, override val unit: String) extends UiInfo {
-  val uiRender: UiRender = number
   val fieldExtractor: SimpleFieldExtractor = if (max > 256) int16 else int8
   val validate: String => Try[String] = (s: String) => {
     val int = s.toInt
@@ -108,7 +103,6 @@ case class UiRange(min: Int, max: Int, override val unit: String) extends UiInfo
 }
 
 case class UiDtmf(max: Int) extends UiInfo {
-  val uiRender: UiRender = dtmfKeys
   val fieldExtractor: SimpleFieldExtractor = DtmfExtractor(max)
   override val validate: String => Try[String] = (s: String) =>
     Try {
@@ -119,4 +113,13 @@ case class UiDtmf(max: Int) extends UiInfo {
 
   override val prompt = s"1 to $max digits"
 }
-
+case class UISelect(strings:(String,Int) *) extends UiInfo {
+  override val fieldExtractor: SimpleFieldExtractor = FieldExtractors.int8
+  override val validate: String => Try[String] = (s: String) =>
+    //todo
+    Try {
+//      if (s.length > max) throw new IllegalArgumentException(s"Must be 1 to $max digits but found: $s ${s.length}")
+//      else
+        s
+    }
+}

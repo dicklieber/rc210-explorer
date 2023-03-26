@@ -154,19 +154,3 @@ case class FieldSeqInts(value: Int*) extends FieldContents {
   override def display: String = value.map(_.toString).mkString(" ")
 }
 
-case class FieldSelect(value: Int) extends FieldContents {
-  override def toJsValue: JsValue = Json.toJson(value)
-
-  override def toHtmlField(fieldEntry: FieldEntry): String = {
-    views.html.fieldSelect(fieldEntry).toString()
-  }
-
-  /**
-   * Render this value as an RD-210 command string.
-   */
-  override def toCommand(fieldEntry: FieldEntry): String = ???
-
-  override def display: String = value.toString
-
-  override def toCell(fieldEntry: FieldEntry): Cell = ???
-}

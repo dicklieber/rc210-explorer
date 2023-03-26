@@ -30,6 +30,7 @@ import play.api.mvc.PathBindable
 import scala.util.Try
 import scala.util.matching.Regex
 import scala.language.postfixOps
+
 object KeyFormats {
 
   implicit val fmtFunction: Format[FunctionNode] = new Format[FunctionNode] {
@@ -55,7 +56,6 @@ object KeyFormats {
   }
 
   val r: Regex = """([a-zA-Z]+)(\d+)?""".r
-
 
 
   implicit val fmtMacroKey: Format[MacroKey] = new Format[MacroKey] {
@@ -118,7 +118,7 @@ object KeyFormats {
   implicit val fmtKey: Format[Key] = new Format[Key] {
     override def reads(json: JsValue): JsResult[Key] = {
       JsResult.fromTry(Try {
-       KeyFactory[Key](json.as[String])
+        KeyFactory[Key](json.as[String])
       })
     }
 
@@ -149,10 +149,7 @@ object KeyFormats {
   implicit val fmtNamedData: OFormat[NamedData] = Json.format[NamedData]
 
 
-  implicit val fmtSchedule: OFormat[Schedule] = Json.format[Schedule]
-
   implicit val fmtMacro: OFormat[MacroNode] = Json.format[MacroNode]
-
 
 
 }

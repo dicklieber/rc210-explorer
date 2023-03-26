@@ -27,9 +27,7 @@ import net.wa9nnn.rc210.key.KeyKind._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class FieldDefinitions @Inject()(implicit selectOptions: SelectOptions) {
-
-
+class FieldDefinitions @Inject()() {
   /**
    * Everything about each field.
    */
@@ -48,7 +46,9 @@ class FieldDefinitions @Inject()(implicit selectOptions: SelectOptions) {
     SimpleField(32, "DTMF Mute Timer", portKey, "n*1006v", UiNumber(999, "100 ms")),
     SimpleField(38, "Kerchunk", portKey, "n15b", checkBox),
     SimpleField(41, "Kerchunk Timer", portKey, "n1018b", UiNumber(6000, "ms")),
-    SimpleField(47, "Mute Digit Select", commonKey, "*2090v", selectOptions.dtmfMuteDigit),
+    SimpleField(47, "Mute Digit Select", commonKey, "*2090v", UISelect(
+      "1st digit" -> 1,
+      "2nd digit" -> 2)),
     SimpleField(48, "CTCSS During ID", portKey, "*n2089", checkBox),
     SimpleField(54, "Timeout Ports", commonKey, "*2051b", checkBox),
     SimpleField(55, "Speech Delay", commonKey, "*1019v", UiNumber(600, "Seconds")),
@@ -70,8 +70,8 @@ class FieldDefinitions @Inject()(implicit selectOptions: SelectOptions) {
     SimpleField(160, "Timeout Timer", portKey, "n*1001v", UiNumber(32767, "seconds")),
     SimpleField(166, "DTMF Mute", portKey, "n*1001v", checkBox),
     SimpleField(169, "Alarm Enable", portKey, "n191b", checkBox),
-    SimpleField(174, "Alarm Macro Low", alarmKey, "*2101 n v", selectOptions.macroSelect),
-    SimpleField(179, "Alarm Macro High", alarmKey, "*2102 n v", selectOptions.macroSelect),
+    SimpleField(174, "Alarm Macro Low", alarmKey, "*2101 n v", checkBox), // these two should be combined together.
+    SimpleField(179, "Alarm Macro High", alarmKey, "*2102 n v", checkBox),
     SimpleField(184, "Vref", alarmKey, "*2065 n v", UiNumber(255, "todo three numbers?")), //*2065 4 9 6
     //###########################################################################################  //todo
     ///For meters, we gather all the parameters needed, then assemble them to actually store
@@ -92,44 +92,81 @@ class FieldDefinitions @Inject()(implicit selectOptions: SelectOptions) {
 
     // Courtesy Tone special handling.  *31CT Delay to segment 1 * duration of segment 1 * Tone 1 * Tone 2 *
 
-    SimpleField(1176, "Radio Type", commonKey, "n*2083 v", selectOptions.radioType),
-    SimpleField(1176, "Yaesu Type", commonKey, "n*2084 v", selectOptions.yaesuType),
-    SimpleField(1177, "Fan Timeout", commonKey, "n*1004v", UiNumber(255, "Minutes")),
+    SimpleField(1176, "Radio Type", commonKey, "n*2083 v", UISelect(
+      "Kenwood" -> 1,
+      "Icom" -> 2,
+      "Yaesu" -> 3,
+      "Kenwood V7a" -> 4,
+      "Doug Hall RBI - 1" -> 5,
+      // there is no 6
+      "Kenwood g707" -> 7,
+      "Kenwood 271A" -> 8,
+      "Kenwood V71a" -> 9)),
+
+
+    SimpleField(1176, "Yaesu Type", commonKey, "n*2084 v", UISelect(
+      "FT-100D" -> 1,
+      "FT817, FT-857, FT-897" -> 2,
+      "FT847" -> 3))
+    ,
+    SimpleField(1177, "Fan Timeout", commonKey, "n*1004v", UiNumber(255, "Minutes"))
+    ,
     //DTMFRegenPrefix1 - 1179-1185 need  special handling. part of IRLP stuff.
-    SimpleField(1186, "Clock 24 Hours", commonKey, "n*5103", checkBox),
-    SimpleField(1187, "Fan Select", commonKey, "n*2119b", checkBox),
-    SimpleField(1188, "DTMF Duration", commonKey, "n*2106b", checkBox),
-    SimpleField(1189, "DTMF Pause", commonKey, "n*2107b", checkBox),
+    SimpleField(1186, "Clock 24 Hours", commonKey, "n*5103", checkBox)
+    ,
+    SimpleField(1187, "Fan Select", commonKey, "n*2119b", checkBox)
+    ,
+    SimpleField(1188, "DTMF Duration", commonKey, "n*2106b", checkBox)
+    ,
+    SimpleField(1189, "DTMF Pause", commonKey, "n*2107b", checkBox)
+    ,
     //DTMFStrings - 1190-1409 special handling
     //DVRSecondLow - 1410-1473
     //DVRTrack - 1474-1493
     //DVRRowsUsed - 1494-1533
-    SimpleField(1534, "Allow Terminator Speech", commonKey, "n*2091b", checkBox),
+    SimpleField(1534, "Allow Terminator Speech", commonKey, "n*2091b", checkBox)
+    ,
     //RemoteRadioMode - 1535-1544
-    SimpleField(1534, "AutoPatch Port", commonKey, "n*2116v", checkBox),
-    SimpleField(1534, "AutoPatch Port Mute", commonKey, "n270", checkBox),
+    SimpleField(1534, "AutoPatch Port", commonKey, "n*2116v", checkBox)
+    ,
+    SimpleField(1534, "AutoPatch Port Mute", commonKey, "n270", checkBox)
+    ,
     //GeneralTimers1_3 - 1553-1558
     //GeneralTimers4_6 - 1559-1564
     //GeneralTimer1_3Macro - 1565-1567
     //GeneralTimer4_6Macro - 1568-1570
-    SimpleField(1571, "Program Prefix", commonKey, "n*2109", UiDtmf(4)),
+    SimpleField(1571, "Program Prefix", commonKey, "n*2109", UiDtmf(4))
+    ,
     //Phrase - 1576-1975 Handled as MessageMacros.
     //IDExtras - 1976-1984 needs special handling
     //MacroPortLimit - 3425-3514 needs special handling probably should be a part of MacroNode
-    SimpleField(3515, "Speak Pending ID Timer", portKey, "n*1019v", UiNumber(600, "seconds")),
-    SimpleField(3521, "Enable Speech ID", portKey, "n*8008b", checkBox),
-    SimpleField(3524, "Guest Macro Enable", portKey, "n280b", checkBox),
-    SimpleField(3525, "Remote Base Prefix", portKey, "n*2060v", UiDtmf(5)),
-    SimpleField(3531, "Lock Code", commonKey, "n*9010v", UiDtmf(4)),
-    SimpleField(3536, "Terminator", commonKey, "n9020v", UiDtmf(1)),
+    SimpleField(3515, "Speak Pending ID Timer", portKey, "n*1019v", UiNumber(600, "seconds"))
+    ,
+    SimpleField(3521, "Enable Speech ID", portKey, "n*8008b", checkBox)
+    ,
+    SimpleField(3524, "Guest Macro Enable", portKey, "n280b", checkBox)
+    ,
+    SimpleField(3525, "Remote Base Prefix", portKey, "n*2060v", UiDtmf(5))
+    ,
+    SimpleField(3531, "Lock Code", commonKey, "n*9010v", UiDtmf(4))
+    ,
+    SimpleField(3536, "Terminator", commonKey, "n9020v", UiDtmf(1))
+    ,
     //ClockCorrection - 3538-3539 Humm, only two bytes but doc shows:  Docs shows this as *5105! Not *5101! In any event needs some special handling.
-    SimpleField(3540, "Say Year", commonKey, "n*5102b", checkBox),
-    SimpleField(3541, "P1 Tail Message", portKey, "n*2110 1 v", selectOptions.macroSelect),
-    SimpleField(3544, "P2 Tail Message", portKey, "n*2110 2 v", selectOptions.macroSelect),
-    SimpleField(3547, "P3 Tail Message", portKey, "n*2110 3 v", selectOptions.macroSelect),
-    SimpleField(3550, "Tail Message Number", portKey, "n*2111v", selectOptions.macroSelect),
-    SimpleField(3553, "Tail Timer", portKey, "n*1020v", UiNumber(999, "tails")),
-    SimpleField(3559, "Tail Counter", portKey, "n*2112v", UiNumber(999, "tails", "0 disables")),
+    SimpleField(3540, "Say Year", commonKey, "n*5102b", checkBox)
+    ,
+    SimpleField(3541, "P1 Tail Message", portKey, "n*2110 1 v", UiInfo.macroSelect)
+    ,
+    SimpleField(3544, "P2 Tail Message", portKey, "n*2110 2 v", UiInfo.macroSelect)
+    ,
+    SimpleField(3547, "P3 Tail Message", portKey, "n*2110 3 v", UiInfo.macroSelect)
+    ,
+    SimpleField(3550, "Tail Message Number", portKey, "n*2111v", UiInfo.macroSelect)
+    ,
+    SimpleField(3553, "Tail Timer", portKey, "n*1020v", UiNumber(999, "tails"))
+    ,
+    SimpleField(3559, "Tail Counter", portKey, "n*2112v", UiNumber(999, "tails", "0 disables"))
+    ,
     //FreqString - 3562-3641	remote base stuff
     //    FieldDefinition(fieldName = "FreqString", kind = portKey, offset = 3562, extractor = int8, template = "2112${value}")),
     //RemoteCTCSS - 3642-3651
@@ -137,10 +174,9 @@ class FieldDefinitions @Inject()(implicit selectOptions: SelectOptions) {
     //DTMFRegenPort1 - 3662 IRLP
     //DTMFRegenMacro1 - 3663 IRLP
     //APHangupCode - 3564-3669	 autopatch
-    SimpleField(3670, "Use DR1", portKey, "n*2124b", checkBox),
-    SimpleField(3671, "Timeout Reset Select", portKey, "nv", checkBox),
-
-
+    SimpleField(3670, "Use DR1", portKey, "n*2124b", checkBox)
+    ,
+    SimpleField(3671, "Timeout Reset Select", portKey, "nv", checkBox)
     //todo finish
   )
 
