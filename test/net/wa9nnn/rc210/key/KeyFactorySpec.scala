@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.key
 
+import net.wa9nnn.rc210.key.KeyFactory.{FunctionKey, Key}
 import org.specs2.mutable.Specification
 
 class KeyFactorySpec extends Specification {

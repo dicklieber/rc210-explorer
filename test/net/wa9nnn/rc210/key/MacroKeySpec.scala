@@ -18,6 +18,8 @@
 package net.wa9nnn.rc210.key
 
 import net.wa9nnn.rc210.fixtures.WithMemory
+import net.wa9nnn.rc210.key.KeyFactory.MacroKey
+import play.api.libs.json.Json
 
 class MacroKeySpec extends WithMemory {
 
@@ -28,7 +30,11 @@ class MacroKeySpec extends WithMemory {
     }
 
     "round trip" in {
-
+      import KeyFormats._
+      val macroKey = MacroKey(42)
+      val sJson = Json.prettyPrint( Json.toJson(macroKey))
+      val backAgain = Json.parse(sJson).as[MacroKey]
+      backAgain must beEqualTo (macroKey)
     }
   }
 }

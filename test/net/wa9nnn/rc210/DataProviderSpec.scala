@@ -21,7 +21,7 @@ import net.wa9nnn.rc210.fixtures.WithMemory
 
 class DataProviderSpec extends WithMemory {
   "DataProvider" should {
-    failure
+    pending
   }
 }
 

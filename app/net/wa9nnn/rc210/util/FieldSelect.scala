@@ -24,14 +24,14 @@ import play.api.libs.json.JsValue
 /**
  * An enumeration with behaviour.
  */
-trait SelectField extends FieldContents {
+trait FieldSelect[T] extends FieldContents {
   val selectOptions: Seq[SelectOption]
-  val value: String
+  val value: T
   val fieldKey: FieldKey
 
   override def toJsValue: JsValue = ???
 
-  override def display: String = value
+  override def display: String = value.toString
 
   /**
    * Render this value as an RD-210 command string.

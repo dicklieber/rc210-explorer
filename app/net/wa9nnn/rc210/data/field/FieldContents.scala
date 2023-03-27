@@ -48,10 +48,10 @@ trait FieldContents {
 
   def toHtmlField(renderMetadata: RenderMetadata): String
 
-   def toCell(renderMetadata: RenderMetadata): Cell = {
-     val html: String = toHtmlField(renderMetadata)
-     Cell.rawHtml(html)
-   }
+  def toCell(renderMetadata: RenderMetadata): Cell = {
+    val html: String = toHtmlField(renderMetadata)
+    Cell.rawHtml(html)
+  }
 
   def update(paramValue: String): FieldContents = {
     throw new NotImplementedError() //todo
@@ -78,7 +78,7 @@ trait FieldContents {
 trait FieldWithFieldKey[K <: Key] extends FieldContents {
   val key: K
   val fieldName: String
-  lazy val fieldkey: FieldKey = FieldKey(fieldName, key)
+  lazy val fieldKey: FieldKey = FieldKey(fieldName, key)
 }
 
 // simple field are defined here. More complex ones like [[net.wa9nnn.rc210.data.schedules.Schedule]] are elsewhere.
@@ -148,7 +148,8 @@ case class FieldSeqInts(value: Int*) extends FieldContents {
   override def toHtmlField(renderMetadata: RenderMetadata): String = {
     fieldString(display, renderMetadata).toString()
   }
-   def toCell(fieldEntry: FieldEntry): Cell = Cell.rawHtml(toHtmlField(fieldEntry))
+
+  def toCell(fieldEntry: FieldEntry): Cell = Cell.rawHtml(toHtmlField(fieldEntry))
 
   override def display: String = value.map(_.toString).mkString(" ")
 }

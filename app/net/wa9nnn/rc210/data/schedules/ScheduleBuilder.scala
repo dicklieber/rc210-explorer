@@ -3,6 +3,7 @@ package net.wa9nnn.rc210.data.schedules
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.key.KeyFactory.MacroKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.util.MacroSelect
 
 import java.time.LocalTime
 
@@ -85,8 +86,8 @@ class ScheduleBuilder extends LazyLogging {
     macroNumbers.zipWithIndex
       .foreach { case (macroNumber, setPoint) =>
         val previous: Schedule = slots(setPoint)
-        val macroKey:MacroKey = KeyFactory(KeyKind.macroKey, macroNumber)
-        slots(setPoint) = previous.copy(macroToRun = macroKey)
+        val macroKey: MacroKey = KeyFactory(KeyKind.macroKey, macroNumber)
+        slots(setPoint) = previous.copy(selectedMacroToRun = MacroSelect(macroKey))
       }
   }
 

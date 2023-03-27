@@ -69,11 +69,13 @@ object KeyFactory {
     keys
   }
 
-  def apply(keyKind: KeyKind): Seq[Key] = {
+  def apply[K <: Key](keyKind: KeyKind): Seq[K] = {
     availableKeys
       .filter(_.kind.eq(keyKind))
+      .map(_.asInstanceOf[K])
   }
-  lazy val defaultMacroKey:MacroKey = apply(KeyKind.macroKey, 1)
+
+  lazy val defaultMacroKey: MacroKey = apply(KeyKind.macroKey, 1)
 
 
   sealed abstract class Key(val kind: KeyKind, val number: Int) extends CellProvider with Ordered[Key] {
@@ -99,7 +101,7 @@ object KeyFactory {
 
   case class AlarmKey(override val number: Int) extends Key(alarmKey, number)
 
-  case class MacroKey private (override val number: Int) extends Key(macroKey, number)
+  case class MacroKey private(override val number: Int) extends Key(macroKey, number)
 
   case class MessageMacroKey(override val number: Int) extends Key(messageMacroKey, number)
 

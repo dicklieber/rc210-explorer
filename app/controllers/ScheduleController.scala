@@ -47,7 +47,7 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
         val weekInMonth: Cell = Cell.rawHtml(s"""<input type="range" name="${FieldKey("Week", schedule.key).param}" min="0" max="5">""")
         val woy: Cell = Cell.rawHtml(schedule.monthOfYear.toHtmlField(fieldEntry))
         val localTime: Cell = Cell.rawHtml(s"""<input type="time" name="${FieldKey("Time", schedule.key).param}" value="${schedule.localTime}">""")
-        val macroToRun: Cell = schedule.macroToRun.toCell //todo need a macro select control.
+        val macroToRun: Cell = schedule.selectedMacroToRun.toCell(schedule)
 
         Row(Seq(
           name,
@@ -90,6 +90,8 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
             logger.trace("fk: {} value: {}", fk.fieldName, value)
           }
       }
+
+
 
 
 

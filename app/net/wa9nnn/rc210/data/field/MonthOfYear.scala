@@ -20,7 +20,7 @@ package net.wa9nnn.rc210.data.field
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.MonthOfYear.options
 import net.wa9nnn.rc210.key.KeyFactory.Key
-import net.wa9nnn.rc210.util.{SelectField, SelectOption}
+import net.wa9nnn.rc210.util.{FieldSelect, SelectOption}
 
 /**
  * An enumeration with behaviour.
@@ -28,7 +28,7 @@ import net.wa9nnn.rc210.util.{SelectField, SelectOption}
  * @param value    one of the display values in selectOptions.
  * @param key      id for name in a <select>.
  */
-case class MonthOfYear(key: Key, value: String = options.head.display) extends SelectField {
+case class MonthOfYear(key: Key, value: String = options.head.display) extends FieldSelect[String] {
   val fieldKey: FieldKey = FieldKey("MonthOfYear", key)
 
   override def update(newValue: String): MonthOfYear = {

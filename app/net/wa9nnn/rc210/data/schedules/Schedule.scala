@@ -5,10 +5,11 @@ import com.wa9nnn.util.tableui.{Header, Row}
 import net.wa9nnn.rc210.MemoryExtractor
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, ScheduleKey}
+import net.wa9nnn.rc210.key.KeyFactory.ScheduleKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
+import net.wa9nnn.rc210.util.MacroSelect
 import play.api.libs.json.{JsString, JsValue}
 
 import java.time.LocalTime
@@ -20,19 +21,19 @@ import java.time.LocalTime
  * @param weekInMonth  e.g 1 == 1st week in month.
  * @param monthOfYear  enumerated
  * @param localTime    illegal times are None.
- * @param macroToRun   e.g. "macro42"
+ * @param selectedMacroToRun   e.g. "macro42"
  */
 case class Schedule(key: ScheduleKey,
                     dayOfWeek: DayOfWeek,
                     weekInMonth: Option[Int],
                     monthOfYear: MonthOfYear,
                     localTime: Option[LocalTime],
-                    macroToRun: MacroKey)
+                    selectedMacroToRun: MacroSelect)
   extends FieldContents with TriggerNode with RenderMetadata {
 
 
   override def toRow: Row = {
-    Row(key.toCell, macroToRun.toCell, dayOfWeek, weekInMonth, monthOfYear, localTime)
+    Row(key.toCell, selectedMacroToRun.toCell(this), dayOfWeek, weekInMonth, monthOfYear, localTime)
   }
 
   override val nodeEnabled: Boolean = localTime.nonEmpty
@@ -75,6 +76,8 @@ case class Schedule(key: ScheduleKey,
   override def prompt: String = "Runs a Macro on a schedule."
 
   override def unit: String = ""
+
+  override def macroToRun: KeyFactory.MacroKey = selectedMacroToRun.value
 }
 
 object Schedule extends LazyLogging with MemoryExtractor {
@@ -87,7 +90,7 @@ object Schedule extends LazyLogging with MemoryExtractor {
       weekInMonth = None,
       monthOfYear = MonthOfYear(scheduleKey),
       localTime = None,
-      macroToRun = KeyFactory.defaultMacroKey
+      selectedMacroToRun = MacroSelect()
     )
   }
 

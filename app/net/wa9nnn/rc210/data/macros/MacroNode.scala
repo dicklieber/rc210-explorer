@@ -83,7 +83,7 @@ object MacroNode extends LazyLogging with MemoryExtractor with FieldDefinition {
       .concat(macroBuilder(SlicePos("//ShortMacro - 2825-3174"), memory, 7))
 
     val r: Seq[FieldEntry] = macros.map { m: MacroNode =>
-      FieldEntry(this, m.fieldkey, m)
+      FieldEntry(this, m.fieldKey, m)
     }
     r
   }

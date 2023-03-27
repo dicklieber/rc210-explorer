@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.key.KeyFactory.Key
-import net.wa9nnn.rc210.util.{SelectField, SelectOption}
+import net.wa9nnn.rc210.util.{FieldSelect, SelectOption}
 import DayOfWeek._
 /**
  * An enumeration with behaviour.
@@ -27,7 +27,7 @@ import DayOfWeek._
  * @param value    one of the display values in selectOptions.
  * @param key      id for name in a <select>.
  */
-case class DayOfWeek(key: Key, value: String = options.head.display) extends SelectField {
+case class DayOfWeek(key: Key, value: String = options.head.display) extends FieldSelect[String] {
 
   override val fieldKey: FieldKey = FieldKey("DayOfWeek", key)
 

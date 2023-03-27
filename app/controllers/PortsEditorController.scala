@@ -22,6 +22,7 @@ import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.named.NamedManager
+import net.wa9nnn.rc210.key.KeyFactory.PortKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.mvc._
 
@@ -48,20 +49,20 @@ class PortsEditorController @Inject()(implicit val controllerComponents: Control
       }.toSeq
         .sorted
 
-      val rows: Seq[Row] = (for {
-        fieldName <- fieldNames.toSeq
+      val rows: Seq[Row] = for {
+        fieldName <- fieldNames
       } yield {
         val cells: Seq[Cell] = for {
-          number <- (1 to KeyKind.portKey.maxN())
+          number <- 1 to KeyKind.portKey.maxN()
         } yield {
           map(FieldKey(fieldName, KeyFactory(KeyKind.portKey, number))).toCell
         }
 
         Row(fieldName, cells: _*)
-      })
+      }
 
       val colHeaders: Seq[Cell] = for {
-        portKey <- KeyFactory(KeyKind.portKey)
+        portKey <- KeyFactory[PortKey](KeyKind.portKey)
       } yield
         namedManager.get(portKey) match {
           case Some(value) =>
