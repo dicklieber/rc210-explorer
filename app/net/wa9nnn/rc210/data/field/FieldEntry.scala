@@ -29,7 +29,7 @@ import play.api.libs.json.{JsValue, Json}
  * @param candidate       the,potential, next value.
  */
 case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fieldValue: FieldContents, candidate: Option[FieldContents] = None)
-  extends RowSource with Ordered[FieldEntry] with CellProvider {
+  extends RowSource with Ordered[FieldEntry] with CellProvider with RenderMetadata {
   val unit = fieldDefinition.uiInfo.unit
 
   def setCandidate(newValue: String): FieldEntry = {

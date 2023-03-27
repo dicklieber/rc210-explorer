@@ -46,10 +46,10 @@ trait FieldContents {
    * @return html
    */
 
-  def toHtmlField(fieldEntry: FieldEntry): String
+  def toHtmlField(renderMetadata: RenderMetadata): String
 
-   def toCell(fieldEntry: FieldEntry): Cell = {
-     val html: String = toHtmlField(fieldEntry)
+   def toCell(renderMetadata: RenderMetadata): Cell = {
+     val html: String = toHtmlField(renderMetadata)
      Cell.rawHtml(html)
    }
 
@@ -92,8 +92,8 @@ case class FieldInt(value: Int) extends FieldContents {
    *
    * @return
    */
-  def toHtmlField(fieldEntry: FieldEntry): String = {
-    fieldNumber(fieldEntry).toString()
+  def toHtmlField(renderMetadata: RenderMetadata): String = {
+    fieldNumber(value, renderMetadata).toString()
   }
 
 
@@ -106,10 +106,9 @@ case class FieldInt(value: Int) extends FieldContents {
 case class FieldDtmf(value: String) extends FieldContents {
   override def toJsValue: JsValue = JsString(value)
 
-  def toHtmlField(fieldEntry: FieldEntry): String = {
-    fieldDtmf(fieldEntry).toString()
+  def toHtmlField(renderMetadata: RenderMetadata): String = {
+    fieldDtmf(value, renderMetadata).toString()
   }
-
 
   /**
    * Render this value as an RD-210 command string.
@@ -122,8 +121,8 @@ case class FieldDtmf(value: String) extends FieldContents {
 case class FieldBoolean(value: Boolean) extends FieldContents {
   override def toJsValue: JsValue = JsBoolean(value)
 
-  override def toHtmlField(fieldEntry: FieldEntry): String = {
-    fieldCheckbox(fieldEntry).toString()
+  override def toHtmlField(renderMetadata: RenderMetadata): String = {
+    fieldCheckbox(value, renderMetadata).toString()
   }
 
   /**
@@ -146,10 +145,10 @@ case class FieldSeqInts(value: Int*) extends FieldContents {
   override def toCommand(fieldEntry: FieldEntry): String = ???
 
 
-  override def toHtmlField(fieldEntry: FieldEntry): String = {
-    fieldString(fieldEntry).toString()
+  override def toHtmlField(renderMetadata: RenderMetadata): String = {
+    fieldString(display, renderMetadata).toString()
   }
-  override def toCell(fieldEntry: FieldEntry): Cell = Cell.rawHtml(toHtmlField(fieldEntry))
+   def toCell(fieldEntry: FieldEntry): Cell = Cell.rawHtml(toHtmlField(fieldEntry))
 
   override def display: String = value.map(_.toString).mkString(" ")
 }

@@ -1,10 +1,11 @@
 @import net.wa9nnn.rc210.data.field.FieldEntry
 @import scala.math.Numeric.Implicits.infixNumericOps
-@(fieldEntry: FieldEntry)
+@import net.wa9nnn.rc210.data.field.RenderMetadata
+@(value: Int, renderMetadata: RenderMetadata)
 
-    @defining(fieldEntry.param) { paramid =>
+    @defining(renderMetadata.param) { paramid =>
         <div class="valueCell">
-            <input id="@paramid" class="" name="@paramid" value="@fieldEntry.fieldValue.display" title="@fieldEntry.prompt">
-            @fieldEntry.unit
+            <input id="@paramid" class="" name="@paramid" value="@value" title="@renderMetadata.prompt">
+            @renderMetadata.unit
         </div>
     }

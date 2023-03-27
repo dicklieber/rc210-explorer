@@ -51,16 +51,17 @@ object KeyFactory {
   }
 
 
-
-
   private val map: Map[String, Key] = keys.map { k =>
-    k.toString -> k }.toMap
+    k.toString -> k
+  }.toMap
 
   def apply[K <: Key](sKey: String): K = {
     map.getOrElse(sKey, throw new IllegalArgumentException(s"No key for : $sKey!")).asInstanceOf[K]
   }
 
   def apply[K <: Key](keyKind: KeyKind, number: Int): K = {
+    assert(number != 0, "Keys cannot have number 0!")
+
     apply(keyKind.skey(number))
   }
 
@@ -72,6 +73,7 @@ object KeyFactory {
     availableKeys
       .filter(_.kind.eq(keyKind))
   }
+  lazy val defaultMacroKey:MacroKey = apply(KeyKind.macroKey, 1)
 
 
   sealed abstract class Key(val kind: KeyKind, val number: Int) extends CellProvider with Ordered[Key] {
@@ -97,7 +99,7 @@ object KeyFactory {
 
   case class AlarmKey(override val number: Int) extends Key(alarmKey, number)
 
-  case class MacroKey protected(override val number: Int) extends Key(macroKey, number)
+  case class MacroKey private (override val number: Int) extends Key(macroKey, number)
 
   case class MessageMacroKey(override val number: Int) extends Key(messageMacroKey, number)
 

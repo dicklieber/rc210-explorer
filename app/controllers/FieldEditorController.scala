@@ -17,6 +17,7 @@
 
 package controllers
 
+import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.named.NamedManager
@@ -30,7 +31,7 @@ import javax.inject._
 class FieldEditorController @Inject()(val controllerComponents: ControllerComponents,
                                       mappedValues: MappedValues
                                      )(implicit enamedManager: NamedManager)
-  extends BaseController {
+  extends BaseController with LazyLogging{
 
 
   def selectKey(): Action[AnyContent] = Action {
@@ -54,9 +55,14 @@ class FieldEditorController @Inject()(val controllerComponents: ControllerCompon
     formUrlEncoded
       .get
       .foreach { case (sKey, values) =>
-        val fieldKey: FieldKey = FieldKey.fromParam(sKey)
+        try {
+          val fieldKey: FieldKey = FieldKey.fromParam(sKey)
 
-        mappedValues.apply(fieldKey, values.headOption.getOrElse(throw new IllegalArgumentException(s"No value for param: $sKey")))
+          mappedValues.apply(fieldKey, values.headOption.getOrElse(throw new IllegalArgumentException(s"No value for param: $sKey")))
+        } catch {
+          case e:Exception =>
+            logger.error(s"sKey: $sKey values: $values", e)
+        }
       }
     Ok
   }

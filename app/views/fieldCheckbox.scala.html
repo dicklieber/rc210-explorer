@@ -1,8 +1,10 @@
 @import net.wa9nnn.rc210.data.field.FieldEntry
-@(fieldEntry: FieldEntry)
-    @defining(fieldEntry.param) { paramid =>
-        <div class="fieldCheckbox valueCell">
-            <input type="checkbox" onchange="handleClick(this, '@paramid')" class="form-check-input" @if(fieldEntry.fieldValue.display) { checked } title="@fieldEntry.prompt">
-        </div>
-        <input type="hidden" name="@fieldEntry.param" id="@paramid" value="XYZZY">
-    }
+@import net.wa9nnn.rc210.data.field.RenderMetadata
+@(value: Boolean,  renderMetadata: RenderMetadata) {
+    <input type="hidden" name="@renderMetadata.param" id="@renderMetadata.param" value="XYZZY">
+    <div class="fieldCheckbox valueCell">
+        <input type="checkbox" onchange="handleClick(this, '@renderMetadata.param')" title="@renderMetadata.prompt"
+        @if(value) { checked }
+        >
+    </div>
+}

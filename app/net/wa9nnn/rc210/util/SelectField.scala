@@ -18,14 +18,20 @@
 package net.wa9nnn.rc210.util
 
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.{FieldContents, FieldEntry}
+import net.wa9nnn.rc210.data.field.{FieldContents, FieldEntry, RenderMetadata}
 import play.api.libs.json.JsValue
 
+/**
+ * An enumeration with behaviour.
+ */
+trait SelectField extends FieldContents {
+  val selectOptions: Seq[SelectOption]
+  val value: String
+  val fieldKey: FieldKey
 
-case class SelectField(metadata: SelectFieldMetadata, currentValue: String) extends FieldContents {
   override def toJsValue: JsValue = ???
 
-  override def display: String = currentValue
+  override def display: String = value
 
   /**
    * Render this value as an RD-210 command string.
@@ -33,24 +39,24 @@ case class SelectField(metadata: SelectFieldMetadata, currentValue: String) exte
   override def toCommand(fieldEntry: FieldEntry): String = ???
 
   /**
+   *
    * Render as HTML. Either a single field of an entire HTML Form.
    *
    * @param fieldEntry all the metadata.
    * @return html
    */
-  override def toHtmlField(fieldEntry: FieldEntry): String = ???
-}
+  override def toHtmlField(renderMetadata: RenderMetadata): String = {
 
-object SelectField {
-  def apply(options: Seq[(String, Int)], fieldKey: FieldKey, current: Int): SelectField = {
+    val optionsHtml: String = selectOptions.map { selectOption: SelectOption =>
+      selectOption.copy(selected = selectOption.display == value).html
+    }.mkString("\n")
+    val param: String = fieldKey.param
 
-    val opts = options.map { case (display, id) =>
-      SelectOption(id, display)
-    }
-
-
-    val metadata = new SelectFieldMetadata(fieldKey, opts)
-    new SelectField(metadata, metadata(current))
+    s"""
+    <select name="$param" class="form-select" aria-label="Default select example">
+    $optionsHtml
+    </select>
+    """.stripMargin
   }
 }
 
@@ -64,32 +70,7 @@ object SelectField {
  * @param fieldKey for this field.
  * @param strings  the strings leading empty string are use dto 'take up' zero.
  */
-class SelectFieldMetadata(fieldKey: FieldKey, selectOptions: Seq[SelectOption]) {
-  def toHtml(fieldEntry: FieldEntry): String = {
-    val currentValue = fieldEntry.fieldValue.asInstanceOf[SelectField].currentValue
-
-    val optionsHtml: String = selectOptions.map { selectOption: SelectOption =>
-      selectOption.copy(selected = selectOption.display == currentValue).html
-    }.mkString("\n")
-    val param = fieldEntry.param
-
-    s"""
-    <select name="$param" class="form-select" aria-label="Default select example" title="${fieldEntry.prompt}">
-    $optionsHtml
-    </select>
-    """.stripMargin
-  }
-
-  /**
-   * find display string for an id.
-   *
-   */
-  def apply(id: Int): String = {
-    selectOptions.find(_.id == id)
-      .map(_.display)
-      .getOrElse(throw new IllegalStateException(s"No id $id for $fieldKey"))
-  }
-}
+abstract class SelectFieldMetadata(fieldKey: FieldKey)
 
 /**
  *
@@ -103,4 +84,6 @@ case class SelectOption protected(id: Int, display: String, selected: Boolean = 
     s"""<option value="$display" >$display</option>"""
   }
 }
+
+
 

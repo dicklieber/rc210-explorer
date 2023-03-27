@@ -1,20 +1,17 @@
 package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.key.KeyFactory.MacroKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
-import net.wa9nnn.rc210.util.SelectField
+
+import java.time.LocalTime
 
 class ScheduleBuilder extends LazyLogging {
-  // colXXX index into n2 dimension of array.
-  val colDow = 0
-  val colWeekInMonth = 1
-  val colMoy = 2
-  val colHours = 3
-  val colMinutes = 4
-  val colMacro = 5
-
-  private val array = Array.ofDim[Any](40, 6)
+  private val nMax = KeyKind.scheduleKey.maxN()
+  val slots = new Array[Schedule](nMax)
+  for (setPoint <- 0 until nMax) {
+    slots(setPoint) = Schedule.empty(setPoint + 1)
+  }
 
   /**
    * DOW packs one or two fields:
@@ -29,15 +26,17 @@ class ScheduleBuilder extends LazyLogging {
     nDows
       .zipWithIndex
       .foreach { case (nDow, setPoint) =>
+        val previous: Schedule = slots(setPoint)
         val sDow = nDow.toString
         val chars = sDow.toCharArray
         chars match {
           case Array(dow) =>
-            array(setPoint)(colWeekInMonth) = None
-            array(setPoint)(colDow) = sDow.toInt
+            //            slots(setPoint) = leave as None
+            val dayOfWeek = previous.dayOfWeek.update(dow.asDigit)
+            slots(setPoint) = previous.copy(dayOfWeek = dayOfWeek)
           case Array(wInMo, dow) =>
-            array(setPoint)(colWeekInMonth) = wInMo.toString.toInt
-            array(setPoint)(colDow) = dow.toString.toInt
+            val weekInMonth: Option[Int] = Option.when(wInMo != 0)(wInMo)
+            slots(setPoint) = previous.copy(weekInMonth = weekInMonth, dayOfWeek = previous.dayOfWeek.update(dow.asDigit))
           case x =>
             logger.error(s"DOW must be 1 or 2 chars, got $sDow")
         }
@@ -47,30 +46,48 @@ class ScheduleBuilder extends LazyLogging {
   def putMoy(moys: Seq[Int]): Unit = {
     moys.zipWithIndex
       .foreach { case (moy, setPoint) =>
-        array(setPoint)(colMoy) = moy
+        val previous: Schedule = slots(setPoint)
+        slots(setPoint) = previous.copy(monthOfYear = previous.monthOfYear.update(moy))
       }
   }
 
   def putHours(hours: Seq[Int]): Unit = {
     hours.zipWithIndex
-      .foreach { case (hours, setPoint) =>
-        array(setPoint)(colHours) = hours
+      .foreach { case (newHours, setPoint) =>
+        val previous: Schedule = slots(setPoint)
+
+        val newLocalTime: Option[LocalTime] =
+          if (newHours < 25) {
+            None
+          } else {
+            val r: Option[LocalTime] = previous.localTime.map { localtime =>
+              localtime.withHour(newHours)
+            }
+            r
+          }
+        slots(setPoint) = previous.copy(localTime = newLocalTime)
       }
   }
 
   def putMinutes(minutes: Seq[Int]): Unit = {
     minutes.zipWithIndex
-      .foreach { case (minutes, setPoint) =>
-        array(setPoint)(colMinutes) = minutes
+      .foreach { case (newMinute, setPoint) =>
+        val previous: Schedule = slots(setPoint)
+        val newTime: Option[LocalTime] = previous.localTime
+          .map { localtime =>
+            localtime.withMinute(newMinute)
+          }.orElse(Option(LocalTime.of(1, newMinute)))
+        slots(setPoint) = previous.copy(localTime = newTime)
       }
   }
 
   def putMacro(macroNumbers: Seq[Int]): Unit = {
     macroNumbers.zipWithIndex
       .foreach { case (macroNumber, setPoint) =>
-        array(setPoint)(colMacro) =  KeyFactory(KeyKind.macroKey,macroNumber)
+        val previous: Schedule = slots(setPoint)
+        val macroKey:MacroKey = KeyFactory(KeyKind.macroKey, macroNumber)
+        slots(setPoint) = previous.copy(macroToRun = macroKey)
       }
   }
 
-  def getSetpointRow(setPoint:Int):Seq[Any] = array(setPoint).toIndexedSeq
 }

@@ -17,13 +17,14 @@
 
 package controllers
 
+import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.mapped.MappedValues
-import net.wa9nnn.rc210.data.named.NamedManager
+import net.wa9nnn.rc210.data.named.{NamedManager, NamedSource}
 import net.wa9nnn.rc210.data.schedules.Schedule
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.key.KeyKind
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
@@ -31,23 +32,25 @@ import javax.inject.{Inject, Singleton}
 @Singleton()
 class ScheduleController @Inject()(val controllerComponents: ControllerComponents,
                                    mappedValues: MappedValues
-                                  )(implicit namedManager: NamedManager) extends BaseController {
+                                  )(implicit namedSource: NamedManager) extends BaseController with LazyLogging {
 
 
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
 
       val entries: Seq[FieldEntry] = mappedValues(KeyKind.scheduleKey)
-      val rows = entries.map { fieldEntry: FieldEntry =>
+      val rows: Seq[Row] = entries.map { fieldEntry: FieldEntry =>
         val schedule: Schedule = fieldEntry.fieldValue.asInstanceOf[Schedule]
+        val keyName = namedSource.get(schedule.key).getOrElse("")
+        val name: Cell = Cell.rawHtml(views.html.fieldNamedKey(schedule.key, keyName, schedule).toString())
         val dow: Cell = Cell.rawHtml(schedule.dayOfWeek.toHtmlField(fieldEntry))
-        val weekInMonth: Cell = Cell.rawHtml(s"""<input type="range" name="Week" min="0" max="5">""")
+        val weekInMonth: Cell = Cell.rawHtml(s"""<input type="range" name="${FieldKey("Week", schedule.key).param}" min="0" max="5">""")
         val woy: Cell = Cell.rawHtml(schedule.monthOfYear.toHtmlField(fieldEntry))
-        val localTime: Cell = Cell.rawHtml((s"""<input type="time" name="Time" value="${schedule.localTime}">"""))
-        val macroToRun: Cell = schedule.macroToRun.toCell //todo need a macroselect control.
+        val localTime: Cell = Cell.rawHtml(s"""<input type="time" name="${FieldKey("Time", schedule.key).param}" value="${schedule.localTime}">""")
+        val macroToRun: Cell = schedule.macroToRun.toCell //todo need a macro select control.
 
         Row(Seq(
-          schedule.key.toCell,
+          name,
           dow,
           weekInMonth,
           woy,
@@ -55,23 +58,40 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
           macroToRun
         ))
       }
-      val columnHeaders: Seq[Cell] = for {
-        portKey <- KeyFactory(KeyKind.portKey)
-      } yield
-        namedManager.get(portKey) match {
-          case Some(value) =>
-            Cell(value)
-              .withToolTip(s"Port ${portKey.number}")
 
-          case None => Cell(portKey.toString)
-        }
-
-      val table = Table(Header("Schedules", columnHeaders: _*), rows)
+      val table = Table(Header("Schedules",
+        "SetPoint",
+        "Day in Week",
+        Cell("Week").withToolTip("Week in month. 0 disables"),
+        "Month",
+        "Time",
+        "Macro To Run"),
+        rows)
       Ok(views.html.schedules(table))
   }
 
   def save(): Action[AnyContent] = Action { implicit request =>
-    implicit val valuesMap = request.body.asFormUrlEncoded.get
+    implicit val valuesMap: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
+    val r = valuesMap.map { case (sKey, values) =>
+      sKey -> values.headOption.getOrElse("No value")
+    }.filter(_._1 != "save")
+      .toSeq
+      .map { case (name, value) =>
+        val fk = FieldKey.fromParam(name)
+        logger.trace("name: {} value: {} fieldKey: {}", name, value, fk)
+        fk -> value
+      }
+      .sortBy(_._1.key.number)
+      .groupBy(_._1.key)
+      .foreach { case (key, items) =>
+        logger.trace(s"==== {} ====", key.toString)
+        items.sortBy(_._1.fieldName)
+          .foreach { case (fk, value) =>
+            logger.trace("fk: {} value: {}", fk.fieldName, value)
+          }
+      }
+
+
 
     //    val schedule = Schedule(key = form2Key("key"),
     //      dayOfWeek = SelectField(ScheduleEnums.dayOfWeek, "dayOfWeek"),

@@ -9,7 +9,6 @@ import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, ScheduleKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
-import net.wa9nnn.rc210.util.SelectField
 import play.api.libs.json.{JsString, JsValue}
 
 import java.time.LocalTime
@@ -17,19 +16,19 @@ import java.time.LocalTime
 /**
  *
  * @param key          for [[ScheduleKey]]
- * @param dayOfWeek
+ * @param dayOfWeek    enumerated
  * @param weekInMonth  e.g 1 == 1st week in month.
- * @param monthOfYear
+ * @param monthOfYear  enumerated
  * @param localTime    illegal times are None.
  * @param macroToRun   e.g. "macro42"
  */
 case class Schedule(key: ScheduleKey,
-                    dayOfWeek: SelectField,
+                    dayOfWeek: DayOfWeek,
                     weekInMonth: Option[Int],
-                    monthOfYear: SelectField,
+                    monthOfYear: MonthOfYear,
                     localTime: Option[LocalTime],
                     macroToRun: MacroKey)
-  extends FieldContents with TriggerNode {
+  extends FieldContents with TriggerNode with RenderMetadata {
 
 
   override def toRow: Row = {
@@ -65,17 +64,33 @@ case class Schedule(key: ScheduleKey,
   /**
    * Render as HTML. Either a single field of an entire HTML Form.
    *
-   * @param fieldEntry all the metadata.
-   * @return html
    */
-  override def toHtmlField(fieldEntry: FieldEntry): String =
-    throw new NotImplementedError() //todo
-//    views.html.schedule(this, key.kind).toString()
+  override def toHtmlField(renderMetadata: RenderMetadata): String =
+    throw new IllegalStateException("Cannot render schedule as a single field!")
 
   override def display: String = description
+
+  override def param: String = FieldKey("Schedule", key).param
+
+  override def prompt: String = "Runs a Macro on a schedule."
+
+  override def unit: String = ""
 }
 
 object Schedule extends LazyLogging with MemoryExtractor {
+
+  def empty(setPoint: Int): Schedule = {
+    val scheduleKey: ScheduleKey = KeyFactory(KeyKind.scheduleKey, setPoint)
+    new Schedule(
+      key = scheduleKey,
+      dayOfWeek = DayOfWeek(scheduleKey),
+      weekInMonth = None,
+      monthOfYear = MonthOfYear(scheduleKey),
+      localTime = None,
+      macroToRun = KeyFactory.defaultMacroKey
+    )
+  }
+
   def header(count: Int): Header = Header(s"Schedules ($count)", "SetPoint", "Macro", "DOW", "WeekInMonth", "MonthOfYear", "LocalTime")
 
   override def extract(memory: Memory): Seq[FieldEntry] = {
@@ -92,39 +107,11 @@ object Schedule extends LazyLogging with MemoryExtractor {
     scheduleBuilder.putMinutes(collect("//SetPointMinutes - 736-775"))
     scheduleBuilder.putMacro(collect("//SetPointMacro - 776-815"))
 
-    //DoSetPoint - 816-855
-    for (setPoint <- 0 until 40) yield {
 
-      val parts: Seq[Any] = scheduleBuilder.getSetpointRow(setPoint)
-
-
-      //*4001 S * DOW * MOY * Hours * Minutes * Macro
-
-      val key: ScheduleKey = KeyFactory(KeyKind.scheduleKey, setPoint + 1)
-      val dow: SelectField = SelectField(ScheduleEnums.dayOfWeek, FieldKey("dayOfWeek", key), parts(scheduleBuilder.colDow).asInstanceOf[Int])
-      val moy: SelectField = SelectField(ScheduleEnums.monthOfYear, FieldKey("monthOfYear", key), parts(scheduleBuilder.colMoy).asInstanceOf[Int])
-      val schedule = Schedule(key,
-        dayOfWeek = dow,
-        weekInMonth = parts(1).asInstanceOf[Option[Int]],
-        monthOfYear = moy,
-        localTime = {
-          val hour: Int = parts(3).asInstanceOf[Int]
-          val minute: Int = parts(4).asInstanceOf[Int]
-          try {
-            Option.when(hour < 25) {
-              LocalTime.of(hour, minute)
-            }
-          } catch {
-            case _: Exception =>
-              logger.error(s"setPoint: $setPoint hour: $hour, minute: $minute")
-              None
-          }
-        },
-        macroToRun = parts(5).asInstanceOf[MacroKey])
-      FieldEntry(this, FieldKey("Schedule", key), schedule)
+    scheduleBuilder.slots.toIndexedSeq.map { schedule =>
+      FieldEntry(this, FieldKey("Schedule", schedule.key), schedule)
     }
   }
-
 
   override val fieldName: String = "Schedule"
   override val kind: KeyKind = KeyKind.scheduleKey

@@ -42,7 +42,7 @@ case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dt
    * @param fieldEntry all the metadata.
    * @return html
    */
-  override def toHtmlField(fieldEntry: FieldEntry): String = {
+  override def toHtmlField(renderMetadata: RenderMetadata): String = {
     throw new NotImplementedError() //todo
   }
 

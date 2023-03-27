@@ -41,6 +41,7 @@
     <logger name="net.wa9nnn.rc210.data.named.NamedManager" level="INFO"/>
     <logger name="net.wa9nnn.rc210.data.schedules.ScheduleNode" level="INFO"/>
     <logger name="net.wa9nnn.rc210.serial.RC210Download" level="INFO"/>
+    <logger name="controllers.ScheduleController" level="TRACE"/>
 
     <root level="INFO">
         <appender-ref ref="ASYNCFILE"/>

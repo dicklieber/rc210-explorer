@@ -1,6 +1,6 @@
-@import net.wa9nnn.rc210.data.field.{FieldBoolean, FieldDtmf, FieldEntry}
-@(fieldEntry: FieldEntry)
+@import net.wa9nnn.rc210.data.field.RenderMetadata
+@(value:String,  renderMetadata: RenderMetadata)
 <div class="valueCell">
-    <input name="@fieldEntry.param" id="@fieldEntry.param" value="@fieldEntry.fieldValue.display" title="@fieldEntry.prompt">
+    <input name="@renderMetadata.param"  value="@value" title="@renderMetadata.prompt">
 </div>
 
