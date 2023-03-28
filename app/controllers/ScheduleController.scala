@@ -20,7 +20,7 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.FormHelpers.{form2OptInt, form2OptTime}
+import net.wa9nnn.rc210.data.field.FormHelpers.{form2OptInt, form2OptTime, localTimeToCell}
 import net.wa9nnn.rc210.data.field.{DayOfWeek, FieldEntry, MonthOfYear}
 import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.named.NamedManager
@@ -38,18 +38,19 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
                                   )(implicit namedSource: NamedManager) extends BaseController with LazyLogging {
 
 
+
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
 
       val entries: Seq[FieldEntry] = mappedValues(KeyKind.scheduleKey)
       val rows: Seq[Row] = entries.map { fieldEntry: FieldEntry =>
-        val schedule: Schedule = fieldEntry.fieldValue.asInstanceOf[Schedule]
+        val schedule: Schedule = fieldEntry.value
         val keyName = namedSource.get(schedule.key).getOrElse("")
         val name: Cell = Cell.rawHtml(views.html.fieldNamedKey(schedule.key, keyName, schedule).toString())
         val dow: Cell = schedule.dayOfWeek.toCell(schedule)
-        val weekInMonth: Cell = Cell.rawHtml(s"""<input type="range" name="${FieldKey("Week", schedule.key).param}" min="0" max="5">""")
+        val weekInMonth: Cell = Cell.rawHtml(s"""<input type="range" name="${FieldKey("Week", schedule.key).param}" value="${schedule.weekInMonth.getOrElse(0)}" min="0" max="5">""")
         val woy: Cell = Cell.rawHtml(schedule.monthOfYear.toHtmlField(schedule))
-        val localTime: Cell = Cell.rawHtml(s"""<input type="time" name="${FieldKey("Time", schedule.key).param}" value="${schedule.localTime}">""")
+        val localTime: Cell = localTimeToCell(schedule)
         val macroToRun: Cell = schedule.selectedMacroToRun.toCell(schedule)
 
         Row(Seq(
@@ -69,7 +70,7 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
         "Month",
         "Time",
         "Macro To Run"),
-        rows)
+        rows.take(1))
       Ok(views.html.schedules(table))
   }
 
@@ -97,7 +98,7 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
           dayOfWeek = DayOfWeek(key, nameToValue),
           weekInMonth = form2OptInt("Week"),
           monthOfYear = MonthOfYear(key, nameToValue),
-          localTime = form2OptTime("localTime"),
+          localTime =   form2OptTime("Time"),
           selectedMacroToRun = MacroSelect(key, nameToValue)
         )
       }.toSeq.sortBy(_.key)

@@ -53,7 +53,8 @@ trait FieldSelect[T] extends FieldContents {
   override def toHtmlField(renderMetadata: RenderMetadata): String = {
 
     val optionsHtml: String = selectOptions.map { selectOption: SelectOption =>
-      selectOption.copy(selected = selectOption.display == value).html
+      val bool = selectOption.display == value.toString
+      selectOption.copy(selected = bool).html
     }.mkString("\n")
     val param: String = FieldKey(name, renderMetadata.key).param
 
@@ -88,7 +89,7 @@ abstract class SelectFieldMetadata(fieldKey: FieldKey)
 case class SelectOption protected(id: Int, display: String, selected: Boolean = false) {
   def html: String = {
     val s: String = if (selected) " selected " else " "
-    s"""<option value="$display" >$display</option>"""
+    s"""<option value="$display" $s >$display</option>"""
   }
 }
 

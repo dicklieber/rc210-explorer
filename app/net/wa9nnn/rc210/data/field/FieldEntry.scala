@@ -31,7 +31,9 @@ import play.api.libs.json.{JsValue, Json}
 case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fieldValue: FieldContents, candidate: Option[FieldContents] = None)
   extends RowSource with Ordered[FieldEntry] with CellProvider with RenderMetadata {
 
-  def value:FieldContents = candidate.getOrElse(fieldValue)
+  def value[F<: FieldContents]:F = {
+    candidate.getOrElse(fieldValue).asInstanceOf[F]
+  }
 
 
   val unit = fieldDefinition.uiInfo.unit
