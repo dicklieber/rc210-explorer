@@ -16,18 +16,20 @@
  */
 
 package net.wa9nnn.rc210.util
-import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.RenderMetadata
-import net.wa9nnn.rc210.key.KeyFactory.MacroKey
+
+import net.wa9nnn.rc210.data.field.{DayOfWeek, RenderMetadata}
+import net.wa9nnn.rc210.key.KeyFactory.{Key, MacroKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+
 
 /**
  * Unlike ogther [[FieldSelect]]s this is just a helper as opposed to a holder of a value.
  */
-case class MacroSelect(value:MacroKey = KeyFactory.defaultMacroKey) extends FieldSelect[MacroKey] {
-  override val selectOptions: Seq[SelectOption] = KeyFactory[MacroKey](KeyKind.macroKey).map{ macroKey =>
+case class MacroSelect(value: MacroKey = KeyFactory.defaultMacroKey) extends FieldSelect[MacroKey] {
+  override val selectOptions: Seq[SelectOption] = KeyFactory[MacroKey](KeyKind.macroKey).map { macroKey =>
     SelectOption(macroKey.number, macroKey.toString)
   }
+  override val name: String = MacroSelect.name
 
   /**
    *
@@ -36,19 +38,33 @@ case class MacroSelect(value:MacroKey = KeyFactory.defaultMacroKey) extends Fiel
    * @param renderMetadata metadata needed  to render html etc
    * @return html
    */
-  override def toHtmlField( renderMetadata: RenderMetadata): String = {
+  override def toHtmlField(renderMetadata: RenderMetadata): String = {
     super.toHtmlField(renderMetadata)
   }
 
-  def fromParam(param: String):MacroKey =
+  def fromParam(param: String): MacroKey =
     KeyFactory(param)
-
-  override val fieldKey: FieldKey = FieldKey("Macro", value)
 
 }
 
-object MacroSelect {
-   val selectOptions: Seq[SelectOption] = KeyFactory[MacroKey](KeyKind.macroKey).map { macroKey =>
+object MacroSelect extends FieldSelectComp {
+  val name: String = "Macro"
+
+  /**
+   *
+   * @param key      for this schedule setpoint.
+   * @param valueMap from form data for this key
+   * @return
+   */
+  def apply(key: Key, valueMap: Map[String, String]): MacroSelect = {
+    val str = valueMap(name)
+    val macroKey:MacroKey = KeyFactory(str)
+    new MacroSelect(macroKey)
+  }
+
+  override val options: Seq[SelectOption] = KeyFactory[MacroKey](KeyKind.macroKey).map { macroKey =>
     SelectOption(macroKey.number, macroKey.toString)
   }
 }
+
+

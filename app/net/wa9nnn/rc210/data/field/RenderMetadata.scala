@@ -17,6 +17,8 @@
 
 package net.wa9nnn.rc210.data.field
 
+import net.wa9nnn.rc210.key.KeyFactory.Key
+
 /**
  * Needed to render a [[FieldContents]] in a [[com.wa9nnn.util.tableui.Cell]] or an html string.
  */
@@ -26,4 +28,6 @@ trait RenderMetadata {
   def prompt: String
 
   def unit: String
+  def key:Key = null
+
 }

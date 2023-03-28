@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.util
 
+import com.wa9nnn.util.tableui.Cell
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.{FieldContents, FieldEntry, RenderMetadata}
 import play.api.libs.json.JsValue
@@ -27,7 +28,7 @@ import play.api.libs.json.JsValue
 trait FieldSelect[T] extends FieldContents {
   val selectOptions: Seq[SelectOption]
   val value: T
-  val fieldKey: FieldKey
+  val name: String
 
   override def toJsValue: JsValue = ???
 
@@ -37,6 +38,10 @@ trait FieldSelect[T] extends FieldContents {
    * Render this value as an RD-210 command string.
    */
   override def toCommand(fieldEntry: FieldEntry): String = ???
+
+  override def toCell(renderMetadata: RenderMetadata): Cell = {
+    Cell.rawHtml(toHtmlField(renderMetadata))
+  }
 
   /**
    *
@@ -50,7 +55,7 @@ trait FieldSelect[T] extends FieldContents {
     val optionsHtml: String = selectOptions.map { selectOption: SelectOption =>
       selectOption.copy(selected = selectOption.display == value).html
     }.mkString("\n")
-    val param: String = fieldKey.param
+    val param: String = FieldKey(name, renderMetadata.key).param
 
     s"""
     <select name="$param" class="form-select" aria-label="Default select example">
@@ -58,6 +63,8 @@ trait FieldSelect[T] extends FieldContents {
     </select>
     """.stripMargin
   }
+
+  override def toString: String = display
 }
 
 
@@ -85,5 +92,9 @@ case class SelectOption protected(id: Int, display: String, selected: Boolean = 
   }
 }
 
+trait FieldSelectComp {
+  val name: String
+  val options: Seq[SelectOption]
+}
 
 

@@ -30,10 +30,11 @@ object FormHelpers {
   //    map(name).head
   //  }
 
-  def form2OptInt(name: String)(implicit map: Map[String, Seq[String]]): Option[Int] = {
-    val option: Option[String] = map(name).headOption
-    val value: Option[Int] = option.map { s => s.toInt }
-    value
+  def form2OptInt(name: String)(implicit map: Map[String, String]): Option[Int] = {
+    val str = map(name)
+    Option.when(str.nonEmpty) {
+      str.toInt
+    }
   }
 
   def form2FieldKey(name: String)(implicit map: Map[String, Seq[String]]): FieldKey = {
@@ -46,15 +47,14 @@ object FormHelpers {
     KeyFactory(value.head)
   }
 
-  def form2OptTime(name: String)(implicit map: Map[String, Seq[String]]): Option[LocalTime] = {
-    //    val value: Seq[String] = map(name)
+  def form2OptTime(name: String)(implicit map: Map[String, String]): Option[LocalTime] = {
     for {
-      value: String <- map(name)
+      value: String <- map.get(name)
       if value.nonEmpty
     } yield {
       LocalTime.parse(value)
     }
-  }.headOption
+  }
 }
 
 

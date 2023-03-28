@@ -1,6 +1,7 @@
 package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.data.field.DayOfWeek
 import net.wa9nnn.rc210.key.KeyFactory.MacroKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.util.MacroSelect
@@ -33,11 +34,11 @@ class ScheduleBuilder extends LazyLogging {
         chars match {
           case Array(dow) =>
             //            slots(setPoint) = leave as None
-            val dayOfWeek = previous.dayOfWeek.update(dow.asDigit)
+            val dayOfWeek = DayOfWeek(dow.asDigit)
             slots(setPoint) = previous.copy(dayOfWeek = dayOfWeek)
           case Array(wInMo, dow) =>
             val weekInMonth: Option[Int] = Option.when(wInMo != 0)(wInMo)
-            slots(setPoint) = previous.copy(weekInMonth = weekInMonth, dayOfWeek = previous.dayOfWeek.update(dow.asDigit))
+            slots(setPoint) = previous.copy(weekInMonth = weekInMonth, dayOfWeek = DayOfWeek(dow.asDigit))
           case x =>
             logger.error(s"DOW must be 1 or 2 chars, got $sDow")
         }

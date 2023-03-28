@@ -17,36 +17,39 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.key.KeyFactory.Key
-import net.wa9nnn.rc210.util.{FieldSelect, SelectOption}
-import DayOfWeek._
+import net.wa9nnn.rc210.util.{FieldSelect, FieldSelectComp, SelectOption}
+import DayOfWeek.options
 /**
  * An enumeration with behaviour.
  *
  * @param value    one of the display values in selectOptions.
  * @param key      id for name in a <select>.
  */
-case class DayOfWeek(key: Key, value: String = options.head.display) extends FieldSelect[String] {
+case class DayOfWeek(value: String = options.head.display) extends FieldSelect[String] {
 
-  override val fieldKey: FieldKey = FieldKey("DayOfWeek", key)
-
-  override def update(newValue: String): DayOfWeek = {
-    copy(value = newValue)
-  }
-
-  def update(newId: Int): DayOfWeek = {
-    options.find(_.id == newId).map{option =>
-      copy(value = option.display)
-    }.getOrElse(throw new IllegalArgumentException(s"No DayOfWeek id of: $newId"))
-  }
 
   override val selectOptions: Seq[SelectOption] = options
+  override val name: String = DayOfWeek.name
 }
 
-object DayOfWeek {
-  def apply(key: Key, id: Int): DayOfWeek = {
-    new DayOfWeek(key, options(id).display)
+object DayOfWeek extends FieldSelectComp {
+  override val name: String = "DayOfWeek"
+
+  def apply(id: Int): DayOfWeek = {
+    val maybeOption = options.find(_.id == id)
+    new DayOfWeek(maybeOption.get.display)
+  }
+
+  /**
+   *
+   * @param key      for this schedule setpoint.
+   * @param valueMap from form data for this key
+   * @return
+   */
+  def apply(key: Key, valueMap: Map[String, String]): DayOfWeek = {
+    val str = valueMap(name)
+    new DayOfWeek(str)
   }
 
   val options: Seq[SelectOption] =

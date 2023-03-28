@@ -20,11 +20,14 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.field.FormHelpers.{form2OptInt, form2OptTime}
+import net.wa9nnn.rc210.data.field.{DayOfWeek, FieldEntry, MonthOfYear}
 import net.wa9nnn.rc210.data.mapped.MappedValues
-import net.wa9nnn.rc210.data.named.{NamedManager, NamedSource}
+import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.data.schedules.Schedule
+import net.wa9nnn.rc210.key.KeyFactory.ScheduleKey
 import net.wa9nnn.rc210.key.KeyKind
+import net.wa9nnn.rc210.util.MacroSelect
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
@@ -43,9 +46,9 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
         val schedule: Schedule = fieldEntry.fieldValue.asInstanceOf[Schedule]
         val keyName = namedSource.get(schedule.key).getOrElse("")
         val name: Cell = Cell.rawHtml(views.html.fieldNamedKey(schedule.key, keyName, schedule).toString())
-        val dow: Cell = Cell.rawHtml(schedule.dayOfWeek.toHtmlField(fieldEntry))
+        val dow: Cell = schedule.dayOfWeek.toCell(schedule)
         val weekInMonth: Cell = Cell.rawHtml(s"""<input type="range" name="${FieldKey("Week", schedule.key).param}" min="0" max="5">""")
-        val woy: Cell = Cell.rawHtml(schedule.monthOfYear.toHtmlField(fieldEntry))
+        val woy: Cell = Cell.rawHtml(schedule.monthOfYear.toHtmlField(schedule))
         val localTime: Cell = Cell.rawHtml(s"""<input type="time" name="${FieldKey("Time", schedule.key).param}" value="${schedule.localTime}">""")
         val macroToRun: Cell = schedule.selectedMacroToRun.toCell(schedule)
 
@@ -71,7 +74,7 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
   }
 
   def save(): Action[AnyContent] = Action { implicit request =>
-    implicit val valuesMap: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
+    val valuesMap: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
     val r = valuesMap.map { case (sKey, values) =>
       sKey -> values.headOption.getOrElse("No value")
     }.filter(_._1 != "save")
@@ -83,28 +86,25 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
       }
       .sortBy(_._1.key.number)
       .groupBy(_._1.key)
-      .foreach { case (key, items) =>
+      .map { case (key, items: Seq[(FieldKey, String)]) =>
         logger.trace(s"==== {} ====", key.toString)
-        items.sortBy(_._1.fieldName)
-          .foreach { case (fk, value) =>
-            logger.trace("fk: {} value: {}", fk.fieldName, value)
-          }
-      }
+
+        implicit val nameToValue: Map[String, String] = items.map { case (fieldey, value) =>
+          fieldey.fieldName -> value
+        }.toMap
+
+        Schedule(key = key.asInstanceOf[ScheduleKey],
+          dayOfWeek = DayOfWeek(key, nameToValue),
+          weekInMonth = form2OptInt("Week"),
+          monthOfYear = MonthOfYear(key, nameToValue),
+          localTime = form2OptTime("localTime"),
+          selectedMacroToRun = MacroSelect(key, nameToValue)
+        )
+      }.toSeq.sortBy(_.key)
+
+      mappedValues.apply(r)
 
 
-
-
-
-    //    val schedule = Schedule(key = form2Key("key"),
-    //      dayOfWeek = SelectField(ScheduleEnums.dayOfWeek, "dayOfWeek"),
-    //      weekInMonth = form2OptInt("weekInMonth"),
-    //      monthOfYear = SelectEnumerationHelper(MonthOfYear, "monthOfYear"),
-    //      localTime = form2OptTime("localTime"),
-    //      macroToRun = SelectKeyHelper("macroToRun"))
-    //
-    //    val fieldKey = FieldKey("Schedule", schedule.key)
-    //    mappedValues.apply(fieldKey, schedule)
-    Ok("todo after edit save schedule")
-    //    Redirect(routes.EditorController.edit(KeyKind.scheduleKey, schedule.key.toString))
+        Redirect(routes.ScheduleController.index())
   }
 }

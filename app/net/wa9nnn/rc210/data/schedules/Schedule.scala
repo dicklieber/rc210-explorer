@@ -23,13 +23,13 @@ import java.time.LocalTime
  * @param localTime    illegal times are None.
  * @param selectedMacroToRun   e.g. "macro42"
  */
-case class Schedule(key: ScheduleKey,
+case class Schedule(override val key: ScheduleKey,
                     dayOfWeek: DayOfWeek,
                     weekInMonth: Option[Int],
                     monthOfYear: MonthOfYear,
                     localTime: Option[LocalTime],
                     selectedMacroToRun: MacroSelect)
-  extends FieldContents with TriggerNode with RenderMetadata {
+  extends FieldWithFieldKey[ScheduleKey] with TriggerNode with RenderMetadata {
 
 
   override def toRow: Row = {
@@ -78,6 +78,8 @@ case class Schedule(key: ScheduleKey,
   override def unit: String = ""
 
   override def macroToRun: KeyFactory.MacroKey = selectedMacroToRun.value
+
+  override val fieldName: String = "Schedule"
 }
 
 object Schedule extends LazyLogging with MemoryExtractor {
@@ -86,7 +88,7 @@ object Schedule extends LazyLogging with MemoryExtractor {
     val scheduleKey: ScheduleKey = KeyFactory(KeyKind.scheduleKey, setPoint)
     new Schedule(
       key = scheduleKey,
-      dayOfWeek = DayOfWeek(scheduleKey),
+      dayOfWeek = DayOfWeek(),
       weekInMonth = None,
       monthOfYear = MonthOfYear(scheduleKey),
       localTime = None,
