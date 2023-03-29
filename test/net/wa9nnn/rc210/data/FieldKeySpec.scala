@@ -45,7 +45,7 @@ class FieldKeySpec extends Specification {
     "json round trip" in {
       val json: JsValue = Json.toJson(fieldKey)
       val sJson = json.as[String]
-      sJson must beEqualTo ("afield|macroKey42")
+      sJson must beEqualTo ("afield:macroKey42")
 
 /*
       val value1: JsValue = Json.parse(sJson)

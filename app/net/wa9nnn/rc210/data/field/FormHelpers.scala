@@ -17,54 +17,12 @@
 
 package net.wa9nnn.rc210.data.field
 
-import com.wa9nnn.util.tableui.Cell
-import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.schedules.Schedule
 import net.wa9nnn.rc210.key.KeyFactory
-import net.wa9nnn.rc210.key.KeyFactory.{Key, ScheduleKey}
+import net.wa9nnn.rc210.key.KeyFactory.Key
 import net.wa9nnn.rc210.util.SelectOption
 
-import java.time.LocalTime
 
 
-object FormHelpers {
-  //  implicit def form2String(name: String)(implicit map: Map[String, Seq[String]]): String = {
-  //    map(name).head
-  //  }
-
-  def form2OptInt(name: String)(implicit map: Map[String, String]): Option[Int] = {
-    val str = map(name)
-    Option.when(str.nonEmpty) {
-      str.toInt
-    }
-  }
-
-  def form2FieldKey(name: String)(implicit map: Map[String, Seq[String]]): FieldKey = {
-    val value: Seq[String] = map(name)
-    FieldKey.fromParam(value.head)
-  }
-
-  def form2Key[T <: Key](name: String)(implicit map: Map[String, Seq[String]]): T = {
-    val value: Seq[String] = map(name)
-    KeyFactory(value.head)
-  }
-
-  def form2OptTime(name: String)(implicit map: Map[String, String]): Option[LocalTime] = {
-    for {
-      value: String <- map.get(name)
-      if value.nonEmpty
-    } yield {
-      LocalTime.parse(value)
-    }
-  }
-
-  def localTimeToCell(schedule: Schedule): Cell = {
-
-    val valueAttribute: String = schedule.localTime.map { time => s"""value="$time" """ }.getOrElse("")
-    val s = s"""<input type="time" name="${FieldKey("Time", schedule.key).param}" $valueAttribute>"""
-    Cell.rawHtml(s)
-  }
-}
 
 object SelectKeyHelper {
   /**

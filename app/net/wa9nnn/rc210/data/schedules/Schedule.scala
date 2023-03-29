@@ -1,7 +1,7 @@
 package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.{Header, Row}
+import com.wa9nnn.util.tableui.{Cell, Header, Row}
 import net.wa9nnn.rc210.MemoryExtractor
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field._
@@ -12,44 +12,37 @@ import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 import net.wa9nnn.rc210.util.MacroSelect
 import play.api.libs.json.{JsString, JsValue}
 
-import java.time.LocalTime
-
 /**
  *
- * @param key          for [[ScheduleKey]]
- * @param dayOfWeek    enumerated
- * @param weekInMonth  e.g 1 == 1st week in month.
- * @param monthOfYear  enumerated
- * @param localTime    illegal times are None.
+ * @param key                  for [[ScheduleKey]]
+ * @param dayOfWeek            enumerated
+ * @param weekInMonth          e.g 1 == 1st week in month.
+ * @param monthOfYear          enumerated
+ * @param time                 when this runs on selected day.
  * @param selectedMacroToRun   e.g. "macro42"
  */
 case class Schedule(override val key: ScheduleKey,
                     dayOfWeek: DayOfWeek,
-                    weekInMonth: Option[Int],
+                    weekInMonth: WeekInMonth,
                     monthOfYear: MonthOfYear,
-                    localTime: Option[LocalTime],
-                    selectedMacroToRun: MacroSelect)
-  extends FieldWithFieldKey[ScheduleKey] with TriggerNode with RenderMetadata {
+                    time: FieldTime,
+                    selectedMacroToRun: MacroSelect,
+                    enabled: FieldBoolean) extends FieldWithFieldKey[ScheduleKey] with TriggerNode with RenderMetadata {
 
 
   override def toRow: Row = {
-    Row(key.toCell, selectedMacroToRun.toCell(this), dayOfWeek, weekInMonth, monthOfYear, localTime)
+    Row(key.toCell, selectedMacroToRun.toCell(this), dayOfWeek, weekInMonth, monthOfYear, time)
   }
 
-  override val nodeEnabled: Boolean = localTime.nonEmpty
 
   val description: String = {
-    localTime.map { localTime =>
-      val week = s" Week: $weekInMonth"
-      s"$monthOfYear$week on $dayOfWeek at $localTime"
-    }
-      .getOrElse("-disabled-")
+    val week = s" Week: $weekInMonth"
+    s"$monthOfYear$week on $dayOfWeek at $time"
   }
 
   override def triggerRow: Row = {
     Row(key.toCell, description)
   }
-
 
   override val triggerEnabled: Boolean = nodeEnabled
 
@@ -88,11 +81,12 @@ object Schedule extends LazyLogging with MemoryExtractor {
     val scheduleKey: ScheduleKey = KeyFactory(KeyKind.scheduleKey, setPoint)
     new Schedule(
       key = scheduleKey,
-      dayOfWeek = DayOfWeek(),
-      weekInMonth = None,
-      monthOfYear = MonthOfYear(scheduleKey),
-      localTime = None,
-      selectedMacroToRun = MacroSelect()
+      dayOfWeek = new DayOfWeek(),
+      weekInMonth = new WeekInMonth(),
+      monthOfYear = new MonthOfYear(),
+      time = new FieldTime(),
+      selectedMacroToRun = new MacroSelect(),
+      enabled = FieldBoolean()
     )
   }
 

@@ -17,44 +17,62 @@
 
 package net.wa9nnn.rc210.data.field
 
+import com.wa9nnn.util.tableui.Cell
 import net.wa9nnn.rc210.data.FieldKey
-import play.api.libs.json.{Format, JsResult, JsValue}
+import net.wa9nnn.rc210.key.KeyFactory.Key
+import play.api.libs.json._
+import views.html._
 
 /**
- *
- * @param contents current value.
+ * Holds the value for a field.
+ * Knows how to render as HTML control or string for JSON, showing to a user or RC-210 Command,
+ * Has enough metadata needed yo render
  */
-case class FieldValue(fieldKey: FieldKey, contents: FieldContents, candidate: Option[FieldContents] = None) {
+trait FieldValue {
 
-  def cssClass: String = if(dirty) "dirtyValue" else ""
+  def toJsValue: JsValue
 
-  def current: FieldContents = candidate.getOrElse(contents)
+  def display: String
 
-//  def bool: Boolean = value == "true"
+  /**
+   * Render this value as an RD-210 command string.
+   */
+  def toCommand(fieldEntry: FieldEntry): String
 
-  def setCandidate(value: FieldContents): FieldValue = copy(candidate = Option(value))
+  /**
+   * Render as HTML. Either a single field of an entire HTML Form.
+   *
+   * @param fieldEntry all the metadata.
+   * @return html
+   */
 
-  def acceptCandidate(): FieldValue = {
-    assert(candidate.nonEmpty, "No candidate to accept!")
-    copy(contents = candidate.get, candidate = None)
+  def toHtmlField(renderMetadata: RenderMetadata): String
+
+  def toCell(renderMetadata: RenderMetadata): Cell = {
+    val html: String = toHtmlField(renderMetadata)
+    Cell.rawHtml(html)
   }
 
-  def dirty: Boolean = candidate.nonEmpty
-
-  override def toString: String = s"${fieldKey.param} contents: ${contents.toString} ${contents.getClass}"
-}
-
-object FieldValue {
-  implicit val fmtFieldValue:
-    Format[FieldValue] = new Format[FieldValue]{
-    override def writes(o: FieldValue): JsValue = o.contents.toJsValue
-
-    override def reads(json: JsValue): JsResult[FieldValue] = {
-
-      throw new NotImplementedError() //todo
-    }
+  def update(paramValue: String): FieldValue = {
+    throw new NotImplementedError() //todo
   }
-
-
 }
+
+/**
+ * Like a [[FieldValue]] but adds the [[Key]].
+ *
+ * @tparam K
+ */
+trait FieldWithFieldKey[K <: Key] extends FieldValue {
+  val key: K
+  val fieldName: String
+  lazy val fieldKey: FieldKey = FieldKey(fieldName, key)
+}
+
+
+
+
+
+
+
 

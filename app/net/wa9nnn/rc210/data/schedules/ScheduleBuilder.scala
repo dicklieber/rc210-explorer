@@ -1,12 +1,10 @@
 package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.field.DayOfWeek
+import net.wa9nnn.rc210.data.field.{DayOfWeek, FieldBoolean, FieldTime, WeekInMonth}
 import net.wa9nnn.rc210.key.KeyFactory.MacroKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.util.MacroSelect
-
-import java.time.LocalTime
 
 class ScheduleBuilder extends LazyLogging {
   private val nMax = KeyKind.scheduleKey.maxN()
@@ -37,8 +35,9 @@ class ScheduleBuilder extends LazyLogging {
             val dayOfWeek = DayOfWeek(dow.asDigit)
             slots(setPoint) = previous.copy(dayOfWeek = dayOfWeek)
           case Array(wInMo, dow) =>
-            val weekInMonth: Option[Int] = Option.when(wInMo != 0)(wInMo)
-            slots(setPoint) = previous.copy(weekInMonth = weekInMonth, dayOfWeek = DayOfWeek(dow.asDigit))
+            val weekInMonth: WeekInMonth = WeekInMonth(wInMo.asDigit)
+            val dayOfWeek: DayOfWeek = DayOfWeek(dow.asDigit)
+            slots(setPoint) = previous.copy(weekInMonth = weekInMonth, dayOfWeek = dayOfWeek)
           case x =>
             logger.error(s"DOW must be 1 or 2 chars, got $sDow")
         }
@@ -55,31 +54,28 @@ class ScheduleBuilder extends LazyLogging {
 
   def putHours(hours: Seq[Int]): Unit = {
     hours.zipWithIndex
-      .foreach { case (newHours, setPoint) =>
+      .foreach { case (newHours: Int, setPoint) =>
         val previous: Schedule = slots(setPoint)
 
-        val newLocalTime: Option[LocalTime] =
-          if (newHours < 25) {
-            None
-          } else {
-            val r: Option[LocalTime] = previous.localTime.map { localtime =>
-              localtime.withHour(newHours)
-            }
-            r
-          }
-        slots(setPoint) = previous.copy(localTime = newLocalTime)
+        if (newHours < 24) {
+          val previousTime: FieldTime = previous.time
+          val newTime = FieldTime(previousTime.value.withHour(newHours))
+          val newSchedule: Schedule = previous.copy(time = newTime, enabled = FieldBoolean(true))
+          slots(setPoint) = newSchedule
+        } else {
+          val newSchedule: Schedule = previous.copy(enabled = FieldBoolean(false))
+          slots(setPoint) = newSchedule
+        }
       }
   }
 
   def putMinutes(minutes: Seq[Int]): Unit = {
     minutes.zipWithIndex
-      .foreach { case (newMinute, setPoint) =>
+      .foreach { case (newMintue: Int, setPoint) =>
         val previous: Schedule = slots(setPoint)
-        val newTime: Option[LocalTime] = previous.localTime
-          .map { localtime =>
-            localtime.withMinute(newMinute)
-          }.orElse(Option(LocalTime.of(1, newMinute)))
-        slots(setPoint) = previous.copy(localTime = newTime)
+        val time: FieldTime = previous.time
+        val newSchedule: Schedule = previous.copy(time = FieldTime(time.value.withMinute(newMintue)))
+        slots(setPoint) = newSchedule
       }
   }
 

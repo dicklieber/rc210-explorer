@@ -32,7 +32,7 @@ class MacroSelectSpec extends Specification {
     override def unit = ""
   }
   "MacroSelect" should {
-    val macroSelect = MacroSelect()
+    val macroSelect =new  MacroSelect()
     "initial state" >> {
       macroSelect.value must beEqualTo(KeyFactory.defaultMacroKey)
 

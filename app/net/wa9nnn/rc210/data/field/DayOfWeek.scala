@@ -20,6 +20,7 @@ package net.wa9nnn.rc210.data.field
 import net.wa9nnn.rc210.key.KeyFactory.Key
 import net.wa9nnn.rc210.util.{FieldSelect, FieldSelectComp, SelectOption}
 import DayOfWeek.options
+
 /**
  * An enumeration with behaviour.
  *
@@ -36,6 +37,7 @@ case class DayOfWeek(value: String = options.head.display) extends FieldSelect[S
 object DayOfWeek extends FieldSelectComp {
   override val name: String = "DayOfWeek"
 
+
   def apply(id: Int): DayOfWeek = {
     val maybeOption = options.find(_.id == id)
     new DayOfWeek(maybeOption.get.display)
@@ -47,7 +49,7 @@ object DayOfWeek extends FieldSelectComp {
    * @param valueMap from form data for this key
    * @return
    */
-  def apply(key: Key, valueMap: Map[String, String]): DayOfWeek = {
+  def apply()(implicit valueMap: Map[String, String]): DayOfWeek = {
     val str = valueMap(name)
     new DayOfWeek(str)
   }

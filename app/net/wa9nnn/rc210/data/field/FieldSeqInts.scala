@@ -17,22 +17,26 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.key.KeyFactory.Key
+import com.wa9nnn.util.tableui.Cell
+import play.api.libs.json.{JsArray, JsNumber, JsValue}
+import views.html.fieldString
 
-/**
- * Needed to render a [[FieldValue]] in a [[com.wa9nnn.util.tableui.Cell]] or an html string.
- */
-trait RenderMetadata {
+case class FieldSeqInts(value: Int*) extends FieldValue {
+  override def toJsValue: JsValue = {
+    JsArray(value.map((int: Int) => JsNumber(BigDecimal.int2bigDecimal(int))))
+  }
 
-  def param: String
+  /**
+   * Render this value as an RD-210 command string.
+   */
+  override def toCommand(fieldEntry: FieldEntry): String = ???
 
-  def prompt: String
 
-  def unit: String = ""
+  override def toHtmlField(renderMetadata: RenderMetadata): String = {
+    fieldString(display, renderMetadata).toString()
+  }
 
-}
+  def toCell(fieldEntry: FieldEntry): Cell = Cell.rawHtml(toHtmlField(fieldEntry))
 
-case class RenderMetdata(name: String, prompt: String = "")(implicit key: Key) extends RenderMetadata {
-  override def param: String = FieldKey(name, key).param
+  override def display: String = value.map(_.toString).mkString(" ")
 }

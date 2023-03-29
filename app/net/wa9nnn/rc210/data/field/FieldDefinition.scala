@@ -27,7 +27,7 @@ case class SimpleField(offset: Int,
                        override val template: String,
                        override val uiInfo: UiInfo  = UiInfo.default,
              ) extends FieldDefinition {
-  def extract(start: Int)(implicit memory: Memory): (FieldContents, Slice) = {
+  def extract(start: Int)(implicit memory: Memory): (FieldValue, Slice) = {
     uiInfo.fieldExtractor(memory, start)
   }
 

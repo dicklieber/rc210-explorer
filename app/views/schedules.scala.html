@@ -3,12 +3,21 @@
 @import net.wa9nnn.rc210.data.named.NamedSource
 @import net.wa9nnn.rc210.ui.Tabs
 @import views.html.helper._
-@(table:Table)(implicit namedSource: NamedSource)
+@(table: Table)(implicit namedSource: NamedSource)
+    @tabbedmain(Tabs.schedulesTab) {
+        <script src="/path/to/cdn/dayjs.min.js"></script>
 
-@tabbedmain(Tabs.schedulesTab) {
-    @form(action = routes.ScheduleController.save()) {
-        <input type="submit" name="save" value="Save">
-        @renderTable(table.withCssClass("tablesorter"))
-        <input type="submit" name="save" value="Save">
+            <!-- Time Picker For <a href="https://www.jqueryscript.net/tags.php?/bootstrap 4/">Bootstrap 4</a> -->
+        <script src="@routes.Assets.versioned("javascripts/timepicker-bs4.js")" defer="defer"></script>
+
+        <script>
+                $('.timePicker').timepicker({
+                    // options here
+                });
+        </script>
+        @form(action = routes.ScheduleController.save()) {
+            <input type="submit" name="save" value="Save">
+            @renderTable(table.withCssClass("tablesorter"))
+            <input type="submit" name="save" value="Save">
+        }
     }
-}

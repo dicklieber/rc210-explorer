@@ -17,22 +17,20 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.key.KeyFactory.Key
+import play.api.libs.json.{JsString, JsValue}
+import views.html.fieldDtmf
 
-/**
- * Needed to render a [[FieldValue]] in a [[com.wa9nnn.util.tableui.Cell]] or an html string.
- */
-trait RenderMetadata {
+case class FieldDtmf(value: String) extends FieldValue {
+  override def toJsValue: JsValue = JsString(value)
 
-  def param: String
+  def toHtmlField(renderMetadata: RenderMetadata): String = {
+    fieldDtmf(value, renderMetadata).toString()
+  }
 
-  def prompt: String
+  /**
+   * Render this value as an RD-210 command string.
+   */
+  override def toCommand(fieldEntry: FieldEntry): String = ???
 
-  def unit: String = ""
-
-}
-
-case class RenderMetdata(name: String, prompt: String = "")(implicit key: Key) extends RenderMetadata {
-  override def param: String = FieldKey(name, key).param
+  override def display: String = value
 }

@@ -19,13 +19,13 @@ package net.wa9nnn.rc210.util
 
 import com.wa9nnn.util.tableui.Cell
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.{FieldContents, FieldEntry, RenderMetadata}
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue, RenderMetadata}
 import play.api.libs.json.JsValue
 
 /**
  * An enumeration with behaviour.
  */
-trait FieldSelect[T] extends FieldContents {
+trait FieldSelect[T] extends FieldValue {
   val selectOptions: Seq[SelectOption]
   val value: T
   val name: String
@@ -39,9 +39,6 @@ trait FieldSelect[T] extends FieldContents {
    */
   override def toCommand(fieldEntry: FieldEntry): String = ???
 
-  override def toCell(renderMetadata: RenderMetadata): Cell = {
-    Cell.rawHtml(toHtmlField(renderMetadata))
-  }
 
   /**
    *
@@ -56,7 +53,7 @@ trait FieldSelect[T] extends FieldContents {
       val bool = selectOption.display == value.toString
       selectOption.copy(selected = bool).html
     }.mkString("\n")
-    val param: String = FieldKey(name, renderMetadata.key).param
+    val param: String =renderMetadata.param
 
     s"""
     <select name="$param" class="form-select" aria-label="Default select example">

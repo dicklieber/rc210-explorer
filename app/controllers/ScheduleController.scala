@@ -20,8 +20,7 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.FormHelpers.{form2OptInt, form2OptTime, localTimeToCell}
-import net.wa9nnn.rc210.data.field.{DayOfWeek, FieldEntry, MonthOfYear}
+import net.wa9nnn.rc210.data.field._
 import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.data.schedules.Schedule
@@ -38,23 +37,25 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
                                   )(implicit namedSource: NamedManager) extends BaseController with LazyLogging {
 
 
-
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
 
       val entries: Seq[FieldEntry] = mappedValues(KeyKind.scheduleKey)
       val rows: Seq[Row] = entries.map { fieldEntry: FieldEntry =>
         val schedule: Schedule = fieldEntry.value
+        implicit val key = schedule.key
         val keyName = namedSource.get(schedule.key).getOrElse("")
         val name: Cell = Cell.rawHtml(views.html.fieldNamedKey(schedule.key, keyName, schedule).toString())
-        val dow: Cell = schedule.dayOfWeek.toCell(schedule)
-        val weekInMonth: Cell = Cell.rawHtml(s"""<input type="range" name="${FieldKey("Week", schedule.key).param}" value="${schedule.weekInMonth.getOrElse(0)}" min="0" max="5">""")
-        val woy: Cell = Cell.rawHtml(schedule.monthOfYear.toHtmlField(schedule))
-        val localTime: Cell = localTimeToCell(schedule)
-        val macroToRun: Cell = schedule.selectedMacroToRun.toCell(schedule)
+        val dow: Cell = schedule.dayOfWeek.toCell(RenderMetdata(DayOfWeek.name))
+        val weekInMonth: Cell = schedule.weekInMonth.toCell(RenderMetdata(WeekInMonth.name))
+        val woy: Cell = Cell.rawHtml(schedule.monthOfYear.toHtmlField(RenderMetdata(MonthOfYear.name)))
+        val localTime: Cell = schedule.time.toCell(RenderMetdata("Time"))
+        val macroToRun: Cell = schedule.selectedMacroToRun.toCell(RenderMetdata(MacroSelect.name))
+        val enabled: Cell = schedule.enabled.toCell(RenderMetdata("Enabled"))
 
         Row(Seq(
           name,
+          enabled,
           dow,
           weekInMonth,
           woy,
@@ -65,6 +66,7 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
 
       val table = Table(Header("Schedules",
         "SetPoint",
+        "Enabled",
         "Day in Week",
         Cell("Week").withToolTip("Week in month. 0 disables"),
         "Month",
@@ -95,17 +97,18 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
         }.toMap
 
         Schedule(key = key.asInstanceOf[ScheduleKey],
-          dayOfWeek = DayOfWeek(key, nameToValue),
-          weekInMonth = form2OptInt("Week"),
-          monthOfYear = MonthOfYear(key, nameToValue),
-          localTime =   form2OptTime("Time"),
-          selectedMacroToRun = MacroSelect(key, nameToValue)
+          dayOfWeek = DayOfWeek(),
+          weekInMonth = WeekInMonth(),
+          monthOfYear = MonthOfYear(),
+          time = FieldTime(),
+          selectedMacroToRun = MacroSelect(),
+          enabled = FieldBoolean("Enabled")
         )
       }.toSeq.sortBy(_.key)
 
-      mappedValues.apply(r)
+    mappedValues.apply(r)
 
 
-        Redirect(routes.ScheduleController.index())
+    Redirect(routes.ScheduleController.index())
   }
 }

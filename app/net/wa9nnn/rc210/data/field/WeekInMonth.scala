@@ -17,8 +17,6 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.MonthOfYear.options
 import net.wa9nnn.rc210.key.KeyFactory.Key
 import net.wa9nnn.rc210.util.{FieldSelect, FieldSelectComp, SelectOption}
 
@@ -28,53 +26,39 @@ import net.wa9nnn.rc210.util.{FieldSelect, FieldSelectComp, SelectOption}
  * @param value    one of the display values in selectOptions.
  * @param key      id for name in a <select>.
  */
-case class MonthOfYear(value: String = options.head.display) extends FieldSelect[String] {
-
-  override def update(newValue: String): MonthOfYear = {
-    copy(value = newValue)
-  }
-
-  def update(newId: Int): MonthOfYear = {
-    copy(value = options(newId).display)
-  }
+case class WeekInMonth(value: String = WeekInMonth.options.head.display) extends FieldSelect[String] {
 
 
-  override val selectOptions: Seq[SelectOption] = options
-  override val name: String = MonthOfYear.name
+  override val selectOptions: Seq[SelectOption] = WeekInMonth.options
+  override val name: String = DayOfWeek.name
 }
 
-object MonthOfYear extends FieldSelectComp{
-  val name = "MonthOfYear"
-  def apply(key: Key, id: Int): MonthOfYear = {
-    new MonthOfYear(options(id).display)
+object WeekInMonth extends FieldSelectComp {
+  override val name: String = "WeekInMonth"
+
+  def apply(id: Int): WeekInMonth = {
+    val maybeOption = options.find(_.id == id)
+    new WeekInMonth(maybeOption.get.display)
   }
 
   /**
    *
-   * @param key
+   * @param key      for this schedule setpoint.
    * @param valueMap from form data for this key
    * @return
    */
-  def apply()(implicit valueMap: Map[String, String]): MonthOfYear = {
+  def apply()(implicit valueMap: Map[String, String]): WeekInMonth = {
     val str = valueMap(name)
-    new MonthOfYear(str)
+    new WeekInMonth(str)
   }
-
 
   val options: Seq[SelectOption] =
     Seq(
-      "Every Month" -> 0,
-      "January" -> 1,
-      "February" -> 2,
-      "March" -> 3,
-      "April" -> 4,
-      "May" -> 5,
-      "June" -> 6,
-      "July" -> 7,
-      "August" -> 8,
-      "September" -> 9,
-      "October" -> 10,
-      "November" -> 11,
-      "December" -> 12,
+      "Every Week" -> 0,
+      "1st Week" -> 1,
+      "2nd Week" -> 2,
+      "3rd Week" -> 3,
+      "4th Week" -> 4,
+      "5th Week" -> 5,
     ).map { t => SelectOption(t._2, t._1) }
 }

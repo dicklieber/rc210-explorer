@@ -1,0 +1,12 @@
+@import net.wa9nnn.rc210.data.field.FieldEntry
+@import scala.math.Numeric.Implicits.infixNumericOps
+@import net.wa9nnn.rc210.data.field.RenderMetadata
+@import java.time.LocalTime
+@(value: LocalTime, renderMetadata: RenderMetadata)
+
+    @defining(renderMetadata.param) { paramid =>
+        <div class="valueCell">
+            <input id="@paramid" class="" name="@paramid" value="@value" title="@renderMetadata.prompt">
+            @renderMetadata.unit
+        </div>
+    }

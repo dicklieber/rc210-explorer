@@ -22,14 +22,14 @@ import net.wa9nnn.rc210.data.field.FieldExtractors.int8
 import net.wa9nnn.rc210.serial.{Memory, Slice, SlicePos}
 
 /**
- * FieldExtractors know how to parse a [[Slice]] of [[Memory]] and produce a [[FieldContents]]
+ * FieldExtractors know how to parse a [[Slice]] of [[Memory]] and produce a [[FieldValue]]
  *
  * @param bytesPerField how much to slice pff for this field.
  */
 
 abstract class SimpleFieldExtractor(val bytesPerField: Int) {
 
-  def apply(memory: Memory, offset: Int): (FieldContents, Slice) = {
+  def apply(memory: Memory, offset: Int): (FieldValue, Slice) = {
     val slice = memory(SlicePos(offset, bytesPerField))
     extract(slice) -> slice
   }
@@ -39,7 +39,7 @@ abstract class SimpleFieldExtractor(val bytesPerField: Int) {
    * @param slice within [[Memory]]
    * @return
    */
-  def extract(slice: Slice): FieldContents
+  def extract(slice: Slice): FieldValue
 
   override def toString: String = name
 
@@ -49,7 +49,7 @@ abstract class SimpleFieldExtractor(val bytesPerField: Int) {
 object FieldExtractors {
 
   val bool: SimpleFieldExtractor = new SimpleFieldExtractor(1) {
-    override def extract(slice: Slice): FieldContents = FieldBoolean(slice.head > 0)
+    override def extract(slice: Slice): FieldValue = FieldBoolean(slice.head > 0)
 
     override val name: String = "bool"
   }
@@ -70,7 +70,7 @@ object FieldExtractors {
   }
 
   val twoInts: SimpleFieldExtractor = new SimpleFieldExtractor(4) {
-    override def extract(slice: Slice): FieldContents = {
+    override def extract(slice: Slice): FieldValue = {
       val ints = slice.grouped(2).map { slice =>
         int16.extract(slice)
       }
@@ -84,7 +84,7 @@ object FieldExtractors {
 
 // this works for any number up to 8 digits
 case class DtmfExtractor(maxDigits: Int) extends SimpleFieldExtractor(maxDigits + 1) with LazyLogging {
-  override def extract(slice: Slice): FieldContents = {
+  override def extract(slice: Slice): FieldValue = {
     FieldDtmf( new String(slice.data
       .takeWhile(_ != 0)
       .map(_.toChar) //todo how about A-D?

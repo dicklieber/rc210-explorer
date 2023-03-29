@@ -56,7 +56,7 @@ object MacroSelect extends FieldSelectComp {
    * @param valueMap from form data for this key
    * @return
    */
-  def apply(key: Key, valueMap: Map[String, String]): MacroSelect = {
+  def apply()(implicit valueMap: Map[String, String]): MacroSelect = {
     val str = valueMap(name)
     val macroKey:MacroKey = KeyFactory(str)
     new MacroSelect(macroKey)

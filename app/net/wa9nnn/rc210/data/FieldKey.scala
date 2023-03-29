@@ -36,7 +36,7 @@ case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey] with 
   /**
    * can identify this in a HTTP param or as a JSON name.
    */
-  val param: String = s"${fieldName}|$key".replaceAll(" ", "~")
+  val param: String = s"${fieldName}:$key".replaceAll(" ", "~")
 
   override def compare(that: FieldKey): Int = {
     var ret = key.kind compareTo(that.key.kind)
@@ -84,7 +84,7 @@ object FieldKey {
       FieldKey(fieldName, KeyFactory(sKey))
   }
 
-  private val r = """(.+)\|(.*)""".r
+  private val r = """(.+)\:(.*)""".r
 }
 
 

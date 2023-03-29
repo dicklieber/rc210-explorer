@@ -28,15 +28,15 @@ import play.api.libs.json.{JsValue, Json}
  * @param fieldValue      the value.
  * @param candidate       the,potential, next value.
  */
-case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fieldValue: FieldContents, candidate: Option[FieldContents] = None)
+case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fieldValue: FieldValue, candidate: Option[FieldValue] = None)
   extends RowSource with Ordered[FieldEntry] with CellProvider with RenderMetadata {
 
-  def value[F<: FieldContents]:F = {
+  def value[F<: FieldValue]:F = {
     candidate.getOrElse(fieldValue).asInstanceOf[F]
   }
 
 
-  val unit = fieldDefinition.uiInfo.unit
+  override val unit: String = fieldDefinition.uiInfo.unit
 
   def setCandidate(newValue: String): FieldEntry = {
      copy(candidate = Option(fieldValue.update(newValue)))
