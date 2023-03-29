@@ -22,13 +22,14 @@ import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field._
 import net.wa9nnn.rc210.data.mapped.MappedValues
-import net.wa9nnn.rc210.data.named.NamedManager
+import net.wa9nnn.rc210.data.named.{NamedKey, NamedManager}
 import net.wa9nnn.rc210.data.schedules.Schedule
 import net.wa9nnn.rc210.key.KeyFactory.ScheduleKey
 import net.wa9nnn.rc210.key.KeyKind
 import net.wa9nnn.rc210.util.MacroSelect
 import play.api.mvc._
 import net.wa9nnn.rc210.data.schedules.Schedule.apply
+
 import javax.inject.{Inject, Singleton}
 
 @Singleton()
@@ -54,17 +55,18 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
         "Month",
         "Time",
         "Macro To Run"),
-        rows.take(1))
+        rows)
       Ok(views.html.schedules(table))
   }
 
   def save(): Action[AnyContent] = Action { implicit request =>
     val valuesMap: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
-    val r = valuesMap.map { case (sKey, values) =>
+    val namedKeys = Seq.newBuilder[NamedKey]
+    val r = valuesMap.map { case (sKey, values: Seq[String]) =>
       sKey -> values.headOption.getOrElse("No value")
     }.filter(_._1 != "save")
       .toSeq
-      .map { case (name, value) =>
+      .map { case (name, value: String) =>
         val fk = FieldKey.fromParam(name)
         logger.trace("name: {} value: {} fieldKey: {}", name, value, fk)
         fk -> value
@@ -74,14 +76,20 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
       .map { case (key, items: Seq[(FieldKey, String)]) =>
         logger.trace(s"==== {} ====", key.toString)
 
+
         implicit val nameToValue: Map[String, String] = items.map { case (fieldey, value) =>
           fieldey.fieldName -> value
         }.toMap
+
+        // named keys are seperatw.
+        val namedKey = NamedKey(key, nameToValue("name"))
+        namedKeys += namedKey
 
         Schedule((key.asInstanceOf[ScheduleKey]))
       }.toSeq.sortBy(_.key)
 
     mappedValues.apply(r)
+    namedSource.update(namedKeys.result())
 
 
     Redirect(routes.ScheduleController.index())

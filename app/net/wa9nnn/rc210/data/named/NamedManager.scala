@@ -65,6 +65,11 @@ class NamedManager @Inject()(@Named("vizRc210.namedDataFile") namedFilePath: Str
       .sorted
   }
 
+  /**
+   * update names for some [[Key]]s.
+    * @param data to be updated
+   *             todo only save if there were changes.
+   */
   def update(data: Iterable[NamedKey]): Unit = {
     data.foreach { nk =>
       val name = nk.name
