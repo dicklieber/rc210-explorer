@@ -1,1653 +1,590 @@
-[
-  [
-    "macroKey",
-    [
-      [
-        "macroKey1",
-        [
-          "functionKey165",
-          "functionKey85",
-          "functionKey27",
-          "functionKey60",
-          "functionKey196"
-        ]
-      ],
-      [
-        "macroKey2",
-        [
-          "functionKey165",
-          "functionKey85",
-          "functionKey197",
-          "functionKey198"
-        ]
-      ],
-      [
-        "macroKey3",
-        [
-          "functionKey165",
-          "functionKey85",
-          "functionKey127"
-        ]
-      ],
-      [
-        "macroKey4",
-        [
-          "functionKey165",
-          "functionKey85",
-          "functionKey197",
-          "functionKey198"
-        ]
-      ],
-      [
-        "macroKey5",
-        []
-      ],
-      [
-        "macroKey6",
-        [
-          "functionKey165",
-          "functionKey85",
-          "functionKey130"
-        ]
-      ],
-      [
-        "macroKey7",
-        [
-          "functionKey162",
-          "functionKey192"
-        ]
-      ],
-      [
-        "macroKey8",
-        [
-          "functionKey162",
-          "functionKey193"
-        ]
-      ],
-      [
-        "macroKey9",
-        [
-          "functionKey165",
-          "functionKey85",
-          "functionKey255",
-          "functionKey255",
-          "functionKey255",
-          "functionKey52",
-          "functionKey255",
-          "functionKey255",
-          "functionKey255",
-          "functionKey53",
-          "functionKey195"
-        ]
-      ],
-      [
-        "macroKey10",
-        [
-          "functionKey165",
-          "functionKey85",
-          "functionKey255",
-          "functionKey255",
-          "functionKey255",
-          "functionKey92",
-          "functionKey255",
-          "functionKey255",
-          "functionKey255",
-          "functionKey93",
-          "functionKey194"
-        ]
-      ],
-      [
-        "macroKey11",
-        [
-          "functionKey163",
-          "functionKey60"
-        ]
-      ],
-      [
-        "macroKey12",
-        []
-      ],
-      [
-        "macroKey13",
-        []
-      ],
-      [
-        "macroKey14",
-        []
-      ],
-      [
-        "macroKey15",
-        []
-      ],
-      [
-        "macroKey16",
-        []
-      ],
-      [
-        "macroKey17",
-        []
-      ],
-      [
-        "macroKey18",
-        []
-      ],
-      [
-        "macroKey19",
-        []
-      ],
-      [
-        "macroKey20",
-        []
-      ],
-      [
-        "macroKey21",
-        []
-      ],
-      [
-        "macroKey22",
-        []
-      ],
-      [
-        "macroKey23",
-        []
-      ],
-      [
-        "macroKey24",
-        []
-      ],
-      [
-        "macroKey25",
-        []
-      ],
-      [
-        "macroKey26",
-        []
-      ],
-      [
-        "macroKey27",
-        []
-      ],
-      [
-        "macroKey28",
-        []
-      ],
-      [
-        "macroKey29",
-        []
-      ],
-      [
-        "macroKey30",
-        []
-      ],
-      [
-        "macroKey31",
-        []
-      ],
-      [
-        "macroKey32",
-        []
-      ],
-      [
-        "macroKey33",
-        []
-      ],
-      [
-        "macroKey34",
-        []
-      ],
-      [
-        "macroKey35",
-        []
-      ],
-      [
-        "macroKey36",
-        []
-      ],
-      [
-        "macroKey37",
-        []
-      ],
-      [
-        "macroKey38",
-        []
-      ],
-      [
-        "macroKey39",
-        []
-      ],
-      [
-        "macroKey40",
-        []
-      ],
-      [
-        "macroKey41",
-        [
-          "functionKey162",
-          "functionKey116"
-        ]
-      ],
-      [
-        "macroKey42",
-        [
-          "functionKey162",
-          "functionKey126"
-        ]
-      ],
-      [
-        "macroKey43",
-        [
-          "functionKey162",
-          "functionKey127"
-        ]
-      ],
-      [
-        "macroKey44",
-        [
-          "functionKey162",
-          "functionKey128"
-        ]
-      ],
-      [
-        "macroKey45",
-        [
-          "functionKey162",
-          "functionKey129"
-        ]
-      ],
-      [
-        "macroKey46",
-        [
-          "functionKey162",
-          "functionKey187",
-          "functionKey189"
-        ]
-      ],
-      [
-        "macroKey47",
-        [
-          "functionKey162",
-          "functionKey130"
-        ]
-      ],
-      [
-        "macroKey48",
-        [
-          "functionKey162",
-          "functionKey13",
-          "functionKey190",
-          "functionKey194"
-        ]
-      ],
-      [
-        "macroKey49",
-        [
-          "functionKey162",
-          "functionKey190",
-          "functionKey195",
-          "functionKey16"
-        ]
-      ],
-      [
-        "macroKey50",
-        [
-          "functionKey162",
-          "functionKey181"
-        ]
-      ],
-      [
-        "macroKey51",
-        [
-          "functionKey163",
-          "functionKey116"
-        ]
-      ],
-      [
-        "macroKey52",
-        [
-          "functionKey163",
-          "functionKey126"
-        ]
-      ],
-      [
-        "macroKey53",
-        [
-          "functionKey163",
-          "functionKey127"
-        ]
-      ],
-      [
-        "macroKey54",
-        [
-          "functionKey163",
-          "functionKey128"
-        ]
-      ],
-      [
-        "macroKey55",
-        [
-          "functionKey163",
-          "functionKey129"
-        ]
-      ],
-      [
-        "macroKey56",
-        [
-          "functionKey163",
-          "functionKey188",
-          "functionKey189"
-        ]
-      ],
-      [
-        "macroKey57",
-        [
-          "functionKey163",
-          "functionKey130"
-        ]
-      ],
-      [
-        "macroKey58",
-        [
-          "functionKey163",
-          "functionKey14",
-          "functionKey191",
-          "functionKey194"
-        ]
-      ],
-      [
-        "macroKey59",
-        [
-          "functionKey163",
-          "functionKey191",
-          "functionKey195",
-          "functionKey17"
-        ]
-      ],
-      [
-        "macroKey60",
-        [
-          "functionKey163",
-          "functionKey182"
-        ]
-      ],
-      [
-        "macroKey61",
-        []
-      ],
-      [
-        "macroKey62",
-        []
-      ],
-      [
-        "macroKey63",
-        []
-      ],
-      [
-        "macroKey64",
-        []
-      ],
-      [
-        "macroKey65",
-        []
-      ],
-      [
-        "macroKey66",
-        []
-      ],
-      [
-        "macroKey67",
-        []
-      ],
-      [
-        "macroKey68",
-        []
-      ],
-      [
-        "macroKey69",
-        []
-      ],
-      [
-        "macroKey70",
-        []
-      ],
-      [
-        "macroKey71",
-        []
-      ],
-      [
-        "macroKey72",
-        []
-      ],
-      [
-        "macroKey73",
-        []
-      ],
-      [
-        "macroKey74",
-        []
-      ],
-      [
-        "macroKey75",
-        []
-      ],
-      [
-        "macroKey76",
-        []
-      ],
-      [
-        "macroKey77",
-        []
-      ],
-      [
-        "macroKey78",
-        []
-      ],
-      [
-        "macroKey79",
-        []
-      ],
-      [
-        "macroKey80",
-        []
-      ],
-      [
-        "macroKey81",
-        []
-      ],
-      [
-        "macroKey82",
-        []
-      ],
-      [
-        "macroKey83",
-        []
-      ],
-      [
-        "macroKey84",
-        []
-      ],
-      [
-        "macroKey85",
-        []
-      ],
-      [
-        "macroKey86",
-        []
-      ],
-      [
-        "macroKey87",
-        []
-      ],
-      [
-        "macroKey88",
-        []
-      ],
-      [
-        "macroKey89",
-        []
-      ],
-      [
-        "macroKey90",
-        [
-          "functionKey13"
-        ]
-      ]
-    ]
+{
+  "alarmKey1": 244,
+  "alarmKey2": 1,
+  "alarmKey3": 0,
+  "alarmKey4": 0,
+  "alarmKey5": 0,
+  "macroKey1": [
+    "functionKey165",
+    "functionKey85",
+    "functionKey27",
+    "functionKey60",
+    "functionKey196"
   ],
-  [
-    "portKey",
-    [
-      [
-        "portKey1",
-        false
-      ],
-      [
-        "portKey1",
-        true
-      ],
-      [
-        "portKey1",
-        true
-      ],
-      [
-        "portKey1",
-        false
-      ],
-      [
-        "portKey1",
-        20
-      ],
-      [
-        "portKey1",
-        false
-      ],
-      [
-        "portKey1",
-        false
-      ],
-      [
-        "portKey1",
-        true
-      ],
-      [
-        "portKey1",
-        10
-      ],
-      [
-        "portKey1",
-        true
-      ],
-      [
-        "portKey1",
-        true
-      ],
-      [
-        "portKey1",
-        35
-      ],
-      [
-        "portKey1",
-        false
-      ],
-      [
-        "portKey1",
-        [
-          12336,
-          12337
-        ]
-      ],
-      [
-        "portKey1",
-        11
-      ],
-      [
-        "portKey1",
-        12
-      ],
-      [
-        "portKey1",
-        13
-      ],
-      [
-        "portKey1",
-        0
-      ],
-      [
-        "portKey1",
-        11
-      ],
-      [
-        "portKey1",
-        true
-      ],
-      [
-        "portKey1",
-        250
-      ],
-      [
-        "portKey1",
-        true
-      ],
-      [
-        "portKey1",
-        1
-      ],
-      [
-        "portKey1",
-        1
-      ],
-      [
-        "portKey1",
-        1
-      ],
-      [
-        "portKey1",
-        10
-      ],
-      [
-        "portKey1",
-        "5"
-      ],
-      [
-        "portKey1",
-        true
-      ],
-      [
-        "portKey1",
-        60
-      ],
-      [
-        "portKey1",
-        false
-      ],
-      [
-        "portKey1",
-        1
-      ],
-      [
-        "portKey1",
-        0
-      ],
-      [
-        "portKey1",
-        0
-      ],
-      [
-        "portKey1",
-        0
-      ],
-      [
-        "portKey1",
-        false
-      ],
-      [
-        "portKey1",
-        0
-      ],
-      [
-        "portKey1",
-        true
-      ],
-      [
-        "portKey1",
-        "72726"
-      ],
-      [
-        "portKey1",
-        false
-      ],
-      [
-        "portKey2",
-        false
-      ],
-      [
-        "portKey2",
-        false
-      ],
-      [
-        "portKey2",
-        true
-      ],
-      [
-        "portKey2",
-        false
-      ],
-      [
-        "portKey2",
-        20
-      ],
-      [
-        "portKey2",
-        false
-      ],
-      [
-        "portKey2",
-        false
-      ],
-      [
-        "portKey2",
-        true
-      ],
-      [
-        "portKey2",
-        10
-      ],
-      [
-        "portKey2",
-        false
-      ],
-      [
-        "portKey2",
-        true
-      ],
-      [
-        "portKey2",
-        35
-      ],
-      [
-        "portKey2",
-        true
-      ],
-      [
-        "portKey2",
-        [
-          12345,
-          0
-        ]
-      ],
-      [
-        "portKey2",
-        40
-      ],
-      [
-        "portKey2",
-        40
-      ],
-      [
-        "portKey2",
-        40
-      ],
-      [
-        "portKey2",
-        0
-      ],
-      [
-        "portKey2",
-        22
-      ],
-      [
-        "portKey2",
-        true
-      ],
-      [
-        "portKey2",
-        250
-      ],
-      [
-        "portKey2",
-        true
-      ],
-      [
-        "portKey2",
-        1
-      ],
-      [
-        "portKey2",
-        1
-      ],
-      [
-        "portKey2",
-        1
-      ],
-      [
-        "portKey2",
-        10
-      ],
-      [
-        "portKey2",
-        "#"
-      ],
-      [
-        "portKey2",
-        true
-      ],
-      [
-        "portKey2",
-        60
-      ],
-      [
-        "portKey2",
-        true
-      ],
-      [
-        "portKey2",
-        1
-      ],
-      [
-        "portKey2",
-        12544
-      ],
-      [
-        "portKey2",
-        0
-      ],
-      [
-        "portKey2",
-        0
-      ],
-      [
-        "portKey2",
-        false
-      ],
-      [
-        "portKey2",
-        0
-      ],
-      [
-        "portKey2",
-        true
-      ],
-      [
-        "portKey2",
-        "72727"
-      ],
-      [
-        "portKey2",
-        false
-      ],
-      [
-        "portKey3",
-        false
-      ],
-      [
-        "portKey3",
-        false
-      ],
-      [
-        "portKey3",
-        false
-      ],
-      [
-        "portKey3",
-        false
-      ],
-      [
-        "portKey3",
-        20
-      ],
-      [
-        "portKey3",
-        false
-      ],
-      [
-        "portKey3",
-        false
-      ],
-      [
-        "portKey3",
-        false
-      ],
-      [
-        "portKey3",
-        10
-      ],
-      [
-        "portKey3",
-        false
-      ],
-      [
-        "portKey3",
-        false
-      ],
-      [
-        "portKey3",
-        1
-      ],
-      [
-        "portKey3",
-        false
-      ],
-      [
-        "portKey3",
-        [
-          0,
-          257
-        ]
-      ],
-      [
-        "portKey3",
-        31
-      ],
-      [
-        "portKey3",
-        32
-      ],
-      [
-        "portKey3",
-        33
-      ],
-      [
-        "portKey3",
-        0
-      ],
-      [
-        "portKey3",
-        33
-      ],
-      [
-        "portKey3",
-        false
-      ],
-      [
-        "portKey3",
-        250
-      ],
-      [
-        "portKey3",
-        false
-      ],
-      [
-        "portKey3",
-        1
-      ],
-      [
-        "portKey3",
-        1
-      ],
-      [
-        "portKey3",
-        1
-      ],
-      [
-        "portKey3",
-        10
-      ],
-      [
-        "portKey3",
-        ""
-      ],
-      [
-        "portKey3",
-        false
-      ],
-      [
-        "portKey3",
-        60
-      ],
-      [
-        "portKey3",
-        false
-      ],
-      [
-        "portKey3",
-        0
-      ],
-      [
-        "portKey3",
-        13364
-      ],
-      [
-        "portKey3",
-        3
-      ],
-      [
-        "portKey3",
-        0
-      ],
-      [
-        "portKey3",
-        false
-      ],
-      [
-        "portKey3",
-        300
-      ],
-      [
-        "portKey3",
-        false
-      ],
-      [
-        "portKey3",
-        "72728"
-      ],
-      [
-        "portKey3",
-        false
-      ]
-    ]
+  "macroKey2": [
+    "functionKey165",
+    "functionKey85",
+    "functionKey197",
+    "functionKey198"
   ],
-  [
-    "commonKey",
-    [
-      [
-        "commonKey1",
-        false
-      ],
-      [
-        "commonKey1",
-        false
-      ],
-      [
-        "commonKey1",
-        false
-      ],
-      [
-        "commonKey1",
-        false
-      ],
-      [
-        "commonKey1",
-        true
-      ],
-      [
-        "commonKey1",
-        true
-      ],
-      [
-        "commonKey1",
-        false
-      ],
-      [
-        "commonKey1",
-        0
-      ],
-      [
-        "commonKey1",
-        "#"
-      ],
-      [
-        "commonKey1",
-        1
-      ],
-      [
-        "commonKey1",
-        "1DC2"
-      ],
-      [
-        "commonKey1",
-        8
-      ],
-      [
-        "commonKey1",
-        false
-      ],
-      [
-        "commonKey1",
-        false
-      ],
-      [
-        "commonKey1",
-        "ABC"
-      ],
-      [
-        "commonKey1",
-        1233
-      ],
-      [
-        "commonKey1",
-        "12"
-      ],
-      [
-        "commonKey1",
-        "D"
-      ],
-      [
-        "commonKey1",
-        false
-      ],
-      [
-        "commonKey1",
-        8
-      ]
-    ]
+  "macroKey3": [
+    "functionKey165",
+    "functionKey85",
+    "functionKey127"
   ],
-  [
-    "alarmKey",
-    [
-      [
-        "alarmKey1",
-        true
-      ],
-      [
-        "alarmKey1",
-        true
-      ],
-      [
-        "alarmKey1",
-        90
-      ],
-      [
-        "alarmKey1",
-        90
-      ],
-      [
-        "alarmKey1",
-        244
-      ],
-      [
-        "alarmKey2",
-        true
-      ],
-      [
-        "alarmKey2",
-        true
-      ],
-      [
-        "alarmKey2",
-        90
-      ],
-      [
-        "alarmKey2",
-        90
-      ],
-      [
-        "alarmKey2",
-        1
-      ],
-      [
-        "alarmKey3",
-        true
-      ],
-      [
-        "alarmKey3",
-        true
-      ],
-      [
-        "alarmKey3",
-        90
-      ],
-      [
-        "alarmKey3",
-        90
-      ],
-      [
-        "alarmKey3",
-        0
-      ],
-      [
-        "alarmKey4",
-        true
-      ],
-      [
-        "alarmKey4",
-        true
-      ],
-      [
-        "alarmKey4",
-        90
-      ],
-      [
-        "alarmKey4",
-        52
-      ],
-      [
-        "alarmKey4",
-        0
-      ],
-      [
-        "alarmKey5",
-        true
-      ],
-      [
-        "alarmKey5",
-        true
-      ],
-      [
-        "alarmKey5",
-        90
-      ],
-      [
-        "alarmKey5",
-        21
-      ],
-      [
-        "alarmKey5",
-        0
-      ]
-    ]
+  "macroKey4": [
+    "functionKey165",
+    "functionKey85",
+    "functionKey197",
+    "functionKey198"
   ],
-  [
-    "scheduleKey",
-    [
-      [
-        "scheduleKey1",
-        {
-          "key": "scheduleKey1",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey1",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey2",
-        {
-          "key": "scheduleKey2",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "1st Week",
-          "monthOfYear": "Every Month",
-          "time": "00:15",
-          "selectedMacroToRun": "macroKey2",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey3",
-        {
-          "key": "scheduleKey3",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "07:00",
-          "selectedMacroToRun": "macroKey3",
-          "enabled": "true"
-        }
-      ],
-      [
-        "scheduleKey4",
-        {
-          "key": "scheduleKey4",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:45",
-          "selectedMacroToRun": "macroKey2",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey5",
-        {
-          "key": "scheduleKey5",
-          "dayOfWeek": "Wednesday",
-          "weekInMonth": "4th Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey7",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey6",
-        {
-          "key": "scheduleKey6",
-          "dayOfWeek": "Wednesday",
-          "weekInMonth": "4th Week",
-          "monthOfYear": "Every Month",
-          "time": "00:45",
-          "selectedMacroToRun": "macroKey8",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey7",
-        {
-          "key": "scheduleKey7",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey1",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey8",
-        {
-          "key": "scheduleKey8",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey6",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey9",
-        {
-          "key": "scheduleKey9",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:30",
-          "selectedMacroToRun": "macroKey6",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey10",
-        {
-          "key": "scheduleKey10",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey1",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey11",
-        {
-          "key": "scheduleKey11",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey1",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey12",
-        {
-          "key": "scheduleKey12",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey1",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey13",
-        {
-          "key": "scheduleKey13",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey13",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey14",
-        {
-          "key": "scheduleKey14",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:25",
-          "selectedMacroToRun": "macroKey14",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey15",
-        {
-          "key": "scheduleKey15",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey15",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey16",
-        {
-          "key": "scheduleKey16",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey16",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey17",
-        {
-          "key": "scheduleKey17",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:15",
-          "selectedMacroToRun": "macroKey16",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey18",
-        {
-          "key": "scheduleKey18",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey1",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey19",
-        {
-          "key": "scheduleKey19",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:30",
-          "selectedMacroToRun": "macroKey20",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey20",
-        {
-          "key": "scheduleKey20",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:59",
-          "selectedMacroToRun": "macroKey20",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey21",
-        {
-          "key": "scheduleKey21",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey90",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey22",
-        {
-          "key": "scheduleKey22",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey90",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey23",
-        {
-          "key": "scheduleKey23",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey90",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey24",
-        {
-          "key": "scheduleKey24",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey90",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey25",
-        {
-          "key": "scheduleKey25",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey90",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey26",
-        {
-          "key": "scheduleKey26",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey90",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey27",
-        {
-          "key": "scheduleKey27",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey90",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey28",
-        {
-          "key": "scheduleKey28",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey90",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey29",
-        {
-          "key": "scheduleKey29",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey90",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey30",
-        {
-          "key": "scheduleKey30",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey90",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey31",
-        {
-          "key": "scheduleKey31",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey90",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey32",
-        {
-          "key": "scheduleKey32",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey90",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey33",
-        {
-          "key": "scheduleKey33",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey90",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey34",
-        {
-          "key": "scheduleKey34",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey90",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey35",
-        {
-          "key": "scheduleKey35",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey90",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey36",
-        {
-          "key": "scheduleKey36",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey90",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey37",
-        {
-          "key": "scheduleKey37",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey90",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey38",
-        {
-          "key": "scheduleKey38",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey90",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey39",
-        {
-          "key": "scheduleKey39",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey90",
-          "enabled": "false"
-        }
-      ],
-      [
-        "scheduleKey40",
-        {
-          "key": "scheduleKey40",
-          "dayOfWeek": "EveryDay",
-          "weekInMonth": "Every Week",
-          "monthOfYear": "Every Month",
-          "time": "00:00",
-          "selectedMacroToRun": "macroKey90",
-          "enabled": "false"
-        }
-      ]
-    ]
-  ]
-]
+  "macroKey5": [],
+  "macroKey6": [
+    "functionKey165",
+    "functionKey85",
+    "functionKey130"
+  ],
+  "macroKey7": [
+    "functionKey162",
+    "functionKey192"
+  ],
+  "macroKey8": [
+    "functionKey162",
+    "functionKey193"
+  ],
+  "macroKey9": [
+    "functionKey165",
+    "functionKey85",
+    "functionKey255",
+    "functionKey255",
+    "functionKey255",
+    "functionKey52",
+    "functionKey255",
+    "functionKey255",
+    "functionKey255",
+    "functionKey53",
+    "functionKey195"
+  ],
+  "macroKey10": [
+    "functionKey165",
+    "functionKey85",
+    "functionKey255",
+    "functionKey255",
+    "functionKey255",
+    "functionKey92",
+    "functionKey255",
+    "functionKey255",
+    "functionKey255",
+    "functionKey93",
+    "functionKey194"
+  ],
+  "macroKey11": [
+    "functionKey163",
+    "functionKey60"
+  ],
+  "macroKey12": [],
+  "macroKey13": [],
+  "macroKey14": [],
+  "macroKey15": [],
+  "macroKey16": [],
+  "macroKey17": [],
+  "macroKey18": [],
+  "macroKey19": [],
+  "macroKey20": [],
+  "macroKey21": [],
+  "macroKey22": [],
+  "macroKey23": [],
+  "macroKey24": [],
+  "macroKey25": [],
+  "macroKey26": [],
+  "macroKey27": [],
+  "macroKey28": [],
+  "macroKey29": [],
+  "macroKey30": [],
+  "macroKey31": [],
+  "macroKey32": [],
+  "macroKey33": [],
+  "macroKey34": [],
+  "macroKey35": [],
+  "macroKey36": [],
+  "macroKey37": [],
+  "macroKey38": [],
+  "macroKey39": [],
+  "macroKey40": [],
+  "macroKey41": [
+    "functionKey162",
+    "functionKey116"
+  ],
+  "macroKey42": [
+    "functionKey162",
+    "functionKey126"
+  ],
+  "macroKey43": [
+    "functionKey162",
+    "functionKey127"
+  ],
+  "macroKey44": [
+    "functionKey162",
+    "functionKey128"
+  ],
+  "macroKey45": [
+    "functionKey162",
+    "functionKey129"
+  ],
+  "macroKey46": [
+    "functionKey162",
+    "functionKey187",
+    "functionKey189"
+  ],
+  "macroKey47": [
+    "functionKey162",
+    "functionKey130"
+  ],
+  "macroKey48": [
+    "functionKey162",
+    "functionKey13",
+    "functionKey190",
+    "functionKey194"
+  ],
+  "macroKey49": [
+    "functionKey162",
+    "functionKey190",
+    "functionKey195",
+    "functionKey16"
+  ],
+  "macroKey50": [
+    "functionKey162",
+    "functionKey181"
+  ],
+  "macroKey51": [
+    "functionKey163",
+    "functionKey116"
+  ],
+  "macroKey52": [
+    "functionKey163",
+    "functionKey126"
+  ],
+  "macroKey53": [
+    "functionKey163",
+    "functionKey127"
+  ],
+  "macroKey54": [
+    "functionKey163",
+    "functionKey128"
+  ],
+  "macroKey55": [
+    "functionKey163",
+    "functionKey129"
+  ],
+  "macroKey56": [
+    "functionKey163",
+    "functionKey188",
+    "functionKey189"
+  ],
+  "macroKey57": [
+    "functionKey163",
+    "functionKey130"
+  ],
+  "macroKey58": [
+    "functionKey163",
+    "functionKey14",
+    "functionKey191",
+    "functionKey194"
+  ],
+  "macroKey59": [
+    "functionKey163",
+    "functionKey191",
+    "functionKey195",
+    "functionKey17"
+  ],
+  "macroKey60": [
+    "functionKey163",
+    "functionKey182"
+  ],
+  "macroKey61": [],
+  "macroKey62": [],
+  "macroKey63": [],
+  "macroKey64": [],
+  "macroKey65": [],
+  "macroKey66": [],
+  "macroKey67": [],
+  "macroKey68": [],
+  "macroKey69": [],
+  "macroKey70": [],
+  "macroKey71": [],
+  "macroKey72": [],
+  "macroKey73": [],
+  "macroKey74": [],
+  "macroKey75": [],
+  "macroKey76": [],
+  "macroKey77": [],
+  "macroKey78": [],
+  "macroKey79": [],
+  "macroKey80": [],
+  "macroKey81": [],
+  "macroKey82": [],
+  "macroKey83": [],
+  "macroKey84": [],
+  "macroKey85": [],
+  "macroKey86": [],
+  "macroKey87": [],
+  "macroKey88": [],
+  "macroKey89": [],
+  "macroKey90": [
+    "functionKey13"
+  ],
+  "commonKey1": 8,
+  "portKey1": false,
+  "portKey2": false,
+  "portKey3": false,
+  "scheduleKey1": {
+    "key": "scheduleKey1",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey1",
+    "enabled": "false"
+  },
+  "scheduleKey2": {
+    "key": "scheduleKey2",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "1st Week",
+    "monthOfYear": "Every Month",
+    "time": "00:15",
+    "selectedMacroToRun": "macroKey2",
+    "enabled": "false"
+  },
+  "scheduleKey3": {
+    "key": "scheduleKey3",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "07:00",
+    "selectedMacroToRun": "macroKey3",
+    "enabled": "true"
+  },
+  "scheduleKey4": {
+    "key": "scheduleKey4",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:45",
+    "selectedMacroToRun": "macroKey2",
+    "enabled": "false"
+  },
+  "scheduleKey5": {
+    "key": "scheduleKey5",
+    "dayOfWeek": "Wednesday",
+    "weekInMonth": "4th Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey7",
+    "enabled": "false"
+  },
+  "scheduleKey6": {
+    "key": "scheduleKey6",
+    "dayOfWeek": "Wednesday",
+    "weekInMonth": "4th Week",
+    "monthOfYear": "Every Month",
+    "time": "00:45",
+    "selectedMacroToRun": "macroKey8",
+    "enabled": "false"
+  },
+  "scheduleKey7": {
+    "key": "scheduleKey7",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey1",
+    "enabled": "false"
+  },
+  "scheduleKey8": {
+    "key": "scheduleKey8",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey6",
+    "enabled": "false"
+  },
+  "scheduleKey9": {
+    "key": "scheduleKey9",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:30",
+    "selectedMacroToRun": "macroKey6",
+    "enabled": "false"
+  },
+  "scheduleKey10": {
+    "key": "scheduleKey10",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey1",
+    "enabled": "false"
+  },
+  "scheduleKey11": {
+    "key": "scheduleKey11",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey1",
+    "enabled": "false"
+  },
+  "scheduleKey12": {
+    "key": "scheduleKey12",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey1",
+    "enabled": "false"
+  },
+  "scheduleKey13": {
+    "key": "scheduleKey13",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey13",
+    "enabled": "false"
+  },
+  "scheduleKey14": {
+    "key": "scheduleKey14",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:25",
+    "selectedMacroToRun": "macroKey14",
+    "enabled": "false"
+  },
+  "scheduleKey15": {
+    "key": "scheduleKey15",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey15",
+    "enabled": "false"
+  },
+  "scheduleKey16": {
+    "key": "scheduleKey16",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey16",
+    "enabled": "false"
+  },
+  "scheduleKey17": {
+    "key": "scheduleKey17",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:15",
+    "selectedMacroToRun": "macroKey16",
+    "enabled": "false"
+  },
+  "scheduleKey18": {
+    "key": "scheduleKey18",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey1",
+    "enabled": "false"
+  },
+  "scheduleKey19": {
+    "key": "scheduleKey19",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:30",
+    "selectedMacroToRun": "macroKey20",
+    "enabled": "false"
+  },
+  "scheduleKey20": {
+    "key": "scheduleKey20",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:59",
+    "selectedMacroToRun": "macroKey20",
+    "enabled": "false"
+  },
+  "scheduleKey21": {
+    "key": "scheduleKey21",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey90",
+    "enabled": "false"
+  },
+  "scheduleKey22": {
+    "key": "scheduleKey22",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey90",
+    "enabled": "false"
+  },
+  "scheduleKey23": {
+    "key": "scheduleKey23",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey90",
+    "enabled": "false"
+  },
+  "scheduleKey24": {
+    "key": "scheduleKey24",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey90",
+    "enabled": "false"
+  },
+  "scheduleKey25": {
+    "key": "scheduleKey25",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey90",
+    "enabled": "false"
+  },
+  "scheduleKey26": {
+    "key": "scheduleKey26",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey90",
+    "enabled": "false"
+  },
+  "scheduleKey27": {
+    "key": "scheduleKey27",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey90",
+    "enabled": "false"
+  },
+  "scheduleKey28": {
+    "key": "scheduleKey28",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey90",
+    "enabled": "false"
+  },
+  "scheduleKey29": {
+    "key": "scheduleKey29",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey90",
+    "enabled": "false"
+  },
+  "scheduleKey30": {
+    "key": "scheduleKey30",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey90",
+    "enabled": "false"
+  },
+  "scheduleKey31": {
+    "key": "scheduleKey31",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey90",
+    "enabled": "false"
+  },
+  "scheduleKey32": {
+    "key": "scheduleKey32",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey90",
+    "enabled": "false"
+  },
+  "scheduleKey33": {
+    "key": "scheduleKey33",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey90",
+    "enabled": "false"
+  },
+  "scheduleKey34": {
+    "key": "scheduleKey34",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey90",
+    "enabled": "false"
+  },
+  "scheduleKey35": {
+    "key": "scheduleKey35",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey90",
+    "enabled": "false"
+  },
+  "scheduleKey36": {
+    "key": "scheduleKey36",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey90",
+    "enabled": "false"
+  },
+  "scheduleKey37": {
+    "key": "scheduleKey37",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey90",
+    "enabled": "false"
+  },
+  "scheduleKey38": {
+    "key": "scheduleKey38",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey90",
+    "enabled": "false"
+  },
+  "scheduleKey39": {
+    "key": "scheduleKey39",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey90",
+    "enabled": "false"
+  },
+  "scheduleKey40": {
+    "key": "scheduleKey40",
+    "dayOfWeek": "EveryDay",
+    "weekInMonth": "Every Week",
+    "monthOfYear": "Every Month",
+    "time": "00:00",
+    "selectedMacroToRun": "macroKey90",
+    "enabled": "false"
+  }
+}

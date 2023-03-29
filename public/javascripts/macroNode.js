@@ -17,9 +17,11 @@
 
 $(function () {
     $(".functionSource").draggable({
+        containment: 'false',
         helper: "clone"
     });
     $(".currentFunction").draggable({
+        containment: "parent",
         helper: "clone"
     });
     $(".functionDrop").droppable({
