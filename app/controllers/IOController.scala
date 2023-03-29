@@ -18,11 +18,14 @@
 package controllers
 
 import akka.util.Timeout
+import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.mapped.MappedValues
-import play.api.libs.json.Json
+import net.wa9nnn.rc210.key.KeyFactory
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
+import scala.collection.immutable
 import scala.concurrent.duration.DurationInt
 
 @Singleton
@@ -31,10 +34,13 @@ class IOController @Inject()(val controllerComponents: ControllerComponents,
   implicit val timeout: Timeout = 5.seconds
 
   def downloadJson(): Action[AnyContent] = Action {
-    val jsObject = Json.arr(
-      mappedValues.all
-        .map(fieldEntry => fieldEntry.fieldKey.param -> fieldEntry.toJson)
-    )
+    val r: Seq[(String, JsValue)] = mappedValues
+      .all
+      .map { fieldEntry =>
+        fieldEntry.fieldKey.key.toString -> fieldEntry.toJson
+      }
+
+    val jsObject =JsObject(r)
     val sJson = Json.prettyPrint(jsObject)
 
     Ok(sJson).withHeaders(

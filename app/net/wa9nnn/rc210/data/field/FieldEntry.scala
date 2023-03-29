@@ -75,10 +75,8 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
   override def compare(that: FieldEntry): Int = fieldKey compare that.fieldKey
 
   def toJson: JsValue = {
-    Json.obj(
-      "value" -> fieldValue.toJsValue,
-      //      "candidate" -> candidate.map(_.toJsValue).getOrElse(JsNull)
-    )
+    val r = fieldValue.toJsValue
+    r
   }
 }
 

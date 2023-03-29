@@ -6,7 +6,7 @@
 
     @defining(renderMetadata.param) { paramid =>
         <div class="valueCell">
-            <input id="@paramid" class="" name="@paramid" value="@value" title="@renderMetadata.prompt">
+            <input id="@paramid" type="time" class="timepicker" name="@paramid" value="@value" title="@renderMetadata.prompt">
             @renderMetadata.unit
         </div>
     }
