@@ -5,6 +5,7 @@ import com.wa9nnn.util.tableui.{Header, Row}
 import net.wa9nnn.rc210.MemoryExtractor
 import net.wa9nnn.rc210.data.Dtmf
 import net.wa9nnn.rc210.data.field._
+import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.key.KeyFactory.{FunctionKey, MacroKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.model.TriggerNode
@@ -59,6 +60,10 @@ case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dt
   override val fieldName: String = "Macro"
 
   override def display: String = functions.map(_.toString).mkString(" ")
+
+  override def toRow()(implicit namedSource: NamedSource): Row = {
+    throw new NotImplementedError() //todo
+  }
 }
 
 object MacroNode extends LazyLogging with MemoryExtractor with FieldDefinition {

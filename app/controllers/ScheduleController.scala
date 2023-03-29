@@ -28,7 +28,7 @@ import net.wa9nnn.rc210.key.KeyFactory.ScheduleKey
 import net.wa9nnn.rc210.key.KeyKind
 import net.wa9nnn.rc210.util.MacroSelect
 import play.api.mvc._
-
+import net.wa9nnn.rc210.data.schedules.Schedule.apply
 import javax.inject.{Inject, Singleton}
 
 @Singleton()
@@ -43,25 +43,7 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
       val entries: Seq[FieldEntry] = mappedValues(KeyKind.scheduleKey)
       val rows: Seq[Row] = entries.map { fieldEntry: FieldEntry =>
         val schedule: Schedule = fieldEntry.value
-        implicit val key = schedule.key
-        val keyName = namedSource.get(schedule.key).getOrElse("")
-        val name: Cell = Cell.rawHtml(views.html.fieldNamedKey(schedule.key, keyName, schedule).toString())
-        val dow: Cell = schedule.dayOfWeek.toCell(RenderMetdata(DayOfWeek.name))
-        val weekInMonth: Cell = schedule.weekInMonth.toCell(RenderMetdata(WeekInMonth.name))
-        val woy: Cell = Cell.rawHtml(schedule.monthOfYear.toHtmlField(RenderMetdata(MonthOfYear.name)))
-        val localTime: Cell = schedule.time.toCell(RenderMetdata("Time"))
-        val macroToRun: Cell = schedule.selectedMacroToRun.toCell(RenderMetdata(MacroSelect.name))
-        val enabled: Cell = schedule.enabled.toCell(RenderMetdata("Enabled"))
-
-        Row(Seq(
-          name,
-          enabled,
-          dow,
-          weekInMonth,
-          woy,
-          localTime,
-          macroToRun
-        ))
+        schedule.toRow()
       }
 
       val table = Table(Header("Schedules",
@@ -96,14 +78,7 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
           fieldey.fieldName -> value
         }.toMap
 
-        Schedule(key = key.asInstanceOf[ScheduleKey],
-          dayOfWeek = DayOfWeek(),
-          weekInMonth = WeekInMonth(),
-          monthOfYear = MonthOfYear(),
-          time = FieldTime(),
-          selectedMacroToRun = MacroSelect(),
-          enabled = FieldBoolean("Enabled")
-        )
+        Schedule((key.asInstanceOf[ScheduleKey]))
       }.toSeq.sortBy(_.key)
 
     mappedValues.apply(r)

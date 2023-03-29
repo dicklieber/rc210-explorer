@@ -17,8 +17,9 @@
 
 package net.wa9nnn.rc210.data.field
 
-import com.wa9nnn.util.tableui.Cell
+import com.wa9nnn.util.tableui.{Cell, Row}
 import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.key.KeyFactory.Key
 import play.api.libs.json._
 import views.html._
@@ -67,6 +68,7 @@ trait FieldWithFieldKey[K <: Key] extends FieldValue {
   val key: K
   val fieldName: String
   lazy val fieldKey: FieldKey = FieldKey(fieldName, key)
+  def toRow() (implicit namedSource: NamedSource):Row
 }
 
 

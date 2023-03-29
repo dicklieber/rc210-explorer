@@ -5,7 +5,8 @@ import com.wa9nnn.util.tableui.{Cell, Header, Row}
 import net.wa9nnn.rc210.MemoryExtractor
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.key.KeyFactory.ScheduleKey
+import net.wa9nnn.rc210.data.named.NamedSource
+import net.wa9nnn.rc210.key.KeyFactory.{Key, ScheduleKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.{Memory, SlicePos}
@@ -21,7 +22,7 @@ import play.api.libs.json.{JsString, JsValue}
  * @param time                 when this runs on selected day.
  * @param selectedMacroToRun   e.g. "macro42"
  */
-case class Schedule(override val key: ScheduleKey,
+case class Schedule(override  val key: ScheduleKey,
                     dayOfWeek: DayOfWeek,
                     weekInMonth: WeekInMonth,
                     monthOfYear: MonthOfYear,
@@ -44,11 +45,31 @@ case class Schedule(override val key: ScheduleKey,
     Row(key.toCell, description)
   }
 
+  def toRow() (implicit namedSource: NamedSource):Row = {
+    implicit val k:ScheduleKey = key
+    val keyName = namedSource.get(key).getOrElse("")
+    val name: Cell = Cell.rawHtml(views.html.fieldNamedKey(key, keyName, this).toString())
+    val dow: Cell = dayOfWeek.toCell(RenderMetdata(DayOfWeek.name))
+    val woy: Cell = Cell.rawHtml(monthOfYear.toHtmlField(RenderMetdata(MonthOfYear.name)))
+    val localTime: Cell = time.toCell(RenderMetdata("Time"))
+    val macroToRun: Cell = selectedMacroToRun.toCell(RenderMetdata(MacroSelect.name))
+
+    Row(Seq(
+      name,
+      enabled.toCell(RenderMetdata("Enabled")),
+      dow,
+      weekInMonth.toCell(RenderMetdata(WeekInMonth.name)),
+      woy,
+      localTime,
+      macroToRun
+    ))
+
+  }
   override val triggerEnabled: Boolean = nodeEnabled
 
   override def triggerDescription: String = toString
 
-  override def toJsValue: JsValue = JsString(description) //todo JsObject of Schedule.
+  override def toJsValue: JsValue = JsString(description) //todo JsObject of 
 
   /**
    * Render this value as an RD-210 command string.
@@ -66,7 +87,7 @@ case class Schedule(override val key: ScheduleKey,
 
   override def param: String = FieldKey("Schedule", key).param
 
-  override def prompt: String = "Runs a Macro on a schedule."
+  override def prompt: String = "Runs a Macro on a "
 
   override def unit: String = ""
 
@@ -94,6 +115,7 @@ object Schedule extends LazyLogging with MemoryExtractor {
 
   override def extract(memory: Memory): Seq[FieldEntry] = {
 
+
     def collect(php: String): Seq[Int] = {
       memory(SlicePos(php)).data
     }
@@ -108,8 +130,19 @@ object Schedule extends LazyLogging with MemoryExtractor {
 
 
     scheduleBuilder.slots.toIndexedSeq.map { schedule =>
-      FieldEntry(this, FieldKey("Schedule", schedule.key), schedule)
+      FieldEntry(this, FieldKey("Schedule",schedule.key ), schedule)
     }
+  }
+
+  def apply(key: ScheduleKey)(implicit values: Map[String, String]): Schedule = {
+    Schedule(key = key,
+      dayOfWeek = DayOfWeek(),
+      weekInMonth = WeekInMonth(),
+      monthOfYear = MonthOfYear(),
+      time = FieldTime(),
+      selectedMacroToRun = MacroSelect(),
+      enabled = FieldBoolean("Enabled")
+    )
   }
 
   override val fieldName: String = "Schedule"
