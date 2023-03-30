@@ -30,8 +30,6 @@ class NamedController @Inject()(implicit val controllerComponents: ControllerCom
 
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      val kv: Map[String, String] = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }
-
       Ok(views.html.named(None, Seq.empty))
   }
 
