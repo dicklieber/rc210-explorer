@@ -17,11 +17,13 @@
 
 $(function () {
     $(".functionSource").draggable({
-        containment: 'false',
+        appendTo: 'body',
+        containment: 'window',
+        scroll: false,
         helper: "clone"
     });
     $(".currentFunction").draggable({
-        containment: "parent",
+        // containment: "parent",
         helper: "clone"
     });
     $(".functionDrop").droppable({
@@ -42,6 +44,28 @@ $(function () {
                 .html("Dropped!");
 
 
+        },
+        over: function (event, ui) {
+            let targetId = event.target.id;
+            console.log(`over::targetId: ${targetId}`)
+
+            if (targetId === "trash") {
+                // remove from table
+            } else {
+                // insert
+            }
+
+        }
+    });
+    $(".dropTrash").droppable({
+
+        drop: function (event, ui) {
+            let targetId = event.target.id;
+            let sourceTr = ui.draggable;
+            console.log(`dropped in trash ${sourceTr} onto ${targetId}`)
+
+            const draggable = ui.draggable;
+            draggable.remove()
         },
         over: function (event, ui) {
             let targetId = event.target.id;

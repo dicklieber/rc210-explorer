@@ -40,7 +40,7 @@ class MacroNodeController @Inject()(val mcc: MessagesControllerComponents,
   def index(): Action[AnyContent] = Action { implicit request =>
 
     val value: Seq[MacroNode] = mappedValues.apply(KeyKind.macroKey).map { fieldEntry =>
-      fieldEntry.fieldValue.asInstanceOf[MacroNode]
+      fieldEntry.value.asInstanceOf[MacroNode]
     }
     Ok(macroNodes(value, KeyKind.macroKey))
   }

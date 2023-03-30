@@ -1,6 +1,7 @@
-.valueCell{
+.valueCell {
     display: block;
 }
+
 .sadMessage {
     font-weight: bold;
     font-size: 14px;
@@ -56,7 +57,7 @@
     border: 1px solid black;
 }
 
-.functionsTable{
+.functionsTable {
     border-collapse: collapse;
     border: 1px;
 }
@@ -89,18 +90,20 @@
     justify-content: left;
 }
 
-
-
+.functionSource {
+    z-index: 999;
+}
 
 legend {
     font-size: 1.2em !important;
     font-weight: normal !important;
     text-align: left !important;
-    width:auto !important;
-    padding:0 10px;
-    border-bottom:none;
-    float:none !important;
+    width: auto !important;
+    padding: 0 10px;
+    border-bottom: none;
+    float: none !important;
 }
+
 fieldset {
     border-color: #0d6efd !important;
     border-width: 1px !important;
@@ -207,9 +210,10 @@ body {
 }
 
 .fieldPrompt {
-    white-space:  nowrap;
+    white-space: nowrap;
 }
+
 .fieldLabel {
-    white-space:  nowrap;
+    white-space: nowrap;
 }
 
