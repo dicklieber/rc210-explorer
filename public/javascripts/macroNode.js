@@ -84,7 +84,11 @@ $(function () {
 
         var functionIds = $("#currentFunctions tr")
             .map(function () {
-                return this.id;
+                console.log(`this: ${this}`);
+                const dataset =  this.dataset;
+                console.log(`dataset: ${dataset}`);
+                const f =  dataset.function
+                return f;
             }) //Project Ids
             .get(); //ToArray
 
@@ -92,32 +96,13 @@ $(function () {
 
         console.log(functionIds)
 
+        $("#functionIds").val(functionIds)
+
         let formData = new FormData($('form')[0]);
         formData.append("functionIds", functionIds);
-        $("#btnSubmit").prop("disabled", true);
+        // $("#btnSubmit").prop("disabled", true);
 
-        $.ajax({
-            type: "POST",
-            url: "/macro/save",
-            data: formData,
-            // data: data,
-            processData: false,
-            contentType: false,
-            cache: false,
-            timeout: 800000,
-            success: function (data) {
-                $("#output").text(data);
-                console.log("SUCCESS : ", data);
-                $("#btnSubmit").prop("disabled", false);
-            },
-            error: function (e) {
-                $("#output").text(e.responseText);
-                console.log("ERROR : ", e);
-                $("#btnSubmit").prop("disabled", false);
-            }
-        });
-
-        return false;
+        return true;
     });
 });
 

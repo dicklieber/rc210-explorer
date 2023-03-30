@@ -17,11 +17,11 @@
 
 package controllers
 
-import net.wa9nnn.rc210.data.Dtmf
+import net.wa9nnn.rc210.data.{Dtmf, FieldKey}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.MacroNode
-import net.wa9nnn.rc210.data.mapped.MappedValues
+import net.wa9nnn.rc210.data.mapped.{MappedValues, NewCandidate}
 import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.mvc._
@@ -31,6 +31,7 @@ import javax.inject.{Inject, Singleton}
 import scala.util.Try
 import scala.util.matching.Regex
 import net.wa9nnn.rc210.key.KeyFactory._
+
 @Singleton()
 class MacroNodeController @Inject()(val mcc: MessagesControllerComponents,
                                     mappedValues: MappedValues
@@ -47,39 +48,38 @@ class MacroNodeController @Inject()(val mcc: MessagesControllerComponents,
 
   def edit(key: MacroKey): Action[AnyContent] = Action { implicit request =>
 
-    val maybeEntry: Seq[FieldEntry] = mappedValues(key)
-    val macroNode: MacroNode = maybeEntry.head.fieldValue.asInstanceOf[MacroNode]
-    val name = namedSource(key)
-
-
-    Ok(views.html.macroEditor(macroNode, name))
+    val fieldKey = FieldKey("Macro", key)
+    val maybeEntry: Option[FieldEntry] = mappedValues(fieldKey)
+    maybeEntry match {
+      case Some(fieldEntry: FieldEntry) =>
+        val name = namedSource(key)
+        Ok(views.html.macroEditor(fieldEntry.value, name))
+      case None =>
+        NotFound(s"No keyField: $fieldKey")
+    }
   }
 
   import MacroNodeController.r
 
   def save(): Action[AnyContent] = Action { implicit request =>
-    val multipartFormData = request.body.asMultipartFormData
-    implicit val valuesMap = multipartFormData.get
+    val formData: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
 
-    val dataParts: Map[String, Seq[String]] = valuesMap.dataParts
-    val sKey = dataParts("key").head
-    val key:MacroKey = KeyFactory(sKey)
-    val dtmf: Option[Dtmf] = dataParts("dtmf").map(Dtmf(_)).headOption
+    val sKey = formData("key").head
+    val key: MacroKey = KeyFactory(sKey)
+    val dtmf: Option[Dtmf] = formData("dtmf").map(Dtmf(_)).headOption
 
-    val functions: Seq[FunctionKey] = dataParts("functionIds")
+    val functions: Seq[FunctionKey] = formData("functionIds")
       .head
       .split(",").toIndexedSeq
-      .flatMap {sfunction =>
-        Try{
-          val r(n) = sfunction
-          FunctionKey(n.toInt)
+      .flatMap { sfunction =>
+        Try {
+          val f: FunctionKey = KeyFactory(sfunction)
+          f
         }.toOption
       }
 
 
-
     val newMacroNode = MacroNode(key, functions, dtmf)
-
     mappedValues(newMacroNode.fieldKey, newMacroNode)
     Redirect(routes.MacroNodeController.index())
   }

@@ -15,6 +15,7 @@
 
     @form(action = routes.MacroNodeController.save(), Symbol("id") -> "macroNodeForm") {
         <input type="hidden" name="key", value="@macroNode.key">
+        <input type="hidden" name="functionIds" id="functionIds">
         <div class="row">
             <div class="col col-md-auto border border-primary">
                 <h2>@macroNode.key</h2>
@@ -33,7 +34,7 @@
 
                 <table id="currentFunctions" >
                     @for(function <- macroNode.functions) {
-                        <tr id="f@function.number" class="functionDrop functionDrag currentFunction" >
+                        <tr  class="functionDrop functionDrag currentFunction" data-function="@function.toString">
                             <td class=" text-end">@function.number </td>
                             <td class="text-nowrap">@functionsProvider.apply(function).get.description</td>
                         </tr>
@@ -54,7 +55,7 @@
                     <div>
                         <table>
                         @for(function <- functionsProvider.functions) {
-                            <tr id="@function.key.toString" class="functionSource" >
+                            <tr class="functionSource"  data-function="@function.key.toString">
                                 <td class=" text-end">@function.key.number </td>
                                 <td class="text-nowrap">@function.description</td>
                             </tr>
