@@ -31,6 +31,8 @@ case class WeekInMonth(value: String = WeekInMonth.options.head.display) extends
 
   override val selectOptions: Seq[SelectOption] = WeekInMonth.options
   override val name: String = DayOfWeek.name
+
+  override def update(paramValue: String): WeekInMonth = copy(value =  paramValue)
 }
 
 object WeekInMonth extends FieldSelectComp {

@@ -21,7 +21,7 @@ import com.wa9nnn.util.tableui.Cell
 import play.api.libs.json.{JsArray, JsNumber, JsValue}
 import views.html.fieldString
 
-case class FieldSeqInts(value: Int*) extends FieldValue {
+case class FieldSeqInts(value: Seq[Int]) extends FieldValue {
   override def toJsValue: JsValue = {
     JsArray(value.map((int: Int) => JsNumber(BigDecimal.int2bigDecimal(int))))
   }
@@ -39,4 +39,11 @@ case class FieldSeqInts(value: Int*) extends FieldValue {
   def toCell(fieldEntry: FieldEntry): Cell = Cell.rawHtml(toHtmlField(fieldEntry))
 
   override def display: String = value.map(_.toString).mkString(" ")
+
+  override def update(paramValue: String): FieldSeqInts = {
+    val ints: Seq[Int] = paramValue.split(" ")
+      .map(_.toInt)
+      .toSeq
+    copy(value = ints)
+  }
 }

@@ -17,8 +17,8 @@
 
 package net.wa9nnn.rc210.util
 
-import net.wa9nnn.rc210.data.field.{DayOfWeek, RenderMetadata}
-import net.wa9nnn.rc210.key.KeyFactory.{Key, MacroKey}
+import net.wa9nnn.rc210.data.field.{FieldValue, RenderMetadata}
+import net.wa9nnn.rc210.key.KeyFactory.MacroKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 
 
@@ -41,6 +41,7 @@ case class MacroSelect(value: MacroKey = KeyFactory.defaultMacroKey) extends Fie
   override def toHtmlField(renderMetadata: RenderMetadata): String = {
     super.toHtmlField(renderMetadata)
   }
+  override def update(paramValue: String): MacroSelect = copy(value = fromParam(paramValue))
 
   def fromParam(param: String): MacroKey =
     KeyFactory(param)

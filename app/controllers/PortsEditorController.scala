@@ -20,23 +20,17 @@ package controllers
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.data.mapped.MappedValues
+import net.wa9nnn.rc210.data.mapped.{MappedValues, NewCandidate}
 import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.key.KeyFactory.PortKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.mvc._
 
 import javax.inject.Inject
+import scala.collection.immutable
 
 class PortsEditorController @Inject()(implicit val controllerComponents: ControllerComponents, mappedValues: MappedValues,
                                       namedManager: NamedManager) extends BaseController {
-
-  def save(): Action[AnyContent] = Action {
-    implicit request: Request[AnyContent] =>
-      val kv: Map[String, String] = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }
-
-    Ok("todo")
-  }
 
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
@@ -71,10 +65,22 @@ class PortsEditorController @Inject()(implicit val controllerComponents: Control
 
           case None => Cell(portKey.toString)
         }
-      val header = Header("Ports", "Field" +: colHeaders: _*)
+      val header = Header(s"Ports (${rows.length} values)", "Field" +: colHeaders: _*)
       val table = Table(header, rows)
 
       Ok(views.html.ports(table))
+  }
+
+  def save(): Action[AnyContent] = Action {
+    implicit request: Request[AnyContent] =>
+      val kv: Map[String, String] = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }.filterNot(_._1 == "save")
+
+      mappedValues(kv.map { case (name, formValue) =>
+        val fieldKey = FieldKey.fromParam(name)
+        NewCandidate(fieldKey, formValue)
+      })
+
+      Redirect(routes.PortsEditorController.index())
   }
 
 }

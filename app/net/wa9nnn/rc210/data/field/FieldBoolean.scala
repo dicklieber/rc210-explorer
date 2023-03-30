@@ -39,6 +39,10 @@ case class FieldBoolean(value: Boolean = false) extends FieldValue {
    def toCell(name:String, renderMetadata: RenderMetadata): Cell = {
      super.toCell(renderMetadata)
    }
+
+  override def update(paramValue: String): FieldValue = {
+    FieldBoolean(paramValue == "true")
+  }
 }
 
 object FieldBoolean {

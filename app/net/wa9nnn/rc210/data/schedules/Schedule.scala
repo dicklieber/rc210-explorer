@@ -107,6 +107,7 @@ case class Schedule(override val key: ScheduleKey,
   override def macroToRun: KeyFactory.MacroKey = selectedMacroToRun.value
 
   override val fieldName: String = "Schedule"
+
 }
 
 object Schedule extends LazyLogging with MemoryExtractor {

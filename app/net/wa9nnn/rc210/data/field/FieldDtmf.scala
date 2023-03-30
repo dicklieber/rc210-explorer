@@ -33,4 +33,8 @@ case class FieldDtmf(value: String) extends FieldValue {
   override def toCommand(fieldEntry: FieldEntry): String = ???
 
   override def display: String = value
+
+  override def update(paramValue: String): FieldValue = {
+    FieldDtmf(paramValue)
+  }
 }

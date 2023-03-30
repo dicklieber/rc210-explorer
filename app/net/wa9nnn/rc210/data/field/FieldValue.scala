@@ -54,9 +54,7 @@ trait FieldValue {
     Cell.rawHtml(html)
   }
 
-  def update(paramValue: String): FieldValue = {
-    throw new NotImplementedError() //todo
-  }
+  def update(paramValue: String): FieldValue
 }
 
 /**
@@ -69,6 +67,8 @@ trait FieldWithFieldKey[K <: Key] extends FieldValue {
   val fieldName: String
   lazy val fieldKey: FieldKey = FieldKey(fieldName, key)
   def toRow() (implicit namedSource: NamedSource):Row
+  override def update(paramValue: String): FieldValue = throw new IllegalStateException("FieldWithFieldKey cannot be updarfted. ") //todo can it?
+
 }
 
 

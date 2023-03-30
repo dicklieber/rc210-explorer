@@ -39,4 +39,8 @@ case class FieldInt(value: Int) extends FieldValue {
   override def toCommand(fieldEntry: FieldEntry): String = ???
 
   override def display: String = value.toString
+
+  override def update(paramValue: String): FieldValue = {
+    FieldInt(paramValue.toInt)
+  }
 }

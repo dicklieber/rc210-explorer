@@ -44,11 +44,12 @@ class MappedValues @Inject()(dataProvider: DataProvider) {
   }
 
 
-  def apply(keyKind: KeyKind):Seq[FieldEntry]={
-  map.values.filter(_.fieldKey.key.kind == keyKind)
-    .toSeq
-    .sortBy(_.fieldKey)
+  def apply(keyKind: KeyKind): Seq[FieldEntry] = {
+    map.values.filter(_.fieldKey.key.kind == keyKind)
+      .toSeq
+      .sortBy(_.fieldKey)
   }
+
   def apply(fieldKey: FieldKey): Option[FieldEntry] = {
     map.values.find(_.fieldKey == fieldKey)
   }
@@ -74,13 +75,25 @@ class MappedValues @Inject()(dataProvider: DataProvider) {
     val entry: FieldEntry = map(fieldKey)
     map.put(fieldKey, entry.setCandidate(value))
   }
+
   def apply(fieldKey: FieldKey, fieldContents: FieldValue): Unit = {
-    val entry: FieldEntry = map.getOrElse(fieldKey,throw new IllegalArgumentException(s"No value for $fieldKey"))
+    val entry: FieldEntry = map.getOrElse(fieldKey, throw new IllegalArgumentException(s"No value for $fieldKey"))
     map.put(fieldKey, entry.copy(candidate = Option(fieldContents)))
   }
 
-  def apply[K <: Key](fields:Seq[FieldWithFieldKey[K]]):Unit = {
-    fields.foreach{fieldWithFieldKey =>
+  def apply(newCandidate: NewCandidate): Unit = {
+    val fieldKey = newCandidate.fieldKey
+    val fieldEntry: FieldEntry = map.apply(fieldKey)
+    val updatedFieldEntry: FieldEntry = fieldEntry.setCandidate(newCandidate.formValue)
+    map.put(fieldKey, updatedFieldEntry)
+  }
+
+  def apply(newValues: Iterable[NewCandidate]): Unit = {
+    newValues.foreach(newCandidate => apply(newCandidate))
+  }
+
+  def apply[K <: Key](fields: Seq[FieldWithFieldKey[K]]): Unit = {
+    fields.foreach { fieldWithFieldKey =>
       apply(fieldWithFieldKey.fieldKey, fieldWithFieldKey)
     }
   }
@@ -124,4 +137,4 @@ object MappedValues {
 }
 
 
-
+case class NewCandidate(fieldKey: FieldKey, formValue: String)

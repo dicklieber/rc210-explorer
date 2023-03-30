@@ -74,7 +74,7 @@ object FieldExtractors {
       val ints = slice.grouped(2).map { slice =>
         int16.extract(slice)
       }
-      FieldSeqInts( ints.map { f => f.asInstanceOf[FieldInt].value }: _*)
+      FieldSeqInts( ints.map { f => f.asInstanceOf[FieldInt].value })
     }
 
     override val name: String = "cwTones"
