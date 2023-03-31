@@ -21,7 +21,6 @@ import net.wa9nnn.rc210.data.field.{FieldValue, RenderMetadata}
 import net.wa9nnn.rc210.key.KeyFactory.MacroKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 
-
 /**
  * Unlike ogther [[FieldSelect]]s this is just a helper as opposed to a holder of a value.
  */
@@ -41,11 +40,13 @@ case class MacroSelect(value: MacroKey = KeyFactory.defaultMacroKey) extends Fie
   override def toHtmlField(renderMetadata: RenderMetadata): String = {
     super.toHtmlField(renderMetadata)
   }
-  override def update(paramValue: String): MacroSelect = copy(value = fromParam(paramValue))
+
+  override def update(paramValue: String): MacroSelect = {
+    MacroSelect(KeyFactory(paramValue))
+  }
 
   def fromParam(param: String): MacroKey =
     KeyFactory(param)
-
 }
 
 object MacroSelect extends FieldSelectComp {
@@ -53,13 +54,12 @@ object MacroSelect extends FieldSelectComp {
 
   /**
    *
-   * @param key      for this schedule setpoint.
    * @param valueMap from form data for this key
    * @return
    */
   def apply()(implicit valueMap: Map[String, String]): MacroSelect = {
     val str = valueMap(name)
-    val macroKey:MacroKey = KeyFactory(str)
+    val macroKey: MacroKey = KeyFactory(str)
     new MacroSelect(macroKey)
   }
 

@@ -27,7 +27,6 @@ object KeyKindBinder {
 
   implicit def keyKindPathBinder: PathBindable[KeyKind] = new PathBindable[KeyKind] {
     override def bind(key: String, value: String): Either[String, KeyKind] = {
-
       Right(KeyKind.valueOf(value))
     }
 

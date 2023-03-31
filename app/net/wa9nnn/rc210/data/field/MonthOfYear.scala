@@ -17,21 +17,18 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.MonthOfYear.options
-import net.wa9nnn.rc210.key.KeyFactory.Key
 import net.wa9nnn.rc210.util.{FieldSelect, FieldSelectComp, SelectOption}
 
 /**
  * An enumeration with behaviour.
  *
  * @param value    one of the display values in selectOptions.
- * @param key      id for name in a <select>.
  */
 case class MonthOfYear(value: String = options.head.display) extends FieldSelect[String] {
 
-  override def update(newValue: String): MonthOfYear = {
-    copy(value = newValue)
+  override def update(newValue: String): FieldValue = {
+    MonthOfYear(newValue)
   }
 
   def update(newId: Int): MonthOfYear = {
@@ -43,15 +40,15 @@ case class MonthOfYear(value: String = options.head.display) extends FieldSelect
   override val name: String = MonthOfYear.name
 }
 
-object MonthOfYear extends FieldSelectComp{
+object MonthOfYear extends FieldSelectComp {
   val name = "MonthOfYear"
-  def apply(key: Key, id: Int): MonthOfYear = {
+
+  def apply(id: Int): MonthOfYear = {
     new MonthOfYear(options(id).display)
   }
 
   /**
    *
-   * @param key
    * @param valueMap from form data for this key
    * @return
    */

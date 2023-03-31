@@ -54,6 +54,11 @@ trait FieldValue {
     Cell.rawHtml(html)
   }
 
+  /**
+   *
+   * @param paramValue candidate from form.
+   * @return None if value has not changed, otherwise a new [[FieldValue]].
+   */
   def update(paramValue: String): FieldValue
 }
 
@@ -66,10 +71,14 @@ trait FieldWithFieldKey[K <: Key] extends FieldValue {
   val key: K
   val fieldName: String
   lazy val fieldKey: FieldKey = FieldKey(fieldName, key)
-  def toRow() (implicit namedSource: NamedSource):Row
+
+  def toRow()(implicit namedSource: NamedSource): Row
+
   override def update(paramValue: String): FieldValue = throw new IllegalStateException("FieldWithFieldKey cannot be updarfted. ") //todo can it?
 
 }
+
+
 
 
 

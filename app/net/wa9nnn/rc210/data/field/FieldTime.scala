@@ -36,7 +36,10 @@ case class FieldTime(value: LocalTime = LocalTime.MIN) extends FieldValue {
 
   override def display: String = value.toString
 
-  override def update(paramValue: String): FieldValue = copy(value = LocalTime.parse(paramValue))
+  override def update(paramValue: String): FieldValue = {
+    val candidate = LocalTime.parse(paramValue)
+    copy(value = candidate)
+  }
 }
 
 object FieldTime {

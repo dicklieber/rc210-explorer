@@ -17,14 +17,12 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.key.KeyFactory.Key
 import net.wa9nnn.rc210.util.{FieldSelect, FieldSelectComp, SelectOption}
 
 /**
  * An enumeration with behaviour.
  *
  * @param value    one of the display values in selectOptions.
- * @param key      id for name in a <select>.
  */
 case class WeekInMonth(value: String = WeekInMonth.options.head.display) extends FieldSelect[String] {
 
@@ -32,7 +30,9 @@ case class WeekInMonth(value: String = WeekInMonth.options.head.display) extends
   override val selectOptions: Seq[SelectOption] = WeekInMonth.options
   override val name: String = DayOfWeek.name
 
-  override def update(paramValue: String): WeekInMonth = copy(value =  paramValue)
+  override def update(paramValue: String): FieldValue = {
+    WeekInMonth(paramValue)
+  }
 }
 
 object WeekInMonth extends FieldSelectComp {
@@ -45,7 +45,6 @@ object WeekInMonth extends FieldSelectComp {
 
   /**
    *
-   * @param key      for this schedule setpoint.
    * @param valueMap from form data for this key
    * @return
    */

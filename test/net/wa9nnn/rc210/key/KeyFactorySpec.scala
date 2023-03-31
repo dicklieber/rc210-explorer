@@ -22,7 +22,6 @@ import org.specs2.mutable.Specification
 
 class KeyFactorySpec extends Specification {
 
-  "KeyFactorySpec" should {
     "apply keykind" in {
       val portKeys = KeyFactory(KeyKind.portKey)
       portKeys must haveLength(3)
@@ -57,5 +56,15 @@ class KeyFactorySpec extends Specification {
       val availableKeys = KeyFactory.availableKeys
       availableKeys must haveLength(1690)
     }
+
+    "kindAndCounts" >> {
+      val kindAndCounts: Seq[(KeyKind, Int)] = KeyFactory.kindAndCounts
+      val head = kindAndCounts.head
+      head._1 must beEqualTo (KeyKind.alarmKey)
+      head._2 must beEqualTo (5)
+
+      val last = kindAndCounts.last
+      last._1 must beEqualTo (KeyKind.scheduleKey)
+      last._2 must beEqualTo (40)
   }
 }

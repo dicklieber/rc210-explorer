@@ -50,10 +50,20 @@ object KeyFactory {
     }
   }
 
-
   private val map: Map[String, Key] = keys.map { k =>
     k.toString -> k
   }.toMap
+
+
+  lazy val kindAndCounts: Seq[(KeyKind, Int)] = {
+    keys
+      .groupBy(_.kind)
+      .map { case (kind, keys) =>
+        kind -> keys.length
+      }.toSeq
+      .sortBy(_._1)
+
+  }
 
   def apply[K <: Key](sKey: String): K = {
     map.getOrElse(sKey, throw new IllegalArgumentException(s"No key for : $sKey!")).asInstanceOf[K]

@@ -24,21 +24,19 @@ import DayOfWeek.options
 /**
  * An enumeration with behaviour.
  *
- * @param value    one of the display values in selectOptions.
- * @param key      id for name in a <select>.
+ * @param value    one of the display values in DayOfWeek.options.
  */
 case class DayOfWeek(value: String = options.head.display) extends FieldSelect[String] {
-
-
   override val selectOptions: Seq[SelectOption] = options
   override val name: String = DayOfWeek.name
 
-  override def update(paramValue: String): DayOfWeek = DayOfWeek(paramValue)
+  override def update(paramValue: String): FieldValue = {
+    DayOfWeek(paramValue)
+  }
 }
 
 object DayOfWeek extends FieldSelectComp {
   override val name: String = "DayOfWeek"
-
 
   def apply(id: Int): DayOfWeek = {
     val maybeOption = options.find(_.id == id)

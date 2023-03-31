@@ -40,10 +40,10 @@ case class FieldSeqInts(value: Seq[Int]) extends FieldValue {
 
   override def display: String = value.map(_.toString).mkString(" ")
 
-  override def update(paramValue: String): FieldSeqInts = {
-    val ints: Seq[Int] = paramValue.split(" ")
+  override def update(paramValue: String): FieldValue = {
+    val candidate: Seq[Int] = paramValue.split(" ")
       .map(_.toInt)
       .toSeq
-    copy(value = ints)
+    copy(value = candidate)
   }
 }

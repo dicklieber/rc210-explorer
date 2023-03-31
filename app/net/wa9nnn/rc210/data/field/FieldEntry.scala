@@ -19,7 +19,8 @@ package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui._
 import net.wa9nnn.rc210.data.FieldKey
-import play.api.libs.json.{JsValue, Json}
+import net.wa9nnn.rc210.key.KeyKind
+import play.api.libs.json.JsValue
 
 
 /**
@@ -29,18 +30,26 @@ import play.api.libs.json.{JsValue, Json}
  * @param candidate       the,potential, next value.
  */
 case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fieldValue: FieldValue, candidate: Option[FieldValue] = None)
-  extends  Ordered[FieldEntry] with CellProvider with RenderMetadata {
+  extends Ordered[FieldEntry] with CellProvider with RenderMetadata {
 
-  def value[F<: FieldValue]:F = {
+  def value[F <: FieldValue]: F = {
     candidate.getOrElse(fieldValue).asInstanceOf[F]
   }
 
 
   override val unit: String = fieldDefinition.uiInfo.unit
 
-  def setCandidate(newValue: String): FieldEntry = {
-     copy(candidate = Option(fieldValue.update(newValue)))
+  def setCandidate(formValue: String): FieldEntry = {
+    val updatedFieldValue: FieldValue = fieldValue.update(formValue)
+
+    if (updatedFieldValue == fieldValue) {
+      copy(candidate = None)
+    }
+    else {
+      copy(candidate = Option(updatedFieldValue))
+    }
   }
+
 
   def acceptCandidate(): FieldEntry = copy(
     candidate = None,
@@ -59,20 +68,30 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
     Cell.rawHtml(s"$toHtml")
   }
 
-  override def toString: String = fieldValue.toString
+  override def toString: String = s"${fieldKey.fieldName}: ${fieldValue.display}"
 
-   def toRow: Row = Row(
-    fieldKey.toCell,
-    fieldValue.toCell(this),
-    candidate.map(_.toString).getOrElse("-")
-  )
-  //    Cell("")
-  //      .withImage(routes.Assets.versioned("images/pencil-square.png").url)
-  //      //      .withUrl(routes.FieldEditorController.editOne(fieldKey.param).url)
-  //      .withToolTip("Edit this field")
-  //  )
+  def toRow(maybeRowHeader: Option[Cell] = None): Row = {
+    val change = candidate match {
+      case Some(c) =>
+        Cell(s"${fieldValue.display} => ${c.display}")
+      case None => Cell("")
+    }
+    val row = Row(
+      fieldKey.toCell,
+      value.toCell(this),
+      change
+    )
+    maybeRowHeader match {
+      case Some(header) =>
+        row.prepended(header)
+      case None =>
+        row
+    }
+  }
+
 
   override def compare(that: FieldEntry): Int = fieldKey compare that.fieldKey
+
 
   def toJson: JsValue = {
     val r = fieldValue.toJsValue
@@ -82,5 +101,12 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
 
 
 object FieldEntry {
+  def header(keyKind: KeyKind): Header = Header(s"${keyKind.name()}", "Number", "Field",
+    Cell("Value")
+      .withToolTip("Either the candidate or current value."),
+    Cell("Change")
+      .withToolTip("Shows how the current value will becomes the candidate.")
+  )
+
   def header(count: Int): Header = Header(s"Fields ($count)", "FieldName", "Key", "Value")
 }

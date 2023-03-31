@@ -18,7 +18,6 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui.Cell
-import net.wa9nnn.rc210.data.field
 import play.api.libs.json.{JsBoolean, JsValue}
 import views.html.fieldCheckbox
 
@@ -36,9 +35,9 @@ case class FieldBoolean(value: Boolean = false) extends FieldValue {
 
   override def display: String = value.toString
 
-   def toCell(name:String, renderMetadata: RenderMetadata): Cell = {
-     super.toCell(renderMetadata)
-   }
+  def toCell(name: String, renderMetadata: RenderMetadata): Cell = {
+    super.toCell(renderMetadata)
+  }
 
   override def update(paramValue: String): FieldValue = {
     FieldBoolean(paramValue == "true")
