@@ -1,0 +1,15 @@
+@import com.wa9nnn.util.tableui.Table
+@import com.wa9nnn.util.tableui.html.renderTable
+@import views.html.helper._
+
+@import net.wa9nnn.rc210.ui.Tabs
+@(table: Table)
+
+@tabbedmain(Tabs.commonTab) {
+
+    @form(action = routes.CommonEditorController.save()) {
+        <input type="submit" name="save" value="Save">
+        @renderTable(table.withCssClass("tablesorter"))
+        <input type="submit" name="save" value="Save">
+    }
+}

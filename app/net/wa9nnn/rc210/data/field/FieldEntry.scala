@@ -29,7 +29,7 @@ import play.api.libs.json.{JsValue, Json}
  * @param candidate       the,potential, next value.
  */
 case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fieldValue: FieldValue, candidate: Option[FieldValue] = None)
-  extends RowSource with Ordered[FieldEntry] with CellProvider with RenderMetadata {
+  extends  Ordered[FieldEntry] with CellProvider with RenderMetadata {
 
   def value[F<: FieldValue]:F = {
     candidate.getOrElse(fieldValue).asInstanceOf[F]
@@ -61,9 +61,9 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
 
   override def toString: String = fieldValue.toString
 
-  override def toRow: Row = Row(
+   def toRow: Row = Row(
     fieldKey.toCell,
-    fieldValue.display,
+    fieldValue.toCell(this),
     candidate.map(_.toString).getOrElse("-")
   )
   //    Cell("")

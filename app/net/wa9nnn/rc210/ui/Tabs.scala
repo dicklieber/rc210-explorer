@@ -21,8 +21,10 @@ import controllers.routes
 import net.wa9nnn.rc210.ui.Tabs.TabName
 
 object Tabs {
+  val commonTab: Tab =  Tab("Common", routes.CommonEditorController.index().url)
 
-//  val alarmtab: Tab = Tab(KeyKind.alarmKey)
+
+  //  val alarmtab: Tab = Tab(KeyKind.alarmKey)
 //
 //  val dtmfTab: Tab = Tab(KeyKind.dtmfMacroKey)
 //
@@ -38,7 +40,7 @@ object Tabs {
   val tabs: Seq[Tab] = Seq(
 //    alarmtab,
 //    dtmfTab,
-//    commonKeyTab,
+    commonTab,
     macrosTab,
     portsTab,
     schedulesTab
