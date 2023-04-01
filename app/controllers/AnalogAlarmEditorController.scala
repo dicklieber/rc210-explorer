@@ -23,7 +23,7 @@ import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.mapped.{MappedValues, NewCandidate}
 import net.wa9nnn.rc210.data.named.NamedManager
-import net.wa9nnn.rc210.key.KeyFactory.LogicAlarmKey
+import net.wa9nnn.rc210.key.KeyFactory.AnalogAlarmKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.mvc._
 
@@ -37,7 +37,7 @@ class AnalogAlarmEditorController @Inject()(val controllerComponents: Controller
 
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      val alarmFields: Seq[FieldEntry] = mappedValues(KeyKind.logicAlarmKey)
+      val alarmFields: Seq[FieldEntry] = mappedValues(KeyKind.analogAlarmKey)
       val map: Map[FieldKey, FieldEntry] = alarmFields
         .map(fieldEntry => fieldEntry.fieldKey -> fieldEntry).
         toMap
@@ -50,16 +50,16 @@ class AnalogAlarmEditorController @Inject()(val controllerComponents: Controller
         fieldName <- fieldNames
       } yield {
         val cells: Seq[Cell] = for {
-          number <- 1 to KeyKind.logicAlarmKey.maxN()
+          number <- 1 to KeyKind.analogAlarmKey.maxN()
         } yield {
-          map(FieldKey(fieldName, KeyFactory(KeyKind.logicAlarmKey, number))).toCell
+          map(FieldKey(fieldName, KeyFactory(KeyKind.analogAlarmKey, number))).toCell
         }
 
         Row(fieldName, cells: _*)
       }
 
       val colHeaders: Seq[Cell] = for {
-        alarmKey <- KeyFactory[LogicAlarmKey](KeyKind.logicAlarmKey)
+        alarmKey <- KeyFactory[AnalogAlarmKey](KeyKind.analogAlarmKey)
       } yield
         namedManager.get(alarmKey) match {
           case Some(value) =>
