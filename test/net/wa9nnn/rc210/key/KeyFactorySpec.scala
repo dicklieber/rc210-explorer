@@ -60,7 +60,7 @@ class KeyFactorySpec extends Specification {
     "kindAndCounts" >> {
       val kindAndCounts: Seq[(KeyKind, Int)] = KeyFactory.kindAndCounts
       val head = kindAndCounts.head
-      head._1 must beEqualTo (KeyKind.alarmKey)
+      head._1 must beEqualTo (KeyKind.logicAlarmKey)
       head._2 must beEqualTo (5)
 
       val last = kindAndCounts.last

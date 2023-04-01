@@ -19,8 +19,9 @@ package net.wa9nnn.rc210.key;
 
 public enum KeyKind {
 
-    alarmKey(5),
+    logicAlarmKey(5),
 
+    analogAlarmKey(8),
     dtmfMacroKey(195, false),
     courtesyToneKey(10),
     functionKey(1005, false),

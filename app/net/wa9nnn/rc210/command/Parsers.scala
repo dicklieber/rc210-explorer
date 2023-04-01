@@ -162,7 +162,7 @@ object AlarmBoolParser extends Parser {
       .grouped(1).zipWithIndex
       .map { case (v, i) =>
         procSeq(command, v)
-          .withKey(  KeyFactory(KeyKind.alarmKey, i + 4))
+          .withKey(  KeyFactory(KeyKind.logicAlarmKey, i + 4))
       }
       .toSeq
   }

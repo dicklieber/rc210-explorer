@@ -35,7 +35,8 @@ object KeyFactory {
         number <- (1 to keyKind.maxN)
       } yield {
         keyKind match {
-          case KeyKind.alarmKey => AlarmKey(number)
+          case KeyKind.logicAlarmKey => LogicAlarmKey(number)
+          case KeyKind.analogAlarmKey => AnalogAlarmKey(number)
           case KeyKind.dtmfMacroKey => DtmfMacroKey(number)
           case KeyKind.courtesyToneKey => CourtesyToneKey(number)
           case KeyKind.functionKey => FunctionKey(number)
@@ -109,7 +110,8 @@ object KeyFactory {
 
   case class PortKey protected(override val number: Int) extends Key(portKey, number)
 
-  case class AlarmKey(override val number: Int) extends Key(alarmKey, number)
+  case class LogicAlarmKey(override val number: Int) extends Key(logicAlarmKey, number)
+  case class AnalogAlarmKey(override val number: Int) extends Key(analogAlarmKey, number)
 
   case class MacroKey private(override val number: Int) extends Key(macroKey, number)
 
