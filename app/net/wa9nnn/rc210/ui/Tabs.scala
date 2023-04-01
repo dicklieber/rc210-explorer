@@ -26,7 +26,7 @@ object Tabs {
 
 
   val logicAlarmTab: Tab = Tab("Logic", routes.LogicAlarmEditorController.index().url, "Logic Alarm settings.")
-  val metersTab: Tab = Tab("Meters", routes.AnalogAlarmEditorController.index().url, "Meter Faces")
+  val metersTab: Tab = Tab("Meters", routes.MeterEditorController.index().url, "Meter Faces")
   //
   //  val dtmfTab: Tab = Tab(KeyKind.dtmfMacroKey)
   //

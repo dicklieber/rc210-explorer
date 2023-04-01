@@ -29,15 +29,15 @@ import play.api.mvc._
 
 import javax.inject._
 
-class AnalogAlarmEditorController @Inject()(val controllerComponents: ControllerComponents,
-                                            mappedValues: MappedValues
+class MeterEditorController @Inject()(val controllerComponents: ControllerComponents,
+                                      mappedValues: MappedValues
                                      )(implicit namedManager: NamedManager)
   extends BaseController with LazyLogging {
 
 
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      val alarmFields: Seq[FieldEntry] = mappedValues(KeyKind.analogAlarmKey)
+      val alarmFields: Seq[FieldEntry] = mappedValues(KeyKind.meterKey)
       val map: Map[FieldKey, FieldEntry] = alarmFields
         .map(fieldEntry => fieldEntry.fieldKey -> fieldEntry).
         toMap
@@ -50,16 +50,16 @@ class AnalogAlarmEditorController @Inject()(val controllerComponents: Controller
         fieldName <- fieldNames
       } yield {
         val cells: Seq[Cell] = for {
-          number <- 1 to KeyKind.analogAlarmKey.maxN()
+          number <- 1 to KeyKind.meterKey.maxN()
         } yield {
-          map(FieldKey(fieldName, KeyFactory(KeyKind.analogAlarmKey, number))).toCell
+          map(FieldKey(fieldName, KeyFactory(KeyKind.meterKey, number))).toCell
         }
 
         Row(fieldName, cells: _*)
       }
 
       val colHeaders: Seq[Cell] = for {
-        alarmKey <- KeyFactory[AnalogAlarmKey](KeyKind.analogAlarmKey)
+        alarmKey <- KeyFactory[AnalogAlarmKey](KeyKind.meterKey)
       } yield
         namedManager.get(alarmKey) match {
           case Some(value) =>
@@ -83,6 +83,6 @@ class AnalogAlarmEditorController @Inject()(val controllerComponents: Controller
         NewCandidate(fieldKey, formValue)
       })
 
-      Redirect(routes.AnalogAlarmEditorController.index())
+      Redirect(routes.MeterEditorController.index())
   }
 }

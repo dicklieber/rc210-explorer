@@ -19,6 +19,10 @@ package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.Dtmf.dtmfDigits
 import net.wa9nnn.rc210.data.field.FieldExtractors.{int16, int8, twoInts}
+import net.wa9nnn.rc210.key.KeyFactory.MacroKey
+import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.serial.Slice
+import net.wa9nnn.rc210.util.MacroSelect
 
 import scala.util.Try
 
@@ -35,12 +39,9 @@ trait UiInfo {
 }
 
 object UiInfo {
-  val macroSelect: UiInfo = new UiInfo{
-    override val fieldExtractor: SimpleFieldExtractor = FieldExtractors.int8
-    override val validate: String => Try[String] = (s: String) => Try(s)
-  }
+  val macroSelect: UiInfo = MacroSelectUi
 
-  val default: UiNumber = UiNumber(256, "")
+   val default: UiNumber = UiNumber(256, "")
   val checkBox: UiInfo = new UiInfo {
     override val fieldExtractor: SimpleFieldExtractor = FieldExtractors.bool
     val validate = (s: String) => Try(s)
@@ -113,13 +114,35 @@ case class UiDtmf(max: Int) extends UiInfo {
 
   override val prompt = s"1 to $max digits"
 }
-case class UISelect(strings:(String,Int) *) extends UiInfo {
+
+
+case class UISelect(strings: (String, Int)*) extends UiInfo {
   override val fieldExtractor: SimpleFieldExtractor = FieldExtractors.int8
   override val validate: String => Try[String] = (s: String) =>
     //todo
     Try {
-//      if (s.length > max) throw new IllegalArgumentException(s"Must be 1 to $max digits but found: $s ${s.length}")
-//      else
-        s
+      //      if (s.length > max) throw new IllegalArgumentException(s"Must be 1 to $max digits but found: $s ${s.length}")
+      //      else
+      s
     }
+}
+
+case object MacroSelectUi extends SimpleFieldExtractor(1) with UiInfo {
+  override val fieldExtractor: MacroSelectUi.type = this
+  override val validate: String => Try[String] = (s: String) => Try(s)
+
+  /**
+   * in sub class.
+   *
+   * @param slice within [[Memory]]
+   * @return
+   */
+  override def extract(slice: Slice): FieldValue = {
+    val macroKey:MacroKey = KeyFactory.apply(KeyKind.macroKey, slice.head + 1)
+
+    MacroSelect(macroKey)
+
+  }
+
+  override val name: String = "???"
 }

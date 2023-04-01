@@ -1,0 +1,15 @@
+@import com.wa9nnn.util.tableui.Table
+@import com.wa9nnn.util.tableui.html.renderTable
+@import views.html.helper._
+
+@import net.wa9nnn.rc210.ui.Tabs
+@(table: Table)
+
+@tabbedmain(Tabs.logicAlarmTab) {
+
+    @form(action = routes.LogicAlarmEditorController.save()) {
+        <input type="submit" name="save" value="Save">
+        @renderTable(table.withCssClass("tablesorter"))
+        <input type="submit" name="save" value="Save">
+    }
+}

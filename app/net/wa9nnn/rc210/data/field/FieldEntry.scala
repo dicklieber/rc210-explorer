@@ -61,7 +61,7 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
   def toCommand: String = fieldValue.toCommand(this)
 
   def toHtml: String = {
-    fieldValue.toHtmlField(this)
+    value.toHtmlField(this)
   }
 
   def toCell: Cell = {

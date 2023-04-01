@@ -36,7 +36,7 @@ class FieldDefinitions @Inject()() {
     SimpleField(0, "Site Prefix", commonKey, "*2108v", UiDtmf(3)),
     SimpleField(4, "TT PadTest", commonKey, "*2093v", UiDtmf(5)),
     SimpleField(10, "Say Hours", commonKey, "*5104b", checkBox),
-    SimpleField(11, "Hang Time 1", portKey, "n*10001v"),
+    SimpleField(11, "Hang Time 1", portKey, "n*10001v", default),
     SimpleField(14, "Hang Time 2", portKey, "n*10002v"),
     SimpleField(17, "Hang Time 3", portKey, "n*10003v"),
     SimpleField(20, "Initial ID Timer  ", portKey, "n*1000v", UiNumber(255, "minutes")),
@@ -70,9 +70,9 @@ class FieldDefinitions @Inject()() {
     SimpleField(160, "Timeout Timer", portKey, "n*1001v", UiNumber(32767, "seconds")),
     SimpleField(166, "DTMF Mute", portKey, "n*1001v", checkBox),
     SimpleField(169, "Enable", logicAlarmKey, "n191b", checkBox),
-    SimpleField(174, "Macro Low", logicAlarmKey, "*2101 n v", checkBox), // these two should be combined together.
-    SimpleField(179, "Macro High", logicAlarmKey, "*2102 n v", checkBox),
-    SimpleField(184, "Vref", analogAlarmKey, "*2065 n v", UiNumber(255, "todo three numbers?")), //*2065 4 9 6
+    SimpleField(174, "Macro Low", logicAlarmKey, "*2101 n v", macroSelect),
+    SimpleField(179, "Macro High", logicAlarmKey, "*2102 n v", macroSelect),
+    SimpleField(184, "Vref", meterKey, "*2065 n v", UiNumber(255, "todo three numbers?")), //*2065 4 9 6
     //###########################################################################################  //todo
     ///For meters, we gather all the parameters needed, then assemble them to actually store
     //###########################################################################################
