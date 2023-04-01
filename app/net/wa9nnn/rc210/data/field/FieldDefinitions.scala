@@ -70,9 +70,9 @@ class FieldDefinitions @Inject()() {
     SimpleField(160, "Timeout Timer", portKey, "n*1001v", UiNumber(32767, "seconds")),
     SimpleField(166, "DTMF Mute", portKey, "n*1001v", checkBox),
     SimpleField(169, "Alarm Enable", portKey, "n191b", checkBox),
-    SimpleField(174, "Alarm Macro Low", alarmKey, "*2101 n v", checkBox), // these two should be combined together.
-    SimpleField(179, "Alarm Macro High", alarmKey, "*2102 n v", checkBox),
-    SimpleField(184, "Vref", alarmKey, "*2065 n v", UiNumber(255, "todo three numbers?")), //*2065 4 9 6
+    SimpleField(174, "Alarm Macro Low", logicAlarmKey, "*2101 n v", checkBox), // these two should be combined together.
+    SimpleField(179, "Alarm Macro High", logicAlarmKey, "*2102 n v", checkBox),
+    SimpleField(184, "Vref", analogAlarmKey, "*2065 n v", UiNumber(255, "todo three numbers?")), //*2065 4 9 6
     //###########################################################################################  //todo
     ///For meters, we gather all the parameters needed, then assemble them to actually store
     //###########################################################################################
@@ -80,8 +80,8 @@ class FieldDefinitions @Inject()() {
     //MeterFaceName - 186-201
     //    *2064 C * M* X1* Y1* X2* Y2* C= Channel 1 to 8 M=Meter Type 0 to 6 X1, Y1, X2, Y2 represent two calibration points. There must be 6 parameters entered to define a meter face, each value ending with *.
 
-    SimpleField(322, "Rx Rcv Macro Active", alarmKey, "*2113 1 v", UiNumber(255, "todo three numbers?")), //*2065 4 9 6
-    SimpleField(325, "Rx Rcv Macro Low", alarmKey, "*2113  v", UiNumber(255, "todo three numbers?")), //*2065 4 9 6
+    SimpleField(322, "Rx Rcv Macro Active", logicAlarmKey, "*2113 1 v", UiNumber(255, "todo three numbers?")), //*2065 4 9 6
+    SimpleField(325, "Rx Rcv Macro Low", logicAlarmKey, "*2113  v", UiNumber(255, "todo three numbers?")), //*2065 4 9 6
     //P1, P2, P3CWDI1 - 328-357
     //P1, P2, P3CWD2 - 358-402
     //P1, P2, P3INITIALID1 - 403-483
