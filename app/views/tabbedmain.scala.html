@@ -29,7 +29,7 @@
             <ul class="nav nav-pills">
                 @for(tab <- Tabs.tabs) {
                     <li class="nav-item">
-                        <a class="nav-link  @if(tab == activeTab) { active }" href="@tab.url">@tab.name</a>
+                        <a class="nav-link  @if(tab == activeTab) { active }" href="@tab.url" title="@tab.tooltip">@tab.name</a>
                     </li>
                 }
                 @*

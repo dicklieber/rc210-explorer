@@ -18,33 +18,34 @@
 package net.wa9nnn.rc210.ui
 
 import controllers.routes
+import net.wa9nnn.rc210.key.KeyKind
 import net.wa9nnn.rc210.ui.Tabs.TabName
 
 object Tabs {
-  val commonTab: Tab =  Tab("Common", routes.CommonEditorController.index().url)
+  val commonTab: Tab = Tab("Common", routes.CommonEditorController.index().url, "Global settings")
 
 
-  //  val alarmtab: Tab = Tab(KeyKind.alarmKey)
-//
-//  val dtmfTab: Tab = Tab(KeyKind.dtmfMacroKey)
-//
-//  val commonKeyTab: Tab = Tab(KeyKind.commonKey)
+  val logicAlarmTab: Tab = Tab("Logic", routes.LogicAlarmEditorController.index().url, "Logic Alarm settings.")
+  val metersTab: Tab = Tab("Meters", routes.AnalogAlarmEditorController.index().url, "Meter Faces")
+  //
+  //  val dtmfTab: Tab = Tab(KeyKind.dtmfMacroKey)
+  //
+  //  val commonKeyTab: Tab = Tab(KeyKind.commonKey)
 
-  val macrosTab: Tab = Tab("Macros", routes.MacroNodeController.index().url)
+  val macrosTab: Tab = Tab("Macros", routes.MacroNodeController.index().url, "Macro settings.")
 
-  val portsTab: Tab = Tab("Ports", routes.PortsEditorController.index().url)
+  val portsTab: Tab = Tab("Ports", routes.PortsEditorController.index().url, "Port settings")
 
-  val schedulesTab: Tab = Tab("Schedules", routes.ScheduleController.index().url)
+  val schedulesTab: Tab = Tab("Schedules", routes.ScheduleController.index().url, "Schedule settings.")
 
 
   val tabs: Seq[Tab] = Seq(
-//    alarmtab,
-//    dtmfTab,
+    metersTab,
+    logicAlarmTab,
     commonTab,
     macrosTab,
     portsTab,
     schedulesTab
-    //    Tab(KeyKind.alarmKey),
     //    Tab(KeyKind.dtmfMacroKey),
     //    Tab(KeyKind.functionKey),
     //    Tab(KeyKind.messageMacroKey),
@@ -58,6 +59,6 @@ object Tabs {
   type TabName = String
 }
 
-case class Tab(name: TabName, url: String)
+case class Tab(name: TabName, url: String, tooltip: String)
 
 
