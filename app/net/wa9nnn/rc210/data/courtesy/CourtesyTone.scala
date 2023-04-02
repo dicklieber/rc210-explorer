@@ -1,0 +1,110 @@
+/*
+ * Copyright (C) 2023  Dick Lieber, WA9NNN
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package net.wa9nnn.rc210.data.courtesy
+
+import com.wa9nnn.util.tableui.{Cell, Row}
+import net.wa9nnn.rc210.data.courtesy.CourtesyTone.{cell, cellSpan3}
+import net.wa9nnn.rc210.data.field._
+import net.wa9nnn.rc210.data.named.NamedSource
+import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey
+import play.api.libs.json.JsValue
+
+//noinspection ZeroIndexToHead
+case class CourtesyTone(override val key: CourtesyToneKey, segments: Seq[Segment]) extends FieldWithFieldKey[CourtesyToneKey] {
+  implicit val k = key
+
+  override def toJsValue: JsValue = ???
+
+  override def display: String = ???
+
+  /**
+   * Render this value as an RD-210 command string.
+   */
+  override def toCommand(fieldEntry: FieldEntry): String = ???
+
+  /**
+   * Render as HTML. Either a single field of an entire HTML Form.
+   *
+   * @param fieldEntry all the metadata.
+   * @return html
+   */
+
+  /**
+   *
+   * @param paramValue candidate from form.
+   * @return None if value has not changed, otherwise a new [[FieldValue]].
+   */
+  override def update(paramValue: String): FieldValue = ???
+
+  override val fieldName: String = "CourtesyTone"
+
+  override def toRow()(implicit namedSource: NamedSource): Row = {
+    throw new NotImplementedError() //todo
+  }
+
+  def rows()(implicit namedSource: NamedSource): Seq[Row] = {
+    val nameCell: Cell = Cell.rawHtml(views.html.fieldNamedKey(key, key.name, RenderMetadata("name")(key)).toString())
+      .withRowSpan(3)
+
+    Seq(
+      Row(nameCell,
+        //top row with delay/duration that span 3 rows.
+        cellSpan3(segments(0).delayMs, RenderMetadata("Delay", units = "ms")),
+        cell(segments(0).durationMs, RenderMetadata("Duration", units = "ms")),
+
+        cellSpan3(segments(1).delayMs, RenderMetadata("Delay", units = "ms")),
+        cell(segments(1).durationMs, RenderMetadata("Duration", units = "ms")),
+
+        cellSpan3(segments(2).delayMs, RenderMetadata("Delay", units = "ms")),
+        cell(segments(2).durationMs, RenderMetadata("Duration", units = "ms")),
+
+        cellSpan3(segments(3).delayMs, RenderMetadata("Delay", units = "ms")),
+        cell(segments(3).durationMs, RenderMetadata("Duration", units = "ms")),
+      ),
+      // tone1 row
+      Row(
+        cell(segments(0).tone1Hz, RenderMetadata("Tone1", units = "Hz")),
+        cell(segments(1).tone1Hz, RenderMetadata("Tone1", units = "Hz")),
+        cell(segments(2).tone1Hz, RenderMetadata("Tone1", units = "Hz")),
+        cell(segments(3).tone1Hz, RenderMetadata("Tone1", units = "Hz")),
+      ),
+      // tone2 row
+      Row(
+        cell(segments(0).tone2Hz, RenderMetadata("Tone2", units = "Hz")),
+        cell(segments(1).tone2Hz, RenderMetadata("Tone2", units = "Hz")),
+        cell(segments(2).tone2Hz, RenderMetadata("Tone2", units = "Hz")),
+        cell(segments(3).tone2Hz, RenderMetadata("Tone2", units = "Hz")),
+      )
+    )
+  }
+
+}
+
+object CourtesyTone {
+  def cell(int: Int, renderMetadata: RenderMetadata): Cell = {
+    FieldInt(int).toCell(renderMetadata)
+    Cell(int)
+  }
+
+  def cellSpan3(int: Int, renderMetadata: RenderMetadata): Cell = {
+    cell(int, renderMetadata)
+      .withRowSpan(3)
+  }
+}
+
+case class Segment(delayMs: Int, durationMs: Int, tone1Hz: Int, tone2Hz: Int)

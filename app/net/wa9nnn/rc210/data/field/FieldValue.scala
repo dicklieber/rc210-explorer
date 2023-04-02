@@ -72,6 +72,14 @@ trait FieldWithFieldKey[K <: Key] extends FieldValue {
   val fieldName: String
   lazy val fieldKey: FieldKey = FieldKey(fieldName, key)
 
+  /**
+   * Render as HTML. Either a single field of an entire HTML Form.
+   *
+   * @param fieldEntry all the metadata.
+   * @return html
+   */
+  override def toHtmlField(renderMetadata: RenderMetadata): String = ???
+
   def toRow()(implicit namedSource: NamedSource): Row
 
   override def update(paramValue: String): FieldValue = throw new IllegalStateException("FieldWithFieldKey cannot be updarfted. ") //todo can it?

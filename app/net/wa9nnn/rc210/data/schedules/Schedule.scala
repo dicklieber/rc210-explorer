@@ -61,17 +61,17 @@ case class Schedule(override val key: ScheduleKey,
   def toRow()(implicit namedSource: NamedSource): Row = {
     implicit val k: ScheduleKey = key
     val keyName = namedSource.get(key).getOrElse("")
-    val name: Cell = Cell.rawHtml(views.html.fieldNamedKey(key, keyName, RenderMetdata("name")).toString())
-    val dow: Cell = dayOfWeek.toCell(RenderMetdata(DayOfWeek.name))
-    val woy: Cell = Cell.rawHtml(monthOfYear.toHtmlField(RenderMetdata(MonthOfYear.name)))
-    val localTime: Cell = time.toCell(RenderMetdata("Time"))
-    val macroToRun: Cell = selectedMacroToRun.toCell(RenderMetdata(MacroSelect.name))
+    val name: Cell = Cell.rawHtml(views.html.fieldNamedKey(key, keyName, RenderMetadata("name")).toString())
+    val dow: Cell = dayOfWeek.toCell(RenderMetadata(DayOfWeek.name))
+    val woy: Cell = Cell.rawHtml(monthOfYear.toHtmlField(RenderMetadata(MonthOfYear.name)))
+    val localTime: Cell = time.toCell(RenderMetadata("Time"))
+    val macroToRun: Cell = selectedMacroToRun.toCell(RenderMetadata(MacroSelect.name))
 
     Row(Seq(
       name,
-      enabled.toCell(RenderMetdata("Enabled")),
+      enabled.toCell(RenderMetadata("Enabled")),
       dow,
-      weekInMonth.toCell(RenderMetdata(WeekInMonth.name)),
+      weekInMonth.toCell(RenderMetadata(WeekInMonth.name)),
       woy,
       localTime,
       macroToRun
@@ -89,12 +89,6 @@ case class Schedule(override val key: ScheduleKey,
    */
   override def toCommand(fieldEntry: FieldEntry): String = ???
 
-  /**
-   * Render as HTML. Either a single field of an entire HTML Form.
-   *
-   */
-  override def toHtmlField(renderMetadata: RenderMetadata): String =
-    throw new IllegalStateException("Cannot render schedule as a single field!")
 
   override def display: String = description
 

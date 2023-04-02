@@ -21,50 +21,56 @@ import net.wa9nnn.rc210.key.KeyFactory.{FunctionKey, Key}
 import org.specs2.mutable.Specification
 
 class KeyFactorySpec extends Specification {
-
-    "apply keykind" in {
-      val portKeys = KeyFactory(KeyKind.portKey)
-      portKeys must haveLength(3)
+  "Expected Number of Keys" >> {
+    val nKeys = KeyKind.values().foldLeft(0) { case (accum, kk) =>
+      accum + kk.maxN()
     }
+    KeyFactory.availableKeys must haveLength(nKeys)
+    val value1 = KeyFactory(KeyKind.courtesyToneKey)
+    value1 must haveLength(KeyKind.courtesyToneKey.maxN())
+  }
+  "apply keykind" in {
+    val portKeys = KeyFactory(KeyKind.portKey)
+    portKeys must haveLength(3)
 
-    "apply sKey" in {
-      val fKey: FunctionKey = KeyFactory("functionKey1")
-      fKey must beAnInstanceOf[FunctionKey]
-      fKey.toString must beEqualTo("functionKey1")
-    }
-    "apply sKey as[Key]" in {
-      val fKey: Key = KeyFactory("functionKey1")
-      fKey must beAnInstanceOf[FunctionKey]
-      fKey.toString must beEqualTo("functionKey1")
-    }
+    val cts = KeyFactory(KeyKind.courtesyToneKey)
+    cts must haveLength(10)
+  }
 
-    "apply" in {
-      val functionKey: FunctionKey = KeyFactory(KeyKind.functionKey, 1)
-      functionKey.number must beEqualTo(1)
-      functionKey.kind must beEqualTo(KeyKind.functionKey)
-    }
+  "apply sKey" in {
+    val fKey: FunctionKey = KeyFactory("functionKey1")
+    fKey must beAnInstanceOf[FunctionKey]
+    fKey.toString must beEqualTo("functionKey1")
+  }
+  "apply sKey as[Key]" in {
+    val fKey: Key = KeyFactory("functionKey1")
+    fKey must beAnInstanceOf[FunctionKey]
+    fKey.toString must beEqualTo("functionKey1")
+  }
 
-    "unknown key" in {
-      KeyFactory[Key]("crap") must throwAn[IllegalArgumentException]
-    }
+  "apply" in {
+    val functionKey: FunctionKey = KeyFactory(KeyKind.functionKey, 1)
+    functionKey.number must beEqualTo(1)
+    functionKey.kind must beEqualTo(KeyKind.functionKey)
+  }
 
-    "bad number" in {
-      KeyFactory[Key](KeyKind.portKey, 42) must throwAn[IllegalArgumentException]
-    }
+  "unknown key" in {
+    KeyFactory[Key]("crap") must throwAn[IllegalArgumentException]
+  }
 
-    "availableKeys" in {
-      val availableKeys = KeyFactory.availableKeys
-      availableKeys must haveLength(1690)
-    }
+  "bad number" in {
+    KeyFactory[Key](KeyKind.portKey, 42) must throwAn[IllegalArgumentException]
+  }
 
-    "kindAndCounts" >> {
-      val kindAndCounts: Seq[(KeyKind, Int)] = KeyFactory.kindAndCounts
-      val head = kindAndCounts.head
-      head._1 must beEqualTo (KeyKind.logicAlarmKey)
-      head._2 must beEqualTo (5)
+  "kindAndCounts" >> {
+    val kindAndCounts: Seq[(KeyKind, Int)] = KeyFactory.kindAndCounts
+    kindAndCounts must haveLength(KeyKind.values().length)
+    val head = kindAndCounts.head
+    head._1 must beEqualTo(KeyKind.logicAlarmKey)
+    head._2 must beEqualTo(5)
 
-      val last = kindAndCounts.last
-      last._1 must beEqualTo (KeyKind.scheduleKey)
-      last._2 must beEqualTo (40)
+    val last = kindAndCounts.last
+    last._1 must beEqualTo(KeyKind.scheduleKey)
+    last._2 must beEqualTo(40)
   }
 }

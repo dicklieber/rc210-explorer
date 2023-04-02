@@ -60,7 +60,7 @@ object Formatters {
 
   implicit val fmtMacroKey: OFormat[MacroKey] = Json.format[MacroKey]
   implicit val fmtLogicAlarmKey: OFormat[LogicAlarmKey] = Json.format[LogicAlarmKey]
-  implicit val fmtAnalogAlarmKey: OFormat[AnalogAlarmKey] = Json.format[AnalogAlarmKey]
+  implicit val fmtAnalogAlarmKey: OFormat[MeterKey] = Json.format[MeterKey]
   implicit val fmtScheduleKey: OFormat[ScheduleKey] = Json.format[ScheduleKey]
   implicit val fmtCommonKey: OFormat[CommonKey] = Json.format[CommonKey]
   implicit val fmtFunctionKey: OFormat[FunctionKey] = Json.format[FunctionKey]

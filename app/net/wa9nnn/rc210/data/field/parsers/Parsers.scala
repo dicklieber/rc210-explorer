@@ -15,35 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.field
+package net.wa9nnn.rc210.data.field.parsers
 
-import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.key.KeyFactory.Key
+object Parsers {
+  def parserInt8(iterator: Iterator[Int]): Int = {
+    val intValue = iterator.next()
+    intValue
+  }
 
-/**
- * Needed to render a [[FieldValue]] in a [[com.wa9nnn.util.tableui.Cell]] or an html string.
- */
-trait RenderMetadata {
-
-  def param: String
-
-  def prompt: String
-
-  def unit: String = ""
-
-}
-
-/**
- * Helper to quickly create a [[RenderMetdata]]
- */
-object RenderMetadata {
-  def apply(name: String, prompts: String = "", units: String = "")(implicit key: Key): RenderMetadata = {
-    new RenderMetadata {
-      override val param = FieldKey(name, key).param
-
-      override val prompt = prompts
-
-      override val unit = units
-    }
+  def parserInt16(iterator: Iterator[Int]): Int = {
+    val intValue = iterator.next() + iterator.next() * 256
+    intValue
   }
 }

@@ -15,35 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.field
+package net.wa9nnn.rc210.data.courtesy
 
-import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.key.KeyFactory.Key
+import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.fixtures.WithMemory
+import org.specs2.mutable.Specification
 
-/**
- * Needed to render a [[FieldValue]] in a [[com.wa9nnn.util.tableui.Cell]] or an html string.
- */
-trait RenderMetadata {
+class CourtesyExtractorSpec extends WithMemory {
 
-  def param: String
-
-  def prompt: String
-
-  def unit: String = ""
-
-}
-
-/**
- * Helper to quickly create a [[RenderMetdata]]
- */
-object RenderMetadata {
-  def apply(name: String, prompts: String = "", units: String = "")(implicit key: Key): RenderMetadata = {
-    new RenderMetadata {
-      override val param = FieldKey(name, key).param
-
-      override val prompt = prompts
-
-      override val unit = units
+  "CourtesyExtractorSpec" should {
+    "extract" in {
+      val cts: Seq[FieldEntry] = CourtesyExtractor.extract(memory)
+      cts must haveLength(10)
     }
   }
 }

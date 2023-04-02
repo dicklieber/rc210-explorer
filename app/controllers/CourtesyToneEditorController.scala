@@ -20,58 +20,38 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.courtesy.CourtesyTone
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.mapped.{MappedValues, NewCandidate}
 import net.wa9nnn.rc210.data.named.NamedManager
-import net.wa9nnn.rc210.key.KeyFactory.MeterKey
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.key.KeyKind
 import play.api.mvc._
 
 import javax.inject._
 
-class MeterEditorController @Inject()(val controllerComponents: ControllerComponents,
-                                      mappedValues: MappedValues
-                                     )(implicit namedManager: NamedManager)
+class CourtesyToneEditorController @Inject()(val controllerComponents: ControllerComponents,
+                                             mappedValues: MappedValues
+                                            )(implicit namedManager: NamedManager)
   extends BaseController with LazyLogging {
-
 
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      val alarmFields: Seq[FieldEntry] = mappedValues(KeyKind.meterKey)
-      val map: Map[FieldKey, FieldEntry] = alarmFields
-        .map(fieldEntry => fieldEntry.fieldKey -> fieldEntry).
-        toMap
-      val fieldNames: Seq[String] = alarmFields.foldLeft(Set.empty[String]) { case (set: Set[String], fieldEntry) =>
-        set + fieldEntry.fieldKey.fieldName
-      }.toSeq
-        .sorted
 
-      val rows: Seq[Row] = for {
-        fieldName <- fieldNames
-      } yield {
-        val cells: Seq[Cell] = for {
-          number <- 1 to KeyKind.meterKey.maxN()
-        } yield {
-          map(FieldKey(fieldName, KeyFactory(KeyKind.meterKey, number))).toCell
-        }
-
-        Row(fieldName, cells: _*)
+      val entries: Seq[FieldEntry] = mappedValues(KeyKind.courtesyToneKey)
+      val rows: Seq[Row] = entries.flatMap { fe =>
+        val ct: CourtesyTone = fe.value
+        ct.rows()
       }
 
-      val colHeaders: Seq[Cell] = for {
-        alarmKey <- KeyFactory[MeterKey](KeyKind.meterKey)
-      } yield
-        namedManager.get(alarmKey) match {
-          case Some(value) =>
-            Cell(value)
-              .withToolTip(s"Alarm ${alarmKey.number}")
-
-          case None => Cell(alarmKey.toString)
-        }
-      val header = Header(s"Alarms (${rows.length} values)", "Field" +: colHeaders: _*)
+      val header = Header(s"Courtesy Tones (${entries.length} values)",
+        "Name",
+        Cell("Segment 1").withColSpan(2),
+        Cell("Segment 2").withColSpan(2),
+        Cell("Segment 3").withColSpan(2),
+        Cell("Segment 4").withColSpan(2))
       val table = Table(header, rows)
 
-      Ok(views.html.ports(table))
+      Ok(views.html.coourtesyTones(table))
   }
 
   def save(): Action[AnyContent] = Action {
@@ -83,6 +63,6 @@ class MeterEditorController @Inject()(val controllerComponents: ControllerCompon
         NewCandidate(fieldKey, formValue)
       })
 
-      Redirect(routes.MeterEditorController.index())
+      Redirect(routes.LogicAlarmEditorController.index())
   }
 }

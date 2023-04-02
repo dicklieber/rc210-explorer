@@ -18,8 +18,8 @@
 package net.wa9nnn.rc210.key
 
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
-import KeyKind._
 import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.key.KeyKind._
 
 /**
  * All keys live here
@@ -32,11 +32,11 @@ object KeyFactory {
     {
       for {
         keyKind <- KeyKind.values().toIndexedSeq
-        number <- (1 to keyKind.maxN)
+        number <- 1 to keyKind.maxN
       } yield {
         keyKind match {
           case KeyKind.logicAlarmKey => LogicAlarmKey(number)
-          case KeyKind.`meterKey` => AnalogAlarmKey(number)
+          case KeyKind.`meterKey` => MeterKey(number)
           case KeyKind.dtmfMacroKey => DtmfMacroKey(number)
           case KeyKind.courtesyToneKey => CourtesyToneKey(number)
           case KeyKind.functionKey => FunctionKey(number)
@@ -54,7 +54,6 @@ object KeyFactory {
   private val map: Map[String, Key] = keys.map { k =>
     k.toString -> k
   }.toMap
-
 
   lazy val kindAndCounts: Seq[(KeyKind, Int)] = {
     keys
@@ -93,7 +92,7 @@ object KeyFactory {
 
     val name: String = kind.toString
 
-    def fieldKey[T](fieldName: String): FieldKey = FieldKey(fieldName, this)
+    def fieldKey(fieldName: String): FieldKey = FieldKey(fieldName, this)
 
     override val toString: String = s"$name$number"
 
@@ -111,7 +110,7 @@ object KeyFactory {
   case class PortKey protected(override val number: Int) extends Key(portKey, number)
 
   case class LogicAlarmKey(override val number: Int) extends Key(logicAlarmKey, number)
-  case class AnalogAlarmKey(override val number: Int) extends Key(meterKey, number)
+  case class MeterKey(override val number: Int) extends Key(meterKey, number)
 
   case class MacroKey private(override val number: Int) extends Key(macroKey, number)
 
@@ -125,10 +124,10 @@ object KeyFactory {
 
   case class DtmfMacroKey(override val number: Int) extends Key(dtmfMacroKey, number)
 
-  case class CourtesyToneKey(override val number: Int) extends Key(dtmfMacroKey, number)
+  case class CourtesyToneKey(override val number: Int) extends Key(courtesyToneKey, number)
 
   /**
-   * There can be any number of [[CommonKey]] but they don't index into a map by themselves. MaxN just indicate o=how many to extract for a given fieldname.
+   * There can be any number of [[CommonKey]] but they don't index into a map by themselves. MaxN just indicates how many to extract for a given field name.
    */
   case class CommonKey(override val number: Int = 1) extends Key(commonKey, number)
 

@@ -3,8 +3,10 @@
 # This file defines all application routes (Higher priority routes first)
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
-POST        /meter/save                controllers.MeterEditorController.save()
-GET         /meter                     controllers.MeterEditorController.index()
+POST        /courtesytones/save         controllers.CourtesyToneEditorController.save()
+GET         /courtesytones              controllers.CourtesyToneEditorController.index()
+POST        /meter/save                 controllers.MeterEditorController.save()
+GET         /meter                      controllers.MeterEditorController.index()
 POST        /logic/save                 controllers.LogicAlarmEditorController.save()
 GET         /logic                      controllers.LogicAlarmEditorController.index()
 POST        /common/save                controllers.CommonEditorController.save()

@@ -37,16 +37,6 @@ case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dt
    */
   override def toCommand(fieldEntry: FieldEntry): String = ???
 
-  /**
-   * Render as HTML. Either a single field of an entire HTML Form.
-   *
-   * @param fieldEntry all the metadata.
-   * @return html
-   */
-  override def toHtmlField(renderMetadata: RenderMetadata): String = {
-    throw new NotImplementedError() //todo
-  }
-
   override def macroToRun: MacroKey = ???
 
   override def triggerEnabled: Boolean = ???

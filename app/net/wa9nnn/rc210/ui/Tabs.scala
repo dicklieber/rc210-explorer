@@ -18,11 +18,11 @@
 package net.wa9nnn.rc210.ui
 
 import controllers.routes
-import net.wa9nnn.rc210.key.KeyKind
 import net.wa9nnn.rc210.ui.Tabs.TabName
 
 object Tabs {
   val commonTab: Tab = Tab("Common", routes.CommonEditorController.index().url, "Global settings")
+  val ctTab: Tab = Tab("CT", routes.CourtesyToneEditorController.index().url, "Courtesy Tones")
 
 
   val logicAlarmTab: Tab = Tab("Logic", routes.LogicAlarmEditorController.index().url, "Logic Alarm settings.")
@@ -30,7 +30,6 @@ object Tabs {
   //
   //  val dtmfTab: Tab = Tab(KeyKind.dtmfMacroKey)
   //
-  //  val commonKeyTab: Tab = Tab(KeyKind.commonKey)
 
   val macrosTab: Tab = Tab("Macros", routes.MacroNodeController.index().url, "Macro settings.")
 
@@ -44,6 +43,7 @@ object Tabs {
     logicAlarmTab,
     commonTab,
     macrosTab,
+    ctTab,
     portsTab,
     schedulesTab
     //    Tab(KeyKind.dtmfMacroKey),

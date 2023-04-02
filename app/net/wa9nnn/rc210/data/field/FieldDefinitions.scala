@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.MemoryExtractor
+import net.wa9nnn.rc210.data.courtesy.CourtesyExtractor
 import net.wa9nnn.rc210.data.field.UiInfo._
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.named.NamedManager
@@ -182,7 +183,8 @@ class FieldDefinitions @Inject()() {
 
   val complexFd: Seq[MemoryExtractor] = Seq(
     Schedule,
-    MacroNode
+    MacroNode,
+    CourtesyExtractor
   )
 
   def forOffset(offset: Int): SimpleField = simplefields.find(_.offset == offset).get

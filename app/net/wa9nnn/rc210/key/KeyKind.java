@@ -39,7 +39,6 @@ public enum KeyKind {
         return nameable;
     }
 
-
     KeyKind(int maxN) {
         this.MaxN = maxN;
 
