@@ -29,7 +29,7 @@ class MacroSelectSpec extends Specification {
 
     override def prompt = "macro"
 
-    override def unit = ""
+    override def units = ""
   }
   "MacroSelect" should {
     val macroSelect =new  MacroSelect()

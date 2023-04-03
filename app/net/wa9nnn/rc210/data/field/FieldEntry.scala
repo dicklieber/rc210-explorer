@@ -37,7 +37,7 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
   }
 
 
-  override val unit: String = fieldDefinition.uiInfo.unit
+  override val units: String = fieldDefinition.uiInfo.unit
 
   def setCandidate(formValue: String): FieldEntry = {
     val updatedFieldValue: FieldValue = fieldValue.update(formValue)
@@ -56,7 +56,7 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
     fieldValue = candidate.getOrElse(throw new IllegalStateException(s"No candidate to accept!")))
 
   val param: String = fieldKey.param
-  val prompt: String = fieldDefinition.prompt
+  override val prompt: String = fieldDefinition.prompt
 
   def toCommand: String = fieldValue.toCommand(this)
 

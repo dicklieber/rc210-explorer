@@ -58,52 +58,54 @@ case class CourtesyTone(override val key: CourtesyToneKey, segments: Seq[Segment
   }
 
   def rows()(implicit namedSource: NamedSource): Seq[Row] = {
-    val nameCell: Cell = Cell.rawHtml(views.html.fieldNamedKey(key, key.name, RenderMetadata("name")(key)).toString())
+    val name: String = namedSource.get(key).getOrElse("")
+    val nameCell: Cell = Cell.rawHtml(views.html.fieldNamedKey(key, name, CtSegmentKey("name", 99)(key)).toString())
       .withRowSpan(3)
 
     Seq(
       Row(nameCell,
         //top row with delay/duration that span 3 rows.
-        cellSpan3(segments(0).delayMs, RenderMetadata("Delay", units = "ms")),
-        cell(segments(0).durationMs, RenderMetadata("Duration", units = "ms")),
+        cellSpan3(segments(0).delayMs, CtSegmentKey("Delay", 0, "ms")),
+        cell(segments(0).durationMs, CtSegmentKey("Duration", 0, "ms")),
+        cellSpan3(segments(1).delayMs, CtSegmentKey("Delay", 1, "ms")),
+        cell(segments(1).durationMs, CtSegmentKey("Duration", 1, "ms")),
 
-        cellSpan3(segments(1).delayMs, RenderMetadata("Delay", units = "ms")),
-        cell(segments(1).durationMs, RenderMetadata("Duration", units = "ms")),
+        cellSpan3(segments(2).delayMs, CtSegmentKey("Delay", 2, units = "ms")),
+        cell(segments(2).durationMs, CtSegmentKey("Duration", 2, units = "ms")),
 
-        cellSpan3(segments(2).delayMs, RenderMetadata("Delay", units = "ms")),
-        cell(segments(2).durationMs, RenderMetadata("Duration", units = "ms")),
-
-        cellSpan3(segments(3).delayMs, RenderMetadata("Delay", units = "ms")),
-        cell(segments(3).durationMs, RenderMetadata("Duration", units = "ms")),
-      ),
+        cellSpan3(segments(3).delayMs, CtSegmentKey("Delay", 3, units = "ms")),
+        cell(segments(3).durationMs, CtSegmentKey("Duration", 3, units = "ms")),
+      )
+      ,
       // tone1 row
       Row(
-        cell(segments(0).tone1Hz, RenderMetadata("Tone1", units = "Hz")),
-        cell(segments(1).tone1Hz, RenderMetadata("Tone1", units = "Hz")),
-        cell(segments(2).tone1Hz, RenderMetadata("Tone1", units = "Hz")),
-        cell(segments(3).tone1Hz, RenderMetadata("Tone1", units = "Hz")),
-      ),
+        cell(segments(0).tone1Hz, CtSegmentKey("Tone1", 0, units = "Hz")),
+        cell(segments(1).tone1Hz, CtSegmentKey("Tone1", 1, units = "Hz")),
+        cell(segments(2).tone1Hz, CtSegmentKey("Tone1", 2, units = "Hz")),
+        cell(segments(3).tone1Hz, CtSegmentKey("Tone1", 3, units = "Hz")),
+      )
+      ,
       // tone2 row
       Row(
-        cell(segments(0).tone2Hz, RenderMetadata("Tone2", units = "Hz")),
-        cell(segments(1).tone2Hz, RenderMetadata("Tone2", units = "Hz")),
-        cell(segments(2).tone2Hz, RenderMetadata("Tone2", units = "Hz")),
-        cell(segments(3).tone2Hz, RenderMetadata("Tone2", units = "Hz")),
+        cell(segments(0).tone2Hz, CtSegmentKey("Tone2", 0, units = "Hz")),
+        cell(segments(1).tone2Hz, CtSegmentKey("Tone2", 1, units = "Hz")),
+        cell(segments(2).tone2Hz, CtSegmentKey("Tone2", 2, units = "Hz")),
+        cell(segments(3).tone2Hz, CtSegmentKey("Tone2", 3, units = "Hz")),
       )
     )
   }
-
 }
 
-object CourtesyTone {
-  def cell(int: Int, renderMetadata: RenderMetadata): Cell = {
-    FieldInt(int).toCell(renderMetadata)
-    Cell(int)
-  }
 
-  def cellSpan3(int: Int, renderMetadata: RenderMetadata): Cell = {
-    cell(int, renderMetadata)
+object CourtesyTone {
+  def cell(value: Int, CtSegmentKey: CtSegmentKey): Cell =
+    FieldInt(value).toCell(CtSegmentKey)
+
+
+  def cellSpan3(int: Int, CtSegmentKey: CtSegmentKey): Cell = {
+    val r = cell(int, CtSegmentKey)
       .withRowSpan(3)
+    r
   }
 }
 

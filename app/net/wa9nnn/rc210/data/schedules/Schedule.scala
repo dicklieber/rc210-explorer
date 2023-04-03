@@ -96,7 +96,7 @@ case class Schedule(override val key: ScheduleKey,
 
   override def prompt: String = "Runs a Macro on a "
 
-  override def unit: String = ""
+  override def units: String = ""
 
   override def macroToRun: KeyFactory.MacroKey = selectedMacroToRun.value
 

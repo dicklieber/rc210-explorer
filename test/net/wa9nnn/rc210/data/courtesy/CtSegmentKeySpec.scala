@@ -15,31 +15,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.field
+package net.wa9nnn.rc210.data.courtesy
 
-import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.key.KeyFactory.Key
+import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey
+import org.specs2.mutable.Specification
 
-/**
- * Needed to render a [[FieldValue]] in a [[com.wa9nnn.util.tableui.Cell]] or an html string.
- */
-trait RenderMetadata {
+class CtSegmentKeySpec extends Specification {
 
-  def param: String
+  "CtSegmentKey" should {
+    val csk = CtSegmentKey(CourtesyToneKey(3), 2, "groucho")
+    "rount trip" in {
+      val param = csk.param
+      param must beEqualTo ("groucho.2.courtesyToneKey3")
 
-  def prompt: String = ""
-
-  def units: String = ""
-
-}
-
-/**
- * Helper to quickly create a [[RenderMetdata]]
- */
-object RenderMetadata {
-  def apply(name: String, prompts: String = "", units: String = "")(implicit key: Key): RenderMetadata = {
-    new RenderMetadata {
-      override val param = FieldKey(name, key).param
+      val backAgain = CtSegmentKey(param)
+      backAgain.segment must beEqualTo (2)
+      backAgain.name must beEqualTo ("groucho")
+      backAgain.ctKey.toString must beEqualTo ("courtesyToneKey3")
     }
   }
 }

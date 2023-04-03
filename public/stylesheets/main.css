@@ -2,6 +2,18 @@
     display: block;
 }
 
+.valueCell input{
+    text-align: right;
+    width: 50px;
+}
+
+.valueCell .units{
+    font-size: small;
+    /*color: darkgrey;*/
+    font-weight: lighter;
+    font-style: italic;
+}
+
 .sadMessage {
     font-weight: bold;
     font-size: 14px;
@@ -11,7 +23,6 @@
 .parenthetic {
     font-size: small;
     color: darkgrey;
-    font-weight: lighter;
     font-weight: lighter;
     font-style: italic;
     opacity: 75;
@@ -215,5 +226,9 @@ body {
 
 .fieldLabel {
     white-space: nowrap;
+}
+
+.keyName input {
+    width: auto;
 }
 
