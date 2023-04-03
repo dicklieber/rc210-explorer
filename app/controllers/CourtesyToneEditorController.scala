@@ -19,14 +19,16 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.Row
-import net.wa9nnn.rc210.data.courtesy.{CourtesyTone, CtSegmentKey}
+import net.wa9nnn.rc210.data.courtesy.{CourtesyTone, CtSegmentKey, Segment}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.mapped.MappedValues
-import net.wa9nnn.rc210.data.named.NamedManager
-import net.wa9nnn.rc210.key.KeyKind
+import net.wa9nnn.rc210.data.named.{NamedKey, NamedManager}
+import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey
+import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.mvc._
 
 import javax.inject._
+import scala.collection.immutable
 
 class CourtesyToneEditorController @Inject()(val controllerComponents: ControllerComponents,
                                              mappedValues: MappedValues
@@ -46,14 +48,24 @@ class CourtesyToneEditorController @Inject()(val controllerComponents: Controlle
 
   def save(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      val kv: Map[String, String] = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }.filterNot(_._1 == "save")
-      val ckv: Map[CtSegmentKey, String] = for {
-        case (key, value) <- kv
-      } yield {
-        CtSegmentKey(key) -> value
-      }
-      //todo assemble CourtesyTone from ckv fields
-      // todo handle name change.
+      request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }
+        .filterNot(_._1 == "save")
+        .map { case (sKey, value) => CtSegmentKey(sKey) -> value } // convert from string name to CtSegmentKeys
+        .groupBy(_._1.ctKey)
+        .map { case (key, values) =>
+          val segs: Seq[Segment] = values.groupBy(_._1.segment).flatMap { case (seg, values) =>
+            val valuesForSegement: Map[String, String] = values.map { case (crSKey, value) => crSKey.name -> value }
+            // we now have a map of names to values
+            if (valuesForSegement.size == 1) {
+              val str = valuesForSegement("name")
+              namedManager.update(Seq(NamedKey(key, str)))
+              Seq.empty
+            } else
+              Seq(Segment(valuesForSegement))
+          }.toSeq
+          CourtesyTone(key, segs)
+        }
+
       Redirect(routes.CourtesyToneEditorController.index())
   }
 }

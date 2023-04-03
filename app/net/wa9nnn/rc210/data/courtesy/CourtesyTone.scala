@@ -17,12 +17,15 @@
 
 package net.wa9nnn.rc210.data.courtesy
 
+import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Row}
 import net.wa9nnn.rc210.data.courtesy.CourtesyTone.{cell, cellSpan3}
 import net.wa9nnn.rc210.data.field._
 import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey
 import play.api.libs.json.JsValue
+
+import scala.collection.immutable.Map
 
 //noinspection ZeroIndexToHead
 case class CourtesyTone(override val key: CourtesyToneKey, segments: Seq[Segment]) extends FieldWithFieldKey[CourtesyToneKey] {
@@ -110,3 +113,21 @@ object CourtesyTone {
 }
 
 case class Segment(delayMs: Int, durationMs: Int, tone1Hz: Int, tone2Hz: Int)
+
+object Segment extends LazyLogging{
+  def apply(m:Map[String, String]):Segment = {
+    logger.trace(s"m: $m")
+    try {
+      val delay = m("Delay").toInt
+      val duration = m("Duration").toInt
+      val tone1 = m("Tone1").toInt
+      val tone2 = m("Tone2").toInt
+
+      new Segment(delay, duration, tone1, tone2)
+    } catch {
+      case e:Exception =>
+        logger.error("Creating a Segment", e)
+        throw e
+    }
+  }
+}

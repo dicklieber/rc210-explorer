@@ -23,7 +23,7 @@ import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey
 
 import scala.util.matching.Regex
 
- class CtSegmentKey(ctKey: CourtesyToneKey, segment: Int, name:String, override val units:String = "Hz") extends RenderMetadata {
+ class CtSegmentKey(val ctKey: CourtesyToneKey, val segment: Int, val name:String, override val units:String = "Hz") extends RenderMetadata {
   override def param: String = s"$name.$segment.${ctKey.toString}"
 }
 
