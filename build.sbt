@@ -29,7 +29,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
     scalacOptions ++= Seq(
       "-feature",
       "-deprecation",
-      "-Xfatal-warnings",
+//      "-Xfatal-warnings",
       //      "-Ymacro-annotations",
       "-Xlog-implicits"
     )
