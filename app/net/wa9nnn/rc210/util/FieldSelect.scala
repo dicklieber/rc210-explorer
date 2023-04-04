@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.util
 
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue, RenderMetadata}
-import play.api.libs.json.JsValue
+import play.api.libs.json.{JsString, JsValue}
 
 /**
  * An enumeration with behaviour.
@@ -29,7 +29,9 @@ trait FieldSelect[T] extends FieldValue {
   val value: T
   val name: String
 
-  override def toJsValue: JsValue = ???
+  override def toJsValue: JsValue = {
+    JsString(value.toString)
+  }
 
   override def display: String = value.toString
 

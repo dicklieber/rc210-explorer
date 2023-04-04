@@ -23,7 +23,7 @@ import net.wa9nnn.rc210.data.functions.FunctionNode
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.named.{NamedData, NamedKey}
 import net.wa9nnn.rc210.data.schedules.Schedule
-import net.wa9nnn.rc210.key.KeyFactory.{FunctionKey, MacroKey, MessageMacroKey, ScheduleKey, WordKey, Key}
+import net.wa9nnn.rc210.key.KeyFactory.{CourtesyToneKey, FunctionKey, Key, MacroKey, MessageMacroKey, ScheduleKey, WordKey}
 import play.api.libs.json._
 import play.api.mvc.PathBindable
 
@@ -58,6 +58,15 @@ object KeyFormats {
   val r: Regex = """([a-zA-Z]+)(\d+)?""".r
 
 
+  implicit val fmtCourtesyToneKey: Format[CourtesyToneKey] = new Format[CourtesyToneKey] {
+    def writes(key: CourtesyToneKey): JsValue = {
+      JsString(key.toString)
+    }
+
+    override def reads(json: JsValue) = {
+      throw new NotImplementedError() //todo
+    }
+  }
   implicit val fmtMacroKey: Format[MacroKey] = new Format[MacroKey] {
     def writes(key: MacroKey): JsValue = {
       JsString(key.toString)

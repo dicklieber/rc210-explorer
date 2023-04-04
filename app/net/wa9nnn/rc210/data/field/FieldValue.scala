@@ -82,8 +82,7 @@ trait FieldWithFieldKey[K <: Key] extends FieldValue {
 
   def toRow()(implicit namedSource: NamedSource): Row
 
-  override def update(paramValue: String): FieldValue = throw new IllegalStateException("FieldWithFieldKey cannot be updarfted. ") //todo can it?
-
+  override def update(paramValue: String): FieldValue = throw new IllegalStateException("FieldWithFieldKey cannot be updated. ") //todo can it?
 }
 
 

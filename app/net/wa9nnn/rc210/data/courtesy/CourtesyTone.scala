@@ -23,15 +23,14 @@ import net.wa9nnn.rc210.data.courtesy.CourtesyTone.{cell, cellSpan3}
 import net.wa9nnn.rc210.data.field._
 import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey
-import play.api.libs.json.JsValue
-
-import scala.collection.immutable.Map
+import play.api.libs.json.{JsValue, Json, OFormat}
+import net.wa9nnn.rc210.key.KeyFormats._
 
 //noinspection ZeroIndexToHead
 case class CourtesyTone(override val key: CourtesyToneKey, segments: Seq[Segment]) extends FieldWithFieldKey[CourtesyToneKey] {
   implicit val k = key
 
-  override def toJsValue: JsValue = ???
+  override def toJsValue: JsValue = Json.toJson(this)
 
   override def display: String = ???
 
@@ -41,18 +40,10 @@ case class CourtesyTone(override val key: CourtesyToneKey, segments: Seq[Segment
   override def toCommand(fieldEntry: FieldEntry): String = ???
 
   /**
-   * Render as HTML. Either a single field of an entire HTML Form.
-   *
-   * @param fieldEntry all the metadata.
-   * @return html
-   */
-
-  /**
    *
    * @param paramValue candidate from form.
    * @return None if value has not changed, otherwise a new [[FieldValue]].
    */
-  override def update(paramValue: String): FieldValue = ???
 
   override val fieldName: String = "CourtesyTone"
 
@@ -101,6 +92,9 @@ case class CourtesyTone(override val key: CourtesyToneKey, segments: Seq[Segment
 
 
 object CourtesyTone {
+  implicit val fmtSegment: OFormat[Segment] = Json.format[Segment]
+  implicit val fmtCourtesyTone: OFormat[CourtesyTone] = Json.format[CourtesyTone]
+
   def cell(value: Int, CtSegmentKey: CtSegmentKey): Cell =
     FieldInt(value).toCell(CtSegmentKey)
 
