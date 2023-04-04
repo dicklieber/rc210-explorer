@@ -47,6 +47,7 @@ case object RC210Download extends LazyLogging {
       source
         .getLines()
         .takeWhile(_.head != 'C')
+        .takeWhile(_ !=  "EEPROM Done")
         .filterNot(_.startsWith("-"))
 //        .take(200)//todo remove
         .foreach { line =>

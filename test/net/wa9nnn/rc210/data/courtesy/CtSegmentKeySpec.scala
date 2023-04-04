@@ -23,7 +23,7 @@ import org.specs2.mutable.Specification
 class CtSegmentKeySpec extends Specification {
 
   "CtSegmentKey" should {
-    val csk = CtSegmentKey(CourtesyToneKey(3), 2, "groucho")
+    val csk =  CtSegmentKey("groucho", 2)(CourtesyToneKey(3))
     "rount trip" in {
       val param = csk.param
       param must beEqualTo ("groucho.2.courtesyToneKey3")
