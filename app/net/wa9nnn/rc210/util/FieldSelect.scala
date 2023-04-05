@@ -26,12 +26,9 @@ import play.api.libs.json.{JsString, JsValue}
  */
 trait FieldSelect[T] extends SimpleFieldValue {
   val selectOptions: Seq[SelectOption]
-  val value: T
   val name: String
+  val value: T
 
-  override def toJsValue: JsValue = {
-    JsString(value.toString)
-  }
 
   override def display: String = value.toString
 

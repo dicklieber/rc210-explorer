@@ -19,7 +19,7 @@ package net.wa9nnn.rc210
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.serial.{Memory, MemoryArray, Slice}
+import net.wa9nnn.rc210.serial.{Memory, MemoryArray, MemoryBuffer, Slice}
 
 import java.io.InputStream
 import javax.inject.{Inject, Singleton}
@@ -28,7 +28,7 @@ import scala.util.{Failure, Success, Using}
 @Singleton
 class DataProvider @Inject()(fieldDefinitions: FieldDefinitions) extends LazyLogging {
 
-  implicit val memory: MemoryArray = Using(getClass.getResourceAsStream("/MemFixedtxt.txt")) {
+   val memory: MemoryArray = Using(getClass.getResourceAsStream("/MemFixedtxt.txt")) {
     stream: InputStream =>
       MemoryArray(stream).get
   } match {
@@ -39,6 +39,7 @@ class DataProvider @Inject()(fieldDefinitions: FieldDefinitions) extends LazyLog
       logger.debug(s"Initial loaded ${value.data.length} bytes from: /MemFixedtxt.txt")
       value
   }
+  implicit  val memoryBuffer = new MemoryBuffer(memory.data)
 
 
   private val simpleFields: Seq[FieldEntry] = for {
@@ -53,7 +54,7 @@ class DataProvider @Inject()(fieldDefinitions: FieldDefinitions) extends LazyLog
     fieldEntry
   }
 
-  private val values: Seq[FieldEntry] = fieldDefinitions.complexFd.flatMap { memoryExtractor: MemoryExtractor =>
+  private val values: Seq[FieldEntry] = fieldDefinitions.complexFd.flatMap { memoryExtractor: ComplexExtractor =>
     val r: Seq[FieldEntry] = memoryExtractor.extract(memory)
     r
   }
@@ -62,7 +63,7 @@ class DataProvider @Inject()(fieldDefinitions: FieldDefinitions) extends LazyLog
 }
 
 
-trait MemoryExtractor extends FieldDefinition {
+trait ComplexExtractor extends FieldDefinition {
 
   /**
    *

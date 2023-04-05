@@ -24,7 +24,7 @@ import net.wa9nnn.rc210.key.KeyFactory.TimerKey
 import net.wa9nnn.rc210.util.MacroSelect
 import play.api.libs.json.{JsValue, Json, OFormat}
 
-case class Timer( key: TimerKey, seconds: FieldInt, macroSelect: MacroSelect) extends ComplexFieldValue[TimerKey] {
+case class Timer(key: TimerKey, seconds: FieldInt, macroSelect: MacroSelect) extends ComplexFieldValue[TimerKey] {
   override val fieldName: String = "Timer"
   implicit val k = key
 

@@ -21,7 +21,6 @@ import com.wa9nnn.util.tableui.{Cell, Row}
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.key.KeyFactory.Key
-import play.api.libs.json._
 
 /**
  * Holds the value for a field.
@@ -29,8 +28,6 @@ import play.api.libs.json._
  * Has enough metadata needed yo render
  */
 sealed trait FieldValue {
-
-  def toJsValue: JsValue
 
   def display: String
 
@@ -92,7 +89,9 @@ trait ComplexFieldValue[K <: Key] extends FieldValue {
   override def update(paramValue: String): FieldValue = throw new IllegalStateException("FieldWithFieldKey cannot be updated. ") //todo can it?
 }
 
-
+trait FieldExtractor[T <: FieldValue] {
+  def extract(itr: Iterator[Int], field:SimpleField): T
+}
 
 
 

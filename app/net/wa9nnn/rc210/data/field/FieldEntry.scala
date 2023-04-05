@@ -56,7 +56,7 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
     fieldValue = candidate.getOrElse(throw new IllegalStateException(s"No candidate to accept!")))
 
   val param: String = fieldKey.param
-  override val prompt: String = fieldDefinition.prompt
+  override val prompt: String = fieldDefinition.tooltip
 
   def toCommand: String = fieldValue.toCommand(this)
 

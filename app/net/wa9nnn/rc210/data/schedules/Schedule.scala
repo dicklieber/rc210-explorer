@@ -2,7 +2,7 @@ package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row}
-import net.wa9nnn.rc210.MemoryExtractor
+import net.wa9nnn.rc210.ComplexExtractor
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field._
 import net.wa9nnn.rc210.data.named.NamedSource
@@ -104,7 +104,7 @@ case class Schedule(override val key: ScheduleKey,
 
 }
 
-object Schedule extends LazyLogging with MemoryExtractor {
+object Schedule extends LazyLogging with ComplexExtractor {
 
   def empty(setPoint: Int): Schedule = {
     val scheduleKey: ScheduleKey = KeyFactory(KeyKind.scheduleKey, setPoint)

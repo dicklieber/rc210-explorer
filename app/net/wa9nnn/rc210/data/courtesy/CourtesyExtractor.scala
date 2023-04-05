@@ -18,14 +18,14 @@
 package net.wa9nnn.rc210.data.courtesy
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.MemoryExtractor
+import net.wa9nnn.rc210.ComplexExtractor
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.{Memory, Slice, SlicePos}
 
-object CourtesyExtractor extends MemoryExtractor with LazyLogging {
+object CourtesyExtractor extends ComplexExtractor with LazyLogging {
   val nCourtesyTones = KeyKind.courtesyToneKey.maxN()
   val nSegmentsPerCt = 4
   val intsPerSegment = 4

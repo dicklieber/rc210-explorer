@@ -2,7 +2,7 @@ package net.wa9nnn.rc210.data.macros
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row}
-import net.wa9nnn.rc210.MemoryExtractor
+import net.wa9nnn.rc210.ComplexExtractor
 import net.wa9nnn.rc210.data.Dtmf
 import net.wa9nnn.rc210.data.field._
 import net.wa9nnn.rc210.data.named.NamedSource
@@ -56,7 +56,7 @@ case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dt
   }
 }
 
-object MacroNode extends LazyLogging with MemoryExtractor with FieldDefinition {
+object MacroNode extends LazyLogging with ComplexExtractor with FieldDefinition {
   def header(count: Int): Header = Header(s"Macros ($count)", "Key", "Functions")
 
   override def extract(memory: Memory): Seq[FieldEntry] = {

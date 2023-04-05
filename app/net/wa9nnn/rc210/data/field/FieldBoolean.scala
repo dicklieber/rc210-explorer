@@ -44,9 +44,13 @@ case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue {
   }
 }
 
-object FieldBoolean {
+object FieldBoolean extends FieldExtractor[FieldBoolean]{
   def apply(name: String)(implicit nameToValue: Map[String, String]): FieldBoolean = {
     val sBool = nameToValue(name)
     new FieldBoolean(sBool == "true")
+  }
+
+  override def extract(itr: Iterator[Int], simpleField: SimpleField): FieldBoolean = {
+    FieldBoolean(itr.next() > 0)
   }
 }

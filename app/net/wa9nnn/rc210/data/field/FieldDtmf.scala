@@ -38,3 +38,16 @@ case class FieldDtmf(value: String) extends SimpleFieldValue {
     FieldDtmf(paramValue)
   }
 }
+
+object FieldDtmf extends FieldExtractor[FieldDtmf] {
+  override def extract(itr: Iterator[Int], simpleField: SimpleField): FieldDtmf = {
+    val ints: Seq[Int] = for {
+      n <- 0 to simpleField.max
+    } yield {
+      itr.next()
+    }
+    FieldDtmf(ints.takeWhile(_ != 0)
+      .map(_.toChar)
+      .toString())
+  }
+}

@@ -17,13 +17,12 @@
 
 package net.wa9nnn.rc210.util
 
-import net.wa9nnn.rc210.data.field.{FieldValue, RenderMetadata}
+import net.wa9nnn.rc210.data.field.{FieldExtractor, RenderMetadata, SimpleField}
 import net.wa9nnn.rc210.key.KeyFactory.MacroKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
-import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue, Json, OFormat}
+import play.api.libs.json._
 
 /**
- * Unlike ogther [[FieldSelect]]s this is just a helper as opposed to a holder of a value.
  */
 case class MacroSelect(value: MacroKey = KeyFactory.defaultMacroKey) extends FieldSelect[MacroKey] {
   override val selectOptions: Seq[SelectOption] = KeyFactory[MacroKey](KeyKind.macroKey).map { macroKey =>
@@ -50,7 +49,7 @@ case class MacroSelect(value: MacroKey = KeyFactory.defaultMacroKey) extends Fie
     KeyFactory(param)
 }
 
-object MacroSelect extends FieldSelectComp {
+object MacroSelect extends FieldExtractor[MacroSelect] {
   val name: String = "Macro"
 
   /**
@@ -68,7 +67,6 @@ object MacroSelect extends FieldSelectComp {
     new MacroSelect(KeyFactory(KeyKind.macroKey, number))
   }
 
-
   implicit val fmtMacroSelect: Format[MacroSelect] = new Format[MacroSelect] {
     override def reads(json: JsValue): JsResult[MacroSelect] = {
       val macrokey: MacroKey = KeyFactory(json.as[String])
@@ -76,11 +74,14 @@ object MacroSelect extends FieldSelectComp {
     }
 
     override def writes(o: MacroSelect): JsValue = JsString(o.value.toString)
-
   }
 
-  override val options: Seq[SelectOption] = KeyFactory[MacroKey](KeyKind.macroKey).map { macroKey =>
+   val options: Seq[SelectOption] = KeyFactory[MacroKey](KeyKind.macroKey).map { macroKey =>
     SelectOption(macroKey.number, macroKey.toString)
+  }
+
+  override def extract(itr: Iterator[Int], field: SimpleField): MacroSelect = {
+    MacroSelect(itr.next())
   }
 }
 

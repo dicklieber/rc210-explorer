@@ -18,13 +18,9 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui.Cell
-import play.api.libs.json.{JsArray, JsNumber, JsValue}
 import views.html.fieldString
 
-case class FieldSeqInts(value: Seq[Int]) extends SimpleFieldValue {
-  override def toJsValue: JsValue = {
-    JsArray(value.map((int: Int) => JsNumber(BigDecimal.int2bigDecimal(int))))
-  }
+case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue {
 
   /**
    * Render this value as an RD-210 command string.
@@ -45,5 +41,11 @@ case class FieldSeqInts(value: Seq[Int]) extends SimpleFieldValue {
       .map(_.toInt)
       .toSeq
     copy(value = candidate)
+  }
+}
+
+object Field2Numbers extends FieldExtractor[Field2Numbers] {
+  override def extract(itr: Iterator[Int], field: SimpleField): Field2Numbers = {
+    Field2Numbers(Seq(itr.next(), itr.next()))
   }
 }

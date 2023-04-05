@@ -48,18 +48,22 @@ abstract class SimpleFieldExtractor(val bytesPerField: Int) {
 
 object FieldExtractors {
 
+/*
   val bool: SimpleFieldExtractor = new SimpleFieldExtractor(1) {
     override def extract(slice: Slice): FieldValue = FieldBoolean(slice.head > 0)
 
     override val name: String = "bool"
   }
+*/
 
+/*
   val int8: SimpleFieldExtractor = new SimpleFieldExtractor(1) {
     override def extract(slice: Slice) = FieldInt( slice.head)
 
     override val name: String = "int8"
   }
-  val int16: SimpleFieldExtractor = new SimpleFieldExtractor(2) {
+*/
+/*  val int16: SimpleFieldExtractor = new SimpleFieldExtractor(2) {
     override def extract(slice: Slice): FieldInt = {
       val iterator = slice.iterator
       val intValue = iterator.next() + iterator.next() * 256
@@ -67,14 +71,14 @@ object FieldExtractors {
     }
 
     override val name: String = "int16"
-  }
+  }*/
 
   val twoInts: SimpleFieldExtractor = new SimpleFieldExtractor(4) {
     override def extract(slice: Slice): FieldValue = {
       val ints = slice.grouped(2).map { slice =>
         int16.extract(slice)
       }
-      FieldSeqInts( ints.map { f => f.asInstanceOf[FieldInt].value })
+      Field2Numbers( ints.map { f => f.asInstanceOf[FieldInt].value })
     }
 
     override val name: String = "cwTones"
@@ -82,6 +86,7 @@ object FieldExtractors {
   }
 }
 
+/*
 // this works for any number up to 8 digits
 case class DtmfExtractor(maxDigits: Int) extends SimpleFieldExtractor(maxDigits + 1) with LazyLogging {
   override def extract(slice: Slice): FieldValue = {
@@ -95,6 +100,7 @@ case class DtmfExtractor(maxDigits: Int) extends SimpleFieldExtractor(maxDigits 
 
   override val name: String = "dtmf"
 }
+*/
 
 
 

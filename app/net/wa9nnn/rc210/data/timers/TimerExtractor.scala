@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.timers
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.MemoryExtractor
+import net.wa9nnn.rc210.ComplexExtractor
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldInt}
 import net.wa9nnn.rc210.key.KeyFactory.TimerKey
@@ -27,7 +27,7 @@ import net.wa9nnn.rc210.serial.{Memory, SlicePos}
 import net.wa9nnn.rc210.util.MacroSelect
 
 //noinspection ZeroIndexToHead
-object TimerExtractor extends MemoryExtractor with LazyLogging {
+object TimerExtractor extends ComplexExtractor with LazyLogging {
   private val nTimers = KeyKind.timerKey.maxN()
   //  Memory Layout
   //  seconds for each timer 6 2-byte ints

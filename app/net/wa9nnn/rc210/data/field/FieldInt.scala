@@ -17,10 +17,9 @@
 
 package net.wa9nnn.rc210.data.field
 
-import play.api.libs.json.{Format, JsNumber, JsResult, JsValue, Json, OFormat}
+import play.api.libs.json.{Format, JsNumber, JsResult, JsValue}
 import views.html.fieldNumber
 
-// simple field are defined here. More complex ones like [[net.wa9nnn.rc210.data.schedules.Schedule]] are elsewhere.
 case class FieldInt(value: Int) extends SimpleFieldValue {
   override def toJsValue: JsValue = JsNumber(BigDecimal.int2bigDecimal(value))
 
@@ -45,10 +44,19 @@ case class FieldInt(value: Int) extends SimpleFieldValue {
   }
 }
 
-object FieldInt {
-  implicit val fmtFieldInt: Format[FieldInt] =  new Format[FieldInt] {
+object FieldInt extends FieldExtractor[FieldInt] {
+
+  implicit val fmtFieldInt: Format[FieldInt] = new Format[FieldInt] {
     override def reads(json: JsValue): JsResult[FieldInt] = ???
 
-    override def writes(o: FieldInt): JsValue = new JsNumber(BigDecimal(o.value))
+    override def writes(o: FieldInt): JsValue = JsNumber(BigDecimal(o.value))
+  }
+
+  override def extract(itr: Iterator[Int], field: SimpleField): FieldInt = {
+    new FieldInt(if (field.max > 256)
+      itr.next() + itr.next() * 256
+    else
+      itr.next()
+    )
   }
 }

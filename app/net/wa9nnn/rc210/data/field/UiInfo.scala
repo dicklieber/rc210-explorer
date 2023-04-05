@@ -56,12 +56,12 @@ object UiInfo {
     override val prompt = "<from macro> <to macro>"
   }
 
-  val unlockCode: UiInfo = new UiInfo {
-    override val fieldExtractor: SimpleFieldExtractor = DtmfExtractor(8)
-    override val validate: String => Try[String] = (s: String) =>
-      throw new NotImplementedError() //todo
-    override val prompt = "1 to 8 digits"
-  }
+//  val unlockCode: UiInfo = new UiInfo {
+//    override val fieldExtractor: SimpleFieldExtractor = DtmfExtractor(8)
+//    override val validate: String => Try[String] = (s: String) =>
+//      throw new NotImplementedError() //todo
+//    override val prompt = "1 to 8 digits"
+//  }
 }
 
 /**
