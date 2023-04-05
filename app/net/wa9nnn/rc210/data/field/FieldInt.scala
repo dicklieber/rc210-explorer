@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.data.field
 
-import play.api.libs.json.{JsNumber, JsValue}
+import play.api.libs.json.{Format, JsNumber, JsResult, JsValue, Json, OFormat}
 import views.html.fieldNumber
 
 // simple field are defined here. More complex ones like [[net.wa9nnn.rc210.data.schedules.Schedule]] are elsewhere.
@@ -42,5 +42,13 @@ case class FieldInt(value: Int) extends FieldValue {
 
   override def update(paramValue: String): FieldValue = {
     FieldInt(paramValue.toInt)
+  }
+}
+
+object FieldInt {
+  implicit val fmtFieldInt: Format[FieldInt] =  new Format[FieldInt] {
+    override def reads(json: JsValue): JsResult[FieldInt] = ???
+
+    override def writes(o: FieldInt): JsValue = new JsNumber(BigDecimal(o.value))
   }
 }

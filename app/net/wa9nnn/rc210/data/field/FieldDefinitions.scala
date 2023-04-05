@@ -23,6 +23,7 @@ import net.wa9nnn.rc210.data.field.UiInfo._
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.data.schedules.Schedule
+import net.wa9nnn.rc210.data.timers.TimerExtractor
 import net.wa9nnn.rc210.key.KeyKind._
 
 import javax.inject.{Inject, Singleton}
@@ -184,7 +185,8 @@ class FieldDefinitions @Inject()() {
   val complexFd: Seq[MemoryExtractor] = Seq(
     Schedule,
     MacroNode,
-    CourtesyExtractor
+    CourtesyExtractor,
+    TimerExtractor
   )
 
   def forOffset(offset: Int): SimpleField = simplefields.find(_.offset == offset).get

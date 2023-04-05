@@ -30,7 +30,8 @@ public enum KeyKind {
     commonKey(1),
     wordKey(256, false),
     portKey(3),
-    scheduleKey(40);
+    scheduleKey(40),
+    timerKey(6);
 
     private final int MaxN;
     private boolean nameable = true;

@@ -72,4 +72,5 @@ object Formatters {
   implicit val fmKey: OFormat[Key] = Json.format[Key]
   implicit val fmtNamedKey: OFormat[NamedKey] = Json.format[NamedKey]
   implicit val fmtNamedData: OFormat[NamedData] = Json.format[NamedData]
+  implicit val fmtTimerKey: OFormat[TimerKey] = Json.format[TimerKey]
 }

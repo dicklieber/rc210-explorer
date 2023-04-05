@@ -36,7 +36,7 @@ object KeyFactory {
       } yield {
         keyKind match {
           case KeyKind.logicAlarmKey => LogicAlarmKey(number)
-          case KeyKind.`meterKey` => MeterKey(number)
+          case KeyKind.meterKey => MeterKey(number)
           case KeyKind.dtmfMacroKey => DtmfMacroKey(number)
           case KeyKind.courtesyToneKey => CourtesyToneKey(number)
           case KeyKind.functionKey => FunctionKey(number)
@@ -46,6 +46,7 @@ object KeyFactory {
           case KeyKind.wordKey => WordKey(number)
           case KeyKind.portKey => PortKey(number)
           case KeyKind.scheduleKey => ScheduleKey(number)
+          case KeyKind.timerKey => TimerKey(number)
         }
       }
     }
@@ -131,4 +132,5 @@ object KeyFactory {
    */
   case class CommonKey(override val number: Int = 1) extends Key(commonKey, number)
 
+  case class TimerKey(override val number: Int = 1) extends Key(timerKey, number)
 }
