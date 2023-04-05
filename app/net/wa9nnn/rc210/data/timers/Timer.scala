@@ -18,13 +18,13 @@
 package net.wa9nnn.rc210.data.timers
 
 import com.wa9nnn.util.tableui.Row
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldInt, FieldWithFieldKey, RenderMetadata}
+import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldInt, RenderMetadata, SimpleFieldValue}
 import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.key.KeyFactory.TimerKey
 import net.wa9nnn.rc210.util.MacroSelect
 import play.api.libs.json.{JsValue, Json, OFormat}
 
-case class Timer( key: TimerKey, seconds: FieldInt, macroSelect: MacroSelect) extends FieldWithFieldKey[TimerKey] {
+case class Timer( key: TimerKey, seconds: FieldInt, macroSelect: MacroSelect) extends ComplexFieldValue[TimerKey] {
   override val fieldName: String = "Timer"
   implicit val k = key
 

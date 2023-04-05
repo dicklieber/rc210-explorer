@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * @param functions that this kacro oinvokes.
  * @param dtmf      that can invoke this macro.
  */
-case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dtmf: Option[Dtmf] = None) extends FieldWithFieldKey[MacroKey] with TriggerNode {
+case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dtmf: Option[Dtmf] = None) extends ComplexFieldValue[MacroKey] with TriggerNode {
 
   def enabled: Boolean = functions.nonEmpty
 

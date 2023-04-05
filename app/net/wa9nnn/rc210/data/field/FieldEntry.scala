@@ -78,7 +78,7 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
     }
     val row = Row(
       fieldKey.toCell,
-      value.toCell(this),
+      value.toString,
       change
     )
     maybeRowHeader match {

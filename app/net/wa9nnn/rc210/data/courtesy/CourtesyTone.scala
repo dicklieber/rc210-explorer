@@ -27,7 +27,7 @@ import play.api.libs.json.{JsValue, Json, OFormat}
 import net.wa9nnn.rc210.key.KeyFormats._
 
 //noinspection ZeroIndexToHead
-case class CourtesyTone(override val key: CourtesyToneKey, segments: Seq[Segment]) extends FieldWithFieldKey[CourtesyToneKey] {
+case class CourtesyTone(override val key: CourtesyToneKey, segments: Seq[Segment]) extends ComplexFieldValue[CourtesyToneKey] {
   implicit val k = key
 
   override def toJsValue: JsValue = Json.toJson(this)

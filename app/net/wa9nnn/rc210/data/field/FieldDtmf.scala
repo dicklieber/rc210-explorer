@@ -20,7 +20,7 @@ package net.wa9nnn.rc210.data.field
 import play.api.libs.json.{JsString, JsValue}
 import views.html.fieldDtmf
 
-case class FieldDtmf(value: String) extends FieldValue {
+case class FieldDtmf(value: String) extends SimpleFieldValue {
   override def toJsValue: JsValue = JsString(value)
 
   def toHtmlField(renderMetadata: RenderMetadata): String = {

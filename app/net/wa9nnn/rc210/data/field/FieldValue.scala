@@ -22,14 +22,13 @@ import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.key.KeyFactory.Key
 import play.api.libs.json._
-import views.html._
 
 /**
  * Holds the value for a field.
  * Knows how to render as HTML control or string for JSON, showing to a user or RC-210 Command,
  * Has enough metadata needed yo render
  */
-trait FieldValue {
+sealed trait FieldValue {
 
   def toJsValue: JsValue
 
@@ -49,10 +48,6 @@ trait FieldValue {
 
   def toHtmlField(renderMetadata: RenderMetadata): String
 
-  def toCell(renderMetadata: RenderMetadata): Cell = {
-    val html: String = toHtmlField(renderMetadata)
-    Cell.rawHtml(html)
-  }
 
   /**
    *
@@ -62,12 +57,24 @@ trait FieldValue {
   def update(paramValue: String): FieldValue
 }
 
+
 /**
- * Like a [[FieldValue]] but adds the [[Key]].
+ * Renders itself as a [[[Cell]]
+ */
+trait SimpleFieldValue extends FieldValue{
+  def toCell(renderMetadata: RenderMetadata): Cell = {
+    val html: String = toHtmlField(renderMetadata)
+    Cell.rawHtml(html)
+  }
+
+}
+
+/**
+ *  Renders itself as a [[Row]]
  *
  * @tparam K
  */
-trait FieldWithFieldKey[K <: Key] extends FieldValue {
+trait ComplexFieldValue[K <: Key] extends FieldValue {
   val key: K
   val fieldName: String
   lazy val fieldKey: FieldKey = FieldKey(fieldName, key)

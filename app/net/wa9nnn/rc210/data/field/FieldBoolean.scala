@@ -21,7 +21,7 @@ import com.wa9nnn.util.tableui.Cell
 import play.api.libs.json.{JsBoolean, JsValue}
 import views.html.fieldCheckbox
 
-case class FieldBoolean(value: Boolean = false) extends FieldValue {
+case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue {
   override def toJsValue: JsValue = JsBoolean(value)
 
   override def toHtmlField(renderMetadata: RenderMetadata): String = {

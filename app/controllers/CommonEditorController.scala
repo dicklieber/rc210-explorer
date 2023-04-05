@@ -34,10 +34,10 @@ class CommonEditorController @Inject()(implicit val controllerComponents: Contro
 
 
       val rows: Seq[Row] = commonFields.map {fieldEntry =>
-        // Can't use fieldEntry's toRow because we just want the field name not key, as hey are all commonKey1
+        // Can't use fieldEntry's toRow because we just want the field name not key, as they are all commonKey1
         Row(
           fieldEntry.fieldKey.fieldName,
-          fieldEntry.value.toCell(fieldEntry)
+          fieldEntry.toCell // todo doesn't smell right, RenderMeta not involved.
         )
       }
 

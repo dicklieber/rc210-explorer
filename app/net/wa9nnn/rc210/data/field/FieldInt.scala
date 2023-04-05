@@ -21,7 +21,7 @@ import play.api.libs.json.{Format, JsNumber, JsResult, JsValue, Json, OFormat}
 import views.html.fieldNumber
 
 // simple field are defined here. More complex ones like [[net.wa9nnn.rc210.data.schedules.Schedule]] are elsewhere.
-case class FieldInt(value: Int) extends FieldValue {
+case class FieldInt(value: Int) extends SimpleFieldValue {
   override def toJsValue: JsValue = JsNumber(BigDecimal.int2bigDecimal(value))
 
   /**

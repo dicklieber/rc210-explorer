@@ -22,7 +22,7 @@ import play.api.libs.json.{JsValue, Json}
 
 import java.time.LocalTime
 
-case class FieldTime(value: LocalTime = LocalTime.MIN) extends FieldValue {
+case class FieldTime(value: LocalTime = LocalTime.MIN) extends SimpleFieldValue {
   override def toJsValue: JsValue = Json.toJson(value)
 
   def toHtmlField(renderMetadata: RenderMetadata): String = {

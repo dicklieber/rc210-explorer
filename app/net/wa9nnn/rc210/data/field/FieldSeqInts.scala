@@ -21,7 +21,7 @@ import com.wa9nnn.util.tableui.Cell
 import play.api.libs.json.{JsArray, JsNumber, JsValue}
 import views.html.fieldString
 
-case class FieldSeqInts(value: Seq[Int]) extends FieldValue {
+case class FieldSeqInts(value: Seq[Int]) extends SimpleFieldValue {
   override def toJsValue: JsValue = {
     JsArray(value.map((int: Int) => JsNumber(BigDecimal.int2bigDecimal(int))))
   }

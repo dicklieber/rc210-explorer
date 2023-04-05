@@ -28,7 +28,7 @@ case class Schedule(override val key: ScheduleKey,
                     monthOfYear: MonthOfYear,
                     time: FieldTime,
                     selectedMacroToRun: MacroSelect,
-                    enabled: FieldBoolean) extends FieldWithFieldKey[ScheduleKey] with TriggerNode with RenderMetadata {
+                    enabled: FieldBoolean) extends ComplexFieldValue[ScheduleKey] with TriggerNode with RenderMetadata {
 
 
   override def toJsValue: JsValue = {

@@ -18,13 +18,13 @@
 package net.wa9nnn.rc210.util
 
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue, RenderMetadata}
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue, RenderMetadata, SimpleFieldValue}
 import play.api.libs.json.{JsString, JsValue}
 
 /**
  * An enumeration with behaviour.
  */
-trait FieldSelect[T] extends FieldValue {
+trait FieldSelect[T] extends SimpleFieldValue {
   val selectOptions: Seq[SelectOption]
   val value: T
   val name: String

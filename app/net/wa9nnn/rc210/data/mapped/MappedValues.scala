@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.mapped
 
 import net.wa9nnn.rc210.DataProvider
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.{FieldValue, FieldEntry, FieldWithFieldKey}
+import net.wa9nnn.rc210.data.field.{FieldValue, FieldEntry, ComplexFieldValue}
 import net.wa9nnn.rc210.key.KeyFactory.Key
 import net.wa9nnn.rc210.key.KeyKind
 import play.api.libs.json.JsArray
@@ -92,7 +92,7 @@ class MappedValues @Inject()(dataProvider: DataProvider) {
     newValues.foreach(newCandidate => apply(newCandidate))
   }
 
-  def apply[K <: Key](fields: Seq[FieldWithFieldKey[K]]): Unit = {
+  def apply[K <: Key](fields: Seq[ComplexFieldValue[K]]): Unit = {
     fields.foreach { fieldWithFieldKey =>
       apply(fieldWithFieldKey.fieldKey, fieldWithFieldKey)
     }
