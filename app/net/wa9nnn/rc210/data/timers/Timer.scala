@@ -18,11 +18,12 @@
 package net.wa9nnn.rc210.data.timers
 
 import com.wa9nnn.util.tableui.Row
-import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldInt, RenderMetadata, SimpleFieldValue}
+import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldInt, RenderMetadata}
 import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.key.KeyFactory.TimerKey
 import net.wa9nnn.rc210.util.MacroSelect
-import play.api.libs.json.{JsValue, Json, OFormat}
+import play.api.libs.json.{Json, OFormat}
+import net.wa9nnn.rc210.key.KeyFormats._
 
 case class Timer(key: TimerKey, seconds: FieldInt, macroSelect: MacroSelect) extends ComplexFieldValue[TimerKey] {
   override val fieldName: String = "Timer"
@@ -34,8 +35,6 @@ case class Timer(key: TimerKey, seconds: FieldInt, macroSelect: MacroSelect) ext
       macroSelect.toCell(RenderMetadata("macro")))
   }
 
-  import Timer.fmtTimer
-  override def toJsValue: JsValue = Json.toJson(this)
 
   override def display: String = s"$seconds => ${macroSelect.value}"
 
@@ -47,8 +46,5 @@ case class Timer(key: TimerKey, seconds: FieldInt, macroSelect: MacroSelect) ext
 }
 
 object Timer {
-  import net.wa9nnn.rc210.key.KeyFormats._
-  import net.wa9nnn.rc210.data.field.FieldInt.fmtFieldInt
-  import MacroSelect.fmtMacroSelect
   implicit val fmtTimer: OFormat[Timer] = Json.format[Timer]
 }

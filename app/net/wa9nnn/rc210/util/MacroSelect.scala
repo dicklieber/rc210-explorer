@@ -49,7 +49,7 @@ case class MacroSelect(value: MacroKey = KeyFactory.defaultMacroKey) extends Fie
     KeyFactory(param)
 }
 
-object MacroSelect extends FieldExtractor[MacroSelect] {
+object MacroSelect extends FieldExtractor {
   val name: String = "Macro"
 
   /**
@@ -81,7 +81,7 @@ object MacroSelect extends FieldExtractor[MacroSelect] {
   }
 
   override def extract(itr: Iterator[Int], field: SimpleField): MacroSelect = {
-    MacroSelect(itr.next())
+    MacroSelect(itr.next() + 1)
   }
 }
 

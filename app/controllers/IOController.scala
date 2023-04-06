@@ -34,13 +34,8 @@ class IOController @Inject()(val controllerComponents: ControllerComponents,
   implicit val timeout: Timeout = 5.seconds
 
   def downloadJson(): Action[AnyContent] = Action {
-    val r: Seq[(String, JsValue)] = mappedValues
-      .all
-      .map { fieldEntry =>
-        fieldEntry.fieldKey.key.toString -> fieldEntry.toJson
-      }
 
-    val jsObject =JsObject(r)
+    val jsObject =Json.toJson(mappedValues)
     val sJson = Json.prettyPrint(jsObject)
 
     Ok(sJson).withHeaders(

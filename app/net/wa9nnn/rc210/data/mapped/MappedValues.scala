@@ -98,42 +98,17 @@ class MappedValues @Inject()(dataProvider: DataProvider) {
     }
   }
 
-  def toJson: JsArray = {
-    throw new NotImplementedError() //todo
-    //    import play.api.libs.json._
-    //    Json.arr(
-    //      valueMap.values
-    //    )
-  }
 }
 
 object MappedValues {
 
   import play.api.libs.json._
 
-  implicit val fmtMappedValues: OFormat[MappedValues] = new OFormat[MappedValues] {
+  implicit val fmtMappedValues: Format[MappedValues] = new Format[MappedValues] {
+    override def reads(json: JsValue): JsResult[MappedValues] = ???
 
-    override def writes(mappedValues: MappedValues): JsObject = {
-      JsObject(
-        mappedValues
-          .all
-          .map(fe => fe.fieldKey.param -> fe.toJson)
-      )
-    }
-
-    override def reads(json: JsValue): JsResult[MappedValues] = {
-      throw new NotImplementedError() //todo
-      //      JsResult.fromTry(Try {
-      //        val values: Seq[FieldValue] = json.as[Seq[FieldValue]]
-      //        values.foreach(fieldMetadata =>
-      //          map.put(fieldMetadata.fieldKey, fieldMetadata)
-      //        )
-      //        mappedValues
-      //      }
-      //      )
-    }
+    override def writes(o: MappedValues): JsValue = ???
   }
-
 }
 
 

@@ -21,6 +21,7 @@ import com.wa9nnn.util.tableui.{Cell, Row}
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.key.KeyFactory.Key
+import net.wa9nnn.rc210.serial.MemoryBuffer
 
 /**
  * Holds the value for a field.
@@ -58,7 +59,7 @@ sealed trait FieldValue {
 /**
  * Renders itself as a [[[Cell]]
  */
-trait SimpleFieldValue extends FieldValue{
+trait SimpleFieldValue extends FieldValue {
   def toCell(renderMetadata: RenderMetadata): Cell = {
     val html: String = toHtmlField(renderMetadata)
     Cell.rawHtml(html)
@@ -67,7 +68,7 @@ trait SimpleFieldValue extends FieldValue{
 }
 
 /**
- *  Renders itself as a [[Row]]
+ * Renders itself as a [[Row]]
  *
  * @tparam K
  */
@@ -89,8 +90,9 @@ trait ComplexFieldValue[K <: Key] extends FieldValue {
   override def update(paramValue: String): FieldValue = throw new IllegalStateException("FieldWithFieldKey cannot be updated. ") //todo can it?
 }
 
-trait FieldExtractor[T <: FieldValue] {
-  def extract(itr: Iterator[Int], field:SimpleField): T
+trait FieldExtractor {
+  def extract(itr: Iterator[Int], field: SimpleField): FieldValue
+
 }
 
 

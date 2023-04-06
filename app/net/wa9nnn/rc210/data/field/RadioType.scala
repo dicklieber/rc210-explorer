@@ -34,7 +34,7 @@ case class RadioType(value: String = selectOptions.head.display) extends FieldSe
   }
 }
 
-object RadioType extends FieldExtractor[RadioType] {
+object RadioType extends FieldExtractor {
 
   def apply(id: Int): RadioType = {
     val maybeOption = selectOptions.find(_.id == id)

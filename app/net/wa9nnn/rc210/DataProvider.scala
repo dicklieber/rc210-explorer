@@ -43,14 +43,14 @@ class DataProvider @Inject()(fieldDefinitions: FieldDefinitions) extends LazyLog
 
 
   private val simpleFields: Seq[FieldEntry] = for {
-    fieldDefinition <- fieldDefinitions.simplefields
+    fieldDefinition <- fieldDefinitions.simpleFields
+    it = fieldDefinition.iterator()
     number <- 1 to fieldDefinition.kind.maxN
   } yield {
-    val start = fieldDefinition.offset + fieldDefinition.uiInfo.fieldExtractor.bytesPerField * (number - 1)
-    val (fieldContents: FieldValue, slice: Slice) = fieldDefinition.extract(start)
+    val fieldValue: FieldValue = fieldDefinition.extract(it)
     val fieldKey = fieldDefinition.fieldKey(number)
-    val fieldEntry: FieldEntry = FieldEntry(fieldDefinition, fieldKey, fieldContents) //todo deal with candidate.
-    logger.trace("FieldEntry: start: {}  slice: {} fieldEntry: {}", start.toString, slice.toString, fieldEntry.toString)
+    val fieldEntry = FieldEntry(fieldDefinition, fieldKey, fieldValue)
+    logger.trace("FieldEntry: offset: {} fieldEntry: {})", fieldDefinition.offset, fieldEntry.toString)
     fieldEntry
   }
 

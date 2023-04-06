@@ -26,9 +26,10 @@ import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.{Memory, Slice, SlicePos}
 
 object CourtesyExtractor extends ComplexExtractor with LazyLogging {
-  val nCourtesyTones = KeyKind.courtesyToneKey.maxN()
-  val nSegmentsPerCt = 4
-  val intsPerSegment = 4
+  private val nCourtesyTones = KeyKind.courtesyToneKey.maxN()
+
+  private val nSegmentsPerCt = 4
+  private val intsPerSegment = 4
 
   /**
    *
@@ -52,7 +53,7 @@ object CourtesyExtractor extends ComplexExtractor with LazyLogging {
     }
 
     val courtesytones: Seq[CourtesyTone] = for (ct <- 0 until (10)) yield {
-      val key:CourtesyToneKey = KeyFactory(KeyKind.courtesyToneKey, ct + 1)
+      val key: CourtesyToneKey = KeyFactory(KeyKind.courtesyToneKey, ct + 1)
       CourtesyTone(key,
         Seq(
           Segment(array(ct)(8), array(ct)(12), array(ct)(0), array(ct)(1)),
@@ -61,11 +62,12 @@ object CourtesyExtractor extends ComplexExtractor with LazyLogging {
           Segment(array(ct)(11), array(ct)(15), array(ct)(6), array(ct)(7)),
         ))
     }
-  courtesytones.map { ct =>
+    courtesytones.map { ct =>
       FieldEntry(this, FieldKey("CourtesyTone", ct.key), ct)
     }
   }
 
   override val fieldName: String = "Courtesy Tone"
   override val kind: KeyKind = KeyKind.courtesyToneKey
+
 }

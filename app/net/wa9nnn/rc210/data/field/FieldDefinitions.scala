@@ -26,14 +26,12 @@ import net.wa9nnn.rc210.key.KeyKind._
 import net.wa9nnn.rc210.util.MacroSelect
 
 import javax.inject.{Inject, Singleton}
-
 @Singleton
 class FieldDefinitions @Inject()() {
   /**
    * Everything about each field.
    */
-  val simplefields: Seq[SimpleField] = Seq(
-    //offset  Name        KindOfKey     commandTemplate  how to render and parse
+  val simpleFields: Seq[SimpleField] = Seq(
     SimpleField(0, "Site Prefix", commonKey, "*2108v", FieldDtmf) max 3,
     SimpleField(4, "TT PadTest", commonKey, "*2093v", FieldDtmf) max 5,
     SimpleField(10, "Say Hours", commonKey, "*5104b", FieldBoolean),
@@ -41,7 +39,7 @@ class FieldDefinitions @Inject()() {
     SimpleField(14, "Hang Time 2", portKey, "n*10002v", FieldInt),
     SimpleField(17, "Hang Time 3", portKey, "n*10003v", FieldInt),
     SimpleField(20, "Initial ID Timer  ", portKey, "n*1000v", FieldInt) units "minutes",
-    SimpleField(23, "Pending ID Timer  ", portKey, "n*1003v", FieldInt) units ("minutes"),
+    SimpleField(23, "Pending ID Timer  ", portKey, "n*1003v", FieldInt) units "minutes",
     SimpleField(26, "Tx Enable", portKey, "n11b", FieldBoolean),
     SimpleField(29, "DTMF Cover Tone", portKey, "n13b", FieldBoolean),
     SimpleField(32, "DTMF Mute Timer", portKey, "n*1006v", FieldInt) max 999 units "100 ms",
@@ -140,6 +138,6 @@ class FieldDefinitions @Inject()() {
     TimerExtractor
   )
 
-  def forOffset(offset: Int): SimpleField = simplefields.find(_.offset == offset).get
+  def forOffset(offset: Int): SimpleField = simpleFields.find(_.offset == offset).get
 
 }

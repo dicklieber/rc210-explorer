@@ -34,7 +34,7 @@ case class MuteDigit(value: String = selectOptions.head.display) extends FieldSe
   }
 }
 
-object MuteDigit extends FieldExtractor[MuteDigit] {
+object MuteDigit extends FieldExtractor {
 
   def apply(id: Int): MuteDigit = {
     val maybeOption = selectOptions.find(_.id == id)

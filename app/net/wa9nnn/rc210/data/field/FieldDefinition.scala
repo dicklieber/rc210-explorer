@@ -2,14 +2,15 @@ package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
-import net.wa9nnn.rc210.serial.{Memory, Slice}
+import net.wa9nnn.rc210.serial.{Memory, MemoryBuffer}
 
-trait FieldDefinition extends RenderMetadata {
+trait FieldDefinition {
   def tooltip: String = ""
 
   val fieldName: String
   val kind: KeyKind
   val template: String = ""
+  val units:String = ""
 }
 
 /**
@@ -29,12 +30,25 @@ case class SimpleField(offset: Int,
                        fieldName: String,
                        kind: KeyKind,
                        override val template: String,
-                       fieldExtractor: FieldExtractor[_],
+                       fieldExtractor: FieldExtractor,
                        override val tooltip: String = "",
                        override val units: String = "",
-                       min:Int = 1,
+                       min: Int = 1,
                        max: Int = 255,
                       ) extends FieldDefinition {
+
+  /**
+   * Create an [[Iterator[Int]] over the [[MemoryBuffer]] starting at an offset.
+   *
+   * @param memoryBuffer data from RC-210 binary dump.
+   */
+  def iterator()(implicit memoryBuffer: MemoryBuffer): Iterator[Int] = {
+    if (max > 255)
+      memoryBuffer.iterator16At(offset)
+    else
+      memoryBuffer.iterator8At(offset)
+  }
+
   def extract(iterator: Iterator[Int]): FieldValue = {
     fieldExtractor.extract(iterator, this)
   }
@@ -46,9 +60,13 @@ case class SimpleField(offset: Int,
   def units(u: String): SimpleField = copy(units = u)
 
   def max(max: Int): SimpleField = copy(max = max)
-  def min(max: Int): SimpleField = copy(min = min)
+
+  def min(min: Int): SimpleField = copy(min = min)
+
   def tooltip(tooltip: String): SimpleField = copy(tooltip = tooltip)
+
 }
+
 
 
 

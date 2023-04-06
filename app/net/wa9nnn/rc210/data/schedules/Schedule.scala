@@ -31,18 +31,18 @@ case class Schedule(override val key: ScheduleKey,
                     enabled: FieldBoolean) extends ComplexFieldValue[ScheduleKey] with TriggerNode with RenderMetadata {
 
 
-  override def toJsValue: JsValue = {
-    val fields: JsObject = Json.obj(
-      "key" -> key.toString,
-      "dayOfWeek" -> dayOfWeek.display,
-      "weekInMonth" -> weekInMonth.display,
-      "monthOfYear" -> monthOfYear.display,
-      "time" -> time.display,
-      "selectedMacroToRun" -> selectedMacroToRun.display,
-      "enabled" -> enabled.display
-    )
-    fields
-  }
+//  override def toJsValue: JsValue = {
+//    val fields: JsObject = Json.obj(
+//      "key" -> key.toString,
+//      "dayOfWeek" -> dayOfWeek.display,
+//      "weekInMonth" -> weekInMonth.display,
+//      "monthOfYear" -> monthOfYear.display,
+//      "time" -> time.display,
+//      "selectedMacroToRun" -> selectedMacroToRun.display,
+//      "enabled" -> enabled.display
+//    )
+//    fields
+//  }
 
   override def toRow: Row = {
     Row(key.toCell, selectedMacroToRun.toCell(this), dayOfWeek, weekInMonth, monthOfYear, time)

@@ -21,7 +21,6 @@ import play.api.libs.json.{Format, JsNumber, JsResult, JsValue}
 import views.html.fieldNumber
 
 case class FieldInt(value: Int) extends SimpleFieldValue {
-  override def toJsValue: JsValue = JsNumber(BigDecimal.int2bigDecimal(value))
 
   /**
    * Render as HTML for this field.
@@ -44,7 +43,7 @@ case class FieldInt(value: Int) extends SimpleFieldValue {
   }
 }
 
-object FieldInt extends FieldExtractor[FieldInt] {
+object FieldInt extends FieldExtractor {
 
   implicit val fmtFieldInt: Format[FieldInt] = new Format[FieldInt] {
     override def reads(json: JsValue): JsResult[FieldInt] = ???

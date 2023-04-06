@@ -30,8 +30,6 @@ import net.wa9nnn.rc210.key.KeyFormats._
 case class CourtesyTone(override val key: CourtesyToneKey, segments: Seq[Segment]) extends ComplexFieldValue[CourtesyToneKey] {
   implicit val k = key
 
-  override def toJsValue: JsValue = Json.toJson(this)
-
   override def display: String = ???
 
   /**

@@ -18,11 +18,9 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui.Cell
-import play.api.libs.json.{JsBoolean, JsValue}
 import views.html.fieldCheckbox
 
 case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue {
-  override def toJsValue: JsValue = JsBoolean(value)
 
   override def toHtmlField(renderMetadata: RenderMetadata): String = {
     fieldCheckbox(value, renderMetadata).toString()
@@ -44,7 +42,7 @@ case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue {
   }
 }
 
-object FieldBoolean extends FieldExtractor[FieldBoolean]{
+object FieldBoolean extends FieldExtractor{
   def apply(name: String)(implicit nameToValue: Map[String, String]): FieldBoolean = {
     val sBool = nameToValue(name)
     new FieldBoolean(sBool == "true")

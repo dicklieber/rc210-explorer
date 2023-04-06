@@ -44,7 +44,7 @@ case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue {
   }
 }
 
-object Field2Numbers extends FieldExtractor[Field2Numbers] {
+object Field2Numbers extends FieldExtractor {
   override def extract(itr: Iterator[Int], field: SimpleField): Field2Numbers = {
     Field2Numbers(Seq(itr.next(), itr.next()))
   }

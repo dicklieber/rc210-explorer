@@ -18,7 +18,9 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui._
+import net.wa9nnn.rc210.ComplexExtractor
 import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.key.KeyKind
 import play.api.libs.json.JsValue
 
@@ -36,8 +38,6 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
     candidate.getOrElse(fieldValue).asInstanceOf[F]
   }
 
-
-  override val units: String = fieldDefinition.uiInfo.unit
 
   def setCandidate(formValue: String): FieldEntry = {
     val updatedFieldValue: FieldValue = fieldValue.update(formValue)
@@ -92,11 +92,6 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
 
   override def compare(that: FieldEntry): Int = fieldKey compare that.fieldKey
 
-
-  def toJson: JsValue = {
-    val r = fieldValue.toJsValue
-    r
-  }
 }
 
 

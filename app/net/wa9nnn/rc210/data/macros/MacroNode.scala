@@ -27,7 +27,6 @@ case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dt
   import net.wa9nnn.rc210.key.KeyFormats._
   import play.api.libs.json._
 
-  override def toJsValue: JsValue = Json.toJson(functions)
 
   //  override val commandStringValue: String = "*4002 10 * 162 * 187 * 122 * 347" // todo
 

@@ -34,7 +34,7 @@ case class YaesuType(value: String = selectOptions.head.display) extends FieldSe
   }
 }
 
-object YaesuType extends FieldExtractor[YaesuType] {
+object YaesuType extends FieldExtractor {
 
   def apply(id: Int): YaesuType = {
     val maybeOption = selectOptions.find(_.id == id)

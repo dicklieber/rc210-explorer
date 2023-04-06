@@ -17,11 +17,9 @@
 
 package net.wa9nnn.rc210.data.field
 
-import play.api.libs.json.{JsString, JsValue}
 import views.html.fieldDtmf
 
 case class FieldDtmf(value: String) extends SimpleFieldValue {
-  override def toJsValue: JsValue = JsString(value)
 
   def toHtmlField(renderMetadata: RenderMetadata): String = {
     fieldDtmf(value, renderMetadata).toString()
@@ -39,7 +37,7 @@ case class FieldDtmf(value: String) extends SimpleFieldValue {
   }
 }
 
-object FieldDtmf extends FieldExtractor[FieldDtmf] {
+object FieldDtmf extends FieldExtractor {
   override def extract(itr: Iterator[Int], simpleField: SimpleField): FieldDtmf = {
     val ints: Seq[Int] = for {
       n <- 0 to simpleField.max
