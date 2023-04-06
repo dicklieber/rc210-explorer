@@ -30,7 +30,7 @@ import net.wa9nnn.rc210.key.KeyFormats._
 case class CourtesyTone(override val key: CourtesyToneKey, segments: Seq[Segment]) extends ComplexFieldValue[CourtesyToneKey] {
   implicit val k = key
 
-  override def display: String = ???
+  override def display: String = s"$key"
 
   /**
    * Render this value as an RD-210 command string.

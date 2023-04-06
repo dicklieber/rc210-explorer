@@ -46,5 +46,23 @@ class MemoryBuffer(data: Array[Int]) {
       ints.head + (ints(1) * 256)
     }
   }
+
+  def sub8(start: Int, length: Int): Array[Int] = {
+    data.slice(start, start + length)
+  }
+
+  /**
+   *
+   * @param offset      starting at.
+   * @param chunkLength how much per chunk.
+   * @param nChunks     how many.
+   * @return
+   */
+  def chunks(offset: Int, chunkLength: Int, nChunks: Int): Seq[Array[Int]] = {
+    val size = chunkLength * nChunks
+    data.slice(offset, offset + size)
+      .grouped(chunkLength)
+      .toSeq
+  }
 }
 

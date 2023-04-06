@@ -19,8 +19,7 @@ package net.wa9nnn.rc210.serial
 
 import net.wa9nnn.rc210.fixtures.WithMemory
 
-class Memory2Spec extends WithMemory {
-  val memoryBuffer = new MemoryBuffer(memory.asInstanceOf[MemoryArray].data)
+class MemoryBufferSpec extends WithMemory {
   "8bit ints" >> {
     val value1: Iterator[Int] = memoryBuffer.iterator8At(0)
     value1.next() must beEqualTo(65)
@@ -32,5 +31,13 @@ class Memory2Spec extends WithMemory {
     val i0 = int16s.next()
     val i1 = int16s.next()
     int16s.next() must beEqualTo(4)
+  }
+
+  "chunks" >> {
+    val chunks: Seq[Array[Int]] = memoryBuffer.chunks(1985, 16, 40)
+    chunks must haveLength(40)
+    val head = chunks.head
+    head must haveLength(16)
+    head.mkString(" ") must beEqualTo ("")
   }
 }

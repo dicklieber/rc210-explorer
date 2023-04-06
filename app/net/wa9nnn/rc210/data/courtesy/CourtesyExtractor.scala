@@ -18,41 +18,32 @@
 package net.wa9nnn.rc210.data.courtesy
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.ComplexExtractor
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldEntry}
 import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
-import net.wa9nnn.rc210.serial.{Memory, Slice, SlicePos}
+import net.wa9nnn.rc210.serial.MemoryBuffer
 
 object CourtesyExtractor extends ComplexExtractor with LazyLogging {
   private val nCourtesyTones = KeyKind.courtesyToneKey.maxN()
 
-  private val nSegmentsPerCt = 4
-  private val intsPerSegment = 4
-
   /**
    *
-   * @param memory    source of RC-210 data.
+   * @param memoryBuffer    source of RC-210 data.
    * @return what we extracted.
    */
-  override def extract(memory: Memory): Seq[FieldEntry] = {
-    val slicePos = SlicePos(856, nCourtesyTones * nSegmentsPerCt * intsPerSegment * 2)
-    val toneSlice: Slice = memory.apply(slicePos)
-    val data: Iterator[Seq[Int]] = toneSlice.data.grouped(2)
-    val int16s: Seq[Int] = data.map((ints: Seq[Int]) => ints.head + (ints(1) * 256)).toSeq
-
+  override def extract(memoryBuffer: MemoryBuffer): Seq[FieldEntry] = {
+    val iterator = memoryBuffer.iterator16At(856)
 
     val array = Array.ofDim[Int](10, 16)
-    val iterator = int16s.iterator
     for {
-      part <- 0 until (16)
-      ct <- 0 until (nCourtesyTones)
+      part <- 0 until 16
+      ct <- 0 until nCourtesyTones
     } {
       array(ct)(part) = iterator.next()
     }
 
-    val courtesytones: Seq[CourtesyTone] = for (ct <- 0 until (10)) yield {
+    val courtesyTones: Seq[CourtesyTone] = for (ct <- 0 until 10) yield {
       val key: CourtesyToneKey = KeyFactory(KeyKind.courtesyToneKey, ct + 1)
       CourtesyTone(key,
         Seq(
@@ -62,7 +53,7 @@ object CourtesyExtractor extends ComplexExtractor with LazyLogging {
           Segment(array(ct)(11), array(ct)(15), array(ct)(6), array(ct)(7)),
         ))
     }
-    courtesytones.map { ct =>
+    courtesyTones.map { ct =>
       FieldEntry(this, FieldKey("CourtesyTone", ct.key), ct)
     }
   }

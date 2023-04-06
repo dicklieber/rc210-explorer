@@ -18,11 +18,8 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui._
-import net.wa9nnn.rc210.ComplexExtractor
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.key.KeyKind
-import play.api.libs.json.JsValue
 
 
 /**
@@ -68,7 +65,9 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
     Cell.rawHtml(s"$toHtml")
   }
 
-  override def toString: String = s"${fieldKey.fieldName}: ${fieldValue.display}"
+  override def toString: String = {
+    s"${fieldKey.fieldName}: ${fieldValue.display}"
+  }
 
   def toRow(maybeRowHeader: Option[Cell] = None): Row = {
     val change = candidate match {

@@ -19,7 +19,6 @@ package net.wa9nnn.rc210.key
 
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.key.KeyKind._
 
 /**
  * All keys live here
@@ -86,6 +85,21 @@ object KeyFactory {
       .map(_.asInstanceOf[K])
   }
 
+  def functionKey(number: Int): FunctionKey = apply(KeyKind.functionKey, number)
+
+  def macroKey(number: Int): MacroKey = apply(KeyKind.macroKey, number)
+
+  def dtmfMacroKey(number: Int): DtmfMacroKey = apply(KeyKind.dtmfMacroKey, number)
+
+  def portKey(number: Int): PortKey = apply(KeyKind.portKey, number)
+
+  def wordKey(number: Int): WordKey = apply(KeyKind.wordKey, number)
+
+  def timerKey(number: Int): TimerKey = apply(KeyKind.timerKey, number)
+  def logicAlarmKey(number: Int): LogicAlarmKey = apply(KeyKind.logicAlarmKey, number)
+  def meterKey(number: Int): MeterKey = apply(KeyKind.meterKey, number)
+  def commonKey(number: Int): CommonKey = apply(KeyKind.commonKey, number)
+
   lazy val defaultMacroKey: MacroKey = apply(KeyKind.macroKey, 1)
 
 
@@ -108,29 +122,30 @@ object KeyFactory {
     }
   }
 
-  case class PortKey protected(override val number: Int) extends Key(portKey, number)
+  case class PortKey protected(override val number: Int) extends Key(KeyKind.portKey, number)
 
-  case class LogicAlarmKey(override val number: Int) extends Key(logicAlarmKey, number)
-  case class MeterKey(override val number: Int) extends Key(meterKey, number)
+  case class LogicAlarmKey(override val number: Int) extends Key(KeyKind.logicAlarmKey, number)
 
-  case class MacroKey private(override val number: Int) extends Key(macroKey, number)
+  case class MeterKey(override val number: Int) extends Key(KeyKind.meterKey, number)
 
-  case class MessageMacroKey(override val number: Int) extends Key(messageMacroKey, number)
+  case class MacroKey private(override val number: Int) extends Key(KeyKind.macroKey, number)
 
-  case class FunctionKey(override val number: Int) extends Key(functionKey, number)
+  case class MessageMacroKey(override val number: Int) extends Key(KeyKind.messageMacroKey, number)
 
-  case class ScheduleKey(override val number: Int) extends Key(scheduleKey, number)
+  case class FunctionKey(override val number: Int) extends Key(KeyKind.functionKey, number)
 
-  case class WordKey(override val number: Int) extends Key(wordKey, number)
+  case class ScheduleKey(override val number: Int) extends Key(KeyKind.scheduleKey, number)
 
-  case class DtmfMacroKey(override val number: Int) extends Key(dtmfMacroKey, number)
+  case class WordKey(override val number: Int) extends Key(KeyKind.wordKey, number)
 
-  case class CourtesyToneKey(override val number: Int) extends Key(courtesyToneKey, number)
+  case class DtmfMacroKey(override val number: Int) extends Key(KeyKind.dtmfMacroKey, number)
+
+  case class CourtesyToneKey(override val number: Int) extends Key(KeyKind.courtesyToneKey, number)
 
   /**
    * There can be any number of [[CommonKey]] but they don't index into a map by themselves. MaxN just indicates how many to extract for a given field name.
    */
-  case class CommonKey(override val number: Int = 1) extends Key(commonKey, number)
+  case class CommonKey(override val number: Int = 1) extends Key(KeyKind.commonKey, number)
 
-  case class TimerKey(override val number: Int = 1) extends Key(timerKey, number)
+  case class TimerKey(override val number: Int = 1) extends Key(KeyKind.timerKey, number)
 }

@@ -17,7 +17,6 @@ object Dtmf {
   val dtmfDigits = "x1234567890*#ABC"
 
   def apply(in: Seq[Int]): Dtmf = {
-    assert(in.length == 5, "Dtmf fields are 5 ints long")
 
     val digits: Seq[Char] = in.flatMap { int =>
       Seq(int & 0x0f, (int & 0xf0) >> 4)

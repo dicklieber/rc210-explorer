@@ -19,7 +19,7 @@ package net.wa9nnn.rc210
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.serial.{Memory, MemoryArray, MemoryBuffer, Slice}
+import net.wa9nnn.rc210.serial.{MemoryArray, MemoryBuffer}
 
 import java.io.InputStream
 import javax.inject.{Inject, Singleton}
@@ -55,7 +55,7 @@ class DataProvider @Inject()(fieldDefinitions: FieldDefinitions) extends LazyLog
   }
 
   private val values: Seq[FieldEntry] = fieldDefinitions.complexFd.flatMap { memoryExtractor: ComplexExtractor =>
-    val r: Seq[FieldEntry] = memoryExtractor.extract(memory)
+    val r: Seq[FieldEntry] = memoryExtractor.extract(memoryBuffer)
     r
   }
 
@@ -63,12 +63,4 @@ class DataProvider @Inject()(fieldDefinitions: FieldDefinitions) extends LazyLog
 }
 
 
-trait ComplexExtractor extends FieldDefinition {
 
-  /**
-   *
-   * @param memory    source of RC-210 data.
-   * @return what we extracted.
-   */
-  def extract(memory: Memory): Seq[FieldEntry]
-}

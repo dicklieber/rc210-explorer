@@ -2,16 +2,14 @@ package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row}
-import net.wa9nnn.rc210.ComplexExtractor
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field._
 import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.key.KeyFactory.ScheduleKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.model.TriggerNode
-import net.wa9nnn.rc210.serial.{Memory, SlicePos}
+import net.wa9nnn.rc210.serial.MemoryBuffer
 import net.wa9nnn.rc210.util.MacroSelect
-import play.api.libs.json.{JsObject, JsValue, Json}
 
 /**
  *
@@ -121,20 +119,15 @@ object Schedule extends LazyLogging with ComplexExtractor {
 
   def header(count: Int): Header = Header(s"Schedules ($count)", "SetPoint", "Macro", "DOW", "WeekInMonth", "MonthOfYear", "LocalTime")
 
-  override def extract(memory: Memory): Seq[FieldEntry] = {
+  override def extract(memory: MemoryBuffer): Seq[FieldEntry] = {
 
-
-    def collect(php: String): Seq[Int] = {
-      memory(SlicePos(php)).data
-    }
-
-    val scheduleBuilder = new ScheduleBuilder()
+    val scheduleBuilder = new ScheduleBuilder(memory.iterator8At(616))
     // Collection values from various places in Memory.
-    scheduleBuilder.putDow(collect("//SetPointDOW - 616-655"))
-    scheduleBuilder.putMoy(collect("//SetPointMOY - 656-695"))
-    scheduleBuilder.putHours(collect("//SetPointHours - 696-735"))
-    scheduleBuilder.putMinutes(collect("//SetPointMinutes - 736-775"))
-    scheduleBuilder.putMacro(collect("//SetPointMacro - 776-815"))
+    scheduleBuilder.putDow()
+    scheduleBuilder.putMoy()
+    scheduleBuilder.putHours()
+    scheduleBuilder.putMinutes()
+    scheduleBuilder.putMacro()
 
 
     scheduleBuilder.slots.toIndexedSeq.map { schedule =>

@@ -18,12 +18,11 @@
 package net.wa9nnn.rc210.data.timers
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.ComplexExtractor
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldInt}
+import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldEntry, FieldInt}
 import net.wa9nnn.rc210.key.KeyFactory.TimerKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
-import net.wa9nnn.rc210.serial.{Memory, SlicePos}
+import net.wa9nnn.rc210.serial.MemoryBuffer
 import net.wa9nnn.rc210.util.MacroSelect
 
 //noinspection ZeroIndexToHead
@@ -31,35 +30,26 @@ object TimerExtractor extends ComplexExtractor with LazyLogging {
   private val nTimers = KeyKind.timerKey.maxN()
   //  Memory Layout
   //  seconds for each timer 6 2-byte ints
-  //  macroToRun for each timer 6 2-byte ints
+  //  macroToRun for each timer 6 1-byte ints
 
 
   /**
    *
-   * @param memory    source of RC-210 data.
+   * @param memoryBuffer    source of RC-210 data.
    * @return what we extracted.
    */
-  override def extract(memory: Memory): Seq[FieldEntry] = {
-    val secondsData: Seq[Int] = memory.apply(SlicePos(1553, nTimers * 2))
-      .data
-      .grouped(2)
-      .map { twoBytes: Seq[Int] =>
-        twoBytes(0) + (twoBytes(1) * 256)
-      }.toSeq
-    val macroData: Seq[MacroSelect] = memory.apply(SlicePos(1565, nTimers))
-      .data
-      .map { number =>
-        MacroSelect(number)
-      }.toSeq
+  override def extract(memoryBuffer: MemoryBuffer): Seq[FieldEntry] = {
+    val seconds = memoryBuffer.iterator16At(1553)
+    val macros = memoryBuffer.iterator8At(1565)
 
-   val r =  (for {
+
+    val r: Seq[FieldEntry] = (for {
       index <- 0 until KeyKind.timerKey.maxN()
     } yield {
       val key: TimerKey = KeyFactory(KeyKind.timerKey, index + 1)
-      FieldEntry(this,
-        FieldKey("Timer", key),
-
-        Timer(key, FieldInt(secondsData(index)), macroData(index)))
+      val fieldKey = FieldKey("Timer", key)
+      val macroSelect: MacroSelect = MacroSelect(macros.next())
+      FieldEntry(this, fieldKey, Timer(key, FieldInt(seconds.next()), macroSelect))
     })
     r
   }

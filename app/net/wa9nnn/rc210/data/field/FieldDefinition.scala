@@ -67,7 +67,15 @@ case class SimpleField(offset: Int,
 
 }
 
+trait ComplexExtractor extends FieldDefinition {
 
+  /**
+   *
+   * @param memory    source of RC-210 data.
+   * @return what we extracted.
+   */
+  def extract(memoryBuffer: MemoryBuffer): Seq[FieldEntry]
+}
 
 
 
