@@ -42,10 +42,17 @@ case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue {
       .toSeq
     copy(value = candidate)
   }
+
+  override def toJsonValue: String = display
 }
 
 object Field2Numbers extends FieldExtractor {
   override def extract(itr: Iterator[Int], field: SimpleField): Field2Numbers = {
     Field2Numbers(Seq(itr.next(), itr.next()))
+  }
+
+  override def parseJson(s: String): FieldValue = {
+    new Field2Numbers(s.split(" ")
+      .map(_.toInt))
   }
 }

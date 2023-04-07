@@ -107,9 +107,17 @@ object MappedValues {
   implicit val fmtMappedValues: Format[MappedValues] = new Format[MappedValues] {
     override def reads(json: JsValue): JsResult[MappedValues] = ???
 
-    override def writes(o: MappedValues): JsValue = ???
+    override def writes(o: MappedValues): JsValue = {
+
+      val value: Seq[(String, JsValue)] = o.all.map { fieldEntry =>
+        fieldEntry.fieldKey.toString -> JsString(fieldEntry.fieldValue.display)
+      }
+      JsObject {
+        value
+      }
+    }
   }
 }
 
 
-case class NewCandidate(fieldKey: FieldKey, formValue: String)
+  case class NewCandidate(fieldKey: FieldKey, formValue: String)

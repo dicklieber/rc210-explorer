@@ -41,6 +41,8 @@ case class FieldInt(value: Int) extends SimpleFieldValue {
   override def update(paramValue: String): FieldValue = {
     FieldInt(paramValue.toInt)
   }
+
+  override def toJsonValue: String = display
 }
 
 object FieldInt extends FieldExtractor {
@@ -58,4 +60,6 @@ object FieldInt extends FieldExtractor {
       itr.next()
     )
   }
+
+  override def parseJson(s: String): FieldValue = new FieldInt(s.toInt)
 }

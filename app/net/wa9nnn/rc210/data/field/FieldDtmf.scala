@@ -48,4 +48,6 @@ object FieldDtmf extends FieldExtractor {
       .map(_.toChar)
       .toString())
   }
+
+  override def parseJson(s: String): FieldValue = new FieldDtmf(s)
 }

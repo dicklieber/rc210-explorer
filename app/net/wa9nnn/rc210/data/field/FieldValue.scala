@@ -47,6 +47,7 @@ sealed trait FieldValue {
   def toHtmlField(renderMetadata: RenderMetadata): String
 
 
+
   /**
    *
    * @param paramValue candidate from form.
@@ -64,6 +65,7 @@ trait SimpleFieldValue extends FieldValue {
     val html: String = toHtmlField(renderMetadata)
     Cell.rawHtml(html)
   }
+  def toJsonValue:String
 
 }
 
@@ -93,6 +95,7 @@ trait ComplexFieldValue[K <: Key] extends FieldValue {
 trait FieldExtractor {
   def extract(itr: Iterator[Int], field: SimpleField): FieldValue
 
+  def parseJson(s:String) :FieldValue
 }
 
 

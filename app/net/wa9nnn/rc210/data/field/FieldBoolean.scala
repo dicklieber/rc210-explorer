@@ -40,6 +40,8 @@ case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue {
   override def update(paramValue: String): FieldValue = {
     FieldBoolean(paramValue == "true")
   }
+
+  override def toJsonValue: String = display
 }
 
 object FieldBoolean extends FieldExtractor{
@@ -51,4 +53,6 @@ object FieldBoolean extends FieldExtractor{
   override def extract(itr: Iterator[Int], simpleField: SimpleField): FieldBoolean = {
     FieldBoolean(itr.next() > 0)
   }
+
+  override def parseJson(s: String): FieldValue = new FieldBoolean(s == "true")
 }

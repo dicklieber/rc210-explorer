@@ -39,14 +39,23 @@ case class FieldTime(value: LocalTime = LocalTime.MIN) extends SimpleFieldValue 
     val candidate = LocalTime.parse(paramValue)
     copy(value = candidate)
   }
+
+  override def toJsonValue: String = display
 }
 
-object FieldTime {
+object FieldTime extends FieldExtractor {
   val time = "Time"
 
   def apply()(implicit nameToValue: Map[String, String]): FieldTime = {
     val sTime = nameToValue(time)
     val localTime = LocalTime.parse(sTime)
+    new field.FieldTime(localTime)
+  }
+
+  override def extract(itr: Iterator[Int], field: SimpleField): FieldValue = throw new IllegalStateException("Can't exrtract as a asimpel field!")
+
+  override def parseJson(s: String): FieldValue = {
+    val localTime = LocalTime.parse(s)
     new field.FieldTime(localTime)
   }
 }
