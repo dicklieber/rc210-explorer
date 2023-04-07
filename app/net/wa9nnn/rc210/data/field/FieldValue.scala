@@ -18,11 +18,10 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui.{Cell, Row}
-import net.wa9nnn.rc210.data.{FieldEntryJson, FieldKey, FieldParser}
+import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.key.KeyFactory.Key
-import net.wa9nnn.rc210.serial.MemoryBuffer
-import play.api.libs.json.{JsObject, JsValue}
+import play.api.libs.json.JsValue
 
 /**
  * Holds the value for a field.
@@ -93,10 +92,7 @@ trait ComplexFieldValue[K <: Key] extends FieldValue {
 
 }
 
-trait FieldExtractor extends FieldParser{
-  def extract(itr: Iterator[Int], field: SimpleField): FieldValue
 
-}
 
 
 

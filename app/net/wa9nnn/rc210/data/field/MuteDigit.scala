@@ -37,7 +37,7 @@ case class MuteDigit(value: String = selectOptions.head.display) extends FieldSe
 
 }
 
-object MuteDigit extends FieldExtractor {
+object MuteDigit extends SimpleExtractor {
 
   def apply(id: Int): MuteDigit = {
     val maybeOption = selectOptions.find(_.id == id)
@@ -50,11 +50,12 @@ object MuteDigit extends FieldExtractor {
       "2nd digit" -> 2
     ).map { t => SelectOption(t._2, t._1) }
 
-  override def extract(itr: Iterator[Int], field: SimpleField): MuteDigit = {
+  override def extractFromInts(itr: Iterator[Int], field: SimpleField): MuteDigit = {
     val id = itr.next()
     apply(id)
   }
 
   override def jsonToField(jsValue: JsValue): FieldValue = new  MuteDigit(jsValue.as[String])
 
+  override val name: String = "MuteDigit"
 }

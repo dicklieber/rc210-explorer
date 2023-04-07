@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.util
 
-import net.wa9nnn.rc210.data.field.{FieldExtractor, FieldValue, RenderMetadata, SimpleField}
+import net.wa9nnn.rc210.data.field.{FieldExtractor, FieldValue, RenderMetadata, SimpleExtractor, SimpleField}
 import net.wa9nnn.rc210.key.KeyFactory.MacroKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.libs.json._
@@ -50,7 +50,7 @@ case class MacroSelect(value: MacroKey = KeyFactory.defaultMacroKey) extends Fie
 
 }
 
-object MacroSelect extends FieldExtractor {
+object MacroSelect extends SimpleExtractor {
   val name: String = "Macro"
 
   /**
@@ -81,11 +81,12 @@ object MacroSelect extends FieldExtractor {
     SelectOption(macroKey.number, macroKey.toString)
   }
 
-  override def extract(itr: Iterator[Int], field: SimpleField): MacroSelect = {
+  override def extractFromInts(itr: Iterator[Int], field: SimpleField): MacroSelect = {
     MacroSelect(itr.next() + 1)
   }
 
   override def jsonToField(jsValue: JsValue): FieldValue = jsValue.as[MacroSelect]
+
 }
 
 

@@ -44,7 +44,7 @@ case class FieldTime(value: LocalTime = LocalTime.MIN) extends SimpleFieldValue 
 
 }
 
-object FieldTime extends FieldExtractor {
+object FieldTime extends SimpleExtractor {
   val time = "Time"
 
   def apply()(implicit nameToValue: Map[String, String]): FieldTime = {
@@ -53,7 +53,7 @@ object FieldTime extends FieldExtractor {
     new field.FieldTime(localTime)
   }
 
-  override def extract(itr: Iterator[Int], field: SimpleField): FieldValue = throw new IllegalStateException("Can't exrtract as field!")
+  override def extractFromInts(itr: Iterator[Int], field: SimpleField): FieldValue = throw new IllegalStateException("Can't exrtract as field!")
 
   implicit val fmtFieldTime: Format[FieldTime] = new Format[FieldTime] {
     override def reads(json: JsValue): JsResult[FieldTime] = JsSuccess(new FieldTime())
@@ -62,4 +62,6 @@ object FieldTime extends FieldExtractor {
   }
 
   override def jsonToField(jsValue: JsValue): FieldValue = jsValue.as[FieldTime]
+
+  override val name: String = "FieldTime"
 }

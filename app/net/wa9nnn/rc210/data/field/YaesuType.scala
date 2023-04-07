@@ -35,7 +35,7 @@ case class YaesuType(value: String = selectOptions.head.display) extends FieldSe
   }
 }
 
-object YaesuType extends FieldExtractor {
+object YaesuType extends SimpleExtractor {
 
   def apply(id: Int): YaesuType = {
     val maybeOption = selectOptions.find(_.id == id)
@@ -54,11 +54,12 @@ object YaesuType extends FieldExtractor {
       "Kenwood 271A" -> 8,
       "Kenwood V71a" -> 9).map { t => SelectOption(t._2, t._1) }
 
-  override def extract(itr: Iterator[Int], field: SimpleField): YaesuType = {
+  override def extractFromInts(itr: Iterator[Int], field: SimpleField): YaesuType = {
     val id = itr.next()
     apply(id)
   }
 
   override def jsonToField(jsValue: JsValue): FieldValue = new YaesuType(jsValue.as[String])
 
+  override val name: String = "YaesuType"
 }

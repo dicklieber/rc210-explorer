@@ -30,12 +30,12 @@ import scala.concurrent.duration.DurationInt
 
 @Singleton
 class IOController @Inject()(val controllerComponents: ControllerComponents,
-                             mappedValues: DataStore) extends BaseController {
+                             dataStore: DataStore) extends BaseController {
   implicit val timeout: Timeout = 5.seconds
 
   def downloadJson(): Action[AnyContent] = Action {
 
-    val jsObject =Json.toJson(mappedValues)
+    val jsObject =Json.toJson(dataStore)
     val sJson = Json.prettyPrint(jsObject)
 
     Ok(sJson).withHeaders(

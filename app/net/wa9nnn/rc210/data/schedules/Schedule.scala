@@ -134,7 +134,7 @@ object Schedule extends LazyLogging with ComplexExtractor {
 
 
     scheduleBuilder.slots.toIndexedSeq.map { schedule =>
-      FieldEntry(this, FieldKey("Schedule", schedule.key), schedule)
+      FieldEntry(fieldDefinition, FieldKey("Schedule", schedule.key), schedule)
     }
   }
 
@@ -149,13 +149,13 @@ object Schedule extends LazyLogging with ComplexExtractor {
     )
   }
 
-  override val fieldName: String = "Schedule"
-  override val kind: KeyKind = KeyKind.scheduleKey
   import net.wa9nnn.rc210.key.KeyFormats._
   implicit val fmtSchedule: Format[Schedule] = Json.format[Schedule]
 
 
   override def jsonToField(jsValue: JsValue): FieldValue = jsValue.as[Schedule]
+
+  override val name: String = "Schedule"
 }
 
 

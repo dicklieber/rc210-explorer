@@ -50,15 +50,14 @@ object TimerExtractor extends ComplexExtractor with LazyLogging {
       val key: TimerKey = KeyFactory(KeyKind.timerKey, index + 1)
       val fieldKey = FieldKey("Timer", key)
       val macroSelect: MacroSelect = MacroSelect(macros.next())
-      FieldEntry(this, fieldKey, Timer(key, FieldInt(seconds.next()), macroSelect))
+      FieldEntry(fieldDefinition, fieldKey, Timer(key, FieldInt(seconds.next()), macroSelect))
     })
     r
   }
-
-  override val fieldName: String = "Courtesy Tone"
-  override val kind: KeyKind = KeyKind.courtesyToneKey
-import net.wa9nnn.rc210.key.KeyFormats._
+  import net.wa9nnn.rc210.key.KeyFormats._
   implicit val fmtTimer: Format[Timer] = Json.format[Timer]
 
   override def jsonToField(jsValue: JsValue): FieldValue = jsValue.as[Timer]
+
+  override val name: String = "Timer"
 }

@@ -35,7 +35,7 @@ case class RadioType(value: String = selectOptions.head.display) extends FieldSe
   }
 }
 
-object RadioType extends FieldExtractor {
+object RadioType extends SimpleExtractor {
 
   def apply(id: Int): RadioType = {
     val maybeOption = selectOptions.find(_.id == id)
@@ -54,11 +54,12 @@ object RadioType extends FieldExtractor {
       "Kenwood 271A" -> 8,
       "Kenwood V71a" -> 9).map { t => SelectOption(t._2, t._1) }
 
-  override def extract(itr: Iterator[Int], field: SimpleField): RadioType = {
+  override def extractFromInts(itr: Iterator[Int], field: SimpleField): RadioType = {
     val id = itr.next()
     apply(id)
   }
 
   override def jsonToField(jsValue: JsValue): FieldValue = new RadioType(jsValue.as[String])
 
+  override val name: String = "RadioType"
 }

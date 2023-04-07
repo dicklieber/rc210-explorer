@@ -45,15 +45,14 @@ case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue {
 
 }
 
-object FieldBoolean extends FieldExtractor{
+object FieldBoolean extends SimpleExtractor{
   def apply(name: String)(implicit nameToValue: Map[String, String]): FieldBoolean = {
     val sBool = nameToValue(name)
     new FieldBoolean(sBool == "true")
   }
 
-  override def extract(itr: Iterator[Int], simpleField: SimpleField): FieldBoolean = {
-    FieldBoolean(itr.next() > 0)
-  }
+  override def extractFromInts(itr: Iterator[Int], fieldDefinition: SimpleField): FieldValue =  FieldBoolean(itr.next() > 0)
+
 
   implicit val fmtFieldBoolean: Format[FieldBoolean] = new Format[FieldBoolean] {
 
@@ -64,4 +63,6 @@ object FieldBoolean extends FieldExtractor{
 
 
   override def jsonToField(jsValue: JsValue): FieldValue = FieldBoolean(jsValue.as[Boolean])
+
+  override val name: String = "FieldBoolean"
 }

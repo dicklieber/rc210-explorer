@@ -21,7 +21,7 @@ import net.wa9nnn.rc210.DataProvider
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
 import net.wa9nnn.rc210.key.KeyFactory.Key
 import net.wa9nnn.rc210.key.KeyKind
-import play.api.libs.json.JsValue
+import play.api.libs.json.{Format, JsValue, Json}
 
 import javax.inject.{Inject, Singleton}
 import scala.collection.concurrent.TrieMap
@@ -108,7 +108,8 @@ object DataStore {
     override def writes(o: DataStore): JsValue = {
 
       val value: Seq[(String, JsValue)] = o.all.map { fieldEntry =>
-        fieldEntry.fieldKey.toString -> JsString(fieldEntry.fieldValue.display)
+        val fieldEntryJson = FieldEntryJson(fieldEntry)
+        fieldEntry.fieldKey.param -> Json.toJson(fieldEntryJson)
       }
       JsObject {
         value
@@ -129,18 +130,18 @@ case class NewCandidate(fieldKey: FieldKey, formValue: String)
  * @param fieldValue
  * @param candidate
  */
-case class FieldEntryJson(fieldKey: FieldKey, parser: FieldParser, fieldValue: JsValue, candidate: Option[JsValue])
+case class FieldEntryJson(fieldKey: FieldKey, parserName:String, fieldValue: JsValue, candidate: Option[JsValue])
 
 object FieldEntryJson {
   def apply(fieldEntry: FieldEntry): FieldEntryJson = {
     val fieldKey = fieldEntry.fieldKey
-    new FieldEntryJson(fieldKey, fieldEntry.fieldDefinition, fieldEntry.fieldValue.toJsonValue, fieldEntry.candidate.map(_.toJsonValue))
+    new FieldEntryJson(fieldKey, fieldEntry.fieldDefinition.parserName, fieldEntry.fieldValue.toJsonValue, fieldEntry.candidate.map(_.toJsonValue))
   }
-}
 
-trait FieldParser {
-  def jsonToField(jsValue: JsValue): FieldValue
+  implicit val fmtFieldEntryJson: Format[FieldEntryJson] = Json.format[FieldEntryJson]
 
 }
+
+
 
 

@@ -1,18 +1,20 @@
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.data.{FieldKey, FieldParser}
+import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.{Memory, MemoryBuffer}
 import play.api.libs.json.JsValue
 
-trait FieldDefinition extends FieldParser{
+trait FieldDefinition {
+  val parserName: String
+
+
   def tooltip: String = ""
 
   val fieldName: String
   val kind: KeyKind
   val template: String = ""
   val units: String = ""
-
 }
 
 /**
@@ -32,12 +34,16 @@ case class SimpleField(offset: Int,
                        fieldName: String,
                        kind: KeyKind,
                        override val template: String,
-                       fieldExtractor: FieldExtractor,
+                       fieldExtractor: SimpleExtractor,
                        override val tooltip: String = "",
                        override val units: String = "",
                        min: Int = 1,
                        max: Int = 255,
                       ) extends FieldDefinition {
+  def extractFromInts(iterator: Iterator[Int]): FieldValue = {
+    fieldExtractor.extractFromInts(iterator, this)
+  }
+
 
   /**
    * Create an [[Iterator[Int]] over the [[MemoryBuffer]] starting at an offset.
@@ -49,10 +55,6 @@ case class SimpleField(offset: Int,
       memoryBuffer.iterator16At(offset)
     else
       memoryBuffer.iterator8At(offset)
-  }
-
-  def extract(iterator: Iterator[Int]): FieldValue = {
-    fieldExtractor.extract(iterator, this)
   }
 
   def fieldKey(number: Int): FieldKey = {
@@ -67,20 +69,40 @@ case class SimpleField(offset: Int,
 
   def tooltip(tooltip: String): SimpleField = copy(tooltip = tooltip)
 
-  override def jsonToField(jsValue: JsValue): FieldValue ={
-    fieldExtractor.jsonToField(jsValue)
-  }
+  override val parserName: String = fieldExtractor.name
 }
 
-trait ComplexExtractor extends FieldDefinition {
+trait ComplexExtractor extends FieldExtractor {
 
   /**
    *
-   * @param memory    source of RC-210 data.
+   * @param memoryBuffer    source of RC-210 data.
    * @return what we extracted.
    */
   def extract(memoryBuffer: MemoryBuffer): Seq[FieldEntry]
+
+   lazy val fieldDefinition: FieldDefinition = {
+    new FieldDefinition {
+      override val fieldName: String = name
+      override val kind: KeyKind = KeyKind.courtesyToneKey
+      override val parserName: String = fieldName
+    }
+  }
+
 }
 
+trait SimpleExtractor extends FieldExtractor {
+  def extractFromInts(iterator: Iterator[Int], fieldDefinition: SimpleField): FieldValue
+}
 
+trait FieldExtractor {
+
+  def jsonToField(jsValue: JsValue): FieldValue
+
+  /**
+   * for various things e.g. parser name.
+   */
+  val name: String
+
+}
 

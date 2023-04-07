@@ -40,10 +40,11 @@ case class FieldDtmf(value: String) extends SimpleFieldValue {
 
 }
 
-object FieldDtmf extends FieldExtractor {
-  override def extract(itr: Iterator[Int], simpleField: SimpleField): FieldDtmf = {
+object FieldDtmf extends SimpleExtractor {
+
+  override def extractFromInts(itr: Iterator[Int], fieldDefinition: SimpleField): FieldValue = {
     val ints: Seq[Int] = for {
-      _ <- 0 to simpleField.max
+      _ <- 0 to fieldDefinition.max
     } yield {
       itr.next()
     }
@@ -52,6 +53,7 @@ object FieldDtmf extends FieldExtractor {
       .toString())
   }
 
+
   implicit val fmtFieldDtmf: Format[FieldDtmf] = new Format[FieldDtmf] {
     override def reads(json: JsValue): JsResult[FieldDtmf] = JsSuccess(new FieldDtmf(json.as[String]))
 
@@ -59,4 +61,6 @@ object FieldDtmf extends FieldExtractor {
   }
 
   override def jsonToField(jsValue: JsValue): FieldValue = jsValue.as[FieldDtmf]
+
+  override val name: String = "FieldDtmf"
 }

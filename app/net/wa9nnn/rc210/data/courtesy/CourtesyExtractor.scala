@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.courtesy
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldEntry, FieldValue}
+import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldDefinition, FieldEntry, FieldValue}
 import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.MemoryBuffer
@@ -55,12 +55,13 @@ object CourtesyExtractor extends ComplexExtractor with LazyLogging {
         ))
     }
     courtesyTones.map { ct =>
-      FieldEntry(this, FieldKey("CourtesyTone", ct.key), ct)
+      FieldEntry(fieldDefinition, FieldKey("CourtesyTone", ct.key), ct)
     }
   }
 
-  override val fieldName: String = "Courtesy Tone"
-  override val kind: KeyKind = KeyKind.courtesyToneKey
 
   override def jsonToField(jsValue: JsValue): FieldValue = jsValue.as[CourtesyTone]
+
+
+  override val name: String = "CourtesyExtractor"
 }

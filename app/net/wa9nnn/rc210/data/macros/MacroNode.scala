@@ -9,8 +9,7 @@ import net.wa9nnn.rc210.key.KeyFactory.{FunctionKey, MacroKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.MemoryBuffer
-import play.api.libs.json.Json.toJson
-import play.api.libs.json.{Format, JsObject, JsValue, Json}
+import play.api.libs.json.{Format, JsValue, Json}
 
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -77,7 +76,7 @@ object MacroNode extends LazyLogging with ComplexExtractor  {
       .concat(macroBuilder(2825, 7, 50)) // SlicePos("//ShortMacro - 2825-3174"), memory, 7))
 
     val r: Seq[FieldEntry] = macros.map { m: MacroNode =>
-      FieldEntry(this, m.fieldKey, m)
+      FieldEntry(fieldDefinition, m.fieldKey, m)
     }
     r
   }
@@ -85,13 +84,13 @@ object MacroNode extends LazyLogging with ComplexExtractor  {
   //*2050 xxx yyyyyyyy where xxx is the 3 digit Macro number (001-105) and yyyyyyyy is the DTMF code up to 8 digits
 
 
-  override val fieldName: String = "Macro"
-  override val kind: KeyKind = KeyKind.macroKey
-import  net.wa9nnn.rc210.key.KeyFormats._
+import net.wa9nnn.rc210.key.KeyFormats._
   implicit val fmtMacroNode: Format[MacroNode] = Json.format[MacroNode]
   override def jsonToField(jsValue: JsValue): FieldValue = {
     jsValue.as[MacroNode]
   }
+
+  override val name: String = "MacroNode"
 }
 
 

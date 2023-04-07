@@ -44,9 +44,9 @@ case class FieldInt(value: Int) extends SimpleFieldValue {
 
 }
 
-object FieldInt extends FieldExtractor {
+object FieldInt extends SimpleExtractor {
 
-  override def extract(itr: Iterator[Int], field: SimpleField): FieldInt = {
+  override def extractFromInts(itr: Iterator[Int], field: SimpleField): FieldInt = {
     new FieldInt(if (field.max > 256)
       itr.next() + itr.next() * 256
     else
@@ -61,4 +61,6 @@ object FieldInt extends FieldExtractor {
   }
 
   override def jsonToField(jsValue: JsValue): FieldValue =  new FieldInt(jsValue.as[Int])
+
+  override val name: String = "FieldInt"
 }

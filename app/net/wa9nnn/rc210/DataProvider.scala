@@ -47,7 +47,7 @@ class DataProvider @Inject()(fieldDefinitions: FieldDefinitions) extends LazyLog
     it = fieldDefinition.iterator()
     number <- 1 to fieldDefinition.kind.maxN
   } yield {
-    val fieldValue: FieldValue = fieldDefinition.extract(it)
+    val fieldValue: FieldValue = fieldDefinition.extractFromInts(it)
     val fieldKey = fieldDefinition.fieldKey(number)
     val fieldEntry = FieldEntry(fieldDefinition, fieldKey, fieldValue)
     logger.trace("FieldEntry: offset: {} fieldEntry: {})", fieldDefinition.offset, fieldEntry.toString)
