@@ -18,8 +18,8 @@
 package controllers
 
 import akka.util.Timeout
+import net.wa9nnn.rc210.data.DataStore
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.key.KeyFactory
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc._
@@ -30,7 +30,7 @@ import scala.concurrent.duration.DurationInt
 
 @Singleton
 class IOController @Inject()(val controllerComponents: ControllerComponents,
-                             mappedValues: MappedValues) extends BaseController {
+                             mappedValues: DataStore) extends BaseController {
   implicit val timeout: Timeout = 5.seconds
 
   def downloadJson(): Action[AnyContent] = Action {

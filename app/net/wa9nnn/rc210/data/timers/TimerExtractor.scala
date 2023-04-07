@@ -19,11 +19,12 @@ package net.wa9nnn.rc210.data.timers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldEntry, FieldInt}
+import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldEntry, FieldInt, FieldValue}
 import net.wa9nnn.rc210.key.KeyFactory.TimerKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.MemoryBuffer
 import net.wa9nnn.rc210.util.MacroSelect
+import play.api.libs.json.{Format, JsValue, Json}
 
 //noinspection ZeroIndexToHead
 object TimerExtractor extends ComplexExtractor with LazyLogging {
@@ -56,4 +57,8 @@ object TimerExtractor extends ComplexExtractor with LazyLogging {
 
   override val fieldName: String = "Courtesy Tone"
   override val kind: KeyKind = KeyKind.courtesyToneKey
+import net.wa9nnn.rc210.key.KeyFormats._
+  implicit val fmtTimer: Format[Timer] = Json.format[Timer]
+
+  override def jsonToField(jsValue: JsValue): FieldValue = jsValue.as[Timer]
 }

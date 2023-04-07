@@ -19,9 +19,8 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
-import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.{DataStore, FieldKey}
 import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.named.{NamedKey, NamedManager}
 import net.wa9nnn.rc210.data.schedules.Schedule
 import net.wa9nnn.rc210.key.KeyFactory.ScheduleKey
@@ -34,7 +33,7 @@ import javax.inject.{Inject, Singleton}
 
 @Singleton()
 class ScheduleController @Inject()(val controllerComponents: ControllerComponents,
-                                   mappedValues: MappedValues
+                                   mappedValues: DataStore
                                   )(implicit namedSource: NamedManager) extends BaseController with LazyLogging {
 
 

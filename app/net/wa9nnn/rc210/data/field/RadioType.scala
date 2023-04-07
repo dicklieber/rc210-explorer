@@ -19,6 +19,7 @@ package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.field.RadioType.selectOptions
 import net.wa9nnn.rc210.util.{FieldSelect, SelectOption}
+import play.api.libs.json.JsValue
 
 /**
  * An enumeration with behaviour.
@@ -51,10 +52,13 @@ object RadioType extends FieldExtractor {
       // there is no 6
       "Kenwood g707" -> 7,
       "Kenwood 271A" -> 8,
-      "Kenwood V71a" -> 9    ).map { t => SelectOption(t._2, t._1) }
+      "Kenwood V71a" -> 9).map { t => SelectOption(t._2, t._1) }
 
   override def extract(itr: Iterator[Int], field: SimpleField): RadioType = {
     val id = itr.next()
     apply(id)
   }
+
+  override def jsonToField(jsValue: JsValue): FieldValue = new RadioType(jsValue.as[String])
+
 }

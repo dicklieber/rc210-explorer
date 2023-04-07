@@ -17,11 +17,10 @@
 
 package controllers
 
-import net.wa9nnn.rc210.data.{Dtmf, FieldKey}
+import net.wa9nnn.rc210.data.{DataStore, Dtmf, FieldKey, NewCandidate}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.MacroNode
-import net.wa9nnn.rc210.data.mapped.{MappedValues, NewCandidate}
 import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.mvc._
@@ -34,7 +33,7 @@ import net.wa9nnn.rc210.key.KeyFactory._
 
 @Singleton()
 class MacroNodeController @Inject()(val mcc: MessagesControllerComponents,
-                                    mappedValues: MappedValues
+                                    mappedValues: DataStore
                                    )(implicit namedSource: NamedManager, functionsProvider: FunctionsProvider) extends MessagesAbstractController(mcc) {
 
 

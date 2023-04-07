@@ -1,16 +1,18 @@
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.{FieldKey, FieldParser}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.{Memory, MemoryBuffer}
+import play.api.libs.json.JsValue
 
-trait FieldDefinition {
+trait FieldDefinition extends FieldParser{
   def tooltip: String = ""
 
   val fieldName: String
   val kind: KeyKind
   val template: String = ""
-  val units:String = ""
+  val units: String = ""
+
 }
 
 /**
@@ -65,6 +67,9 @@ case class SimpleField(offset: Int,
 
   def tooltip(tooltip: String): SimpleField = copy(tooltip = tooltip)
 
+  override def jsonToField(jsValue: JsValue): FieldValue ={
+    fieldExtractor.jsonToField(jsValue)
+  }
 }
 
 trait ComplexExtractor extends FieldDefinition {

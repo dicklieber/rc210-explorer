@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.data.field
 
+import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue, Json}
 import views.html.fieldDtmf
 
 case class FieldDtmf(value: String) extends SimpleFieldValue {
@@ -35,12 +36,14 @@ case class FieldDtmf(value: String) extends SimpleFieldValue {
   override def update(paramValue: String): FieldValue = {
     FieldDtmf(paramValue)
   }
+  override def toJsonValue: JsValue = Json.toJson(this)
+
 }
 
 object FieldDtmf extends FieldExtractor {
   override def extract(itr: Iterator[Int], simpleField: SimpleField): FieldDtmf = {
     val ints: Seq[Int] = for {
-      n <- 0 to simpleField.max
+      _ <- 0 to simpleField.max
     } yield {
       itr.next()
     }
@@ -49,5 +52,11 @@ object FieldDtmf extends FieldExtractor {
       .toString())
   }
 
-  override def parseJson(s: String): FieldValue = new FieldDtmf(s)
+  implicit val fmtFieldDtmf: Format[FieldDtmf] = new Format[FieldDtmf] {
+    override def reads(json: JsValue): JsResult[FieldDtmf] = JsSuccess(new FieldDtmf(json.as[String]))
+
+    override def writes(o: FieldDtmf): JsValue = JsString(o.value)
+  }
+
+  override def jsonToField(jsValue: JsValue): FieldValue = jsValue.as[FieldDtmf]
 }

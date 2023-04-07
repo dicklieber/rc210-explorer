@@ -17,8 +17,9 @@
 
 package net.wa9nnn.rc210.data.field
 
+import com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase
 import net.wa9nnn.rc210.data.field
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue, Json}
 
 import java.time.LocalTime
 
@@ -39,8 +40,8 @@ case class FieldTime(value: LocalTime = LocalTime.MIN) extends SimpleFieldValue 
     val candidate = LocalTime.parse(paramValue)
     copy(value = candidate)
   }
+  override def toJsonValue: JsValue = Json.toJson(this)
 
-  override def toJsonValue: String = display
 }
 
 object FieldTime extends FieldExtractor {
@@ -52,10 +53,13 @@ object FieldTime extends FieldExtractor {
     new field.FieldTime(localTime)
   }
 
-  override def extract(itr: Iterator[Int], field: SimpleField): FieldValue = throw new IllegalStateException("Can't exrtract as a asimpel field!")
+  override def extract(itr: Iterator[Int], field: SimpleField): FieldValue = throw new IllegalStateException("Can't exrtract as field!")
 
-  override def parseJson(s: String): FieldValue = {
-    val localTime = LocalTime.parse(s)
-    new field.FieldTime(localTime)
+  implicit val fmtFieldTime: Format[FieldTime] = new Format[FieldTime] {
+    override def reads(json: JsValue): JsResult[FieldTime] = JsSuccess(new FieldTime())
+
+    override def writes(o: FieldTime): JsValue = JsString(o.value.toString)
   }
+
+  override def jsonToField(jsValue: JsValue): FieldValue = jsValue.as[FieldTime]
 }

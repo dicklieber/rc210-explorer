@@ -19,6 +19,7 @@ package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.field.MonthOfYear.options
 import net.wa9nnn.rc210.util.{FieldSelect, FieldSelectComp, SelectOption}
+import play.api.libs.json.{Format, JsResult, JsSuccess, JsValue}
 
 /**
  * An enumeration with behaviour.
@@ -74,4 +75,12 @@ object MonthOfYear extends FieldSelectComp {
       "November" -> 11,
       "December" -> 12,
     ).map { t => SelectOption(t._2, t._1) }
+
+  implicit val fmtDayOfWeek: Format[MonthOfYear] = new Format[MonthOfYear] {
+
+    override def writes(o: MonthOfYear) = o.toJsonValue
+
+    override def reads(json: JsValue): JsResult[MonthOfYear] = JsSuccess(MonthOfYear(json.as[String]))
+  }
+
 }

@@ -19,6 +19,7 @@ package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.field.YaesuType.selectOptions
 import net.wa9nnn.rc210.util.{FieldSelect, SelectOption}
+import play.api.libs.json.JsValue
 
 /**
  * An enumeration with behaviour.
@@ -57,4 +58,7 @@ object YaesuType extends FieldExtractor {
     val id = itr.next()
     apply(id)
   }
+
+  override def jsonToField(jsValue: JsValue): FieldValue = new YaesuType(jsValue.as[String])
+
 }

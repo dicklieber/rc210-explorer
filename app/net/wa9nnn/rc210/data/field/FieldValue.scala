@@ -18,10 +18,11 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui.{Cell, Row}
-import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.{FieldEntryJson, FieldKey, FieldParser}
 import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.key.KeyFactory.Key
 import net.wa9nnn.rc210.serial.MemoryBuffer
+import play.api.libs.json.{JsObject, JsValue}
 
 /**
  * Holds the value for a field.
@@ -46,6 +47,7 @@ sealed trait FieldValue {
 
   def toHtmlField(renderMetadata: RenderMetadata): String
 
+  def toJsonValue: JsValue
 
 
   /**
@@ -65,8 +67,6 @@ trait SimpleFieldValue extends FieldValue {
     val html: String = toHtmlField(renderMetadata)
     Cell.rawHtml(html)
   }
-  def toJsonValue:String
-
 }
 
 /**
@@ -90,15 +90,13 @@ trait ComplexFieldValue[K <: Key] extends FieldValue {
   def toRow()(implicit namedSource: NamedSource): Row
 
   override def update(paramValue: String): FieldValue = throw new IllegalStateException("FieldWithFieldKey cannot be updated. ") //todo can it?
+
 }
 
-trait FieldExtractor {
+trait FieldExtractor extends FieldParser{
   def extract(itr: Iterator[Int], field: SimpleField): FieldValue
 
-  def parseJson(s:String) :FieldValue
 }
-
-
 
 
 

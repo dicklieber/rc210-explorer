@@ -18,15 +18,14 @@
 package controllers
 
 import com.wa9nnn.util.tableui.{Header, Row, Table}
-import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.{DataStore, FieldKey, NewCandidate}
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.data.mapped.{MappedValues, NewCandidate}
 import net.wa9nnn.rc210.key.KeyKind
 import play.api.mvc._
 
 import javax.inject.Inject
 
-class CommonEditorController @Inject()(implicit val controllerComponents: ControllerComponents, mappedValues: MappedValues) extends BaseController {
+class CommonEditorController @Inject()(implicit val controllerComponents: ControllerComponents, mappedValues: DataStore) extends BaseController {
 
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>

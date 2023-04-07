@@ -19,9 +19,8 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
-import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.{DataStore, FieldKey, NewCandidate}
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.data.mapped.{MappedValues, NewCandidate}
 import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.key.KeyFactory.LogicAlarmKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
@@ -31,7 +30,7 @@ import play.twirl.api.Html
 import javax.inject._
 
 class LogicAlarmEditorController @Inject()(val controllerComponents: ControllerComponents,
-                                           mappedValues: MappedValues
+                                           mappedValues: DataStore
                                      )(implicit namedManager: NamedManager)
   extends BaseController with LazyLogging {
 //todo needs to be like Schedule and macro edit as a single object.

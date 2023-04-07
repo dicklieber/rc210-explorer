@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.util.{FieldSelect, FieldSelectComp, SelectOption}
+import play.api.libs.json.{Format, JsResult, JsSuccess, JsValue}
 
 /**
  * An enumeration with behaviour.
@@ -62,4 +63,11 @@ object WeekInMonth extends FieldSelectComp {
       "4th Week" -> 4,
       "5th Week" -> 5,
     ).map { t => SelectOption(t._2, t._1) }
+  implicit val fmtDayOfWeek: Format[WeekInMonth] = new Format[WeekInMonth] {
+
+    override def writes(o: WeekInMonth) = o.toJsonValue
+
+    override def reads(json: JsValue): JsResult[WeekInMonth] = JsSuccess(WeekInMonth(json.as[String]))
+  }
+
 }

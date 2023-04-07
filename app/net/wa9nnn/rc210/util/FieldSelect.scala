@@ -17,8 +17,7 @@
 
 package net.wa9nnn.rc210.util
 
-import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue, RenderMetadata, SimpleFieldValue}
+import net.wa9nnn.rc210.data.field.{FieldEntry, RenderMetadata, SimpleFieldValue}
 import play.api.libs.json.{JsString, JsValue}
 
 /**
@@ -38,12 +37,12 @@ trait FieldSelect[T] extends SimpleFieldValue {
   override def toCommand(fieldEntry: FieldEntry): String = ???
 
 
+  override def toJsonValue: JsValue = JsString(display)
+
   /**
    *
    * Render as HTML. Either a single field of an entire HTML Form.
    *
-   * @param fieldEntry all the metadata.
-   * @return html
    */
   override def toHtmlField(renderMetadata: RenderMetadata): String = {
 
@@ -51,7 +50,7 @@ trait FieldSelect[T] extends SimpleFieldValue {
       val bool = selectOption.display == value.toString
       selectOption.copy(selected = bool).html
     }.mkString("\n")
-    val param: String =renderMetadata.param
+    val param: String = renderMetadata.param
 
     s"""
     <select name="$param" class="form-select" aria-label="Default select example">
@@ -65,19 +64,8 @@ trait FieldSelect[T] extends SimpleFieldValue {
 
 
 /**
- * Holds the current enumerated value.
- * This is yet another enumeration value; hava enum don't allow adding scala behaviour and passing geneaic enums damn near impossible.
- * Scala Enumeration in scala 2 is bizarre and is going away in scala 3.
- * So we invent yet another enumeration but it does all the things we need for this application.
  *
- * @param fieldKey for this field.
- * @param strings  the strings leading empty string are use dto 'take up' zero.
- */
-abstract class SelectFieldMetadata(fieldKey: FieldKey)
-
-/**
- *
- * @param id       this is used in the application logic not HTML <select><ption>
+ * @param id       this is used in the application logic not HTML <select><option>
  * @param display  what to show  users and use as value attribute in <option>s
  * @param selected true if this is currently selected.
  */

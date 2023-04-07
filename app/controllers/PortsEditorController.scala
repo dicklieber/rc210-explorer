@@ -18,9 +18,8 @@
 package controllers
 
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
-import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.{DataStore, FieldKey, NewCandidate}
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.data.mapped.{MappedValues, NewCandidate}
 import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.key.KeyFactory.PortKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
@@ -29,7 +28,7 @@ import play.api.mvc._
 import javax.inject.Inject
 import scala.collection.immutable
 
-class PortsEditorController @Inject()(implicit val controllerComponents: ControllerComponents, mappedValues: MappedValues,
+class PortsEditorController @Inject()(implicit val controllerComponents: ControllerComponents, mappedValues: DataStore,
                                       namedManager: NamedManager) extends BaseController {
 
   def index(): Action[AnyContent] = Action {

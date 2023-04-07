@@ -17,14 +17,13 @@
 
 package net.wa9nnn.rc210.data.field
 
-import play.api.libs.json.{Format, JsNumber, JsResult, JsValue}
+import play.api.libs.json._
 import views.html.fieldNumber
 
 case class FieldInt(value: Int) extends SimpleFieldValue {
 
   /**
    * Render as HTML for this field.
-   * This is typically just one form field for [[SimpleFieldExtractor]] fields.
    * For complex fields like [[net.wa9nnn.rc210.data.schedules.Schedule]] it's an entire HTML form.
    *
    * @return
@@ -41,17 +40,11 @@ case class FieldInt(value: Int) extends SimpleFieldValue {
   override def update(paramValue: String): FieldValue = {
     FieldInt(paramValue.toInt)
   }
+  override def toJsonValue: JsValue = Json.toJson(this)
 
-  override def toJsonValue: String = display
 }
 
 object FieldInt extends FieldExtractor {
-
-  implicit val fmtFieldInt: Format[FieldInt] = new Format[FieldInt] {
-    override def reads(json: JsValue): JsResult[FieldInt] = ???
-
-    override def writes(o: FieldInt): JsValue = JsNumber(BigDecimal(o.value))
-  }
 
   override def extract(itr: Iterator[Int], field: SimpleField): FieldInt = {
     new FieldInt(if (field.max > 256)
@@ -61,5 +54,11 @@ object FieldInt extends FieldExtractor {
     )
   }
 
-  override def parseJson(s: String): FieldValue = new FieldInt(s.toInt)
+  implicit val fmtFieldInt: Format[FieldInt] = new Format[FieldInt] {
+    override def reads(json: JsValue): JsResult[FieldInt] = JsSuccess(new FieldInt(json.as[Int]))
+
+    override def writes(o: FieldInt): JsValue = Json.toJson(o.value)
+  }
+
+  override def jsonToField(jsValue: JsValue): FieldValue =  new FieldInt(jsValue.as[Int])
 }

@@ -15,24 +15,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.mapped
+package net.wa9nnn.rc210.data
 
 import net.wa9nnn.rc210.DataProvider
-import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.{FieldValue, FieldEntry, ComplexFieldValue}
+import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
 import net.wa9nnn.rc210.key.KeyFactory.Key
 import net.wa9nnn.rc210.key.KeyKind
-import play.api.libs.json.JsArray
+import play.api.libs.json.JsValue
 
 import javax.inject.{Inject, Singleton}
 import scala.collection.concurrent.TrieMap
 
 /**
- * Holds most values are simple key->value.
- * Does not include more complex fields e.g.Macro
+ * Holds all values as simple key->value.
  */
 @Singleton
-class MappedValues @Inject()(dataProvider: DataProvider) {
+class DataStore @Inject()(dataProvider: DataProvider) {
   private val map = new TrieMap[FieldKey, FieldEntry]
 
   dataProvider.initialValues.foreach { fieldContents =>
@@ -100,14 +98,14 @@ class MappedValues @Inject()(dataProvider: DataProvider) {
 
 }
 
-object MappedValues {
+object DataStore {
 
   import play.api.libs.json._
 
-  implicit val fmtMappedValues: Format[MappedValues] = new Format[MappedValues] {
-    override def reads(json: JsValue): JsResult[MappedValues] = ???
+  implicit val fmtMappedValues: Format[DataStore] = new Format[DataStore] {
+    override def reads(json: JsValue): JsResult[DataStore] = ???
 
-    override def writes(o: MappedValues): JsValue = {
+    override def writes(o: DataStore): JsValue = {
 
       val value: Seq[(String, JsValue)] = o.all.map { fieldEntry =>
         fieldEntry.fieldKey.toString -> JsString(fieldEntry.fieldValue.display)
@@ -120,4 +118,29 @@ object MappedValues {
 }
 
 
-  case class NewCandidate(fieldKey: FieldKey, formValue: String)
+case class NewCandidate(fieldKey: FieldKey, formValue: String)
+
+/**
+ * Data transfer object for JSON.
+ * This is what's written to or Parsed (by PlayJson) from the [[DataStore]] JSON data..
+ *
+ * @param fieldKey ID
+ * @param parser   knows how for transform a [[JsValue]] to a [[FieldValue]].
+ * @param fieldValue
+ * @param candidate
+ */
+case class FieldEntryJson(fieldKey: FieldKey, parser: FieldParser, fieldValue: JsValue, candidate: Option[JsValue])
+
+object FieldEntryJson {
+  def apply(fieldEntry: FieldEntry): FieldEntryJson = {
+    val fieldKey = fieldEntry.fieldKey
+    new FieldEntryJson(fieldKey, fieldEntry.fieldDefinition, fieldEntry.fieldValue.toJsonValue, fieldEntry.candidate.map(_.toJsonValue))
+  }
+}
+
+trait FieldParser {
+  def jsonToField(jsValue: JsValue): FieldValue
+
+}
+
+

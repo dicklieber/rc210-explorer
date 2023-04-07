@@ -8,7 +8,9 @@ import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.key.KeyFactory.{FunctionKey, MacroKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.model.TriggerNode
-import net.wa9nnn.rc210.serial.{Memory, MemoryBuffer, SlicePos}
+import net.wa9nnn.rc210.serial.MemoryBuffer
+import play.api.libs.json.Json.toJson
+import play.api.libs.json.{Format, JsObject, JsValue, Json}
 
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -48,9 +50,11 @@ case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dt
   override def toRow()(implicit namedSource: NamedSource): Row = {
     throw new NotImplementedError() //todo
   }
+  override def toJsonValue: JsValue = Json.toJson(this)
+
 }
 
-object MacroNode extends LazyLogging with ComplexExtractor with FieldDefinition {
+object MacroNode extends LazyLogging with ComplexExtractor  {
   def header(count: Int): Header = Header(s"Macros ($count)", "Key", "Functions")
 
   override def extract(memoryBuffer: MemoryBuffer): Seq[FieldEntry] = {
@@ -83,7 +87,11 @@ object MacroNode extends LazyLogging with ComplexExtractor with FieldDefinition 
 
   override val fieldName: String = "Macro"
   override val kind: KeyKind = KeyKind.macroKey
-
+import  net.wa9nnn.rc210.key.KeyFormats._
+  implicit val fmtMacroNode: Format[MacroNode] = Json.format[MacroNode]
+  override def jsonToField(jsValue: JsValue): FieldValue = {
+    jsValue.as[MacroNode]
+  }
 }
 
 

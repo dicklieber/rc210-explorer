@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui.Cell
+import play.api.libs.json.{Format, JsBoolean, JsSuccess, JsValue, Json}
 import views.html.fieldCheckbox
 
 case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue {
@@ -40,8 +41,8 @@ case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue {
   override def update(paramValue: String): FieldValue = {
     FieldBoolean(paramValue == "true")
   }
+  override def toJsonValue: JsValue = Json.toJson(this)
 
-  override def toJsonValue: String = display
 }
 
 object FieldBoolean extends FieldExtractor{
@@ -54,5 +55,13 @@ object FieldBoolean extends FieldExtractor{
     FieldBoolean(itr.next() > 0)
   }
 
-  override def parseJson(s: String): FieldValue = new FieldBoolean(s == "true")
+  implicit val fmtFieldBoolean: Format[FieldBoolean] = new Format[FieldBoolean] {
+
+    override def writes(o: FieldBoolean) = JsBoolean(o.value)
+
+    override def reads(json: JsValue): JsSuccess[FieldBoolean] = JsSuccess(new FieldBoolean(json.as[Boolean]))
+  }
+
+
+  override def jsonToField(jsValue: JsValue): FieldValue = FieldBoolean(jsValue.as[Boolean])
 }

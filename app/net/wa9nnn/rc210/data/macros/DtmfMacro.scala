@@ -22,7 +22,7 @@ object DtmfMacroExtractor {
 
       chunks.map { chunk =>
         val key: MacroKey = KeyFactory.macroKey(mai.getAndIncrement())
-        key -> Dtmf(chunk)
+        key -> Dtmf(chunk.toIndexedSeq)
       }
     }
 

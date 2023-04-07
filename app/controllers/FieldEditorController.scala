@@ -19,9 +19,8 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
-import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.{DataStore, FieldKey}
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.data.mapped.MappedValues
 import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.key.KeyFactory.Key
@@ -31,7 +30,7 @@ import play.twirl.api.Html
 import javax.inject._
 
 class FieldEditorController @Inject()(val controllerComponents: ControllerComponents,
-                                      mappedValues: MappedValues
+                                      mappedValues: DataStore
                                      )(implicit enamedManager: NamedManager)
   extends BaseController with LazyLogging {
 

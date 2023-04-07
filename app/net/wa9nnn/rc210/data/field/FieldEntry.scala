@@ -20,7 +20,6 @@ package net.wa9nnn.rc210.data.field
 import com.wa9nnn.util.tableui._
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.key.KeyKind
-import play.api.libs.json.{Format, JsObject, JsResult, JsValue, Json}
 
 
 /**
@@ -105,17 +104,6 @@ object FieldEntry {
 
   def header(count: Int): Header = Header(s"Fields ($count)", "FieldName", "Key", "Value")
 
-  implicit val fmtFieldEntry: Format[FieldEntry] = new Format[FieldEntry] {
-    override def reads(json: JsValue): JsResult[FieldEntry] = ???
-
-    override def writes(o: FieldEntry): JsValue = {
-      val jsValue: JsValue = Json.toJson(o.fieldValue.display)
-      JsObject {
-        Seq(
-          "fieldValue" -> jsValue,
-          "candidate" -> Json.toJson(o.candidate.map(_.display).getOrElse(""))
-        )
-      }
-    }
-  }
 }
+
+

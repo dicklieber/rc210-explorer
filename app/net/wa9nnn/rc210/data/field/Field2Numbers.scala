@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui.Cell
+import play.api.libs.json.{Format, JsString, JsValue, Json}
 import views.html.fieldString
 
 case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue {
@@ -42,8 +43,8 @@ case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue {
       .toSeq
     copy(value = candidate)
   }
+  override def toJsonValue: JsValue = Json.toJson(this)
 
-  override def toJsonValue: String = display
 }
 
 object Field2Numbers extends FieldExtractor {
@@ -51,8 +52,8 @@ object Field2Numbers extends FieldExtractor {
     Field2Numbers(Seq(itr.next(), itr.next()))
   }
 
-  override def parseJson(s: String): FieldValue = {
-    new Field2Numbers(s.split(" ")
-      .map(_.toInt))
-  }
+  implicit val fmtField2Numbers: Format[Field2Numbers] = Json.format[Field2Numbers]
+
+  override def jsonToField(jsValue: JsValue): FieldValue = jsValue.as[Field2Numbers]
 }
+

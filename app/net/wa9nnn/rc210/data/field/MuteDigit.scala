@@ -17,8 +17,10 @@
 
 package net.wa9nnn.rc210.data.field
 
+import net.wa9nnn.rc210.data.field
 import net.wa9nnn.rc210.data.field.MuteDigit.selectOptions
 import net.wa9nnn.rc210.util.{FieldSelect, SelectOption}
+import play.api.libs.json.JsValue
 
 /**
  * An enumeration with behaviour.
@@ -32,6 +34,7 @@ case class MuteDigit(value: String = selectOptions.head.display) extends FieldSe
   override def update(paramValue: String): FieldValue = {
     MuteDigit(paramValue)
   }
+
 }
 
 object MuteDigit extends FieldExtractor {
@@ -51,4 +54,7 @@ object MuteDigit extends FieldExtractor {
     val id = itr.next()
     apply(id)
   }
+
+  override def jsonToField(jsValue: JsValue): FieldValue = new  MuteDigit(jsValue.as[String])
+
 }
