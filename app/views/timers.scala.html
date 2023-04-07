@@ -1,0 +1,14 @@
+@import com.wa9nnn.util.tableui.Table
+@import com.wa9nnn.util.tableui.html.renderTable
+@import net.wa9nnn.rc210.data.named.NamedSource
+@import net.wa9nnn.rc210.ui.Tabs
+@import views.html.helper._
+@(table: Table)(implicit namedSource: NamedSource)
+@tabbedmain(Tabs.timersTab) {
+
+    @form(action = routes.TimerEditorController.save()) {
+        <input type="submit" name="save" value="Save">
+        @renderTable(table.withCssClass("tablesorter"))
+        <input type="submit" name="save" value="Save">
+    }
+}

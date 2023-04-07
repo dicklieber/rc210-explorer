@@ -80,7 +80,7 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
           fieldey.fieldName -> value
         }.toMap
 
-        // named keys are seperatw.
+        // named keys are seperate.
         val namedKey = NamedKey(key, nameToValue("name"))
         namedKeys += namedKey
 

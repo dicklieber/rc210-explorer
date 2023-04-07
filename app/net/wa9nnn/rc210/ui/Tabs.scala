@@ -36,6 +36,7 @@ object Tabs {
   val portsTab: Tab = Tab("Ports", routes.PortsEditorController.index().url, "Port settings")
 
   val schedulesTab: Tab = Tab("Schedules", routes.ScheduleController.index().url, "Schedule settings.")
+  val timersTab: Tab = Tab("Timers", routes.TimerEditorController.index().url, "Timer settings.")
 
 
   val tabs: Seq[Tab] = Seq(
@@ -45,7 +46,8 @@ object Tabs {
     macrosTab,
     ctTab,
     portsTab,
-    schedulesTab
+    schedulesTab,
+    timersTab
     //    Tab(KeyKind.dtmfMacroKey),
     //    Tab(KeyKind.functionKey),
     //    Tab(KeyKind.messageMacroKey),
