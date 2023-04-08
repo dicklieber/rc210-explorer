@@ -24,7 +24,9 @@ import scala.collection.immutable.ArraySeq
  *
  * @param data mutable array.
  */
-class MemoryBuffer(data: Array[Int]) {
+class MemoryBuffer(data: Array[Int] = Array.empty) {
+  val length: Int = data.length
+
   private val array = new ArraySeq.ofInt(data)
 
   def iterator8At(offset: Int): Iterator[Int] = {

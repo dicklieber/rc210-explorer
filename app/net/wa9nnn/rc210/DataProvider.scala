@@ -19,27 +19,14 @@ package net.wa9nnn.rc210
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.serial.{MemoryArray, MemoryBuffer}
+import net.wa9nnn.rc210.io.DatFile
+import net.wa9nnn.rc210.serial.MemoryBuffer
 
-import java.io.InputStream
 import javax.inject.{Inject, Singleton}
-import scala.util.{Failure, Success, Using}
 
 @Singleton
-class DataProvider @Inject()(fieldDefinitions: FieldDefinitions) extends LazyLogging {
-
-   val memory: MemoryArray = Using(getClass.getResourceAsStream("/MemFixedtxt.txt")) {
-    stream: InputStream =>
-      MemoryArray(stream).get
-  } match {
-    case Failure(exception) =>
-      logger.error("Initial loading", exception)
-      throw new Exception()
-    case Success(value: MemoryArray) =>
-      logger.debug(s"Initial loaded ${value.data.length} bytes from: /MemFixedtxt.txt")
-      value
-  }
-  implicit  val memoryBuffer = new MemoryBuffer(memory.data)
+class DataProvider @Inject()(fieldDefinitions: FieldDefinitions, datFile: DatFile) extends LazyLogging {
+implicit val memoryBuffer: MemoryBuffer =datFile.memoryBuffer
 
 
   private val simpleFields: Seq[FieldEntry] = for {
