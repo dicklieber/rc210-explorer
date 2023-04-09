@@ -1,0 +1,25 @@
+@import com.wa9nnn.util.tableui.Table
+@import com.wa9nnn.util.tableui.html.renderTable
+@import net.wa9nnn.rc210.ui.Tabs
+@(table: Table)(implicit request: RequestHeader)
+@tabbedmain(Tabs.rc210Tab) {
+    <script>
+            const route = '@routes.IOController.socket.webSocketURL()';
+            console.log(`route: ${route}`);
+            const webSocket = new WebSocket(route);
+
+            webSocket.onmessage = (event) => {
+                console.log(`onMessage: nt: ${event}`);
+            };
+            webSocket.onopen = (event) => {
+                console.log(`onopen: nt: ${event}`);
+                webSocket.send("Gimme da progress");
+            };
+            webSocket.onclose = (event) => {
+                console.log(`onclose: nt: ${event}`);
+                webSocket.send("So long and thanks for all the fish.");
+            };
+
+    </script>
+    @renderTable(table.withCssClass("tablesorter"))
+}

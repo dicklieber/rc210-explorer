@@ -19,6 +19,15 @@ case object RC210Download extends LazyLogging {
     SerialPort.getCommPorts.map(ComPort(_)).toList
   }
 
+  def download(descriptor: String): Try[Array[Int]] = {
+    listPorts.find(_.descriptor == descriptor) match {
+      case Some(comPort) =>
+        download(comPort)
+      case None =>
+        throw new IllegalArgumentException(s"Can't find serial port: $descriptor!")
+    }
+  }
+
   def download(comPort: ComPort): Try[Array[Int]] = {
     val linesFile: Option[Path] = Option.when(logger.underlying.isTraceEnabled()) {
       val logsDir = Paths.get("logs")
@@ -29,6 +38,7 @@ case object RC210Download extends LazyLogging {
     }
 
     val serialPort: SerialPort = SerialPort.getCommPort(comPort.descriptor)
+    //    serialPort.setBaudRate(57600)
     serialPort.setBaudRate(19200)
     val opened: Boolean = serialPort.openPort()
     if (!opened) {
@@ -47,9 +57,9 @@ case object RC210Download extends LazyLogging {
       source
         .getLines()
         .takeWhile(_.head != 'C')
-        .takeWhile(_ !=  "EEPROM Done")
+        .takeWhile(_ != "EEPROM Done")
         .filterNot(_.startsWith("-"))
-//        .take(200)//todo remove
+        //        .take(200)//todo remove
         .foreach { line =>
           linesFile.foreach(Files.writeString(_, line + "\n", CREATE, WRITE, APPEND))
           try {
@@ -90,6 +100,7 @@ case class ComPort(descriptor: String, friendlyName: String)
 
 object ComPort {
   implicit val comPortFmt: OFormat[ComPort] = Json.format[ComPort]
+
   def apply(serialPort: SerialPort): ComPort = {
     new ComPort(serialPort.getSystemPortPath, serialPort.getDescriptivePortName)
   }

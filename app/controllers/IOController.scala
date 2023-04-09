@@ -18,15 +18,15 @@
 package controllers
 
 import akka.util.Timeout
+import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.DataStore
-import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.key.KeyFactory
-import play.api.libs.json.{JsObject, JsValue, Json}
+import net.wa9nnn.rc210.serial.{ComPort, RC210Download}
+import play.api.libs.json.Json
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
-import scala.collection.immutable
 import scala.concurrent.duration.DurationInt
+import scala.util.{Failure, Success, Try}
 
 @Singleton
 class IOController @Inject()(val controllerComponents: ControllerComponents,
@@ -35,7 +35,7 @@ class IOController @Inject()(val controllerComponents: ControllerComponents,
 
   def downloadJson(): Action[AnyContent] = Action {
 
-    val jsObject =Json.toJson(dataStore)
+    val jsObject = Json.toJson(dataStore)
     val sJson = Json.prettyPrint(jsObject)
 
     Ok(sJson).withHeaders(
@@ -43,4 +43,51 @@ class IOController @Inject()(val controllerComponents: ControllerComponents,
       "Content-Disposition" -> s"""attachment; filename="rc210.json""""
     )
   }
+
+  def download(serialPortDescriptor: String): Action[AnyContent] = Action {
+    implicit request: Request[AnyContent] =>
+    val triedInts: Try[Array[Int]] = RC210Download.download(serialPortDescriptor)
+    triedInts match {
+      case Failure(exception) =>
+        InternalServerError(exception.getMessage)
+      case Success(value: Array[Int]) =>
+        Ok(s"Got ${value.length} from $serialPortDescriptor}")
+
+    }
+
+
+  }
+
+  def listSerialPorts(): Action[AnyContent] = Action {
+    implicit request: Request[AnyContent] =>
+    val ports: List[ComPort] = RC210Download.listPorts
+    val rows = ports.sortBy(_.friendlyName)
+      .filterNot(_.descriptor.contains("/dev/tty")) // thedse are just clutter.
+      .map { port => {
+        val value: String = routes.IOController.download(port.descriptor).url
+        Row(Cell(port.descriptor)
+          .withUrl(value),
+          port.friendlyName)
+      }
+      }
+    val table = Table(Header("Serial Ports", "Descriptor", "Friendly Name"), rows)
+
+    Ok(views.html.RC210Ports(table))
+  }
+
+
+  import play.api.mvc._
+  import akka.stream.scaladsl._
+
+  def socket: WebSocket = WebSocket.accept[String, String] { request =>
+    // Log events to the console
+    val in = Sink.foreach[String](mess =>
+        println(mess))
+
+    // Send a single 'Hello!' message and then leave the socket open
+    val out = Source.single("Hello!").concat(Source.maybe)
+
+    Flow.fromSinkAndSource(in, out)
+  }
+
 }
