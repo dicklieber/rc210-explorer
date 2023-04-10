@@ -51,7 +51,7 @@ case object RC210Download extends LazyLogging {
     val result: mutable.ArrayBuilder[Int] = Array.newBuilder[Int]
 
     wakeup(outputStream)
-    outputStream.write("1SendEram\r\n".getBytes)
+      outputStream.write("1SendEram\r\n".getBytes)
 
     Using(new BufferedSource(serialPort.getInputStream)) { source: BufferedSource =>
       source

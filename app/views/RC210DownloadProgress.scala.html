@@ -1,7 +1,7 @@
 @import com.wa9nnn.util.tableui.Table
 @import com.wa9nnn.util.tableui.html.renderTable
 @import net.wa9nnn.rc210.ui.Tabs
-@(table: Table)(implicit request: RequestHeader)
+@()(implicit request: RequestHeader)
 @tabbedmain(Tabs.rc210Tab) {
     <script>
             const route = '@routes.IOController.socket.webSocketURL()';
@@ -21,5 +21,4 @@
             };
 
     </script>
-    @renderTable(table.withCssClass("tablesorter"))
 }

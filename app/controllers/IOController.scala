@@ -20,17 +20,20 @@ package controllers
 import akka.util.Timeout
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.DataStore
-import net.wa9nnn.rc210.serial.{ComPort, RC210Download}
+import net.wa9nnn.rc210.serial.{ComPort, RC210Actor, RC210Download}
 import play.api.libs.json.Json
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
 import scala.util.{Failure, Success, Try}
-
+import akka.actor.typed.ActorRef
+import net.wa9nnn.rc210.serial.RC210Actor.StartDownload
 @Singleton
 class IOController @Inject()(val controllerComponents: ControllerComponents,
-                             dataStore: DataStore) extends BaseController {
+                             dataStore: DataStore,
+                             val rc210Actor: ActorRef[RC210Actor.RC210Message]
+                            ) extends BaseController {
   implicit val timeout: Timeout = 5.seconds
 
   def downloadJson(): Action[AnyContent] = Action {
@@ -46,14 +49,16 @@ class IOController @Inject()(val controllerComponents: ControllerComponents,
 
   def download(serialPortDescriptor: String): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-    val triedInts: Try[Array[Int]] = RC210Download.download(serialPortDescriptor)
-    triedInts match {
-      case Failure(exception) =>
-        InternalServerError(exception.getMessage)
-      case Success(value: Array[Int]) =>
-        Ok(s"Got ${value.length} from $serialPortDescriptor}")
-
-    }
+      rc210Actor ! StartDownload(serialPortDescriptor)
+      Ok(views.html.RC210DownloadProgress())
+//    val triedInts: Try[Array[Int]] = RC210Download.download(serialPortDescriptor)
+//    triedInts match {
+//      case Failure(exception) =>
+//        InternalServerError(exception.getMessage)
+//      case Success(value: Array[Int]) =>
+//        Ok(views.html.RC210DownloadProgress
+//
+//    }
 
 
   }
@@ -72,7 +77,7 @@ class IOController @Inject()(val controllerComponents: ControllerComponents,
       }
     val table = Table(Header("Serial Ports", "Descriptor", "Friendly Name"), rows)
 
-    Ok(views.html.RC210Ports(table))
+    Ok(views.html.RC210DownloadLandings(table))
   }
 
 
