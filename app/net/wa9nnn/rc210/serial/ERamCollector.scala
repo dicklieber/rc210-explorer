@@ -19,12 +19,13 @@ package net.wa9nnn.rc210.serial
 
 import com.fazecast.jSerialComm.SerialPort
 import com.typesafe.scalalogging.LazyLogging
+import com.wa9nnn.util.Stamped
+import net.wa9nnn.rc210.util.{CircularBuffer, Progress}
 
 import java.io.IOException
-import java.time.Instant
+import java.time.{Duration, Instant}
 import java.util.concurrent.Executors
 import scala.collection.mutable
-import scala.concurrent.duration.Duration
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.io.BufferedSource
 import scala.util.Try
@@ -37,25 +38,30 @@ import scala.util.matching.Regex
  * @param progress         called periodically to update progress bar.
  * @param executionContext where this wil run.
  */
-class ERamCollector(descriptor: String, mod: Int = 357)(progress: Progress => Unit)
+class ERamCollector(descriptor: String, progress: Progress => Unit, mod: Int = 357)
   extends Runnable with LazyLogging {
 
-  private val promise = Promise[Seq[Int]]()
-  private val builder: mutable.Builder[Int, Seq[Int]] = Seq.newBuilder[Int]
+  private val promise = Promise[RC210Data]()
+  private val mainBuilder: mutable.Builder[Int, Seq[Int]] = Seq.newBuilder[Int]
+  private val extBuilder: mutable.Builder[Int, Seq[Int]] = Seq.newBuilder[Int]
   private val serialPort: SerialPort = SerialPort.getCommPort(descriptor)
+  private val recentLines = new CircularBuffer[String](50)
+  private var builder = mainBuilder
 
-  def start()(implicit executionContext: ExecutionContext): Future[Seq[Int]] = {
+  def start()(implicit executionContext: ExecutionContext): Future[RC210Data] = {
     executionContext.execute(this)
     promise.future
   }
 
+  private val allLines: mutable.Builder[String, Seq[String]] = Seq.newBuilder[String]
+
   override def run(): Unit = {
 
-
+    implicit val start = Instant.now()
     //    serialPort.setBaudRate(57600)
     val reader: BufferedSource = try {
       serialPort.setBaudRate(19200)
-      val timeoutMs = 1000 * 60
+      val timeoutMs = 1000 * 60 * 2
       serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, timeoutMs, 0)
 
       val opened: Boolean = serialPort.openPort()
@@ -69,34 +75,56 @@ class ERamCollector(descriptor: String, mod: Int = 357)(progress: Progress => Un
         return // out of the run
     }
 
-
     wakeup()
 
-    write("1SendEram\r\n")
+    write("1SendEram\r\n") // tell RC-210 to send Erqam contents.
 
-    reader.getLines.foreach { line =>
-      logger.debug(s"line: $line")
-      line match {
-        case "EEPROM Done" =>
-          logger.debug("EEPROM Done")
-          promise.complete {
-            Try {
-              builder.result()
+    try {
+      reader.getLines().foreach { line =>
+        logger.debug(s"line: $line")
+        recentLines.add(line)
+        logger.whenTraceEnabled {
+          allLines += line
+        }
+        line match {
+          case "Complete" =>
+            logger.debug("Complete")
+            promise.complete {
+              Try {
+                serialPort.closePort()
+                RC210Data(mainBuilder.result(), extBuilder.result(), start)
+              }
             }
-          }
-        case message: String =>
-          logger.debug(message)
-          val ERamCollector.parser(sIndex, value) = message
-          val index: Int = sIndex.toInt
-          if (index % mod == 0) {
-            progress(Progress(index))
-          }
-          builder += value.toInt
-          write("\rOK\r\n")
-          logger.debug("Send OK")
-        case x =>
-          logger.error(s"Unexpected Message: $x")
+
+          case "EEPROM Done" =>
+            // done with main part switch to saving in external builder.
+            logger.debug("EEPROM Done switch to ext EEPROM.")
+            builder = extBuilder
+
+          case message: String =>
+            try {
+              val ERamCollector.parser(sIndex, value) = message
+              val index: Int = sIndex.toInt
+              if (index % mod == 0) {
+                progress(Progress(index))
+              }
+              builder += value.toInt
+            } catch {
+              case e: Exception =>
+                logger.error(s"processline line: $line")
+            }
+            write("\rOK\r\n")
+          case x =>
+            logger.error(s"Unexpected Message: $x")
+        }
       }
+    } catch {
+      case e: Exception =>
+        logger.error("Line Processing", e)
+        logger.error(recentLines.items.mkString("\n"))
+    }
+    allLines.result().foreach {
+      println
     }
 
     def wakeup(): Unit = {
@@ -122,18 +150,20 @@ object ERamCollector {
 
 }
 
-object ErmamTest extends App{
+case class RC210Data(memory: Seq[Int], extMemory: Seq[Int], override val stamp: Instant) extends Stamped
+
+object ErmamTest extends App {
   implicit val ec = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(1))
 
 
-  val maybePort = ERamCollector.listPorts.find(_.friendlyName.contains("FT232")).get
-  val collector = new ERamCollector(maybePort.descriptor)(progress =>
-    println(progress)
-  )
+  val maybePort: Option[ComPort] = ERamCollector.listPorts.find(_.friendlyName.contains("FT232"))
+  maybePort.map { comPort =>
+    val collector = new ERamCollector(comPort.descriptor, progress =>
+      println(progress)
+      , 500)
 
-  val start = Instant.now()
-  collector.start().foreach{r: Seq[Int] =>
-    val dur = java.time.Duration.between(start, Instant.now())
-    println(s"Collected ${r.length} ints in: $dur}")
-  }
+    collector.start().foreach { r: RC210Data =>
+      println(r)
+    }
+  }.orElse(throw new IllegalStateException(s"Can't find a FT232 serial port!"))
 }

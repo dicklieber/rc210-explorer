@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2023  Dick Lieber, WA9NNN
  *
@@ -15,27 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.serial
+package net.wa9nnn.rc210.util
 
-import org.specs2.concurrent.ExecutionEnv
-import org.specs2.mutable.Specification
+import scala.collection.immutable
 
-import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
-import scala.language.postfixOps
+/**
+ * A buffer that keep the last n items
+ * @param max
+ * @tparam T
+ */
+class CircularBuffer[T](max: Int) {
+  var items: Seq[T] = immutable.Vector[T]()
 
-class ERamCollectorSpec(implicit ee: ExecutionEnv) extends Specification {
-  "ERamCollectorSpec" should {
-    "start" in {
+  def add(newItem: T): Unit = {
+    items = (if (items.size >= max) {
+      items.drop(items.size - max + 1)
+    } else {
+      items
+    }) :+ newItem
+  }
 
-      val maybePort = ERamCollector.listPorts.find(_.friendlyName.contains("FT232")).get
-      val collector = new ERamCollector(maybePort.descriptor, progress =>
-        println(progress)
-      )
-
-      val future: Future[RC210Data] = collector.start()
-      val result: RC210Data = Await.result[RC210Data](future, 2 minutes)
-      ok
-    }
+  def get: Seq[T] = {
+    items
   }
 }

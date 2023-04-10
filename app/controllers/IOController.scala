@@ -17,23 +17,28 @@
 
 package controllers
 
+import akka.NotUsed
+import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, Sink, Source}
+import akka.stream.{BoundedSourceQueue, Materializer}
 import akka.util.Timeout
+import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.DataStore
-import net.wa9nnn.rc210.serial.{ComPort, RC210Actor, RC210Download}
+import net.wa9nnn.rc210.serial.{ComPort, ERamCollector, RC210Download}
+import net.wa9nnn.rc210.util.Progress
 import play.api.libs.json.Json
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
+import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationInt
-import scala.util.{Failure, Success, Try}
-import akka.actor.typed.ActorRef
-import net.wa9nnn.rc210.serial.RC210Actor.StartDownload
+
 @Singleton
-class IOController @Inject()(val controllerComponents: ControllerComponents,
+class IOController @Inject()(implicit val controllerComponents: ControllerComponents,
                              dataStore: DataStore,
-                             val rc210Actor: ActorRef[RC210Actor.RC210Message]
-                            ) extends BaseController {
+                             mat: Materializer,
+                             executionContext: ExecutionContext
+                            ) extends BaseController with LazyLogging {
   implicit val timeout: Timeout = 5.seconds
 
   def downloadJson(): Action[AnyContent] = Action {
@@ -49,50 +54,52 @@ class IOController @Inject()(val controllerComponents: ControllerComponents,
 
   def download(serialPortDescriptor: String): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      rc210Actor ! StartDownload(serialPortDescriptor)
+
+      val ec = new ERamCollector(serialPortDescriptor, (p: Progress) => {
+        logger.trace("Progress: {}", p.toString)
+        queue.offer(p)
+      }, 35)
+
+      ec.start()
       Ok(views.html.RC210DownloadProgress())
-//    val triedInts: Try[Array[Int]] = RC210Download.download(serialPortDescriptor)
-//    triedInts match {
-//      case Failure(exception) =>
-//        InternalServerError(exception.getMessage)
-//      case Success(value: Array[Int]) =>
-//        Ok(views.html.RC210DownloadProgress
-//
-//    }
-
-
   }
 
   def listSerialPorts(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-    val ports: List[ComPort] = RC210Download.listPorts
-    val rows = ports.sortBy(_.friendlyName)
-      .filterNot(_.descriptor.contains("/dev/tty")) // thedse are just clutter.
-      .map { port => {
-        val value: String = routes.IOController.download(port.descriptor).url
-        Row(Cell(port.descriptor)
-          .withUrl(value),
-          port.friendlyName)
-      }
-      }
-    val table = Table(Header("Serial Ports", "Descriptor", "Friendly Name"), rows)
+      val ports: List[ComPort] = RC210Download.listPorts
+      val rows = ports.sortBy(_.friendlyName)
+        .filterNot(_.descriptor.contains("/dev/tty")) // these are just clutter.
+        .map { port => {
+          val value: String = routes.IOController.download(port.descriptor).url
+          Row(Cell(port.descriptor)
+            .withUrl(value),
+            port.friendlyName)
+        }
+        }
+      val table = Table(Header("Serial Ports", "Descriptor", "Friendly Name"), rows)
 
-    Ok(views.html.RC210DownloadLandings(table))
+      Ok(views.html.RC210DownloadLandings(table))
   }
 
+  import play.api.mvc.WebSocket.MessageFlowTransformer
 
-  import play.api.mvc._
-  import akka.stream.scaladsl._
+  implicit val messageFlowTransformer = MessageFlowTransformer.jsonMessageFlowTransformer[String, Progress]
 
-  def socket: WebSocket = WebSocket.accept[String, String] { request =>
-    // Log events to the console
+  private val (queue: BoundedSourceQueue[Progress], source: Source[Progress, NotUsed]) = Source.queue[Progress](128)
+
+    .toMat(BroadcastHub.sink(16))(Keep.both)
+    .run()
+
+  val s: Source[Progress, NotUsed] = source
+
+  def socket: WebSocket = WebSocket.accept[String, Progress] { request: RequestHeader =>
+    //     Log events to the console
     val in = Sink.foreach[String](mess =>
-        println(mess))
+      println(mess))
 
-    // Send a single 'Hello!' message and then leave the socket open
-    val out = Source.single("Hello!").concat(Source.maybe)
+    val value = Flow.fromSinkAndSource(in, s)
 
-    Flow.fromSinkAndSource(in, out)
+    value
   }
 
 }

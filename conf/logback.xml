@@ -42,8 +42,10 @@
     <logger name="net.wa9nnn.rc210.data.schedules.ScheduleNode" level="INFO"/>
     <logger name="net.wa9nnn.rc210.serial.RC210Download" level="INFO"/>
     <logger name="controllers.ScheduleController" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.data.courtesy.Segment" level="TRACE"/>
-    <logger name="controllers.CourtesyToneEditorController" level="TRACE"/>
+    <logger name="net.wa9nnn.rc210.data.courtesy.Segment" level="INFO"/>
+    <logger name="controllers.CourtesyToneEditorController" level="INFO"/>
+    <logger name="controllers.IOController" level="TRACE"/>
+    <logger name="net.wa9nnn.rc210.serial.ERamCollector" level="TRACE"/>
 
     <root level="INFO">
         <appender-ref ref="ASYNCFILE"/>

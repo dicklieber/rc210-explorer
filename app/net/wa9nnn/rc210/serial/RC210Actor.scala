@@ -19,12 +19,11 @@ package net.wa9nnn.rc210.serial
 
 import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.Behaviors
-import com.fazecast.jSerialComm.{SerialPort, SerialPortDataListener, SerialPortEvent}
+import com.fazecast.jSerialComm.SerialPort
 import com.typesafe.scalalogging.LazyLogging
+import play.api.libs.json.{Format, Json}
 
-import java.io.IOException
-import scala.collection.mutable
-import scala.concurrent.{ExecutionContext, Future, Promise}
+import java.time.{Duration, Instant}
 import scala.util.matching.Regex
 
 object RC210Actor extends LazyLogging {
@@ -101,5 +100,3 @@ object RC210Actor extends LazyLogging {
  * @param executionContext where this will execute.
  */
 
-
-case class Progress(n: Int, of: Int = 4096)

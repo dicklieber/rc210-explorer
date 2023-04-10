@@ -19,7 +19,6 @@ import play.api.{Configuration, Environment}
 class Module(environment: Environment, configuration: Configuration) extends ScalaModule with AkkaGuiceSupport{
   override def configure(): Unit = {
     install(new ConfigModule(configuration))
-    bindTypedActor(RC210Actor.create(), "RC210") // uses "create" method
   }
 }
 

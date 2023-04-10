@@ -9,7 +9,7 @@
             const webSocket = new WebSocket(route);
 
             webSocket.onmessage = (event) => {
-                console.log(`onMessage: nt: ${event}`);
+                console.log(`onMessage:  ${event.data}`);
             };
             webSocket.onopen = (event) => {
                 console.log(`onopen: nt: ${event}`);
@@ -21,4 +21,8 @@
             };
 
     </script>
+
+    //todo progress bar
+
+
 }

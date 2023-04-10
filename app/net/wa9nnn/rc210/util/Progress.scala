@@ -15,27 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.serial
+package net.wa9nnn.rc210.util
 
-import org.specs2.concurrent.ExecutionEnv
-import org.specs2.mutable.Specification
+import play.api.libs.json.{Format, Json}
 
-import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
-import scala.language.postfixOps
+import java.time.{Duration, Instant}
 
-class ERamCollectorSpec(implicit ee: ExecutionEnv) extends Specification {
-  "ERamCollectorSpec" should {
-    "start" in {
 
-      val maybePort = ERamCollector.listPorts.find(_.friendlyName.contains("FT232")).get
-      val collector = new ERamCollector(maybePort.descriptor, progress =>
-        println(progress)
-      )
+case class Progress(n: Int, of: Int = 4096, duration: Duration, itemsPerSecond: Long)
 
-      val future: Future[RC210Data] = collector.start()
-      val result: RC210Data = Await.result[RC210Data](future, 2 minutes)
-      ok
-    }
+object Progress {
+  def apply(soFar: Int)(implicit start: Instant): Progress = {
+    val duration = Duration.between(start, Instant.now())
+    val itemsPerSecond: Long = if (soFar > 0)
+      soFar / duration.getSeconds
+    else
+      0
+
+    new Progress(n = soFar, duration = duration, itemsPerSecond = itemsPerSecond)
   }
+
+  implicit val fmtProgress: Format[Progress] = Json.format[Progress]
 }
