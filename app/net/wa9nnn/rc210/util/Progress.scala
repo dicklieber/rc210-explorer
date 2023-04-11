@@ -22,7 +22,9 @@ import play.api.libs.json.{Format, Json}
 import java.time.{Duration, Instant}
 
 
-case class Progress(n: Int, of: Int = 4096, duration: Duration, itemsPerSecond: Long)
+case class Progress(running:Boolean = false, n: Int, of: Int = 4096, duration: Duration = Duration.ZERO, itemsPerSecond: Long = 0L, percent: String = "0%"){
+  def finish:Progress = copy(running = false)
+}
 
 object Progress {
   def apply(soFar: Int)(implicit start: Instant): Progress = {
@@ -31,8 +33,10 @@ object Progress {
       soFar / duration.getSeconds
     else
       0
-
-    new Progress(n = soFar, duration = duration, itemsPerSecond = itemsPerSecond)
+val expected:Int = 4097 + 390
+    val percent = (soFar * 100.0/expected) .toInt
+    val sPercent = s"$percent%"
+    new Progress(running= true, n = soFar, of = expected, duration = duration, itemsPerSecond = itemsPerSecond, percent = sPercent)
   }
 
   implicit val fmtProgress: Format[Progress] = Json.format[Progress]

@@ -29,9 +29,7 @@ class ERamCollectorSpec(implicit ee: ExecutionEnv) extends Specification {
     "start" in {
 
       val maybePort = ERamCollector.listPorts.find(_.friendlyName.contains("FT232")).get
-      val collector = new ERamCollector(maybePort.descriptor, progress =>
-        println(progress)
-      )
+      val collector = new ERamCollector(maybePort.descriptor)
 
       val future: Future[RC210Data] = collector.start()
       val result: RC210Data = Await.result[RC210Data](future, 2 minutes)

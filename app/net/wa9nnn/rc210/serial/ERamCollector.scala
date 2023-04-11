@@ -23,7 +23,7 @@ import com.wa9nnn.util.Stamped
 import net.wa9nnn.rc210.util.{CircularBuffer, Progress}
 
 import java.io.IOException
-import java.time.{Duration, Instant}
+import java.time.Instant
 import java.util.concurrent.Executors
 import scala.collection.mutable
 import scala.concurrent.{ExecutionContext, Future, Promise}
@@ -35,19 +35,23 @@ import scala.util.matching.Regex
  * Collects ERAM dat from an RC-210 via the serial port.
  *
  * @param descriptor       for [[SerialPort]].open
- * @param progress         called periodically to update progress bar.
- * @param executionContext where this wil run.
  */
-class ERamCollector(descriptor: String, progress: Progress => Unit, mod: Int = 357)
-  extends Runnable with LazyLogging {
+class ERamCollector(descriptor: String) extends Runnable with LazyLogging {
 
   private val promise = Promise[RC210Data]()
-  private val mainBuilder: mutable.Builder[Int, Seq[Int]] = Seq.newBuilder[Int]
-  private val extBuilder: mutable.Builder[Int, Seq[Int]] = Seq.newBuilder[Int]
   private val serialPort: SerialPort = SerialPort.getCommPort(descriptor)
   private val recentLines = new CircularBuffer[String](50)
-  private var builder = mainBuilder
+  private var progress = Progress(running = false, 0)
 
+  private val mainBuilder: mutable.Builder[Int, Seq[Int]] = Seq.newBuilder[Int]
+  private val extBuilder: mutable.Builder[Int, Seq[Int]] = Seq.newBuilder[Int]
+  private var builder = mainBuilder // will get switch between main and ext eram.
+
+  /**
+   *
+   * @param executionContext where this will run.
+   * @return
+   */
   def start()(implicit executionContext: ExecutionContext): Future[RC210Data] = {
     executionContext.execute(this)
     promise.future
@@ -82,7 +86,9 @@ class ERamCollector(descriptor: String, progress: Progress => Unit, mod: Int = 3
     try {
       reader.getLines().foreach { line =>
         logger.debug(s"line: $line")
-        recentLines.add(line)
+        logger.whenInfoEnabled {
+          recentLines.add(line)
+        }
         logger.whenTraceEnabled {
           allLines += line
         }
@@ -105,9 +111,7 @@ class ERamCollector(descriptor: String, progress: Progress => Unit, mod: Int = 3
             try {
               val ERamCollector.parser(sIndex, value) = message
               val index: Int = sIndex.toInt
-              if (index % mod == 0) {
-                progress(Progress(index))
-              }
+              progress = progress.copy(n = index)
               builder += value.toInt
             } catch {
               case e: Exception =>
@@ -147,10 +151,9 @@ object ERamCollector {
   def listPorts: List[ComPort] = {
     SerialPort.getCommPorts.map(ComPort(_)).toList
   }
-
 }
 
-case class RC210Data(memory: Seq[Int], extMemory: Seq[Int], override val stamp: Instant) extends Stamped
+case class RC210Data(memory: Seq[Int], extMemory: Seq[Int], progress: Progress)
 
 object ErmamTest extends App {
   implicit val ec = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(1))
@@ -158,9 +161,7 @@ object ErmamTest extends App {
 
   val maybePort: Option[ComPort] = ERamCollector.listPorts.find(_.friendlyName.contains("FT232"))
   maybePort.map { comPort =>
-    val collector = new ERamCollector(comPort.descriptor, progress =>
-      println(progress)
-      , 500)
+    val collector = new ERamCollector(comPort.descriptor)
 
     collector.start().foreach { r: RC210Data =>
       println(r)

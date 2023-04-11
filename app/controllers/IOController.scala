@@ -17,27 +17,22 @@
 
 package controllers
 
-import akka.NotUsed
-import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, Sink, Source}
-import akka.stream.{BoundedSourceQueue, Materializer}
 import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.DataStore
-import net.wa9nnn.rc210.serial.{ComPort, ERamCollector, RC210Download}
+import net.wa9nnn.rc210.serial.{ComPort, ERamCollector, RC210Data, RC210Download}
 import net.wa9nnn.rc210.util.Progress
 import play.api.libs.json.Json
 import play.api.mvc._
 
-import java.time.Instant
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationInt
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class IOController @Inject()(implicit val controllerComponents: ControllerComponents,
                              dataStore: DataStore,
-                             mat: Materializer,
                              executionContext: ExecutionContext
                             ) extends BaseController with LazyLogging {
   implicit val timeout: Timeout = 5.seconds
@@ -53,23 +48,26 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
     )
   }
 
+  var downloadProgress: Option[Progress] = None
+  var rc210Data: Option[RC210Data] = None
+
+  def progress(): Action[AnyContent] = Action {
+    implicit request: Request[AnyContent] =>
+      val jsObject = Json.toJson(downloadProgress)
+      val sJson = Json.prettyPrint(jsObject)
+
+      Ok(sJson)
+  }
+
   def download(serialPortDescriptor: String): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
 
-      queue.offer(Progress(0)(Instant.now))
-      queue.offer(Progress(0)(Instant.now))
-      queue.offer(Progress(0)(Instant.now))
-      val ec = new ERamCollector(serialPortDescriptor, (p: Progress) => {
-        try {
-          logger.trace("Progress: {}", p.toString)
-          queue.offer(p)
-        } catch {
-          case e:Exception =>
-            logger.error("Progress", e)
-        }
-      }, 67)
+      val ec = new ERamCollector(serialPortDescriptor
+      )
 
-      ec.start()
+      val eventualRC210Data: Future[RC210Data] = ec.start()
+        eventualRC210Data.foreach{r => rc210Data = Option(r)}
+
       Ok(views.html.RC210DownloadProgress())
   }
 
@@ -89,27 +87,4 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
 
       Ok(views.html.RC210DownloadLandings(table))
   }
-
-  import play.api.mvc.WebSocket.MessageFlowTransformer
-
-  implicit val messageFlowTransformer = MessageFlowTransformer.jsonMessageFlowTransformer[String, Progress]
-
-  private val (queue: BoundedSourceQueue[Progress], source: Source[Progress, NotUsed]) = Source.queue[Progress](128).concat(akka.stream.scaladsl.Source.maybe)
-    .toMat(BroadcastHub.sink(16))(Keep.both)
-    .run()
-
-  val s: Source[Progress, NotUsed] = source
-
-  def socket: WebSocket = WebSocket.accept[String, Progress] { request: RequestHeader =>
-    //     Log events to the console
-    val in = Sink.foreach[String](mess =>
-      println(mess))
-
-
-
-    val value = Flow.fromSinkAndSource(in, s.concat(Source.maybe))
-
-    value
-  }
-
 }
