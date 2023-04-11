@@ -12,11 +12,11 @@
                 console.log(`onMessage:  ${event.data}`);
             };
             webSocket.onopen = (event) => {
-                console.log(`onopen: nt: ${event}`);
+                console.log(`onopen: event: ${event}`);
                 webSocket.send("Gimme da progress");
             };
             webSocket.onclose = (event) => {
-                console.log(`onclose: nt: ${event}`);
+                console.log(`onclose: event: ${event}`);
                 webSocket.send("So long and thanks for all the fish.");
             };
 

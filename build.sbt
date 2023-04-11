@@ -62,6 +62,7 @@ libraryDependencies ++= Seq(
   "com.github.kxbmap" %% "configs" % "0.6.1",
 )
 
+PlayKeys.devSettings += "play.server.websocket.periodic-keep-alive-mode" -> "pong"
 
 routesImport += "net.wa9nnn.rc210.Binders._"
 routesImport += "net.wa9nnn.rc210.key.KeyFactory._"

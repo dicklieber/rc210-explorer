@@ -29,6 +29,7 @@ import net.wa9nnn.rc210.util.Progress
 import play.api.libs.json.Json
 import play.api.mvc._
 
+import java.time.Instant
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationInt
@@ -55,10 +56,18 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
   def download(serialPortDescriptor: String): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
 
+      queue.offer(Progress(0)(Instant.now))
+      queue.offer(Progress(0)(Instant.now))
+      queue.offer(Progress(0)(Instant.now))
       val ec = new ERamCollector(serialPortDescriptor, (p: Progress) => {
-        logger.trace("Progress: {}", p.toString)
-        queue.offer(p)
-      }, 35)
+        try {
+          logger.trace("Progress: {}", p.toString)
+          queue.offer(p)
+        } catch {
+          case e:Exception =>
+            logger.error("Progress", e)
+        }
+      }, 67)
 
       ec.start()
       Ok(views.html.RC210DownloadProgress())
@@ -85,8 +94,7 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
 
   implicit val messageFlowTransformer = MessageFlowTransformer.jsonMessageFlowTransformer[String, Progress]
 
-  private val (queue: BoundedSourceQueue[Progress], source: Source[Progress, NotUsed]) = Source.queue[Progress](128)
-
+  private val (queue: BoundedSourceQueue[Progress], source: Source[Progress, NotUsed]) = Source.queue[Progress](128).concat(akka.stream.scaladsl.Source.maybe)
     .toMat(BroadcastHub.sink(16))(Keep.both)
     .run()
 
@@ -97,7 +105,9 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
     val in = Sink.foreach[String](mess =>
       println(mess))
 
-    val value = Flow.fromSinkAndSource(in, s)
+
+
+    val value = Flow.fromSinkAndSource(in, s.concat(Source.maybe))
 
     value
   }
