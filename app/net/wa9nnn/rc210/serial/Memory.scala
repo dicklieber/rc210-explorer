@@ -17,14 +17,24 @@
 
 package net.wa9nnn.rc210.serial
 
+import com.typesafe.scalalogging.LazyLogging
+
+import java.io.PrintWriter
+import java.net.URL
+import java.nio.file.{Files, Path}
+import java.time.Instant
 import scala.collection.immutable.ArraySeq
+import scala.io.BufferedSource
+import scala.util.matching.Regex
+import scala.util.{Try, Using}
 
 /**
  * Access RC-210 memory with iterators over 8 (1 bute) or 16 (2 byte) integers.
+ * and a few more helpers.
  *
- * @param data mutable array.
+ * @param data mutable array. The 1st 4097 ints are main memory the last
  */
-class MemoryBuffer(data: Array[Int] = Array.empty) {
+class Memory(data: Array[Int] = Array.empty) {
   val length: Int = data.length
 
   private val array = new ArraySeq.ofInt(data)
@@ -66,5 +76,61 @@ class MemoryBuffer(data: Array[Int] = Array.empty) {
       .grouped(chunkLength)
       .toSeq
   }
+
+  /**
+   * File looks like:
+   * comment: comment\n
+   * stamp: ISO-8601\n as ISO-860
+   * size: data.length \n
+   * followed by one value per line.
+   *
+   * @param path where to save.
+   */
+  def save(path: Path): Unit = {
+    Using(new PrintWriter(Files.newBufferedWriter(path))) { writer: PrintWriter =>
+//      writer.println(s"comment: \t$comment")
+//      writer.println(s"stamp: \t${stamp.toString}")
+//      writer.println(s"size: \t${data.length}")
+      data.zipWithIndex.foreach { case (v, i) =>
+        val s = f"$i%04d:$v%d"
+        writer.println(s)
+      }
+    }
+  }
+
+}
+
+object Memory extends LazyLogging {
+
+    val r: Regex = """(.*):\s+(.*)""".r
+
+    /**
+     * Read from a file produced by [[Memory]].save().
+     *
+     * @param url where to read from.
+     * @return the data or an exception.
+     */
+    def load(url: URL): Try[Memory] = {
+
+      Using(new BufferedSource(url.openStream())) { bs =>
+        var comment = ""
+        var stamp = Instant.now()
+        var size = -1
+        val builder = Array.newBuilder[Int]
+
+        bs.getLines().foreach {
+          case r("comment", rvalue) =>
+            comment = rvalue
+          case r("stamp", rvalue) =>
+            stamp = Instant.parse(rvalue)
+          case r("size", rvalue) =>
+            size = rvalue.toInt
+          case line =>
+            line.drop(5) // get ride of index and colon
+            builder += line.drop(5).trim.toInt // get rid of index and colon
+        }
+        new Memory(builder.result())
+      }
+    }
 }
 

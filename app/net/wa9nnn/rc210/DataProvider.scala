@@ -18,35 +18,39 @@
 package net.wa9nnn.rc210
 
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.data.DataStore
 import net.wa9nnn.rc210.data.field._
 import net.wa9nnn.rc210.io.DatFile
-import net.wa9nnn.rc210.serial.MemoryBuffer
+import net.wa9nnn.rc210.serial.Memory
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DataProvider @Inject()(fieldDefinitions: FieldDefinitions, datFile: DatFile) extends LazyLogging {
-implicit val memoryBuffer: MemoryBuffer =datFile.memoryBuffer
+class DataProvider @Inject()(fieldDefinitions: FieldDefinitions, dataStore: DataStore, datFile: DatFile) extends LazyLogging {
+logger.info("DataProvider")
 
+  datFile.load().map { implicit memory: Memory =>
 
-  private val simpleFields: Seq[FieldEntry] = for {
-    fieldDefinition <- fieldDefinitions.simpleFields
-    it = fieldDefinition.iterator()
-    number <- 1 to fieldDefinition.kind.maxN
-  } yield {
-    val fieldValue: FieldValue = fieldDefinition.extractFromInts(it)
-    val fieldKey = fieldDefinition.fieldKey(number)
-    val fieldEntry = FieldEntry(fieldDefinition, fieldKey, fieldValue)
-    logger.trace("FieldEntry: offset: {} fieldEntry: {})", fieldDefinition.offset, fieldEntry.toString)
-    fieldEntry
+    val simpleFields: Seq[FieldEntry] = for {
+      fieldDefinition <- fieldDefinitions.simpleFields
+      it = fieldDefinition.iterator()
+      number <- 1 to fieldDefinition.kind.maxN
+    } yield {
+      val fieldValue: FieldValue = fieldDefinition.extractFromInts(it)
+      val fieldKey = fieldDefinition.fieldKey(number)
+      val fieldEntry = FieldEntry(fieldDefinition, fieldKey, fieldValue)
+      logger.trace("FieldEntry: offset: {} fieldEntry: {})", fieldDefinition.offset, fieldEntry.toString)
+      fieldEntry
+    }
+
+    val values: Seq[FieldEntry] = fieldDefinitions.complexFd.flatMap { memoryExtractor: ComplexExtractor =>
+      val r: Seq[FieldEntry] = memoryExtractor.extract(memory)
+      r
+    }
+
+    val initialValues: Seq[FieldEntry] = simpleFields ++: values
+    dataStore.load(initialValues)
   }
-
-  private val values: Seq[FieldEntry] = fieldDefinitions.complexFd.flatMap { memoryExtractor: ComplexExtractor =>
-    val r: Seq[FieldEntry] = memoryExtractor.extract(memoryBuffer)
-    r
-  }
-
-  val initialValues: Seq[FieldEntry] = simpleFields ++: values
 }
 
 

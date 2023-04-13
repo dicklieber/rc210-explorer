@@ -21,20 +21,20 @@ import net.wa9nnn.rc210.fixtures.WithMemory
 
 class MemoryBufferSpec extends WithMemory {
   "8bit ints" >> {
-    val value1: Iterator[Int] = memoryBuffer.iterator8At(0)
+    val value1: Iterator[Int] = memory.iterator8At(0)
     value1.next() must beEqualTo(65)
     value1.next() must beEqualTo(66)
     value1.next() must beEqualTo(67)
   }
   "16bit ints" >> {
-    val int16s: Iterator[Int] = memoryBuffer.iterator16At(1553) // 1553 is timer seconds.
+    val int16s: Iterator[Int] = memory.iterator16At(1553) // 1553 is timer seconds.
     val i0 = int16s.next()
     val i1 = int16s.next()
     int16s.next() must beEqualTo(4)
   }
 
   "chunks" >> {
-    val chunks: Seq[Array[Int]] = memoryBuffer.chunks(1985, 16, 40)
+    val chunks: Seq[Array[Int]] = memory.chunks(1985, 16, 40)
     chunks must haveLength(40)
     val head = chunks.head
     head must haveLength(16)

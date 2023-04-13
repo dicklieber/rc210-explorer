@@ -24,7 +24,8 @@ POST        /macro/save                        controllers.MacroNodeController.s
 GET         /downloadjson                      controllers.IOController.downloadJson()
 GET         /rc210/download/:descriptor        controllers.IOController.download(descriptor:String)
 POST        /rc210/progress                    controllers.IOController.progress()
-GET        /rc210/progress                    controllers.IOController.progress()
+GET         /rc210/progress                    controllers.IOController.progress()
+GET         /rc210/result                      controllers.IOController.downloadResult
 GET         /rc210                             controllers.IOController.listSerialPorts()
 GET         /flow                              controllers.Flow2Controller.flow()
 POST        /ports/save                        controllers.PortsEditorController.save()

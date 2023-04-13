@@ -22,7 +22,7 @@ import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldEntry, FieldInt, FieldValue}
 import net.wa9nnn.rc210.key.KeyFactory.TimerKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
-import net.wa9nnn.rc210.serial.MemoryBuffer
+import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.util.MacroSelect
 import play.api.libs.json.{Format, JsValue, Json}
 
@@ -39,7 +39,7 @@ object TimerExtractor extends ComplexExtractor with LazyLogging {
    * @param memoryBuffer    source of RC-210 data.
    * @return what we extracted.
    */
-  override def extract(memoryBuffer: MemoryBuffer): Seq[FieldEntry] = {
+  override def extract(memoryBuffer: Memory): Seq[FieldEntry] = {
     val seconds = memoryBuffer.iterator16At(1553)
     val macros = memoryBuffer.iterator8At(1565)
 

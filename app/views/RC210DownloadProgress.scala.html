@@ -6,7 +6,7 @@
     @tabbedmain(Tabs.rc210Tab) {
         <script>
                 const route = '@routes.IOController.progress().url';
-                setInterval(myMethod, 500);
+                setInterval(myMethod, 979);
 
                 function myMethod() {
                     $.ajax(route,
@@ -17,6 +17,9 @@
                                     const $progress = $('.progress-bar');
                                     $progress.css("width", progress.percent);
                                     $progress.text(progress.percent)
+                                    if(!progress.running){
+                                        window.location.href = '@routes.IOController.downloadResult';
+                                    }
                                 },
                                 error: function (jqXhr, textStatus, errorMessage) { // error callback
                                     $('p').append('Error: ' + errorMessage);

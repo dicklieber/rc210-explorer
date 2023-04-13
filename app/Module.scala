@@ -1,5 +1,6 @@
 
 import net.codingwell.scalaguice.ScalaModule
+import net.wa9nnn.rc210.DataProvider
 import net.wa9nnn.rc210.serial.RC210Actor
 import play.api.libs.concurrent.AkkaGuiceSupport
 import play.api.{Configuration, Environment}
@@ -19,6 +20,7 @@ import play.api.{Configuration, Environment}
 class Module(environment: Environment, configuration: Configuration) extends ScalaModule with AkkaGuiceSupport{
   override def configure(): Unit = {
     install(new ConfigModule(configuration))
+    bind[DataProvider].asEagerSingleton()
   }
 }
 

@@ -17,11 +17,12 @@
 
 package net.wa9nnn.rc210.io
 
+import com.fazecast.jSerialComm.SerialPort
 import net.wa9nnn.rc210.fixtures.WithTestConfiguration
-import net.wa9nnn.rc210.serial.MemoryBuffer
-import org.specs2.matcher.MatchResult
+import net.wa9nnn.rc210.serial.{Memory, RC210Data}
+import net.wa9nnn.rc210.util.EramStatus
 
-import scala.util.{Failure, Success, Try}
+import java.nio.file.Files
 
 class DatFileSpec extends WithTestConfiguration {
 
@@ -34,9 +35,17 @@ class DatFileSpec extends WithTestConfiguration {
       ok
     }
 
-    "latest not exist" in {
-      val memoryBuffer: MemoryBuffer = datFile.memoryBuffer
-      memoryBuffer.length must beEqualTo (0)
+    "from rc210data" >> {
+      Files.createDirectories(datFile.memoryFile.getParent)
+      Files.write(datFile.memoryFile, "Just to exist".getBytes)
+      val main = Array.fill(10)(42)
+      val ext = Array.fill(5)(142)
+
+
+      val rC210Data = new RC210Data(main, ext, new EramStatus("com3"), SerialPort.getCommPorts.head)
+      val memory = datFile.apply(rC210Data)
+      memory.length must beEqualTo(main.length + ext.length)
     }
+
   }
 }

@@ -8,7 +8,7 @@ import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.key.KeyFactory.{FunctionKey, MacroKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.model.TriggerNode
-import net.wa9nnn.rc210.serial.MemoryBuffer
+import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.{Format, JsValue, Json}
 
 import java.util.concurrent.atomic.AtomicInteger
@@ -56,7 +56,7 @@ case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dt
 object MacroNode extends LazyLogging with ComplexExtractor  {
   def header(count: Int): Header = Header(s"Macros ($count)", "Key", "Functions")
 
-  override def extract(memoryBuffer: MemoryBuffer): Seq[FieldEntry] = {
+  override def extract(memoryBuffer: Memory): Seq[FieldEntry] = {
 
     val dtmfMap: DtmfMacros = DtmfMacroExtractor(memoryBuffer)
     val mai = new AtomicInteger(1)

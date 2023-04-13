@@ -3,7 +3,7 @@ package net.wa9nnn.rc210.data.macros
 import net.wa9nnn.rc210.data.Dtmf
 import net.wa9nnn.rc210.key.KeyFactory.MacroKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
-import net.wa9nnn.rc210.serial.MemoryBuffer
+import net.wa9nnn.rc210.serial.Memory
 
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 object DtmfMacroExtractor {
 
-  def apply(memoryBuffer: MemoryBuffer): DtmfMacros = {
+  def apply(memoryBuffer: Memory): DtmfMacros = {
     val mai = new AtomicInteger(1) // cause macro numbers start at 1
 
 

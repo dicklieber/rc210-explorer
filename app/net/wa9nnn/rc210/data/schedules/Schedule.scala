@@ -8,7 +8,7 @@ import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.key.KeyFactory.ScheduleKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.model.TriggerNode
-import net.wa9nnn.rc210.serial.MemoryBuffer
+import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.util.MacroSelect
 import play.api.libs.json.{Format, JsValue, Json}
 
@@ -122,7 +122,7 @@ object Schedule extends LazyLogging with ComplexExtractor {
 
   def header(count: Int): Header = Header(s"Schedules ($count)", "SetPoint", "Macro", "DOW", "WeekInMonth", "MonthOfYear", "LocalTime")
 
-  override def extract(memory: MemoryBuffer): Seq[FieldEntry] = {
+  override def extract(memory: Memory): Seq[FieldEntry] = {
 
     val scheduleBuilder = new ScheduleBuilder(memory.iterator8At(616))
     // Collection values from various places in Memory.

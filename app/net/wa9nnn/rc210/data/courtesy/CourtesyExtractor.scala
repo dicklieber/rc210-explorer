@@ -22,7 +22,7 @@ import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldDefinition, FieldEntry, FieldValue}
 import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
-import net.wa9nnn.rc210.serial.MemoryBuffer
+import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.JsValue
 
 object CourtesyExtractor extends ComplexExtractor with LazyLogging {
@@ -33,7 +33,7 @@ object CourtesyExtractor extends ComplexExtractor with LazyLogging {
    * @param memoryBuffer    source of RC-210 data.
    * @return what we extracted.
    */
-  override def extract(memoryBuffer: MemoryBuffer): Seq[FieldEntry] = {
+  override def extract(memoryBuffer: Memory): Seq[FieldEntry] = {
     val iterator = memoryBuffer.iterator16At(856)
 
     val array = Array.ofDim[Int](10, 16)

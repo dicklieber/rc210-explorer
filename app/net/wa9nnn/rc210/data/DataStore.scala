@@ -17,7 +17,6 @@
 
 package net.wa9nnn.rc210.data
 
-import net.wa9nnn.rc210.DataProvider
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
 import net.wa9nnn.rc210.key.KeyFactory.Key
 import net.wa9nnn.rc210.key.KeyKind
@@ -28,13 +27,26 @@ import scala.collection.concurrent.TrieMap
 
 /**
  * Holds all values as simple key->value.
+ * Until loaded all functions that return Seq[FieldEntry] will return Seq.empty.
  */
 @Singleton
-class DataStore @Inject()(dataProvider: DataProvider) {
-  private val map = new TrieMap[FieldKey, FieldEntry]
+class DataStore @Inject()() {
+  private var map: TrieMap[FieldKey, FieldEntry] = new TrieMap[FieldKey, FieldEntry]
 
-  dataProvider.initialValues.foreach { fieldContents =>
-    map.put(fieldContents.fieldKey, fieldContents)
+  /**
+   * This will be invoked:
+   * - at startup from reading an existing memory file
+   * - after re-downloading from an RC-210
+   * - after load saved json data.
+   * @param fieldEntries
+   */
+  def load(fieldEntries: Seq[FieldEntry]): Unit = {
+    val map = new TrieMap[FieldKey, FieldEntry]
+    fieldEntries.foreach { fieldContents =>
+      map.put(fieldContents.fieldKey, fieldContents)
+
+      this.map = map
+    }
   }
 
   def all: Seq[FieldEntry] = {
@@ -130,7 +142,7 @@ case class NewCandidate(fieldKey: FieldKey, formValue: String)
  * @param fieldValue
  * @param candidate
  */
-case class FieldEntryJson(fieldKey: FieldKey, parserName:String, fieldValue: JsValue, candidate: Option[JsValue])
+case class FieldEntryJson(fieldKey: FieldKey, parserName: String, fieldValue: JsValue, candidate: Option[JsValue])
 
 object FieldEntryJson {
   def apply(fieldEntry: FieldEntry): FieldEntryJson = {

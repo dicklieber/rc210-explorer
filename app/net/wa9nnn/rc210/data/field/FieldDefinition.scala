@@ -2,7 +2,7 @@ package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
-import net.wa9nnn.rc210.serial.MemoryBuffer
+import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.JsValue
 
 trait FieldDefinition {
@@ -25,7 +25,7 @@ trait FieldDefinition {
  * @param fieldName      as shown to users.
  * @param kind           e.g. [[net.wa9nnn.rc210.key.KeyFactory.MacroKey]] or [[net.wa9nnn.rc210.key.KeyFactory.LogicAlarmKey]]
  * @param template       used to generate the rc-210 command.
- * @param fieldExtractor that knows how to get this from the [[net.wa9nnn.rc210.serial.MemoryBuffer]]
+ * @param fieldExtractor that knows how to get this from the [[net.wa9nnn.rc210.serial.Memory]]
  * @param tooltip        for this field.
  * @param units          suffix for <input>
  * @param max            used by the extractor. e.g. max DtMF digits or max number.
@@ -46,11 +46,11 @@ case class SimpleField(offset: Int,
 
 
   /**
-   * Create an [[Iterator[Int]] over the [[MemoryBuffer]] starting at an offset.
+   * Create an [[Iterator[Int]] over the [[Memory]] starting at an offset.
    *
    * @param memoryBuffer data from RC-210 binary dump.
    */
-  def iterator()(implicit memoryBuffer: MemoryBuffer): Iterator[Int] = {
+  def iterator()(implicit memoryBuffer: Memory): Iterator[Int] = {
     if (max > 255)
       memoryBuffer.iterator16At(offset)
     else
@@ -79,7 +79,7 @@ trait ComplexExtractor extends FieldExtractor {
    * @param memoryBuffer    source of RC-210 data.
    * @return what we extracted.
    */
-  def extract(memoryBuffer: MemoryBuffer): Seq[FieldEntry]
+  def extract(memoryBuffer: Memory): Seq[FieldEntry]
 
    lazy val fieldDefinition: FieldDefinition = {
     new FieldDefinition {

@@ -25,7 +25,7 @@ class CourtesyExtractorSpec extends WithMemory {
 
   "CourtesyExtractorSpec" should {
     "extract" in {
-      val cts: Seq[FieldEntry] = CourtesyExtractor.extract(memoryBuffer)
+      val cts: Seq[FieldEntry] = CourtesyExtractor.extract(memory)
       cts must haveLength(10)
     }
   }

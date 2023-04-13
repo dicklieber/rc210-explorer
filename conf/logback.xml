@@ -44,7 +44,7 @@
     <logger name="controllers.ScheduleController" level="INFO"/>
     <logger name="net.wa9nnn.rc210.data.courtesy.Segment" level="INFO"/>
     <logger name="controllers.CourtesyToneEditorController" level="INFO"/>
-    <logger name="controllers.IOController" level="TRACE"/>
+    <logger name="controllers.IOController" level="INFO"/>
     <logger name="net.wa9nnn.rc210.serial.ERamCollector" level="INFO"/>
 
     <root level="INFO">

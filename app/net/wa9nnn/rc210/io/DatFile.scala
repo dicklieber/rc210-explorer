@@ -19,28 +19,49 @@ package net.wa9nnn.rc210.io
 
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
+import com.wa9nnn.util.TimeConverters.fileStamp
 import configs.syntax._
-import net.wa9nnn.rc210.serial.{MemoryArray, MemoryBuffer}
+import net.wa9nnn.rc210.serial.{Memory, RC210Data}
 
 import java.io.PrintWriter
-import java.nio.file.Path
+import java.net.URL
+import java.nio.file.{Files, Path}
+import java.time.Instant
 import javax.inject.{Inject, Singleton}
 import scala.util.Try
 
 @Singleton
 class DatFile @Inject()(config: Config) extends LazyLogging {
 
-  private val memoryFile: Path = config.get[Path]("vizRc210.memoryFile").value
+  val memoryFile: Path = config.get[Path]("vizRc210.memoryFile").value
   private val historyDir: Path = config.get[Path]("vizRc210.historyDir").value
   private val dataStoreFile: Path = config.get[Path]("vizRc210.dataStoreFile").value
 
-  private val triedArray: Try[MemoryArray] = MemoryArray(memoryFile.toUri.toURL)
-  private var memoryArray: Option[MemoryArray] = triedArray.toOption
+  def load(): Try[Memory] = {
+    Memory.load(memoryFile.toUri.toURL)
+  }
+  def apply(rc210Data: RC210Data): Memory = {
+    val memory = rc210Data.mainArray
+    val extMemory = rc210Data.extArray
+    logger.info(rc210Data.progress.toString)
+    val portDescription: String = rc210Data.serialPort.getPortDescription
+    // build MemoryArray
+    val data = memory.concat(extMemory)
+    val newMemory = new Memory(data)
+    // backup old
+    if(Files.exists(memoryFile)){
+      val fileTime: Instant = Files.getLastModifiedTime(memoryFile).toInstant
+      val stampName = fileStamp(fileTime)
+      val historic: String = memoryFile.getFileName.toString .replace(".", stampName + ".")
+      val target = historyDir.resolve(historic)
+      Files.createDirectories(historyDir)
+      Files.move(memoryFile, target)
+    }
 
-  private var latest: MemoryBuffer = memoryArray.map(ma => new MemoryBuffer(ma.data)).getOrElse(new MemoryBuffer())
-
-  def memoryBuffer: MemoryBuffer = latest
-
+    // save new
+    newMemory.save(memoryFile)
+    newMemory
+  }
 
   def save(writer: PrintWriter => Unit): Unit = {
     throw new NotImplementedError()
