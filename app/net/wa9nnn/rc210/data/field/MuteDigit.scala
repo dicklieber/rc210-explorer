@@ -55,7 +55,7 @@ object MuteDigit extends SimpleExtractor {
     apply(id)
   }
 
-  override def jsonToField(jsValue: JsValue): FieldValue = new  MuteDigit(jsValue.as[String])
+  override def parse(jsValue: JsValue): FieldValue = new  MuteDigit(jsValue.as[String])
 
   override val name: String = "MuteDigit"
 }

@@ -117,14 +117,8 @@ object DataStore {
     override def reads(json: JsValue): JsResult[DataStore] = ???
 
     override def writes(o: DataStore): JsValue = {
-
-      val value: Seq[(String, JsValue)] = o.all.map { fieldEntry =>
-        val fieldEntryJson = FieldEntryJson(fieldEntry)
-        fieldEntry.fieldKey.param -> Json.toJson(fieldEntryJson)
-      }
-      JsObject {
-        value
-      }
+      Json.toJson(o.all.map(fieldEntry =>
+        Json.toJson(FieldEntryJson(fieldEntry))))
     }
   }
 }

@@ -60,7 +60,7 @@ object CourtesyExtractor extends ComplexExtractor with LazyLogging {
   }
 
 
-  override def jsonToField(jsValue: JsValue): FieldValue = jsValue.as[CourtesyTone]
+  override def parse(jsValue: JsValue): FieldValue = jsValue.as[CourtesyTone]
 
 
   override val name: String = "CourtesyExtractor"

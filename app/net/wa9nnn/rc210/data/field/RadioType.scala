@@ -59,7 +59,7 @@ object RadioType extends SimpleExtractor {
     apply(id)
   }
 
-  override def jsonToField(jsValue: JsValue): FieldValue = new RadioType(jsValue.as[String])
+  override def parse(jsValue: JsValue): FieldValue = new RadioType(jsValue.as[String])
 
   override val name: String = "RadioType"
 }

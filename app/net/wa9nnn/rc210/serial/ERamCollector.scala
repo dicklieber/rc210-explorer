@@ -108,7 +108,7 @@ class ERamCollector(descriptor: String) extends Runnable with LazyLogging  {
                 status.finish()
                 serialPort.closePort()
                 reader.close()
-                RC210Data(mainBuilder.result(), extBuilder.result(), status, serialPort)
+                RC210Data(mainBuilder.result(), extBuilder.result(), status)
               }
             }
           case "Timeout" =>
@@ -158,7 +158,7 @@ object ERamCollector {
   }
 }
 
-case class RC210Data(mainArray: Array[Int], extArray: Array[Int], progress: EramStatus, serialPort: SerialPort)
+case class RC210Data(mainArray: Array[Int], extArray: Array[Int], progress: EramStatus)
 
 object ErmamTest extends App {
   implicit val ec = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(1))

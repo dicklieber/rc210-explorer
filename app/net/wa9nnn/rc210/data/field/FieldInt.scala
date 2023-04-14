@@ -60,7 +60,7 @@ object FieldInt extends SimpleExtractor {
     override def writes(o: FieldInt): JsValue = Json.toJson(o.value)
   }
 
-  override def jsonToField(jsValue: JsValue): FieldValue =  new FieldInt(jsValue.as[Int])
+  override def parse(jsValue: JsValue): FieldValue =  new FieldInt(jsValue.as[Int])
 
   override val name: String = "FieldInt"
 }

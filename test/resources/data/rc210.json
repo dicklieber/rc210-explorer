@@ -1,0 +1,2679 @@
+[
+  {
+    "fieldKey" : "Enable:logicAlarmKey1",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Macro~High:logicAlarmKey1",
+    "fieldValue" : "macroKey2"
+  },
+  {
+    "fieldKey" : "Macro~Low:logicAlarmKey1",
+    "fieldValue" : "macroKey2"
+  },
+  {
+    "fieldKey" : "Enable:logicAlarmKey2",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Macro~High:logicAlarmKey2",
+    "fieldValue" : "macroKey2"
+  },
+  {
+    "fieldKey" : "Macro~Low:logicAlarmKey2",
+    "fieldValue" : "macroKey2"
+  },
+  {
+    "fieldKey" : "Enable:logicAlarmKey3",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Macro~High:logicAlarmKey3",
+    "fieldValue" : "macroKey2"
+  },
+  {
+    "fieldKey" : "Macro~Low:logicAlarmKey3",
+    "fieldValue" : "macroKey2"
+  },
+  {
+    "fieldKey" : "Enable:logicAlarmKey4",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Macro~High:logicAlarmKey4",
+    "fieldValue" : "macroKey2"
+  },
+  {
+    "fieldKey" : "Macro~Low:logicAlarmKey4",
+    "fieldValue" : "macroKey2"
+  },
+  {
+    "fieldKey" : "Enable:logicAlarmKey5",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Macro~High:logicAlarmKey5",
+    "fieldValue" : "macroKey2"
+  },
+  {
+    "fieldKey" : "Macro~Low:logicAlarmKey5",
+    "fieldValue" : "macroKey2"
+  },
+  {
+    "fieldKey" : "CourtesyTone:courtesyToneKey1",
+    "fieldValue" : {
+      "key" : "courtesyToneKey1",
+      "segments" : [
+        {
+          "delayMs" : 1200,
+          "durationMs" : 100,
+          "tone1Hz" : 660,
+          "tone2Hz" : 880
+        },
+        {
+          "delayMs" : 11,
+          "durationMs" : 10,
+          "tone1Hz" : 1600,
+          "tone2Hz" : 1800
+        },
+        {
+          "delayMs" : 22,
+          "durationMs" : 20,
+          "tone1Hz" : 2600,
+          "tone2Hz" : 2800
+        },
+        {
+          "delayMs" : 33,
+          "durationMs" : 30,
+          "tone1Hz" : 360,
+          "tone2Hz" : 380
+        }
+      ]
+    }
+  },
+  {
+    "fieldKey" : "CourtesyTone:courtesyToneKey2",
+    "fieldValue" : {
+      "key" : "courtesyToneKey2",
+      "segments" : [
+        {
+          "delayMs" : 1200,
+          "durationMs" : 200,
+          "tone1Hz" : 400,
+          "tone2Hz" : 0
+        },
+        {
+          "delayMs" : 100,
+          "durationMs" : 200,
+          "tone1Hz" : 600,
+          "tone2Hz" : 0
+        },
+        {
+          "delayMs" : 0,
+          "durationMs" : 0,
+          "tone1Hz" : 0,
+          "tone2Hz" : 0
+        },
+        {
+          "delayMs" : 0,
+          "durationMs" : 0,
+          "tone1Hz" : 0,
+          "tone2Hz" : 0
+        }
+      ]
+    }
+  },
+  {
+    "fieldKey" : "CourtesyTone:courtesyToneKey3",
+    "fieldValue" : {
+      "key" : "courtesyToneKey3",
+      "segments" : [
+        {
+          "delayMs" : 250,
+          "durationMs" : 100,
+          "tone1Hz" : 1000,
+          "tone2Hz" : 0
+        },
+        {
+          "delayMs" : 100,
+          "durationMs" : 100,
+          "tone1Hz" : 1000,
+          "tone2Hz" : 0
+        },
+        {
+          "delayMs" : 0,
+          "durationMs" : 0,
+          "tone1Hz" : 0,
+          "tone2Hz" : 0
+        },
+        {
+          "delayMs" : 0,
+          "durationMs" : 0,
+          "tone1Hz" : 0,
+          "tone2Hz" : 0
+        }
+      ]
+    }
+  },
+  {
+    "fieldKey" : "CourtesyTone:courtesyToneKey4",
+    "fieldValue" : {
+      "key" : "courtesyToneKey4",
+      "segments" : [
+        {
+          "delayMs" : 250,
+          "durationMs" : 100,
+          "tone1Hz" : 697,
+          "tone2Hz" : 1477
+        },
+        {
+          "delayMs" : 100,
+          "durationMs" : 100,
+          "tone1Hz" : 770,
+          "tone2Hz" : 1477
+        },
+        {
+          "delayMs" : 100,
+          "durationMs" : 100,
+          "tone1Hz" : 880,
+          "tone2Hz" : 1477
+        },
+        {
+          "delayMs" : 100,
+          "durationMs" : 100,
+          "tone1Hz" : 941,
+          "tone2Hz" : 1477
+        }
+      ]
+    }
+  },
+  {
+    "fieldKey" : "CourtesyTone:courtesyToneKey5",
+    "fieldValue" : {
+      "key" : "courtesyToneKey5",
+      "segments" : [
+        {
+          "delayMs" : 250,
+          "durationMs" : 100,
+          "tone1Hz" : 330,
+          "tone2Hz" : 0
+        },
+        {
+          "delayMs" : 0,
+          "durationMs" : 100,
+          "tone1Hz" : 495,
+          "tone2Hz" : 0
+        },
+        {
+          "delayMs" : 0,
+          "durationMs" : 100,
+          "tone1Hz" : 660,
+          "tone2Hz" : 0
+        },
+        {
+          "delayMs" : 0,
+          "durationMs" : 0,
+          "tone1Hz" : 0,
+          "tone2Hz" : 0
+        }
+      ]
+    }
+  },
+  {
+    "fieldKey" : "CourtesyTone:courtesyToneKey6",
+    "fieldValue" : {
+      "key" : "courtesyToneKey6",
+      "segments" : [
+        {
+          "delayMs" : 250,
+          "durationMs" : 75,
+          "tone1Hz" : 330,
+          "tone2Hz" : 0
+        },
+        {
+          "delayMs" : 0,
+          "durationMs" : 75,
+          "tone1Hz" : 495,
+          "tone2Hz" : 0
+        },
+        {
+          "delayMs" : 0,
+          "durationMs" : 75,
+          "tone1Hz" : 660,
+          "tone2Hz" : 0
+        },
+        {
+          "delayMs" : 0,
+          "durationMs" : 0,
+          "tone1Hz" : 0,
+          "tone2Hz" : 0
+        }
+      ]
+    }
+  },
+  {
+    "fieldKey" : "CourtesyTone:courtesyToneKey7",
+    "fieldValue" : {
+      "key" : "courtesyToneKey7",
+      "segments" : [
+        {
+          "delayMs" : 250,
+          "durationMs" : 100,
+          "tone1Hz" : 1000,
+          "tone2Hz" : 880
+        },
+        {
+          "delayMs" : 0,
+          "durationMs" : 0,
+          "tone1Hz" : 0,
+          "tone2Hz" : 0
+        },
+        {
+          "delayMs" : 0,
+          "durationMs" : 0,
+          "tone1Hz" : 0,
+          "tone2Hz" : 0
+        },
+        {
+          "delayMs" : 0,
+          "durationMs" : 0,
+          "tone1Hz" : 0,
+          "tone2Hz" : 0
+        }
+      ]
+    }
+  },
+  {
+    "fieldKey" : "CourtesyTone:courtesyToneKey8",
+    "fieldValue" : {
+      "key" : "courtesyToneKey8",
+      "segments" : [
+        {
+          "delayMs" : 250,
+          "durationMs" : 100,
+          "tone1Hz" : 440,
+          "tone2Hz" : 660
+        },
+        {
+          "delayMs" : 0,
+          "durationMs" : 0,
+          "tone1Hz" : 0,
+          "tone2Hz" : 0
+        },
+        {
+          "delayMs" : 0,
+          "durationMs" : 0,
+          "tone1Hz" : 0,
+          "tone2Hz" : 0
+        },
+        {
+          "delayMs" : 0,
+          "durationMs" : 0,
+          "tone1Hz" : 0,
+          "tone2Hz" : 0
+        }
+      ]
+    }
+  },
+  {
+    "fieldKey" : "CourtesyTone:courtesyToneKey9",
+    "fieldValue" : {
+      "key" : "courtesyToneKey9",
+      "segments" : [
+        {
+          "delayMs" : 250,
+          "durationMs" : 75,
+          "tone1Hz" : 1000,
+          "tone2Hz" : 0
+        },
+        {
+          "delayMs" : 75,
+          "durationMs" : 75,
+          "tone1Hz" : 1000,
+          "tone2Hz" : 0
+        },
+        {
+          "delayMs" : 75,
+          "durationMs" : 75,
+          "tone1Hz" : 1000,
+          "tone2Hz" : 0
+        },
+        {
+          "delayMs" : 0,
+          "durationMs" : 0,
+          "tone1Hz" : 0,
+          "tone2Hz" : 0
+        }
+      ]
+    }
+  },
+  {
+    "fieldKey" : "CourtesyTone:courtesyToneKey10",
+    "fieldValue" : {
+      "key" : "courtesyToneKey10",
+      "segments" : [
+        {
+          "delayMs" : 1200,
+          "durationMs" : 100,
+          "tone1Hz" : 660,
+          "tone2Hz" : 880
+        },
+        {
+          "delayMs" : 0,
+          "durationMs" : 0,
+          "tone1Hz" : 0,
+          "tone2Hz" : 0
+        },
+        {
+          "delayMs" : 0,
+          "durationMs" : 0,
+          "tone1Hz" : 0,
+          "tone2Hz" : 0
+        },
+        {
+          "delayMs" : 0,
+          "durationMs" : 0,
+          "tone1Hz" : 0,
+          "tone2Hz" : 0
+        }
+      ]
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey1",
+    "fieldValue" : {
+      "key" : "macroKey1",
+      "functions" : [
+        "functionKey165",
+        "functionKey85",
+        "functionKey27",
+        "functionKey60",
+        "functionKey196"
+      ],
+      "dtmf" : "10901"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey2",
+    "fieldValue" : {
+      "key" : "macroKey2",
+      "functions" : [
+        "functionKey165",
+        "functionKey85",
+        "functionKey197",
+        "functionKey198"
+      ],
+      "dtmf" : "10902"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey3",
+    "fieldValue" : {
+      "key" : "macroKey3",
+      "functions" : [
+        "functionKey165",
+        "functionKey85",
+        "functionKey127"
+      ],
+      "dtmf" : "10903"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey4",
+    "fieldValue" : {
+      "key" : "macroKey4",
+      "functions" : [
+        "functionKey165",
+        "functionKey85",
+        "functionKey197",
+        "functionKey198"
+      ],
+      "dtmf" : "10904"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey5",
+    "fieldValue" : {
+      "key" : "macroKey5",
+      "functions" : [],
+      "dtmf" : "10905"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey6",
+    "fieldValue" : {
+      "key" : "macroKey6",
+      "functions" : [
+        "functionKey165",
+        "functionKey85",
+        "functionKey130"
+      ],
+      "dtmf" : "10906"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey7",
+    "fieldValue" : {
+      "key" : "macroKey7",
+      "functions" : [
+        "functionKey162",
+        "functionKey192"
+      ],
+      "dtmf" : "10907"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey8",
+    "fieldValue" : {
+      "key" : "macroKey8",
+      "functions" : [
+        "functionKey162",
+        "functionKey193"
+      ],
+      "dtmf" : "10908"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey9",
+    "fieldValue" : {
+      "key" : "macroKey9",
+      "functions" : [
+        "functionKey165",
+        "functionKey85",
+        "functionKey255",
+        "functionKey255",
+        "functionKey255",
+        "functionKey52",
+        "functionKey255",
+        "functionKey255",
+        "functionKey255",
+        "functionKey53",
+        "functionKey195"
+      ],
+      "dtmf" : "10909"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey10",
+    "fieldValue" : {
+      "key" : "macroKey10",
+      "functions" : [
+        "functionKey165",
+        "functionKey85",
+        "functionKey255",
+        "functionKey255",
+        "functionKey255",
+        "functionKey92",
+        "functionKey255",
+        "functionKey255",
+        "functionKey255",
+        "functionKey93",
+        "functionKey194"
+      ],
+      "dtmf" : "109010"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey11",
+    "fieldValue" : {
+      "key" : "macroKey11",
+      "functions" : [
+        "functionKey163",
+        "functionKey60"
+      ],
+      "dtmf" : "109011"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey12",
+    "fieldValue" : {
+      "key" : "macroKey12",
+      "functions" : [],
+      "dtmf" : "109012"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey13",
+    "fieldValue" : {
+      "key" : "macroKey13",
+      "functions" : [],
+      "dtmf" : "109013"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey14",
+    "fieldValue" : {
+      "key" : "macroKey14",
+      "functions" : [],
+      "dtmf" : "109014"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey15",
+    "fieldValue" : {
+      "key" : "macroKey15",
+      "functions" : [],
+      "dtmf" : "109015"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey16",
+    "fieldValue" : {
+      "key" : "macroKey16",
+      "functions" : [],
+      "dtmf" : "109016"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey17",
+    "fieldValue" : {
+      "key" : "macroKey17",
+      "functions" : [],
+      "dtmf" : "109017"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey18",
+    "fieldValue" : {
+      "key" : "macroKey18",
+      "functions" : [],
+      "dtmf" : "109018"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey19",
+    "fieldValue" : {
+      "key" : "macroKey19",
+      "functions" : [],
+      "dtmf" : "109019"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey20",
+    "fieldValue" : {
+      "key" : "macroKey20",
+      "functions" : [],
+      "dtmf" : "109020"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey21",
+    "fieldValue" : {
+      "key" : "macroKey21",
+      "functions" : [],
+      "dtmf" : "109021"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey22",
+    "fieldValue" : {
+      "key" : "macroKey22",
+      "functions" : [],
+      "dtmf" : "109022"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey23",
+    "fieldValue" : {
+      "key" : "macroKey23",
+      "functions" : [],
+      "dtmf" : "109023"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey24",
+    "fieldValue" : {
+      "key" : "macroKey24",
+      "functions" : [],
+      "dtmf" : "109024"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey25",
+    "fieldValue" : {
+      "key" : "macroKey25",
+      "functions" : [],
+      "dtmf" : "109025"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey26",
+    "fieldValue" : {
+      "key" : "macroKey26",
+      "functions" : [],
+      "dtmf" : "109026"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey27",
+    "fieldValue" : {
+      "key" : "macroKey27",
+      "functions" : [],
+      "dtmf" : "109027"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey28",
+    "fieldValue" : {
+      "key" : "macroKey28",
+      "functions" : [],
+      "dtmf" : "109028"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey29",
+    "fieldValue" : {
+      "key" : "macroKey29",
+      "functions" : [],
+      "dtmf" : "109029"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey30",
+    "fieldValue" : {
+      "key" : "macroKey30",
+      "functions" : [],
+      "dtmf" : "109030"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey31",
+    "fieldValue" : {
+      "key" : "macroKey31",
+      "functions" : [],
+      "dtmf" : "109031"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey32",
+    "fieldValue" : {
+      "key" : "macroKey32",
+      "functions" : [],
+      "dtmf" : "109032"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey33",
+    "fieldValue" : {
+      "key" : "macroKey33",
+      "functions" : [],
+      "dtmf" : "109033"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey34",
+    "fieldValue" : {
+      "key" : "macroKey34",
+      "functions" : [],
+      "dtmf" : "109034"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey35",
+    "fieldValue" : {
+      "key" : "macroKey35",
+      "functions" : [],
+      "dtmf" : "109035"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey36",
+    "fieldValue" : {
+      "key" : "macroKey36",
+      "functions" : [],
+      "dtmf" : "109036"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey37",
+    "fieldValue" : {
+      "key" : "macroKey37",
+      "functions" : [],
+      "dtmf" : "109037"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey38",
+    "fieldValue" : {
+      "key" : "macroKey38",
+      "functions" : [],
+      "dtmf" : "109038"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey39",
+    "fieldValue" : {
+      "key" : "macroKey39",
+      "functions" : [],
+      "dtmf" : "109039"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey40",
+    "fieldValue" : {
+      "key" : "macroKey40",
+      "functions" : [],
+      "dtmf" : "109040"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey41",
+    "fieldValue" : {
+      "key" : "macroKey41",
+      "functions" : [
+        "functionKey162",
+        "functionKey116"
+      ],
+      "dtmf" : "2451"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey42",
+    "fieldValue" : {
+      "key" : "macroKey42",
+      "functions" : [
+        "functionKey162",
+        "functionKey126"
+      ],
+      "dtmf" : "2452"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey43",
+    "fieldValue" : {
+      "key" : "macroKey43",
+      "functions" : [
+        "functionKey162",
+        "functionKey127"
+      ],
+      "dtmf" : "2453"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey44",
+    "fieldValue" : {
+      "key" : "macroKey44",
+      "functions" : [
+        "functionKey162",
+        "functionKey128"
+      ],
+      "dtmf" : "2454"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey45",
+    "fieldValue" : {
+      "key" : "macroKey45",
+      "functions" : [
+        "functionKey162",
+        "functionKey129"
+      ],
+      "dtmf" : "2455"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey46",
+    "fieldValue" : {
+      "key" : "macroKey46",
+      "functions" : [
+        "functionKey162",
+        "functionKey187",
+        "functionKey189"
+      ],
+      "dtmf" : "2456"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey47",
+    "fieldValue" : {
+      "key" : "macroKey47",
+      "functions" : [
+        "functionKey162",
+        "functionKey130"
+      ],
+      "dtmf" : "2457"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey48",
+    "fieldValue" : {
+      "key" : "macroKey48",
+      "functions" : [
+        "functionKey162",
+        "functionKey13",
+        "functionKey190",
+        "functionKey194"
+      ],
+      "dtmf" : "2458"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey49",
+    "fieldValue" : {
+      "key" : "macroKey49",
+      "functions" : [
+        "functionKey162",
+        "functionKey190",
+        "functionKey195",
+        "functionKey16"
+      ],
+      "dtmf" : "2459"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey50",
+    "fieldValue" : {
+      "key" : "macroKey50",
+      "functions" : [
+        "functionKey162",
+        "functionKey181"
+      ],
+      "dtmf" : "2450"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey51",
+    "fieldValue" : {
+      "key" : "macroKey51",
+      "functions" : [
+        "functionKey163",
+        "functionKey116"
+      ],
+      "dtmf" : "4451"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey52",
+    "fieldValue" : {
+      "key" : "macroKey52",
+      "functions" : [
+        "functionKey163",
+        "functionKey126"
+      ],
+      "dtmf" : "4452"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey53",
+    "fieldValue" : {
+      "key" : "macroKey53",
+      "functions" : [
+        "functionKey163",
+        "functionKey127"
+      ],
+      "dtmf" : "4453"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey54",
+    "fieldValue" : {
+      "key" : "macroKey54",
+      "functions" : [
+        "functionKey163",
+        "functionKey128"
+      ],
+      "dtmf" : "4454"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey55",
+    "fieldValue" : {
+      "key" : "macroKey55",
+      "functions" : [
+        "functionKey163",
+        "functionKey129"
+      ],
+      "dtmf" : "4455"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey56",
+    "fieldValue" : {
+      "key" : "macroKey56",
+      "functions" : [
+        "functionKey163",
+        "functionKey188",
+        "functionKey189"
+      ],
+      "dtmf" : "4456"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey57",
+    "fieldValue" : {
+      "key" : "macroKey57",
+      "functions" : [
+        "functionKey163",
+        "functionKey130"
+      ],
+      "dtmf" : "4457"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey58",
+    "fieldValue" : {
+      "key" : "macroKey58",
+      "functions" : [
+        "functionKey163",
+        "functionKey14",
+        "functionKey191",
+        "functionKey194"
+      ],
+      "dtmf" : "4458"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey59",
+    "fieldValue" : {
+      "key" : "macroKey59",
+      "functions" : [
+        "functionKey163",
+        "functionKey191",
+        "functionKey195",
+        "functionKey17"
+      ],
+      "dtmf" : "4459"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey60",
+    "fieldValue" : {
+      "key" : "macroKey60",
+      "functions" : [
+        "functionKey163",
+        "functionKey182"
+      ],
+      "dtmf" : "4450"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey61",
+    "fieldValue" : {
+      "key" : "macroKey61",
+      "functions" : [],
+      "dtmf" : "109061"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey62",
+    "fieldValue" : {
+      "key" : "macroKey62",
+      "functions" : [],
+      "dtmf" : "109062"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey63",
+    "fieldValue" : {
+      "key" : "macroKey63",
+      "functions" : [],
+      "dtmf" : "109063"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey64",
+    "fieldValue" : {
+      "key" : "macroKey64",
+      "functions" : [],
+      "dtmf" : "109064"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey65",
+    "fieldValue" : {
+      "key" : "macroKey65",
+      "functions" : [],
+      "dtmf" : "109065"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey66",
+    "fieldValue" : {
+      "key" : "macroKey66",
+      "functions" : [],
+      "dtmf" : "109066"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey67",
+    "fieldValue" : {
+      "key" : "macroKey67",
+      "functions" : [],
+      "dtmf" : "109067"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey68",
+    "fieldValue" : {
+      "key" : "macroKey68",
+      "functions" : [],
+      "dtmf" : "109068"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey69",
+    "fieldValue" : {
+      "key" : "macroKey69",
+      "functions" : [],
+      "dtmf" : "109069"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey70",
+    "fieldValue" : {
+      "key" : "macroKey70",
+      "functions" : [],
+      "dtmf" : "109070"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey71",
+    "fieldValue" : {
+      "key" : "macroKey71",
+      "functions" : [],
+      "dtmf" : "109071"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey72",
+    "fieldValue" : {
+      "key" : "macroKey72",
+      "functions" : [],
+      "dtmf" : "109072"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey73",
+    "fieldValue" : {
+      "key" : "macroKey73",
+      "functions" : [],
+      "dtmf" : "109073"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey74",
+    "fieldValue" : {
+      "key" : "macroKey74",
+      "functions" : [],
+      "dtmf" : "109074"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey75",
+    "fieldValue" : {
+      "key" : "macroKey75",
+      "functions" : [],
+      "dtmf" : "109075"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey76",
+    "fieldValue" : {
+      "key" : "macroKey76",
+      "functions" : [],
+      "dtmf" : "109076"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey77",
+    "fieldValue" : {
+      "key" : "macroKey77",
+      "functions" : [],
+      "dtmf" : "109077"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey78",
+    "fieldValue" : {
+      "key" : "macroKey78",
+      "functions" : [],
+      "dtmf" : "109078"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey79",
+    "fieldValue" : {
+      "key" : "macroKey79",
+      "functions" : [],
+      "dtmf" : "109079"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey80",
+    "fieldValue" : {
+      "key" : "macroKey80",
+      "functions" : [],
+      "dtmf" : "109080"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey81",
+    "fieldValue" : {
+      "key" : "macroKey81",
+      "functions" : [],
+      "dtmf" : "109081"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey82",
+    "fieldValue" : {
+      "key" : "macroKey82",
+      "functions" : [],
+      "dtmf" : "109082"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey83",
+    "fieldValue" : {
+      "key" : "macroKey83",
+      "functions" : [],
+      "dtmf" : "109083"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey84",
+    "fieldValue" : {
+      "key" : "macroKey84",
+      "functions" : [],
+      "dtmf" : "109084"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey85",
+    "fieldValue" : {
+      "key" : "macroKey85",
+      "functions" : [],
+      "dtmf" : "109085"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey86",
+    "fieldValue" : {
+      "key" : "macroKey86",
+      "functions" : [],
+      "dtmf" : "109086"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey87",
+    "fieldValue" : {
+      "key" : "macroKey87",
+      "functions" : [],
+      "dtmf" : "109087"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey88",
+    "fieldValue" : {
+      "key" : "macroKey88",
+      "functions" : [],
+      "dtmf" : "109088"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey89",
+    "fieldValue" : {
+      "key" : "macroKey89",
+      "functions" : [],
+      "dtmf" : "109089"
+    }
+  },
+  {
+    "fieldKey" : "Macro:macroKey90",
+    "fieldValue" : {
+      "key" : "macroKey90",
+      "functions" : [
+        "functionKey13"
+      ],
+      "dtmf" : "109090"
+    }
+  },
+  {
+    "fieldKey" : "Allow~Terminator~Speech:commonKey1",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "AutoPatch~Port:commonKey1",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "AutoPatch~Port~Mute:commonKey1",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Clock~24~Hours:commonKey1",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "DTMF~Duration:commonKey1",
+    "fieldValue" : true
+  },
+  {
+    "fieldKey" : "DTMF~Pause:commonKey1",
+    "fieldValue" : true
+  },
+  {
+    "fieldKey" : "Fan~Select:commonKey1",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Fan~Timeout:commonKey1",
+    "fieldValue" : 0
+  },
+  {
+    "fieldKey" : "Lock~Code:commonKey1",
+    "fieldValue" : "Vector(#)"
+  },
+  {
+    "fieldKey" : "Mute~Digit~Select:commonKey1",
+    "fieldValue" : "1st digit"
+  },
+  {
+    "fieldKey" : "Program~Prefix:commonKey1",
+    "fieldValue" : "Vector(1, D, C, 2)"
+  },
+  {
+    "fieldKey" : "Radio~Type:commonKey1",
+    "fieldValue" : "Kenwood 271A"
+  },
+  {
+    "fieldKey" : "Say~Hours:commonKey1",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Say~Year:commonKey1",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Site~Prefix:commonKey1",
+    "fieldValue" : "Vector(A, B, C)"
+  },
+  {
+    "fieldKey" : "Speech~Delay:commonKey1",
+    "fieldValue" : 1233
+  },
+  {
+    "fieldKey" : "TT~PadTest:commonKey1",
+    "fieldValue" : "Vector(1, 2)"
+  },
+  {
+    "fieldKey" : "Terminator:commonKey1",
+    "fieldValue" : "Vector(D)"
+  },
+  {
+    "fieldKey" : "Timeout~Ports:commonKey1",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Yaesu~Type:commonKey1",
+    "fieldValue" : "Kenwood 271A"
+  },
+  {
+    "fieldKey" : "CTCSS~Decode:portKey1",
+    "fieldValue" : true
+  },
+  {
+    "fieldKey" : "CTCSS~During~ID:portKey1",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "CTCSS~Encode~Polarity:portKey1",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "CTCSS~Encode~Timer:portKey1",
+    "fieldValue" : 35
+  },
+  {
+    "fieldKey" : "CWS~Speed:portKey1",
+    "fieldValue" : 20
+  },
+  {
+    "fieldKey" : "DTMF~COS~Control:portKey1",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "DTMF~Cover~Tone:portKey1",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "DTMF~Mute:portKey1",
+    "fieldValue" : true
+  },
+  {
+    "fieldKey" : "DTMF~Mute~Timer:portKey1",
+    "fieldValue" : 2570
+  },
+  {
+    "fieldKey" : "DTMF~Require~Tone:portKey1",
+    "fieldValue" : true
+  },
+  {
+    "fieldKey" : "Enable~Speech~ID:portKey1",
+    "fieldValue" : true
+  },
+  {
+    "fieldKey" : "Guest~Macro~Enable:portKey1",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Guest~Macro~Range:portKey1",
+    "fieldValue" : "48 48"
+  },
+  {
+    "fieldKey" : "Hang~Time~1:portKey1",
+    "fieldValue" : 11
+  },
+  {
+    "fieldKey" : "Hang~Time~2:portKey1",
+    "fieldValue" : 12
+  },
+  {
+    "fieldKey" : "Hang~Time~3:portKey1",
+    "fieldValue" : 13
+  },
+  {
+    "fieldKey" : "Inactivity~Timeout:portKey1",
+    "fieldValue" : 0
+  },
+  {
+    "fieldKey" : "Initial~ID~Timer~~:portKey1",
+    "fieldValue" : 11
+  },
+  {
+    "fieldKey" : "Kerchunk:portKey1",
+    "fieldValue" : true
+  },
+  {
+    "fieldKey" : "Kerchunk~Timer:portKey1",
+    "fieldValue" : 64250
+  },
+  {
+    "fieldKey" : "Monitor~Mix:portKey1",
+    "fieldValue" : true
+  },
+  {
+    "fieldKey" : "P1~Tail~Message:portKey1",
+    "fieldValue" : "macroKey2"
+  },
+  {
+    "fieldKey" : "P2~Tail~Message:portKey1",
+    "fieldValue" : "macroKey2"
+  },
+  {
+    "fieldKey" : "P3~Tail~Message:portKey1",
+    "fieldValue" : "macroKey2"
+  },
+  {
+    "fieldKey" : "Pending~ID~Timer~~:portKey1",
+    "fieldValue" : 10
+  },
+  {
+    "fieldKey" : "Remote~Base~Prefix:portKey1",
+    "fieldValue" : "Vector(5)"
+  },
+  {
+    "fieldKey" : "Repeat~Mode:portKey1",
+    "fieldValue" : true
+  },
+  {
+    "fieldKey" : "Rx~Rcv~Macro~Active:portKey1",
+    "fieldValue" : "macroKey91"
+  },
+  {
+    "fieldKey" : "Rx~Rcv~Macro~Low:portKey1",
+    "fieldValue" : "macroKey91"
+  },
+  {
+    "fieldKey" : "Speak~Pending~ID~Timer:portKey1",
+    "fieldValue" : 15420
+  },
+  {
+    "fieldKey" : "Speech~ID~Override:portKey1",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Speech~Override:portKey1",
+    "fieldValue" : true
+  },
+  {
+    "fieldKey" : "Tail~Counter:portKey1",
+    "fieldValue" : 3211264
+  },
+  {
+    "fieldKey" : "Tail~Message~Number:portKey1",
+    "fieldValue" : "macroKey1"
+  },
+  {
+    "fieldKey" : "Tail~Timer:portKey1",
+    "fieldValue" : 0
+  },
+  {
+    "fieldKey" : "Timeout~Reset~Select:portKey1",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Timeout~Timer:portKey1",
+    "fieldValue" : 0
+  },
+  {
+    "fieldKey" : "Tx~Enable:portKey1",
+    "fieldValue" : true
+  },
+  {
+    "fieldKey" : "Unlock:portKey1",
+    "fieldValue" : "Vector(7, 2, 7, 2, 6)"
+  },
+  {
+    "fieldKey" : "Use~DR1:portKey1",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "CTCSS~Decode:portKey2",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "CTCSS~During~ID:portKey2",
+    "fieldValue" : true
+  },
+  {
+    "fieldKey" : "CTCSS~Encode~Polarity:portKey2",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "CTCSS~Encode~Timer:portKey2",
+    "fieldValue" : 35
+  },
+  {
+    "fieldKey" : "CWS~Speed:portKey2",
+    "fieldValue" : 20
+  },
+  {
+    "fieldKey" : "DTMF~COS~Control:portKey2",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "DTMF~Cover~Tone:portKey2",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "DTMF~Mute:portKey2",
+    "fieldValue" : true
+  },
+  {
+    "fieldKey" : "DTMF~Mute~Timer:portKey2",
+    "fieldValue" : 65802
+  },
+  {
+    "fieldKey" : "DTMF~Require~Tone:portKey2",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Enable~Speech~ID:portKey2",
+    "fieldValue" : true
+  },
+  {
+    "fieldKey" : "Guest~Macro~Enable:portKey2",
+    "fieldValue" : true
+  },
+  {
+    "fieldKey" : "Guest~Macro~Range:portKey2",
+    "fieldValue" : "49 48"
+  },
+  {
+    "fieldKey" : "Hang~Time~1:portKey2",
+    "fieldValue" : 40
+  },
+  {
+    "fieldKey" : "Hang~Time~2:portKey2",
+    "fieldValue" : 0
+  },
+  {
+    "fieldKey" : "Hang~Time~3:portKey2",
+    "fieldValue" : 40
+  },
+  {
+    "fieldKey" : "Inactivity~Timeout:portKey2",
+    "fieldValue" : 0
+  },
+  {
+    "fieldKey" : "Initial~ID~Timer~~:portKey2",
+    "fieldValue" : 22
+  },
+  {
+    "fieldKey" : "Kerchunk:portKey2",
+    "fieldValue" : true
+  },
+  {
+    "fieldKey" : "Kerchunk~Timer:portKey2",
+    "fieldValue" : 506
+  },
+  {
+    "fieldKey" : "Monitor~Mix:portKey2",
+    "fieldValue" : true
+  },
+  {
+    "fieldKey" : "P1~Tail~Message:portKey2",
+    "fieldValue" : "macroKey2"
+  },
+  {
+    "fieldKey" : "P2~Tail~Message:portKey2",
+    "fieldValue" : "macroKey2"
+  },
+  {
+    "fieldKey" : "P3~Tail~Message:portKey2",
+    "fieldValue" : "macroKey2"
+  },
+  {
+    "fieldKey" : "Pending~ID~Timer~~:portKey2",
+    "fieldValue" : 10
+  },
+  {
+    "fieldKey" : "Remote~Base~Prefix:portKey2",
+    "fieldValue" : "Vector(#)"
+  },
+  {
+    "fieldKey" : "Repeat~Mode:portKey2",
+    "fieldValue" : true
+  },
+  {
+    "fieldKey" : "Rx~Rcv~Macro~Active:portKey2",
+    "fieldValue" : "macroKey91"
+  },
+  {
+    "fieldKey" : "Rx~Rcv~Macro~Low:portKey2",
+    "fieldValue" : "macroKey91"
+  },
+  {
+    "fieldKey" : "Speak~Pending~ID~Timer:portKey2",
+    "fieldValue" : 65852
+  },
+  {
+    "fieldKey" : "Speech~ID~Override:portKey2",
+    "fieldValue" : true
+  },
+  {
+    "fieldKey" : "Speech~Override:portKey2",
+    "fieldValue" : true
+  },
+  {
+    "fieldKey" : "Tail~Counter:portKey2",
+    "fieldValue" : 3238708
+  },
+  {
+    "fieldKey" : "Tail~Message~Number:portKey2",
+    "fieldValue" : "macroKey1"
+  },
+  {
+    "fieldKey" : "Tail~Timer:portKey2",
+    "fieldValue" : 0
+  },
+  {
+    "fieldKey" : "Timeout~Reset~Select:portKey2",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Timeout~Timer:portKey2",
+    "fieldValue" : 66092
+  },
+  {
+    "fieldKey" : "Tx~Enable:portKey2",
+    "fieldValue" : true
+  },
+  {
+    "fieldKey" : "Unlock:portKey2",
+    "fieldValue" : "Vector(7, 2, 7, 2, 7)"
+  },
+  {
+    "fieldKey" : "Use~DR1:portKey2",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "CTCSS~Decode:portKey3",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "CTCSS~During~ID:portKey3",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "CTCSS~Encode~Polarity:portKey3",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "CTCSS~Encode~Timer:portKey3",
+    "fieldValue" : 1
+  },
+  {
+    "fieldKey" : "CWS~Speed:portKey3",
+    "fieldValue" : 20
+  },
+  {
+    "fieldKey" : "DTMF~COS~Control:portKey3",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "DTMF~Cover~Tone:portKey3",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "DTMF~Mute:portKey3",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "DTMF~Mute~Timer:portKey3",
+    "fieldValue" : 16448000
+  },
+  {
+    "fieldKey" : "DTMF~Require~Tone:portKey3",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Enable~Speech~ID:portKey3",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Guest~Macro~Enable:portKey3",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Guest~Macro~Range:portKey3",
+    "fieldValue" : "57 48"
+  },
+  {
+    "fieldKey" : "Hang~Time~1:portKey3",
+    "fieldValue" : 31
+  },
+  {
+    "fieldKey" : "Hang~Time~2:portKey3",
+    "fieldValue" : 0
+  },
+  {
+    "fieldKey" : "Hang~Time~3:portKey3",
+    "fieldValue" : 33
+  },
+  {
+    "fieldKey" : "Inactivity~Timeout:portKey3",
+    "fieldValue" : 0
+  },
+  {
+    "fieldKey" : "Initial~ID~Timer~~:portKey3",
+    "fieldValue" : 33
+  },
+  {
+    "fieldKey" : "Kerchunk:portKey3",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Kerchunk~Timer:portKey3",
+    "fieldValue" : 1
+  },
+  {
+    "fieldKey" : "Monitor~Mix:portKey3",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "P1~Tail~Message:portKey3",
+    "fieldValue" : "macroKey2"
+  },
+  {
+    "fieldKey" : "P2~Tail~Message:portKey3",
+    "fieldValue" : "macroKey2"
+  },
+  {
+    "fieldKey" : "P3~Tail~Message:portKey3",
+    "fieldValue" : "macroKey2"
+  },
+  {
+    "fieldKey" : "Pending~ID~Timer~~:portKey3",
+    "fieldValue" : 10
+  },
+  {
+    "fieldKey" : "Remote~Base~Prefix:portKey3",
+    "fieldValue" : "Vector()"
+  },
+  {
+    "fieldKey" : "Repeat~Mode:portKey3",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Rx~Rcv~Macro~Active:portKey3",
+    "fieldValue" : "macroKey91"
+  },
+  {
+    "fieldKey" : "Rx~Rcv~Macro~Low:portKey3",
+    "fieldValue" : "macroKey91"
+  },
+  {
+    "fieldKey" : "Speak~Pending~ID~Timer:portKey3",
+    "fieldValue" : 13568
+  },
+  {
+    "fieldKey" : "Speech~ID~Override:portKey3",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Speech~Override:portKey3",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Tail~Counter:portKey3",
+    "fieldValue" : 3224117
+  },
+  {
+    "fieldKey" : "Tail~Message~Number:portKey3",
+    "fieldValue" : "macroKey4"
+  },
+  {
+    "fieldKey" : "Tail~Timer:portKey3",
+    "fieldValue" : 3433728
+  },
+  {
+    "fieldKey" : "Timeout~Reset~Select:portKey3",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Timeout~Timer:portKey3",
+    "fieldValue" : 0
+  },
+  {
+    "fieldKey" : "Tx~Enable:portKey3",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Unlock:portKey3",
+    "fieldValue" : "Vector(4, 2)"
+  },
+  {
+    "fieldKey" : "Use~DR1:portKey3",
+    "fieldValue" : false
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey1",
+    "fieldValue" : {
+      "key" : "scheduleKey1",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey1",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey1",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey1",
+      "enabled" : true
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey2",
+    "fieldValue" : {
+      "key" : "scheduleKey2",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:25",
+      "selectedMacroToRun" : "macroKey1",
+      "enabled" : true
+    },
+    "candidate" : {
+      "key" : "scheduleKey2",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:25",
+      "selectedMacroToRun" : "macroKey1",
+      "enabled" : true
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey3",
+    "fieldValue" : {
+      "key" : "scheduleKey3",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "1st Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:25",
+      "selectedMacroToRun" : "macroKey1",
+      "enabled" : true
+    },
+    "candidate" : {
+      "key" : "scheduleKey3",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "1st Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:25",
+      "selectedMacroToRun" : "macroKey1",
+      "enabled" : true
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey4",
+    "fieldValue" : {
+      "key" : "scheduleKey4",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:25",
+      "selectedMacroToRun" : "macroKey1",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey4",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:25",
+      "selectedMacroToRun" : "macroKey1",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey5",
+    "fieldValue" : {
+      "key" : "scheduleKey5",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey1",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey5",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey1",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey6",
+    "fieldValue" : {
+      "key" : "scheduleKey6",
+      "dayOfWeek" : "Wednesday",
+      "weekInMonth" : "4th Week",
+      "monthOfYear" : "Every Month",
+      "time" : "07:15",
+      "selectedMacroToRun" : "macroKey2",
+      "enabled" : true
+    },
+    "candidate" : {
+      "key" : "scheduleKey6",
+      "dayOfWeek" : "Wednesday",
+      "weekInMonth" : "4th Week",
+      "monthOfYear" : "Every Month",
+      "time" : "07:15",
+      "selectedMacroToRun" : "macroKey2",
+      "enabled" : true
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey7",
+    "fieldValue" : {
+      "key" : "scheduleKey7",
+      "dayOfWeek" : "Wednesday",
+      "weekInMonth" : "4th Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey3",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey7",
+      "dayOfWeek" : "Wednesday",
+      "weekInMonth" : "4th Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey3",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey8",
+    "fieldValue" : {
+      "key" : "scheduleKey8",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:45",
+      "selectedMacroToRun" : "macroKey4",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey8",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:45",
+      "selectedMacroToRun" : "macroKey4",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey9",
+    "fieldValue" : {
+      "key" : "scheduleKey9",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey3",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey9",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey3",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey10",
+    "fieldValue" : {
+      "key" : "scheduleKey10",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:45",
+      "selectedMacroToRun" : "macroKey8",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey10",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:45",
+      "selectedMacroToRun" : "macroKey8",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey11",
+    "fieldValue" : {
+      "key" : "scheduleKey11",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey9",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey11",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey9",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey12",
+    "fieldValue" : {
+      "key" : "scheduleKey12",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey2",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey12",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey2",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey13",
+    "fieldValue" : {
+      "key" : "scheduleKey13",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:30",
+      "selectedMacroToRun" : "macroKey7",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey13",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:30",
+      "selectedMacroToRun" : "macroKey7",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey14",
+    "fieldValue" : {
+      "key" : "scheduleKey14",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey7",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey14",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey7",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey15",
+    "fieldValue" : {
+      "key" : "scheduleKey15",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey2",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey15",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey2",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey16",
+    "fieldValue" : {
+      "key" : "scheduleKey16",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey2",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey16",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey2",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey17",
+    "fieldValue" : {
+      "key" : "scheduleKey17",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey2",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey17",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey2",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey18",
+    "fieldValue" : {
+      "key" : "scheduleKey18",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:25",
+      "selectedMacroToRun" : "macroKey14",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey18",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:25",
+      "selectedMacroToRun" : "macroKey14",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey19",
+    "fieldValue" : {
+      "key" : "scheduleKey19",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey15",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey19",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey15",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey20",
+    "fieldValue" : {
+      "key" : "scheduleKey20",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey16",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey20",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey16",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey21",
+    "fieldValue" : {
+      "key" : "scheduleKey21",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:15",
+      "selectedMacroToRun" : "macroKey17",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey21",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:15",
+      "selectedMacroToRun" : "macroKey17",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey22",
+    "fieldValue" : {
+      "key" : "scheduleKey22",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey17",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey22",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey17",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey23",
+    "fieldValue" : {
+      "key" : "scheduleKey23",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:30",
+      "selectedMacroToRun" : "macroKey2",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey23",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:30",
+      "selectedMacroToRun" : "macroKey2",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey24",
+    "fieldValue" : {
+      "key" : "scheduleKey24",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:59",
+      "selectedMacroToRun" : "macroKey21",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey24",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:59",
+      "selectedMacroToRun" : "macroKey21",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey25",
+    "fieldValue" : {
+      "key" : "scheduleKey25",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey21",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey25",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey21",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey26",
+    "fieldValue" : {
+      "key" : "scheduleKey26",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey26",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey27",
+    "fieldValue" : {
+      "key" : "scheduleKey27",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey27",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey28",
+    "fieldValue" : {
+      "key" : "scheduleKey28",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey28",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey29",
+    "fieldValue" : {
+      "key" : "scheduleKey29",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey29",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey30",
+    "fieldValue" : {
+      "key" : "scheduleKey30",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey30",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey31",
+    "fieldValue" : {
+      "key" : "scheduleKey31",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey31",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey32",
+    "fieldValue" : {
+      "key" : "scheduleKey32",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey32",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey33",
+    "fieldValue" : {
+      "key" : "scheduleKey33",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey33",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey34",
+    "fieldValue" : {
+      "key" : "scheduleKey34",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey34",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey35",
+    "fieldValue" : {
+      "key" : "scheduleKey35",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey35",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey36",
+    "fieldValue" : {
+      "key" : "scheduleKey36",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey36",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey37",
+    "fieldValue" : {
+      "key" : "scheduleKey37",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey37",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey38",
+    "fieldValue" : {
+      "key" : "scheduleKey38",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey38",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey39",
+    "fieldValue" : {
+      "key" : "scheduleKey39",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey39",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Schedule:scheduleKey40",
+    "fieldValue" : {
+      "key" : "scheduleKey40",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    },
+    "candidate" : {
+      "key" : "scheduleKey40",
+      "dayOfWeek" : "EveryDay",
+      "weekInMonth" : "Every Week",
+      "monthOfYear" : "Every Month",
+      "time" : "00:00",
+      "selectedMacroToRun" : "macroKey91",
+      "enabled" : false
+    }
+  },
+  {
+    "fieldKey" : "Timer:timerKey1",
+    "fieldValue" : {
+      "key" : "timerKey1",
+      "seconds" : 1,
+      "macroSelect" : "macroKey1"
+    }
+  },
+  {
+    "fieldKey" : "Timer:timerKey2",
+    "fieldValue" : {
+      "key" : "timerKey2",
+      "seconds" : 2,
+      "macroSelect" : "macroKey1"
+    }
+  },
+  {
+    "fieldKey" : "Timer:timerKey3",
+    "fieldValue" : {
+      "key" : "timerKey3",
+      "seconds" : 4,
+      "macroSelect" : "macroKey1"
+    }
+  },
+  {
+    "fieldKey" : "Timer:timerKey4",
+    "fieldValue" : {
+      "key" : "timerKey4",
+      "seconds" : 8,
+      "macroSelect" : "macroKey90"
+    }
+  },
+  {
+    "fieldKey" : "Timer:timerKey5",
+    "fieldValue" : {
+      "key" : "timerKey5",
+      "seconds" : 16,
+      "macroSelect" : "macroKey90"
+    }
+  },
+  {
+    "fieldKey" : "Timer:timerKey6",
+    "fieldValue" : {
+      "key" : "timerKey6",
+      "seconds" : 32,
+      "macroSelect" : "macroKey90"
+    }
+  }
+]

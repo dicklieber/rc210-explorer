@@ -61,7 +61,7 @@ object FieldTime extends SimpleExtractor {
     override def writes(o: FieldTime): JsValue = JsString(o.value.toString)
   }
 
-  override def jsonToField(jsValue: JsValue): FieldValue = jsValue.as[FieldTime]
+  override def parse(jsValue: JsValue): FieldValue = jsValue.as[FieldTime]
 
   override val name: String = "FieldTime"
 }

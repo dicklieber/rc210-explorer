@@ -86,7 +86,7 @@ object MacroNode extends LazyLogging with ComplexExtractor  {
 
 import net.wa9nnn.rc210.key.KeyFormats._
   implicit val fmtMacroNode: Format[MacroNode] = Json.format[MacroNode]
-  override def jsonToField(jsValue: JsValue): FieldValue = {
+  override def parse(jsValue: JsValue): FieldValue = {
     jsValue.as[MacroNode]
   }
 

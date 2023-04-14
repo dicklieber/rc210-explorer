@@ -153,7 +153,7 @@ object Schedule extends LazyLogging with ComplexExtractor {
   implicit val fmtSchedule: Format[Schedule] = Json.format[Schedule]
 
 
-  override def jsonToField(jsValue: JsValue): FieldValue = jsValue.as[Schedule]
+  override def parse(jsValue: JsValue): FieldValue = jsValue.as[Schedule]
 
   override val name: String = "Schedule"
 }

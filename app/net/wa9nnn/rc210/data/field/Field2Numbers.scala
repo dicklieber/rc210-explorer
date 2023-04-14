@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui.Cell
-import play.api.libs.json.{Format, JsValue, Json}
+import play.api.libs.json._
 import views.html.fieldString
 
 case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue {
@@ -49,14 +49,29 @@ case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue {
 }
 
 object Field2Numbers extends SimpleExtractor {
-  implicit val fmtField2Numbers: Format[Field2Numbers] = Json.format[Field2Numbers]
+  implicit val fmtField2Numbers: Format[Field2Numbers] = new Format[Field2Numbers] {
+    override def writes(o: Field2Numbers) = JsString(o.value.mkString(" "))
 
-  override def jsonToField(jsValue: JsValue): FieldValue = jsValue.as[Field2Numbers]
+    override def reads(json: JsValue): JsResult[Field2Numbers] =
+
+      JsSuccess(Field2Numbers(json.as[String]
+        .split(" ")
+        .toIndexedSeq
+        .map(_.toInt)
+      )
+      )
+  }
+
+  //  override def jsonToField(jsValue: JsValue): FieldValue = jsValue.as[Field2Numbers]
 
   override val name: String = "Field2Numbers"
 
   override def extractFromInts(iterator: Iterator[Int], fieldDefinition: SimpleField): FieldValue = {
     Field2Numbers(Seq(iterator.next(), iterator.next()))
   }
+
+  override def parse(json: JsValue): FieldValue =
+    json.as[Field2Numbers]
+
 }
 

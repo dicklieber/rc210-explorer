@@ -60,7 +60,7 @@ object FieldDtmf extends SimpleExtractor {
     override def writes(o: FieldDtmf): JsValue = JsString(o.value)
   }
 
-  override def jsonToField(jsValue: JsValue): FieldValue = jsValue.as[FieldDtmf]
+  override def parse(jsValue: JsValue): FieldValue = jsValue.as[FieldDtmf]
 
   override val name: String = "FieldDtmf"
 }

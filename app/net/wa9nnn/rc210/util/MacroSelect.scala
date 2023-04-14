@@ -85,7 +85,7 @@ object MacroSelect extends SimpleExtractor {
     MacroSelect(itr.next() + 1)
   }
 
-  override def jsonToField(jsValue: JsValue): FieldValue = jsValue.as[MacroSelect]
+  override def parse(jsValue: JsValue): FieldValue = jsValue.as[MacroSelect]
 
 }
 

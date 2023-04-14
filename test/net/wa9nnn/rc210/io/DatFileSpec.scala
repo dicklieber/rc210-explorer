@@ -17,9 +17,8 @@
 
 package net.wa9nnn.rc210.io
 
-import com.fazecast.jSerialComm.SerialPort
 import net.wa9nnn.rc210.fixtures.WithTestConfiguration
-import net.wa9nnn.rc210.serial.{Memory, RC210Data}
+import net.wa9nnn.rc210.serial.{ComPort, RC210Data}
 import net.wa9nnn.rc210.util.EramStatus
 
 import java.nio.file.Files
@@ -42,7 +41,8 @@ class DatFileSpec extends WithTestConfiguration {
       val ext = Array.fill(5)(142)
 
 
-      val rC210Data = new RC210Data(main, ext, new EramStatus("com3"), SerialPort.getCommPorts.head)
+      val comPort = ComPort("com3", "fred")
+      val rC210Data = new RC210Data(main, ext, new EramStatus(comPort))
       val memory = datFile.apply(rC210Data)
       memory.length must beEqualTo(main.length + ext.length)
     }

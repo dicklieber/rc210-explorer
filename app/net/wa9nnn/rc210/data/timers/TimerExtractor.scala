@@ -57,7 +57,7 @@ object TimerExtractor extends ComplexExtractor with LazyLogging {
   import net.wa9nnn.rc210.key.KeyFormats._
   implicit val fmtTimer: Format[Timer] = Json.format[Timer]
 
-  override def jsonToField(jsValue: JsValue): FieldValue = jsValue.as[Timer]
+  override def parse(jsValue: JsValue): FieldValue = jsValue.as[Timer]
 
   override val name: String = "Timer"
 }

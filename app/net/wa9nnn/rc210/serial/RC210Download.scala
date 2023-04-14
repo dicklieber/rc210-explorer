@@ -96,7 +96,7 @@ case object RC210Download extends LazyLogging {
 
 }
 
-case class ComPort(descriptor: String, friendlyName: String)
+case class ComPort(descriptor: String = "com1", friendlyName: String = "com1")
 
 object ComPort {
   implicit val comPortFmt: OFormat[ComPort] = Json.format[ComPort]

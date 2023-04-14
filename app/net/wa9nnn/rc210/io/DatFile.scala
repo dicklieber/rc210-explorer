@@ -44,7 +44,6 @@ class DatFile @Inject()(config: Config) extends LazyLogging {
     val memory = rc210Data.mainArray
     val extMemory = rc210Data.extArray
     logger.info(rc210Data.progress.toString)
-    val portDescription: String = rc210Data.serialPort.getPortDescription
     // build MemoryArray
     val data = memory.concat(extMemory)
     val newMemory = new Memory(data)

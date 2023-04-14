@@ -44,7 +44,6 @@ case class SimpleField(offset: Int,
     fieldExtractor.extractFromInts(iterator, this)
   }
 
-
   /**
    * Create an [[Iterator[Int]] over the [[Memory]] starting at an offset.
    *
@@ -97,7 +96,7 @@ trait SimpleExtractor extends FieldExtractor {
 
 trait FieldExtractor {
 
-  def jsonToField(jsValue: JsValue): FieldValue
+  def parse(jsValue: JsValue): FieldValue
 
   /**
    * for various things e.g. parser name.
