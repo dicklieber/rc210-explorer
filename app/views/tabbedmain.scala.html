@@ -26,20 +26,24 @@
 
         <div >
             @* <div class="container-fluid ">*@
-            <ul class="nav nav-pills">
-                @for(tab <- Tabs.tabs) {
-                    <li class="nav-item">
-                        <a class="nav-link  @if(tab == activeTab) { active }" href="@tab.url" title="@tab.tooltip">@tab.name</a>
+            <nav class="navbar navbar-expand-sm navbar-light bg-light">
+                <ul class="nav nav-pills">
+                    @for(tab <- Tabs.tabs) {
+                        <li class="nav-item">
+                            <a class="nav-link  @if(tab == activeTab) { active }" href="@tab.url" title="@tab.tooltip">@tab.name</a>
+                        </li>
+                    }
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">More</a>
+                        <div class="dropdown-menu">
+                            <a href="@routes.DataStoreController.downloadJson()" class="dropdown-item">Download Json</a>
+                            <a href="#" class="dropdown-item">Sent Items</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="@routes.LandingController.tabs()" class="dropdown-item">Old Landing Page</a>
+                        </div>
                     </li>
-                }
-                @*
-                @for(keyKind <- KeyKind.values()) {
-                <li class="nav-item">
-                <a class="nav-link @if(keyKind == activeKeyKind) { active }" href="@routes.EditorController.editUnselected(keyKind)">@keyKind.toString</a>
-                </li>
-                }
-                *@
-            </ul>
+                </ul>
+            </nav>
         </div>
 
         @content

@@ -38,7 +38,6 @@ class DataStore @Inject()() {
    * - at startup from reading an existing memory file
    * - after re-downloading from an RC-210
    * - after load saved json data.
-   * @param fieldEntries
    */
   def load(fieldEntries: Seq[FieldEntry]): Unit = {
     val map = new TrieMap[FieldKey, FieldEntry]
@@ -138,16 +137,15 @@ case class NewCandidate(fieldKey: FieldKey, formValue: String)
  * This is what's written to or Parsed (by PlayJson) from the [[DataStore]] JSON data..
  *
  * @param fieldKey ID
- * @param parser   knows how for transform a [[JsValue]] to a [[FieldValue]].
  * @param fieldValue
  * @param candidate
  */
-case class FieldEntryJson(fieldKey: FieldKey, parserName: String, fieldValue: JsValue, candidate: Option[JsValue])
+case class FieldEntryJson(fieldKey: FieldKey, fieldValue: JsValue, candidate: Option[JsValue])
 
 object FieldEntryJson {
   def apply(fieldEntry: FieldEntry): FieldEntryJson = {
     val fieldKey = fieldEntry.fieldKey
-    new FieldEntryJson(fieldKey, fieldEntry.fieldDefinition.parserName, fieldEntry.fieldValue.toJsonValue, fieldEntry.candidate.map(_.toJsonValue))
+    new FieldEntryJson(fieldKey, fieldEntry.fieldValue.toJsonValue, fieldEntry.candidate.map(_.toJsonValue))
   }
 
   implicit val fmtFieldEntryJson: Format[FieldEntryJson] = Json.format[FieldEntryJson]

@@ -21,7 +21,7 @@ GET         /macros                            controllers.MacroNodeController.i
 GET         /macro/edit/:key                   controllers.MacroNodeController.edit(key:MacroKey)
 POST        /macro/save                        controllers.MacroNodeController.save()
 #GET         /messageMacros             controllers.RawDataController.messageMacros()
-GET         /downloadjson                      controllers.IOController.downloadJson()
+GET         /datastore/download                controllers.DataStoreController.downloadJson()
 GET         /rc210/download/:descriptor        controllers.IOController.download(descriptor:String)
 POST        /rc210/progress                    controllers.IOController.progress()
 GET         /rc210/progress                    controllers.IOController.progress()
@@ -36,7 +36,7 @@ GET         /named                             controllers.NamedController.index
 #GET         /edit/:keyKind             controllers.EditorController.editUnselected(keyKind:net.wa9nnn.rc210.key.KeyKind)
 GET         /tabs                              controllers.LandingController.tabs()
 POST        /schedule/save                     controllers.ScheduleController.save()
-GET         /                                  controllers.LandingController.index()
+GET         /                                  controllers.LandingController.tabs()
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                      controllers.Assets.versioned(path="/public", file: Asset)

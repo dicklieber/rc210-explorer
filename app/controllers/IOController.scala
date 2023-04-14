@@ -38,17 +38,6 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
                             ) extends BaseController with LazyLogging {
   implicit val timeout: Timeout = 5.seconds
 
-  def downloadJson(): Action[AnyContent] = Action {
-
-    val jsObject = Json.toJson(dataStore)
-    val sJson = Json.prettyPrint(jsObject)
-
-    Ok(sJson).withHeaders(
-      "Content-Type" -> "text/json",
-      "Content-Disposition" -> s"""attachment; filename="rc210.json""""
-    )
-  }
-
 
   def progress(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>

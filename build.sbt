@@ -1,4 +1,5 @@
 import play.sbt.routes.RoutesKeys.routesImport
+
 name := """rc210-explorer"""
 organization := "net.wa9nnn"
 
@@ -8,6 +9,8 @@ enablePlugins(JavaServerAppPackaging)
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
   .settings(
+    Compile / mappings := Seq(),
+    packageDoc / mappings := Seq(),
     scalaVersion := "2.13.10",
     buildInfoKeys :=
       Seq[BuildInfoKey](
@@ -24,12 +27,11 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
     //    docusaurDir := (ThisBuild / baseDirectory).value / "website",
     //    docusaurBuildDir := docusaurDir.value / "build",
 
-    mappings in(Compile, packageDoc) := Seq(),
 
     scalacOptions ++= Seq(
       "-feature",
       "-deprecation",
-//      "-Xfatal-warnings",
+      //      "-Xfatal-warnings",
       //      "-Ymacro-annotations",
       "-Xlog-implicits"
     )
