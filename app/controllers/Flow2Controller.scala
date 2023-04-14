@@ -17,10 +17,7 @@
 
 package controllers
 
-import com.wa9nnn.util.tableui.Table
-import net.wa9nnn.rc210.DataProvider
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
-import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.named.NamedManager
 import play.api.mvc._
 

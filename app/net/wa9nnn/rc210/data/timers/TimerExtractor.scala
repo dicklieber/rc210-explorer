@@ -50,7 +50,7 @@ object TimerExtractor extends ComplexExtractor with LazyLogging {
       val key: TimerKey = KeyFactory(KeyKind.timerKey, index + 1)
       val fieldKey = FieldKey("Timer", key)
       val macroSelect: MacroSelect = MacroSelect(macros.next())
-      FieldEntry(fieldDefinition, fieldKey, Timer(key, FieldInt(seconds.next()), macroSelect))
+      FieldEntry(this, fieldKey, Timer(key, FieldInt(seconds.next()), macroSelect))
     })
     r
   }
@@ -60,4 +60,6 @@ object TimerExtractor extends ComplexExtractor with LazyLogging {
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[Timer]
 
   override val name: String = "Timer"
+  override val fieldName: String = name
+  override val kind: KeyKind = KeyKind.timerKey
 }

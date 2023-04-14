@@ -6,7 +6,7 @@ import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.JsValue
 
 trait FieldDefinition {
-  val parserName: String
+  def parse(jsValue: JsValue):FieldValue
 
 
   def tooltip: String = ""
@@ -68,10 +68,12 @@ case class SimpleField(offset: Int,
 
   def tooltip(tooltip: String): SimpleField = copy(tooltip = tooltip)
 
-  override val parserName: String = fieldExtractor.name
+  override def parse(json: JsValue): FieldValue = {
+    fieldExtractor.parse(json)
+  }
 }
 
-trait ComplexExtractor extends FieldExtractor {
+trait ComplexExtractor extends FieldExtractor with FieldDefinition{
 
   /**
    *
@@ -80,13 +82,14 @@ trait ComplexExtractor extends FieldExtractor {
    */
   def extract(memoryBuffer: Memory): Seq[FieldEntry]
 
-   lazy val fieldDefinition: FieldDefinition = {
-    new FieldDefinition {
-      override val fieldName: String = name
-      override val kind: KeyKind = KeyKind.courtesyToneKey
-      override val parserName: String = fieldName
-    }
-  }
+//   lazy val fieldDefinition: FieldDefinition = {
+//    new FieldDefinition {
+//      override val fieldName: String = name
+//      override val kind: KeyKind = KeyKind.courtesyToneKey
+//
+//      override def parse(jsValue: JsValue): FieldValue
+//    }
+//  }
 
 }
 

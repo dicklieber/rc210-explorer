@@ -55,7 +55,7 @@ object CourtesyExtractor extends ComplexExtractor with LazyLogging {
         ))
     }
     courtesyTones.map { ct =>
-      FieldEntry(fieldDefinition, FieldKey("CourtesyTone", ct.key), ct)
+      FieldEntry(this, FieldKey("CourtesyTone", ct.key), ct)
     }
   }
 
@@ -64,4 +64,6 @@ object CourtesyExtractor extends ComplexExtractor with LazyLogging {
 
 
   override val name: String = "CourtesyExtractor"
+  override val fieldName: String = name
+  override val kind: KeyKind = KeyKind.courtesyToneKey
 }

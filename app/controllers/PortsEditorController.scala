@@ -18,7 +18,8 @@
 package controllers
 
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
-import net.wa9nnn.rc210.data.{DataStore, FieldKey, NewCandidate}
+import net.wa9nnn.rc210.data.datastore.{DataStore, NewCandidate}
+import net.wa9nnn.rc210.data.{FieldKey, datastore}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.key.KeyFactory.PortKey
@@ -76,7 +77,7 @@ class PortsEditorController @Inject()(implicit val controllerComponents: Control
 
       mappedValues(kv.map { case (name, formValue) =>
         val fieldKey = FieldKey.fromParam(name)
-        NewCandidate(fieldKey, formValue)
+        datastore.NewCandidate(fieldKey, formValue)
       })
 
       Redirect(routes.PortsEditorController.index())

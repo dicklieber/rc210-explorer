@@ -76,7 +76,7 @@ object MacroNode extends LazyLogging with ComplexExtractor  {
       .concat(macroBuilder(2825, 7, 50)) // SlicePos("//ShortMacro - 2825-3174"), memory, 7))
 
     val r: Seq[FieldEntry] = macros.map { m: MacroNode =>
-      FieldEntry(fieldDefinition, m.fieldKey, m)
+      FieldEntry(this, m.fieldKey, m)
     }
     r
   }
@@ -91,6 +91,8 @@ import net.wa9nnn.rc210.key.KeyFormats._
   }
 
   override val name: String = "MacroNode"
+  override val fieldName: String = name
+  override val kind: KeyKind = KeyKind.macroKey
 }
 
 

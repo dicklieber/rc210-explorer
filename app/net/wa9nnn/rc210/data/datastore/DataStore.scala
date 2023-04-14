@@ -15,8 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data
+package net.wa9nnn.rc210.data.datastore
 
+import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
 import net.wa9nnn.rc210.key.KeyFactory.Key
 import net.wa9nnn.rc210.key.KeyKind
@@ -24,6 +25,7 @@ import play.api.libs.json.{Format, JsValue, Json}
 
 import javax.inject.{Inject, Singleton}
 import scala.collection.concurrent.TrieMap
+import scala.collection.immutable.Seq
 
 /**
  * Holds all values as simple key->value.
@@ -34,19 +36,27 @@ class DataStore @Inject()() {
   private var map: TrieMap[FieldKey, FieldEntry] = new TrieMap[FieldKey, FieldEntry]
 
   /**
-   * This will be invoked:
-   * - at startup from reading an existing memory file
-   * - after re-downloading from an RC-210
-   * - after load saved json data.
+   * Replaces all fieldEntries in the [[DataStore]].
    */
   def load(fieldEntries: Seq[FieldEntry]): Unit = {
     val map = new TrieMap[FieldKey, FieldEntry]
     fieldEntries.foreach { fieldContents =>
       map.put(fieldContents.fieldKey, fieldContents)
-
       this.map = map
     }
   }
+
+  /**
+   * Updates with supplied fieldEntries.
+   * Can't do a load as there may not be enough entries on the json file.
+   * @param fieldEntries
+   */
+  def update(fieldEntries: Seq[FieldEntry]): Unit = {
+    fieldEntries.foreach { fe =>
+      map.put(fe.fieldKey, fe)
+    }
+  }
+
 
   def all: Seq[FieldEntry] = {
     map.values.toSeq.sorted

@@ -20,7 +20,7 @@ package controllers
 import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
-import net.wa9nnn.rc210.data.DataStore
+import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.io.DatFile
 import net.wa9nnn.rc210.serial.{ComPort, ERamCollector, RC210Data, RC210Download}
 import play.api.libs.json.Json
@@ -48,5 +48,6 @@ class DataStoreController @Inject()(implicit val controllerComponents: Controlle
       "Content-Disposition" -> s"""attachment; filename="rc210.json""""
     )
   }
+
 
 }

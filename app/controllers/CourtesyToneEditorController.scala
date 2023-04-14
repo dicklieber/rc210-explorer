@@ -19,8 +19,8 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.Row
-import net.wa9nnn.rc210.data.DataStore
 import net.wa9nnn.rc210.data.courtesy.{CourtesyTone, CtSegmentKey, Segment}
+import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.named.{NamedKey, NamedManager}
 import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey

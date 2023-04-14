@@ -17,22 +17,25 @@
 
 package net.wa9nnn.rc210.data.datastore
 
-import net.wa9nnn.rc210.data.FieldEntryJson
-import play.api.libs.json.Json
+import org.specs2.mutable.Specification
 
-import java.net.URL
-import scala.util.{Try, Using}
+import scala.util.{Failure, Success, Try}
 
-/**
- * Parses JSON saved from [[DataStore]]
- */
+class JsonFileLoaderSpec extends Specification {
 
-object Parser {
-  def apply(url: URL): Try[Seq[FieldEntryJson]] = {
-    Using(url.openStream()) { inputStream =>
-      Json.parse(inputStream).as[Seq[FieldEntryJson]]
+  "ParserSpec" should {
+    "apply" in {
+      val url = getClass.getResource("/data/rc210.json")
+      val triedDataStore: Try[Seq[FieldEntryJson]] = JsonFileLoader(url)
+      triedDataStore match {
+        case Failure(exception) =>
+          exception.printStackTrace()
+        case Success(value) =>
+          value
+      }
+      triedDataStore must beSuccessfulTry[Seq[FieldEntryJson]]
+      val fieldEnreies: Seq[FieldEntryJson] = triedDataStore.get
+      fieldEnreies must haveLength(301)
     }
-
   }
-
 }
