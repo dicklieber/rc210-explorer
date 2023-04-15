@@ -22,6 +22,8 @@ GET         /macro/edit/:key                   controllers.MacroNodeController.e
 POST        /macro/save                        controllers.MacroNodeController.save()
 #GET         /messageMacros             controllers.RawDataController.messageMacros()
 GET         /datastore/download                controllers.DataStoreController.downloadJson()
+GET         /datastore/upload                  controllers.DataStoreController.upload
+POST        /datastore/save                    controllers.DataStoreController.save()
 GET         /rc210/download/:descriptor        controllers.IOController.download(descriptor:String)
 POST        /rc210/progress                    controllers.IOController.progress()
 GET         /rc210/progress                    controllers.IOController.progress()

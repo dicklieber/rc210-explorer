@@ -63,8 +63,8 @@ object KeyFormats {
       JsString(key.toString)
     }
 
-    override def reads(json: JsValue) = {
-      throw new NotImplementedError() //todo
+    override def reads(json: JsValue): JsResult[CourtesyToneKey] = {
+      JsSuccess(KeyFactory.apply(json.as[String]))
     }
   }
 
@@ -73,8 +73,8 @@ object KeyFormats {
       JsString(key.toString)
     }
 
-    override def reads(json: JsValue) = {
-      throw new NotImplementedError() //todo
+    override def reads(json: JsValue): JsResult[TimerKey] = {
+      JsSuccess(KeyFactory.apply(json.as[String]))
     }
   }
 
@@ -84,8 +84,8 @@ object KeyFormats {
       JsString(key.toString)
     }
 
-    override def reads(json: JsValue) = {
-      throw new NotImplementedError() //todo
+    override def reads(json: JsValue): JsResult[MacroKey] = {
+      JsSuccess(KeyFactory.apply(json.as[String]))
     }
   }
   implicit val fmtL10NError: OFormat[L10NMessage] = Json.format[L10NMessage]
@@ -101,9 +101,8 @@ object KeyFormats {
       JsString(key.toString)
     }
 
-    override def reads(json: JsValue) = {
-      throw new NotImplementedError() //todo
-    }
+    override def reads(json: JsValue): JsResult[FunctionKey] = {
+      JsSuccess(KeyFactory.apply(json.as[String]))    }
   }
 
 
@@ -112,27 +111,24 @@ object KeyFormats {
       JsString(key.toString)
     }
 
-    override def reads(json: JsValue) = {
-      throw new NotImplementedError() //todo
-    }
+    override def reads(json: JsValue): JsResult[ScheduleKey] = {
+      JsSuccess(KeyFactory.apply(json.as[String]))    }
   }
   implicit val fmtMessageMacroKey: Format[MessageMacroKey] = new Format[MessageMacroKey] {
     def writes(key: MessageMacroKey): JsValue = {
       JsString(key.toString)
     }
 
-    override def reads(json: JsValue) = {
-      throw new NotImplementedError() //todo
-    }
+    override def reads(json: JsValue): JsResult[MessageMacroKey] = {
+      JsSuccess(KeyFactory.apply(json.as[String]))    }
   }
   implicit val fmtWordKey: Format[WordKey] = new Format[WordKey] {
     def writes(key: WordKey): JsValue = {
       JsString(key.toString)
     }
 
-    override def reads(json: JsValue) = {
-      throw new NotImplementedError() //todo
-    }
+    override def reads(json: JsValue): JsResult[WordKey] = {
+      JsSuccess(KeyFactory.apply(json.as[String]))    }
   }
 
 

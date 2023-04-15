@@ -19,22 +19,20 @@ package controllers
 
 import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
-import net.wa9nnn.rc210.data.datastore.DataStore
-import net.wa9nnn.rc210.io.DatFile
-import net.wa9nnn.rc210.serial.{ComPort, ERamCollector, RC210Data, RC210Download}
+import net.wa9nnn.rc210.data.datastore.{DataStore, FieldEntryJson, JsonFileLoader}
+import play.api.libs.Files
 import play.api.libs.json.Json
 import play.api.mvc._
 
+import java.io.InputStream
+import java.nio.file.Paths
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
-import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success, Using}
 
 @Singleton
 class DataStoreController @Inject()(implicit val controllerComponents: ControllerComponents,
-                                    dataStore: DataStore,
-                                    datFile: DatFile,
-                                    executionContext: ExecutionContext
+                                    dataStore: DataStore
                                    ) extends BaseController with LazyLogging {
   implicit val timeout: Timeout = 5.seconds
 
@@ -47,5 +45,38 @@ class DataStoreController @Inject()(implicit val controllerComponents: Controlle
       "Content-Type" -> "text/json",
       "Content-Disposition" -> s"""attachment; filename="rc210.json""""
     )
+  }
+
+  def upload: Action[AnyContent] = Action {
+
+
+    Ok(views.html.fileUpload())
+  }
+
+  def save = Action(parse.multipartFormData) { request =>
+    val body = request.body
+    body
+      .file("jsonFile")
+
+      .map { jsonFile: MultipartFormData.FilePart[Files.TemporaryFile] =>
+        // only get the last part of the filename
+        // otherwise someone can send a path like ../../home/foo/bar.txt to write to other files on the system
+        val filename = Paths.get(jsonFile.filename).getFileName
+        val fileSize = jsonFile.fileSize
+        val contentType = jsonFile.contentType
+
+
+        val ref: Files.TemporaryFile = jsonFile.ref
+        Using(java.nio.file.Files.newInputStream(ref.path)) { is: InputStream =>
+          val enrtries: Seq[FieldEntryJson] = Json.parse(is).as[Seq[FieldEntryJson]]
+          JsonFileLoader(enrtries, dataStore)
+        } match {
+          case Failure(exception: Throwable) =>
+            logger.error(s"Uploading: ${jsonFile.filename}", exception)
+            InternalServerError(exception.getMessage)
+          case Success(value: Unit) =>
+            Ok("File uploaded")
+        }
+      }.get
   }
 }

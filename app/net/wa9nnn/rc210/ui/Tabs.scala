@@ -38,6 +38,7 @@ object Tabs {
   val schedulesTab: Tab = Tab("Schedules", routes.ScheduleController.index().url, "Schedule settings.")
   val timersTab: Tab = Tab("Timers", routes.TimerEditorController.index().url, "Timer settings.")
   val rc210Tab: Tab = Tab("RC-210", routes.IOController.listSerialPorts().url, "RC-210 Download.")
+  val fileUpload: Tab = Tab("Upload", routes.DataStoreController.upload.url, "Upload a saved JSON file.")
 
 
   val tabs: Seq[Tab] = Seq(
