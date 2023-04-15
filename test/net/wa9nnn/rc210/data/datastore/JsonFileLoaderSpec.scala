@@ -17,25 +17,34 @@
 
 package net.wa9nnn.rc210.data.datastore
 
-import org.specs2.mutable.Specification
+import com.typesafe.config.ConfigFactory
+import net.wa9nnn.rc210.data.field.FieldDefinitions
+import net.wa9nnn.rc210.fixtures.WithTestConfiguration
+import net.wa9nnn.rc210.io.DatFile
+import play.api.libs.json.Json
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Success, Try, Using}
 
-class JsonFileLoaderSpec extends Specification {
+class JsonFileLoaderSpec extends WithTestConfiguration {
+  private val url = getClass.getResource("/data/datastore.json")
 
-  "ParserSpec" should {
+  "load" should {
     "apply" in {
-      val url = getClass.getResource("/data/rc210.json")
-      val triedDataStore: Try[Seq[FieldEntryJson]] = JsonFileLoader(url)
-      triedDataStore match {
-        case Failure(exception) =>
-          exception.printStackTrace()
-        case Success(value) =>
-          value
+      val fieldDefinitions = new FieldDefinitions()
+
+      val datFile = new DatFile(config)
+      val mfl = new MemoryFileLoader(fieldDefinitions)
+      val seq = mfl.load(datFile.memoryFile)
+
+      val dataStore = new DataStore()
+      dataStore.load(seq)
+      dataStore.all must haveLength(301)
+
+      Using(url.openStream()) { inputStream =>
+        val seq = Json.parse(inputStream).as[Seq[FieldEntryJson]]
+        JsonFileLoader(seq, dataStore)
       }
-      triedDataStore must beSuccessfulTry[Seq[FieldEntryJson]]
-      val fieldEnreies: Seq[FieldEntryJson] = triedDataStore.get
-      fieldEnreies must haveLength(301)
+      dataStore.all must haveLength(301) //stl
     }
   }
 }

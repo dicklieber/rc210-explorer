@@ -35,8 +35,8 @@ class DatFileSpec extends WithTestConfiguration {
     }
 
     "from rc210data" >> {
-      Files.createDirectories(datFile.memoryFile.getParent)
-      Files.write(datFile.memoryFile, "Just to exist".getBytes)
+      Files.createDirectories(datFile.memoryFilePath.getParent)
+      Files.write(datFile.memoryFilePath, "Just to exist".getBytes)
       val main = Array.fill(10)(42)
       val ext = Array.fill(5)(142)
 

@@ -28,18 +28,16 @@ import java.net.URL
 import java.nio.file.{Files, Path}
 import java.time.Instant
 import javax.inject.{Inject, Singleton}
-import scala.util.Try
 
 @Singleton
 class DatFile @Inject()(config: Config) extends LazyLogging {
 
-  val memoryFile: Path = config.get[Path]("vizRc210.memoryFile").value
+  val memoryFilePath: Path = config.get[Path]("vizRc210.memoryFile").value
+  val memoryFile: URL = memoryFilePath.toUri.toURL
   private val historyDir: Path = config.get[Path]("vizRc210.historyDir").value
-   val dataStoreFile: Path = config.get[Path]("vizRc210.dataStoreFile").value
+  val dataStoreFile: URL = config.get[Path]("vizRc210.dataStoreFile").value.toUri.toURL
 
-  def load(): Try[Memory] = {
-    Memory.load(memoryFile.toUri.toURL)
-  }
+
   def apply(rc210Data: RC210Data): Memory = {
     val memory = rc210Data.mainArray
     val extMemory = rc210Data.extArray
@@ -48,17 +46,17 @@ class DatFile @Inject()(config: Config) extends LazyLogging {
     val data = memory.concat(extMemory)
     val newMemory = new Memory(data)
     // backup old
-    if(Files.exists(memoryFile)){
-      val fileTime: Instant = Files.getLastModifiedTime(memoryFile).toInstant
+    if (Files.exists(memoryFilePath)) {
+      val fileTime: Instant = Files.getLastModifiedTime(memoryFilePath).toInstant
       val stampName = fileStamp(fileTime)
-      val historic: String = memoryFile.getFileName.toString .replace(".", stampName + ".")
+      val historic: String = memoryFilePath.getFileName.toString.replace(".", stampName + ".")
       val target = historyDir.resolve(historic)
       Files.createDirectories(historyDir)
-      Files.move(memoryFile, target)
+      Files.move(memoryFilePath, target)
     }
 
     // save new
-    newMemory.save(memoryFile)
+    newMemory.save(memoryFilePath)
     newMemory
   }
 

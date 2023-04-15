@@ -22,37 +22,38 @@ import net.wa9nnn.rc210.data.field._
 import net.wa9nnn.rc210.io.DatFile
 import net.wa9nnn.rc210.serial.Memory
 
+import java.net.URL
 import javax.inject.{Inject, Singleton}
+import scala.util.{Failure, Success}
 
 @Singleton
-class MemoryFileLoader @Inject()(fieldDefinitions: FieldDefinitions, dataStore: DataStore, datFile: DatFile) extends LazyLogging {
-
-  load() // startup
-
-  def load(): Unit = {
-    datFile.load().map {
-      implicit memory: Memory =>
-
-        val simpleFields: Seq[FieldEntry] = for {
-          fieldDefinition <- fieldDefinitions.simpleFields
-          it = fieldDefinition.iterator()
-          number <- 1 to fieldDefinition.kind.maxN
-        } yield {
-          val fieldValue: FieldValue = fieldDefinition.extractFromInts(it)
-          val fieldKey = fieldDefinition.fieldKey(number)
-          val fieldEntry = FieldEntry(fieldDefinition, fieldKey, fieldValue)
-          logger.trace("FieldEntry: offset: {} fieldEntry: {})", fieldDefinition.offset, fieldEntry.toString)
-          fieldEntry
-        }
-
-        val values: Seq[FieldEntry] = fieldDefinitions.complexFd.flatMap { memoryExtractor: ComplexExtractor =>
-          val r: Seq[FieldEntry] = memoryExtractor.extract(memory)
-          r
-        }
-
-        val initialValues: Seq[FieldEntry] = simpleFields ++: values
-        dataStore.load(initialValues)
+class MemoryFileLoader @Inject()(fieldDefinitions: FieldDefinitions) extends LazyLogging {
+  def load(url: URL): Seq[FieldEntry] = {
+    implicit val memory = Memory.load(url) match {
+      case Failure(exception) =>
+        logger.error(s"No Memory", exception)
+        throw exception
+      case Success(value) =>
+        value
     }
+    val simpleFields: Seq[FieldEntry] = for {
+      fieldDefinition <- fieldDefinitions.simpleFields
+      it = fieldDefinition.iterator()
+      number <- 1 to fieldDefinition.kind.maxN
+    } yield {
+      val fieldValue: FieldValue = fieldDefinition.extractFromInts(it)
+      val fieldKey = fieldDefinition.fieldKey(number)
+      val fieldEntry = FieldEntry(fieldDefinition, fieldKey, fieldValue)
+      logger.trace("FieldEntry: offset: {} fieldEntry: {})", fieldDefinition.offset, fieldEntry.toString)
+      fieldEntry
+    }
+
+    val complexFields: Seq[FieldEntry] = fieldDefinitions.complexFd.flatMap { memoryExtractor: ComplexExtractor =>
+      val r: Seq[FieldEntry] = memoryExtractor.extract(memory)
+      r
+    }
+
+    simpleFields ++: complexFields
   }
 }
 

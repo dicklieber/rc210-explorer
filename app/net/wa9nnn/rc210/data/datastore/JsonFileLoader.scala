@@ -19,63 +19,35 @@ package net.wa9nnn.rc210.data.datastore
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.field.{FieldDefinition, FieldEntry}
-import net.wa9nnn.rc210.io.DatFile
-import play.api.libs.json.Json
 
-import java.net.URL
-import javax.inject.{Inject, Singleton}
-import scala.util.{Failure, Success, Try, Using}
+import scala.collection.immutable.Seq
 
 
-@Singleton
-class JsonFileLoader @Inject()(dataStore: DataStore, datFile: DatFile, memoryFileLoader: MemoryFileLoader) extends LazyLogging {
 
-  load()
-
-  def load(): Unit = {
-
-    JsonFileLoader(datFile.dataStoreFile.toUri.toURL) match {
-      case Failure(exception) =>
-        logger.info(s"No Json file. (${exception.getMessage})")
-      case Success(fields: Seq[FieldEntryJson]) =>
-        loadFields(fields)
-    }
-
-    def loadFields(fields: Seq[FieldEntryJson]): Unit = {
-
-      val r: Seq[FieldEntry] = for {
-        json <- fields
-        fieldKey = json.fieldKey
-        fieldEntry <- dataStore(fieldKey)
-      } yield {
-        val fieldDefinition: FieldDefinition = fieldEntry.fieldDefinition
-        FieldEntry(fieldDefinition = fieldDefinition,
-          fieldKey = fieldKey,
-          fieldValue = fieldDefinition.parse(json.fieldValue),
-          candidate = json.candidate.map { o =>
-            fieldDefinition.parse(o)
-          })
-      }
-
-      dataStore.update(r)
-    }
-  }
-}
 
 /**
  * Parses JSON saved from [[DataStore]]
  */
-object JsonFileLoader {
+object JsonFileLoader extends LazyLogging {
   /**
-   * Loads a JSON file parwses to [[FieldEntryJson]]s
-   *
-   * @param url
+   * Loads a JSON file oinfo the [[DataStore]].
+   * @param in
    * @return
    */
-  def apply(url: URL): Try[Seq[FieldEntryJson]] = {
-    Using(url.openStream()) { inputStream =>
-      Json.parse(inputStream).as[Seq[FieldEntryJson]]
+  def apply(in: Seq[FieldEntryJson], dataStore: DataStore): Unit = {
+   val fes: Seq[FieldEntry] =  for {
+      json <- in
+      fieldKey = json.fieldKey
+      fieldEntry <- dataStore(fieldKey)
+    } yield {
+      val fieldDefinition: FieldDefinition = fieldEntry.fieldDefinition
+      FieldEntry(fieldDefinition = fieldDefinition,
+        fieldKey = fieldKey,
+        fieldValue = fieldDefinition.parse(json.fieldValue),
+        candidate = json.candidate.map { o =>
+          fieldDefinition.parse(o)
+        })
     }
+    dataStore.update(fes)
   }
-
 }

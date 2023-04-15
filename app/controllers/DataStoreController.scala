@@ -35,7 +35,7 @@ class DataStoreController @Inject()(implicit val controllerComponents: Controlle
                                     dataStore: DataStore,
                                     datFile: DatFile,
                                     executionContext: ExecutionContext
-                            ) extends BaseController with LazyLogging {
+                                   ) extends BaseController with LazyLogging {
   implicit val timeout: Timeout = 5.seconds
 
   def downloadJson(): Action[AnyContent] = Action {
@@ -48,6 +48,4 @@ class DataStoreController @Inject()(implicit val controllerComponents: Controlle
       "Content-Disposition" -> s"""attachment; filename="rc210.json""""
     )
   }
-
-
 }
