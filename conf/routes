@@ -20,6 +20,9 @@ GET         /schedules                         controllers.ScheduleController.in
 GET         /macros                            controllers.MacroNodeController.index()
 GET         /macro/edit/:key                   controllers.MacroNodeController.edit(key:MacroKey)
 POST        /macro/save                        controllers.MacroNodeController.save()
+GET         /messages                          controllers.MessageController.index()
+GET         /message/edit/:key                 controllers.MessageController.edit(key:MacroKey)
+POST        /message/save                      controllers.MessageController.save()
 #GET         /messageMacros             controllers.RawDataController.messageMacros()
 GET         /datastore/download                controllers.DataStoreController.downloadJson()
 GET         /datastore/upload                  controllers.DataStoreController.upload

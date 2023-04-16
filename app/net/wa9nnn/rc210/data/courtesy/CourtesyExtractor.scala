@@ -30,11 +30,11 @@ object CourtesyExtractor extends ComplexExtractor with LazyLogging {
 
   /**
    *
-   * @param memoryBuffer    source of RC-210 data.
+   * @param memory    source of RC-210 data.
    * @return what we extracted.
    */
-  override def extract(memoryBuffer: Memory): Seq[FieldEntry] = {
-    val iterator = memoryBuffer.iterator16At(856)
+  override def extract(memory: Memory): Seq[FieldEntry] = {
+    val iterator = memory.iterator16At(856)
 
     val array = Array.ofDim[Int](10, 16)
     for {

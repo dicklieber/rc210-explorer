@@ -1,6 +1,6 @@
 package net.wa9nnn.rc210.data.functions
 
-import net.wa9nnn.rc210.key.KeyFactory.{FunctionKey, MacroKey, MessageMacroKey}
+import net.wa9nnn.rc210.key.KeyFactory.{FunctionKey, MacroKey, MessageKey}
 import org.specs2.mutable.Specification
 
 class FunctionsSpec extends Specification {
@@ -12,7 +12,7 @@ class FunctionsSpec extends Specification {
       functions.size must beEqualTo (872)
 
       val invokedMessageMacros = functions.invokedMessageMacros
-      invokedMessageMacros.head must beEqualTo (MessageMacroKey(1))
+      invokedMessageMacros.head must beEqualTo (MessageKey(1))
 
       val invokedMacros = functions.invokedMacros
       invokedMacros.head must beEqualTo (MacroKey(1))

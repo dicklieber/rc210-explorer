@@ -26,9 +26,8 @@ public enum KeyKind {
     courtesyToneKey(10),
     functionKey(1005, false),
     macroKey(105),
-    messageMacroKey(70),
+    messageKey(70), // 40 (in Main) + 30 (in RTC)
     commonKey(1),
-    wordKey(256, false),
     portKey(3),
     scheduleKey(40),
     timerKey(6);

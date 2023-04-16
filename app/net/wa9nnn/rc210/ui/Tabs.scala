@@ -32,6 +32,7 @@ object Tabs {
   //
 
   val macrosTab: Tab = Tab("Macros", routes.MacroNodeController.index().url, "Macro settings.")
+  val messagesTab: Tab = Tab("Messages", routes.MessageController.index().url, "Messages.")
 
   val portsTab: Tab = Tab("Ports", routes.PortsEditorController.index().url, "Port settings")
 
@@ -46,6 +47,7 @@ object Tabs {
     logicAlarmTab,
     commonTab,
     macrosTab,
+    messagesTab,
     ctTab,
     portsTab,
     schedulesTab,

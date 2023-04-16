@@ -36,12 +36,12 @@ object TimerExtractor extends ComplexExtractor with LazyLogging {
 
   /**
    *
-   * @param memoryBuffer    source of RC-210 data.
+   * @param memory    source of RC-210 data.
    * @return what we extracted.
    */
-  override def extract(memoryBuffer: Memory): Seq[FieldEntry] = {
-    val seconds = memoryBuffer.iterator16At(1553)
-    val macros = memoryBuffer.iterator8At(1565)
+  override def extract(memory: Memory): Seq[FieldEntry] = {
+    val seconds = memory.iterator16At(1553)
+    val macros = memory.iterator8At(1565)
 
 
     val r: Seq[FieldEntry] = (for {

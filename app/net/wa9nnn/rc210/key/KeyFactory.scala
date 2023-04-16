@@ -40,9 +40,8 @@ object KeyFactory {
           case KeyKind.courtesyToneKey => CourtesyToneKey(number)
           case KeyKind.functionKey => FunctionKey(number)
           case KeyKind.macroKey => MacroKey(number)
-          case KeyKind.messageMacroKey => MessageMacroKey(number)
+          case KeyKind.`messageKey` => MessageKey(number)
           case KeyKind.commonKey => CommonKey()
-          case KeyKind.wordKey => WordKey(number)
           case KeyKind.portKey => PortKey(number)
           case KeyKind.scheduleKey => ScheduleKey(number)
           case KeyKind.timerKey => TimerKey(number)
@@ -93,11 +92,15 @@ object KeyFactory {
 
   def portKey(number: Int): PortKey = apply(KeyKind.portKey, number)
 
-  def wordKey(number: Int): WordKey = apply(KeyKind.wordKey, number)
 
   def timerKey(number: Int): TimerKey = apply(KeyKind.timerKey, number)
+
   def logicAlarmKey(number: Int): LogicAlarmKey = apply(KeyKind.logicAlarmKey, number)
+
   def meterKey(number: Int): MeterKey = apply(KeyKind.meterKey, number)
+
+  def messageKey(number: Int): MessageKey = apply(KeyKind.messageKey, number)
+
   def commonKey(number: Int): CommonKey = apply(KeyKind.commonKey, number)
 
   lazy val defaultMacroKey: MacroKey = apply(KeyKind.macroKey, 1)
@@ -130,13 +133,12 @@ object KeyFactory {
 
   case class MacroKey private(override val number: Int) extends Key(KeyKind.macroKey, number)
 
-  case class MessageMacroKey(override val number: Int) extends Key(KeyKind.messageMacroKey, number)
+  case class MessageKey(override val number: Int) extends Key(KeyKind.messageKey, number)
 
   case class FunctionKey(override val number: Int) extends Key(KeyKind.functionKey, number)
 
   case class ScheduleKey(override val number: Int) extends Key(KeyKind.scheduleKey, number)
 
-  case class WordKey(override val number: Int) extends Key(KeyKind.wordKey, number)
 
   case class DtmfMacroKey(override val number: Int) extends Key(KeyKind.dtmfMacroKey, number)
 

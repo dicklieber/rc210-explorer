@@ -77,10 +77,10 @@ trait ComplexExtractor extends FieldExtractor with FieldDefinition{
 
   /**
    *
-   * @param memoryBuffer    source of RC-210 data.
+   * @param memory    source of RC-210 data.
    * @return what we extracted.
    */
-  def extract(memoryBuffer: Memory): Seq[FieldEntry]
+  def extract(memory: Memory): Seq[FieldEntry]
 
 //   lazy val fieldDefinition: FieldDefinition = {
 //    new FieldDefinition {

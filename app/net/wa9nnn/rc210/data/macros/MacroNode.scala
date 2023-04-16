@@ -56,13 +56,13 @@ case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dt
 object MacroNode extends LazyLogging with ComplexExtractor  {
   def header(count: Int): Header = Header(s"Macros ($count)", "Key", "Functions")
 
-  override def extract(memoryBuffer: Memory): Seq[FieldEntry] = {
+  override def extract(memory: Memory): Seq[FieldEntry] = {
 
-    val dtmfMap: DtmfMacros = DtmfMacroExtractor(memoryBuffer)
+    val dtmfMap: DtmfMacros = DtmfMacroExtractor(memory)
     val mai = new AtomicInteger(1)
 
     def macroBuilder(offset: Int, chunkLength: Int, nChunks:Int) = {
-      memoryBuffer.chunks(offset, chunkLength, nChunks)
+      memory.chunks(offset, chunkLength, nChunks)
         .map { chunk: Array[Int] =>
           val key: MacroKey = KeyFactory(KeyKind.macroKey, mai.getAndIncrement())
           val f: Array[FunctionKey] = chunk.takeWhile(_ != 0)

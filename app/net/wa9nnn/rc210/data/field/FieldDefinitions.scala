@@ -19,6 +19,7 @@ package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.courtesy.CourtesyExtractor
 import net.wa9nnn.rc210.data.macros.MacroNode
+import net.wa9nnn.rc210.data.message.MesssageExtractor
 import net.wa9nnn.rc210.data.schedules.Schedule
 import net.wa9nnn.rc210.data.timers.TimerExtractor
 import net.wa9nnn.rc210.key.KeyKind._
@@ -134,7 +135,8 @@ class FieldDefinitions @Inject()() {
     Schedule,
     MacroNode,
     CourtesyExtractor,
-    TimerExtractor
+    TimerExtractor,
+    MesssageExtractor
   )
 
   def forOffset(offset: Int): SimpleField = simpleFields.find(_.offset == offset).get

@@ -17,48 +17,50 @@
 
 package controllers
 
-import net.wa9nnn.rc210.data.datastore.{DataStore, NewCandidate}
-import net.wa9nnn.rc210.data.{Dtmf, FieldKey}
-import net.wa9nnn.rc210.data.field.FieldEntry
+import com.wa9nnn.util.tableui.{Row, Table}
+import net.wa9nnn.rc210.data.Dtmf
+import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.MacroNode
+import net.wa9nnn.rc210.data.message.Message
 import net.wa9nnn.rc210.data.named.NamedManager
+import net.wa9nnn.rc210.key.KeyFactory._
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.mvc._
-import views.html.macroNodes
 
 import javax.inject.{Inject, Singleton}
 import scala.util.Try
 import scala.util.matching.Regex
-import net.wa9nnn.rc210.key.KeyFactory._
 
 @Singleton()
-class MacroNodeController @Inject()( mappedValues: DataStore
-                                   )(implicit namedSource: NamedManager, functionsProvider: FunctionsProvider) extends MessagesInjectedController {
+class MessageController @Inject()(dataStore: DataStore
+                                 )(implicit namedSource: NamedManager, functionsProvider: FunctionsProvider) extends MessagesInjectedController {
 
 
   def index(): Action[AnyContent] = Action { implicit request =>
 
-    val value: Seq[MacroNode] = mappedValues.apply(KeyKind.macroKey).map { fieldEntry =>
-      fieldEntry.value.asInstanceOf[MacroNode]
-    }
-    Ok(macroNodes(value, KeyKind.macroKey))
+    val rows: Seq[Row] = dataStore
+      .apply(KeyKind.messageKey)
+      .map { fieldEntry =>
+        Row(fieldEntry.fieldKey.key.toCell, fieldEntry.value.display)
+      }
+    val table = Table(Message.header(rows.length), rows)
+    Ok(views.html.messages(table))
   }
 
   def edit(key: MacroKey): Action[AnyContent] = Action { implicit request =>
 
-    val fieldKey = FieldKey("Macro", key)
-    val maybeEntry: Option[FieldEntry] = mappedValues(fieldKey)
-    maybeEntry match {
-      case Some(fieldEntry: FieldEntry) =>
-        val name = namedSource(key)
-        Ok(views.html.macroEditor(fieldEntry.value, name))
-      case None =>
-        NotFound(s"No keyField: $fieldKey")
-    }
+    //    val fieldKey = FieldKey("Macro", key)
+    //    val maybeEntry: Option[FieldEntry] = dataStore(fieldKey)
+    //    maybeEntry match {
+    //      case Some(fieldEntry: FieldEntry) =>
+    //        val name = namedSource(key)
+    //        Ok(views.html.dat(fieldEntry.value, name))
+    //      case None =>
+    //        NotFound(s"No keyField: $fieldKey")
+    //    }
+    throw new NotImplementedError() //todo
   }
-
-  import MacroNodeController.r
 
   def save(): Action[AnyContent] = Action { implicit request =>
     val formData: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
@@ -79,13 +81,12 @@ class MacroNodeController @Inject()( mappedValues: DataStore
 
 
     val newMacroNode = MacroNode(key, functions, dtmf)
-    mappedValues(newMacroNode.fieldKey, newMacroNode)
+    dataStore(newMacroNode.fieldKey, newMacroNode)
     Redirect(routes.MacroNodeController.index())
   }
 }
 
-object MacroNodeController {
+object MessageController {
   val r: Regex = """[^\d]*(\d*)""".r
 }
 
-case class MacroEdit(macroNode: MacroNode, name: String)

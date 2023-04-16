@@ -4,7 +4,7 @@
 
 @tabbedmain(Tabs.fileUpload) {
 
-    @form(action = routes.DataStoreController.save(), 'enctype -> "multipart/form-data") {
+    @form(action = routes.DataStoreController.save(), Symbol("enctype") -> "multipart/form-data") {
         <label class="form-label" for="file">Json File</label>
         <input type="file" class="form-control" id="file" name="jsonFile"/>
         <input class="btn btn-primary" type="submit" value="Submit">

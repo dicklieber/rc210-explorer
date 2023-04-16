@@ -22,14 +22,13 @@ import net.wa9nnn.rc210.command._
 import net.wa9nnn.rc210.data.functions.FunctionNode
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.named.{NamedData, NamedKey}
-import net.wa9nnn.rc210.data.schedules.Schedule
-import net.wa9nnn.rc210.key.KeyFactory.{CourtesyToneKey, FunctionKey, Key, MacroKey, MessageMacroKey, ScheduleKey, TimerKey, WordKey}
+import net.wa9nnn.rc210.key.KeyFactory._
 import play.api.libs.json._
 import play.api.mvc.PathBindable
 
+import scala.language.postfixOps
 import scala.util.Try
 import scala.util.matching.Regex
-import scala.language.postfixOps
 
 object KeyFormats {
 
@@ -102,7 +101,8 @@ object KeyFormats {
     }
 
     override def reads(json: JsValue): JsResult[FunctionKey] = {
-      JsSuccess(KeyFactory.apply(json.as[String]))    }
+      JsSuccess(KeyFactory.apply(json.as[String]))
+    }
   }
 
 
@@ -112,25 +112,19 @@ object KeyFormats {
     }
 
     override def reads(json: JsValue): JsResult[ScheduleKey] = {
-      JsSuccess(KeyFactory.apply(json.as[String]))    }
+      JsSuccess(KeyFactory.apply(json.as[String]))
+    }
   }
-  implicit val fmtMessageMacroKey: Format[MessageMacroKey] = new Format[MessageMacroKey] {
-    def writes(key: MessageMacroKey): JsValue = {
+
+  implicit val fmtMessageKey: Format[MessageKey] = new Format[MessageKey] {
+    def writes(key: MessageKey): JsValue = {
       JsString(key.toString)
     }
 
-    override def reads(json: JsValue): JsResult[MessageMacroKey] = {
-      JsSuccess(KeyFactory.apply(json.as[String]))    }
-  }
-  implicit val fmtWordKey: Format[WordKey] = new Format[WordKey] {
-    def writes(key: WordKey): JsValue = {
-      JsString(key.toString)
+    override def reads(json: JsValue): JsResult[MessageKey] = {
+      JsSuccess(KeyFactory.apply(json.as[String]))
     }
-
-    override def reads(json: JsValue): JsResult[WordKey] = {
-      JsSuccess(KeyFactory.apply(json.as[String]))    }
   }
-
 
   implicit val fmtKey: Format[Key] = new Format[Key] {
     override def reads(json: JsValue): JsResult[Key] = {
