@@ -5,6 +5,7 @@
 @import net.wa9nnn.rc210.key.KeyKind
 @import net.wa9nnn.rc210.ui.Tab
 @import net.wa9nnn.rc210.ui.Tabs
+@import scala.util.Random
 @(macroNode: MacroNode, name: String)(implicit namedSource: NamedSource, functionsProvider: FunctionsProvider, messagesProvider: MessagesProvider)
 
 @tabbedmain(Tabs.macrosTab) {
@@ -34,7 +35,7 @@
 
                 <table id="currentFunctions" >
                     @for(function <- macroNode.functions) {
-                        <tr  class="functionDrop functionDrag currentFunction" data-function="@function.toString">
+                        <tr id = @Random.nextInt() class="functionDrop functionDrag currentFunction" data-function="@function.toString">
                             <td class=" text-end">@function.number </td>
                             <td class="text-nowrap">@functionsProvider.apply(function).get.description</td>
                         </tr>

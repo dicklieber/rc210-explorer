@@ -36,6 +36,9 @@ $(function () {
             if (targetId === "trash") {
                 $("#ddMessage").text(`Remove this function: ${targetId}`)
             } else {
+                const newId = self.crypto.randomUUID();
+                sourceTr.attr("id", newId)
+
                 insert(sourceTr, targetId)
             }
             $(this)
@@ -68,7 +71,8 @@ $(function () {
             draggable.remove()
         },
         over: function (event, ui) {
-            let targetId = event.target.id;
+            const target = event.target;
+            const targetId = target.id;
             console.log(`over::targetId: ${targetId}`)
 
             if (targetId === "trash") {
