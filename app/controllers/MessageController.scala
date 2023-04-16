@@ -20,6 +20,7 @@ package controllers
 import com.wa9nnn.util.tableui.{Row, Table}
 import net.wa9nnn.rc210.data.Dtmf
 import net.wa9nnn.rc210.data.datastore.DataStore
+import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.message.Message
@@ -39,16 +40,12 @@ class MessageController @Inject()(dataStore: DataStore
 
   def index(): Action[AnyContent] = Action { implicit request =>
 
-    val rows: Seq[Row] = dataStore
-      .apply(KeyKind.messageKey)
-      .map { fieldEntry =>
-        Row(fieldEntry.fieldKey.key.toCell, fieldEntry.value.display)
-      }
-    val table = Table(Message.header(rows.length), rows)
-    Ok(views.html.messages(table))
+    val entries: Seq[FieldEntry] = dataStore.apply(KeyKind.messageKey)
+    val messages: Seq[Message] = entries.map(_.value[Message])
+    Ok(views.html.messages(messages))
   }
 
-  def edit(key: MacroKey): Action[AnyContent] = Action { implicit request =>
+  def edit(key: MessageKey): Action[AnyContent] = Action { implicit request =>
 
     //    val fieldKey = FieldKey("Macro", key)
     //    val maybeEntry: Option[FieldEntry] = dataStore(fieldKey)

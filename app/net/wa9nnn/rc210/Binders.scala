@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210
 
-import net.wa9nnn.rc210.key.KeyFactory.MacroKey
+import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, MessageKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.mvc.PathBindable
 
@@ -41,6 +41,16 @@ object Binders {
 
     override def unbind(key: String, macroKey: MacroKey): String = {
       macroKey.toString
+    }
+  }
+  implicit def  messageKeyBinder: PathBindable[MessageKey] = new PathBindable[MessageKey] {
+    override def bind(key: String, value: String): Either[String, MessageKey] = {
+
+      Right(KeyFactory(value))
+    }
+
+    override def unbind(key: String, messageKey: MessageKey): String = {
+      messageKey.toString
     }
   }
 }

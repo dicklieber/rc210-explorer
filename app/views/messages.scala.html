@@ -3,9 +3,35 @@
 @import net.wa9nnn.rc210.data.named.NamedSource
 @import net.wa9nnn.rc210.ui.Tabs
 @import views.html.helper._
-@(table: Table)(implicit namedSource: NamedSource)
-@tabbedmain(Tabs.messagesTab) {
-    @form(action = routes.MessageController.save()) {
-        @renderTable(table.withCssClass("tablesorter"))
+@import net.wa9nnn.rc210.data.message.Message
+@(messages: Seq[Message])(implicit namedSource: NamedSource)
+    @tabbedmain(Tabs.messagesTab) {
+        <div class="container">
+            <table class="table table-bordered w-auto">
+                <thead class="table-primary">
+                    <tr>
+                        <th></th>
+                        <th>Message</th>
+                        <th>Words</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @for(message <- messages) {
+                    <tr>
+                        <td>
+                            <button type="button" class="bi bi-pencil-square btn p-0"
+                            onclick="window.location.href = '@routes.MessageController.edit(message.key)'"></button>
+                        </td>
+                        <td title="@message.key.toString">
+                        @namedSource(message.key)
+                        </td>
+                        <td>
+                        @message.display
+                        </td>
+
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
     }
-}
