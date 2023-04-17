@@ -25,7 +25,6 @@ import play.api.libs.json.Json
 import play.api.mvc._
 
 import java.io.InputStream
-import java.nio.file.Paths
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
 import scala.util.{Failure, Success, Using}
@@ -48,33 +47,25 @@ class DataStoreController @Inject()(implicit val controllerComponents: Controlle
   }
 
   def upload: Action[AnyContent] = Action {
-
-
     Ok(views.html.fileUpload())
   }
 
-  def save = Action(parse.multipartFormData) { request =>
+  def save: Action[MultipartFormData[Files.TemporaryFile]] = Action(parse.multipartFormData) { request =>
     val body = request.body
     body
       .file("jsonFile")
-
       .map { jsonFile: MultipartFormData.FilePart[Files.TemporaryFile] =>
-        // only get the last part of the filename
-        // otherwise someone can send a path like ../../home/foo/bar.txt to write to other files on the system
-        val filename = Paths.get(jsonFile.filename).getFileName
-        val fileSize = jsonFile.fileSize
-        val contentType = jsonFile.contentType
-
 
         val ref: Files.TemporaryFile = jsonFile.ref
         Using(java.nio.file.Files.newInputStream(ref.path)) { is: InputStream =>
           val enrtries: Seq[FieldEntryJson] = Json.parse(is).as[Seq[FieldEntryJson]]
           JsonFileLoader(enrtries, dataStore)
+          ref.delete()
         } match {
           case Failure(exception: Throwable) =>
             logger.error(s"Uploading: ${jsonFile.filename}", exception)
             InternalServerError(exception.getMessage)
-          case Success(value: Unit) =>
+          case _ =>
             Ok("File uploaded")
         }
       }.get
