@@ -32,7 +32,6 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class IOController @Inject()(implicit val controllerComponents: ControllerComponents,
-                             dataStore: DataStore,
                              datFile: DatFile,
                              executionContext: ExecutionContext
                             ) extends BaseController with LazyLogging {

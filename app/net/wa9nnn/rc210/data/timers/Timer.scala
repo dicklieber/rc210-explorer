@@ -50,6 +50,7 @@ case class Timer(key: TimerKey, seconds: FieldInt, macroSelect: MacroSelect) ext
 }
 
 object Timer {
+
   import net.wa9nnn.rc210.key.KeyFormats._
   implicit val fmtTimer: OFormat[Timer] = Json.format[Timer]
 }

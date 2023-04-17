@@ -33,15 +33,14 @@ import net.wa9nnn.rc210.data.schedules.Schedule.apply
 import javax.inject.{Inject, Singleton}
 
 @Singleton()
-class ScheduleController @Inject()(val controllerComponents: ControllerComponents,
-                                   mappedValues: DataStore
+class ScheduleController @Inject()(val controllerComponents: ControllerComponents, dataStore: DataStore
                                   )(implicit namedSource: NamedManager) extends BaseController with LazyLogging {
 
 
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
 
-      val entries: Seq[FieldEntry] = mappedValues(KeyKind.scheduleKey)
+      val entries: Seq[FieldEntry] = dataStore(KeyKind.scheduleKey)
       val rows: Seq[Row] = entries.map { fieldEntry: FieldEntry =>
         val schedule: Schedule = fieldEntry.value
         schedule.toRow()
@@ -62,7 +61,7 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
   def save(): Action[AnyContent] = Action { implicit request =>
     val valuesMap: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
     val namedKeys = Seq.newBuilder[NamedKey]
-    val r = valuesMap.map { case (sKey, values: Seq[String]) =>
+    val r: Seq[Schedule] = valuesMap.map { case (sKey, values: Seq[String]) =>
       sKey -> values.headOption.getOrElse("No value")
     }.filter(_._1 != "save")
       .toSeq
@@ -88,7 +87,7 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
         Schedule((key.asInstanceOf[ScheduleKey]))
       }.toSeq.sortBy(_.key)
 
-    mappedValues.apply(r)
+    dataStore.complexCandidate(r)
     namedSource.update(namedKeys.result())
 
 

@@ -18,11 +18,13 @@
 package net.wa9nnn.rc210.data.datastore
 
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
+import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, SimpleFieldValue}
+import net.wa9nnn.rc210.io.DatFile
 import net.wa9nnn.rc210.key.KeyFactory.Key
 import net.wa9nnn.rc210.key.KeyKind
 import play.api.libs.json.{Format, JsValue, Json}
 
+import java.nio.file.Files
 import javax.inject.{Inject, Singleton}
 import scala.collection.concurrent.TrieMap
 import scala.collection.immutable.Seq
@@ -32,7 +34,7 @@ import scala.collection.immutable.Seq
  * Until loaded all functions that return Seq[FieldEntry] will return Seq.empty.
  */
 @Singleton
-class DataStore @Inject()() {
+class DataStore @Inject()(datFile: DatFile) {
   private var map: TrieMap[FieldKey, FieldEntry] = new TrieMap[FieldKey, FieldEntry]
 
   /**
@@ -49,12 +51,14 @@ class DataStore @Inject()() {
   /**
    * Updates with supplied fieldEntries.
    * Can't do a load as there may not be enough entries on the json file.
+   *
    * @param fieldEntries
    */
   def update(fieldEntries: Seq[FieldEntry]): Unit = {
     fieldEntries.foreach { fe =>
       map.put(fe.fieldKey, fe)
     }
+    save()
   }
 
 
@@ -63,12 +67,20 @@ class DataStore @Inject()() {
   }
 
 
+  /**
+   * @return all the the entries for the [[KeyKind]].
+   */
   def apply(keyKind: KeyKind): Seq[FieldEntry] = {
     map.values.filter(_.fieldKey.key.kind == keyKind)
       .toSeq
       .sortBy(_.fieldKey)
   }
 
+  /**
+   *
+   * @param fieldKey of interest.
+   * @return [[FieldEntry]] if fieldKey was found.
+   */
   def apply(fieldKey: FieldKey): Option[FieldEntry] = {
     map.values.find(_.fieldKey == fieldKey)
   }
@@ -76,7 +88,7 @@ class DataStore @Inject()() {
   /**
    *
    * @param key of interest
-   * @return order by field name.
+   * @return al the field for the key.
    */
   def apply(key: Key): Seq[FieldEntry] = {
     map.values
@@ -85,38 +97,72 @@ class DataStore @Inject()() {
       .sortBy(_.fieldKey.fieldName)
   }
 
+  /**
+   * Moves the  candidate to the fieldValue
+   * This should be invoked after successfully sending the candidate to the RC-210.
+   *
+   * @param fieldKey of
+   * @throws IllegalStateException if there is no candidate.
+   */
   def acceptCandidate(fieldKey: FieldKey): Unit = {
     map.put(fieldKey, map(fieldKey).acceptCandidate())
+    save()
   }
 
 
-  def apply(fieldKey: FieldKey, value: String): Unit = {
+  private def update(fieldKey: FieldKey, value: String): Unit = {
     val entry: FieldEntry = map(fieldKey)
     map.put(fieldKey, entry.setCandidate(value))
   }
 
-  def apply(fieldKey: FieldKey, fieldContents: FieldValue): Unit = {
-    val entry: FieldEntry = map.getOrElse(fieldKey, throw new IllegalArgumentException(s"No value for $fieldKey"))
-    map.put(fieldKey, entry.copy(candidate = Option(fieldContents)))
-  }
+  //  def setCandidate(fieldKey: FieldKey, fieldContents: FieldValue): Unit = {
+  //    val entry: FieldEntry = map.getOrElse(fieldKey, throw new IllegalArgumentException(s"No value for $fieldKey"))
+  //    map.put(fieldKey, entry.copy(candidate = Option(fieldContents)))
+  //    save()
+  //  }
 
-  def apply(newCandidate: NewCandidate): Unit = {
-    val fieldKey = newCandidate.fieldKey
-    val fieldEntry: FieldEntry = map.apply(fieldKey)
-    val updatedFieldEntry: FieldEntry = fieldEntry.setCandidate(newCandidate.formValue)
-    map.put(fieldKey, updatedFieldEntry)
-  }
 
-  def apply(newValues: Iterable[NewCandidate]): Unit = {
-    newValues.foreach(newCandidate => apply(newCandidate))
-  }
+  def simpleCandidate(newCandidate: FormValue): Unit =
+    simpleCandidate(Seq(newCandidate))
 
-  def apply[K <: Key](fields: Seq[ComplexFieldValue[K]]): Unit = {
-    fields.foreach { fieldWithFieldKey =>
-      apply(fieldWithFieldKey.fieldKey, fieldWithFieldKey)
+  def simpleCandidate(newValues: Iterable[FormValue]): Unit = {
+    newValues.foreach { formValue =>
+      val fieldKey = formValue.fieldKey
+      val currentEntry: FieldEntry = map.apply(fieldKey)
+      val newFieldEntry = currentEntry.setCandidate(formValue.sFormValue)
+      map.put(fieldKey, newFieldEntry)
     }
+    save()
   }
 
+  def complexCandidate(newValue: ComplexFieldValue[_]): Unit =
+    complexCandidate(Seq(newValue))
+
+  def complexCandidate(newValues: Iterable[ComplexFieldValue[_]]): Unit = {
+    newValues.foreach { fieldValue: ComplexFieldValue[_] =>
+      val fieldKey = fieldValue.fieldKey
+
+      val current: FieldEntry = map.apply(fieldKey)
+      val updatedFieldEntry: FieldEntry = current.setCandidate(fieldValue)
+      map.put(fieldKey, updatedFieldEntry)
+    }
+    save()
+  }
+
+  //  def apply[K <: Key](fields: Seq[ComplexFieldValue[K]]): Unit = {
+  //    fields.foreach { fieldWithFieldKey =>
+  //      apply(fieldWithFieldKey.fieldKey, fieldWithFieldKey)
+  //    }
+  //    save()
+  //  }
+
+
+  private def save(): Unit = {
+    Files.createDirectories(datFile.dataStsorePath.getParent)
+    val jsObject = Json.toJson(this)
+    val sJson = Json.prettyPrint(jsObject)
+    Files.writeString(datFile.dataStsorePath, sJson)
+  }
 }
 
 object DataStore {
@@ -134,17 +180,26 @@ object DataStore {
 }
 
 
-case class NewCandidate(fieldKey: FieldKey, formValue: String)
-
 /**
  * Data transfer object for JSON.
  * This is what's written to or Parsed (by PlayJson) from the [[DataStore]] JSON data..
  *
- * @param fieldKey ID
- * @param fieldValue
- * @param candidate
+ * @param fieldKey   ID of the entry.
+ * @param fieldValue current.
+ * @param candidate  next value.
  */
 case class FieldEntryJson(fieldKey: FieldKey, fieldValue: JsValue, candidate: Option[JsValue])
+
+
+/**
+ * Helper to transfer values from an html form to the [[DataStore]].
+ *
+ * @param sFieldKey  <input name=??> from a form.
+ * @param sFormValue PUT value from the submitted form.
+ */
+case class FormValue(sFieldKey: String, sFormValue: String) {
+  val fieldKey: FieldKey = FieldKey.fromParam(sFieldKey)
+}
 
 object FieldEntryJson {
   def apply(fieldEntry: FieldEntry): FieldEntryJson = {

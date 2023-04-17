@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui.Cell
-import play.api.libs.json.{Format, JsBoolean, JsSuccess, JsValue, Json}
+import play.api.libs.json._
 import views.html.fieldCheckbox
 
 case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue {
@@ -38,7 +38,7 @@ case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue {
     super.toCell(renderMetadata)
   }
 
-  override def update(paramValue: String): FieldValue = {
+  override def update(paramValue: String): FieldBoolean = {
     FieldBoolean(paramValue == "true")
   }
   override def toJsonValue: JsValue = Json.toJson(this)

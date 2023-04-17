@@ -35,9 +35,21 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
     candidate.getOrElse(fieldValue).asInstanceOf[F]
   }
 
+  /**
+   *
+   * @param newFieldValue already parsed to a [[FieldValue]]
+   * @return updated [[FieldEntry]].
+   */
+  def setCandidate(newFieldValue: ComplexFieldValue[_]): FieldEntry = {
+    if (fieldValue == newFieldValue)
+      copy(candidate = None)
+    else
+      copy(candidate = Option(newFieldValue))
+  }
 
   def setCandidate(formValue: String): FieldEntry = {
-    val updatedFieldValue: FieldValue = fieldValue.update(formValue)
+    val simpleFieldValue = fieldValue.asInstanceOf[SimpleFieldValue]
+    val updatedFieldValue: SimpleFieldValue = simpleFieldValue.update(formValue)
 
     if (updatedFieldValue == fieldValue) {
       copy(candidate = None)
@@ -95,6 +107,12 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
 
 
 object FieldEntry {
+
+  def apply(complexExtractor: ComplexExtractor, complexFieldValue: ComplexFieldValue[_]): FieldEntry = {
+
+    new FieldEntry(complexExtractor, complexFieldValue.fieldKey, complexFieldValue)
+  }
+
   def header(keyKind: KeyKind): Header = Header(s"${keyKind.name()}", "Number", "Field",
     Cell("Value")
       .withToolTip("Either the candidate or current value."),

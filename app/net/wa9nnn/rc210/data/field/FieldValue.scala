@@ -49,12 +49,6 @@ sealed trait FieldValue {
   def toJsonValue: JsValue
 
 
-  /**
-   *
-   * @param paramValue candidate from form.
-   * @return None if value has not changed, otherwise a new [[FieldValue]].
-   */
-  def update(paramValue: String): FieldValue
 }
 
 
@@ -66,6 +60,14 @@ trait SimpleFieldValue extends FieldValue {
     val html: String = toHtmlField(renderMetadata)
     Cell.rawHtml(html)
   }
+
+  /**
+   *
+   * @param paramValue candidate from form.
+   * @return None if value has not changed, otherwise a new [[FieldValue]].
+   */
+  def update(paramValue: String): SimpleFieldValue
+
 }
 
 /**
@@ -87,9 +89,6 @@ trait ComplexFieldValue[K <: Key] extends FieldValue {
   override def toHtmlField(renderMetadata: RenderMetadata): String = ???
 
   def toRow()(implicit namedSource: NamedSource): Row
-
-  override def update(paramValue: String): FieldValue = throw new IllegalStateException("FieldWithFieldKey cannot be updated. ") //todo can it?
-
 }
 
 

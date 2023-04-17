@@ -18,8 +18,8 @@
 package controllers
 
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
-import net.wa9nnn.rc210.data.datastore.{DataStore, NewCandidate}
-import net.wa9nnn.rc210.data.{FieldKey, datastore}
+import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.datastore.{DataStore, FormValue}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.key.KeyFactory.PortKey
@@ -27,14 +27,13 @@ import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.mvc._
 
 import javax.inject.Inject
-import scala.collection.immutable
 
-class PortsEditorController @Inject()(implicit val controllerComponents: ControllerComponents, mappedValues: DataStore,
+class PortsEditorController @Inject()(implicit val controllerComponents: ControllerComponents, dataStore: DataStore,
                                       namedManager: NamedManager) extends BaseController {
 
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      val portFields: Seq[FieldEntry] = mappedValues(KeyKind.portKey)
+      val portFields: Seq[FieldEntry] = dataStore(KeyKind.portKey)
       val map: Map[FieldKey, FieldEntry] = portFields
         .map(fieldEntry => fieldEntry.fieldKey -> fieldEntry).
         toMap
@@ -75,12 +74,9 @@ class PortsEditorController @Inject()(implicit val controllerComponents: Control
     implicit request: Request[AnyContent] =>
       val kv: Map[String, String] = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }.filterNot(_._1 == "save")
 
-      mappedValues(kv.map { case (name, formValue) =>
-        val fieldKey = FieldKey.fromParam(name)
-        datastore.NewCandidate(fieldKey, formValue)
+      dataStore.simpleCandidate(kv.map { case (name, formValue: String) =>
+        FormValue(name, formValue)
       })
-
       Redirect(routes.PortsEditorController.index())
   }
-
 }

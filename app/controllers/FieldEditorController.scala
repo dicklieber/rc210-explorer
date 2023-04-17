@@ -20,7 +20,7 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.datastore.DataStore
+import net.wa9nnn.rc210.data.datastore.{DataStore, FormValue}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
@@ -29,9 +29,9 @@ import play.api.mvc._
 import play.twirl.api.Html
 
 import javax.inject._
+import scala.collection.immutable
 
-class FieldEditorController @Inject()(val controllerComponents: ControllerComponents,
-                                      mappedValues: DataStore
+class FieldEditorController @Inject()(val controllerComponents: ControllerComponents, dataStore: DataStore
                                      )(implicit enamedManager: NamedManager)
   extends BaseController with LazyLogging {
 
@@ -42,7 +42,7 @@ class FieldEditorController @Inject()(val controllerComponents: ControllerCompon
   }
 
   def editFields(keyKind: KeyKind): Action[AnyContent] = Action {
-    val grouped: Seq[(Int, Seq[FieldEntry])] = mappedValues.apply(keyKind)
+    val grouped: Seq[(Int, Seq[FieldEntry])] = dataStore.apply(keyKind)
       .sortBy(_.fieldKey)
       .groupBy(_.fieldKey.key.number)
       .map { case (number, fields) =>
@@ -71,18 +71,21 @@ class FieldEditorController @Inject()(val controllerComponents: ControllerCompon
 
   def save(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     var kind: Option[KeyKind] = None
-    request.body.asFormUrlEncoded
+    val r: Iterable[FormValue] = request.body.asFormUrlEncoded
       .get
-      .foreach { case (sKey, values) =>
+      .flatMap { case (sKey, values) =>
         try {
           val fieldKey: FieldKey = FieldKey.fromParam(sKey)
           if (kind.isEmpty) kind = Option(fieldKey.key.kind)
-          mappedValues.apply(fieldKey, values.headOption.getOrElse(throw new IllegalArgumentException(s"No value for param: $sKey")))
+          Seq(FormValue(sKey, values.headOption.getOrElse(throw new IllegalArgumentException(s"No value for param: $sKey"))))
         } catch {
           case e: Exception =>
             logger.error(s"sKey: $sKey values: $values", e)
+            Seq.empty
         }
       }
+
+    dataStore.simpleCandidate(r)
     Redirect(routes.FieldEditorController.editFields(kind.getOrElse(KeyKind.macroKey)))
   }
 

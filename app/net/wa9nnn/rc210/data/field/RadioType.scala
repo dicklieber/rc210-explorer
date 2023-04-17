@@ -30,7 +30,7 @@ case class RadioType(value: String = selectOptions.head.display) extends FieldSe
   override val selectOptions: Seq[SelectOption] = RadioType.selectOptions
   override val name: String = DayOfWeek.name
 
-  override def update(paramValue: String): FieldValue = {
+  override def update(paramValue: String): RadioType = {
     RadioType(paramValue)
   }
 }

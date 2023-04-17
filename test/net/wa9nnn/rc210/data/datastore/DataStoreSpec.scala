@@ -18,27 +18,27 @@
 package net.wa9nnn.rc210.data.datastore
 
 import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.message.{Message, MesssageExtractor}
+import net.wa9nnn.rc210.fixtures.WithTestConfiguration
 import net.wa9nnn.rc210.io.DatFile
-import play.api.libs.json.Json
+import net.wa9nnn.rc210.key.KeyFactory
+import org.specs2.mutable.Specification
 
-import javax.inject.{Inject, Singleton}
-import scala.util.Using
+import java.nio.file.Files
 
+class DataStoreSpec extends WithTestConfiguration {
 
-/**
- * Startup
- *
- * @param memoryFileLoader hwo to get memory image.
- * @param dataStore        where to put stuff
- * @param datFile          wjefre files are located based on [[com.typesafe.config.Config]].
- */
-@Singleton
-class InitialLoader @Inject()(memoryFileLoader: MemoryFileLoader, dataStore: DataStore, datFile: DatFile) {
-  private val seq: Seq[FieldEntry] = memoryFileLoader.load(datFile.memoryFile)
-  dataStore.load(seq)
+  "DataStore" should {
+    "save" in {
+      val datFile = new DatFile(config)
+      val dataStore = new DataStore(datFile)
+      val message = Message(KeyFactory.messageKey(1), Seq(1, 2, 3))
+      val fieldEntry: FieldEntry = FieldEntry(MesssageExtractor, message)
 
-  Using(datFile.dataStoreFile.openStream()) { inoutStream =>
-    val seq: Seq[FieldEntryJson] = Json.parse(inoutStream).as[Seq[FieldEntryJson]]
-    JsonFileLoader(seq, dataStore)
+      Files.exists(datFile.dataStsorePath) must beFalse
+      dataStore.update(Seq(fieldEntry))
+      Files.exists(datFile.dataStsorePath) must beTrue
+
+    }
   }
 }

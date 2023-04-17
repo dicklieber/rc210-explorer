@@ -17,12 +17,13 @@
 
 package controllers
 
-import net.wa9nnn.rc210.data.datastore.{DataStore, NewCandidate}
-import net.wa9nnn.rc210.data.{Dtmf, FieldKey}
+import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.named.NamedManager
+import net.wa9nnn.rc210.data.{Dtmf, FieldKey}
+import net.wa9nnn.rc210.key.KeyFactory._
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.mvc._
 import views.html.macroNodes
@@ -30,16 +31,15 @@ import views.html.macroNodes
 import javax.inject.{Inject, Singleton}
 import scala.util.Try
 import scala.util.matching.Regex
-import net.wa9nnn.rc210.key.KeyFactory._
 
 @Singleton()
-class MacroNodeController @Inject()( mappedValues: DataStore
+class MacroNodeController @Inject()(dataStore: DataStore
                                    )(implicit namedSource: NamedManager, functionsProvider: FunctionsProvider) extends MessagesInjectedController {
 
 
   def index(): Action[AnyContent] = Action { implicit request =>
 
-    val value: Seq[MacroNode] = mappedValues.apply(KeyKind.macroKey).map { fieldEntry =>
+    val value: Seq[MacroNode] = dataStore.apply(KeyKind.macroKey).map { fieldEntry =>
       fieldEntry.value.asInstanceOf[MacroNode]
     }
     Ok(macroNodes(value, KeyKind.macroKey))
@@ -48,7 +48,7 @@ class MacroNodeController @Inject()( mappedValues: DataStore
   def edit(key: MacroKey): Action[AnyContent] = Action { implicit request =>
 
     val fieldKey = FieldKey("Macro", key)
-    val maybeEntry: Option[FieldEntry] = mappedValues(fieldKey)
+    val maybeEntry: Option[FieldEntry] = dataStore(fieldKey)
     maybeEntry match {
       case Some(fieldEntry: FieldEntry) =>
         val name = namedSource(key)
@@ -57,8 +57,6 @@ class MacroNodeController @Inject()( mappedValues: DataStore
         NotFound(s"No keyField: $fieldKey")
     }
   }
-
-  import MacroNodeController.r
 
   def save(): Action[AnyContent] = Action { implicit request =>
     val formData: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
@@ -77,9 +75,7 @@ class MacroNodeController @Inject()( mappedValues: DataStore
         }.toOption
       }
 
-
-    val newMacroNode = MacroNode(key, functions, dtmf)
-    mappedValues(newMacroNode.fieldKey, newMacroNode)
+    dataStore.complexCandidate(MacroNode(key, functions, dtmf))
     Redirect(routes.MacroNodeController.index())
   }
 }

@@ -19,7 +19,7 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
-import net.wa9nnn.rc210.data.datastore.{DataStore, NewCandidate}
+import net.wa9nnn.rc210.data.datastore.{DataStore, FormValue}
 import net.wa9nnn.rc210.data.{FieldKey, datastore}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.named.NamedManager
@@ -30,15 +30,13 @@ import play.twirl.api.Html
 
 import javax.inject._
 
-class LogicAlarmEditorController @Inject()(val controllerComponents: ControllerComponents,
-                                           mappedValues: DataStore
+class LogicAlarmEditorController @Inject()(val controllerComponents: ControllerComponents, dataStore: DataStore
                                      )(implicit namedManager: NamedManager)
   extends BaseController with LazyLogging {
-//todo needs to be like Schedule and macro edit as a single object.
 
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      val alarmFields: Seq[FieldEntry] = mappedValues(KeyKind.logicAlarmKey)
+      val alarmFields: Seq[FieldEntry] = dataStore(KeyKind.logicAlarmKey)
       val map: Map[FieldKey, FieldEntry] = alarmFields
         .map(fieldEntry => fieldEntry.fieldKey -> fieldEntry).
         toMap
@@ -81,9 +79,8 @@ class LogicAlarmEditorController @Inject()(val controllerComponents: ControllerC
     implicit request: Request[AnyContent] =>
       val kv: Map[String, String] = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }.filterNot(_._1 == "save")
 
-      mappedValues(kv.map { case (name, formValue) =>
-        val fieldKey = FieldKey.fromParam(name)
-        datastore.NewCandidate(fieldKey, formValue)
+      dataStore.simpleCandidate(kv.map { case (name, formValue) =>
+        FormValue(name, formValue)
       })
 
       Redirect(routes.LogicAlarmEditorController.index())

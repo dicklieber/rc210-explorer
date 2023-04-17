@@ -19,8 +19,8 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
-import net.wa9nnn.rc210.data.datastore.{DataStore, NewCandidate}
-import net.wa9nnn.rc210.data.{FieldKey, datastore}
+import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.datastore.{DataStore, FormValue}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.key.KeyFactory.MeterKey
@@ -30,18 +30,18 @@ import play.api.mvc._
 import javax.inject._
 
 class MeterEditorController @Inject()(val controllerComponents: ControllerComponents,
-                                      mappedValues: DataStore
+                                      dataStore: DataStore
                                      )(implicit namedManager: NamedManager)
   extends BaseController with LazyLogging {
 
 
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      val alarmFields: Seq[FieldEntry] = mappedValues(KeyKind.meterKey)
-      val map: Map[FieldKey, FieldEntry] = alarmFields
+      val meterFields: Seq[FieldEntry] = dataStore(KeyKind.meterKey)
+      val map: Map[FieldKey, FieldEntry] = meterFields
         .map(fieldEntry => fieldEntry.fieldKey -> fieldEntry).
         toMap
-      val fieldNames: Seq[String] = alarmFields.foldLeft(Set.empty[String]) { case (set: Set[String], fieldEntry) =>
+      val fieldNames: Seq[String] = meterFields.foldLeft(Set.empty[String]) { case (set: Set[String], fieldEntry) =>
         set + fieldEntry.fieldKey.fieldName
       }.toSeq
         .sorted
@@ -54,7 +54,6 @@ class MeterEditorController @Inject()(val controllerComponents: ControllerCompon
         } yield {
           map(FieldKey(fieldName, KeyFactory(KeyKind.meterKey, number))).toCell
         }
-
         Row(fieldName, cells: _*)
       }
 
@@ -78,9 +77,8 @@ class MeterEditorController @Inject()(val controllerComponents: ControllerCompon
     implicit request: Request[AnyContent] =>
       val kv: Map[String, String] = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }.filterNot(_._1 == "save")
 
-      mappedValues(kv.map { case (name, formValue) =>
-        val fieldKey = FieldKey.fromParam(name)
-        datastore.NewCandidate(fieldKey, formValue)
+      dataStore.simpleCandidate(kv.map { case (name, formValue) =>
+        FormValue(name, formValue)
       })
 
       Redirect(routes.MeterEditorController.index())

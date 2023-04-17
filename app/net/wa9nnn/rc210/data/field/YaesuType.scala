@@ -30,7 +30,7 @@ case class YaesuType(value: String = selectOptions.head.display) extends FieldSe
   override val selectOptions: Seq[SelectOption] = YaesuType.selectOptions
   override val name: String = DayOfWeek.name
 
-  override def update(paramValue: String): FieldValue = {
+  override def update(paramValue: String): YaesuType = {
     YaesuType(paramValue)
   }
 }

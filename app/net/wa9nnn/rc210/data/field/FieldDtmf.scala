@@ -33,7 +33,7 @@ case class FieldDtmf(value: String) extends SimpleFieldValue {
 
   override def display: String = value
 
-  override def update(paramValue: String): FieldValue = {
+  override def update(paramValue: String): FieldDtmf = {
     FieldDtmf(paramValue)
   }
   override def toJsonValue: JsValue = Json.toJson(this)

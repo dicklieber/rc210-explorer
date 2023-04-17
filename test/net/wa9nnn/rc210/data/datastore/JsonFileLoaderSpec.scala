@@ -36,7 +36,7 @@ class JsonFileLoaderSpec extends WithTestConfiguration {
       val mfl = new MemoryFileLoader(fieldDefinitions)
       val seq = mfl.load(datFile.memoryFile)
 
-      val dataStore = new DataStore()
+      val dataStore = new DataStore(datFile)
       dataStore.load(seq)
       dataStore.all must haveLength(301)
 

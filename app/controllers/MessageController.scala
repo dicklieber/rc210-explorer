@@ -17,12 +17,10 @@
 
 package controllers
 
-import com.wa9nnn.util.tableui.{Row, Table}
-import net.wa9nnn.rc210.data.{Dtmf, FieldKey}
+import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
-import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.message.Message
 import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.key.KeyFactory._
@@ -30,7 +28,6 @@ import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
-import scala.util.Try
 import scala.util.matching.Regex
 
 @Singleton()
@@ -68,12 +65,12 @@ class MessageController @Inject()(dataStore: DataStore
 
     val strings: Array[String] = formData("words").head.split(",").filter(_.nonEmpty)
 
-    val words: Seq[Int] = strings.map {s =>
-            s.toInt
-          }
+    val words: Seq[Int] = strings.map { s =>
+      s.toInt
+    }.toIndexedSeq
 
     val newMacroNode = Message(key, words)
-    dataStore(newMacroNode.fieldKey, newMacroNode)
+    dataStore.complexCandidate(newMacroNode)
     Redirect(routes.MessageController.index())
   }
 }

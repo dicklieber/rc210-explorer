@@ -37,7 +37,7 @@ case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue {
 
   override def display: String = value.map(_.toString).mkString(" ")
 
-  override def update(paramValue: String): FieldValue = {
+  override def update(paramValue: String): Field2Numbers = {
     val candidate: Seq[Int] = paramValue.split(" ")
       .map(_.toInt)
       .toSeq

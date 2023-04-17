@@ -85,7 +85,6 @@ class NamedManager @Inject()(@Named("vizRc210.namedDataFile") namedFilePath: Str
 
   def get(key: Key): Option[String] = map.get(key)
 
-
   private def save(): Unit = {
     val namedData = NamedData(map.map { case (key, str) =>
       NamedKey(key, str)

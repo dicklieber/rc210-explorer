@@ -31,7 +31,7 @@ case class DayOfWeek(value: String = options.head.display) extends FieldSelect[S
   override val selectOptions: Seq[SelectOption] = options
   override val name: String = DayOfWeek.name
 
-  override def update(paramValue: String): FieldValue = {
+  override def update(paramValue: String): DayOfWeek = {
     DayOfWeek(paramValue)
   }
 }

@@ -19,7 +19,7 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
-import net.wa9nnn.rc210.data.datastore.{DataStore, NewCandidate}
+import net.wa9nnn.rc210.data.datastore.{DataStore, FormValue}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.data.timers.Timer
@@ -31,13 +31,13 @@ import play.api.mvc._
 import javax.inject._
 
 class TimerEditorController @Inject()(val controllerComponents: ControllerComponents,
-                                      mappedValues: DataStore
+                                      datastore: DataStore
                                      )(implicit namedManager: NamedManager)
   extends BaseController with LazyLogging {
 
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      val timerFields: Seq[FieldEntry] = mappedValues(KeyKind.timerKey)
+      val timerFields: Seq[FieldEntry] = datastore(KeyKind.timerKey)
 
       val rows: Seq[Row] = timerFields.map { fieldEntry =>
         val value: Timer = fieldEntry.value
@@ -52,12 +52,14 @@ class TimerEditorController @Inject()(val controllerComponents: ControllerCompon
   def save(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
       val kv: Map[String, String] = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }.filterNot(_._1 == "save")
-//todo handle name
-      mappedValues(kv.map { case (name, formValue) =>
-        val fieldKey = FieldKey.fromParam(name)
-        datastore.NewCandidate(fieldKey, formValue)
-      })
-
-      Redirect(routes.LogicAlarmEditorController.index())
+////todo handle name
+//      mappedValues(kv.map { case (name, formValue) =>
+//        val fieldKey = FieldKey.fromParam(name)
+//        Timer()
+//        datastore.complexCandidate(timer)
+//      })
+//
+//      Redirect(routes.LogicAlarmEditorController.index())
+    throw new NotImplementedError() //todo
   }
 }

@@ -31,7 +31,7 @@ case class MuteDigit(value: String = selectOptions.head.display) extends FieldSe
   override val selectOptions: Seq[SelectOption] = MuteDigit.selectOptions
   override val name: String = DayOfWeek.name
 
-  override def update(paramValue: String): FieldValue = {
+  override def update(paramValue: String): MuteDigit = {
     MuteDigit(paramValue)
   }
 

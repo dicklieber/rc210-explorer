@@ -18,7 +18,7 @@
 package controllers
 
 import com.wa9nnn.util.tableui.{Header, Row, Table}
-import net.wa9nnn.rc210.data.datastore.{DataStore, NewCandidate}
+import net.wa9nnn.rc210.data.datastore.{DataStore, FormValue}
 import net.wa9nnn.rc210.data.{FieldKey, datastore}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.key.KeyKind
@@ -26,14 +26,15 @@ import play.api.mvc._
 
 import javax.inject.Inject
 
-class CommonEditorController @Inject()(implicit val controllerComponents: ControllerComponents, mappedValues: DataStore) extends BaseController {
+class CommonEditorController @Inject()(implicit val controllerComponents: ControllerComponents, dataStore: DataStore)
+  extends BaseController {
 
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      val commonFields: Seq[FieldEntry] = mappedValues(KeyKind.commonKey)
+      val commonFields: Seq[FieldEntry] = dataStore(KeyKind.commonKey)
 
 
-      val rows: Seq[Row] = commonFields.map {fieldEntry =>
+      val rows: Seq[Row] = commonFields.map { fieldEntry =>
         // Can't use fieldEntry's toRow because we just want the field name not key, as they are all commonKey1
         Row(
           fieldEntry.fieldKey.fieldName,
@@ -51,9 +52,8 @@ class CommonEditorController @Inject()(implicit val controllerComponents: Contro
     implicit request: Request[AnyContent] =>
       val kv: Map[String, String] = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }.filterNot(_._1 == "save")
 
-      mappedValues(kv.map { case (name, formValue) =>
-        val fieldKey = FieldKey.fromParam(name)
-        datastore.NewCandidate(fieldKey, formValue)
+      dataStore.simpleCandidate(kv.map { case (name, formValue) =>
+        FormValue(name, formValue)
       })
 
       Redirect(routes.CommonEditorController.index())

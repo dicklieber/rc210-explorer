@@ -28,7 +28,7 @@ import play.api.libs.json.{Format, JsResult, JsSuccess, JsValue}
  */
 case class MonthOfYear(value: String = options.head.display) extends FieldSelect[String] {
 
-  override def update(newValue: String): FieldValue = {
+  override def update(newValue: String): MonthOfYear = {
     MonthOfYear(newValue)
   }
 

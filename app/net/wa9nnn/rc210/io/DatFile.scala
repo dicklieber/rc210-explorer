@@ -35,7 +35,8 @@ class DatFile @Inject()(config: Config) extends LazyLogging {
   val memoryFilePath: Path = config.get[Path]("vizRc210.memoryFile").value
   val memoryFile: URL = memoryFilePath.toUri.toURL
   private val historyDir: Path = config.get[Path]("vizRc210.historyDir").value
-  val dataStoreFile: URL = config.get[Path]("vizRc210.dataStoreFile").value.toUri.toURL
+  val dataStsorePath: Path = config.get[Path]("vizRc210.dataStoreFile").value
+  val dataStoreFile: URL = dataStsorePath.toUri.toURL
 
 
   def apply(rc210Data: RC210Data): Memory = {
