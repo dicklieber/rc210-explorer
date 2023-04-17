@@ -1,0 +1,63 @@
+@import net.wa9nnn.rc210.data.message.Message
+@import net.wa9nnn.rc210.data.named.NamedSource
+@import net.wa9nnn.rc210.data.vocabulary.Words
+@import net.wa9nnn.rc210.ui.Tabs
+@import views.html.helper.form
+
+@import scala.util.Random
+@(message: Message, name: String)(implicit namedSource: NamedSource, messagesProvider: MessagesProvider)
+
+@tabbedmain(Tabs.messagesTab) {
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+    <script src="@routes.Assets.versioned("javascripts/messageEditor.js")"></script>
+
+
+    @form(action = routes.MessageController.save(), Symbol("id") -> "messageForm") {
+        <input type="hidden" name="key" value="@message.key">
+        <input type="hidden" name="words" id="words">
+        <div class="row">
+            <div class="col col-md-auto border border-primary">
+                <h2>@message.key</h2>
+                <div><label for="name">Name: </label>
+                    <input id="name" name="name" value="@name">
+                </div>
+
+                <input class="btn btn-primary" type="submit" value="Save">
+            </div>
+            <div class="col col-md-auto border border-primary">
+                <h2>Current</h2>
+
+                <table id="currentWords" >
+                    @for(word <- message.words) {
+                        <tr id = "@Random.nextInt()" class="wordDrop wordDrag currentWords" data-word="@word">
+                            <td class="text-nowrap">@Words(word).string<td>
+                        </tr>
+                    }
+                    <tr id="droplast" class="wordDrop" >
+                        <td colspan="2">--droplast--</td>
+                    </tr>
+
+                </table>
+                <div class="dropTrash">
+                    <i class="bi bi-trash3"></i>
+                </div>
+            </div>
+            <div class="col col-md-auto ">
+                <h2>Available Words</h2>
+                <div id="myDropdown" class="dropdown-content show wordList">
+                    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+                    <div>
+                        <table>
+                        @for(word <- Words.words) {
+                            <tr class="wordSource"  data-word="@word.id">
+                                <td class="text-nowrap">@word.string</td>
+                            </tr>
+                        }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

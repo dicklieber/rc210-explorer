@@ -18,7 +18,7 @@
 package controllers
 
 import com.wa9nnn.util.tableui.{Row, Table}
-import net.wa9nnn.rc210.data.Dtmf
+import net.wa9nnn.rc210.data.{Dtmf, FieldKey}
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
@@ -47,39 +47,34 @@ class MessageController @Inject()(dataStore: DataStore
 
   def edit(key: MessageKey): Action[AnyContent] = Action { implicit request =>
 
-    //    val fieldKey = FieldKey("Macro", key)
-    //    val maybeEntry: Option[FieldEntry] = dataStore(fieldKey)
-    //    maybeEntry match {
-    //      case Some(fieldEntry: FieldEntry) =>
-    //        val name = namedSource(key)
-    //        Ok(views.html.dat(fieldEntry.value, name))
-    //      case None =>
-    //        NotFound(s"No keyField: $fieldKey")
-    //    }
-    throw new NotImplementedError() //todo
+    val fieldKey = FieldKey("Message", key)
+    val maybeEntry: Option[FieldEntry] = dataStore(fieldKey)
+    maybeEntry match {
+      case Some(fieldEntry: FieldEntry) =>
+        val name = namedSource(key)
+        val value: Message = fieldEntry.value
+        Ok(views.html.messageEditor(value, name))
+
+      case None =>
+        NotFound(s"No keyField: $fieldKey")
+    }
   }
 
   def save(): Action[AnyContent] = Action { implicit request =>
     val formData: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
 
     val sKey = formData("key").head
-    val key: MacroKey = KeyFactory(sKey)
-    val dtmf: Option[Dtmf] = formData("dtmf").map(Dtmf(_)).headOption
+    val key: MessageKey = KeyFactory(sKey)
 
-    val functions: Seq[FunctionKey] = formData("functionIds")
-      .head
-      .split(",").toIndexedSeq
-      .flatMap { sfunction =>
-        Try {
-          val f: FunctionKey = KeyFactory(sfunction)
-          f
-        }.toOption
-      }
+    val strings: Array[String] = formData("words").head.split(",").filter(_.nonEmpty)
 
+    val words: Seq[Int] = strings.map {s =>
+            s.toInt
+          }
 
-    val newMacroNode = MacroNode(key, functions, dtmf)
+    val newMacroNode = Message(key, words)
     dataStore(newMacroNode.fieldKey, newMacroNode)
-    Redirect(routes.MacroNodeController.index())
+    Redirect(routes.MessageController.index())
   }
 }
 

@@ -51,7 +51,7 @@ object MesssageExtractor extends ComplexExtractor with LazyLogging {
   /**
    * for various things e.g. parser name.
    */
-  override val name: String = "Phrase"
+  override val name: String = "Message"
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[Message]
 
