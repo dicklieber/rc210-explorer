@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.data.datastore
 
+import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, SimpleFieldValue}
 import net.wa9nnn.rc210.io.DatFile
@@ -34,7 +35,7 @@ import scala.collection.immutable.Seq
  * Until loaded all functions that return Seq[FieldEntry] will return Seq.empty.
  */
 @Singleton
-class DataStore @Inject()(datFile: DatFile) {
+class DataStore @Inject()(datFile: DatFile) extends LazyLogging{
   private var map: TrieMap[FieldKey, FieldEntry] = new TrieMap[FieldKey, FieldEntry]
 
   /**
@@ -115,13 +116,6 @@ class DataStore @Inject()(datFile: DatFile) {
     map.put(fieldKey, entry.setCandidate(value))
   }
 
-  //  def setCandidate(fieldKey: FieldKey, fieldContents: FieldValue): Unit = {
-  //    val entry: FieldEntry = map.getOrElse(fieldKey, throw new IllegalArgumentException(s"No value for $fieldKey"))
-  //    map.put(fieldKey, entry.copy(candidate = Option(fieldContents)))
-  //    save()
-  //  }
-
-
   def simpleCandidate(newCandidate: FormValue): Unit =
     simpleCandidate(Seq(newCandidate))
 
@@ -149,19 +143,12 @@ class DataStore @Inject()(datFile: DatFile) {
     save()
   }
 
-  //  def apply[K <: Key](fields: Seq[ComplexFieldValue[K]]): Unit = {
-  //    fields.foreach { fieldWithFieldKey =>
-  //      apply(fieldWithFieldKey.fieldKey, fieldWithFieldKey)
-  //    }
-  //    save()
-  //  }
-
-
   private def save(): Unit = {
     Files.createDirectories(datFile.dataStsorePath.getParent)
     val jsObject = Json.toJson(this)
     val sJson = Json.prettyPrint(jsObject)
     Files.writeString(datFile.dataStsorePath, sJson)
+    logger.debug("Saved DataStore to {}", datFile.dataStsorePath)
   }
 }
 
