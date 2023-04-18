@@ -17,31 +17,13 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.key.KeyFactory.Key
+import org.specs2.mutable.Specification
 
-/**
- * Needed to render a [[FieldValue]] in a [[com.wa9nnn.util.tableui.Cell]] or an html string.
- */
-trait RenderMetadata {
+class FieldEntrySpec extends Specification {
 
-  def param: String
-
-  def prompt: String = ""
-
-  def units: String = ""
-
-}
-
-/**
- * Helper to quickly create a [[RenderMetdata]]
- */
-object RenderMetadata {
-  def apply(name: String, prompt: String = "", units: String = "")(implicit key: Key): RenderMetadata = {
-    new RMD(name, prompt, units)
+  "FieldEntrySpec" should {
+    "candidate" in {
+      ok
+    }
   }
-}
-
-case class RMD(name: String, override val prompt: String = "", override val units: String = "")(implicit key: Key) extends RenderMetadata {
-  override def param: String = FieldKey(name, key).param
 }

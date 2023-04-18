@@ -67,7 +67,11 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
   val param: String = fieldKey.param
   override val prompt: String = fieldDefinition.tooltip
 
-  def toCommand: String = fieldValue.toCommand(this)
+  def toCommand: String = {
+    candidate
+      .getOrElse(throw new IllegalStateException(s"No candidate for: $fieldKey!"))
+      .toCommand(this)
+  }
 
   def toHtml: String = {
     value.toHtmlField(this)

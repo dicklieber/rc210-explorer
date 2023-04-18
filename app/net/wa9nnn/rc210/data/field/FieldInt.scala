@@ -33,13 +33,21 @@ case class FieldInt(value: Int) extends SimpleFieldValue {
   }
 
 
-  override def toCommand(fieldEntry: FieldEntry): String = ???
+  override def toCommand(fieldEntry: FieldEntry): String = {
+    val fieldKey = fieldEntry.fieldKey
+    val key = fieldKey.key
+
+    fieldEntry.fieldDefinition.template
+      .replaceAll("n", key.number.toString)
+      .replaceAll("v", value.toString)
+  }
 
   override def display: String = value.toString
 
   override def update(paramValue: String): FieldInt = {
     FieldInt(paramValue.toInt)
   }
+
   override def toJsonValue: JsValue = Json.toJson(this)
 
 }
@@ -60,7 +68,7 @@ object FieldInt extends SimpleExtractor {
     override def writes(o: FieldInt): JsValue = Json.toJson(o.value)
   }
 
-  override def parse(jsValue: JsValue): FieldValue =  new FieldInt(jsValue.as[Int])
+  override def parse(jsValue: JsValue): FieldValue = new FieldInt(jsValue.as[Int])
 
   override val name: String = "FieldInt"
 }

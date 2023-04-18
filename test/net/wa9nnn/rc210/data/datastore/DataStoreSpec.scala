@@ -38,6 +38,12 @@ class DataStoreSpec extends WithTestConfiguration {
       Files.exists(datFile.dataStsorePath) must beFalse
       dataStore.update(Seq(fieldEntry))
       Files.exists(datFile.dataStsorePath) must beTrue
+    }
+
+    "candidates" >> {
+      val datFile = new DatFile(config)
+      val dataStore = new DataStore(datFile)
+      pending
 
     }
   }
