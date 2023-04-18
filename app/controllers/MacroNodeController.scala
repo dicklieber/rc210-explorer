@@ -84,4 +84,4 @@ object MacroNodeController {
   val r: Regex = """[^\d]*(\d*)""".r
 }
 
-case class MacroEdit(macroNode: MacroNode, name: String)
+

@@ -29,7 +29,7 @@ object Dtmf {
     override def reads(json: JsValue): JsResult[Dtmf] = {
 
       try {
-        JsSuccess(Dtmf(json.toString()))
+        JsSuccess(Dtmf(json.as[String]))
       }
       catch {
         case e: IllegalArgumentException => JsError(e.getMessage)
