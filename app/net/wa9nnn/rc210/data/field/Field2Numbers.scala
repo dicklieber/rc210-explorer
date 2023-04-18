@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui.Cell
+import net.wa9nnn.rc210.key.KeyFactory
 import play.api.libs.json._
 import views.html.fieldString
 
@@ -26,8 +27,12 @@ case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue {
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommand(fieldEntry: FieldEntry): String = ???
-
+  override def toCommand(fieldEntry: FieldEntry): String = {
+    val fieldKey = fieldEntry.fieldKey
+    val key: KeyFactory.Key = fieldKey.key
+    key.replaceN(fieldEntry.fieldDefinition.template)
+      .replaceAll("v", value.toString) //todo
+  }
 
   override def toHtmlField(renderMetadata: RenderMetadata): String = {
     fieldString(display, renderMetadata).toString()

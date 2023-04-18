@@ -40,6 +40,7 @@ object Tabs {
   val timersTab: Tab = Tab("Timers", routes.TimerEditorController.index().url, "Timer settings.")
   val rc210Tab: Tab = Tab("RC-210", routes.IOController.listSerialPorts().url, "RC-210 Download.")
   val fileUpload: Tab = Tab("Upload", routes.DataStoreController.upload.url, "Upload a saved JSON file.")
+  val changes: Tab = Tab("Changes", routes.CandidateController.index.url, "Pending changes that need to be sent to the RC-210.")
 
 
   val tabs: Seq[Tab] = Seq(
@@ -52,7 +53,8 @@ object Tabs {
     portsTab,
     schedulesTab,
     timersTab,
-    rc210Tab
+    rc210Tab,
+    changes,
     //    Tab(KeyKind.dtmfMacroKey),
     //    Tab(KeyKind.functionKey),
     //    Tab(KeyKind.messageMacroKey),

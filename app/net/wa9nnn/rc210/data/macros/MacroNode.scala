@@ -30,7 +30,7 @@ case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dt
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommand(fieldEntry: FieldEntry): String = ???
+  override def toCommand(fieldEntry: FieldEntry): String = "//todo"
 
   override def macroToRun: MacroKey = ???
 
@@ -44,7 +44,7 @@ case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dt
 
   override val fieldName: String = "Macro"
 
-  override def display: String = functions.map(_.toString).mkString(" ")
+  override def display: String = functions.map(_.number).mkString(" ")
 
   override def toRow()(implicit namedSource: NamedSource): Row = {
     throw new NotImplementedError() //todo

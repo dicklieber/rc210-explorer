@@ -35,7 +35,7 @@ case class CourtesyTone(override val key: CourtesyToneKey, segments: Seq[Segment
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommand(fieldEntry: FieldEntry): String = ???
+  override def toCommand(fieldEntry: FieldEntry): String = "//todo"
 
   /**
    *

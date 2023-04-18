@@ -98,6 +98,8 @@ class DataStore @Inject()(datFile: DatFile) extends LazyLogging{
       .sortBy(_.fieldKey.fieldName)
   }
 
+  def candidates:Seq[FieldEntry] = all.filter(_.candidate.nonEmpty)
+
   /**
    * Moves the  candidate to the fieldValue
    * This should be invoked after successfully sending the candidate to the RC-210.

@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.data.field
 
+import net.wa9nnn.rc210.key.KeyFactory
 import play.api.libs.json._
 import views.html.fieldNumber
 
@@ -35,10 +36,9 @@ case class FieldInt(value: Int) extends SimpleFieldValue {
 
   override def toCommand(fieldEntry: FieldEntry): String = {
     val fieldKey = fieldEntry.fieldKey
-    val key = fieldKey.key
+    val key: KeyFactory.Key = fieldKey.key
 
-    fieldEntry.fieldDefinition.template
-      .replaceAll("n", key.number.toString)
+    key.replaceN(fieldEntry.fieldDefinition.template)
       .replaceAll("v", value.toString)
   }
 

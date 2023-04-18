@@ -106,6 +106,11 @@ object KeyFactory {
   lazy val defaultMacroKey: MacroKey = apply(KeyKind.macroKey, 1)
 
 
+  /**
+   *
+   * @param kind metadata about a kind (or flavor of a [[Key]].
+   * @param number
+   */
   sealed abstract class Key(val kind: KeyKind, val number: Int) extends CellProvider with Ordered[Key] {
 
     val name: String = kind.toString
@@ -114,8 +119,21 @@ object KeyFactory {
 
     override val toString: String = s"$name$number"
 
+
     override def toCell: Cell = Cell(toString)
       .withCssClass(kind.toString)
+
+
+    /**
+     * Replace's 'n' in the template with the number (usually a port number).
+     *
+     * @param template in
+     * @return with 'n' replaced by the port number.
+     */
+    def replaceN(template: String): String = {
+      template.replaceAll("n", number.toString)
+    }
+
 
     override def compare(that: Key): Int = {
       var ret = kind compareTo that.kind

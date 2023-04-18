@@ -44,7 +44,7 @@ case class Timer(key: TimerKey, seconds: FieldInt, macroSelect: MacroSelect) ext
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommand(fieldEntry: FieldEntry): String = ???
+  override def toCommand(fieldEntry: FieldEntry): String = "//todo"
 
   override def toJsonValue: JsValue = Json.toJson(this)
 }

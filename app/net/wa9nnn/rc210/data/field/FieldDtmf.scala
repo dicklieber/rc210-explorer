@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.data.field
 
+import net.wa9nnn.rc210.key.KeyFactory
 import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue, Json}
 import views.html.fieldDtmf
 
@@ -29,7 +30,13 @@ case class FieldDtmf(value: String) extends SimpleFieldValue {
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommand(fieldEntry: FieldEntry): String = ???
+  override def toCommand(fieldEntry: FieldEntry): String = {
+    val fieldKey = fieldEntry.fieldKey
+    val key: KeyFactory.Key = fieldKey.key
+    key.replaceN(fieldEntry.fieldDefinition.template)
+      .replaceAll("v", value) //todo probably not right.
+  }
+
 
   override def display: String = value
 

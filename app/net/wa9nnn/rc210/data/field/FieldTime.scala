@@ -19,6 +19,7 @@ package net.wa9nnn.rc210.data.field
 
 import com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase
 import net.wa9nnn.rc210.data.field
+import net.wa9nnn.rc210.key.KeyFactory
 import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue, Json}
 
 import java.time.LocalTime
@@ -32,7 +33,16 @@ case class FieldTime(value: LocalTime = LocalTime.MIN) extends SimpleFieldValue 
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommand(fieldEntry: FieldEntry): String = ???
+  override def toCommand(fieldEntry: FieldEntry): String = {
+    val fieldKey = fieldEntry.fieldKey
+    val key: KeyFactory.Key = fieldKey.key
+    val minute = value.getMinute
+    val hour = value.getHour
+    val timePiece = f"$hour%02d*$minute%02d"
+    key.replaceN(fieldEntry.fieldDefinition.template)
+      .replaceAll("v", timePiece)
+  }
+
 
   override def display: String = value.toString
 

@@ -55,7 +55,7 @@ class FieldDefinitions @Inject()() {
     SimpleField(73, "DTMF Require Tone", portKey, "n17b", FieldBoolean),
     SimpleField(76, "Unlock", portKey, "* 9 0 0 0 S", FieldDtmf) max 8,
     SimpleField(103, "Speech ID Override", portKey, "n20b", FieldBoolean),
-    SimpleField(118, "CWS Speed", portKey, "n*8000b", FieldInt) min 5 max 22 units "wpm",
+    SimpleField(118, "CWS Speed", portKey, "n*8000v", FieldInt) min 5 max 22 units "wpm",
     SimpleField(136, "CTCSS Decode", portKey, "n112b", FieldBoolean),
     SimpleField(139, "Monitor Mix", portKey, "n119b", FieldBoolean),
     //AuxAudioTimer - 142-147 //todo how does this match up with the macro to run?

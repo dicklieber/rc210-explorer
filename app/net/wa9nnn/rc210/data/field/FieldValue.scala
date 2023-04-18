@@ -86,7 +86,7 @@ trait ComplexFieldValue[K <: Key] extends FieldValue {
    * @param fieldEntry all the metadata.
    * @return html
    */
-  override def toHtmlField(renderMetadata: RenderMetadata): String = ???
+  override def toHtmlField(renderMetadata: RenderMetadata): String = "//todo"
 
   def toRow()(implicit namedSource: NamedSource): Row
 }
