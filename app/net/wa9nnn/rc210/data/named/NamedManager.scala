@@ -29,9 +29,9 @@ import java.nio.file.{Files, Path, Paths}
 import javax.inject.{Inject, Named, Singleton}
 
 trait NamedSource {
-  def apply(key: Key): String
+  def nameForKey(key: Key): String
 
-  def get(key: Key): Option[String]
+  def getName(key: Key): Option[String]
 
 }
 
@@ -56,7 +56,7 @@ class NamedManager @Inject()(@Named("vizRc210.namedDataFile") namedFilePath: Str
   def size: Int = map.size
 
 
-  override def apply(key: Key): String = map.getOrElse(key, key.toString)
+  override def nameForKey(key: Key): String = map.getOrElse(key, key.toString)
 
   def keysForKeyKind(keyKind: KeyKind): Seq[NamedKey] = {
     map
@@ -86,7 +86,7 @@ class NamedManager @Inject()(@Named("vizRc210.namedDataFile") namedFilePath: Str
     save()
   }
 
-  def get(key: Key): Option[String] = map.get(key)
+  def getName(key: Key): Option[String] = map.get(key)
 
   private def save(): Unit = {
     val namedData = NamedData(map.map { case (key, str) =>

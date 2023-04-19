@@ -26,7 +26,7 @@
                     onclick="window.location.href='@routes.MacroNodeController.edit(macroNode.key.asInstanceOf[MacroKey])'"></button>
                 </td>
                 <td title="@macroNode.key.toString">
-                @namedSource(macroNode.key)
+                @namedSource.nameForKey(macroNode.key)
                 </td>
                 <td class="text-end">
                     @macroNode.dtmf

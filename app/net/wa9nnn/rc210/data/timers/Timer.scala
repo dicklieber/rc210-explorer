@@ -29,7 +29,6 @@ case class Timer(key: TimerKey, seconds: FieldInt, macroSelect: MacroSelect) ext
   implicit val k = key
 
   override def toRow()(implicit namedSource: NamedSource): Row = {
-    val keyName = namedSource.get(key).getOrElse("")
     val name: Cell = key.namedCell()
 
     Row(

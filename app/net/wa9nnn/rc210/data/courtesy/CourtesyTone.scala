@@ -23,8 +23,8 @@ import net.wa9nnn.rc210.data.courtesy.CourtesyTone.{cell, cellSpan3}
 import net.wa9nnn.rc210.data.field._
 import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey
-import play.api.libs.json.{JsValue, Json, OFormat}
 import net.wa9nnn.rc210.key.KeyFormats._
+import play.api.libs.json.{JsValue, Json, OFormat}
 
 //noinspection ZeroIndexToHead
 case class CourtesyTone(override val key: CourtesyToneKey, segments: Seq[Segment]) extends ComplexFieldValue[CourtesyToneKey] {
@@ -50,7 +50,6 @@ case class CourtesyTone(override val key: CourtesyToneKey, segments: Seq[Segment
   }
 
   def rows()(implicit namedSource: NamedSource): Seq[Row] = {
-    val name: String = namedSource.get(key).getOrElse("")
     val nameCell: Cell =key.namedCell(CtSegmentKey("name", 99).param)
       .withRowSpan(3)
 

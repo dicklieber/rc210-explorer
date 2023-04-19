@@ -23,7 +23,7 @@
                             onclick="window.location.href = '@routes.MessageController.edit(message.key)'"></button>
                         </td>
                         <td title="@message.key.toString">
-                        @namedSource(message.key)
+                        @namedSource.nameForKey(message.key)
                         </td>
                         <td>
                         @message.display

@@ -47,7 +47,7 @@ class NamedController @Inject()(implicit val controllerComponents: ControllerCom
     val keys: Seq[Key] = KeyFactory(selectedKeyKind)
     val namedKeys: Seq[NamedKey] = keys
       .map { key =>
-        NamedKey(key, namedManager.get(key).getOrElse(""))
+        NamedKey(key, namedManager.getName(key).getOrElse(""))
       }
     Ok(views.html.named(Option(selectedKeyKind), namedKeys))
   }

@@ -62,7 +62,7 @@ class LogicAlarmEditorController @Inject()(val controllerComponents: ControllerC
       val colHeaders: Seq[Cell] = for {
         alarmKey <- KeyFactory[LogicAlarmKey](KeyKind.logicAlarmKey)
       } yield
-        namedManager.get(alarmKey) match {
+        namedManager.getName(alarmKey) match {
           case Some(value) =>
             Cell(value)
               .withToolTip(s"Alarm ${alarmKey.number}")

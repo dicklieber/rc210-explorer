@@ -51,7 +51,7 @@ class MacroNodeController @Inject()(dataStore: DataStore
     val maybeEntry: Option[FieldEntry] = dataStore(fieldKey)
     maybeEntry match {
       case Some(fieldEntry: FieldEntry) =>
-        val name = namedSource(key)
+        val name = namedSource.nameForKey(key)
         Ok(views.html.macroEditor(fieldEntry.value, name))
       case None =>
         NotFound(s"No keyField: $fieldKey")

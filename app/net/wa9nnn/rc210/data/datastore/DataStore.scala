@@ -20,6 +20,7 @@ package net.wa9nnn.rc210.data.datastore
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, SimpleFieldValue}
+import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.io.DatFile
 import net.wa9nnn.rc210.key.KeyFactory.Key
 import net.wa9nnn.rc210.key.KeyKind
@@ -35,7 +36,7 @@ import scala.collection.immutable.Seq
  * Until loaded all functions that return Seq[FieldEntry] will return Seq.empty.
  */
 @Singleton
-class DataStore @Inject()(datFile: DatFile) extends LazyLogging{
+class DataStore @Inject()(datFile: DatFile) extends  LazyLogging{
   private var map: TrieMap[FieldKey, FieldEntry] = new TrieMap[FieldKey, FieldEntry]
 
   /**

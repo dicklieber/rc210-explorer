@@ -48,7 +48,7 @@ class MessageController @Inject()(dataStore: DataStore
     val maybeEntry: Option[FieldEntry] = dataStore(fieldKey)
     maybeEntry match {
       case Some(fieldEntry: FieldEntry) =>
-        val name = namedSource(key)
+        val name = namedSource.nameForKey(key)
         val value: Message = fieldEntry.value
         Ok(views.html.messageEditor(value, name))
 

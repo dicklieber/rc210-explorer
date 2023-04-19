@@ -60,7 +60,7 @@ class MeterEditorController @Inject()(val controllerComponents: ControllerCompon
       val colHeaders: Seq[Cell] = for {
         alarmKey <- KeyFactory[MeterKey](KeyKind.meterKey)
       } yield
-        namedManager.get(alarmKey) match {
+        namedManager.getName(alarmKey) match {
           case Some(value) =>
             Cell(value)
               .withToolTip(s"Alarm ${alarmKey.number}")

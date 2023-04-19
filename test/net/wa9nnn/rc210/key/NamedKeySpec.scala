@@ -31,8 +31,8 @@ class NamedKeySpec extends Specification with BeforeAll with Mockito {
     val namedSource = mock[NamedSource]
 
     Key.setNamedSource(namedSource)
-    namedSource.get(portKey1).returns(Some("Harpo"))
-    namedSource.get(portKey2).returns(None)
+    namedSource.getName(portKey1).returns(Some("Harpo"))
+    namedSource.getName(portKey2).returns(None)
 
   }
 
