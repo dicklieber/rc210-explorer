@@ -21,7 +21,7 @@ import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.datastore.{DataStore, FormValue}
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.data.named.NamedManager
+import net.wa9nnn.rc210.data.named.{NamedKey, NamedManager}
 import net.wa9nnn.rc210.key.KeyFactory.PortKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.mvc._
@@ -33,11 +33,11 @@ class PortsEditorController @Inject()(implicit val controllerComponents: Control
 
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      val portFields: Seq[FieldEntry] = dataStore(KeyKind.portKey)
-      val map: Map[FieldKey, FieldEntry] = portFields
+      val portEntries: Seq[FieldEntry] = dataStore(KeyKind.portKey)
+      val map: Map[FieldKey, FieldEntry] = portEntries
         .map(fieldEntry => fieldEntry.fieldKey -> fieldEntry).
         toMap
-      val fieldNames: Seq[String] = portFields.foldLeft(Set.empty[String]) { case (set: Set[String], fieldEntry) =>
+      val fieldNames: Seq[String] = portEntries.foldLeft(Set.empty[String]) { case (set: Set[String], fieldEntry) =>
         set + fieldEntry.fieldKey.fieldName
       }.toSeq
         .sorted
@@ -54,18 +54,16 @@ class PortsEditorController @Inject()(implicit val controllerComponents: Control
         Row(fieldName, cells: _*)
       }
 
+
       val colHeaders: Seq[Cell] = for {
         portKey <- KeyFactory[PortKey](KeyKind.portKey)
-      } yield
-        namedManager.get(portKey) match {
-          case Some(value) =>
-            Cell(value)
-              .withToolTip(s"Port ${portKey.number}")
+      } yield {
+        portKey.namedCell()
+      }
+      val namesRow = Row(colHeaders.prepended(Cell("")))
 
-          case None => Cell(portKey.toString)
-        }
-      val header = Header(s"Ports (${rows.length} values)", "Field" +: colHeaders: _*)
-      val table = Table(header, rows)
+      //      val header = Header(s"Ports (${rows.length} values)", "Field" +: colHeaders: _*)
+      val table = Table(Seq.empty, rows.prepended(namesRow))
 
       Ok(views.html.ports(table))
   }
@@ -74,8 +72,13 @@ class PortsEditorController @Inject()(implicit val controllerComponents: Control
     implicit request: Request[AnyContent] =>
       val kv: Map[String, String] = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }.filterNot(_._1 == "save")
 
-      dataStore.simpleCandidate(kv.map { case (name, formValue: String) =>
-        FormValue(name, formValue)
+      dataStore.simpleCandidate(kv.flatMap { case (name, formValue: String) =>
+        val fieldKey = FieldKey.fromParam(name)
+        if (fieldKey.fieldName == "name") {
+          namedManager.update(Seq(NamedKey(fieldKey.key, formValue)))
+          Seq.empty
+        } else
+          Seq(FormValue(name, formValue))
       })
       Redirect(routes.PortsEditorController.index())
   }

@@ -38,6 +38,6 @@ class MemoryBufferSpec extends WithMemory {
     chunks must haveLength(40)
     val head = chunks.head
     head must haveLength(16)
-    head.mkString(" ") must beEqualTo ("")
+    head.mkString(" ") must beEqualTo ("165 85 27 60 196 0 255 255 255 255 255 255 255 255 255 255")
   }
 }

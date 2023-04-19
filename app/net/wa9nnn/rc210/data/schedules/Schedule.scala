@@ -60,7 +60,7 @@ case class Schedule(override val key: ScheduleKey,
   def toRow()(implicit namedSource: NamedSource): Row = {
     implicit val k: ScheduleKey = key
     val keyName = namedSource.get(key).getOrElse("")
-    val name: Cell = Cell.rawHtml(views.html.fieldNamedKey(key, keyName, RenderMetadata("name")).toString())
+    val name: Cell = k.namedCell()
     val dow: Cell = dayOfWeek.toCell(RenderMetadata(DayOfWeek.name))
     val woy: Cell = Cell.rawHtml(monthOfYear.toHtmlField(RenderMetadata(MonthOfYear.name)))
     val localTime: Cell = time.toCell(RenderMetadata("Time"))

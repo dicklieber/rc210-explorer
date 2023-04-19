@@ -49,9 +49,12 @@ class NamedManager @Inject()(@Named("vizRc210.namedDataFile") namedFilePath: Str
 
   private val map = new TrieMap[Key, String]
 
-  def size: Int = map.size
 
   load()
+  Key.setNamedSource(this)
+
+  def size: Int = map.size
+
 
   override def apply(key: Key): String = map.getOrElse(key, key.toString)
 

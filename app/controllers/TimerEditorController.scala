@@ -20,15 +20,17 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.datastore.{DataStore, FormValue}
-import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.data.named.NamedManager
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldInt}
+import net.wa9nnn.rc210.data.named.{NamedKey, NamedManager}
 import net.wa9nnn.rc210.data.timers.Timer
 import net.wa9nnn.rc210.data.{FieldKey, datastore}
-import net.wa9nnn.rc210.key.KeyFactory.TimerKey
+import net.wa9nnn.rc210.key.KeyFactory.{Key, MacroKey, TimerKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.util.MacroSelect
 import play.api.mvc._
 
 import javax.inject._
+import scala.collection.immutable
 
 class TimerEditorController @Inject()(val controllerComponents: ControllerComponents,
                                       datastore: DataStore
@@ -43,7 +45,7 @@ class TimerEditorController @Inject()(val controllerComponents: ControllerCompon
         val value: Timer = fieldEntry.value
         value.toRow()
       }
-      val header = Header(s"Timers (${rows.length} values)", "Field", "Seconds", "Macro")
+      val header = Header(s"Timers (${rows.length} values)", "Timer", "Seconds", "Macro To Run")
       val table = Table(header, rows)
 
       Ok(views.html.timers(table))
@@ -51,15 +53,22 @@ class TimerEditorController @Inject()(val controllerComponents: ControllerCompon
 
   def save(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      val kv: Map[String, String] = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }.filterNot(_._1 == "save")
-////todo handle name
-//      mappedValues(kv.map { case (name, formValue) =>
-//        val fieldKey = FieldKey.fromParam(name)
-//        Timer()
-//        datastore.complexCandidate(timer)
-//      })
-//
-//      Redirect(routes.LogicAlarmEditorController.index())
-    throw new NotImplementedError() //todo
+      val timers: Iterable[Timer] = request.body.asFormUrlEncoded
+        .get
+        .filterNot(_._1 == "save")
+        .map { t => FieldKey.fromParam(t._1) -> t._2.head }
+        .groupBy(_._1.key)
+        .map { case (key: Key, values: Map[FieldKey, String]) =>
+          val valueMap = values.map { case (fk, value) =>
+            fk.fieldName -> value
+          }.toMap
+          val name = valueMap("name")
+          val seconds = FieldInt(valueMap("seconds").toInt)
+          val macrotoRun: MacroKey = KeyFactory.apply(valueMap("macro"))
+          val macroSelect = MacroSelect(macrotoRun)
+          Timer(key = key.asInstanceOf[TimerKey], seconds = seconds, macroSelect = macroSelect)
+        }
+        datastore.complexCandidate(timers)
+      Redirect(routes.TimerEditorController.index())
   }
 }

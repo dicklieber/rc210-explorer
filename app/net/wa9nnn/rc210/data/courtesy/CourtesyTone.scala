@@ -51,7 +51,7 @@ case class CourtesyTone(override val key: CourtesyToneKey, segments: Seq[Segment
 
   def rows()(implicit namedSource: NamedSource): Seq[Row] = {
     val name: String = namedSource.get(key).getOrElse("")
-    val nameCell: Cell = Cell.rawHtml(views.html.fieldNamedKey(key, name, CtSegmentKey("name", 99)(key)).toString())
+    val nameCell: Cell =key.namedCell(CtSegmentKey("name", 99).param)
       .withRowSpan(3)
 
     Seq(

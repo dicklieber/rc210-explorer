@@ -31,14 +31,14 @@ import javax.inject._
 import scala.collection.immutable
 
 class CourtesyToneEditorController @Inject()(val controllerComponents: ControllerComponents,
-                                             mappedValues: DataStore
+                                             dataStore: DataStore
                                             )(implicit namedManager: NamedManager)
   extends BaseController with LazyLogging {
 
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
 
-      val entries: Seq[FieldEntry] = mappedValues(KeyKind.courtesyToneKey)
+      val entries: Seq[FieldEntry] = dataStore(KeyKind.courtesyToneKey)
       val rows: Seq[Row] = entries.flatMap { fe =>
         val ct: CourtesyTone = fe.value
         ct.rows()
@@ -48,7 +48,7 @@ class CourtesyToneEditorController @Inject()(val controllerComponents: Controlle
 
   def save(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }
+    val r: Unit = dataStore.complexCandidate(request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }
         .filterNot(_._1 == "save")
         .map { case (sKey, value) => CtSegmentKey(sKey) -> value } // convert from string name to CtSegmentKeys
         .groupBy(_._1.ctKey)
@@ -64,7 +64,7 @@ class CourtesyToneEditorController @Inject()(val controllerComponents: Controlle
               Seq(Segment(valuesForSegement))
           }.toSeq
           CourtesyTone(key, segs)
-        }
+        }.toSeq)
 
       Redirect(routes.CourtesyToneEditorController.index())
   }

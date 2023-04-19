@@ -30,7 +30,7 @@ case class Timer(key: TimerKey, seconds: FieldInt, macroSelect: MacroSelect) ext
 
   override def toRow()(implicit namedSource: NamedSource): Row = {
     val keyName = namedSource.get(key).getOrElse("")
-    val name: Cell = Cell.rawHtml(views.html.fieldNamedKey(key, keyName, RenderMetadata("name")).toString())
+    val name: Cell = key.namedCell()
 
     Row(
       name,

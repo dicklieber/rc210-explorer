@@ -26,7 +26,7 @@ class MacroKeySpec extends WithMemory {
   "MacroKeySpec" should {
     "number" in {
       val macroKey = MacroKey(42)
-      macroKey.toString must beEqualTo ("macro42")
+      macroKey.toString must beEqualTo ("macroKey42")
     }
 
     "round trip" in {

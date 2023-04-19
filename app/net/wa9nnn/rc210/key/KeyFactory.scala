@@ -19,6 +19,9 @@ package net.wa9nnn.rc210.key
 
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
 import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.named.NamedSource
+import net.wa9nnn.rc210.key.KeyFactory.Key.namedSource
+import play.twirl.api.Html
 
 /**
  * All keys live here
@@ -123,6 +126,15 @@ object KeyFactory {
     override def toCell: Cell = Cell(toString)
       .withCssClass(kind.toString)
 
+    /**
+     * Display the Key. Number: <input>
+     * This can be placed in a [[com.wa9nnn.util.tableui.Row]].
+     * @param name for name attribute in <input>
+     */
+    def namedCell(param:String = fieldKey("name").param): Cell = {
+            val html: Html = views.html.fieldNamedKey(this, namedSource.get(this).getOrElse(""), param)
+            Cell.rawHtml(html.toString())
+    }
 
     /**
      * Replace's 'n' in the template with the number (usually a port number).
@@ -141,6 +153,17 @@ object KeyFactory {
         ret = number compareTo that.number
       ret
     }
+  }
+
+  object Key {
+    def namedSource: NamedSource = _namedSource.get
+
+    def setNamedSource(namedsource: NamedSource): Unit = {
+      if (_namedSource.isDefined) throw new IllegalStateException("NamedSource alrady set.")
+      _namedSource = Option(namedsource)
+    }
+
+    protected var _namedSource: Option[NamedSource] = None
   }
 
   case class PortKey protected(override val number: Int) extends Key(KeyKind.portKey, number)
