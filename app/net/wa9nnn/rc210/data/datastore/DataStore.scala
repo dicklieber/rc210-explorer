@@ -23,14 +23,14 @@ import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry}
 import net.wa9nnn.rc210.data.named.{NamedKey, NamedSource}
 import net.wa9nnn.rc210.io.DatFile
 import net.wa9nnn.rc210.key.KeyFactory.Key
+import net.wa9nnn.rc210.key.KeyFormats._
 import net.wa9nnn.rc210.key.KeyKind
-import play.api.libs.json.{Format, JsValue, Json}
+import play.api.libs.json.Json
 
 import java.nio.file.Files
 import javax.inject.{Inject, Singleton}
 import scala.collection.concurrent.TrieMap
 import scala.collection.immutable.Seq
-import net.wa9nnn.rc210.key.KeyFormats._
 
 /**
  * Holds all values as simple key->value.
@@ -181,59 +181,4 @@ object DataStore {
     }
   }
 }
-
-
-/**
- * Data transfer object for JSON.
- * This is what's written to or Parsed (by PlayJson) from the [[DataStore]] JSON data..
- *
- * @param fieldKey   ID of the entry.
- * @param fieldValue current.
- * @param candidate  next value.
- */
-case class FieldEntryJson(fieldKey: FieldKey, fieldValue: JsValue, candidate: Option[JsValue])
-
-
-/**
- * Helper to transfer values from an html form to the [[DataStore]].
- *
- * @param sFieldKey  <input name=??> from a form.
- * @param sFormValue PUT value from the submitted form.
- */
-case class FormValue(sFieldKey: String, sFormValue: String) {
-  val fieldKey: FieldKey = FieldKey.fromParam(sFieldKey)
-}
-
-object FieldEntryJson {
-  def apply(fieldEntry: FieldEntry): FieldEntryJson = {
-    val fieldKey = fieldEntry.fieldKey
-    new FieldEntryJson(fieldKey, fieldEntry.fieldValue.toJsonValue, fieldEntry.candidate.map(_.toJsonValue))
-  }
-
-  implicit val fmtFieldEntryJson: Format[FieldEntryJson] = Json.format[FieldEntryJson]
-
-}
-
-/**
- * What is sent to the [[DataStore]] to be the new candidate and name.
- *
- * @param fieldKey   id of value.
- * @param candidate  contents of value. To set as candidate.
- */
-case class UpdateCandidate(fieldKey: FieldKey, candidate: Either[String, ComplexFieldValue[_]])
-
-object UpdateCandidate {
-  def apply(complexFieldValue: ComplexFieldValue[_]):UpdateCandidate = {
-    new UpdateCandidate(complexFieldValue.fieldKey, Right(complexFieldValue))
-  }
-}
-
-case class UpdateData(candidates: Seq[UpdateCandidate], names: Seq[NamedKey] = Seq.empty)
-
-case class NamedDataJson(key: Key, name: String)
-
-object NamedDataJson {
-  implicit val fmtNamedDataJson: Format[NamedDataJson] = Json.format[NamedDataJson]
-}
-
 
