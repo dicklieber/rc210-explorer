@@ -59,7 +59,7 @@ class PortsEditorController @Inject()(implicit val controllerComponents: Control
       } yield {
         portKey.namedCell()
       }
-      val namesRow = Row(colHeaders.prepended(Cell("")))
+      val namesRow = Row(colHeaders.prepended(Cell("Ports:").withCssClass("cornerCell")))
 
       val table = Table(Seq.empty, rows.prepended(namesRow))
 

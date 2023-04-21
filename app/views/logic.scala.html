@@ -5,11 +5,11 @@
 @import net.wa9nnn.rc210.ui.Tabs
 @(table: Table)
 
-@tabbedmain(Tabs.logicAlarmTab) {
+    @tabbedmain(Tabs.logicAlarmTab) {
 
-    @form(action = routes.LogicAlarmEditorController.save()) {
-        <input type="submit" name="save" value="Save">
-        @renderTable(table.withCssClass("tablesorter"))
-        <input type="submit" name="save" value="Save">
+        @form(action = routes.LogicAlarmEditorController.save()) {
+            <input type="submit" class="btn btn-primary" name="save" value="Save">
+            @renderTable(table.withCssClass("tablesorter"))
+            <input type="submit" class="btn btn-primary" name="save" value="Save">
+        }
     }
-}

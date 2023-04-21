@@ -122,6 +122,9 @@ fieldset {
     border-style: solid !important;
 }
 
+.cornerCell {
+    text-align: right;
+}
 body {
     /*background: #f5f5f5;*/
     color: #555;

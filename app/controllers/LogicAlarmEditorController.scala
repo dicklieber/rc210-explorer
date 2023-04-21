@@ -24,6 +24,7 @@ import net.wa9nnn.rc210.data.datastore.{DataStore, FormValue, UpdateCandidate, U
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.key.KeyFactory.LogicAlarmKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.ui.FormParser
 import play.api.mvc._
 
 import javax.inject._
@@ -57,26 +58,24 @@ class LogicAlarmEditorController @Inject()(val controllerComponents: ControllerC
         Row(fieldName, cells: _*)
       }
 
+
       val colHeaders: Seq[Cell] = for {
-        alarmKey <- KeyFactory[LogicAlarmKey](KeyKind.logicAlarmKey)
+        portKey <- KeyFactory[LogicAlarmKey](KeyKind.logicAlarmKey)
       } yield {
-        alarmKey.namedCell()
+        portKey.namedCell()
       }
-      val header = Header(s"Logic Alarms (${rows.length} values)", "Field" +: colHeaders: _*)
-      val table = Table(header, rows)
+      val namesRow: Row = Row(colHeaders.prepended(Cell("Alarm:").withCssClass("cornerCell")))
+
+
+      val table = Table(Seq.empty, rows.prepended(namesRow))
 
       Ok(views.html.logic(table))
   }
 
   def save(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      val kv: Map[String, String] = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }.filterNot(_._1 == "save")
-
-     val r: Seq[UpdateCandidate] =  kv.map { case (name, formValue) =>
-        val fieldKey = FieldKey.fromParam(name)
-       UpdateCandidate(fieldKey, Left(formValue))
-      }.toSeq
-      dataStore.update(UpdateData(r)) // todo handle name.
+      val updateData = FormParser(AnyContentAsFormUrlEncoded(request.body.asFormUrlEncoded.get))
+      dataStore.update(updateData)
 
       Redirect(routes.LogicAlarmEditorController.index())
   }
