@@ -25,7 +25,6 @@ import net.wa9nnn.rc210.data.message.Message
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.key.KeyFactory._
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
-import net.wa9nnn.rc210.ui.FormParser
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}

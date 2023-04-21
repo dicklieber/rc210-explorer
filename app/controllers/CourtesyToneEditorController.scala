@@ -19,10 +19,14 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.Row
-import net.wa9nnn.rc210.data.courtesy.CourtesyTone
-import net.wa9nnn.rc210.data.datastore.DataStore
+import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.courtesy.{CourtesyTone, CtSegmentKey, Segment}
+import net.wa9nnn.rc210.data.datastore.{DataStore, UpdateCandidate, UpdateData}
 import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.named.NamedKey
+import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey
 import net.wa9nnn.rc210.key.KeyKind
+import net.wa9nnn.rc210.ui.FormParser
 import play.api.mvc._
 
 import javax.inject._
@@ -36,38 +40,46 @@ class CourtesyToneEditorController @Inject()(val controllerComponents: Controlle
     implicit request: Request[AnyContent] =>
 
       val entries: Seq[FieldEntry] = dataStore(KeyKind.courtesyToneKey)
-/*
-      val rows: Seq[Unit] = entries.map { fe =>
-         CourtesyTone = fe.value
-//        ct.rows()
+      val rows: Seq[Row] = entries.flatMap { fe: FieldEntry =>
+        val ct: CourtesyTone = fe.value
+        ct.rows()
       }
-*/
-//      Ok(views.html.courtesyTones(rows))
-      Ok("todo")
+      Ok(views.html.courtesyTones(rows))
   }
 
   def save(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-/*
-    val r: Unit = dataStore.complexCandidate(request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }
+      val namedKeyBuilder = Seq.newBuilder[NamedKey]
+      val ctBuilder = Seq.newBuilder[UpdateCandidate]
+
+
+      val form = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }
+
+      form.filter(_._1 startsWith ("name"))
+        .foreach { case (sKey, value) =>
+          val ctKey = CtSegmentKey(sKey)
+          namedKeyBuilder += NamedKey(ctKey.ctKey, value)
+        }
+
+
+      form
         .filterNot(_._1 == "save")
+        .filterNot(_._1 startsWith "name")
         .map { case (sKey, value) => CtSegmentKey(sKey) -> value } // convert from string name to CtSegmentKeys
         .groupBy(_._1.ctKey)
-        .map { case (key, values) =>
-          val segs: Seq[Segment] = values.groupBy(_._1.segment).flatMap { case (seg, values) =>
-            val valuesForSegement: Map[String, String] = values.map { case (crSKey, value) => crSKey.name -> value }
+        .map { case (ctKey: CourtesyToneKey, values: Map[CtSegmentKey, String]) =>
+          val segs = values
+            .groupBy(_._1.segment).map { case (seg, values) =>
+            val valuesForSegment: Map[String, String] = values.map { case (crSKey: CtSegmentKey, value: String) =>
+              crSKey.name -> value
+            }
             // we now have a map of names to values
-            if (valuesForSegement.size == 1) {
-              val str = valuesForSegement("name")
-              namedManager.update(Seq(NamedKey(key, str)))
-              Seq.empty
-            } else
-              Seq(Segment(valuesForSegement))
-          }.toSeq
-          CourtesyTone(key, segs)
-        }.toSeq)
-*/
-
+            Segment(valuesForSegment)
+          }
+          val courtesyTone = CourtesyTone(ctKey, segs.toSeq)
+          ctBuilder += UpdateCandidate(courtesyTone)
+        }
+      dataStore.update(UpdateData(ctBuilder.result(), namedKeyBuilder.result()))
       Redirect(routes.CourtesyToneEditorController.index())
   }
 }

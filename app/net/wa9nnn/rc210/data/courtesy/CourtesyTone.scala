@@ -49,7 +49,7 @@ case class CourtesyTone(override val key: CourtesyToneKey, segments: Seq[Segment
     throw new NotImplementedError() //todo
   }
 
-  def rows()(implicit namedSource: NamedSource): Seq[Row] = {
+  def rows(): Seq[Row] = {
     val nameCell: Cell =key.namedCell(CtSegmentKey("name", 99).param)
       .withRowSpan(3)
 
