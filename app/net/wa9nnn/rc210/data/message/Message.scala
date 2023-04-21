@@ -19,10 +19,11 @@ package net.wa9nnn.rc210.data.message
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row}
+import controllers.routes
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry}
-import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.data.vocabulary.Words
-import net.wa9nnn.rc210.key.KeyFactory.{MessageKey, logicAlarmKey}
+import net.wa9nnn.rc210.key.KeyFactory.{Key, MessageKey}
+import net.wa9nnn.rc210.ui.EditButton
 import play.api.libs.json.{Format, JsValue, Json}
 
 import scala.collection.immutable.Seq
@@ -40,45 +41,14 @@ case class Message(key: MessageKey, words: Seq[Int]) extends ComplexFieldValue[M
   override val fieldName: String = "Message"
 
   override def toRow: Row = {
-    /*    <div class="container">
-          <table class="table table-bordered w-auto">
-            <thead class="table-primary">
-              <tr>
-                <th></th>
-                <th>Message</th>
-                <th>Words</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for(message
-              <- messages)
-                {<tr>
-                <td>
-                  <button type="button" class="bi bi-pencil-square btn p-0"
-                          onclick="window.location.href = '@routes.MessageController.edit(message.key)'"></button>
-                </td>
-                <td title="@message.key.toString">
-                  @namedSource.nameForKey(message.key)
-                </td>
-                <td>
-                  @message.display
-                </td>
 
-              </tr>}
-              </tbody>
-            </table>
-          </div>
-    */
-
-    val rowHeader = key.namedCell()
-    Row(rowHeader, words.map { wordKey =>
-      Cell(Words.apply(wordKey).string)
-        .withToolTip(wordKey.toString)
-    }
-    )
+    val editButton = EditButton(routes.MessageController.edit(key))
+    val rowHeader = key.toCell
+    val csvWords: Cell = Cell(display )
+    Row(editButton, rowHeader, csvWords)
   }
 
-  override def display: String = words.map(wordKey => Words(wordKey).string).mkString(" ")
+  override def display: String = words.map(id => Words(id).string).mkString(", ")
 
   /**
    * Render this value as an RD-210 command string.
@@ -92,23 +62,14 @@ object Message extends LazyLogging {
 
   import net.wa9nnn.rc210.key.KeyFormats._
 
-  def header(count: Int): Header = Header(s"Messages Macros ($count)", "Key", "Words")
+  def header(count: Int): Header = Header(s"Messages Macros ($count)", "Edit", "Key", "Words")
 
   implicit val fmtPhrase: Format[Message] = Json.format[Message]
 
-  //  def apply(values:Map[String,String]):Message = {
-  //    logger.info(s"todo $values")
-  //    val sKey = formData("key").head
-  //    val key: MessageKey = KeyFactory(sKey)
-  //
-  //    val strings: Array[String] = formData("words").head.split(",").filter(_.nonEmpty)
-  //
-  //    val words: Seq[Int] = strings.map { s =>
-  //      s.toInt
-  //    }.toIndexedSeq
-  //
-  //    val message = Message(key, words)
-  //
-  //  }
+  def apply(key: Key, kv: Map[String, String]): Message = {
+
+    val words: Array[Int] = kv("words").split(",").filter(_.nonEmpty).map(_.toInt)
+    new Message(key.asInstanceOf[MessageKey], words)
+  }
 }
 

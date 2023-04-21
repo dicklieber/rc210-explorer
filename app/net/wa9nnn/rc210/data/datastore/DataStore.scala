@@ -222,6 +222,12 @@ object FieldEntryJson {
  */
 case class UpdateCandidate(fieldKey: FieldKey, candidate: Either[String, ComplexFieldValue[_]])
 
+object UpdateCandidate {
+  def apply(complexFieldValue: ComplexFieldValue[_]):UpdateCandidate = {
+    new UpdateCandidate(complexFieldValue.fieldKey, Right(complexFieldValue))
+  }
+}
+
 case class UpdateData(candidates: Seq[UpdateCandidate], names: Seq[NamedKey] = Seq.empty)
 
 case class NamedDataJson(key: Key, name: String)

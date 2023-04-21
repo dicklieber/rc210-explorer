@@ -73,6 +73,10 @@
     border: 1px;
 }
 
+.sectionHeader {
+    font-size: 1.17em;
+}
+
 .number {
     text-align: right;
     white-space: nowrap;
@@ -92,12 +96,9 @@
 }
 
 .help {
-    font-size: small;
+    font-size: smaller;
     color: darkgrey;
-    font-weight: lighter;
-    font-style: italic;
-    opacity: 75;
-    width: 20em;
+    width: 25em;
     justify-content: left;
 }
 

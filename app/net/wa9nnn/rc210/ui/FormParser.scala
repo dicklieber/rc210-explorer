@@ -22,7 +22,7 @@ import net.wa9nnn.rc210.data.datastore.{UpdateCandidate, UpdateData}
 import net.wa9nnn.rc210.data.field.ComplexFieldValue
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.key.KeyFactory.Key
-import play.api.mvc.{AnyContent, AnyContentAsFormUrlEncoded, Request}
+import play.api.mvc.AnyContentAsFormUrlEncoded
 
 object FormParser {
   /**

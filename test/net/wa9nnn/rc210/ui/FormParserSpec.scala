@@ -48,11 +48,7 @@ class FormParserSpec extends Specification {
         "words:messageKey1" -> Seq("1,2,3")
       ).toMap)
       val r: UpdateData = FormParser[MessageKey](content, (key: MessageKey, kv: Map[String, String]) => {
-
-        val value1: String = kv("words")
-        val words: Array[Int] = value1.split(",").filter(_.nonEmpty).map(_.toInt)
-
-        Message(key, words)
+        Message(key, kv)
       }
       )
       r.candidates must haveLength(1)

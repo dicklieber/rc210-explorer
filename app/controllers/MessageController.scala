@@ -25,6 +25,7 @@ import net.wa9nnn.rc210.data.message.Message
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.key.KeyFactory._
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.ui.FormParser
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
@@ -57,22 +58,17 @@ class MessageController @Inject()(dataStore: DataStore) extends MessagesInjected
   }
 
   def save(): Action[AnyContent] = Action { implicit request =>
-    val formUrlEncoded: Option[Map[String, Seq[String]]] = request.body.asFormUrlEncoded
-    val formData: Map[String, Seq[String]] = formUrlEncoded.get
+    val kv: Map[String, String] = AnyContentAsFormUrlEncoded(request.body.asFormUrlEncoded.get)
+      .data
+      .map(t => t._1 -> t._2.headOption.getOrElse(""))
 
-    val sKey = formData("key").head
-    val key: MessageKey = KeyFactory(sKey)
+    val messageKey: MessageKey = KeyFactory(kv("key"))
+    val message = Message(messageKey, kv)
+    val candidate = UpdateCandidate(message)
+    val name: String = kv("name")
+    val namedKey = NamedKey(messageKey, name)
 
-    val strings: Array[String] = formData("words").head.split(",").filter(_.nonEmpty)
-
-    val words: Seq[Int] = strings.map { s =>
-      s.toInt
-    }.toIndexedSeq
-
-    val message = Message(key, words)
-    val updateCandidate = UpdateCandidate(message.fieldKey, Right(message))
-    val keyNames = Seq(NamedKey(key, formData("name").head))
-    dataStore.update(UpdateData(Seq(updateCandidate), keyNames))
+    dataStore.update(UpdateData(Seq(candidate), Seq(namedKey)))
     Redirect(routes.MessageController.index())
   }
 }

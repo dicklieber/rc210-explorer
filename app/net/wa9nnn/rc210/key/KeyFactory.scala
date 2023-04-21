@@ -120,23 +120,32 @@ object KeyFactory {
 
     def fieldKey(fieldName: String): FieldKey = FieldKey(fieldName, this)
 
+    val prettyName: String = kind.toString.dropRight(3).capitalize
+
     override val toString: String = s"$name$number"
 
 
-    override def toCell: Cell = Cell(toString)
-      .withCssClass(kind.toString)
+    override def toCell: Cell = {
+      val name = namedSource.nameForKey(this)
+      val c = if (name.isEmpty)
+        Cell(number)
+      else
+        Cell(s"$number: $name")
+      c.withCssClass(kind.toString)
+    }
 
     /**
      * Display the Key. Number: <input>
      * This can be placed in a [[com.wa9nnn.util.tableui.Row]].
+     *
      * @param name for name attribute in <input>
      */
-    def namedCell(param:String = fieldKey("name").param): Cell = {
-            val html: Html = views.html.fieldNamedKey(this, namedSource.nameForKey(this), param)
-            Cell.rawHtml(html.toString())
+    def namedCell(param: String = fieldKey("name").param): Cell = {
+      val html: Html = views.html.fieldNamedKey(this, namedSource.nameForKey(this), param)
+      Cell.rawHtml(html.toString())
     }
 
-    def namedHtml:String = {
+    def namedHtml: String = {
       val html: Html = views.html.fieldNamedKey(this, namedSource.nameForKey(this), "name")
       html.toString()
     }

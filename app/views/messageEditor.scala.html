@@ -17,15 +17,18 @@
             <input type="hidden" name="words" id="words">
             <div class="row">
                 <div class="col col-md-auto border border-primary">
-                    <h2>@message.key</h2>
+                    <p class="sectionHeader">@message.key</p>
+
                     <div><label for="name">Name: </label>
-                        @message.key.namedHtml
+                        @Html(message.key.namedHtml)
                     </div>
 
                     <input class="btn btn-primary" type="submit" value="Save">
+                    <p class="text-break help">Drag from Available Words to Current Words.<br/>
+                        Drag within CurrtWords to re-arrange or remove.</p>
                 </div>
                 <div class="col col-md-auto border border-primary">
-                    <h2>Current</h2>
+                    <p class="sectionHeader">Current Words</p>
 
                     <table id="currentWords" >
                         @for(word <- message.words) {
@@ -44,7 +47,8 @@
                     </div>
                 </div>
                 <div class="col col-md-auto ">
-                    <h2>Available Words</h2>
+                    <p class="sectionHeader">Available Words</p>
+
                     <div id="myDropdown" class="dropdown-content show wordList">
                         <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
                         <div>
