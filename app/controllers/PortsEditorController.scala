@@ -19,11 +19,11 @@ package controllers
 
 import com.wa9nnn.util.tableui.{Cell, Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.datastore.{DataStore, UpdateCandidate, UpdateData}
+import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.key.KeyFactory.PortKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.ui.FormParser
 import play.api.mvc._
 
 import javax.inject.Inject
@@ -61,7 +61,6 @@ class PortsEditorController @Inject()(implicit val controllerComponents: Control
       }
       val namesRow = Row(colHeaders.prepended(Cell("")))
 
-      //      val header = Header(s"Ports (${rows.length} values)", "Field" +: colHeaders: _*)
       val table = Table(Seq.empty, rows.prepended(namesRow))
 
       Ok(views.html.ports(table))
@@ -69,19 +68,8 @@ class PortsEditorController @Inject()(implicit val controllerComponents: Control
 
   def save(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      val namedKeyBuilder = Seq.newBuilder[NamedKey]
-
-      val kv: Map[String, String] = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }.filterNot(_._1 == "save")
-
-      val r: Seq[UpdateCandidate] = (kv.flatMap { case (name, formValue: String) =>
-        val fieldKey = FieldKey.fromParam(name)
-        if (fieldKey.fieldName == "name") {
-          namedKeyBuilder += NamedKey(fieldKey.key, formValue)
-          Seq.empty
-        } else
-          Seq(UpdateCandidate(fieldKey, Left(formValue)))
-      }.toSeq)
-      dataStore.update(UpdateData(r, namedKeyBuilder.result()))
+      val updateData = FormParser(AnyContentAsFormUrlEncoded(request.body.asFormUrlEncoded.get))
+      dataStore.update(updateData)
       Redirect(routes.PortsEditorController.index())
   }
 }
