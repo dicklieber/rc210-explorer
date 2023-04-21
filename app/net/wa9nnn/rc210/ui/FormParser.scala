@@ -26,7 +26,7 @@ import play.api.mvc.AnyContentAsFormUrlEncoded
 
 object FormParser {
   /**
-   *
+   * Parses [[ComplexFieldValue]]s from <form> data.
    *
    * @param f       (K,  Map[String, String]) )      function to instantiate a [[ComplexFieldValue[K]]] from a K  and map of named form values for the key.
    * @param content whose boduy contains the HTML form data.
@@ -51,5 +51,31 @@ object FormParser {
       }.toSeq
 
     UpdateData(candidates, namedKeyBuilder.result())
+  }
+
+  /**
+   * Parses [[net.wa9nnn.rc210.data.field.SimpleFieldValue]]s from <form> data
+   *
+   * @param content whose boduy contains the HTML form data.
+   * @return data to send to the [[net.wa9nnn.rc210.data.datastore.DataStore]].
+   */
+  def apply(content: AnyContentAsFormUrlEncoded): UpdateData = {
+
+
+    val namedKeyBuilder = Seq.newBuilder[NamedKey]
+    val candidateBuilder = Seq.newBuilder[UpdateCandidate]
+    content
+      .data
+      .filter(_._1 != "save")
+      .map { t => FieldKey.fromParam(t._1) -> t._2.head } // convert form <input> name to FieldKey and on;y get 1st string for each <form> item.
+      .foreach { case (fieldKey: FieldKey, value: String) =>
+        fieldKey match {
+          case FieldKey("name", _) =>
+            namedKeyBuilder += NamedKey(fieldKey.key, value)
+          case _ =>
+            candidateBuilder += UpdateCandidate(fieldKey, Left(value)) // this string will get parsed within the FieldValues in the [[DataStore]].
+        }
+      }
+    UpdateData(candidateBuilder.result(), namedKeyBuilder.result())
   }
 }

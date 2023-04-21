@@ -18,10 +18,10 @@
 package controllers
 
 import com.wa9nnn.util.tableui.{Header, Row, Table}
-import net.wa9nnn.rc210.data.datastore.{DataStore, FormValue}
-import net.wa9nnn.rc210.data.{FieldKey, datastore}
+import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.key.KeyKind
+import net.wa9nnn.rc210.ui.FormParser
 import play.api.mvc._
 
 import javax.inject.Inject
@@ -33,12 +33,11 @@ class CommonEditorController @Inject()(implicit val controllerComponents: Contro
     implicit request: Request[AnyContent] =>
       val commonFields: Seq[FieldEntry] = dataStore(KeyKind.commonKey)
 
-
       val rows: Seq[Row] = commonFields.map { fieldEntry =>
         // Can't use fieldEntry's toRow because we just want the field name not key, as they are all commonKey1
         Row(
           fieldEntry.fieldKey.fieldName,
-          fieldEntry.toCell // todo doesn't smell right, RenderMeta not involved.
+          fieldEntry.toCell
         )
       }
 
@@ -50,13 +49,8 @@ class CommonEditorController @Inject()(implicit val controllerComponents: Contro
 
   def save(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      val kv: Map[String, String] = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }.filterNot(_._1 == "save")
-
-//      kv.map { case (name, formValue) =>
-//        FormValue(name, formValue)
-//      }
-//      dataStore.update
+      val updateData = FormParser(AnyContentAsFormUrlEncoded(request.body.asFormUrlEncoded.get))
+      dataStore.update(updateData)
       Redirect(routes.CommonEditorController.index())
   }
-
 }

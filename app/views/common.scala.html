@@ -8,8 +8,8 @@
 @tabbedmain(Tabs.commonTab) {
 
     @form(action = routes.CommonEditorController.save()) {
-        <input type="submit" name="save" value="Save">
+        <input type="submit" class="btn btn-primary" name="save" value="Save">
         @renderTable(table.withCssClass("tablesorter"))
-        <input type="submit" name="save" value="Save">
+        <input type="submit" class="btn btn-primary" name="save" value="Save">
     }
 }
