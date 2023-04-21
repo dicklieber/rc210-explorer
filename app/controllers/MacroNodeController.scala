@@ -17,11 +17,11 @@
 
 package controllers
 
-import net.wa9nnn.rc210.data.datastore.DataStore
+import net.wa9nnn.rc210.data.datastore.{DataStore, UpdateCandidate, UpdateData}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.MacroNode
-import net.wa9nnn.rc210.data.named.NamedManager
+import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.data.{Dtmf, FieldKey}
 import net.wa9nnn.rc210.key.KeyFactory._
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
@@ -34,7 +34,7 @@ import scala.util.matching.Regex
 
 @Singleton()
 class MacroNodeController @Inject()(dataStore: DataStore
-                                   )(implicit namedSource: NamedManager, functionsProvider: FunctionsProvider) extends MessagesInjectedController {
+                                   )(implicit  functionsProvider: FunctionsProvider) extends MessagesInjectedController {
 
 
   def index(): Action[AnyContent] = Action { implicit request =>
@@ -42,7 +42,7 @@ class MacroNodeController @Inject()(dataStore: DataStore
     val value: Seq[MacroNode] = dataStore.apply(KeyKind.macroKey).map { fieldEntry =>
       fieldEntry.value.asInstanceOf[MacroNode]
     }
-    Ok(macroNodes(value, KeyKind.macroKey))
+    Ok(macroNodes(value))
   }
 
   def edit(key: MacroKey): Action[AnyContent] = Action { implicit request =>
@@ -51,8 +51,7 @@ class MacroNodeController @Inject()(dataStore: DataStore
     val maybeEntry: Option[FieldEntry] = dataStore(fieldKey)
     maybeEntry match {
       case Some(fieldEntry: FieldEntry) =>
-        val name = namedSource.nameForKey(key)
-        Ok(views.html.macroEditor(fieldEntry.value, name))
+        Ok(views.html.macroEditor(fieldEntry.value))
       case None =>
         NotFound(s"No keyField: $fieldKey")
     }
@@ -75,7 +74,12 @@ class MacroNodeController @Inject()(dataStore: DataStore
         }.toOption
       }
 
-    dataStore.complexCandidate(MacroNode(key, functions, dtmf))
+    val macroNode = MacroNode(key, functions, dtmf)
+    val ud = UpdateCandidate( macroNode.fieldKey, Right(macroNode))
+
+    val keyNames = Seq(NamedKey(key, formData("name").head))
+    dataStore.update(UpdateData(Seq(ud), keyNames))
+
     Redirect(routes.MacroNodeController.index())
   }
 }

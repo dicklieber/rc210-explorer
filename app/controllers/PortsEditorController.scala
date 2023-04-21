@@ -17,19 +17,18 @@
 
 package controllers
 
-import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
+import com.wa9nnn.util.tableui.{Cell, Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.datastore.{DataStore, FormValue}
+import net.wa9nnn.rc210.data.datastore.{DataStore, UpdateCandidate, UpdateData}
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.data.named.{NamedKey, NamedManager}
+import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.key.KeyFactory.PortKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.mvc._
 
 import javax.inject.Inject
 
-class PortsEditorController @Inject()(implicit val controllerComponents: ControllerComponents, dataStore: DataStore,
-                                      namedManager: NamedManager) extends BaseController {
+class PortsEditorController @Inject()(implicit val controllerComponents: ControllerComponents, dataStore: DataStore) extends BaseController {
 
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
@@ -70,16 +69,19 @@ class PortsEditorController @Inject()(implicit val controllerComponents: Control
 
   def save(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
+      val namedKeyBuilder = Seq.newBuilder[NamedKey]
+
       val kv: Map[String, String] = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }.filterNot(_._1 == "save")
 
-      dataStore.simpleCandidate(kv.flatMap { case (name, formValue: String) =>
+      val r: Seq[UpdateCandidate] = (kv.flatMap { case (name, formValue: String) =>
         val fieldKey = FieldKey.fromParam(name)
         if (fieldKey.fieldName == "name") {
-          namedManager.update(Seq(NamedKey(fieldKey.key, formValue)))
+          namedKeyBuilder += NamedKey(fieldKey.key, formValue)
           Seq.empty
         } else
-          Seq(FormValue(name, formValue))
-      })
+          Seq(UpdateCandidate(fieldKey, Left(formValue)))
+      }.toSeq)
+      dataStore.update(UpdateData(r, namedKeyBuilder.result()))
       Redirect(routes.PortsEditorController.index())
   }
 }

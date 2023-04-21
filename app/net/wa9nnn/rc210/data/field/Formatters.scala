@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.Dtmf
-import net.wa9nnn.rc210.data.named.{NamedData, NamedKey}
+import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.key.KeyFactory
 import net.wa9nnn.rc210.key.KeyFactory._
 import play.api.data.FormError
@@ -70,6 +70,5 @@ object Formatters {
   implicit val fmtDtmfMacroKey: OFormat[DtmfMacroKey] = Json.format[DtmfMacroKey]
   implicit val fmKey: OFormat[Key] = Json.format[Key]
   implicit val fmtNamedKey: OFormat[NamedKey] = Json.format[NamedKey]
-  implicit val fmtNamedData: OFormat[NamedData] = Json.format[NamedData]
   implicit val fmtTimerKey: OFormat[TimerKey] = Json.format[TimerKey]
 }

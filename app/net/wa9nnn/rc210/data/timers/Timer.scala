@@ -26,9 +26,9 @@ import play.api.libs.json.{JsValue, Json, OFormat}
 
 case class Timer(key: TimerKey, seconds: FieldInt, macroSelect: MacroSelect) extends ComplexFieldValue[TimerKey] {
   override val fieldName: String = "Timer"
-  implicit val k = key
+  implicit val k: TimerKey = key
 
-  override def toRow()(implicit namedSource: NamedSource): Row = {
+  override def toRow: Row = {
     val name: Cell = key.namedCell()
 
     Row(

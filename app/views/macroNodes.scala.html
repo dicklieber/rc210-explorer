@@ -5,7 +5,7 @@
 @import views.html.helper._
 @import net.wa9nnn.rc210.key.KeyFactory.MacroKey
 @import net.wa9nnn.rc210.ui.Tabs
-@(macroNodes: Seq[MacroNode], keyKind: KeyKind)(implicit functionsProvider: FunctionsProvider, namedSource: NamedSource)
+@(macroNodes: Seq[MacroNode])(implicit functionsProvider: FunctionsProvider)
 
 @tabbedmain(Tabs.macrosTab) {
     <div class="container">
@@ -26,7 +26,7 @@
                     onclick="window.location.href='@routes.MacroNodeController.edit(macroNode.key.asInstanceOf[MacroKey])'"></button>
                 </td>
                 <td title="@macroNode.key.toString">
-                @namedSource.nameForKey(macroNode.key)
+                @Html( macroNode.key.namedHtml)
                 </td>
                 <td class="text-end">
                     @macroNode.dtmf

@@ -4,7 +4,6 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row}
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.key.KeyFactory.ScheduleKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.model.TriggerNode
@@ -43,9 +42,6 @@ case class Schedule(override val key: ScheduleKey,
 //    fields
 //  }
 
-  override def toRow: Row = {
-    Row(key.toCell, selectedMacroToRun.toCell(this), dayOfWeek, weekInMonth, monthOfYear, time)
-  }
 
 
   val description: String = {
@@ -57,7 +53,7 @@ case class Schedule(override val key: ScheduleKey,
     Row(key.toCell, description)
   }
 
-  def toRow()(implicit namedSource: NamedSource): Row = {
+  override def toRow: Row = {
     implicit val k: ScheduleKey = key
     val name: Cell = k.namedCell()
     val dow: Cell = dayOfWeek.toCell(RenderMetadata(DayOfWeek.name))

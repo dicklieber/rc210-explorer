@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.data.field
 
-import com.wa9nnn.util.tableui.{Cell, Row}
+import com.wa9nnn.util.tableui.{Cell, Row, RowSource}
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.key.KeyFactory.Key
@@ -75,7 +75,7 @@ trait SimpleFieldValue extends FieldValue {
  *
  * @tparam K
  */
-trait ComplexFieldValue[K <: Key] extends FieldValue {
+trait ComplexFieldValue[K <: Key] extends FieldValue with RowSource {
   val key: K
   val fieldName: String
   lazy val fieldKey: FieldKey = FieldKey(fieldName, key)
@@ -88,7 +88,6 @@ trait ComplexFieldValue[K <: Key] extends FieldValue {
    */
   override def toHtmlField(renderMetadata: RenderMetadata): String = "//todo"
 
-  def toRow()(implicit namedSource: NamedSource): Row
 }
 
 

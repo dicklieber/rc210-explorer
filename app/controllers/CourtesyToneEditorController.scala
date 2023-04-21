@@ -19,35 +19,36 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.Row
-import net.wa9nnn.rc210.data.courtesy.{CourtesyTone, CtSegmentKey, Segment}
+import net.wa9nnn.rc210.data.courtesy.CourtesyTone
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.data.named.{NamedKey, NamedManager}
-import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.key.KeyKind
 import play.api.mvc._
 
 import javax.inject._
-import scala.collection.immutable
 
 class CourtesyToneEditorController @Inject()(val controllerComponents: ControllerComponents,
                                              dataStore: DataStore
-                                            )(implicit namedManager: NamedManager)
+                                            )
   extends BaseController with LazyLogging {
 
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
 
       val entries: Seq[FieldEntry] = dataStore(KeyKind.courtesyToneKey)
-      val rows: Seq[Row] = entries.flatMap { fe =>
-        val ct: CourtesyTone = fe.value
-        ct.rows()
+/*
+      val rows: Seq[Unit] = entries.map { fe =>
+         CourtesyTone = fe.value
+//        ct.rows()
       }
-      Ok(views.html.courtesyTones(rows))
+*/
+//      Ok(views.html.courtesyTones(rows))
+      Ok("todo")
   }
 
   def save(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
+/*
     val r: Unit = dataStore.complexCandidate(request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }
         .filterNot(_._1 == "save")
         .map { case (sKey, value) => CtSegmentKey(sKey) -> value } // convert from string name to CtSegmentKeys
@@ -65,6 +66,7 @@ class CourtesyToneEditorController @Inject()(val controllerComponents: Controlle
           }.toSeq
           CourtesyTone(key, segs)
         }.toSeq)
+*/
 
       Redirect(routes.CourtesyToneEditorController.index())
   }

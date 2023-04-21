@@ -20,9 +20,9 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.datastore.{DataStore, FormValue}
+import net.wa9nnn.rc210.data.datastore.{DataStore, UpdateCandidate, UpdateData}
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.data.named.NamedManager
+import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.key.KeyFactory.MeterKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.mvc._
@@ -31,7 +31,7 @@ import javax.inject._
 
 class MeterEditorController @Inject()(val controllerComponents: ControllerComponents,
                                       dataStore: DataStore
-                                     )(implicit namedManager: NamedManager)
+                                     )
   extends BaseController with LazyLogging {
 
 
@@ -59,14 +59,9 @@ class MeterEditorController @Inject()(val controllerComponents: ControllerCompon
 
       val colHeaders: Seq[Cell] = for {
         alarmKey <- KeyFactory[MeterKey](KeyKind.meterKey)
-      } yield
-        namedManager.getName(alarmKey) match {
-          case Some(value) =>
-            Cell(value)
-              .withToolTip(s"Alarm ${alarmKey.number}")
-
-          case None => Cell(alarmKey.toString)
-        }
+      } yield {
+        alarmKey.namedCell()
+      }
       val header = Header(s"Alarms (${rows.length} values)", "Field" +: colHeaders: _*)
       val table = Table(header, rows)
 
@@ -75,11 +70,19 @@ class MeterEditorController @Inject()(val controllerComponents: ControllerCompon
 
   def save(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
+      val namedKeyBuilder = Seq.newBuilder[NamedKey]
       val kv: Map[String, String] = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }.filterNot(_._1 == "save")
 
-      dataStore.simpleCandidate(kv.map { case (name, formValue) =>
-        FormValue(name, formValue)
-      })
+      val r: Seq[UpdateCandidate] = (kv.flatMap { case (name, formValue: String) =>
+        val fieldKey = FieldKey.fromParam(name)
+        if (fieldKey.fieldName == "name") {
+          namedKeyBuilder += NamedKey(fieldKey.key, formValue)
+          Seq.empty
+        } else
+          Seq(UpdateCandidate(fieldKey, Left(formValue)))
+      }.toSeq)
+
+      dataStore.update(UpdateData(r, namedKeyBuilder.result()))
 
       Redirect(routes.MeterEditorController.index())
   }

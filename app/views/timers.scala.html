@@ -3,7 +3,7 @@
 @import net.wa9nnn.rc210.data.named.NamedSource
 @import net.wa9nnn.rc210.ui.Tabs
 @import views.html.helper._
-@(table: Table)(implicit namedSource: NamedSource)
+@(table: Table)
 @tabbedmain(Tabs.timersTab) {
 
     @form(action = routes.TimerEditorController.save()) {

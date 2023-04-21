@@ -3,7 +3,6 @@ package net.wa9nnn.rc210.data
 import akka.actor.ActorRef
 import com.wa9nnn.util.tableui._
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
-import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.key.KeyFactory.MacroKey
 import views.html.macroRowHeader
 
@@ -11,7 +10,7 @@ import javax.inject.{Inject, Named, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class FlowTableBuilder @Inject()(functions: FunctionsProvider, @Named("values-actor") valuesActor: ActorRef) (implicit ec: ExecutionContext, namedManager: NamedManager){
+class FlowTableBuilder @Inject()(functions: FunctionsProvider, @Named("values-actor") valuesActor: ActorRef) (implicit ec: ExecutionContext){
   def apply(): Table = {
 
 /*

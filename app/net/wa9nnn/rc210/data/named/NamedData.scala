@@ -23,6 +23,9 @@ case class NamedKey(key: Key, name: String) extends Ordered[NamedKey] {
   override def compare(that: NamedKey): Int = key compareTo that.key
 }
 
-case class NamedData(data: Seq[NamedKey])
+
+trait NamedSource {
+  def nameForKey(key: Key): String
+}
 
 

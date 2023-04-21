@@ -52,10 +52,10 @@ class CommonEditorController @Inject()(implicit val controllerComponents: Contro
     implicit request: Request[AnyContent] =>
       val kv: Map[String, String] = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }.filterNot(_._1 == "save")
 
-      dataStore.simpleCandidate(kv.map { case (name, formValue) =>
-        FormValue(name, formValue)
-      })
-
+//      kv.map { case (name, formValue) =>
+//        FormValue(name, formValue)
+//      }
+//      dataStore.update
       Redirect(routes.CommonEditorController.index())
   }
 

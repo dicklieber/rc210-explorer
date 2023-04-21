@@ -20,22 +20,18 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.datastore.DataStore
+import net.wa9nnn.rc210.data.datastore.{DataStore, UpdateCandidate, UpdateData}
 import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.data.named.{NamedKey, NamedManager}
+import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.data.schedules.Schedule
 import net.wa9nnn.rc210.key.KeyFactory.ScheduleKey
 import net.wa9nnn.rc210.key.KeyKind
-import net.wa9nnn.rc210.util.MacroSelect
 import play.api.mvc._
-import net.wa9nnn.rc210.data.schedules.Schedule.apply
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton()
-class ScheduleController @Inject()(val controllerComponents: ControllerComponents, dataStore: DataStore
-                                  )(implicit namedSource: NamedManager) extends BaseController with LazyLogging {
-
+class ScheduleController @Inject()(val controllerComponents: ControllerComponents, dataStore: DataStore) extends BaseController with LazyLogging {
 
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
@@ -43,7 +39,7 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
       val entries: Seq[FieldEntry] = dataStore(KeyKind.scheduleKey)
       val rows: Seq[Row] = entries.map { fieldEntry: FieldEntry =>
         val schedule: Schedule = fieldEntry.value
-        schedule.toRow()
+        schedule.toRow
       }
 
       val table = Table(Header("Schedules",
@@ -59,9 +55,11 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
   }
 
   def save(): Action[AnyContent] = Action { implicit request =>
+    val namedKeyBuilder = Seq.newBuilder[NamedKey]
+
     val valuesMap: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
     val namedKeys = Seq.newBuilder[NamedKey]
-    val r: Seq[Schedule] = valuesMap.map { case (sKey, values: Seq[String]) =>
+    val r: Seq[UpdateCandidate] = valuesMap.map { case (sKey, values: Seq[String]) =>
       sKey -> values.headOption.getOrElse("No value")
     }.filter(_._1 != "save")
       .toSeq
@@ -84,11 +82,11 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
         val namedKey = NamedKey(key, nameToValue("name"))
         namedKeys += namedKey
 
-        Schedule((key.asInstanceOf[ScheduleKey]))
-      }.toSeq.sortBy(_.key)
+        val schedule = Schedule((key.asInstanceOf[ScheduleKey]))
+        UpdateCandidate( schedule.fieldKey, Right(schedule))
+      }.toSeq.sortBy(_.fieldKey.key)
 
-    dataStore.complexCandidate(r)
-    namedSource.update(namedKeys.result())
+    dataStore.update(UpdateData(r, namedKeyBuilder.result()))
 
 
     Redirect(routes.ScheduleController.index())

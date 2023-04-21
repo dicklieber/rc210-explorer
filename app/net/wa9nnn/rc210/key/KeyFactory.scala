@@ -132,8 +132,13 @@ object KeyFactory {
      * @param name for name attribute in <input>
      */
     def namedCell(param:String = fieldKey("name").param): Cell = {
-            val html: Html = views.html.fieldNamedKey(this, namedSource.getName(this).getOrElse(""), param)
+            val html: Html = views.html.fieldNamedKey(this, namedSource.nameForKey(this), param)
             Cell.rawHtml(html.toString())
+    }
+
+    def namedHtml:String = {
+      val html: Html = views.html.fieldNamedKey(this, namedSource.nameForKey(this), "name")
+      html.toString()
     }
 
     /**

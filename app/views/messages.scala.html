@@ -4,8 +4,10 @@
 @import net.wa9nnn.rc210.ui.Tabs
 @import views.html.helper._
 @import net.wa9nnn.rc210.data.message.Message
-@(messages: Seq[Message])(implicit namedSource: NamedSource)
+@(table:Table)
     @tabbedmain(Tabs.messagesTab) {
+        @renderTable(table)
+@*
         <div class="container">
             <table class="table table-bordered w-auto">
                 <thead class="table-primary">
@@ -34,4 +36,5 @@
                 </tbody>
             </table>
         </div>
+*@
     }

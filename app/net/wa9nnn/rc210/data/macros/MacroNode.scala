@@ -46,9 +46,6 @@ case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dt
 
   override def display: String = functions.map(_.number).mkString(" ")
 
-  override def toRow()(implicit namedSource: NamedSource): Row = {
-    throw new NotImplementedError() //todo
-  }
   override def toJsonValue: JsValue = Json.toJson(this)
 
 }

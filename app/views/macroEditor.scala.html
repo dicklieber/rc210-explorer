@@ -1,12 +1,10 @@
 @import net.wa9nnn.rc210.data.functions.FunctionsProvider
-@import net.wa9nnn.rc210.data.named.NamedSource
-@import views.html.helper.form
 @import net.wa9nnn.rc210.data.macros.MacroNode
-@import net.wa9nnn.rc210.key.KeyKind
-@import net.wa9nnn.rc210.ui.Tab
 @import net.wa9nnn.rc210.ui.Tabs
+@import views.html.helper.form
+
 @import scala.util.Random
-@(macroNode: MacroNode, name: String)(implicit namedSource: NamedSource, functionsProvider: FunctionsProvider, messagesProvider: MessagesProvider)
+@(macroNode: MacroNode)(implicit functionsProvider: FunctionsProvider, messagesProvider: MessagesProvider)
 
 @tabbedmain(Tabs.macrosTab) {
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
@@ -20,10 +18,7 @@
         <div class="row">
             <div class="col col-md-auto border border-primary">
                 <h2>@macroNode.key</h2>
-                <div><label for="name">Name: </label>
-                    <input id="name" name="name" value="@name">
-                </div>
-
+                @Html(macroNode.key.namedHtml)
                 <div><label for="dtmf">DTMF: </label>
                     <input id="dtmf" name="dtmf" value="@macroNode.dtmf">
                 </div>
@@ -35,7 +30,7 @@
 
                 <table id="currentFunctions" >
                     @for(function <- macroNode.functions) {
-                        <tr id = @Random.nextInt() class="functionDrop functionDrag currentFunction" data-function="@function.toString">
+                        <tr id = "@Random.nextInt()" class="functionDrag functionDrop currentFunction" data-function="@function.toString">
                             <td class=" text-end">@function.number </td>
                             <td class="text-nowrap">@functionsProvider.apply(function).get.description</td>
                         </tr>
@@ -56,7 +51,7 @@
                     <div>
                         <table>
                         @for(function <- functionsProvider.functions) {
-                            <tr class="functionSource"  data-function="@function.key.toString">
+                            <tr class="functionSource" data-function="@function.key.toString">
                                 <td class=" text-end">@function.key.number </td>
                                 <td class="text-nowrap">@function.description</td>
                             </tr>

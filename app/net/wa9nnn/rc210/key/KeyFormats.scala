@@ -21,7 +21,7 @@ import com.wa9nnn.util.JsonFormatUtils.javaEnumFormat
 import net.wa9nnn.rc210.command._
 import net.wa9nnn.rc210.data.functions.FunctionNode
 import net.wa9nnn.rc210.data.macros.MacroNode
-import net.wa9nnn.rc210.data.named.{NamedData, NamedKey}
+import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.key.KeyFactory._
 import play.api.libs.json._
 import play.api.mvc.PathBindable
@@ -157,7 +157,6 @@ object KeyFormats {
 
 
   implicit val fmtNamed: OFormat[NamedKey] = Json.format[NamedKey]
-  implicit val fmtNamedData: OFormat[NamedData] = Json.format[NamedData]
 
 
   implicit val fmtMacro: OFormat[MacroNode] = Json.format[MacroNode]

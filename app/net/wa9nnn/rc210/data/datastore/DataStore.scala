@@ -19,8 +19,8 @@ package net.wa9nnn.rc210.data.datastore
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, SimpleFieldValue}
-import net.wa9nnn.rc210.data.named.NamedSource
+import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry}
+import net.wa9nnn.rc210.data.named.{NamedKey, NamedSource}
 import net.wa9nnn.rc210.io.DatFile
 import net.wa9nnn.rc210.key.KeyFactory.Key
 import net.wa9nnn.rc210.key.KeyKind
@@ -30,14 +30,18 @@ import java.nio.file.Files
 import javax.inject.{Inject, Singleton}
 import scala.collection.concurrent.TrieMap
 import scala.collection.immutable.Seq
+import net.wa9nnn.rc210.key.KeyFormats._
 
 /**
  * Holds all values as simple key->value.
  * Until loaded all functions that return Seq[FieldEntry] will return Seq.empty.
+ * Also holds named Keys.
  */
 @Singleton
-class DataStore @Inject()(datFile: DatFile) extends  LazyLogging{
-  private var map: TrieMap[FieldKey, FieldEntry] = new TrieMap[FieldKey, FieldEntry]
+class DataStore @Inject()(datFile: DatFile) extends NamedSource with LazyLogging {
+  Key.setNamedSource(this)
+  private var valuesMap: TrieMap[FieldKey, FieldEntry] = new TrieMap[FieldKey, FieldEntry]
+  private val keyNamesMap = new TrieMap[Key, String]
 
   /**
    * Replaces all fieldEntries in the [[DataStore]].
@@ -46,34 +50,19 @@ class DataStore @Inject()(datFile: DatFile) extends  LazyLogging{
     val map = new TrieMap[FieldKey, FieldEntry]
     fieldEntries.foreach { fieldContents =>
       map.put(fieldContents.fieldKey, fieldContents)
-      this.map = map
+      this.valuesMap = map
     }
   }
-
-  /**
-   * Updates with supplied fieldEntries.
-   * Can't do a load as there may not be enough entries on the json file.
-   *
-   * @param fieldEntries
-   */
-  def update(fieldEntries: Seq[FieldEntry]): Unit = {
-    fieldEntries.foreach { fe =>
-      map.put(fe.fieldKey, fe)
-    }
-    save()
-  }
-
 
   def all: Seq[FieldEntry] = {
-    map.values.toSeq.sorted
+    valuesMap.values.toSeq.sorted
   }
-
 
   /**
    * @return all the the entries for the [[KeyKind]].
    */
   def apply(keyKind: KeyKind): Seq[FieldEntry] = {
-    map.values.filter(_.fieldKey.key.kind == keyKind)
+    valuesMap.values.filter(_.fieldKey.key.kind == keyKind)
       .toSeq
       .sortBy(_.fieldKey)
   }
@@ -84,7 +73,7 @@ class DataStore @Inject()(datFile: DatFile) extends  LazyLogging{
    * @return [[FieldEntry]] if fieldKey was found.
    */
   def apply(fieldKey: FieldKey): Option[FieldEntry] = {
-    map.values.find(_.fieldKey == fieldKey)
+    valuesMap.values.find(_.fieldKey == fieldKey)
   }
 
   /**
@@ -93,13 +82,13 @@ class DataStore @Inject()(datFile: DatFile) extends  LazyLogging{
    * @return al the field for the key.
    */
   def apply(key: Key): Seq[FieldEntry] = {
-    map.values
+    valuesMap.values
       .filter(_.fieldKey.key == key)
       .toSeq
       .sortBy(_.fieldKey.fieldName)
   }
 
-  def candidates:Seq[FieldEntry] = all.filter(_.candidate.nonEmpty)
+  def candidates: Seq[FieldEntry] = all.filter(_.candidate.nonEmpty)
 
   /**
    * Moves the  candidate to the fieldValue
@@ -109,42 +98,53 @@ class DataStore @Inject()(datFile: DatFile) extends  LazyLogging{
    * @throws IllegalStateException if there is no candidate.
    */
   def acceptCandidate(fieldKey: FieldKey): Unit = {
-    map.put(fieldKey, map(fieldKey).acceptCandidate())
+    valuesMap.put(fieldKey, valuesMap(fieldKey).acceptCandidate())
     save()
   }
 
-
-  private def update(fieldKey: FieldKey, value: String): Unit = {
-    val entry: FieldEntry = map(fieldKey)
-    map.put(fieldKey, entry.setCandidate(value))
+  def update(updateData: UpdateData): Unit = {
+    handleCandidates(updateData.candidates)
+    handleNames(updateData.names)
+    save()
   }
 
-  def simpleCandidate(newCandidate: FormValue): Unit =
-    simpleCandidate(Seq(newCandidate))
-
-  def simpleCandidate(newValues: Iterable[FormValue]): Unit = {
-    newValues.foreach { formValue =>
-      val fieldKey = formValue.fieldKey
-      val currentEntry: FieldEntry = map.apply(fieldKey)
-      val newFieldEntry = currentEntry.setCandidate(formValue.sFormValue)
-      map.put(fieldKey, newFieldEntry)
+  def update(fieldEntries: Seq[FieldEntry]): Unit = {
+    fieldEntries.foreach { fieldEntry =>
+      valuesMap.put(fieldEntry.fieldKey, fieldEntry)
     }
     save()
   }
 
-  def complexCandidate(newValue: ComplexFieldValue[_]): Unit =
-    complexCandidate(Seq(newValue))
+  private def handleCandidates(candidates: Seq[UpdateCandidate]): Unit = {
+    candidates.foreach { candidate: UpdateCandidate =>
+      val fieldKey = candidate.fieldKey
+      val currentEntry = valuesMap(candidate.fieldKey)
+      val newEntry: FieldEntry = candidate.candidate match {
+        case Left(formValue: String) =>
+          currentEntry.setCandidate(formValue)
 
-  def complexCandidate(newValues: Iterable[ComplexFieldValue[_]]): Unit = {
-    newValues.foreach { fieldValue: ComplexFieldValue[_] =>
-      val fieldKey = fieldValue.fieldKey
-
-      val current: FieldEntry = map.apply(fieldKey)
-      val updatedFieldEntry: FieldEntry = current.setCandidate(fieldValue)
-      map.put(fieldKey, updatedFieldEntry)
+        case Right(value: ComplexFieldValue[_]) =>
+          currentEntry.setCandidate(value)
+        case x =>
+          logger.error(s"Neither right nor left.  $x")
+          throw new NotImplementedError() //todo
+      }
+      valuesMap.put(fieldKey, newEntry)
     }
-    save()
   }
+
+  private def handleNames(namedKeys: Seq[NamedKey]): Unit = {
+    // Now handle key name.
+    namedKeys.foreach { namedKey =>
+      val key = namedKey.key
+      val name = namedKey.name
+      if (name.isBlank)
+        keyNamesMap.remove((key))
+      else
+        keyNamesMap.put(key, name)
+    }
+  }
+
 
   private def save(): Unit = {
     Files.createDirectories(datFile.dataStsorePath.getParent)
@@ -153,18 +153,31 @@ class DataStore @Inject()(datFile: DatFile) extends  LazyLogging{
     Files.writeString(datFile.dataStsorePath, sJson)
     logger.debug("Saved DataStore to {}", datFile.dataStsorePath)
   }
+
+  override def nameForKey(key: Key): String = {
+    keyNamesMap.getOrElse(key, "")
+  }
+
+  def allNamedKeys: Seq[NamedDataJson] = keyNamesMap.map { case (key, name) =>
+    NamedDataJson(key, name)
+  }.toSeq
 }
 
 object DataStore {
 
   import play.api.libs.json._
 
-  implicit val fmtMappedValues: Format[DataStore] = new Format[DataStore] {
+  implicit val fmtDataStore: Format[DataStore] = new Format[DataStore] {
     override def reads(json: JsValue): JsResult[DataStore] = ???
 
     override def writes(o: DataStore): JsValue = {
-      Json.toJson(o.all.map(fieldEntry =>
+      val jsValues: JsArray = JsArray(o.all.map(fieldEntry =>
         Json.toJson(FieldEntryJson(fieldEntry))))
+      val jsNames: JsArray = JsArray(o.allNamedKeys.map(Json.toJson(_)))
+      Json.obj {
+        "values" -> jsValues
+        "keyNames" -> jsNames
+      }
     }
   }
 }
@@ -201,6 +214,20 @@ object FieldEntryJson {
 
 }
 
+/**
+ * What is sent to the [[DataStore]] to be the new candidate and name.
+ *
+ * @param fieldKey   id of value.
+ * @param candidate  contents of value. To set as candidate.
+ */
+case class UpdateCandidate(fieldKey: FieldKey, candidate: Either[String, ComplexFieldValue[_]])
 
+case class UpdateData(candidates: Seq[UpdateCandidate], names: Seq[NamedKey] = Seq.empty)
+
+case class NamedDataJson(key: Key, name: String)
+
+object NamedDataJson {
+  implicit val fmtNamedDataJson: Format[NamedDataJson] = Json.format[NamedDataJson]
+}
 
 

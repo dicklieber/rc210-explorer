@@ -19,19 +19,17 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
-import net.wa9nnn.rc210.data.datastore.{DataStore, FormValue}
-import net.wa9nnn.rc210.data.{FieldKey, datastore}
+import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.datastore.{DataStore, FormValue, UpdateCandidate, UpdateData}
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.data.named.NamedManager
 import net.wa9nnn.rc210.key.KeyFactory.LogicAlarmKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.mvc._
-import play.twirl.api.Html
 
 import javax.inject._
+import scala.collection.immutable
 
-class LogicAlarmEditorController @Inject()(val controllerComponents: ControllerComponents, dataStore: DataStore
-                                     )(implicit namedManager: NamedManager)
+class LogicAlarmEditorController @Inject()(val controllerComponents: ControllerComponents, dataStore: DataStore)
   extends BaseController with LazyLogging {
 
   def index(): Action[AnyContent] = Action {
@@ -61,14 +59,9 @@ class LogicAlarmEditorController @Inject()(val controllerComponents: ControllerC
 
       val colHeaders: Seq[Cell] = for {
         alarmKey <- KeyFactory[LogicAlarmKey](KeyKind.logicAlarmKey)
-      } yield
-        namedManager.getName(alarmKey) match {
-          case Some(value) =>
-            Cell(value)
-              .withToolTip(s"Alarm ${alarmKey.number}")
-
-          case None => Cell(alarmKey.toString)
-        }
+      } yield {
+        alarmKey.namedCell()
+      }
       val header = Header(s"Logic Alarms (${rows.length} values)", "Field" +: colHeaders: _*)
       val table = Table(header, rows)
 
@@ -79,9 +72,11 @@ class LogicAlarmEditorController @Inject()(val controllerComponents: ControllerC
     implicit request: Request[AnyContent] =>
       val kv: Map[String, String] = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }.filterNot(_._1 == "save")
 
-      dataStore.simpleCandidate(kv.map { case (name, formValue) =>
-        FormValue(name, formValue)
-      })
+     val r: Seq[UpdateCandidate] =  kv.map { case (name, formValue) =>
+        val fieldKey = FieldKey.fromParam(name)
+       UpdateCandidate(fieldKey, Left(formValue))
+      }.toSeq
+      dataStore.update(UpdateData(r)) // todo handle name.
 
       Redirect(routes.LogicAlarmEditorController.index())
   }

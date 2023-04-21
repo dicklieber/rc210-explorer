@@ -17,12 +17,12 @@
 
 package controllers
 
+import com.wa9nnn.util.tableui.{Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.datastore.DataStore
+import net.wa9nnn.rc210.data.datastore.{DataStore, UpdateCandidate, UpdateData}
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.message.Message
-import net.wa9nnn.rc210.data.named.NamedManager
+import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.key.KeyFactory._
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.mvc._
@@ -31,15 +31,15 @@ import javax.inject.{Inject, Singleton}
 import scala.util.matching.Regex
 
 @Singleton()
-class MessageController @Inject()(dataStore: DataStore
-                                 )(implicit namedSource: NamedManager, functionsProvider: FunctionsProvider) extends MessagesInjectedController {
+class MessageController @Inject()(dataStore: DataStore) extends MessagesInjectedController {
 
 
   def index(): Action[AnyContent] = Action { implicit request =>
 
-    val entries: Seq[FieldEntry] = dataStore.apply(KeyKind.messageKey)
-    val messages: Seq[Message] = entries.map(_.value[Message])
-    Ok(views.html.messages(messages))
+    val rows: Seq[Row] = dataStore.apply(KeyKind.messageKey)
+      .map(_.value[Message].toRow)
+    val table = Table(Message.header(rows.length), rows)
+    Ok(views.html.messages(table))
   }
 
   def edit(key: MessageKey): Action[AnyContent] = Action { implicit request =>
@@ -48,9 +48,8 @@ class MessageController @Inject()(dataStore: DataStore
     val maybeEntry: Option[FieldEntry] = dataStore(fieldKey)
     maybeEntry match {
       case Some(fieldEntry: FieldEntry) =>
-        val name = namedSource.nameForKey(key)
         val value: Message = fieldEntry.value
-        Ok(views.html.messageEditor(value, name))
+        Ok(views.html.messageEditor(value))
 
       case None =>
         NotFound(s"No keyField: $fieldKey")
@@ -58,7 +57,8 @@ class MessageController @Inject()(dataStore: DataStore
   }
 
   def save(): Action[AnyContent] = Action { implicit request =>
-    val formData: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
+    val formUrlEncoded: Option[Map[String, Seq[String]]] = request.body.asFormUrlEncoded
+    val formData: Map[String, Seq[String]] = formUrlEncoded.get
 
     val sKey = formData("key").head
     val key: MessageKey = KeyFactory(sKey)
@@ -69,8 +69,10 @@ class MessageController @Inject()(dataStore: DataStore
       s.toInt
     }.toIndexedSeq
 
-    val newMacroNode = Message(key, words)
-    dataStore.complexCandidate(newMacroNode)
+    val message = Message(key, words)
+    val updateCandidate = UpdateCandidate(message.fieldKey, Right(message))
+    val keyNames = Seq(NamedKey(key, formData("name").head))
+    dataStore.update(UpdateData(Seq(updateCandidate), keyNames))
     Redirect(routes.MessageController.index())
   }
 }

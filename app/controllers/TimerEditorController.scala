@@ -18,23 +18,20 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
-import net.wa9nnn.rc210.data.datastore.{DataStore, FormValue}
+import com.wa9nnn.util.tableui.{Header, Row, Table}
+import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.datastore.{DataStore, UpdateCandidate, UpdateData}
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldInt}
-import net.wa9nnn.rc210.data.named.{NamedKey, NamedManager}
+import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.data.timers.Timer
-import net.wa9nnn.rc210.data.{FieldKey, datastore}
 import net.wa9nnn.rc210.key.KeyFactory.{Key, MacroKey, TimerKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.util.MacroSelect
 import play.api.mvc._
 
 import javax.inject._
-import scala.collection.immutable
 
-class TimerEditorController @Inject()(val controllerComponents: ControllerComponents,
-                                      datastore: DataStore
-                                     )(implicit namedManager: NamedManager)
+class TimerEditorController @Inject()(val controllerComponents: ControllerComponents, datastore: DataStore)
   extends BaseController with LazyLogging {
 
   def index(): Action[AnyContent] = Action {
@@ -43,7 +40,7 @@ class TimerEditorController @Inject()(val controllerComponents: ControllerCompon
 
       val rows: Seq[Row] = timerFields.map { fieldEntry =>
         val value: Timer = fieldEntry.value
-        value.toRow()
+        value.toRow
       }
       val header = Header(s"Timers (${rows.length} values)", "Timer", "Seconds", "Macro To Run")
       val table = Table(header, rows)
@@ -53,22 +50,30 @@ class TimerEditorController @Inject()(val controllerComponents: ControllerCompon
 
   def save(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      val timers: Iterable[Timer] = request.body.asFormUrlEncoded
+
+      val namedKeyBuilder = Seq.newBuilder[NamedKey]
+
+      val timers: Seq[UpdateCandidate] = request.body.asFormUrlEncoded
         .get
         .filterNot(_._1 == "save")
-        .map { t => FieldKey.fromParam(t._1) -> t._2.head }
+        .map { t: (String, Seq[String]) => FieldKey.fromParam(t._1) -> t._2.head }
         .groupBy(_._1.key)
         .map { case (key: Key, values: Map[FieldKey, String]) =>
           val valueMap = values.map { case (fk, value) =>
             fk.fieldName -> value
           }.toMap
           val name = valueMap("name")
+          namedKeyBuilder += NamedKey(key, name)
           val seconds = FieldInt(valueMap("seconds").toInt)
           val macrotoRun: MacroKey = KeyFactory.apply(valueMap("macro"))
           val macroSelect = MacroSelect(macrotoRun)
-          Timer(key = key.asInstanceOf[TimerKey], seconds = seconds, macroSelect = macroSelect)
-        }
-        datastore.complexCandidate(timers)
+          val timer = Timer(key.asInstanceOf[TimerKey] , seconds = seconds, macroSelect = macroSelect)
+          UpdateCandidate(timer.fieldKey, Right(timer))
+        }.toSeq
+      datastore.update(UpdateData(timers, namedKeyBuilder.result()))
       Redirect(routes.TimerEditorController.index())
   }
+
+
+
 }

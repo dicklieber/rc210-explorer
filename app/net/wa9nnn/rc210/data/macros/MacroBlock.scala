@@ -19,15 +19,13 @@ package net.wa9nnn.rc210.data.macros
 
 import com.wa9nnn.util.tableui.Row
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
-import net.wa9nnn.rc210.data.named.NamedManager
 
 /**
  * Build function rows for a [[MacroNode]]
  * Prepends a column with MacroNode metadata key and name. etc.
  */
 object MacroBlock {
-  def apply(macroNode: MacroNode)(implicit namedManager: NamedManager,
-                                  functionsProvider: FunctionsProvider): Seq[Row] = {
+  def apply(macroNode: MacroNode)(implicit functionsProvider: FunctionsProvider): Seq[Row] = {
 
 /*
     implicit val functions: Seq[FunctionKey] = macroNodes.functions

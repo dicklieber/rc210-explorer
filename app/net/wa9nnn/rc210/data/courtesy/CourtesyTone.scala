@@ -45,7 +45,7 @@ case class CourtesyTone(override val key: CourtesyToneKey, segments: Seq[Segment
 
   override val fieldName: String = "CourtesyTone"
 
-  override def toRow()(implicit namedSource: NamedSource): Row = {
+  override def toRow: Row = {
     throw new NotImplementedError() //todo
   }
 

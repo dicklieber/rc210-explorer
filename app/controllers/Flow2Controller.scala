@@ -18,13 +18,11 @@
 package controllers
 
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
-import net.wa9nnn.rc210.data.named.NamedManager
 import play.api.mvc._
 
 import javax.inject.Inject
 
 class Flow2Controller @Inject()(implicit val controllerComponents: ControllerComponents,
-                                namedManager: NamedManager,
                                 functionsProvider: FunctionsProvider) extends BaseController {
 
   def flow(): Action[AnyContent] = Action {
