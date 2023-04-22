@@ -30,10 +30,10 @@ case class FieldDtmf(value: String) extends SimpleFieldValue {
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommand(fieldEntry: FieldEntry): String = {
+  override def toCommand(fieldEntry: FieldEntryBase): String = {
     val fieldKey = fieldEntry.fieldKey
     val key: KeyFactory.Key = fieldKey.key
-    key.replaceN(fieldEntry.fieldDefinition.template)
+    key.replaceN(fieldEntry.template)
       .replaceAll("v", value) //todo probably not right.
   }
 

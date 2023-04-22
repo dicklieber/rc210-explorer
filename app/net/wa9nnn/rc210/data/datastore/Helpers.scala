@@ -36,6 +36,7 @@ import net.wa9nnn.rc210.key.KeyFormats._
 case class FieldEntryJson(fieldKey: FieldKey, fieldValue: JsValue, candidate: Option[JsValue])
 
 
+
 /**
  * Helper to transfer values from an html form to the [[DataStore]].
  *
@@ -65,7 +66,7 @@ object FieldEntryJson {
 case class UpdateCandidate(fieldKey: FieldKey, candidate: Either[String, ComplexFieldValue[_]])
 
 object UpdateCandidate {
-  def apply(complexFieldValue: ComplexFieldValue[_]):UpdateCandidate = {
+  def apply(complexFieldValue: ComplexFieldValue[_]): UpdateCandidate = {
     new UpdateCandidate(complexFieldValue.fieldKey, Right(complexFieldValue))
   }
 }

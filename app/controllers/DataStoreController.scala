@@ -19,26 +19,24 @@ package controllers
 
 import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.datastore.{DataStore, FieldEntryJson, JsonFileLoader}
+import net.wa9nnn.rc210.data.datastore.{DataStore, DataStoreJson}
 import play.api.libs.Files
 import play.api.libs.json.Json
 import play.api.mvc._
 
-import java.io.InputStream
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
-import scala.util.{Failure, Success, Using}
 
 @Singleton
 class DataStoreController @Inject()(implicit val controllerComponents: ControllerComponents,
-                                    dataStore: DataStore
+                                    dataStore: DataStore,
+                                    dataStoreJson: DataStoreJson
                                    ) extends BaseController with LazyLogging {
   implicit val timeout: Timeout = 5.seconds
 
   def downloadJson(): Action[AnyContent] = Action {
 
-    val jsObject = Json.toJson(dataStore)
-    val sJson = Json.prettyPrint(jsObject)
+    val sJson = Json.prettyPrint(Json.toJson(dataStore.toJson))
 
     Ok(sJson).withHeaders(
       "Content-Type" -> "text/json",
@@ -54,20 +52,9 @@ class DataStoreController @Inject()(implicit val controllerComponents: Controlle
     val body = request.body
     body
       .file("jsonFile")
-      .map { jsonFile: MultipartFormData.FilePart[Files.TemporaryFile] =>
-
-        val ref: Files.TemporaryFile = jsonFile.ref
-        Using(java.nio.file.Files.newInputStream(ref.path)) { is: InputStream =>
-          val enrtries: Seq[FieldEntryJson] = Json.parse(is).as[Seq[FieldEntryJson]]
-          JsonFileLoader(enrtries, dataStore)
-          ref.delete()
-        } match {
-          case Failure(exception: Throwable) =>
-            logger.error(s"Uploading: ${jsonFile.filename}", exception)
-            InternalServerError(exception.getMessage)
-          case _ =>
-            Ok("File uploaded")
-        }
-      }.get
+      .foreach { jsonFile: MultipartFormData.FilePart[Files.TemporaryFile] =>
+        dataStoreJson.load(dataStore, jsonFile.ref.path)
+      }
+    Redirect(routes.MacroNodeController.index())
   }
 }

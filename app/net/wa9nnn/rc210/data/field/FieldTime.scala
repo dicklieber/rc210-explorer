@@ -33,13 +33,13 @@ case class FieldTime(value: LocalTime = LocalTime.MIN) extends SimpleFieldValue 
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommand(fieldEntry: FieldEntry): String = {
+  override def toCommand(fieldEntry: FieldEntryBase): String = {
     val fieldKey = fieldEntry.fieldKey
     val key: KeyFactory.Key = fieldKey.key
     val minute = value.getMinute
     val hour = value.getHour
     val timePiece = f"$hour%02d*$minute%02d"
-    key.replaceN(fieldEntry.fieldDefinition.template)
+    key.replaceN(fieldEntry.template)
       .replaceAll("v", timePiece)
   }
 

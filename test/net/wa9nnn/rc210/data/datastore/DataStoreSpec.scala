@@ -35,9 +35,9 @@ class DataStoreSpec extends WithTestConfiguration {
       val message = Message(KeyFactory.messageKey(1), Seq(1, 2, 3))
       val fieldEntry: FieldEntry = FieldEntry(MesssageExtractor, message)
 
-      Files.exists(datFile.dataStsorePath) must beFalse
+      Files.exists(datFile.dataStorePath) must beFalse
       dataStore.update(Seq(fieldEntry))
-      Files.exists(datFile.dataStsorePath) must beTrue
+      Files.exists(datFile.dataStorePath) must beTrue
     }
 
     "candidates" >> {

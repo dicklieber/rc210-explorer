@@ -64,7 +64,7 @@ class FieldDefinitions @Inject()() {
     SimpleField(154, "CTCSS Encode Timer", portKey, "n*1007", FieldInt) max 255 units "1/10 Seconds",
     SimpleField(157, "Repeat Mode", portKey, "n14b", FieldBoolean),
     SimpleField(160, "Timeout Timer", portKey, "n*1001v", FieldInt) max 32767 units "seconds",
-    SimpleField(166, "DTMF Mute", portKey, "n*1001v", FieldBoolean),
+    SimpleField(166, "DTMF Mute", portKey, "n*1001b", FieldBoolean),
     SimpleField(169, "Enable", logicAlarmKey, "n191b", FieldBoolean),
     SimpleField(174, "Macro Low", logicAlarmKey, "*2101 n v", MacroSelect),
     SimpleField(179, "Macro High", logicAlarmKey, "*2102 n v", MacroSelect),

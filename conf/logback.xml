@@ -46,7 +46,7 @@
     <logger name="controllers.CourtesyToneEditorController" level="INFO"/>
     <logger name="controllers.IOController" level="INFO"/>
     <logger name="net.wa9nnn.rc210.serial.ERamCollector" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.data.datastore.DataStore" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.data.datastore.DataStore" level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref ref="ASYNCFILE"/>

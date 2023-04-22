@@ -19,10 +19,8 @@ package net.wa9nnn.rc210.data.datastore
 
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.io.DatFile
-import play.api.libs.json.Json
 
 import javax.inject.{Inject, Singleton}
-import scala.util.Using
 
 
 /**
@@ -33,12 +31,10 @@ import scala.util.Using
  * @param datFile          wjefre files are located based on [[com.typesafe.config.Config]].
  */
 @Singleton
-class InitialLoader @Inject()(memoryFileLoader: MemoryFileLoader, dataStore: DataStore, datFile: DatFile) {
+class InitialLoader @Inject()(memoryFileLoader: MemoryFileLoader, dataStore: DataStore, dataStoreJson: DataStoreJson, datFile: DatFile) {
+
   private val seq: Seq[FieldEntry] = memoryFileLoader.load(datFile.memoryFile)
   dataStore.load(seq)
 
-  Using(datFile.dataStoreFile.openStream()) { inoutStream =>
-    val seq: Seq[FieldEntryJson] = Json.parse(inoutStream).as[Seq[FieldEntryJson]]
-    JsonFileLoader(seq, dataStore)
-  }
+  dataStoreJson.load(dataStore)
 }

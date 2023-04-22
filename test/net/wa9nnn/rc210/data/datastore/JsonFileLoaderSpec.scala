@@ -42,7 +42,7 @@ class JsonFileLoaderSpec extends WithTestConfiguration {
 
       Using(url.openStream()) { inputStream =>
         val seq = Json.parse(inputStream).as[Seq[FieldEntryJson]]
-        JsonFileLoader(seq, dataStore)
+        DataStoreJson(seq, dataStore)
       }
       dataStore.all must haveLength(301) //stl
     }

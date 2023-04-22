@@ -15,22 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.named
+package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.key.KeyFactory.Key
-import play.api.libs.json.{Format, Json}
-import net.wa9nnn.rc210.key.KeyFormats._
-case class NamedKey(key: Key, name: String) extends Ordered[NamedKey] {
-  override def compare(that: NamedKey): Int = key compareTo that.key
+import net.wa9nnn.rc210.data.FieldKey
+
+trait FieldEntryBase {
+  val fieldKey: FieldKey
+  val template: String
+
 }
-
-object NamedKey {
-  implicit val fmtNamedKey: Format[NamedKey] = Json.format[NamedKey]
-}
-
-
-trait NamedSource {
-  def nameForKey(key: Key): String
-}
-
-

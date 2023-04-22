@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.timers
 
 import com.wa9nnn.util.tableui.{Cell, Row}
-import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldInt, RenderMetadata}
+import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldEntryBase, FieldInt, RenderMetadata}
 import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.key.KeyFactory.TimerKey
 import net.wa9nnn.rc210.util.MacroSelect
@@ -43,7 +43,7 @@ case class Timer(key: TimerKey, seconds: FieldInt, macroSelect: MacroSelect) ext
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommand(fieldEntry: FieldEntry): String = "//todo"
+  override def toCommand(fieldEntry: FieldEntryBase): String = "//todo"
 
   override def toJsonValue: JsValue = Json.toJson(this)
 }

@@ -19,15 +19,12 @@ package net.wa9nnn.rc210.data.datastore
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry}
+import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
 import net.wa9nnn.rc210.data.named.{NamedKey, NamedSource}
-import net.wa9nnn.rc210.io.DatFile
 import net.wa9nnn.rc210.key.KeyFactory.Key
 import net.wa9nnn.rc210.key.KeyFormats._
 import net.wa9nnn.rc210.key.KeyKind
-import play.api.libs.json.Json
 
-import java.nio.file.Files
 import javax.inject.{Inject, Singleton}
 import scala.collection.concurrent.TrieMap
 import scala.collection.immutable.Seq
@@ -38,10 +35,10 @@ import scala.collection.immutable.Seq
  * Also holds named Keys.
  */
 @Singleton
-class DataStore @Inject()(datFile: DatFile) extends NamedSource with LazyLogging {
+class DataStore @Inject()(dataStoreJson: DataStoreJson) extends NamedSource with LazyLogging {
   Key.setNamedSource(this)
   private var valuesMap: TrieMap[FieldKey, FieldEntry] = new TrieMap[FieldKey, FieldEntry]
-  private val keyNamesMap = new TrieMap[Key, String]
+  private var keyNamesMap = new TrieMap[Key, String]
 
   /**
    * Replaces all fieldEntries in the [[DataStore]].
@@ -115,9 +112,37 @@ class DataStore @Inject()(datFile: DatFile) extends NamedSource with LazyLogging
     save()
   }
 
+  def toJson: DataTransferJson = {
+    DataTransferJson(all.map(_.toJson), allNamedKeys)
+  }
+
+  /**
+   * Replace data in the datastore
+   */
+  def fromJson(dataTransferJson: DataTransferJson): Unit = {
+    // Field Values
+    dataTransferJson.values.foreach { fieldEntryJson =>
+      val fieldKey = fieldEntryJson.fieldKey
+      valuesMap.get(fieldKey).foreach { fieldEntry =>
+        val newFieldValue: FieldValue = fieldEntry.fieldDefinition.parse(fieldEntryJson.fieldValue)
+        val newCandidate: Option[FieldValue] = fieldEntryJson.candidate.map(fieldEntry.fieldDefinition.parse)
+
+        val updated = fieldEntry.copy(fieldValue = newFieldValue, candidate = newCandidate)
+        valuesMap.put(fieldKey, updated)
+      }
+    }
+    // NamedKeys
+    val newNamedKeyMap = new TrieMap[Key, String]()
+    dataTransferJson.namedKeys.foreach { namedKey =>
+      newNamedKeyMap.put(namedKey.key, namedKey.name)
+    }
+    keyNamesMap = newNamedKeyMap
+  }
+
   private def handleCandidates(candidates: Seq[UpdateCandidate]): Unit = {
     candidates.foreach { candidate: UpdateCandidate =>
       val fieldKey = candidate.fieldKey
+
       val currentEntry = valuesMap(candidate.fieldKey)
       val newEntry: FieldEntry = candidate.candidate match {
         case Left(formValue: String) =>
@@ -139,7 +164,7 @@ class DataStore @Inject()(datFile: DatFile) extends NamedSource with LazyLogging
       val key = namedKey.key
       val name = namedKey.name
       if (name.isBlank)
-        keyNamesMap.remove((key))
+        keyNamesMap.remove(key)
       else
         keyNamesMap.put(key, name)
     }
@@ -147,29 +172,24 @@ class DataStore @Inject()(datFile: DatFile) extends NamedSource with LazyLogging
 
 
   private def save(): Unit = {
-    Files.createDirectories(datFile.dataStsorePath.getParent)
-    val jsObject = Json.toJson(this)
-    val sJson = Json.prettyPrint(jsObject)
-    Files.writeString(datFile.dataStsorePath, sJson)
-    logger.debug("Saved DataStore to {}", datFile.dataStsorePath)
+    dataStoreJson.write(toJson)
   }
 
   override def nameForKey(key: Key): String = {
     keyNamesMap.getOrElse(key, "")
   }
 
-  def allNamedKeys: Seq[NamedDataJson] = keyNamesMap.map { case (key, name) =>
-    NamedDataJson(key, name)
+  private def allNamedKeys: Seq[NamedKey] = keyNamesMap.map { case (key, name) =>
+    NamedKey(key, name)
   }.toSeq
 }
 
+/*
 object DataStore {
 
   import play.api.libs.json._
 
-  implicit val fmtDataStore: Format[DataStore] = new Format[DataStore] {
-    override def reads(json: JsValue): JsResult[DataStore] = ???
-
+  implicit val fmtDataStore: Writes[DataStore] = new Writes[DataStore] {
     override def writes(o: DataStore): JsValue = {
       val jsValues: JsArray = JsArray(o.all.map(fieldEntry => Json.toJson(FieldEntryJson(fieldEntry))))
       val jsNames: JsArray = JsArray(o.allNamedKeys.map(Json.toJson(_)))
@@ -180,4 +200,5 @@ object DataStore {
     }
   }
 }
+*/
 

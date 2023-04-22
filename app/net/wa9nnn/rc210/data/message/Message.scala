@@ -20,7 +20,7 @@ package net.wa9nnn.rc210.data.message
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row}
 import controllers.routes
-import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry}
+import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldEntryBase}
 import net.wa9nnn.rc210.data.vocabulary.Words
 import net.wa9nnn.rc210.key.KeyFactory.{Key, MessageKey}
 import net.wa9nnn.rc210.ui.EditButton
@@ -53,7 +53,7 @@ case class Message(key: MessageKey, words: Seq[Int]) extends ComplexFieldValue[M
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommand(fieldEntry: FieldEntry): String = "//todo"
+  override def toCommand(fieldEntry: FieldEntryBase): String = "//todo"
 
   override def toJsonValue: JsValue = Json.toJson(this)
 }
@@ -69,7 +69,7 @@ object Message extends LazyLogging {
   def apply(key: Key, kv: Map[String, String]): Message = {
 
     val words: Array[Int] = kv("words").split(",").filter(_.nonEmpty).map(_.toInt)
-    new Message(key.asInstanceOf[MessageKey], words)
+    new Message(key.asInstanceOf[MessageKey], words.toIndexedSeq)
   }
 }
 

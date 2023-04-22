@@ -19,6 +19,7 @@ package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui._
 import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.datastore.FieldEntryJson
 import net.wa9nnn.rc210.key.KeyKind
 
 
@@ -29,7 +30,7 @@ import net.wa9nnn.rc210.key.KeyKind
  * @param candidate       the,potential, next value.
  */
 case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fieldValue: FieldValue, candidate: Option[FieldValue] = None)
-  extends Ordered[FieldEntry] with CellProvider with RenderMetadata {
+  extends Ordered[FieldEntry] with CellProvider with RenderMetadata with FieldEntryBase{
 
   def value[F <: FieldValue]: F = {
     candidate.getOrElse(fieldValue).asInstanceOf[F]
@@ -104,9 +105,13 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
     }
   }
 
+  def toJson:FieldEntryJson = {
+    FieldEntryJson(this)
+  }
 
   override def compare(that: FieldEntry): Int = fieldKey compare that.fieldKey
 
+  override val template: String = fieldDefinition.template
 }
 
 

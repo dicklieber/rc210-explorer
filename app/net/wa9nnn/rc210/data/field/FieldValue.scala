@@ -35,7 +35,7 @@ sealed trait FieldValue {
   /**
    * Render this value as an RD-210 command string.
    */
-  def toCommand(fieldEntry: FieldEntry): String
+  def toCommand(fieldEntry: FieldEntryBase): String
 
   /**
    * Render as HTML. Either a single field of an entire HTML Form.
