@@ -17,14 +17,26 @@
 
 package net.wa9nnn.rc210.util
 
+import com.wa9nnn.util.tableui.Row
 import net.wa9nnn.rc210.data.field.{FieldExtractor, FieldValue, RenderMetadata, SimpleExtractor, SimpleField}
 import net.wa9nnn.rc210.key.KeyFactory.MacroKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.model.TriggerNode
 import play.api.libs.json._
 
 /**
  */
-case class MacroSelect(value: MacroKey = KeyFactory.defaultMacroKey) extends FieldSelect[MacroKey] {
+case class MacroSelect(value: MacroKey = KeyFactory.defaultMacroKey) extends FieldSelect[MacroKey] with TriggerNode{
+  override val macroToRun: MacroKey = value
+
+  override def triggerEnabled: Boolean = true
+
+  override def triggerDescription: String = "Macro to Run"
+
+  override val key: KeyFactory.Key = value
+
+  override def toRow: Row = Row(value.toCell)
+
   override val selectOptions: Seq[SelectOption] = KeyFactory[MacroKey](KeyKind.macroKey).map { macroKey =>
     SelectOption(macroKey.number, macroKey.toString)
   }

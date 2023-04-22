@@ -1,7 +1,8 @@
 @import com.wa9nnn.util.tableui.html.renderTableBodyRows
 @import net.wa9nnn.rc210.data.functions.FunctionsProvider
 @import net.wa9nnn.rc210.data.macros.{MacroBlock, MacroNode}
-@(macroNodes: Seq[MacroNode])(implicit functionsProvider: FunctionsProvider)
+@import net.wa9nnn.rc210.data.datastore.DataStore
+@(macroNodes: Seq[MacroNode])(implicit functionsProvider: FunctionsProvider, dataStore: DataStore)
 
 @main("RCP Dat") {
     <h1>Flow</h1>
@@ -16,7 +17,7 @@
         </thead>
         <tbody>
         @for(macroNode <- macroNodes) {
-            @renderTableBodyRows(MacroBlock(macroNode))
+            @renderTableBodyRows(MacroBlock(macroNode, dataStore))
         }
         </tbody>
     </table>

@@ -21,6 +21,7 @@ import controllers.routes
 import net.wa9nnn.rc210.ui.Tabs.TabName
 
 object Tabs {
+  val flowTab: Tab = Tab("Flow", routes.Flow2Controller.flow().url, "How to Macros to things. How this all works.")
   val commonTab: Tab = Tab("Common", routes.CommonEditorController.index().url, "Global settings")
   val ctTab: Tab = Tab("CT", routes.CourtesyToneEditorController.index().url, "Courtesy Tones")
 
@@ -44,6 +45,7 @@ object Tabs {
 
 
   val tabs: Seq[Tab] = Seq(
+    flowTab,
     metersTab,
     logicAlarmTab,
     commonTab,

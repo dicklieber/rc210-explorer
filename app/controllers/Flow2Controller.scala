@@ -17,12 +17,15 @@
 
 package controllers
 
+import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
+import net.wa9nnn.rc210.data.macros.MacroNode
+import net.wa9nnn.rc210.key.KeyKind
 import play.api.mvc._
 
 import javax.inject.Inject
 
-class Flow2Controller @Inject()(implicit val controllerComponents: ControllerComponents,
+class Flow2Controller @Inject()(implicit val controllerComponents: ControllerComponents, dataStore: DataStore,
                                 functionsProvider: FunctionsProvider) extends BaseController {
 
   def flow(): Action[AnyContent] = Action {
@@ -35,6 +38,7 @@ class Flow2Controller @Inject()(implicit val controllerComponents: ControllerCom
 //        .filter(_.nodeEnabled)
 //
 //      Ok(views.html.flow(macroNodes))
-      Ok(views.html.flow(Seq.empty))
+      val value: Seq[MacroNode] = dataStore.apply(KeyKind.macroKey).map(_.value.asInstanceOf[MacroNode])
+      Ok(views.html.flow(value))
   }
 }

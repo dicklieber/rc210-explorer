@@ -20,7 +20,9 @@ package net.wa9nnn.rc210.data.field
 import com.wa9nnn.util.tableui._
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.datastore.FieldEntryJson
+import net.wa9nnn.rc210.key.KeyFactory.MacroKey
 import net.wa9nnn.rc210.key.KeyKind
+import net.wa9nnn.rc210.model.TriggerNode
 
 
 /**
@@ -81,6 +83,8 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
   def toCell: Cell = {
     Cell.rawHtml(s"$toHtml")
   }
+
+  def canTriggerMacro:Option[MacroKey] = fieldValue.isInstanceOf[TriggerNode]
 
   override def toString: String = {
     s"${fieldKey.fieldName}: ${fieldValue.display}"
