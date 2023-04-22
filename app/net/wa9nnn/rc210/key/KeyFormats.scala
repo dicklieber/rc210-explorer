@@ -39,9 +39,9 @@ object KeyFormats {
         val jsKey: FunctionKey = (json \ "key").as[Key].asInstanceOf[FunctionKey]
 
         val sdesc: String = (json \ "description").as[String]
-        val sdest: Option[Key] = (json \ "destination").asOpt[Key]
+        val dest: Option[Key] = (json \ "destination").asOpt[Key]
 
-        val f = FunctionNode(jsKey, sdesc, sdest)
+        val f = FunctionNode(jsKey, sdesc, dest)
         JsSuccess(f)
       }
       catch {

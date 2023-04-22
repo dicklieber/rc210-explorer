@@ -23,6 +23,7 @@ case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dt
 
   def enabled: Boolean = functions.nonEmpty
 
+  override def canRunMacro(macroKey: MacroKey): Boolean = false //todo look for FunctionNode with destination that has the macro of interest.
 
   //  override val commandStringValue: String = "*4002 10 * 162 * 187 * 122 * 347" // todo
 
@@ -32,11 +33,6 @@ case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dt
    */
   override def toCommand(fieldEntry: FieldEntryBase): String = "//todo"
 
-  override def macroToRun: MacroKey = ???
-
-  override def triggerEnabled: Boolean = ???
-
-  override def triggerDescription: String = ???
 
   override def toRow: Row = {
     throw new NotImplementedError() //todo
@@ -47,6 +43,7 @@ case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dt
   override def display: String = functions.map(_.number).mkString(" ")
 
   override def toJsonValue: JsValue = Json.toJson(this)
+
 
 }
 

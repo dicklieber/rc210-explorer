@@ -13,10 +13,7 @@ trait Node extends RowSource {
  * A [[Node]] that can invoke a Macro
  */
 trait TriggerNode extends Node with RowSource {
-  def macroToRun: MacroKey
-  def triggerEnabled:Boolean
-  def triggerRow:Row = Row(key.toCell, triggerDescription)
-  def triggerDescription:String
+def canRunMacro(macroKey: MacroKey):Boolean
 }
 
 //case class TriggerDetail(key:Key, macroToRun: MacroKey, description:String)

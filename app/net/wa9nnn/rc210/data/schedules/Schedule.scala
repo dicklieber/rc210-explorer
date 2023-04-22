@@ -28,29 +28,9 @@ case class Schedule(override val key: ScheduleKey,
                     selectedMacroToRun: MacroSelect,
                     enabled: FieldBoolean) extends ComplexFieldValue[ScheduleKey] with TriggerNode with RenderMetadata {
 
-
-//  override def toJsValue: JsValue = {
-//    val fields: JsObject = Json.obj(
-//      "key" -> key.toString,
-//      "dayOfWeek" -> dayOfWeek.display,
-//      "weekInMonth" -> weekInMonth.display,
-//      "monthOfYear" -> monthOfYear.display,
-//      "time" -> time.display,
-//      "selectedMacroToRun" -> selectedMacroToRun.display,
-//      "enabled" -> enabled.display
-//    )
-//    fields
-//  }
-
-
-
   val description: String = {
     val week = s" Week: $weekInMonth"
     s"$monthOfYear$week on $dayOfWeek at $time"
-  }
-
-  override def triggerRow: Row = {
-    Row(key.toCell, description)
   }
 
   override def toRow: Row = {
@@ -72,12 +52,6 @@ case class Schedule(override val key: ScheduleKey,
     ))
 
   }
-
-  override val triggerEnabled: Boolean = nodeEnabled
-
-  override def triggerDescription: String = toString
-
-
   /**
    * Render this value as an RD-210 command string.
    */
@@ -92,12 +66,12 @@ case class Schedule(override val key: ScheduleKey,
 
   override def units: String = ""
 
-  override def macroToRun: KeyFactory.MacroKey = selectedMacroToRun.value
 
   override val fieldName: String = "Schedule"
 
   override def toJsonValue: JsValue = Json.toJson(this)
 
+  override def canRunMacro(macroKey: KeyFactory.MacroKey): Boolean = selectedMacroToRun.value == macroKey
 }
 
 object Schedule extends LazyLogging with ComplexExtractor {

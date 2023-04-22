@@ -47,15 +47,22 @@ class FunctionsProvider extends LazyLogging {
   lazy val invokedMessageMacros: Seq[MessageKey] = for {
     function <- functions
     destKey <- function.destination
-    if destKey.isInstanceOf[MessageKey]
   } yield {
     destKey.asInstanceOf[MessageKey]
   }
 
 }
 
+/**
+ *
+ * @param key of the function.
+ * @param description human readable.
+ * @param destination MacroKey or MessageKey
+ */
 case class FunctionNode(key: FunctionKey, description: String, destination: Option[Key]) extends Ordered[FunctionNode] with RowSource {
-
+destination foreach(destKey =>
+  assert(destKey.isInstanceOf[MacroKey] || destKey.isInstanceOf[MessageKey], s"destination must be MacrpoKey or MessageKey! But got: $key")
+  )
   override def compare(that: FunctionNode): Int = description compareTo that.description
 
   override def toRow: Row = {

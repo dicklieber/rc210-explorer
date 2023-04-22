@@ -21,7 +21,7 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
 import net.wa9nnn.rc210.data.named.{NamedKey, NamedSource}
-import net.wa9nnn.rc210.key.KeyFactory.Key
+import net.wa9nnn.rc210.key.KeyFactory.{Key, MacroKey}
 import net.wa9nnn.rc210.key.KeyFormats._
 import net.wa9nnn.rc210.key.KeyKind
 
@@ -83,6 +83,9 @@ class DataStore @Inject()(dataStoreJson: DataStoreJson) extends NamedSource with
       .filter(_.fieldKey.key == key)
       .toSeq
       .sortBy(_.fieldKey.fieldName)
+  }
+  def triggersForMacro(macroKey: MacroKey):Seq[FieldEntry ] = {
+    all.flatMap(_.canTriggerMacro(macroKey)).sortBy(_.fieldKey)
   }
 
   def candidates: Seq[FieldEntry] = all.filter(_.candidate.nonEmpty)

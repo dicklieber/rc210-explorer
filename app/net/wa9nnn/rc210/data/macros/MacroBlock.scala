@@ -19,9 +19,8 @@ package net.wa9nnn.rc210.data.macros
 
 import com.wa9nnn.util.tableui._
 import net.wa9nnn.rc210.data.datastore.DataStore
-import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
-import net.wa9nnn.rc210.data.message.Message
 import net.wa9nnn.rc210.key.KeyFactory.{FunctionKey, Key, MacroKey, MessageKey}
 
 /**
@@ -64,7 +63,6 @@ object MacroBlock {
             .withCssClass("flowMacroRight")
           if (last) {
             descriptionCell = descriptionCell.withCssClass("flowMacroBottom")
-            destinationCell = destinationCell.withCssClass("flowMacroBottom")
           }
           Seq(descriptionCell, destinationCell)
         }.getOrElse(Seq.empty)
@@ -73,17 +71,16 @@ object MacroBlock {
       def macroCell() = {
         val macroKey = macroNode.key
         macroKey.toCell
+          .withCssClass("flowMarcoCell")
+          .withRowSpan(functions.length)
       }
 
       def buildTriggersCell: Cell = {
         val macroKey = macroNode.key
-        //todo dataStore.trigges
-        val triggerRows = Seq.empty
-//        val triggerRows = rc210Data
-//          .triggers(macroKey)
-//          .map { triggerNode =>
-//            triggerNode.triggerRow
-//          }
+        val triggerRows = dataStore.triggersForMacro(macroKey).map{fieldEntry =>
+          val value: FieldValue = fieldEntry.value
+          Row(fieldEntry.fieldKey.toCell, value.display)
+        }
         val triggersTable = Table(Seq.empty, triggerRows)
         val table = Table(
           headers = Seq.empty,
@@ -101,7 +98,7 @@ object MacroBlock {
           .withCssClass("flowMacroBottom flowMacroLeft flowMacroTop")
           .withToolTip(s"Macro Command ${macroKey.number}")
 
-      }
+      }.withCssClass("flowTriggersCell")
 
       maybeMacroKey.map { macroKey =>
         val topRowCells = functionCells.map(_.withCssClass("flowMacroTop"))
@@ -129,10 +126,15 @@ object MacroBlock {
           .map(buildRow(_)) :+ buildRow(functions.last, last = true)
     }
     functionRows
-//    functionRows :+ seperatorRow
+    functionRows :+ seperatorRow
   }
 
 
+  private val cellSeperator: Cell = Cell("seperator")
+    .withColSpan(3)
   //    .withCssClass("border-bottom border-3 border-secondary"))
   //  )
+  val seperatorRow: Row = Row(Seq(cellSeperator))
+
+
 }

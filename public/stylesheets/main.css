@@ -195,7 +195,14 @@ body {
     border-collapse: separate !important;
     border-spacing: 0;
 }
-
+.flowTriggersCell {
+    border: blueviolet;
+    background: lightskyblue;
+}
+.flowMarcoCell {
+    border: #cc0000;
+    background: lightpink;
+}
 .flowMacroLeft {
     border-left: 2px solid dimgray;
 

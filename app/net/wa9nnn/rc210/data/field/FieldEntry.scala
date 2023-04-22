@@ -32,7 +32,7 @@ import net.wa9nnn.rc210.model.TriggerNode
  * @param candidate       the,potential, next value.
  */
 case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fieldValue: FieldValue, candidate: Option[FieldValue] = None)
-  extends Ordered[FieldEntry] with CellProvider with RenderMetadata with FieldEntryBase{
+  extends Ordered[FieldEntry] with CellProvider with RenderMetadata with FieldEntryBase {
 
   def value[F <: FieldValue]: F = {
     candidate.getOrElse(fieldValue).asInstanceOf[F]
@@ -84,7 +84,23 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
     Cell.rawHtml(s"$toHtml")
   }
 
-  def canTriggerMacro:Option[MacroKey] = fieldValue.isInstanceOf[TriggerNode]
+  /**
+   *
+   * @param macroKey of interest.
+   * @return FieldEntry that invokes the macroKey.
+   */
+  def canTriggerMacro(macroKey: MacroKey): Option[FieldEntry] = {
+    fieldValue match {
+      case tn: TriggerNode =>
+        if (tn.canRunMacro(macroKey))
+          Option(this)
+        else
+          None
+      case _ =>
+        None
+    }
+  }
+
 
   override def toString: String = {
     s"${fieldKey.fieldName}: ${fieldValue.display}"
@@ -109,7 +125,7 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
     }
   }
 
-  def toJson:FieldEntryJson = {
+  def toJson: FieldEntryJson = {
     FieldEntryJson(this)
   }
 
