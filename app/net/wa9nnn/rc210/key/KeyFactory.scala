@@ -150,6 +150,10 @@ object KeyFactory {
       html.toString()
     }
 
+    def noEdit: String = {
+      s"$number: ${namedSource.nameForKey(this)}"
+    }
+
     /**
      * Replace's 'n' in the template with the number (usually a port number).
      *

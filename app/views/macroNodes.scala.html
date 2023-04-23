@@ -14,17 +14,18 @@
                     <td>&nbsp;</td>
                     <td title="Number or name">Macro</td>
                     <td title="DTMF that will invoke this macro">DTMF</td>
-                    <td>Function</td>
+                    <td title="Functions that will run when this macro is triggered.">Function</td>
                 </tr>
             </thead>
         @for(macroNode <- macroNodes) {
             <tr>
                 <td>
                     <button type="button" class="bi bi-pencil-square btn p-0"
+                        title="Edit macro definition."
                     onclick="window.location.href='@routes.MacroNodeController.edit(macroNode.key.asInstanceOf[MacroKey])'"></button>
                 </td>
-                <td title="@macroNode.key.toString">
-                @Html( macroNode.key.namedHtml)
+                <td title="Click edit button to change name.">
+                @macroNode.key.noEdit
                 </td>
                 <td class="text-end">
                     @macroNode.dtmf
