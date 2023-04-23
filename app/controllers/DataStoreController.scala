@@ -19,7 +19,9 @@ package controllers
 
 import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
+import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.datastore.{DataStore, DataStoreJson}
+import net.wa9nnn.rc210.data.field.FieldValue
 import play.api.libs.Files
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -57,4 +59,25 @@ class DataStoreController @Inject()(implicit val controllerComponents: Controlle
       }
     Redirect(routes.MacroNodeController.index())
   }
+
+    def dump(): Action[AnyContent] = Action {
+
+      val rows: Seq[Row] = dataStore
+        .all
+        .map { fieldEntry =>
+          val value: FieldValue = fieldEntry.value
+          val fieldKey = fieldEntry.fieldKey
+          val key = fieldKey.key
+          var row = Row(key.toString, key.keyName, fieldKey.fieldName, value.display, value.toCommand(fieldEntry))
+
+          fieldEntry.candidate.foreach { candidateValue =>
+            row = row :+ candidateValue.display
+            row = row :+ candidateValue.toCommand(fieldEntry)
+          }
+          row
+        }
+      val header = Header(s"All entries (${rows.length})", "Key","KeyName", "Field Name",  "Field Value", "Command", "Candidate Value", "Candidate Command")
+      val table = Table(header, rows)
+      Ok(views.html.dat(Seq(table)))
+    }
 }

@@ -36,13 +36,15 @@ class JsonFileLoaderSpec extends WithTestConfiguration {
       val mfl = new MemoryFileLoader(fieldDefinitions)
       val seq = mfl.load(datFile.memoryFile)
 
-      val dataStore = new DataStore(datFile)
+      val dataStoreJson = new DataStoreJson(datFile)
+      val dataStore = new DataStore(dataStoreJson)
       dataStore.load(seq)
       dataStore.all must haveLength(301)
 
       Using(url.openStream()) { inputStream =>
-        val seq = Json.parse(inputStream).as[Seq[FieldEntryJson]]
-        DataStoreJson(seq, dataStore)
+        val seq: Seq[FieldEntryJson] = Json.parse(inputStream).as[Seq[FieldEntryJson]]
+        val dataTransferJson = new DataTransferJson(seq, Seq.empty)
+        dataStore.fromJson(dataTransferJson)
       }
       dataStore.all must haveLength(301) //stl
     }

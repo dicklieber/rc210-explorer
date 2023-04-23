@@ -31,20 +31,14 @@ class DataStoreSpec extends WithTestConfiguration {
   "DataStore" should {
     "save" in {
       val datFile = new DatFile(config)
-      val dataStore = new DataStore(datFile)
+      val dataStoreJson = new DataStoreJson(datFile)
+      val dataStore = new DataStore(dataStoreJson)
       val message = Message(KeyFactory.messageKey(1), Seq(1, 2, 3))
       val fieldEntry: FieldEntry = FieldEntry(MesssageExtractor, message)
 
       Files.exists(datFile.dataStorePath) must beFalse
       dataStore.update(Seq(fieldEntry))
       Files.exists(datFile.dataStorePath) must beTrue
-    }
-
-    "candidates" >> {
-      val datFile = new DatFile(config)
-      val dataStore = new DataStore(datFile)
-      pending
-
     }
   }
 }

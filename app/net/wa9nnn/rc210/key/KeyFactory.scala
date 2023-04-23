@@ -134,6 +134,7 @@ object KeyFactory {
       c.withCssClass(kind.toString)
     }
 
+    def keyName:String = namedSource.nameForKey(this)
     /**
      * Display the Key. Number: <input>
      * This can be placed in a [[com.wa9nnn.util.tableui.Row]].

@@ -76,6 +76,8 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
       .toCommand(this)
   }
 
+  def comnands: (String, Option[String]) =  (fieldValue.toCommand(this), candidate.map(_.toCommand(this)))
+
   def toHtml: String = {
     value.toHtmlField(this)
   }
@@ -152,5 +154,4 @@ object FieldEntry {
   def header(count: Int): Header = Header(s"Fields ($count)", "FieldName", "Key", "Value")
 
 }
-
 

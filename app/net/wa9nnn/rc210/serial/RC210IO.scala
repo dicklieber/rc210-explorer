@@ -5,6 +5,7 @@ import com.typesafe.scalalogging.LazyLogging
 import play.api.libs.json.{Json, OFormat}
 
 import java.io.{IOException, OutputStream}
+import java.nio.charset.Charset
 import java.nio.file.StandardOpenOption._
 import java.nio.file.{Files, Path, Paths}
 import scala.collection.mutable
@@ -12,11 +13,25 @@ import scala.io.BufferedSource
 import scala.util.matching.Regex
 import scala.util.{Try, Using}
 
-case object RC210Download extends LazyLogging {
+case object RC210IO extends LazyLogging {
   val parser: Regex = """(\d+),(\d+)""".r
 
   def listPorts: List[ComPort] = {
     SerialPort.getCommPorts.map(ComPort(_)).toList
+  }
+
+  /**
+   *  temporary way to get port.
+   *  //todo persist user choosen port in future.
+    * @return
+   */
+  def ft232Port: ComPort = {
+    listPorts.find(_.friendlyName.contains("FT232")) match {
+      case Some(value) =>
+        value
+      case None =>
+        throw new IllegalStateException("Can't find FT232 port")
+    }
   }
 
   def download(descriptor: String): Try[Array[Int]] = {
@@ -85,15 +100,38 @@ case object RC210Download extends LazyLogging {
     }
   }
 
+  def sendReceive(command:String):String = {
+    val comPort: ComPort = ft232Port
+    val serialPort: SerialPort = SerialPort.getCommPort(comPort.descriptor)
+    try{
+      serialPort.setBaudRate(19200)
+      serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0)
+      val opened: Boolean = serialPort.openPort()
+      if (!opened) {
+        throw new IOException(s"Did not open $comPort")
+      }
+
+      val bytes = command.getBytes
+      logger.info(s"Sending: $command")
+      serialPort.writeBytes(bytes, bytes.length)
+      val buffer = new Array[Byte](100)
+      val bytesRead: Int = serialPort.readBytes(buffer, buffer.length)
+      val response = new String(buffer, 0, bytesRead, Charset.defaultCharset())
+      logger.info(s"Sent: $command  Response: $buffer", Charset.forName("US-ASCII"))
+      serialPort.closePort()
+      response
+    }finally {
+      serialPort.closePort()
+    }
+  }
+
   def wakeup(outputStream: OutputStream): Unit = {
     for (_ <- 0 to 3) {
       outputStream.write('\r'.toInt)
       outputStream.flush()
       Thread.sleep(100)
     }
-
   }
-
 }
 
 case class ComPort(descriptor: String = "com1", friendlyName: String = "com1")

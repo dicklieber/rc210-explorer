@@ -3,6 +3,7 @@
 # This file defines all application routes (Higher priority routes first)
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
+
 POST        /timers/save                       controllers.TimerEditorController.save()
 GET         /timers                            controllers.TimerEditorController.index()
 POST        /courtesytones/save                controllers.CourtesyToneEditorController.save()
@@ -23,6 +24,7 @@ POST        /message/save                      controllers.MessageController.sav
 GET         /datastore/download                controllers.DataStoreController.downloadJson()
 GET         /datastore/upload                  controllers.DataStoreController.upload
 POST        /datastore/save                    controllers.DataStoreController.save()
+GET         /datastore/dump                    controllers.DataStoreController.dump()
 GET         /rc210/download/:descriptor        controllers.IOController.download(descriptor:String)
 POST        /rc210/progress                    controllers.IOController.progress()
 GET         /rc210/progress                    controllers.IOController.progress()

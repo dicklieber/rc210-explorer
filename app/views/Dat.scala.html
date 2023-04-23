@@ -1,10 +1,13 @@
 @import com.wa9nnn.util.tableui.Table
 @import com.wa9nnn.util.tableui.html.renderTable
+@import net.wa9nnn.rc210.ui.Tabs
 @(tables: Seq[Table])
 
-    @main("RC Flow") {
-
+    @tabbedmain(Tabs.noTab) {
         @for(table <- tables) {
-            @renderTable(table.withCssClass("tablesorter"))
+            @renderTable(table
+                    .withCssClass("tablesorter")
+                    .withCssClass("table table-sm")
+            )
         }
     }

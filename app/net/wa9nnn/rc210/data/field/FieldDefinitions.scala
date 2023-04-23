@@ -107,7 +107,7 @@ class FieldDefinitions @Inject()() {
     SimpleField(3515, "Speak Pending ID Timer", portKey, "n*1019v", FieldInt) max 600 units "seconds",
     SimpleField(3521, "Enable Speech ID", portKey, "n*8008b", FieldBoolean),
     SimpleField(3524, "Guest Macro Enable", portKey, "n280b", FieldBoolean),
-    SimpleField(3525, "Remote Base Prefix", portKey, "n*2060v", FieldDtmf) max 5,
+    SimpleField(3525, "Remote Base Prefix", commonKey, "n*2060v", FieldDtmf) max 5,
     SimpleField(3531, "Lock Code", commonKey, "n*9010v", FieldDtmf) max 4,
     SimpleField(3536, "Terminator", commonKey, "n9020v", FieldDtmf) max 1,
     //ClockCorrection - 3538-3539 Humm, only two bytes but doc shows:  Docs shows this as *5105! Not *5101! In any event needs some special handling.

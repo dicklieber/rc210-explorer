@@ -6,11 +6,11 @@ import org.specs2.mutable.Specification
 import java.nio.file.{Files, Paths}
 import scala.util.{Failure, Success, Try}
 
-class RC210DownloadSpec extends Specification {
+class RC210IOSpec extends Specification {
 
   "RC210Download" should {
     "listPorts" in {
-      val ports = RC210Download.listPorts
+      val ports = RC210IO.listPorts
       ports.foreach {
         println(_)
       }
@@ -26,11 +26,11 @@ class RC210DownloadSpec extends Specification {
 }
 
 object DownloadTest extends App {
-  private val ports = RC210Download.listPorts
+  private val ports = RC210IO.listPorts
   private val maybePort: Option[ComPort] = ports.find(_.friendlyName.contains("FT232"))
   private val comport: ComPort = maybePort.get
 
-  private val triedBytes: Try[Array[Int]] = RC210Download.download(comport)
+  private val triedBytes: Try[Array[Int]] = RC210IO.download(comport)
   triedBytes match {
     case Failure(exception) =>
       exception.printStackTrace()
@@ -43,4 +43,10 @@ object DownloadTest extends App {
 
       memory.save(path)
   }
+}
+
+
+object SendResceiveTest extends App {
+  println(RC210IO.sendReceive("\r\r1GetVersion\r"))
+  println(RC210IO.sendReceive("\r\r1GetRTCVersion\r"))
 }

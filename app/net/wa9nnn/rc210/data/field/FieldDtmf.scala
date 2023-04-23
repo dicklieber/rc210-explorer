@@ -17,11 +17,13 @@
 
 package net.wa9nnn.rc210.data.field
 
+import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.key.KeyFactory
 import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue, Json}
 import views.html.fieldDtmf
 
-case class FieldDtmf(value: String) extends SimpleFieldValue {
+case class FieldDtmf(value: String) extends SimpleFieldValue with LazyLogging{
+  logger.debug("value: {}", value)
 
   def toHtmlField(renderMetadata: RenderMetadata): String = {
     fieldDtmf(value, renderMetadata).toString()
@@ -43,7 +45,8 @@ case class FieldDtmf(value: String) extends SimpleFieldValue {
   override def update(paramValue: String): FieldDtmf = {
     FieldDtmf(paramValue)
   }
-  override def toJsonValue: JsValue = Json.toJson(this)
+
+  override def toJsonValue: JsValue = Json.toJson(value)
 
 }
 
@@ -55,9 +58,11 @@ object FieldDtmf extends SimpleExtractor {
     } yield {
       itr.next()
     }
-    FieldDtmf(ints.takeWhile(_ != 0)
-      .map(_.toChar)
-      .toString())
+
+    val tt: Array[Char] = ints.takeWhile(_ != 0)
+      .map(_.toChar).toArray
+    val str: String = new String(tt)
+    new FieldDtmf(str)
   }
 
 

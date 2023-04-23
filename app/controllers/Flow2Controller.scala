@@ -35,8 +35,8 @@ class Flow2Controller @Inject()(implicit val controllerComponents: ControllerCom
         .map(fieldEntry =>
           MacroBlock(fieldEntry.value)
         )
-      val header = Header(s"Macro Flow (${rows.length})", "Macro", "Triggers", "Functions")
-      val table = Table(Seq.empty, rows)
+      val header = Header(s"Macro Flow (${rows.length})", "Triggers", "Macro", "Functions")
+      val table = Table(header, rows)
       Ok(views.html.flow(table))
   }
 }

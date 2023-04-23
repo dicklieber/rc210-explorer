@@ -22,7 +22,7 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.io.DatFile
-import net.wa9nnn.rc210.serial.{ComPort, ERamCollector, RC210Data, RC210Download}
+import net.wa9nnn.rc210.serial.{ComPort, ERamCollector, RC210Data, RC210IO}
 import play.api.libs.json.Json
 import play.api.mvc._
 
@@ -78,7 +78,7 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
 
   def listSerialPorts(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      val ports: List[ComPort] = RC210Download.listPorts
+      val ports: List[ComPort] = RC210IO.listPorts
       val rows = ports.sortBy(_.friendlyName)
         .filterNot(_.descriptor.contains("/dev/tty")) // these are just clutter.
         .map { port => {

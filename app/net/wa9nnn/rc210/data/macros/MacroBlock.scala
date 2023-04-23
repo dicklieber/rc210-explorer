@@ -34,10 +34,18 @@ object MacroBlock {
       .withCssClass("flowMarcoCell")
 
     val triggersCell: Cell = {
-      val triggerRows: Seq[Row] = dataStore.triggersForMacro(macroKey).map { fieldEntry =>
+      var triggerRows: Seq[Row] = dataStore.triggersForMacro(macroKey).map { fieldEntry =>
         val value: FieldValue = fieldEntry.value
         Row(fieldEntry.fieldKey.toCell, value.display)
       }
+      macroNode.dtmf.foreach { dtmf =>
+        triggerRows = triggerRows.prepended(Row("DTMF", dtmf.toString))
+      }
+
+      if (macroKey.number == 1)
+        triggerRows = triggerRows.prepended(Row(Cell("--Start--")
+          .withColSpan(2)))
+
       val triggersTable = Table(Seq.empty, triggerRows)
       TableInACell(triggersTable)
         .withCssClass("flowMacroBottom flowMacroLeft flowMacroTop")
@@ -54,7 +62,7 @@ object MacroBlock {
       }.withCssClass("flowFunctionsCell")
       TableInACell(Table(Seq.empty, functionRows))
     }
-    Row(macroCell, triggersCell, functionTableCell)
+    Row(triggersCell, macroCell, functionTableCell)
   }
 
 

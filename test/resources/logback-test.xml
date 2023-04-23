@@ -35,9 +35,9 @@
 
   <!-- Off these ones as they are annoying, and anyway we manage configuration ourselves -->
   <logger name="net.wa9nnn.rc210.data.schedules.ScheduleNode" level="INFO" />
-  <logger name="net.wa9nnn.rc210.serial.RC210Download" level="INFO" />
+  <logger name="net.wa9nnn.rc210.serial.RC210IO" level="INFO" />
   <logger name="net.wa9nnn.rc210.data.named.NamedManager" level="INFO" />
-  <logger name="net.wa9nnn.rc210.serial.RC210Download" level="TRACE" />
+  <logger name="net.wa9nnn.rc210.serial.RC210IO" level="TRACE" />
   <logger name="net.wa9nnn.rc210.io.DatFile" level="TRACE" />
   <logger name="net.wa9nnn.rc210.serial.ERamCollector" level="INFO" />
 
