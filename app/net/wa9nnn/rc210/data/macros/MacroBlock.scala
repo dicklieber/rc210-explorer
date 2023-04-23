@@ -19,114 +19,42 @@ package net.wa9nnn.rc210.data.macros
 
 import com.wa9nnn.util.tableui._
 import net.wa9nnn.rc210.data.datastore.DataStore
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
-import net.wa9nnn.rc210.data.functions.FunctionsProvider
-import net.wa9nnn.rc210.key.KeyFactory.{FunctionKey, Key, MacroKey, MessageKey}
+import net.wa9nnn.rc210.data.field.FieldValue
+import net.wa9nnn.rc210.data.functions.{FunctionNode, FunctionsProvider}
+import net.wa9nnn.rc210.key.KeyFactory
 
 /**
  * Build function rows for a [[MacroNode]]
  * Prepends a column with MacroNode metadata key and name. etc.
  */
 object MacroBlock {
-  def apply(macroNode: MacroNode, dataStore: DataStore)(implicit functionsProvider: FunctionsProvider): Seq[Row] = {
+  def apply(macroNode: MacroNode)(implicit dataStore: DataStore, functionsProvider: FunctionsProvider): Row = {
+    val macroKey = macroNode.key
+    val macroCell: Cell = macroKey.toCell
+      .withCssClass("flowMarcoCell")
 
-    implicit val functions: Seq[FunctionKey] = macroNode.functions
-
-
- def buildRow(functionKey: FunctionKey, maybeMacroKey: Option[MacroKey] = None, last: Boolean = false): Row = {
-
-      /**
-       * Right extension td to a function td.
-       */
-      def buildDestinationCell(key: Option[Key]): Cell = {
-        key
-          .map {
-            case key: MessageKey =>
-              val message: Seq[FieldEntry] = dataStore(key)
-              // should only be one for a Key.
-            message.head.toCell
-//              rc210Data
-//                .messageMacroMap
-//                .get(key)
-//                .map(_.toCell)
-//                .getOrElse(Cell(""))
-            case key =>
-              key.toCell
-          }.getOrElse(Cell(""))
+    val triggersCell: Cell = {
+      val triggerRows: Seq[Row] = dataStore.triggersForMacro(macroKey).map { fieldEntry =>
+        val value: FieldValue = fieldEntry.value
+        Row(fieldEntry.fieldKey.toCell, value.display)
       }
+      val triggersTable = Table(Seq.empty, triggerRows)
+      TableInACell(triggersTable)
+        .withCssClass("flowMacroBottom flowMacroLeft flowMacroTop")
+        .withToolTip(s"Macro Command ${macroKey.number}")
 
-      val functionCells: Seq[Cell] = {
-        functionsProvider(functionKey).map { functionNode =>
-          var descriptionCell = Cell(functionNode.description)
+    }.withCssClass("flowTriggersCell")
 
-          var destinationCell: Cell = buildDestinationCell(functionNode.destination)
-            .withCssClass("flowMacroRight")
-          if (last) {
-            descriptionCell = descriptionCell.withCssClass("flowMacroBottom")
-          }
-          Seq(descriptionCell, destinationCell)
-        }.getOrElse(Seq.empty)
-      }
-
-      def macroCell() = {
-        val macroKey = macroNode.key
-        macroKey.toCell
-          .withCssClass("flowMarcoCell")
-          .withRowSpan(functions.length)
-      }
-
-      def buildTriggersCell: Cell = {
-        val macroKey = macroNode.key
-        val triggerRows = dataStore.triggersForMacro(macroKey).map{fieldEntry =>
-          val value: FieldValue = fieldEntry.value
-          Row(fieldEntry.fieldKey.toCell, value.display)
-        }
-        val triggersTable = Table(Seq.empty, triggerRows)
-        val table = Table(
-          headers = Seq.empty,
-          rows = Seq(
-            Row(Seq(
-              TableInACell(triggersTable)
-              //              Cell(namedManager(macroKey))
-              //                .withToolTip(s"Macro Command ${macroKey.index}")
-            )
-            )
-          ),
-          cssClass = Seq.empty)
-        TableInACell(table)
-          .withRowSpan(functions.length)
-          .withCssClass("flowMacroBottom flowMacroLeft flowMacroTop")
-          .withToolTip(s"Macro Command ${macroKey.number}")
-
-      }.withCssClass("flowTriggersCell")
-
-      maybeMacroKey.map { macroKey =>
-        val topRowCells = functionCells.map(_.withCssClass("flowMacroTop"))
-        val moreCells: Seq[Cell] = macroCell() +: buildTriggersCell +: topRowCells
-        new Row( moreCells)
-      }.getOrElse {
-        Row(functionCells)
-      }
+    val functionTableCell: Cell = {
+      val functionRows = for {
+        functionKey <- macroNode.functions
+        functionNode <- functionsProvider(functionKey)
+      } yield {
+        Row(functionKey.toCell, functionNode.description)
+      }.withCssClass("flowFunctionsCell")
+      TableInACell(Table(Seq.empty, functionRows))
     }
-
-    val functionRows = functions.length match {
-      case 0 =>
-        Seq.empty
-      case 1 =>
-        Seq(buildRow(functions.head, Option(macroNode.key), last = true))
-      case 2 =>
-        Seq(
-          buildRow(functions.head, Option(macroNode.key)),
-          buildRow(functions(1), last = true)
-        )
-      case _ =>
-        buildRow(functions.head, Option(macroNode.key)) +: functions
-          .drop(1)
-          .dropRight(1)
-          .map(buildRow(_)) :+ buildRow(functions.last, last = true)
-    }
-    functionRows
-    functionRows :+ seperatorRow
+    Row(macroCell, triggersCell, functionTableCell)
   }
 
 

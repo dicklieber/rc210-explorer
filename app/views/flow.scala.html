@@ -1,24 +1,10 @@
-@import com.wa9nnn.util.tableui.html.renderTableBodyRows
-@import net.wa9nnn.rc210.data.functions.FunctionsProvider
-@import net.wa9nnn.rc210.data.macros.{MacroBlock, MacroNode}
+@import com.wa9nnn.util.tableui.Table
+@import com.wa9nnn.util.tableui.html.renderTable
 @import net.wa9nnn.rc210.data.datastore.DataStore
-@(macroNodes: Seq[MacroNode])(implicit functionsProvider: FunctionsProvider, dataStore: DataStore)
+@import net.wa9nnn.rc210.data.functions.FunctionsProvider
+@import net.wa9nnn.rc210.ui.Tabs
+@(table: Table)(implicit functionsProvider: FunctionsProvider, dataStore: DataStore)
 
-@main("RCP Dat") {
-    <h1>Flow</h1>
-
-    <table class="flowTable">
-        <thead>
-            <tr>
-                <td>Macro</td>
-                <td >Trigger</td>
-                <td colspan="2">Functions</td>
-            </tr>
-        </thead>
-        <tbody>
-        @for(macroNode <- macroNodes) {
-            @renderTableBodyRows(MacroBlock(macroNode, dataStore))
-        }
-        </tbody>
-    </table>
+@tabbedmain(Tabs.flowTab) {
+    @renderTable(table)
 }

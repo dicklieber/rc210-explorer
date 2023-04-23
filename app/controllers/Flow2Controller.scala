@@ -17,28 +17,26 @@
 
 package controllers
 
+import com.wa9nnn.util.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
-import net.wa9nnn.rc210.data.macros.MacroNode
+import net.wa9nnn.rc210.data.macros.MacroBlock
 import net.wa9nnn.rc210.key.KeyKind
 import play.api.mvc._
 
 import javax.inject.Inject
 
-class Flow2Controller @Inject()(implicit val controllerComponents: ControllerComponents, dataStore: DataStore,
-                                functionsProvider: FunctionsProvider) extends BaseController {
+class Flow2Controller @Inject()(implicit val controllerComponents: ControllerComponents,
+                                dataStore: DataStore, functionsProvider: FunctionsProvider) extends BaseController {
 
   def flow(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-
-
-//todo get from store
-//      val macroNodes: Seq[MacroNode] = rc210Data
-//        .macros
-//        .filter(_.nodeEnabled)
-//
-//      Ok(views.html.flow(macroNodes))
-      val value: Seq[MacroNode] = dataStore.apply(KeyKind.macroKey).map(_.value.asInstanceOf[MacroNode])
-      Ok(views.html.flow(value))
+      val rows: Seq[Row] = dataStore.apply(KeyKind.macroKey)
+        .map(fieldEntry =>
+          MacroBlock(fieldEntry.value)
+        )
+      val header = Header(s"Macro Flow (${rows.length})", "Macro", "Triggers", "Functions")
+      val table = Table(Seq.empty, rows)
+      Ok(views.html.flow(table))
   }
 }

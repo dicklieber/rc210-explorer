@@ -203,32 +203,14 @@ body {
     border: #cc0000;
     background: lightpink;
 }
-.flowMacroLeft {
-    border-left: 2px solid dimgray;
-
+.flowFunctionsCell{
+    border: #cc0000;
+    background: lightgreen;
 }
 
-.flowMacroRight {
-    border-right: 2px solid dimgray;
-
-}
-
-.flowMacroTop {
-    border-top: 2px solid dimgray;
-
-}
-
-.flowMacroBottom {
-    border-bottom: 2px solid dimgray;
-
-}
-
-.flowMacroCell {
-    border: 2px solid dimgray;
-}
 
 .dirtyValue {
-    background: #cccc33;
+    background: #FFE99D;
 }
 
 .fieldPrompt {
