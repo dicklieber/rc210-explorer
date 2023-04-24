@@ -17,6 +17,7 @@
 
 package controllers
 
+import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.datastore.DataStore
@@ -28,7 +29,7 @@ import javax.inject.{Inject, Singleton}
 import scala.util.Try
 
 @Singleton()
-class CandidateController @Inject()(dataStore: DataStore) extends MessagesInjectedController {
+class CandidateController @Inject()(dataStore: DataStore) extends MessagesInjectedController  with LazyLogging{
   def index(): Action[AnyContent] = Action { implicit request =>
     val candidates = dataStore.candidates
     val rows: Seq[Row] =
@@ -49,12 +50,12 @@ class CandidateController @Inject()(dataStore: DataStore) extends MessagesInject
         val value: FieldValue = fieldEntry.value
         val fieldKey = fieldEntry.fieldKey
         val key = fieldKey.key
-        val sendValueButton = Cell(value.toCommand(fieldEntry)).withUrl(routes.CandidateController.send(fieldKey).url)
+        val sendValueButton = Cell(value.toCommand(fieldEntry)).withUrl(routes.CandidateController.sendFieldValue(fieldKey).url)
         var row = Row(key.toString, fieldKey.fieldName, value.display, sendValueButton)
 
         fieldEntry.candidate.foreach { candidateValue =>
           row = row :+ candidateValue.display
-          val sendValueButton = Cell(candidateValue.toCommand(fieldEntry)).withUrl(routes.CandidateController.send(fieldKey).url)
+          val sendValueButton = Cell(candidateValue.toCommand(fieldEntry)).withUrl(routes.CandidateController.sendCandidate(fieldKey).url)
           row = row :+ sendValueButton
         }
         row
@@ -64,12 +65,29 @@ class CandidateController @Inject()(dataStore: DataStore) extends MessagesInject
     Ok(views.html.dat(Seq(table)))
   }
 
-  def send(fieldKey: FieldKey): Action[AnyContent] = Action { implicit request =>
+
+  def sendFieldValue(fieldKey: FieldKey): Action[AnyContent] = {
+    send(fieldKey, sendValue = true)
+  }
+
+  def sendCandidate(fieldKey: FieldKey): Action[AnyContent] = {
+    send(fieldKey)
+  }
+
+  /**
+   * Send command to the RC-210.
+   *
+   * @param fieldKey
+   * @param sendValue true to send the fieldValue's command. false to send and accept the candidate's.
+   * @return
+   */
+  def send(fieldKey: FieldKey, sendValue: Boolean = false): Action[AnyContent] = Action { implicit request =>
     dataStore(fieldKey) match {
       case Some(fieldEntry: FieldEntry) =>
-        val command = fieldEntry.value.toCommand(fieldEntry)+ "\r"
+        val command = fieldEntry.value.toCommand(fieldEntry) + "\r"
         val triedResponse: Try[String] = RC210IO.sendReceive(command)
         val transaction = CommandTransaction(command, fieldEntry, triedResponse)
+        logger.debug(transaction.toString)
         Ok(transaction.toString)
       case None =>
         NotFound(s"No fieldKey: $fieldKey")

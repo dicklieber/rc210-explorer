@@ -114,7 +114,6 @@ case object RC210IO extends LazyLogging {
         throw new IOException(s"Did not open $comPort")
       }
       val bytes = command.getBytes
-      logger.info(s"Sending: $command")
       serialPort.writeBytes(bytes, bytes.length)
       val buffer = new Array[Byte](100)
       val bytesRead: Int = serialPort.readBytes(buffer, buffer.length)
