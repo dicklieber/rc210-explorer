@@ -23,6 +23,7 @@ import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.serial.{CommandTransaction, RC210IO}
+import net.wa9nnn.rc210.ui.CandidatesCell
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
@@ -43,28 +44,7 @@ class CandidateController @Inject()(dataStore: DataStore) extends MessagesInject
   }
 
   def dump(): Action[AnyContent] = Action {
-
-    val rows: Seq[Row] = dataStore
-      .all
-      .map { fieldEntry =>
-        val value: FieldValue = fieldEntry.fieldValue
-        val fieldKey = fieldEntry.fieldKey
-        val key = fieldKey.key
-        val commands = value.toCommands(fieldEntry)
-        val sendValueButton = Cell(commands.mkString("</br>")).withUrl(routes.CandidateController.sendCandidate(fieldKey).url)
-        var row = Row(key.toString, fieldKey.fieldName, value.display, sendValueButton)
-
-        fieldEntry.candidate.foreach { candidateValue =>
-          row = row :+ candidateValue.display
-          val commands = candidateValue.toCommands(fieldEntry)
-          val sendValueButton = Cell(commands.mkString("</br>")).withUrl(routes.CandidateController.sendCandidate(fieldKey).url)
-          row = row :+ sendValueButton
-        }
-        row
-      }
-    val header = Header(s"All entries (${rows.length})", "Key", "Field Name", "Field Value", "Command", "Candidate Value", "Candidate Command")
-    val table = Table(header, rows)
-    Ok(views.html.dat(Seq(table)))
+    Ok(views.html.dump(dataStore.all))
   }
 
 

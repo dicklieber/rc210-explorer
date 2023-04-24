@@ -6,7 +6,7 @@ import com.wa9nnn.util.Stamped
 import net.wa9nnn.rc210.data.field.FieldEntry
 import play.api.libs.json.{Json, OFormat}
 
-import java.io.{IOException, OutputStream}
+import java.io.{BufferedReader, IOException, InputStreamReader, OutputStream}
 import java.nio.charset.Charset
 import java.nio.file.StandardOpenOption._
 import java.nio.file.{Files, Path, Paths}
@@ -106,6 +106,7 @@ case object RC210IO extends LazyLogging {
   def sendReceive(command: String): Try[String] = {
     val comPort: ComPort = ft232Port
     val serialPort: SerialPort = SerialPort.getCommPort(comPort.descriptor)
+    val reader = new BufferedReader(new InputStreamReader(serialPort.getInputStream))
     val tried: Try[String] = Try {
       serialPort.setBaudRate(19200)
       serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0)
@@ -115,11 +116,10 @@ case object RC210IO extends LazyLogging {
       }
       val bytes = command.getBytes
       serialPort.writeBytes(bytes, bytes.length)
-      val buffer = new Array[Byte](100)
-      val bytesRead: Int = serialPort.readBytes(buffer, buffer.length)
-      val response: String = new String(buffer, 0, bytesRead, Charset.defaultCharset())
+      val response = reader.readLine()
       response
     }
+    reader.close()
     serialPort.closePort()
     tried
   }
@@ -133,7 +133,7 @@ case object RC210IO extends LazyLogging {
   }
 }
 
-case class CommandTransaction(command: String, fieldEntry: FieldEntry,  response: Try[String]) extends Stamped{
+case class CommandTransaction(command: String, fieldEntry: FieldEntry, response: Try[String]) extends Stamped {
   def fixUp(in: String): String =
     in.replace("\r", "\\r")
       .replace("\n", "\\n")

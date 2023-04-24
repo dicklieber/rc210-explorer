@@ -26,6 +26,9 @@ import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey
 import net.wa9nnn.rc210.key.KeyFormats._
 import play.api.libs.json.{JsValue, Json, OFormat}
 
+import java.util.concurrent.atomic.AtomicInteger
+import scala.xml.Atom
+
 //noinspection ZeroIndexToHead
 case class CourtesyTone(override val key: CourtesyToneKey, segments: Seq[Segment]) extends ComplexFieldValue[CourtesyToneKey] {
   implicit val k = key
@@ -36,11 +39,11 @@ case class CourtesyTone(override val key: CourtesyToneKey, segments: Seq[Segment
    * Render this value as an RD-210 command string.
    */
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
-//todo
-Seq.empty
+    val segN = new AtomicInteger(1)
+    segments.map { segment =>
+      segment.toCommand(key.number, segN.getAndIncrement())
+    }
   }
-
-
 
   /**
    *
@@ -55,7 +58,7 @@ Seq.empty
   }
 
   def rows(): Seq[Row] = {
-    val nameCell: Cell =key.namedCell(CtSegmentKey("name", 99).param)
+    val nameCell: Cell = key.namedCell(CtSegmentKey("name", 99).param)
       .withRowSpan(3)
 
     Seq(
@@ -110,10 +113,14 @@ object CourtesyTone {
   }
 }
 
-case class Segment(delayMs: Int, durationMs: Int, tone1Hz: Int, tone2Hz: Int)
+case class Segment(delayMs: Int, durationMs: Int, tone1Hz: Int, tone2Hz: Int) {
+  def toCommand(number: Int, segN: Int): String = {
+    f"1*3$segN$number%02d$delayMs%d*$durationMs%d*$tone1Hz%d*$tone2Hz%d*"
+  }
+}
 
-object Segment extends LazyLogging{
-  def apply(m:Map[String, String]):Segment = {
+object Segment extends LazyLogging {
+  def apply(m: Map[String, String]): Segment = {
     logger.trace(s"m: $m")
     try {
       val delay = m("Delay").toInt
@@ -123,7 +130,7 @@ object Segment extends LazyLogging{
 
       new Segment(delay, duration, tone1, tone2)
     } catch {
-      case e:Exception =>
+      case e: Exception =>
         logger.error("Creating a Segment", e)
         throw e
     }
