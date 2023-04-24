@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210
 
+import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, MessageKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.mvc.PathBindable
@@ -43,7 +44,8 @@ object Binders {
       macroKey.toString
     }
   }
-  implicit def  messageKeyBinder: PathBindable[MessageKey] = new PathBindable[MessageKey] {
+
+  implicit def messageKeyBinder: PathBindable[MessageKey] = new PathBindable[MessageKey] {
     override def bind(key: String, value: String): Either[String, MessageKey] = {
 
       Right(KeyFactory(value))
@@ -52,5 +54,19 @@ object Binders {
     override def unbind(key: String, messageKey: MessageKey): String = {
       messageKey.toString
     }
+  }
+
+  implicit def fieldKeyBinder: PathBindable[FieldKey] = new PathBindable[FieldKey] {
+    override def bind(key: String, value: String): Either[String, FieldKey] =
+
+      try {
+        Right(FieldKey.fromParam(value))
+      } catch {
+        case e: Exception =>
+          Left(e.getMessage)
+      }
+
+    override def unbind(key: String, fieldKey: FieldKey): String =
+      fieldKey.param
   }
 }

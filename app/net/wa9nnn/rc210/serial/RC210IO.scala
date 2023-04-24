@@ -2,6 +2,8 @@ package net.wa9nnn.rc210.serial
 
 import com.fazecast.jSerialComm.SerialPort
 import com.typesafe.scalalogging.LazyLogging
+import com.wa9nnn.util.Stamped
+import net.wa9nnn.rc210.data.field.FieldEntry
 import play.api.libs.json.{Json, OFormat}
 
 import java.io.{IOException, OutputStream}
@@ -11,7 +13,7 @@ import java.nio.file.{Files, Path, Paths}
 import scala.collection.mutable
 import scala.io.BufferedSource
 import scala.util.matching.Regex
-import scala.util.{Try, Using}
+import scala.util.{Failure, Success, Try, Using}
 
 case object RC210IO extends LazyLogging {
   val parser: Regex = """(\d+),(\d+)""".r
@@ -21,9 +23,10 @@ case object RC210IO extends LazyLogging {
   }
 
   /**
-   *  temporary way to get port.
-   *  //todo persist user choosen port in future.
-    * @return
+   * temporary way to get port.
+   * //todo persist user choosen port in future.
+   *
+   * @return
    */
   def ft232Port: ComPort = {
     listPorts.find(_.friendlyName.contains("FT232")) match {
@@ -66,7 +69,7 @@ case object RC210IO extends LazyLogging {
     val result: mutable.ArrayBuilder[Int] = Array.newBuilder[Int]
 
     wakeup(outputStream)
-      outputStream.write("1SendEram\r\n".getBytes)
+    outputStream.write("1SendEram\r\n".getBytes)
 
     Using(new BufferedSource(serialPort.getInputStream)) { source: BufferedSource =>
       source
@@ -100,29 +103,26 @@ case object RC210IO extends LazyLogging {
     }
   }
 
-  def sendReceive(command:String):String = {
+  def sendReceive(command: String): Try[String] = {
     val comPort: ComPort = ft232Port
     val serialPort: SerialPort = SerialPort.getCommPort(comPort.descriptor)
-    try{
+    val tried: Try[String] = Try {
       serialPort.setBaudRate(19200)
       serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0)
       val opened: Boolean = serialPort.openPort()
       if (!opened) {
         throw new IOException(s"Did not open $comPort")
       }
-
       val bytes = command.getBytes
       logger.info(s"Sending: $command")
       serialPort.writeBytes(bytes, bytes.length)
       val buffer = new Array[Byte](100)
       val bytesRead: Int = serialPort.readBytes(buffer, buffer.length)
-      val response = new String(buffer, 0, bytesRead, Charset.defaultCharset())
-      logger.info(s"Sent: $command  Response: $buffer", Charset.forName("US-ASCII"))
-      serialPort.closePort()
+      val response: String = new String(buffer, 0, bytesRead, Charset.defaultCharset())
       response
-    }finally {
-      serialPort.closePort()
     }
+    serialPort.closePort()
+    tried
   }
 
   def wakeup(outputStream: OutputStream): Unit = {
@@ -131,6 +131,24 @@ case object RC210IO extends LazyLogging {
       outputStream.flush()
       Thread.sleep(100)
     }
+  }
+}
+
+case class CommandTransaction(command: String, fieldEntry: FieldEntry,  response: Try[String]) extends Stamped{
+  def fixUp(in: String): String =
+    in.replace("\r", "\\r")
+      .replace("\n", "\\n")
+
+  override def toString: String = {
+    val fixedCommand = fixUp(command)
+    val fixedResponse = response match {
+      case Failure(exception) =>
+        exception.getMessage
+      case Success(value) =>
+        fixUp(value)
+    }
+    s"field: ${fieldEntry.fieldKey.param} $fixedCommand => $fixedResponse"
+
   }
 }
 

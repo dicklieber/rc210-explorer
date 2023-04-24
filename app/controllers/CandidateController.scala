@@ -17,11 +17,15 @@
 
 package controllers
 
-import com.wa9nnn.util.tableui.{Header, Row, Table}
+import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
+import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.datastore.DataStore
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
+import net.wa9nnn.rc210.serial.{CommandTransaction, RC210IO}
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
+import scala.util.Try
 
 @Singleton()
 class CandidateController @Inject()(dataStore: DataStore) extends MessagesInjectedController {
@@ -30,11 +34,46 @@ class CandidateController @Inject()(dataStore: DataStore) extends MessagesInject
     val rows: Seq[Row] =
       candidates.map { fieldEntry =>
         val candidate = fieldEntry.candidate.get
-        Row(fieldEntry.fieldKey.key.toCell, fieldEntry.fieldKey.fieldName,  fieldEntry.fieldValue.display, candidate.display, fieldEntry.toCommand)
+        Row(fieldEntry.fieldKey.key.toCell, fieldEntry.fieldKey.fieldName, fieldEntry.fieldValue.display, candidate.display, fieldEntry.toCommand)
       }
-    val table = Table(Header(s"Candidates (${candidates.length})", "Key", "Field",  "Was", "New", "Command"), rows)
+    val table = Table(Header(s"Candidates (${candidates.length})", "Key", "Field", "Was", "New", "Command"), rows)
 
     Ok(views.html.candidates(table))
+  }
+
+  def dump(): Action[AnyContent] = Action {
+
+    val rows: Seq[Row] = dataStore
+      .all
+      .map { fieldEntry =>
+        val value: FieldValue = fieldEntry.value
+        val fieldKey = fieldEntry.fieldKey
+        val key = fieldKey.key
+        val sendValueButton = Cell(value.toCommand(fieldEntry)).withUrl(routes.CandidateController.send(fieldKey).url)
+        var row = Row(key.toString, fieldKey.fieldName, value.display, sendValueButton)
+
+        fieldEntry.candidate.foreach { candidateValue =>
+          row = row :+ candidateValue.display
+          val sendValueButton = Cell(candidateValue.toCommand(fieldEntry)).withUrl(routes.CandidateController.send(fieldKey).url)
+          row = row :+ sendValueButton
+        }
+        row
+      }
+    val header = Header(s"All entries (${rows.length})", "Key", "Field Name", "Field Value", "Command", "Candidate Value", "Candidate Command")
+    val table = Table(header, rows)
+    Ok(views.html.dat(Seq(table)))
+  }
+
+  def send(fieldKey: FieldKey): Action[AnyContent] = Action { implicit request =>
+    dataStore(fieldKey) match {
+      case Some(fieldEntry: FieldEntry) =>
+        val command = fieldEntry.value.toCommand(fieldEntry)+ "\r"
+        val triedResponse: Try[String] = RC210IO.sendReceive(command)
+        val transaction = CommandTransaction(command, fieldEntry, triedResponse)
+        Ok(transaction.toString)
+      case None =>
+        NotFound(s"No fieldKey: $fieldKey")
+    }
   }
 
 

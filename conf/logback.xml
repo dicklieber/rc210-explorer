@@ -40,14 +40,14 @@
     <logger name="net.wa9nnn.rc210.data.field.DtmfExtractor" level="INFO"/>
     <logger name="net.wa9nnn.rc210.data.named.NamedManager" level="INFO"/>
     <logger name="net.wa9nnn.rc210.data.schedules.ScheduleNode" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.serial.RC210IO" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.serial.RC210IO" level="DEBUG"/>
     <logger name="controllers.ScheduleController" level="INFO"/>
     <logger name="net.wa9nnn.rc210.data.courtesy.Segment" level="INFO"/>
     <logger name="controllers.CourtesyToneEditorController" level="INFO"/>
     <logger name="controllers.IOController" level="INFO"/>
     <logger name="net.wa9nnn.rc210.serial.ERamCollector" level="INFO"/>
     <logger name="net.wa9nnn.rc210.data.datastore.DataStore" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.data.field.FieldDtmf" level="DEBUG"/>
+    <logger name="net.wa9nnn.rc210.data.field.FieldDtmf" level="INFO"/>
 
     <root level="INFO">
         <appender-ref ref="ASYNCFILE"/>

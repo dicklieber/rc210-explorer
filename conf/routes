@@ -24,7 +24,6 @@ POST        /message/save                      controllers.MessageController.sav
 GET         /datastore/download                controllers.DataStoreController.downloadJson()
 GET         /datastore/upload                  controllers.DataStoreController.upload
 POST        /datastore/save                    controllers.DataStoreController.save()
-GET         /datastore/dump                    controllers.DataStoreController.dump()
 GET         /rc210/download/:descriptor        controllers.IOController.download(descriptor:String)
 POST        /rc210/progress                    controllers.IOController.progress()
 GET         /rc210/progress                    controllers.IOController.progress()
@@ -36,6 +35,8 @@ GET         /ports                             controllers.PortsEditorController
 GET         /tabs                              controllers.LandingController.tabs()
 POST        /schedule/save                     controllers.ScheduleController.save()
 GET         /candidates                        controllers.CandidateController.index()
+GET         /datastore/dump                    controllers.CandidateController.dump()
+GET         /candidates/send/:fieldKey         controllers.CandidateController.send(fieldKey:FieldKey)
 GET         /                                  controllers.LandingController.tabs()
 
 # Map static resources from the /public folder to the /assets URL path

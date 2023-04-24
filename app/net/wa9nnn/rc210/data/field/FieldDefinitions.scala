@@ -32,7 +32,7 @@ class FieldDefinitions @Inject()() {
    * Everything about each field.
    */
   val simpleFields: Seq[SimpleField] = Seq(
-    SimpleField(0, "Site Prefix", commonKey, "*2108v", FieldDtmf) max 3,
+    SimpleField(0, "Site Prefix", commonKey, "1*2108v", FieldDtmf) max 3,
     SimpleField(4, "TT PadTest", commonKey, "*2093v", FieldDtmf) max 5,
     SimpleField(10, "Say Hours", commonKey, "*5104b", FieldBoolean),
     SimpleField(11, "Hang Time 1", portKey, "n*10001v", FieldInt),
