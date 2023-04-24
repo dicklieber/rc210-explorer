@@ -36,7 +36,7 @@ trait FieldSelect[T] extends SimpleFieldValue {
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommand(fieldEntry: FieldEntryBase): String = {
+  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
     val fieldKey = fieldEntry.fieldKey
     val key: KeyFactory.Key = fieldKey.key
 
@@ -46,8 +46,9 @@ trait FieldSelect[T] extends SimpleFieldValue {
       case m: MacroKey =>
         m.number
     }
-    key.replaceN(fieldEntry.template)
-      .replaceAll("v", number.toString)
+    Seq(key.replaceN(fieldEntry.template)
+      .replaceAll("v", number.toString))
+
   }
 
 

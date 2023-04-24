@@ -53,7 +53,7 @@ case class Message(key: MessageKey, words: Seq[Int]) extends ComplexFieldValue[M
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommand(fieldEntry: FieldEntryBase): String = "//todo"
+  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = Seq("//todo")
 
   override def toJsonValue: JsValue = Json.toJson(this)
 }

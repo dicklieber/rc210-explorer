@@ -35,7 +35,7 @@ class CandidateController @Inject()(dataStore: DataStore) extends MessagesInject
     val rows: Seq[Row] =
       candidates.map { fieldEntry =>
         val candidate = fieldEntry.candidate.get
-        Row(fieldEntry.fieldKey.key.toCell, fieldEntry.fieldKey.fieldName, fieldEntry.fieldValue.display, candidate.display, fieldEntry.toCommand)
+        Row(fieldEntry.fieldKey.key.toCell, fieldEntry.fieldKey.fieldName, fieldEntry.fieldValue.display, candidate.display, fieldEntry.toCommands)
       }
     val table = Table(Header(s"Candidates (${candidates.length})", "Key", "Field", "Was", "New", "Command"), rows)
 
@@ -47,15 +47,17 @@ class CandidateController @Inject()(dataStore: DataStore) extends MessagesInject
     val rows: Seq[Row] = dataStore
       .all
       .map { fieldEntry =>
-        val value: FieldValue = fieldEntry.value
+        val value: FieldValue = fieldEntry.fieldValue
         val fieldKey = fieldEntry.fieldKey
         val key = fieldKey.key
-        val sendValueButton = Cell(value.toCommand(fieldEntry)).withUrl(routes.CandidateController.sendFieldValue(fieldKey).url)
+        val commands = value.toCommands(fieldEntry)
+        val sendValueButton = Cell(commands.mkString("</br>")).withUrl(routes.CandidateController.sendCandidate(fieldKey).url)
         var row = Row(key.toString, fieldKey.fieldName, value.display, sendValueButton)
 
         fieldEntry.candidate.foreach { candidateValue =>
           row = row :+ candidateValue.display
-          val sendValueButton = Cell(candidateValue.toCommand(fieldEntry)).withUrl(routes.CandidateController.sendCandidate(fieldKey).url)
+          val commands = candidateValue.toCommands(fieldEntry)
+          val sendValueButton = Cell(commands.mkString("</br>")).withUrl(routes.CandidateController.sendCandidate(fieldKey).url)
           row = row :+ sendValueButton
         }
         row
@@ -84,11 +86,16 @@ class CandidateController @Inject()(dataStore: DataStore) extends MessagesInject
   def send(fieldKey: FieldKey, sendValue: Boolean = false): Action[AnyContent] = Action { implicit request =>
     dataStore(fieldKey) match {
       case Some(fieldEntry: FieldEntry) =>
-        val command = fieldEntry.value.toCommand(fieldEntry) + "\r"
-        val triedResponse: Try[String] = RC210IO.sendReceive(command)
-        val transaction = CommandTransaction(command, fieldEntry, triedResponse)
-        logger.debug(transaction.toString)
-        Ok(transaction.toString)
+
+        val commands: Seq[String] = fieldEntry.fieldValue.toCommands(fieldEntry)
+      val transactions: Seq[CommandTransaction] =   commands.map{ command =>
+          val withCr = command + "\r"
+          val triedResponse: Try[String] = RC210IO.sendReceive(withCr)
+          val transaction = CommandTransaction(withCr, fieldEntry, triedResponse)
+          logger.debug(transaction.toString)
+          transaction
+        }
+        Ok(transactions.map(_.toString).mkString("\n"))
       case None =>
         NotFound(s"No fieldKey: $fieldKey")
     }

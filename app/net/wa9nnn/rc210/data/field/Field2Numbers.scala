@@ -27,11 +27,12 @@ case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue {
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommand(fieldEntry: FieldEntryBase): String = {
+  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
     val fieldKey = fieldEntry.fieldKey
     val key: KeyFactory.Key = fieldKey.key
-    key.replaceN(fieldEntry.template)
-      .replaceAll("v", value.toString) //todo
+    Seq(key.replaceN(fieldEntry.template)
+      .replaceAll("v", value.toString)
+    )
   }
 
   override def toHtmlField(renderMetadata: RenderMetadata): String = {

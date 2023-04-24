@@ -32,11 +32,12 @@ case class FieldDtmf(value: String) extends SimpleFieldValue with LazyLogging{
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommand(fieldEntry: FieldEntryBase): String = {
+  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
     val fieldKey = fieldEntry.fieldKey
     val key: KeyFactory.Key = fieldKey.key
-    key.replaceN(fieldEntry.template)
+   Seq( key.replaceN(fieldEntry.template)
       .replaceAll("v", value) //todo probably not right.
+   )
   }
 
 

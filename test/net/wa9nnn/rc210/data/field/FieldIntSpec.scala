@@ -47,7 +47,7 @@ implicit val key: MacroKey = MacroKey(3)
     val fieldDefinition = SimpleField(17, "Hang Time 3", KeyKind.portKey, "n*10003v", FieldInt)
     val fieldKey: FieldKey = fieldDefinition.fieldKey(3)
     val fieldEntry = FieldEntry(fieldDefinition, fieldKey, fieldInt, Option(candidate))
-    val command = fieldEntry.toCommand
+    val command = fieldEntry.toCommands.head
     command must beEqualTo ("3*10003142")
     //                       +============== Port 1,2, or 3
     //                        +++++========= Commnd base e.g. *1000

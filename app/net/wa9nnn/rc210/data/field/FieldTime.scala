@@ -33,14 +33,15 @@ case class FieldTime(value: LocalTime = LocalTime.MIN) extends SimpleFieldValue 
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommand(fieldEntry: FieldEntryBase): String = {
+  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
     val fieldKey = fieldEntry.fieldKey
     val key: KeyFactory.Key = fieldKey.key
     val minute = value.getMinute
     val hour = value.getHour
     val timePiece = f"$hour%02d*$minute%02d"
-    key.replaceN(fieldEntry.template)
-      .replaceAll("v", timePiece)
+    Seq(key.replaceN(fieldEntry.template)
+      .replaceAll("v", timePiece))
+
   }
 
 
@@ -50,6 +51,7 @@ case class FieldTime(value: LocalTime = LocalTime.MIN) extends SimpleFieldValue 
     val candidate = LocalTime.parse(paramValue)
     copy(value = candidate)
   }
+
   override def toJsonValue: JsValue = Json.toJson(this)
 
 }

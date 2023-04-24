@@ -25,7 +25,7 @@ class FieldBooleanSpec extends Specification {
 
     "toCommand false" in {
       val fieldBoolean = FieldBoolean()
-      val command = fieldBoolean.toCommand(new FieldEntryBase {
+      val command = fieldBoolean.toCommands(new FieldEntryBase {
         override val fieldKey: FieldKey = FieldKey("nn", KeyFactory.defaultMacroKey)
         override val template: String = "1*999b"
       })
@@ -33,7 +33,7 @@ class FieldBooleanSpec extends Specification {
     }
     "toCommand true" in {
       val fieldBoolean = FieldBoolean(true)
-      val command = fieldBoolean.toCommand(new FieldEntryBase {
+      val command = fieldBoolean.toCommands(new FieldEntryBase {
         override val fieldKey: FieldKey = FieldKey("nn", KeyFactory.defaultMacroKey)
         override val template: String = "1*999b"
       })
