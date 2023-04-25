@@ -17,6 +17,8 @@
 
 package controllers
 
+import akka.NotUsed
+import akka.stream.{Materializer, OverflowStrategy}
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import controllers.CandidateController.performInit
@@ -30,7 +32,7 @@ import javax.inject.{Inject, Singleton}
 import scala.util.Try
 
 @Singleton()
-class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO) extends MessagesInjectedController with LazyLogging {
+class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(implicit mat:Materializer) extends MessagesInjectedController with LazyLogging {
   def index(): Action[AnyContent] = Action { implicit request =>
     val candidates = dataStore.candidates
     val rows: Seq[Row] =
@@ -86,7 +88,7 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO) exte
   }
 
   def sendAllFields(): Action[AnyContent] = Action { implicit request =>
-    val serialPortOperation = rc210IO.start()
+/*    val serialPortOperation = rc210IO.start()
     val initRows = performInit(serialPortOperation).map(_.toRow)
     val rows: Seq[Row] = for {
       fieldEntry <- dataStore.all.take(25)
@@ -96,15 +98,53 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO) exte
       val triedResponse: Try[String] = serialPortOperation.preform(withCr)
       val transaction = CommandTransaction(withCr, fieldEntry.fieldKey.toCell, triedResponse)
       logger.debug(transaction.toString)
+      queue.offer(transaction.toString)
       transaction.toRow
     }
     serialPortOperation.close()
-    val table = Table(CommandTransaction.header(s"All Fields (${rows.length})"), initRows ++ rows)
-    Ok(views.html.dat(Seq(table)))
+ */
+//    val table = Table(CommandTransaction.header(s"All Fields (${rows.length})"), initRows ++ rows)
+    Ok(views.html.commandsProgress())
   }
 
   def sendAllCandidates(): Action[AnyContent] = Action { implicit request =>
     Ok("todo")
+  }
+
+
+  import play.api.mvc._
+  import akka.stream.scaladsl._
+
+
+  def ws = WebSocket.accept[String, String] { request =>
+
+    val (queue, source) = Source.queue[String](250, OverflowStrategy.dropTail).preMaterialize()
+//    val runnableGraph: RunnableGraph[Source[String, NotUsed]] =
+//      source.toMat(BroadcastHub.sink(bufferSize = 256))(Keep.right)
+
+    // Log events to the console
+    val in = Sink.foreach[String]{ message =>
+      val serialPortOperation = rc210IO.start()
+      val initRows = performInit(serialPortOperation).map(_.toRow)
+      val rows: Seq[Row] = for {
+        fieldEntry <- dataStore.all.take(25)
+        command <- fieldEntry.fieldValue.toCommands(fieldEntry)
+      } yield {
+        val withCr = "\r" + command + "\r"
+        val triedResponse: Try[String] = serialPortOperation.preform(withCr)
+        val transaction = CommandTransaction(withCr, fieldEntry.fieldKey.toCell, triedResponse)
+        logger.debug(transaction.toString)
+        queue.offer(transaction.toString)
+        transaction.toRow
+      }
+      serialPortOperation.close()
+    }
+
+
+
+
+//    val tuple: (NotUsed, Source[String, NotUsed]) = source
+    Flow.fromSinkAndSource(in,source)
   }
 }
 

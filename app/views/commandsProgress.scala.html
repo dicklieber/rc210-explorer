@@ -1,0 +1,25 @@
+@import com.wa9nnn.util.tableui.Table
+@import com.wa9nnn.util.tableui.html.renderTable
+@import net.wa9nnn.rc210.ui.Tabs
+@import play.filters.csrf.CSRF
+@()(implicit request: RequestHeader)
+    @tabbedmain(Tabs.rc210Tab) {
+        <script>
+                const url = '@routes.CandidateController.ws.webSocketURL()';
+
+                webSocket = new WebSocket(url);
+                webSocket.onmessage = (event) => {
+                    console.log(event.data);
+                };
+                webSocket.onopen = (event) => {
+                    webSocket.send("start upload all")
+                }
+                webSocket.onclose = (event) => {
+                    webSocket.send("websocket closed")
+                }
+
+        </script>
+
+        todo handle websocket messages.
+
+    }
