@@ -1,18 +1,21 @@
 package net.wa9nnn.rc210.serial
 
 import com.fazecast.jSerialComm.SerialPort
+import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import play.api.libs.json.{Json, OFormat}
 
-import java.io.{BufferedReader, IOException, InputStreamReader, OutputStream}
+import java.io._
 import java.nio.file.StandardOpenOption._
 import java.nio.file.{Files, Path, Paths}
+import javax.inject.{Inject, Singleton}
 import scala.collection.mutable
 import scala.io.BufferedSource
 import scala.util.matching.Regex
-import scala.util.{Try, Using}
+import scala.util.{Failure, Try, Using}
 
-case object RC210IO extends LazyLogging {
+@Singleton
+class RC210IO @Inject()(config: Config) extends LazyLogging {
   val parser: Regex = """(\d+),(\d+)""".r
 
   def listPorts: List[ComPort] = {
@@ -21,7 +24,7 @@ case object RC210IO extends LazyLogging {
 
   /**
    * temporary way to get port.
-   * //todo persist user choosen port in future.
+   * //todo persist user chosen port in future.
    *
    * @return
    */
@@ -100,25 +103,9 @@ case object RC210IO extends LazyLogging {
     }
   }
 
-  def sendReceive(command: String): Try[String] = {
+  def start(comPort: ComPort = ft232Port): SerialPortOperation = {
     val comPort: ComPort = ft232Port
-    val serialPort: SerialPort = SerialPort.getCommPort(comPort.descriptor)
-    val reader = new BufferedReader(new InputStreamReader(serialPort.getInputStream))
-    val tried: Try[String] = Try {
-      serialPort.setBaudRate(19200)
-      serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0)
-      val opened: Boolean = serialPort.openPort()
-      if (!opened) {
-        throw new IOException(s"Did not open $comPort")
-      }
-      val bytes = command.getBytes
-      serialPort.writeBytes(bytes, bytes.length)
-      val response = reader.readLine()
-      response
-    }
-    reader.close()
-    serialPort.closePort()
-    tried
+    new SerialPortOperation(comPort)
   }
 
   def wakeup(outputStream: OutputStream): Unit = {
@@ -131,6 +118,80 @@ case object RC210IO extends LazyLogging {
 }
 
 
+/**
+ * Handles sending and receiving to the RC-210 via a serial port.
+ *
+ * @param comPort from [[RC210IO.listPorts]].
+ */
+class SerialPortOperation(comPort: ComPort) extends LazyLogging {
+
+  // Initially not open, will try to open on perform.
+  private var serialInfo: Try[SerialInfo] = Failure(new IllegalStateException("Not opened"))
+
+  def preform(in: String): Try[String] = {
+    val r = serialInfo.recoverWith { e =>
+      serialInfo = open()
+      serialInfo
+    }.map(_.preform(in))
+    r
+  }
+
+  def close(): Unit = {
+    logger.trace(s"Closing: {}", comPort.toString)
+    serialInfo.foreach({ serialInfo =>
+      serialInfo.close()
+    })
+    serialInfo
+  }
+
+
+  private def open(): Try[SerialInfo] = {
+    Try {
+      logger.trace(s"Opening: {}", comPort.toString)
+      val serialPort: SerialPort = SerialPort.getCommPort(comPort.descriptor)
+      if (serialPort.isOpen) {
+        logger.trace(s"Serialport alreadyOpen!")
+        serialPort.closePort()
+        if (serialPort.isOpen) {
+          logger.trace(s"Serialport still open after closePort()!")
+        }
+      }
+      serialPort.setBaudRate(19200)
+      serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0)
+      val opened: Boolean = serialPort.openPort()
+      if (!opened) {
+        logger.trace(s"Serialport: {} did not open!", comPort.toString)
+        throw new IOException(s"Did not open $comPort")
+      }
+      val reader = new BufferedReader(new InputStreamReader(serialPort.getInputStream))
+      val writer: OutputStreamWriter = new OutputStreamWriter(serialPort.getOutputStream)
+
+      serialPort.getInputStream.skip(serialPort.bytesAvailable());
+      SerialInfo(serialPort, writer, reader)
+    }
+  }
+
+  case class SerialInfo(serialPort: SerialPort, val writer: Writer, val reader: BufferedReader) {
+    def preform(in: String): String = {
+      writer.write(in)
+      writer.flush()
+      val response: String = reader.readLine()
+      response
+    }
+
+    /**
+     * Done, cleanup.
+     */
+    def close(): Unit = {
+      logger.trace(s"close: {}", comPort.toString)
+      writer.close()
+      reader.close()
+      serialPort.closePort()
+      logger.trace(s"serialPort.isOpen: {}", serialPort.isOpen)
+    }
+  }
+
+}
 
 case class ComPort(descriptor: String = "com1", friendlyName: String = "com1")
 

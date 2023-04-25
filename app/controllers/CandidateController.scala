@@ -19,18 +19,18 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
+import controllers.CandidateController.performInit
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.datastore.DataStore
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
-import net.wa9nnn.rc210.serial.{CommandTransaction, RC210IO}
-import net.wa9nnn.rc210.ui.CandidatesCell
+import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.serial.{CommandTransaction, RC210IO, SerialPortOperation}
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
 import scala.util.Try
 
 @Singleton()
-class CandidateController @Inject()(dataStore: DataStore) extends MessagesInjectedController with LazyLogging {
+class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO) extends MessagesInjectedController with LazyLogging {
   def index(): Action[AnyContent] = Action { implicit request =>
     val candidates = dataStore.candidates
     val rows: Seq[Row] =
@@ -59,7 +59,7 @@ class CandidateController @Inject()(dataStore: DataStore) extends MessagesInject
   /**
    * Send command to the RC-210.
    *
-   * @param fieldKey to send
+   * @param fieldKey  to send
    * @param sendValue true to send the fieldValue's command. false to send and accept the candidate's.
    * @return
    */
@@ -67,11 +67,14 @@ class CandidateController @Inject()(dataStore: DataStore) extends MessagesInject
     dataStore(fieldKey) match {
       case Some(fieldEntry: FieldEntry) =>
 
+        val serialPortOperation = rc210IO.start()
+
         val commands: Seq[String] = fieldEntry.fieldValue.toCommands(fieldEntry)
         val rows: Seq[Row] = commands.map { command =>
           val withCr = "\r" + command + "\r"
-          val triedResponse: Try[String] = RC210IO.sendReceive(withCr)
-          val transaction = CommandTransaction(withCr, fieldEntry, triedResponse)
+          val triedResponse: Try[String] = serialPortOperation.preform(withCr)
+          serialPortOperation.close()
+          val transaction = CommandTransaction(withCr, fieldEntry.fieldKey.toCell, triedResponse)
           logger.debug(transaction.toString)
           transaction.toRow
         }
@@ -83,18 +86,20 @@ class CandidateController @Inject()(dataStore: DataStore) extends MessagesInject
   }
 
   def sendAllFields(): Action[AnyContent] = Action { implicit request =>
-
+    val serialPortOperation = rc210IO.start()
+    val initRows = performInit(serialPortOperation).map(_.toRow)
     val rows: Seq[Row] = for {
-      fieldEntry <- dataStore.all
+      fieldEntry <- dataStore.all.take(25)
       command <- fieldEntry.fieldValue.toCommands(fieldEntry)
     } yield {
       val withCr = "\r" + command + "\r"
-      val triedResponse: Try[String] = RC210IO.sendReceive(withCr)
-      val transaction = CommandTransaction(withCr, fieldEntry, triedResponse)
+      val triedResponse: Try[String] = serialPortOperation.preform(withCr)
+      val transaction = CommandTransaction(withCr, fieldEntry.fieldKey.toCell, triedResponse)
       logger.debug(transaction.toString)
       transaction.toRow
     }
-    val table = Table(CommandTransaction.header(s"All Fields (${rows.length})"), rows)
+    serialPortOperation.close()
+    val table = Table(CommandTransaction.header(s"All Fields (${rows.length})"), initRows ++ rows)
     Ok(views.html.dat(Seq(table)))
   }
 
@@ -102,4 +107,27 @@ class CandidateController @Inject()(dataStore: DataStore) extends MessagesInject
     Ok("todo")
   }
 }
+
+object CandidateController {
+  private val init = Seq(
+    "\r\r1333444555",
+    "1*20990",
+    "1GetVersion",
+    "1GetRTCVersion",
+  )
+  def performInit(serialPortOperation: SerialPortOperation) = {
+    for{
+      command <- init
+    }yield{
+      Thread.sleep(125)
+      val withCr =  command + "\r"
+      val triedResponse: Try[String] = serialPortOperation.preform(withCr)
+      val transaction = CommandTransaction(withCr, Cell("Init"), triedResponse)
+      transaction
+    }
+
+  }
+}
+
+
 

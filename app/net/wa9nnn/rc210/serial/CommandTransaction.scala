@@ -18,12 +18,11 @@
 package net.wa9nnn.rc210.serial
 
 import com.wa9nnn.util.Stamped
-import com.wa9nnn.util.tableui.{Header, Row, RowSource}
-import net.wa9nnn.rc210.data.field.FieldEntry
+import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
 
 import scala.util.{Failure, Success, Try}
 
-case class CommandTransaction(command: String, fieldEntry: FieldEntry, response: Try[String]) extends Stamped with RowSource {
+case class CommandTransaction(command: String, field: Cell, response: Try[String]) extends Stamped with RowSource {
   private def fixUp(in: String): String =
     in.replace("\r", "\\r")
       .replace("\n", "\\n")
@@ -36,15 +35,15 @@ case class CommandTransaction(command: String, fieldEntry: FieldEntry, response:
       case Success(value) =>
         fixUp(value)
     }
-    s"field: ${fieldEntry.fieldKey.param} $fixedCommand => $fixedResponse"
+    s"field: ${field.value} $fixedCommand => $fixedResponse"
   }
 
   override def toRow: Row = {
     response match {
       case Failure(exception) =>
-        Row(fieldEntry.fieldKey.toCell, fixUp(command), exception.getMessage).withCssClass("sadCell")
+        Row(field, fixUp(command), exception.getMessage).withCssClass("sadCell")
       case Success(response) =>
-        val row = Row(fieldEntry.fieldKey.toCell, fixUp(command), fixUp(response))
+        val row = Row(field, fixUp(command), fixUp(response))
         response.head match {
           case '+' =>
             row

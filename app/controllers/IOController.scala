@@ -33,7 +33,8 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class IOController @Inject()(implicit val controllerComponents: ControllerComponents,
                              datFile: DatFile,
-                             executionContext: ExecutionContext
+                             executionContext: ExecutionContext,
+                             rc210IO: RC210IO
                             ) extends BaseController with LazyLogging {
   implicit val timeout: Timeout = 5.seconds
 
@@ -78,7 +79,7 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
 
   def listSerialPorts(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      val ports: List[ComPort] = RC210IO.listPorts
+      val ports: List[ComPort] = rc210IO.listPorts
       val rows = ports.sortBy(_.friendlyName)
         .filterNot(_.descriptor.contains("/dev/tty")) // these are just clutter.
         .map { port => {
