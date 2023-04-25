@@ -2,18 +2,15 @@ package net.wa9nnn.rc210.serial
 
 import com.fazecast.jSerialComm.SerialPort
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.Stamped
-import net.wa9nnn.rc210.data.field.FieldEntry
 import play.api.libs.json.{Json, OFormat}
 
 import java.io.{BufferedReader, IOException, InputStreamReader, OutputStream}
-import java.nio.charset.Charset
 import java.nio.file.StandardOpenOption._
 import java.nio.file.{Files, Path, Paths}
 import scala.collection.mutable
 import scala.io.BufferedSource
 import scala.util.matching.Regex
-import scala.util.{Failure, Success, Try, Using}
+import scala.util.{Try, Using}
 
 case object RC210IO extends LazyLogging {
   val parser: Regex = """(\d+),(\d+)""".r
@@ -133,23 +130,7 @@ case object RC210IO extends LazyLogging {
   }
 }
 
-case class CommandTransaction(command: String, fieldEntry: FieldEntry, response: Try[String]) extends Stamped {
-  def fixUp(in: String): String =
-    in.replace("\r", "\\r")
-      .replace("\n", "\\n")
 
-  override def toString: String = {
-    val fixedCommand = fixUp(command)
-    val fixedResponse = response match {
-      case Failure(exception) =>
-        exception.getMessage
-      case Success(value) =>
-        fixUp(value)
-    }
-    s"field: ${fieldEntry.fieldKey.param} $fixedCommand => $fixedResponse"
-
-  }
-}
 
 case class ComPort(descriptor: String = "com1", friendlyName: String = "com1")
 

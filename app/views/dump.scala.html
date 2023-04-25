@@ -3,16 +3,16 @@
 @(fieldEntries: Seq[FieldEntry])
 
 @tabbedmain(Tabs.noTab) {
-    <table class="table">
+    <table class="table table-sm table-bordered border-primary">
         <thead>
             <tr>
                 <th>Key</th>
                 <th>Field Name</th>
                 <th>Field Value</th>
-                <th>&nbsp;</th>
+                <th><a href="@routes.CandidateController.sendAllFields" title="Send all"><i class="bi bi-send-plus"></i></a></th>
                 <th>Command</th>
                 <th>Candidate Value</th>
-                <th>&nbsp;</th>
+                <th><a href="@routes.CandidateController.sendAllCandidates()" title="Send and clear all candidates."><i class="bi bi-send-plus"></i></a></th>
                 <th>Candidate Command</th>
             </tr>
         </thead>

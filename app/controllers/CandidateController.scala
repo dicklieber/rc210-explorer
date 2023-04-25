@@ -30,7 +30,7 @@ import javax.inject.{Inject, Singleton}
 import scala.util.Try
 
 @Singleton()
-class CandidateController @Inject()(dataStore: DataStore) extends MessagesInjectedController  with LazyLogging{
+class CandidateController @Inject()(dataStore: DataStore) extends MessagesInjectedController with LazyLogging {
   def index(): Action[AnyContent] = Action { implicit request =>
     val candidates = dataStore.candidates
     val rows: Seq[Row] =
@@ -59,7 +59,7 @@ class CandidateController @Inject()(dataStore: DataStore) extends MessagesInject
   /**
    * Send command to the RC-210.
    *
-   * @param fieldKey
+   * @param fieldKey to send
    * @param sendValue true to send the fieldValue's command. false to send and accept the candidate's.
    * @return
    */
@@ -68,19 +68,38 @@ class CandidateController @Inject()(dataStore: DataStore) extends MessagesInject
       case Some(fieldEntry: FieldEntry) =>
 
         val commands: Seq[String] = fieldEntry.fieldValue.toCommands(fieldEntry)
-      val transactions: Seq[CommandTransaction] =   commands.map{ command =>
-          val withCr = command + "\r"
+        val rows: Seq[Row] = commands.map { command =>
+          val withCr = "\r" + command + "\r"
           val triedResponse: Try[String] = RC210IO.sendReceive(withCr)
           val transaction = CommandTransaction(withCr, fieldEntry, triedResponse)
           logger.debug(transaction.toString)
-          transaction
+          transaction.toRow
         }
-        Ok(transactions.map(_.toString).mkString("\n"))
+        val table = Table(CommandTransaction.header(s"All Fields (${rows.length})"), rows)
+        Ok(views.html.dat(Seq(table)))
       case None =>
         NotFound(s"No fieldKey: $fieldKey")
     }
   }
 
+  def sendAllFields(): Action[AnyContent] = Action { implicit request =>
 
+    val rows: Seq[Row] = for {
+      fieldEntry <- dataStore.all
+      command <- fieldEntry.fieldValue.toCommands(fieldEntry)
+    } yield {
+      val withCr = "\r" + command + "\r"
+      val triedResponse: Try[String] = RC210IO.sendReceive(withCr)
+      val transaction = CommandTransaction(withCr, fieldEntry, triedResponse)
+      logger.debug(transaction.toString)
+      transaction.toRow
+    }
+    val table = Table(CommandTransaction.header(s"All Fields (${rows.length})"), rows)
+    Ok(views.html.dat(Seq(table)))
+  }
+
+  def sendAllCandidates(): Action[AnyContent] = Action { implicit request =>
+    Ok("todo")
+  }
 }
 
