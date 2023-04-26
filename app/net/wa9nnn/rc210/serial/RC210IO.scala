@@ -9,6 +9,7 @@ import java.io._
 import java.nio.file.StandardOpenOption._
 import java.nio.file.{Files, Path, Paths}
 import javax.inject.{Inject, Singleton}
+import scala.annotation.tailrec
 import scala.collection.mutable
 import scala.io.BufferedSource
 import scala.util.matching.Regex
@@ -126,82 +127,50 @@ class RC210IO @Inject()(config: Config) extends LazyLogging {
 class SerialPortOperation(comPort: ComPort) extends LazyLogging {
 
   // Initially not open, will try to open on perform.
-  private var serialInfo: Try[SerialInfo] = Failure(new IllegalStateException("Not opened"))
+  private val serialPort: SerialPort = SerialPort.getCommPort(comPort.descriptor)
+  serialPort.setBaudRate(19200)
+  serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0)
+  val opened: Boolean = serialPort.openPort()
+  if (!opened) {
+    logger.trace(s"Serialport: {} did not open!", comPort.toString)
+    throw new IOException(s"Did not open $comPort")
+  }
+  val reader: BufferedReader = new BufferedReader(new InputStreamReader(serialPort.getInputStream))
+  val writer = new BufferedWriter(new OutputStreamWriter(serialPort.getOutputStream))
 
   def preform(in: String): Try[String] = {
-    val r = serialInfo.recoverWith { e =>
-      serialInfo = open()
-      serialInfo
-    }.map(_.preform(in))
-    r
+    Try {
+      val prewriteReader = reader.ready()
+      writer.write(in)
+      writer.flush()
+
+      readResponse()
+    }
+  }
+
+  private val terminaters = "-+"
+
+  @tailrec
+  private def readResponse(lines: Seq[String] = Seq.empty): String = {
+    val line = reader.readLine()
+    logger.trace("read lin e: {}", line)
+    val head = line.head
+    if (terminaters.contains(head)) {
+      logger.trace("\tGot terminator.")
+      (lines :+ line) mkString (" ") // done
+    }
+    else {
+      logger.trace("\tNo +-, read another line.")
+      readResponse(lines :+ line) // read another.
+    }
   }
 
   def close(): Unit = {
     logger.trace(s"Closing: {}", comPort.toString)
-    serialInfo.foreach({ serialInfo =>
-      serialInfo.close()
-    })
+    writer.close()
+    reader.close()
+    serialPort.closePort()
   }
-
-
-  private def open(): Try[SerialInfo] = {
-    Try {
-      logger.trace(s"Opening: {}", comPort.toString)
-      val serialPort: SerialPort = SerialPort.getCommPort(comPort.descriptor)
-      if (serialPort.isOpen) {
-        logger.trace(s"Serialport alreadyOpen!")
-        serialPort.closePort()
-        if (serialPort.isOpen) {
-          logger.trace(s"Serialport still open after closePort()!")
-        }
-      }
-      serialPort.setBaudRate(19200)
-      serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0)
-      val opened: Boolean = serialPort.openPort()
-      if (!opened) {
-        logger.trace(s"Serialport: {} did not open!", comPort.toString)
-        throw new IOException(s"Did not open $comPort")
-      }
-      val reader = new BufferedReader(new InputStreamReader(serialPort.getInputStream))
-      val writer: OutputStreamWriter = new OutputStreamWriter(serialPort.getOutputStream)
-
-      serialPort.getInputStream.skip(serialPort.bytesAvailable());
-      SerialInfo(serialPort, writer, reader)
-    }
-  }
-
-  case class SerialInfo(serialPort: SerialPort, val writer: Writer, val reader:BufferedReader) {
-    val recBuffer = new Array[Byte](200)
-
-    def preform(in: String): String = {
-
-      var byte:Int = 42
-      while(byte != -1){
-        byte = reader.read()
-        if( byte != -1){
-          logger.debug("Draining: {}", byte)
-        }
-      }
-
-      writer.write(in)
-      writer.flush()
-
-      val response: String = reader.readLine()
-      response
-    }
-
-    /**
-     * Done, cleanup.
-     */
-    def close(): Unit = {
-      logger.trace(s"close: {}", comPort.toString)
-      writer.close()
-      reader.close()
-      serialPort.closePort()
-      logger.trace(s"serialPort.isOpen: {}", serialPort.isOpen)
-    }
-  }
-
 }
 
 case class ComPort(descriptor: String = "com1", friendlyName: String = "com1")

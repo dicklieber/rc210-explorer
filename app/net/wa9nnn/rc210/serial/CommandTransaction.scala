@@ -44,13 +44,10 @@ case class CommandTransaction(command: String, field: Cell, response: Try[String
         Row(field, fixUp(command), exception.getMessage).withCssClass("sadCell")
       case Success(response) =>
         val row = Row(field, fixUp(command), fixUp(response))
-        response.head match {
-          case '+' =>
-            row
-          case x =>
-            row.withCssClass("sadCell")
-        }
-
+        if (response.contains('+'))
+          row
+        else
+          row.withCssClass("sadCell")
     }
   }
 }
