@@ -10,9 +10,17 @@
                 webSocket = new WebSocket(url);
                 webSocket.onmessage = (event) => {
                     const data = event.data;
-                    console.log(`data: ${data}`);
-                    // const msg = JSON.parse(data);
-                    // console.log(`json msg: ${msg}`);
+                    if (data.startsWith("Kinder"))
+                        window.location.href = '@routes.CandidateController.lastUpload()';
+                    else {
+                        const $progress = $('.progress-bar');
+                        $progress.css("width", data + "%");
+                        $progress.text(data)
+
+                        console.log(`data: ${data}`);
+                        // const msg = JSON.parse(data);
+                        // console.log(`json msg: ${msg}`);
+                    }
                 };
                 webSocket.onopen = (event) => {
                     console.log("websocket onopen")
@@ -23,7 +31,15 @@
                 }
 
         </script>
-
-        todo handle websocket messages.
+        <div class="container">
+                <!-- Progress bar HTML -->
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped" style="min-width: 0px;"></div>
+            </div>
+            <div>
+                <p id="command"></p>
+                <p id="response"></p>
+            </div>
+        </div>
 
     }

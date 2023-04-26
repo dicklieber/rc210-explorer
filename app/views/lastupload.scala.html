@@ -1,0 +1,10 @@
+@import com.wa9nnn.util.tableui.Table
+@import com.wa9nnn.util.tableui.html.renderTable
+@import net.wa9nnn.rc210.ui.Tabs
+@import java.time.Instant
+@(table: Table, stamp: Option[Instant])
+
+@tabbedmain(Tabs.noTab) {
+    <p>Last Upload: @stamp</p>
+    @renderTable(table)
+}

@@ -40,6 +40,7 @@ GET         /candidates/sendValue/:fieldKey            controllers.CandidateCont
 GET         /candidates/send/candidate:fieldKey        controllers.CandidateController.sendCandidate(fieldKey:FieldKey)
 GET         /candidates/sendAllFields                  controllers.CandidateController.sendAllFields
 GET         /candidates/sendAllCandidates              controllers.CandidateController.sendAllCandidates()
+GET         /candidates/lastUpload                     controllers.CandidateController.lastUpload()
 GET         /candidates/ws                             controllers.CandidateController.ws
 GET         /                                          controllers.LandingController.tabs()
 
