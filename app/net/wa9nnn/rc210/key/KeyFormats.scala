@@ -17,8 +17,6 @@
 
 package net.wa9nnn.rc210.key
 
-import com.wa9nnn.util.JsonFormatUtils.javaEnumFormat
-import net.wa9nnn.rc210.command._
 import net.wa9nnn.rc210.data.functions.FunctionNode
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.named.NamedKey
@@ -87,13 +85,6 @@ object KeyFormats {
       JsSuccess(KeyFactory.apply(json.as[String]))
     }
   }
-  implicit val fmtL10NError: OFormat[L10NMessage] = Json.format[L10NMessage]
-  implicit val fmtCommandId: Format[Command] = javaEnumFormat[Command]
-
-
-  implicit val fmtLocus: Format[Locus] = javaEnumFormat[Locus]
-  implicit val fmtValueType: Format[ValueType] = javaEnumFormat[ValueType]
-
 
   implicit val fmtFunctionKey: Format[FunctionKey] = new Format[FunctionKey] {
     def writes(key: FunctionKey): JsValue = {
@@ -151,9 +142,6 @@ object KeyFormats {
     override def unbind(key: String, keyKind: KeyKind): String =
       keyKind.toString
   }
-
-
-  implicit val fmtItemValue: OFormat[ItemValue] = Json.format[ItemValue]
 
 
   implicit val fmtNamed: OFormat[NamedKey] = Json.format[NamedKey]

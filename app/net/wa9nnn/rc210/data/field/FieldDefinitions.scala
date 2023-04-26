@@ -139,6 +139,8 @@ class FieldDefinitions @Inject()() {
     MesssageExtractor
   )
 
+  val allFields:Seq[FieldDefinition] = simpleFields ++ complexFd
+
   def forOffset(offset: Int): SimpleField = simpleFields.find(_.offset == offset).get
 
 }

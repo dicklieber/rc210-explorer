@@ -1,12 +1,16 @@
 package net.wa9nnn.rc210.data.field
 
+import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.JsValue
 
+import java.text.FieldPosition
+import scala.util.Try
+
 trait FieldDefinition {
-  def parse(jsValue: JsValue):FieldValue
+  def parse(jsValue: JsValue): FieldValue
 
 
   def tooltip: String = ""
@@ -15,6 +19,7 @@ trait FieldDefinition {
   val kind: KeyKind
   val template: String = ""
   val units: String = ""
+  def positions: Seq[FieldOffset]
 }
 
 /**
@@ -39,9 +44,14 @@ case class SimpleField(offset: Int,
                        override val units: String = "",
                        min: Int = 1,
                        max: Int = 255,
-                      ) extends FieldDefinition {
-  def extractFromInts(iterator: Iterator[Int]): FieldValue = {
-    fieldExtractor.extractFromInts(iterator, this)
+                      ) extends FieldDefinition with LazyLogging{
+  def extractFromInts(iterator: Iterator[Int]): Try[FieldValue] = {
+    val tried: Try[FieldValue] = Try {
+      fieldExtractor.extractFromInts(iterator, this)
+    }
+    if(tried.isFailure)
+      logger.error(s"Extracting: $this. Ignored!")
+    tried
   }
 
   /**
@@ -71,9 +81,11 @@ case class SimpleField(offset: Int,
   override def parse(json: JsValue): FieldValue = {
     fieldExtractor.parse(json)
   }
+
+  override def positions: Seq[FieldOffset] = Seq(FieldOffset(offset, this))
 }
 
-trait ComplexExtractor extends FieldExtractor with FieldDefinition{
+trait ComplexExtractor extends FieldExtractor with FieldDefinition {
 
   /**
    *
@@ -82,14 +94,14 @@ trait ComplexExtractor extends FieldExtractor with FieldDefinition{
    */
   def extract(memory: Memory): Seq[FieldEntry]
 
-//   lazy val fieldDefinition: FieldDefinition = {
-//    new FieldDefinition {
-//      override val fieldName: String = name
-//      override val kind: KeyKind = KeyKind.courtesyToneKey
-//
-//      override def parse(jsValue: JsValue): FieldValue
-//    }
-//  }
+  //   lazy val fieldDefinition: FieldDefinition = {
+  //    new FieldDefinition {
+  //      override val fieldName: String = name
+  //      override val kind: KeyKind = KeyKind.courtesyToneKey
+  //
+  //      override def parse(jsValue: JsValue): FieldValue
+  //    }
+  //  }
 
 }
 
@@ -108,3 +120,4 @@ trait FieldExtractor {
 
 }
 
+case class FieldOffset(offset:Int, fieldDefinition: FieldDefinition)

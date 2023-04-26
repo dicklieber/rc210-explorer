@@ -141,7 +141,6 @@ class SerialPortOperation(comPort: ComPort) extends LazyLogging {
     serialInfo.foreach({ serialInfo =>
       serialInfo.close()
     })
-    serialInfo
   }
 
 

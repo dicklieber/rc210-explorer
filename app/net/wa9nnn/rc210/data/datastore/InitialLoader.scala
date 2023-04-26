@@ -17,8 +17,8 @@
 
 package net.wa9nnn.rc210.data.datastore
 
+import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.io.DatFile
 
 import javax.inject.{Inject, Singleton}
 
@@ -31,10 +31,15 @@ import javax.inject.{Inject, Singleton}
  * @param datFile          wjefre files are located based on [[com.typesafe.config.Config]].
  */
 @Singleton
-class InitialLoader @Inject()(memoryFileLoader: MemoryFileLoader, dataStore: DataStore, dataStoreJson: DataStoreJson, datFile: DatFile) {
+class InitialLoader @Inject()(memoryFileLoader: MemoryFileLoader, dataStoreJson: DataStoreJson, dataStore: DataStore) extends LazyLogging{
 
-  private val seq: Seq[FieldEntry] = memoryFileLoader.load(datFile.memoryFile)
-  dataStore.load(seq)
+   try {
+     val seq: Seq[FieldEntry] = memoryFileLoader.load
+     dataStore.load(seq)
 
-  dataStoreJson.load(dataStore)
+     dataStoreJson.load(dataStore)
+   } catch {
+     case e:Exception =>
+       logger.error("Initial load", e)
+   }
 }

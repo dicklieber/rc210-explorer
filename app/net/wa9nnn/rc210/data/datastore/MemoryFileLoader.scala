@@ -27,21 +27,31 @@ import javax.inject.{Inject, Singleton}
 import scala.util.{Failure, Success}
 
 @Singleton
-class MemoryFileLoader @Inject()(fieldDefinitions: FieldDefinitions) extends LazyLogging {
-  def load(url: URL): Seq[FieldEntry] = {
-    implicit val memory = Memory.load(url) match {
+class MemoryFileLoader @Inject()(fieldDefinitions: FieldDefinitions, datFile: DatFile) extends LazyLogging {
+
+  /**
+   * Get sacved Memory (Raw RC-210 download data.)
+    * @return
+   */
+  def loadMemory: Memory = {
+    Memory.load(datFile.memoryFile) match {
       case Failure(exception) =>
         logger.error(s"No Memory", exception)
         throw exception
       case Success(value) =>
         value
     }
+  }
+
+
+  def load: Seq[FieldEntry] = {
+    implicit val memory = loadMemory
     val simpleFields: Seq[FieldEntry] = for {
       fieldDefinition <- fieldDefinitions.simpleFields
       it = fieldDefinition.iterator()
       number <- 1 to fieldDefinition.kind.maxN
+      fieldValue <- fieldDefinition.extractFromInts(it).toOption
     } yield {
-      val fieldValue: FieldValue = fieldDefinition.extractFromInts(it)
       val fieldKey = fieldDefinition.fieldKey(number)
       val fieldEntry = FieldEntry(fieldDefinition, fieldKey, fieldValue)
       logger.trace("FieldEntry: offset: {} fieldEntry: {})", fieldDefinition.offset, fieldEntry.toString)
@@ -49,8 +59,13 @@ class MemoryFileLoader @Inject()(fieldDefinitions: FieldDefinitions) extends Laz
     }
 
     val complexFields: Seq[FieldEntry] = fieldDefinitions.complexFd.flatMap { memoryExtractor: ComplexExtractor =>
-      val r: Seq[FieldEntry] = memoryExtractor.extract(memory)
-      r
+      try {
+        memoryExtractor.extract(memory)
+      } catch {
+        case e: Throwable =>
+          logger.error(s"loading: ${memoryExtractor.fieldName}", e)
+          Seq.empty
+      }
     }
 
     simpleFields ++: complexFields

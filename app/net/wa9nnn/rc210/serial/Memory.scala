@@ -34,7 +34,7 @@ import scala.util.{Try, Using}
  *
  * @param data mutable array. The 1st 4097 ints are main memory the last
  */
-class Memory(data: Array[Int] = Array.empty) {
+class Memory(val data: Array[Int] = Array.empty) {
   val length: Int = data.length
 
   private val array = new ArraySeq.ofInt(data)

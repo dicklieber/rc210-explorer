@@ -38,10 +38,11 @@ GET         /candidates                                controllers.CandidateCont
 GET         /datastore/dump                            controllers.CandidateController.dump()
 GET         /candidates/sendValue/:fieldKey            controllers.CandidateController.sendFieldValue(fieldKey:FieldKey)
 GET         /candidates/send/candidate:fieldKey        controllers.CandidateController.sendCandidate(fieldKey:FieldKey)
-GET         /candidates/sendAllFields                  controllers.CandidateController.sendAllFields
+GET         /candidates/sendAllFields                  controllers.CandidateController.sendAllFields()
 GET         /candidates/sendAllCandidates              controllers.CandidateController.sendAllCandidates()
 GET         /candidates/lastUpload                     controllers.CandidateController.lastUpload()
 GET         /candidates/ws                             controllers.CandidateController.ws
+GET         /memory                                    controllers.MemoryController.index
 GET         /                                          controllers.LandingController.tabs()
 
 # Map static resources from the /public folder to the /assets URL path

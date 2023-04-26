@@ -50,6 +50,11 @@ case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dt
 object MacroNode extends LazyLogging with ComplexExtractor  {
   def header(count: Int): Header = Header(s"Macros ($count)", "Key", "Functions")
 
+  override def positions: Seq[FieldOffset] = Seq(
+    FieldOffset(1985, this),
+    FieldOffset(2825, this),
+  )
+
   override def extract(memory: Memory): Seq[FieldEntry] = {
 
     val dtmfMap: DtmfMacros = DtmfMacroExtractor(memory)

@@ -149,7 +149,7 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
           }
           maybeLastUpload = Option(LastUpload(transactions))
           serialPortOperation.close()
-          queue.offer("Kinder daqs ist Alles")
+          queue.offer("Kinder das ist Alles")
         }
 
       }

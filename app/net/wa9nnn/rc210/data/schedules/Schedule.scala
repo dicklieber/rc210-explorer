@@ -91,6 +91,12 @@ object Schedule extends LazyLogging with ComplexExtractor {
 
   def header(count: Int): Header = Header(s"Schedules ($count)", "SetPoint", "Macro", "DOW", "WeekInMonth", "MonthOfYear", "LocalTime")
 
+  override def positions: Seq[FieldOffset] = {
+    Seq(
+      FieldOffset(616, this)
+    )
+  }
+
   override def extract(memory: Memory): Seq[FieldEntry] = {
 
     val scheduleBuilder = new ScheduleBuilder(memory.iterator8At(616))

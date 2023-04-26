@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.timers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldEntry, FieldInt, FieldValue}
+import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldEntry, FieldInt, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.key.KeyFactory.TimerKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.Memory
@@ -33,6 +33,12 @@ object TimerExtractor extends ComplexExtractor with LazyLogging {
   //  seconds for each timer 6 2-byte ints
   //  macroToRun for each timer 6 1-byte ints
 
+  override def positions: Seq[FieldOffset] = {
+    Seq(
+      FieldOffset(1553, this),
+      FieldOffset(1565, this)
+    )
+  }
 
   /**
    *
