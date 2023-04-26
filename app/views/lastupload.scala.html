@@ -1,10 +1,37 @@
 @import com.wa9nnn.util.tableui.Table
 @import com.wa9nnn.util.tableui.html.renderTable
 @import net.wa9nnn.rc210.ui.Tabs
-@import java.time.Instant
-@(table: Table, stamp: Option[Instant])
+@import com.wa9nnn.util.TimeConverters
+@(table: Table, maybeLastUpload: Option[LastUpload])
 
-@tabbedmain(Tabs.noTab) {
-    <p>Last Upload: @stamp</p>
-    @renderTable(table)
-}
+    @tabbedmain(Tabs.noTab) {
+        @for(lastUpload <- maybeLastUpload) {
+            <table>
+                <tr>
+                    <td>When:</td>
+                    <td>@TimeConverters.local(lastUpload.start)</td>
+                </tr>
+                <tr>
+                    <td>Took:</td>
+                    <td>@TimeConverters.durationToString(lastUpload.duration)</td>
+                </tr>
+                <tr>
+                    <td>Commands Sent:</td>
+                    <td>@lastUpload.transactions.length</td>
+                </tr>
+                @if(lastUpload.successCount > 0) {
+                    <tr>
+                        <td>Success:</td>
+                        <td>@lastUpload.successCount</td>
+                    </tr>
+                }
+                @if(lastUpload.failCount > 0) {
+                    <tr>
+                        <td>Failueres:</td>
+                        <td>@lastUpload.failCount</td>
+                    </tr>
+                }
+            </table>
+        }
+        @renderTable(table)
+    }

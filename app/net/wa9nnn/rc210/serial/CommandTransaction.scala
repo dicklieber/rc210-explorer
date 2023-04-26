@@ -37,6 +37,7 @@ case class CommandTransaction(command: String, field: Cell, response: Try[String
     }
     s"field: ${field.value} $fixedCommand => $fixedResponse"
   }
+  val isSuccess: Boolean = response.map(_.contains('+')).getOrElse(false)
 
   override def toRow: Row = {
     response match {
@@ -44,7 +45,7 @@ case class CommandTransaction(command: String, field: Cell, response: Try[String
         Row(field, fixUp(command), exception.getMessage).withCssClass("sadCell")
       case Success(response) =>
         val row = Row(field, fixUp(command), fixUp(response))
-        if (response.contains('+'))
+        if (isSuccess)
           row
         else
           row.withCssClass("sadCell")

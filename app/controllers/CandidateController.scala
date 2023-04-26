@@ -28,7 +28,7 @@ import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.serial.{CommandTransaction, RC210IO, SerialPortOperation}
 import play.api.mvc._
 
-import java.time.Instant
+import java.time.{Duration, Instant}
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.{Inject, Singleton}
 import scala.util.Try
@@ -112,6 +112,7 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
       logger.info("message: {}", message)
       val runnable = new Runnable {
         override def run(): Unit = {
+          val start = Instant.now()
           val expectedCount = 369.0
           var sofar = new AtomicDouble()
           val serialPortOperation = rc210IO.start()
@@ -131,7 +132,7 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
             queue.offer(sPercent)
             transaction
           }
-          maybeLastUpload = Option(LastUpload(initRows :++ transactions))
+          maybeLastUpload = Option(LastUpload(initRows :++ transactions, start))
           serialPortOperation.close()
           queue.offer("Kinder das ist Alles")
         }
@@ -148,10 +149,10 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
 
   def lastUpload(): Action[AnyContent] = Action { implicit request =>
     maybeLastUpload match {
-      case Some(value: LastUpload) =>
-        val rows = value.transactions.map(_.toRow)
+      case Some(lastUpload: LastUpload) =>
+        val rows = lastUpload.transactions.map(_.toRow)
         val table = Table(CommandTransaction.header(s"All Fields (${rows.length})"), rows)
-        Ok(views.html.lastupload(table, Option(value.stamp)))
+        Ok(views.html.lastupload(table, Option(lastUpload)))
       case None =>
         Ok(views.html.lastupload(Table(Seq.empty, Seq.empty), None))
     }
@@ -179,4 +180,10 @@ object CandidateController {
   }
 }
 
-case class LastUpload(transactions: Seq[CommandTransaction], stamp: Instant = Instant.now())
+case class LastUpload(transactions: Seq[CommandTransaction], start: Instant, finish:Instant = Instant.now()){
+  val duration:Duration = Duration.between(start, finish)
+
+  val successCount:Int = transactions.count(_.isSuccess)
+  val failCount:Int = transactions.count(!_.isSuccess)
+
+}
