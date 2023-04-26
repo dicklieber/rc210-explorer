@@ -170,10 +170,22 @@ class SerialPortOperation(comPort: ComPort) extends LazyLogging {
     }
   }
 
-  case class SerialInfo(serialPort: SerialPort, val writer: Writer, val reader: BufferedReader) {
+  case class SerialInfo(serialPort: SerialPort, val writer: Writer, val reader:BufferedReader) {
+    val recBuffer = new Array[Byte](200)
+
     def preform(in: String): String = {
+
+      var byte:Int = 42
+      while(byte != -1){
+        byte = reader.read()
+        if( byte != -1){
+          logger.debug("Draining: {}", byte)
+        }
+      }
+
       writer.write(in)
       writer.flush()
+
       val response: String = reader.readLine()
       response
     }

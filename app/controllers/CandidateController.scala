@@ -90,22 +90,6 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
   }
 
   def sendAllFields(): Action[AnyContent] = Action { implicit request =>
-    /*    val serialPortOperation = rc210IO.start()
-        val initRows = performInit(serialPortOperation).map(_.toRow)
-        val rows: Seq[Row] = for {
-          fieldEntry <- dataStore.all.take(25)
-          command <- fieldEntry.fieldValue.toCommands(fieldEntry)
-        } yield {
-          val withCr = "\r" + command + "\r"
-          val triedResponse: Try[String] = serialPortOperation.preform(withCr)
-          val transaction = CommandTransaction(withCr, fieldEntry.fieldKey.toCell, triedResponse)
-          logger.debug(transaction.toString)
-          queue.offer(transaction.toString)
-          transaction.toRow
-        }
-        serialPortOperation.close()
-     */
-    //    val table = Table(CommandTransaction.header(s"All Fields (${rows.length})"), initRows ++ rows)
     Ok(views.html.commandsProgress())
   }
 
@@ -131,7 +115,7 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
           val expectedCount = 369.0
           var sofar = new AtomicDouble()
           val serialPortOperation = rc210IO.start()
-          val initRows = performInit(serialPortOperation).map(_.toRow)
+          val initRows: Seq[CommandTransaction] = performInit(serialPortOperation)
           val transactions: Seq[CommandTransaction] = for {
             fieldEntry <- dataStore.all // .take(25)
             command <- fieldEntry.fieldValue.toCommands(fieldEntry)
@@ -142,19 +126,22 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
 
             logger.debug(transaction.toString)
             val response: Try[String] = triedResponse.recoverWith(e => Try(e.getMessage))
-           val percent = 100.0 * sofar.getAndAdd(1.0) / expectedCount
+            val percent = 100.0 * sofar.getAndAdd(1.0) / expectedCount
             val sPercent = f"$percent%.1f"
             queue.offer(sPercent)
             transaction
           }
-          maybeLastUpload = Option(LastUpload(transactions))
+          maybeLastUpload = Option(LastUpload(initRows :++ transactions))
           serialPortOperation.close()
           queue.offer("Kinder das ist Alles")
         }
 
       }
-      new Thread(runnable).start()
+      val thread: Thread = new Thread(runnable, "Download")
+      thread.setDaemon(true)
+      thread.start()
     }
+
 
     Flow.fromSinkAndSource(in, source)
   }
