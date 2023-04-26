@@ -42,7 +42,7 @@ class MemoryController @Inject()(memoryFileLoader: MemoryFileLoader, fieldDefini
     implicit request: Request[AnyContent] =>
 
       val memory: Memory = memoryFileLoader.loadMemory
-      val rows: Seq[Row] = memory.data.zipWithIndex.map { case (int, index) =>
+      val rows: Seq[Row] = memory.data.zipWithIndex.toIndexedSeq.map { case (int, index) =>
         val row = Row(Cell(index), Cell(int))
         offsetToField.get(index).map { fieldDefinition =>
           val extraCells: Seq[Cell] = Seq(

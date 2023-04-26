@@ -119,59 +119,7 @@ class RC210IO @Inject()(config: Config) extends LazyLogging {
 }
 
 
-/**
- * Handles sending and receiving to the RC-210 via a serial port.
- *
- * @param comPort from [[RC210IO.listPorts]].
- */
-class SerialPortOperation(comPort: ComPort) extends LazyLogging {
 
-  // Initially not open, will try to open on perform.
-  private val serialPort: SerialPort = SerialPort.getCommPort(comPort.descriptor)
-  serialPort.setBaudRate(19200)
-  serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0)
-  val opened: Boolean = serialPort.openPort()
-  if (!opened) {
-    logger.trace(s"Serialport: {} did not open!", comPort.toString)
-    throw new IOException(s"Did not open $comPort")
-  }
-  val reader: BufferedReader = new BufferedReader(new InputStreamReader(serialPort.getInputStream))
-  val writer = new BufferedWriter(new OutputStreamWriter(serialPort.getOutputStream))
-
-  def preform(in: String): Try[String] = {
-    Try {
-      val prewriteReader = reader.ready()
-      writer.write(in)
-      writer.flush()
-
-      readResponse()
-    }
-  }
-
-  private val terminaters = "-+"
-
-  @tailrec
-  private def readResponse(lines: Seq[String] = Seq.empty): String = {
-    val line = reader.readLine()
-    logger.trace("read lin e: {}", line)
-    val head = line.head
-    if (terminaters.contains(head)) {
-      logger.trace("\tGot terminator.")
-      (lines :+ line) mkString (" ") // done
-    }
-    else {
-      logger.trace("\tNo +-, read another line.")
-      readResponse(lines :+ line) // read another.
-    }
-  }
-
-  def close(): Unit = {
-    logger.trace(s"Closing: {}", comPort.toString)
-    writer.close()
-    reader.close()
-    serialPort.closePort()
-  }
-}
 
 case class ComPort(descriptor: String = "com1", friendlyName: String = "com1")
 

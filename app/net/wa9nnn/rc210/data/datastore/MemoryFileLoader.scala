@@ -43,7 +43,6 @@ class MemoryFileLoader @Inject()(fieldDefinitions: FieldDefinitions, datFile: Da
     }
   }
 
-
   def load: Seq[FieldEntry] = {
     implicit val memory = loadMemory
     val simpleFields: Seq[FieldEntry] = for {
