@@ -17,22 +17,23 @@
 
 package controllers
 
-import akka.NotUsed
 import akka.stream.{Materializer, OverflowStrategy}
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import controllers.CandidateController.performInit
+import controllers.UpLoadProgress._
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.serial.{CommandTransaction, RC210IO, SerialPortOperation}
+import play.api.libs.json.{Format, Json}
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
 import scala.util.Try
 
 @Singleton()
-class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(implicit mat:Materializer) extends MessagesInjectedController with LazyLogging {
+class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(implicit mat: Materializer) extends MessagesInjectedController with LazyLogging {
   def index(): Action[AnyContent] = Action { implicit request =>
     val candidates = dataStore.candidates
     val rows: Seq[Row] =
@@ -88,22 +89,22 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
   }
 
   def sendAllFields(): Action[AnyContent] = Action { implicit request =>
-/*    val serialPortOperation = rc210IO.start()
-    val initRows = performInit(serialPortOperation).map(_.toRow)
-    val rows: Seq[Row] = for {
-      fieldEntry <- dataStore.all.take(25)
-      command <- fieldEntry.fieldValue.toCommands(fieldEntry)
-    } yield {
-      val withCr = "\r" + command + "\r"
-      val triedResponse: Try[String] = serialPortOperation.preform(withCr)
-      val transaction = CommandTransaction(withCr, fieldEntry.fieldKey.toCell, triedResponse)
-      logger.debug(transaction.toString)
-      queue.offer(transaction.toString)
-      transaction.toRow
-    }
-    serialPortOperation.close()
- */
-//    val table = Table(CommandTransaction.header(s"All Fields (${rows.length})"), initRows ++ rows)
+    /*    val serialPortOperation = rc210IO.start()
+        val initRows = performInit(serialPortOperation).map(_.toRow)
+        val rows: Seq[Row] = for {
+          fieldEntry <- dataStore.all.take(25)
+          command <- fieldEntry.fieldValue.toCommands(fieldEntry)
+        } yield {
+          val withCr = "\r" + command + "\r"
+          val triedResponse: Try[String] = serialPortOperation.preform(withCr)
+          val transaction = CommandTransaction(withCr, fieldEntry.fieldKey.toCell, triedResponse)
+          logger.debug(transaction.toString)
+          queue.offer(transaction.toString)
+          transaction.toRow
+        }
+        serialPortOperation.close()
+     */
+    //    val table = Table(CommandTransaction.header(s"All Fields (${rows.length})"), initRows ++ rows)
     Ok(views.html.commandsProgress())
   }
 
@@ -112,41 +113,104 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
   }
 
 
-  import play.api.mvc._
   import akka.stream.scaladsl._
+  import play.api.mvc.WebSocket.MessageFlowTransformer
+  import play.api.mvc._
 
+  implicit val messageFlowTransformer: MessageFlowTransformer[String, UpLoadProgress] = MessageFlowTransformer.jsonMessageFlowTransformer[String, UpLoadProgress]
 
   def ws = WebSocket.accept[String, String] { request =>
 
-    val (queue, source) = Source.queue[String](250, OverflowStrategy.dropTail).preMaterialize()
-//    val runnableGraph: RunnableGraph[Source[String, NotUsed]] =
-//      source.toMat(BroadcastHub.sink(bufferSize = 256))(Keep.right)
+    val (queue, source) = Source.queue[String](250, OverflowStrategy.dropHead).preMaterialize()
 
+    var progress = UpLoadProgress(369)
     // Log events to the console
-    val in = Sink.foreach[String]{ message =>
+    val in = Sink.foreach[String] { message =>
+      logger.info("message: {}", message)
+
       val serialPortOperation = rc210IO.start()
       val initRows = performInit(serialPortOperation).map(_.toRow)
       val rows: Seq[Row] = for {
-        fieldEntry <- dataStore.all.take(25)
+        fieldEntry <- dataStore.all // .take(25)
         command <- fieldEntry.fieldValue.toCommands(fieldEntry)
       } yield {
         val withCr = "\r" + command + "\r"
         val triedResponse: Try[String] = serialPortOperation.preform(withCr)
         val transaction = CommandTransaction(withCr, fieldEntry.fieldKey.toCell, triedResponse)
+
         logger.debug(transaction.toString)
-        queue.offer(transaction.toString)
+        progress = progress.add()
+        val sProgressJson = Json.toJson(progress).toString()
+        queue.offer(sProgressJson)
+        logger.debug(sProgressJson)
         transaction.toRow
       }
       serialPortOperation.close()
+      queue.offer("Kinder daqs ist Alles")
     }
 
-
-
-
-//    val tuple: (NotUsed, Source[String, NotUsed]) = source
-    Flow.fromSinkAndSource(in,source)
+    //    def sendProgress
+    //
+    //    queue.offer(progress)
+    //    val serialPortOperation = rc210IO.start()
+    //    val initRows = performInit(serialPortOperation).map(_.toRow)
+    //    val rows: Seq[Row] = for {
+    //      fieldEntry <- dataStore.all // .take(25)
+    //      command <- fieldEntry.fieldValue.toCommands(fieldEntry)
+    //    } yield {
+    //      val withCr = "\r" + command + "\r"
+    //      val triedResponse: Try[String] = serialPortOperation.preform(withCr)
+    //      val transaction = CommandTransaction(withCr, fieldEntry.fieldKey.toCell, triedResponse)
+    //
+    //      logger.debug(transaction.toString)
+    //      progress = progress.add()
+    //      queue.offer(progress)
+    //      transaction.toRow
+    //    }
+    //    serialPortOperation.close()
+    //    val sender = new Sender()
+    //    //    queue.offer(progress)
+    //    val soource = sender.start
+    Flow.fromSinkAndSource(in, source)
   }
+
+
+  //  class Sender() extends Runnable {
+  //    val (queue, source) = Source.queue[UpLoadProgress](250, OverflowStrategy.dropTail).preMaterialize()
+  //    //    val runnableGraph: RunnableGraph[Source[String, NotUsed]] =
+  //    //      source.toMat(BroadcastHub.sink(bufferSize = 256))(Keep.right)
+  //
+  //    var progress: UpLoadProgress = UpLoadProgress(300)
+  //
+  //    def start: Source[UpLoadProgress, NotUsed] = {
+  //      new Thread(this).start()
+  //      source
+  //    }
+  //
+  //    override def run(): Unit = {
+  //
+  //      queue.offer(progress)
+  //      val serialPortOperation = rc210IO.start()
+  //      val initRows = performInit(serialPortOperation).map(_.toRow)
+  //      val rows: Seq[Row] = for {
+  //        fieldEntry <- dataStore.all // .take(25)
+  //        command <- fieldEntry.fieldValue.toCommands(fieldEntry)
+  //      } yield {
+  //        val withCr = "\r" + command + "\r"
+  //        val triedResponse: Try[String] = serialPortOperation.preform(withCr)
+  //        val transaction = CommandTransaction(withCr, fieldEntry.fieldKey.toCell, triedResponse)
+  //
+  //        logger.debug(transaction.toString)
+  //        progress = progress.add()
+  //        queue.offer(progress)
+  //        transaction.toRow
+  //      }
+  //      serialPortOperation.close()
+  //
+  //    }
+  //  }
 }
+
 
 object CandidateController {
   private val init = Seq(
@@ -155,19 +219,31 @@ object CandidateController {
     "1GetVersion",
     "1GetRTCVersion",
   )
+
   def performInit(serialPortOperation: SerialPortOperation) = {
-    for{
+    for {
       command <- init
-    }yield{
+    } yield {
       Thread.sleep(125)
-      val withCr =  command + "\r"
+      val withCr = command + "\r"
       val triedResponse: Try[String] = serialPortOperation.preform(withCr)
       val transaction = CommandTransaction(withCr, Cell("Init"), triedResponse)
       transaction
     }
-
   }
 }
 
+case class UpLoadProgress(max: Int, soFar: Int = 0) {
+  def add(): UpLoadProgress = {
+    copy(soFar = soFar + 1)
+  }
+}
+
+object UpLoadProgress {
+  implicit val fmtFS: Format[FS] = Json.format[FS]
+  implicit val fmtUpLoadProgress: Format[UpLoadProgress] = Json.format[UpLoadProgress]
+}
+
+case class FS(param: String = "", css: String = "", response: String = "none")
 
 

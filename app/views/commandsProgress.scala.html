@@ -9,13 +9,17 @@
 
                 webSocket = new WebSocket(url);
                 webSocket.onmessage = (event) => {
-                    console.log(event.data);
+                    const data = event.data;
+                    console.log(`data: ${data}`);
+                    // const msg = JSON.parse(data);
+                    // console.log(`json msg: ${msg}`);
                 };
                 webSocket.onopen = (event) => {
+                    console.log("websocket onopen")
                     webSocket.send("start upload all")
                 }
                 webSocket.onclose = (event) => {
-                    webSocket.send("websocket closed")
+                    console.log("websocket closed")
                 }
 
         </script>
