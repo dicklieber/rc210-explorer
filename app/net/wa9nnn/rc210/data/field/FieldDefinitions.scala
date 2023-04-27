@@ -65,9 +65,9 @@ class FieldDefinitions @Inject()() {
     SimpleField(157, "Repeat Mode", portKey, "n14b", FieldBoolean),
     SimpleField(160, "Timeout Timer", portKey, "n*1001v", FieldInt) max 32767 units "seconds",
     SimpleField(166, "DTMF Mute", portKey, "n*1001b", FieldBoolean),
-    SimpleField(169, "Enable", logicAlarmKey, "n191b", FieldBoolean),
-    SimpleField(174, "Macro Low", logicAlarmKey, "*2101 n v", MacroSelect),
-    SimpleField(179, "Macro High", logicAlarmKey, "*2102 n v", MacroSelect),
+    SimpleField(169, "Enable", logicAlarmKey, "1n191b", FieldBoolean),
+    SimpleField(174, "Macro Low", logicAlarmKey, "*2101nv", MacroSelect),
+    SimpleField(179, "Macro High", logicAlarmKey, "*2102nv", MacroSelect),
     // needs to be complex field   SimpleField(184, "Vref", meterKey, "*2065 n v", UiNumber(255, "todo three numbers?")), //*2065 4 9 6
     //###########################################################################################  //todo
     ///For meters, we gather all the parameters needed, then assemble them to actually store
