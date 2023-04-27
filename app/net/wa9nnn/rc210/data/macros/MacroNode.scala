@@ -31,7 +31,15 @@ case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dt
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = Seq("//todo")
+  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
+    val numbers = functions.map(_.number).mkString("*")
+    val macroNumber = f"${key.number}%03d"
+    val dtmfPart = dtmf.map(_.value).getOrElse("")
+    Seq(
+      s"1*4002*${key.number}*$numbers",
+      s"1*2050${macroNumber}$dtmfPart"
+    )
+  }
 
 
   override def toRow: Row = {
@@ -47,7 +55,7 @@ case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dt
 
 }
 
-object MacroNode extends LazyLogging with ComplexExtractor  {
+object MacroNode extends LazyLogging with ComplexExtractor {
   def header(count: Int): Header = Header(s"Macros ($count)", "Key", "Functions")
 
   override def positions: Seq[FieldOffset] = Seq(
@@ -60,14 +68,13 @@ object MacroNode extends LazyLogging with ComplexExtractor  {
     val dtmfMap: DtmfMacros = DtmfMacroExtractor(memory)
     val mai = new AtomicInteger(1)
 
-    def macroBuilder(offset: Int, chunkLength: Int, nChunks:Int) = {
+    def macroBuilder(offset: Int, chunkLength: Int, nChunks: Int) = {
       memory.chunks(offset, chunkLength, nChunks)
         .map { chunk: Array[Int] =>
           val key: MacroKey = KeyFactory(KeyKind.macroKey, mai.getAndIncrement())
           val f: Array[FunctionKey] = chunk.takeWhile(_ != 0)
             .map(number => KeyFactory.functionKey(number))
           MacroNode(key, f.toIndexedSeq, dtmfMap(key))
-
         }
     }
 
@@ -83,8 +90,10 @@ object MacroNode extends LazyLogging with ComplexExtractor  {
   //*2050 xxx yyyyyyyy where xxx is the 3 digit Macro number (001-105) and yyyyyyyy is the DTMF code up to 8 digits
 
 
-import net.wa9nnn.rc210.key.KeyFormats._
+  import net.wa9nnn.rc210.key.KeyFormats._
+
   implicit val fmtMacroNode: Format[MacroNode] = Json.format[MacroNode]
+
   override def parse(jsValue: JsValue): FieldValue = {
     jsValue.as[MacroNode]
   }
