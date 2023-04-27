@@ -44,7 +44,7 @@ case class Message(key: MessageKey, words: Seq[Int]) extends ComplexFieldValue[M
 
     val editButton = EditButton(routes.MessageController.edit(key))
     val rowHeader = key.toCell
-    val csvWords: Cell = Cell(display )
+    val csvWords: Cell = Cell(display)
     Row(editButton, rowHeader, csvWords)
   }
 
@@ -53,7 +53,12 @@ case class Message(key: MessageKey, words: Seq[Int]) extends ComplexFieldValue[M
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = Seq("//todo")
+  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
+    val value: Seq[String] = words.map(word => f"$word%03d")
+    val word3s: String = value.mkString
+    Seq(f"1*2103${key.number}%02d$word3s")
+  }
+
 
   override def toJsonValue: JsValue = Json.toJson(this)
 }
