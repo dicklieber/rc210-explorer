@@ -73,17 +73,26 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
 
         try {
           val serialPortOperation = rc210IO.start()
-
-          val commands: Seq[String] = fieldEntry.fieldValue.toCommands(fieldEntry)
+          val commands: Seq[String] =  if(sendValue)
+            fieldEntry.fieldValue.toCommands(fieldEntry)
+          else {
+            fieldEntry.candidate.get.toCommands(fieldEntry)
+          }
           val rows: Seq[Row] = commands.map { command =>
             val withCr = "\r" + command + "\r"
             val triedResponse: Try[String] = serialPortOperation.preform(withCr)
-            val transaction = CommandTransaction(withCr, fieldEntry.fieldKey.toCell, triedResponse)
+            val transaction: CommandTransaction = CommandTransaction(withCr, fieldEntry.fieldKey.toCell, triedResponse)
             logger.debug(transaction.toString)
+            if (!sendValue && transaction.isSuccess) {
+              dataStore.acceptCandidate(fieldKey)
+            }
             transaction.toRow
           }
           serialPortOperation.close()
-          val table = Table(Header(s"Field"), rows)
+
+
+
+          val table = Table(Header("Result", "Field", "Command", "Response"), rows)
           Ok(views.html.dat(Seq(table)))
         } catch {
           case e:Throwable =>
