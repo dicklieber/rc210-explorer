@@ -33,8 +33,8 @@ class JsonFileLoaderSpec extends WithTestConfiguration {
       val fieldDefinitions = new FieldDefinitions()
 
       val datFile = new DatFile(config)
-      val mfl = new MemoryFileLoader(fieldDefinitions)
-      val seq = mfl.load(datFile.memoryFile)
+      val memoryFileLoader: MemoryFileLoader = new MemoryFileLoader(fieldDefinitions, datFile)
+      val seq = memoryFileLoader.load
 
       val dataStoreJson = new DataStoreJson(datFile)
       val dataStore = new DataStore(dataStoreJson)

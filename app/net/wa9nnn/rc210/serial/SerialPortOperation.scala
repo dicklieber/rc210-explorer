@@ -32,7 +32,7 @@ import scala.util.Try
 class SerialPortOperation(comPort: ComPort) extends LazyLogging {
   private val serialPort: SerialPort = SerialPort.getCommPort(comPort.descriptor)
   serialPort.setBaudRate(19200)
-  serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0)
+  serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 5000, 1000)
   val opened: Boolean = serialPort.openPort()
   if (!opened) {
     logger.trace(s"Serialport: {} did not open!", comPort.toString)

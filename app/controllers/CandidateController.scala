@@ -71,19 +71,24 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
     dataStore(fieldKey) match {
       case Some(fieldEntry: FieldEntry) =>
 
-        val serialPortOperation = rc210IO.start()
+        try {
+          val serialPortOperation = rc210IO.start()
 
-        val commands: Seq[String] = fieldEntry.fieldValue.toCommands(fieldEntry)
-        val rows: Seq[Row] = commands.map { command =>
-          val withCr = "\r" + command + "\r"
-          val triedResponse: Try[String] = serialPortOperation.preform(withCr)
+          val commands: Seq[String] = fieldEntry.fieldValue.toCommands(fieldEntry)
+          val rows: Seq[Row] = commands.map { command =>
+            val withCr = "\r" + command + "\r"
+            val triedResponse: Try[String] = serialPortOperation.preform(withCr)
+            val transaction = CommandTransaction(withCr, fieldEntry.fieldKey.toCell, triedResponse)
+            logger.debug(transaction.toString)
+            transaction.toRow
+          }
           serialPortOperation.close()
-          val transaction = CommandTransaction(withCr, fieldEntry.fieldKey.toCell, triedResponse)
-          logger.debug(transaction.toString)
-          transaction.toRow
+          val table = Table(Header(s"Field"), rows)
+          Ok(views.html.dat(Seq(table)))
+        } catch {
+          case e:Throwable =>
+            InternalServerError(e.getMessage)
         }
-        val table = Table(CommandTransaction.header(s"Field"), rows)
-        Ok(views.html.dat(Seq(table)))
       case None =>
         NotFound(s"No fieldKey: $fieldKey")
     }

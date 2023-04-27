@@ -4,7 +4,6 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row}
 import net.wa9nnn.rc210.data.Dtmf
 import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.key.KeyFactory.{FunctionKey, MacroKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.model.TriggerNode
@@ -12,6 +11,7 @@ import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.{Format, JsValue, Json}
 
 import java.util.concurrent.atomic.AtomicInteger
+import scala.annotation.tailrec
 
 /**
  *
@@ -38,7 +38,7 @@ case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dt
     val mCmd = if (functions.isEmpty)
       s"1*4003$macroNumber" // erase macro
     else
-      s"1*4002*${macroNumber}*$numbers"
+      s"1*4002${macroNumber}*$numbers"
 
     //    1*4002 11 * 118 * 391 ok
     //    1*400211 * 118 * 391 ok
@@ -82,9 +82,8 @@ object MacroNode extends LazyLogging with ComplexExtractor {
       memory.chunks(offset, chunkLength, nChunks)
         .map { chunk: Array[Int] =>
           val key: MacroKey = KeyFactory(KeyKind.macroKey, mai.getAndIncrement())
-          val f: Array[FunctionKey] = chunk.takeWhile(_ != 0)
-            .map(number => KeyFactory.functionKey(number))
-          MacroNode(key, f.toIndexedSeq, dtmfMap(key))
+          val functions: Seq[FunctionKey] = parseChunk(chunk.iterator)
+          MacroNode(key, functions, dtmfMap(key))
         }
     }
 
@@ -96,9 +95,42 @@ object MacroNode extends LazyLogging with ComplexExtractor {
     }
     r
   }
-  //*4002 10 * 162 * 187 * 122 * 347
-  //*2050 xxx yyyyyyyy where xxx is the 3 digit Macro number (001-105) and yyyyyyyy is the DTMF code up to 8 digits
 
+  /**
+   * Get all the Function key from a chunk of RC_210-210 data.
+   *
+   * @param iterator of the chunk.
+   * @return
+   */
+  @tailrec
+  def parseChunk(iterator: Iterator[Int], soFar: Seq[FunctionKey] = Seq.empty): Seq[FunctionKey] = {
+    parseFunction(iterator) match {
+      case Some(functionKey) =>
+        parseChunk(iterator, soFar :+ functionKey)
+      case None =>
+        soFar
+    }
+  }
+
+  /**
+   * Accumulate functionKey frpm ints. Handle 255s and less than 255
+   *
+   * @param iterator within the chunk.
+   * @return
+   */
+  @tailrec
+  def parseFunction(iterator: Iterator[Int], soFar: Int = 0): Option[FunctionKey] = {
+    val int = iterator.next()
+    int match {
+      case 0 =>
+        None // Done. function numbers don't allow 255,512,767.
+      case x: Int if x < 255 =>
+        val number = soFar + x
+        Some(KeyFactory.functionKey(number))
+      case 255 =>
+        parseFunction(iterator, soFar + int) // add next int, which will always be 255.
+    }
+  }
 
   import net.wa9nnn.rc210.key.KeyFormats._
 
