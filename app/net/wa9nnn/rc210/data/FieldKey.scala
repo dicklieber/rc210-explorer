@@ -47,8 +47,10 @@ case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey] with 
     ret
   }
 
+  override def toString: String = s"${key.toString}:$fieldName"
+
   override def toCell: Cell = {
-    Cell(fieldName).withToolTip(s"key: $key param: $param")
+    Cell(toString).withToolTip(s"key: $key param: $param")
   }
 }
 

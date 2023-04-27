@@ -32,11 +32,21 @@ case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dt
    * Render this value as an RD-210 command string.
    */
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
-    val numbers = functions.map(_.number).mkString("*")
-    val macroNumber = f"${key.number}%03d"
-    val dtmfPart = dtmf.map(_.value).getOrElse("")
+    val numbers: String = functions.map(_.number).mkString("*")
+    val macroNumber: String = f"${key.number}%03d"
+    val dtmfPart: String = dtmf.map(_.value).getOrElse("")
+    val mCmd = if (functions.isEmpty)
+      s"1*4003$macroNumber" // erase macro
+    else
+      s"1*4002*${macroNumber}*$numbers"
+
+    //    1*4002 11 * 118 * 391 ok
+    //    1*400211 * 118 * 391 ok
+    //    1*400211*118*391 ok
+    //    1*4002011*118*391 ok
+
     Seq(
-      s"1*4002*${key.number}*$numbers",
+      mCmd,
       s"1*2050${macroNumber}$dtmfPart"
     )
   }

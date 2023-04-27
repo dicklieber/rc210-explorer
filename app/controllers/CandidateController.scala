@@ -82,7 +82,7 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
           logger.debug(transaction.toString)
           transaction.toRow
         }
-        val table = Table(CommandTransaction.header(s"All Fields (${rows.length})"), rows)
+        val table = Table(CommandTransaction.header(s"Field"), rows)
         Ok(views.html.dat(Seq(table)))
       case None =>
         NotFound(s"No fieldKey: $fieldKey")
@@ -113,7 +113,7 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
       val runnable = new Runnable {
         override def run(): Unit = {
           val start = Instant.now()
-          val expectedCount = 369.0
+          val expectedCount = 461.0
           var sofar = new AtomicDouble()
           val serialPortOperation = rc210IO.start()
           val initRows: Seq[CommandTransaction] = performInit(serialPortOperation)
