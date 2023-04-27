@@ -65,7 +65,7 @@ case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dt
 
 }
 
-object MacroNode extends LazyLogging with ComplexExtractor {
+object MacroNode extends ComplexExtractor {
   def header(count: Int): Header = Header(s"Macros ($count)", "Key", "Functions")
 
   override def positions: Seq[FieldOffset] = Seq(
@@ -82,7 +82,22 @@ object MacroNode extends LazyLogging with ComplexExtractor {
       memory.chunks(offset, chunkLength, nChunks)
         .map { chunk: Array[Int] =>
           val key: MacroKey = KeyFactory(KeyKind.macroKey, mai.getAndIncrement())
-          val functions: Seq[FunctionKey] = parseChunk(chunk.iterator)
+          val sChunk = chunk
+            .map(_.toString)
+            .mkString(", ")
+
+
+          val functions: Seq[FunctionKey] = try {
+            parseChunk(chunk.iterator)
+          } catch {
+            case e: NoSuchElementException =>
+              logger.error(s"macroKey: $key Ran out in chunk: $sChunk assuming no functions!")
+              Seq.empty
+            case e:Exception =>
+              logger.error(s"macroKey: $key Error parsing chunk: $sChunk ${e.getMessage}")
+              Seq.empty
+
+          }
           MacroNode(key, functions, dtmfMap(key))
         }
     }

@@ -85,7 +85,7 @@ case class SimpleField(offset: Int,
   override def positions: Seq[FieldOffset] = Seq(FieldOffset(offset, this))
 }
 
-trait ComplexExtractor extends FieldExtractor with FieldDefinition {
+trait ComplexExtractor extends FieldExtractor with FieldDefinition  with LazyLogging{
 
   /**
    *

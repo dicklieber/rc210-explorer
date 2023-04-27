@@ -46,8 +46,8 @@ object TimerExtractor extends ComplexExtractor with LazyLogging {
    * @return what we extracted.
    */
   override def extract(memory: Memory): Seq[FieldEntry] = {
-    val seconds = memory.iterator16At(1553)
-    val macros = memory.iterator8At(1565)
+    val seconds: Iterator[Int] = memory.iterator16At(1553)
+    val macroInts: Iterator[Int] = memory.iterator8At(1565)
 
 
     val r: Seq[FieldEntry] = (for {
@@ -55,7 +55,7 @@ object TimerExtractor extends ComplexExtractor with LazyLogging {
     } yield {
       val key: TimerKey = KeyFactory(KeyKind.timerKey, index + 1)
       val fieldKey = FieldKey("Timer", key)
-      val macroSelect: MacroSelect = MacroSelect(macros.next())
+      val macroSelect: MacroSelect = MacroSelect(macroInts.next() + 1)
       FieldEntry(this, fieldKey, Timer(key, FieldInt(seconds.next()), macroSelect))
     })
     r
