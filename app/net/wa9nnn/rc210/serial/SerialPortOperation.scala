@@ -29,14 +29,14 @@ import scala.util.Try
  *
  * @param comPort from [[RC210IO.listPorts]].
  */
-class SerialPortOperation(comPort: ComPort) extends LazyLogging {
+class SerialPortOperation(comPort: ComPort) extends Closeable with LazyLogging {
   private val serialPort: SerialPort = SerialPort.getCommPort(comPort.descriptor)
   serialPort.setBaudRate(19200)
   serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 5000, 1000)
   val opened: Boolean = serialPort.openPort()
   if (!opened) {
     logger.trace(s"Serialport: {} did not open!", comPort.toString)
-    throw new IOException(s"Did not open $comPort")
+    throw  SerialPortOpenException(comPort)
   }
   val reader: BufferedReader = new BufferedReader(new InputStreamReader(serialPort.getInputStream))
   val writer = new BufferedWriter(new OutputStreamWriter(serialPort.getOutputStream))
@@ -71,10 +71,12 @@ class SerialPortOperation(comPort: ComPort) extends LazyLogging {
     }
   }
 
-  def close(): Unit = {
+  override def close(): Unit = {
     logger.trace(s"Closing: {}", comPort.toString)
     writer.close()
     reader.close()
     serialPort.closePort()
   }
 }
+
+case class SerialPortOpenException(comPort: ComPort) extends Exception(s"Did not open: $comPort!")

@@ -25,13 +25,13 @@ import controllers.CandidateController.performInit
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.serial.{CommandTransaction, RC210IO, SerialPortOperation}
+import net.wa9nnn.rc210.serial.{CommandTransaction, RC210IO, SerialPortOpenException, SerialPortOperation}
 import play.api.mvc._
 
 import java.time.{Duration, Instant}
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.{Inject, Singleton}
-import scala.util.Try
+import scala.util.{Failure, Success, Try, Using}
 
 @Singleton()
 class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(implicit mat: Materializer) extends MessagesInjectedController with LazyLogging {
@@ -67,40 +67,37 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
    * @param sendValue true to send the fieldValue's command. false to send and accept the candidate's.
    * @return
    */
-  def send(fieldKey: FieldKey, sendValue: Boolean = false): Action[AnyContent] = Action { implicit request =>
-    dataStore(fieldKey) match {
-      case Some(fieldEntry: FieldEntry) =>
+  def send(fieldKey: FieldKey, sendValue: Boolean = false): Action[AnyContent] = Action {
+    implicit request =>
+      try {
+        val fieldEntry: FieldEntry = dataStore(fieldKey).get // throws on failure.
 
-        try {
-          val serialPortOperation = rc210IO.start()
-          val commands: Seq[String] =  if(sendValue)
-            fieldEntry.fieldValue.toCommands(fieldEntry)
-          else {
-            fieldEntry.candidate.get.toCommands(fieldEntry)
-          }
-          val rows: Seq[Row] = commands.map { command =>
+        val fieldValue = if (sendValue)
+          fieldEntry.fieldValue
+        else
+          fieldEntry.candidate.get // thows if no candidate.
+
+        val rows: Seq[Row] = Using(rc210IO.start()) { serialPortOperation: SerialPortOperation =>
+          for {
+            command <- fieldValue.toCommands(fieldEntry)
+          } yield {
             val withCr = "\r" + command + "\r"
-            val triedResponse: Try[String] = serialPortOperation.preform(withCr)
-            val transaction: CommandTransaction = CommandTransaction(withCr, fieldEntry.fieldKey.toCell, triedResponse)
-            logger.debug(transaction.toString)
+            val transaction: CommandTransaction = CommandTransaction(withCr, fieldEntry.fieldKey.toCell, serialPortOperation.preform(withCr))
             if (!sendValue && transaction.isSuccess) {
               dataStore.acceptCandidate(fieldKey)
             }
             transaction.toRow
           }
-          serialPortOperation.close()
-
-
-
-          val table = Table(Header("Result", "Field", "Command", "Response"), rows)
-          Ok(views.html.dat(Seq(table)))
-        } catch {
-          case e:Throwable =>
-            InternalServerError(e.getMessage)
-        }
-      case None =>
-        NotFound(s"No fieldKey: $fieldKey")
-    }
+        }.get
+        val table = Table(Header("Result", "Field", "Command", "Response"), rows)
+        Ok(views.html.dat(Seq(table)))
+      } catch {
+        case e:SerialPortOpenException =>
+          InternalServerError(e.getMessage)
+        case e:Throwable =>
+          logger.error(s"Sending $fieldKey", e)
+          InternalServerError(e.getMessage)
+      }
   }
 
   def sendAllFields(): Action[AnyContent] = Action { implicit request =>
@@ -129,28 +126,35 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
           val start = Instant.now()
           val expectedCount = 461.0
           var sofar = new AtomicDouble()
-          val serialPortOperation = rc210IO.start()
-          val initRows: Seq[CommandTransaction] = performInit(serialPortOperation)
-          val transactions: Seq[CommandTransaction] = for {
-            fieldEntry <- dataStore.all // .take(25)
-            command <- fieldEntry.fieldValue.toCommands(fieldEntry)
-          } yield {
-            val withCr = "\r" + command + "\r"
-            val triedResponse: Try[String] = serialPortOperation.preform(withCr)
-            val transaction = CommandTransaction(withCr, fieldEntry.fieldKey.toCell, triedResponse)
+          var maybeSerialPortOption: Option[SerialPortOperation] = None
+          try {
+            val serialPortOperation = rc210IO.start()
+            maybeSerialPortOption = Option(serialPortOperation)
+            val initRows: Seq[CommandTransaction] = performInit(serialPortOperation)
+            val transactions: Seq[CommandTransaction] = for {
+              fieldEntry <- dataStore.all // .take(25)
+              command <- fieldEntry.fieldValue.toCommands(fieldEntry)
+            } yield {
+              val withCr = "\r" + command + "\r"
+              val triedResponse: Try[String] = serialPortOperation.preform(withCr)
+              val transaction = CommandTransaction(withCr, fieldEntry.fieldKey.toCell, triedResponse)
 
-            logger.debug(transaction.toString)
-            val response: Try[String] = triedResponse.recoverWith(e => Try(e.getMessage))
-            val percent = 100.0 * sofar.getAndAdd(1.0) / expectedCount
-            val sPercent = f"$percent%.1f"
-            queue.offer(sPercent)
-            transaction
+              logger.debug(transaction.toString)
+              val response: Try[String] = triedResponse.recoverWith(e => Try(e.getMessage))
+              val percent = 100.0 * sofar.getAndAdd(1.0) / expectedCount
+              val sPercent = f"$percent%.1f"
+              queue.offer(sPercent)
+              transaction
+            }
+            maybeLastUpload = Option(LastUpload(initRows :++ transactions, start))
+          } catch {
+            case e: Exception =>
+              logger.error("WS opteration", e)
+          } finally {
+            maybeSerialPortOption.foreach(_.close())
           }
-          maybeLastUpload = Option(LastUpload(initRows :++ transactions, start))
-          serialPortOperation.close()
           queue.offer("Kinder das ist Alles")
         }
-
       }
       val thread: Thread = new Thread(runnable, "Download")
       thread.setDaemon(true)
@@ -194,10 +198,10 @@ object CandidateController {
   }
 }
 
-case class LastUpload(transactions: Seq[CommandTransaction], start: Instant, finish:Instant = Instant.now()){
-  val duration:Duration = Duration.between(start, finish)
+case class LastUpload(transactions: Seq[CommandTransaction], start: Instant, finish: Instant = Instant.now()) {
+  val duration: Duration = Duration.between(start, finish)
 
-  val successCount:Int = transactions.count(_.isSuccess)
-  val failCount:Int = transactions.count(!_.isSuccess)
+  val successCount: Int = transactions.count(_.isSuccess)
+  val failCount: Int = transactions.count(!_.isSuccess)
 
 }

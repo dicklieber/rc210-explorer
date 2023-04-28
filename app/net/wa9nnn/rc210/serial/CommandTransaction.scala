@@ -39,6 +39,7 @@ case class CommandTransaction(command: String, field: Cell, response: Try[String
   }
 
   val isSuccess: Boolean = response.map(_.contains('+')).getOrElse(false)
+  val isFailure: Boolean = !isSuccess
 
   override def toRow: Row = {
     response match {
