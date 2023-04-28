@@ -11,7 +11,7 @@
                 webSocket.onmessage = (event) => {
                     const data = event.data;
                     if (data.startsWith("Kinder"))
-                        window.location.href = '@routes.CandidateController.lastUpload()';
+                        window.location.href = '@routes.CandidateController.lastSendAll()';
                     else {
                         const $progress = $('.progress-bar');
                         $progress.css("width", data + "%");

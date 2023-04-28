@@ -29,9 +29,8 @@ import net.wa9nnn.rc210.serial.{CommandTransaction, RC210IO, SerialPortOpenExcep
 import play.api.mvc._
 
 import java.time.{Duration, Instant}
-import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.{Inject, Singleton}
-import scala.util.{Failure, Success, Try, Using}
+import scala.util.{Try, Using}
 
 @Singleton()
 class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(implicit mat: Materializer) extends MessagesInjectedController with LazyLogging {
@@ -108,10 +107,9 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
     Ok("todo")
   }
 
-  var maybeLastUpload: Option[LastUpload] = None
+  var maybeLastSendAll: Option[LastSendAll] = None
 
   import akka.stream.scaladsl._
-  import play.api.mvc.WebSocket.MessageFlowTransformer
   import play.api.mvc._
 
   def ws = WebSocket.accept[String, String] { request =>
@@ -145,7 +143,7 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
               queue.offer(sPercent)
               transaction
             }
-            maybeLastUpload = Option(LastUpload(initRows :++ transactions, start))
+            maybeLastSendAll = Option(LastSendAll(initRows :++ transactions, start))
           } catch {
             case e: Exception =>
               logger.error("WS opteration", e)
@@ -164,14 +162,14 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
     Flow.fromSinkAndSource(in, source)
   }
 
-  def lastUpload(): Action[AnyContent] = Action { implicit request =>
-    maybeLastUpload match {
-      case Some(lastUpload: LastUpload) =>
-        val rows = lastUpload.transactions.map(_.toRow)
+  def lastSendAll(): Action[AnyContent] = Action { implicit request =>
+    maybeLastSendAll match {
+      case Some(lastSendAll: LastSendAll) =>
+        val rows = lastSendAll.transactions.map(_.toRow)
         val table = Table(CommandTransaction.header(s"All Fields (${rows.length})"), rows)
-        Ok(views.html.lastupload(table, Option(lastUpload)))
+        Ok(views.html.lastSendAll(table, Option(lastSendAll)))
       case None =>
-        Ok(views.html.lastupload(Table(Seq.empty, Seq.empty), None))
+        Ok(views.html.lastSendAll(Table(Seq.empty, Seq.empty), None))
     }
   }
 }
@@ -197,7 +195,7 @@ object CandidateController {
   }
 }
 
-case class LastUpload(transactions: Seq[CommandTransaction], start: Instant, finish: Instant = Instant.now()) {
+case class LastSendAll(transactions: Seq[CommandTransaction], start: Instant, finish: Instant = Instant.now()) {
   val duration: Duration = Duration.between(start, finish)
 
   val successCount: Int = transactions.count(_.isSuccess)

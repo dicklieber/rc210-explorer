@@ -2,7 +2,7 @@
 @import com.wa9nnn.util.tableui.html.renderTable
 @import net.wa9nnn.rc210.ui.Tabs
 @import com.wa9nnn.util.TimeConverters
-@(table: Table, maybeLastUpload: Option[LastUpload])
+@(table: Table, maybeLastSendAll: Option[LastSendAll])
 
     @tabbedmain(Tabs.noTab) {
         <script>
@@ -22,31 +22,31 @@
                 });
         </script>
 
-        @for(lastUpload <- maybeLastUpload) {
+        @for(lastSendAll <- maybeLastSendAll) {
             <div class="container">
                 <table class="table table-borderedtable-sm w-auto">
                     <tr>
                         <td>When:</td>
-                        <td>@TimeConverters.local(lastUpload.start)</td>
+                        <td>@TimeConverters.local(lastSendAll.start)</td>
                     </tr>
                     <tr>
                         <td>Took:</td>
-                        <td>@TimeConverters.durationToString(lastUpload.duration)</td>
+                        <td>@TimeConverters.durationToString(lastSendAll.duration)</td>
                     </tr>
                     <tr>
                         <td>Commands Sent:</td>
-                        <td>@lastUpload.transactions.length</td>
+                        <td>@lastSendAll.transactions.length</td>
                     </tr>
-                    @if(lastUpload.successCount > 0) {
+                    @if(lastSendAll.successCount > 0) {
                         <tr>
                             <td>Success:</td>
-                            <td>@lastUpload.successCount</td>
+                            <td>@lastSendAll.successCount</td>
                         </tr>
                     }
-                    @if(lastUpload.failCount > 0) {
+                    @if(lastSendAll.failCount > 0) {
                         <tr>
                             <td>Failures:</td>
-                            <td>@lastUpload.failCount</td>
+                            <td>@lastSendAll.failCount</td>
                         </tr>
                     }
 
