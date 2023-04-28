@@ -92,9 +92,9 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
         val table = Table(Header("Result", "Field", "Command", "Response"), rows)
         Ok(views.html.dat(Seq(table)))
       } catch {
-        case e:SerialPortOpenException =>
+        case e: SerialPortOpenException =>
           InternalServerError(e.getMessage)
-        case e:Throwable =>
+        case e: Throwable =>
           logger.error(s"Sending $fieldKey", e)
           InternalServerError(e.getMessage)
       }
@@ -138,9 +138,8 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
               val withCr = "\r" + command + "\r"
               val triedResponse: Try[String] = serialPortOperation.preform(withCr)
               val transaction = CommandTransaction(withCr, fieldEntry.fieldKey.toCell, triedResponse)
-
-              logger.debug(transaction.toString)
-              val response: Try[String] = triedResponse.recoverWith(e => Try(e.getMessage))
+              if (transaction.isFailure)
+                logger.error(transaction.toString)
               val percent = 100.0 * sofar.getAndAdd(1.0) / expectedCount
               val sPercent = f"$percent%.1f"
               queue.offer(sPercent)
