@@ -16,10 +16,6 @@
                         const $progress = $('.progress-bar');
                         $progress.css("width", data + "%");
                         $progress.text(data)
-
-                        console.log(`data: ${data}`);
-                        // const msg = JSON.parse(data);
-                        // console.log(`json msg: ${msg}`);
                     }
                 };
                 webSocket.onopen = (event) => {

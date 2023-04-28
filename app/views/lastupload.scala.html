@@ -5,33 +5,58 @@
 @(table: Table, maybeLastUpload: Option[LastUpload])
 
     @tabbedmain(Tabs.noTab) {
+        <script>
+                $(function () {
+                    $(".happyCell").hide()
+                    $("#sucessful").on("change", function (event) {
+                        const target = event.target;
+                        const checked = target.checked;
+                        console.log(event);
+                        const $happyCell = $(".happyCell");
+                        if (checked)
+                            $happyCell.show();
+
+                        else
+                            $happyCell.hide()
+                    });
+                });
+        </script>
+
         @for(lastUpload <- maybeLastUpload) {
-            <table>
-                <tr>
-                    <td>When:</td>
-                    <td>@TimeConverters.local(lastUpload.start)</td>
-                </tr>
-                <tr>
-                    <td>Took:</td>
-                    <td>@TimeConverters.durationToString(lastUpload.duration)</td>
-                </tr>
-                <tr>
-                    <td>Commands Sent:</td>
-                    <td>@lastUpload.transactions.length</td>
-                </tr>
-                @if(lastUpload.successCount > 0) {
+            <div class="container">
+                <table class="table table-borderedtable-sm w-auto">
                     <tr>
-                        <td>Success:</td>
-                        <td>@lastUpload.successCount</td>
+                        <td>When:</td>
+                        <td>@TimeConverters.local(lastUpload.start)</td>
                     </tr>
-                }
-                @if(lastUpload.failCount > 0) {
                     <tr>
-                        <td>Failures:</td>
-                        <td>@lastUpload.failCount</td>
+                        <td>Took:</td>
+                        <td>@TimeConverters.durationToString(lastUpload.duration)</td>
                     </tr>
-                }
-            </table>
+                    <tr>
+                        <td>Commands Sent:</td>
+                        <td>@lastUpload.transactions.length</td>
+                    </tr>
+                    @if(lastUpload.successCount > 0) {
+                        <tr>
+                            <td>Success:</td>
+                            <td>@lastUpload.successCount</td>
+                        </tr>
+                    }
+                    @if(lastUpload.failCount > 0) {
+                        <tr>
+                            <td>Failures:</td>
+                            <td>@lastUpload.failCount</td>
+                        </tr>
+                    }
+
+                </table>
+            </div>
         }
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="sucessful" >
+            <label class="form-check-label" for="flexSwitchCheckChecked">Show sucessful</label>
+        </div>
+
         @renderTable(table)
     }
