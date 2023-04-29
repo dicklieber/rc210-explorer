@@ -19,21 +19,29 @@ package controllers
 
 import akka.stream.{Materializer, OverflowStrategy}
 import com.google.common.util.concurrent.AtomicDouble
+import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import controllers.CandidateController.performInit
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.io.DatFile
 import net.wa9nnn.rc210.serial.{CommandTransaction, RC210IO, SerialPortOpenException, SerialPortOperation}
 import play.api.mvc._
 
+import java.io.PrintWriter
+import java.nio.file.Files
 import java.time.{Duration, Instant}
+import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.{Inject, Singleton}
 import scala.util.{Try, Using}
 
 @Singleton()
-class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(implicit mat: Materializer) extends MessagesInjectedController with LazyLogging {
+class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO, datFile: DatFile, config: Config)
+                                   (implicit mat: Materializer) extends MessagesInjectedController with LazyLogging {
+  val stopOnError: Boolean = config.getBoolean("vizRc210.stopSendOnError")
+
   def index(): Action[AnyContent] = Action { implicit request =>
     val candidates = dataStore.candidates
     val rows: Seq[Row] =
@@ -81,7 +89,7 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
             command <- fieldValue.toCommands(fieldEntry)
           } yield {
             val withCr = "\r" + command + "\r"
-            val transaction: CommandTransaction = CommandTransaction(withCr, fieldEntry.fieldKey.toCell, serialPortOperation.preform(withCr))
+            val transaction: CommandTransaction = CommandTransaction(0, withCr, fieldEntry.fieldKey.toCell, serialPortOperation.preform(withCr))
             if (!sendValue && transaction.isSuccess) {
               dataStore.acceptCandidate(fieldKey)
             }
@@ -112,7 +120,7 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
   import akka.stream.scaladsl._
   import play.api.mvc._
 
-  def ws = WebSocket.accept[String, String] { request =>
+  def ws: WebSocket = WebSocket.accept[String, String] { request =>
 
     val (queue, source) = Source.queue[String](250, OverflowStrategy.dropHead).preMaterialize()
 
@@ -122,7 +130,9 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
       val runnable = new Runnable {
         override def run(): Unit = {
           val start = Instant.now()
+          val sendIndex = new AtomicInteger()
           val expectedCount = 461.0
+          val sendLogWriter = new PrintWriter(Files.newBufferedWriter(datFile.sendLog))
           var sofar = new AtomicDouble()
           var maybeSerialPortOption: Option[SerialPortOperation] = None
           try {
@@ -135,9 +145,14 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
             } yield {
               val withCr = "\r" + command + "\r"
               val triedResponse: Try[String] = serialPortOperation.preform(withCr)
-              val transaction = CommandTransaction(withCr, fieldEntry.fieldKey.toCell, triedResponse)
-              if (transaction.isFailure)
+              val transaction = CommandTransaction(sendIndex.incrementAndGet(), withCr, fieldEntry.fieldKey.toCell, triedResponse)
+              if (transaction.isFailure) {
                 logger.error(transaction.toString)
+                if (stopOnError)
+                  throw new IllegalStateException("Stoping on  error.")
+              }
+              sendLogWriter.println(transaction.toString)
+              sendLogWriter.flush()
               val percent = 100.0 * sofar.getAndAdd(1.0) / expectedCount
               val sPercent = f"$percent%.1f"
               queue.offer(sPercent)
@@ -146,9 +161,10 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO)(impl
             maybeLastSendAll = Option(LastSendAll(initRows :++ transactions, start))
           } catch {
             case e: Exception =>
-              logger.error("WS opteration", e)
+              logger.error("WS Operation", e)
           } finally {
             maybeSerialPortOption.foreach(_.close())
+            sendLogWriter.close()
           }
           queue.offer("Kinder das ist Alles")
         }
@@ -189,7 +205,7 @@ object CandidateController {
       Thread.sleep(125)
       val withCr = command + "\r"
       val triedResponse: Try[String] = serialPortOperation.preform(withCr)
-      val transaction = CommandTransaction(withCr, Cell("Init"), triedResponse)
+      val transaction = CommandTransaction(0,withCr, Cell("Init"), triedResponse)
       transaction
     }
   }

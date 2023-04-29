@@ -42,9 +42,13 @@ object MacroBlock {
         triggerRows = triggerRows.prepended(Row("DTMF", dtmf.toString))
       }
 
-      if (macroKey.number == 1)
-        triggerRows = triggerRows.prepended(Row(Cell("--Start--")
-          .withColSpan(2)))
+      if (macroKey.number == 1) {
+        val cell = Cell("--Start--")
+          .withColSpan(2)
+        val startRow = new Row(Seq(cell))
+
+        triggerRows = triggerRows.prepended(startRow)
+      }
 
       val triggersTable = Table(Seq.empty, triggerRows)
       TableInACell(triggersTable)

@@ -37,6 +37,7 @@ class DatFile @Inject()(config: Config) extends LazyLogging {
   private val historyDir: Path = config.get[Path]("vizRc210.historyDir").value
   val dataStorePath: Path = config.get[Path]("vizRc210.dataStoreFile").value
   val dataStoreFile: URL = dataStorePath.toUri.toURL
+  val sendLog:Path = config.get[Path]("vizRc210.sendLog").value
 
 
   def apply(rc210Data: RC210Data): Memory = {
@@ -47,6 +48,8 @@ class DatFile @Inject()(config: Config) extends LazyLogging {
     val data = memory.concat(extMemory)
     val newMemory = new Memory(data)
     // backup old
+
+
     if (Files.exists(memoryFilePath)) {
       val fileTime: Instant = Files.getLastModifiedTime(memoryFilePath).toInstant
       val stampName = fileStamp(fileTime)

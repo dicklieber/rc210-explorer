@@ -22,7 +22,7 @@ import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
 
 import scala.util.{Failure, Success, Try}
 
-case class CommandTransaction(command: String, field: Cell, response: Try[String]) extends Stamped with RowSource {
+case class CommandTransaction(index:Int, command: String, field: Cell, response: Try[String]) extends Stamped with RowSource {
   private def fixUp(in: String): String =
     in.replace("\r", "\\r")
       .replace("\n", "\\n")
@@ -35,7 +35,11 @@ case class CommandTransaction(command: String, field: Cell, response: Try[String
       case Success(value) =>
         fixUp(value)
     }
-    s"field: ${field.value} $fixedCommand => $fixedResponse"
+    val startOfLine = if(isSuccess)
+      "Success"
+      else
+      "Failure"
+    s"$startOfLine:: Index:$index Field: ${field.value} $fixedCommand => $fixedResponse"
   }
 
   val isSuccess: Boolean = response.map(_.contains('+')).getOrElse(false)
@@ -46,7 +50,7 @@ case class CommandTransaction(command: String, field: Cell, response: Try[String
       case Failure(exception) =>
         Row(field, fixUp(command), exception.getMessage).withCssClass("sadCell")
       case Success(response) =>
-        val row = Row(field, fixUp(command), fixUp(response))
+        val row = Row(Cell(index), field, fixUp(command), fixUp(response))
         row.withCssClass(if (isSuccess)
           "happyCell"
         else
@@ -57,5 +61,5 @@ case class CommandTransaction(command: String, field: Cell, response: Try[String
 }
 
 object CommandTransaction {
-  def header(topLine: String): Header = Header(topLine, "Field", "Command", "Response")
+  def header(topLine: String): Header = Header(topLine, "Index", "Field", "Command", "Response")
 }

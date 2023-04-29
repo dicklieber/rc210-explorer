@@ -115,7 +115,11 @@ object CourtesyTone {
 
 case class Segment(delayMs: Int, durationMs: Int, tone1Hz: Int, tone2Hz: Int) {
   def toCommand(number: Int, segN: Int): String = {
-    f"1*3$segN$number%02d$delayMs%d*$durationMs%d*$tone1Hz%d*$tone2Hz%d*"
+    //1*31011200*100*6
+    val sNumber = f"$number%02d"
+
+    val spaced = s"1*3$segN$sNumber $delayMs * $durationMs * $tone1Hz * $tone2Hz*"
+    spaced.replace(" ", "")
   }
 }
 

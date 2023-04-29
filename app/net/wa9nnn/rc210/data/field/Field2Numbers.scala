@@ -31,7 +31,7 @@ case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue {
     val fieldKey = fieldEntry.fieldKey
     val key: KeyFactory.Key = fieldKey.key
     Seq(key.replaceN(fieldEntry.template)
-      .replaceAll("v", value.toString)
+      .replaceAll("v", value.map(int => f"$int%03d").mkString(""))
     )
   }
 

@@ -113,14 +113,14 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
         Cell(s"${fieldValue.display} => ${c.display}")
       case None => Cell("")
     }
-    val row = Row(
+    val row: Row = Row(
       fieldKey.toCell,
       value.toString,
       change
     )
     maybeRowHeader match {
-      case Some(header) =>
-        row.prepended(header)
+      case Some(header: Cell) =>
+        row.copy(cells = row.cells.prepended(header))
       case None =>
         row
     }
