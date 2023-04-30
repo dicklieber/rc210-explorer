@@ -1,89 +1,59 @@
 package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.field.{DayOfWeek, FieldBoolean, FieldTime, WeekInMonth}
-import net.wa9nnn.rc210.key.KeyFactory.MacroKey
+import net.wa9nnn.rc210.data.field.{DayOfWeek, DowBase, MonthOfYear, Week}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
-import net.wa9nnn.rc210.util.MacroSelect
+import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.serial.Memory.Chunk
 
-class ScheduleBuilder(iterator: Iterator[Int]) extends LazyLogging {
-  private val nMax = KeyKind.scheduleKey.maxN()
-  val slots = new Array[Schedule](nMax)
-  for (setPoint <- 0 until nMax) {
-    slots(setPoint) = Schedule.empty(setPoint + 1)
-  }
+object ScheduleBuilder extends LazyLogging {
+  // indices into a [[Chunk]]
+  private val DOW = 0
+  private val MOY = 1
+  private val HOUR = 2
+  private val MINUTE = 3
+  private val MACR0 = 4
+  private val ENABLE = 5
+  val fieldsInRC210Schedule = 6
 
-  private def forEachSetpoint(f: Int => Unit): Unit = {
-    for (setPoint <- 1 until  nMax) {
-      f(setPoint)
+  def apply(memory: Memory): Seq[Schedule] = {
+    // Each chunk is one RC-210 memory setpoint field.
+    implicit val chunks: Seq[Chunk] = memory.chunks(616, KeyKind.scheduleKey.maxN(), fieldsInRC210Schedule)
+
+
+    for {
+      n <- 0 until KeyKind.scheduleKey.maxN()
+    } yield {
+      val key = KeyFactory.scheduleKey(n + 1)
+      val dow: DowBase = {dowBuilder(chunks(DOW)(n))}
+      val monthOfYear = MonthOfYear.values()(chunks(MOY)(n))
+      val hour = chunks(HOUR)(n)
+      val minute = chunks(MINUTE)(n)
+      val macr0 = KeyFactory.macroKey(chunks(MACR0)(n) + 1)
+      val enable = chunks(ENABLE)(n) > 0
+      Schedule(key = key,
+        dow = dow,
+        monthOfYear = monthOfYear,
+        hour = hour,
+        minute = minute,
+        macroKey = macr0,
+        enabled = enable
+      )
+
     }
+
   }
 
-  /**
-   * DOW packs one or two fields:
-   * From RC-20 Manual:
-   * you may alternately use 2 digits for DOW entry and it now becomes DOM (Day Of Month) and consists of 2 digits.
-   * The first digit signifies which week within a month to use and the second digit signifies the day of that week to use.
-   * For example, if an event is wanted for the 2nd Thursday of every month, you’d enter 24 for the DOW entry.
-   *
-   */
-  def putDow(): Unit = {
-    forEachSetpoint { setPoint: Int =>
-      val previous: Schedule = slots(setPoint)
-      val sDow = iterator.next().toString
-      val chars = sDow.toCharArray
-      chars match {
-        case Array(dow) =>
-          //            slots(setPoint) = leave as None
-          val dayOfWeek = DayOfWeek(dow.asDigit)
-          slots(setPoint) = previous.copy(dayOfWeek = dayOfWeek)
-        case Array(wInMo, dow) =>
-          val weekInMonth: WeekInMonth = WeekInMonth(wInMo.asDigit)
-          val dayOfWeek: DayOfWeek = DayOfWeek(dow.asDigit)
-          slots(setPoint) = previous.copy(weekInMonth = weekInMonth, dayOfWeek = dayOfWeek)
-        case _ =>
-          logger.error(s"DOW must be 1 or 2 chars, got $sDow")
-      }
-    }
-  }
-
-  def putMoy(): Unit = {
-    forEachSetpoint { setPoint: Int =>
-      val previous: Schedule = slots(setPoint)
-      slots(setPoint) = previous.copy(monthOfYear = previous.monthOfYear.update(iterator.next()))
-    }
-  }
-
-  def putHours(): Unit = {
-    forEachSetpoint { setPoint =>
-      val previous: Schedule = slots(setPoint)
-      val newHours = iterator.next()
-      if (newHours < 24) {
-        val previousTime: FieldTime = previous.time
-        val newTime = FieldTime(previousTime.value.withHour(newHours))
-        val newSchedule: Schedule = previous.copy(time = newTime, enabled = FieldBoolean(true))
-        slots(setPoint) = newSchedule
-      } else {
-        val newSchedule: Schedule = previous.copy(enabled = FieldBoolean(false))
-        slots(setPoint) = newSchedule
-      }
-    }
-  }
-
-  def putMinutes(): Unit = {
-    forEachSetpoint { setPoint =>
-      val previous: Schedule = slots(setPoint)
-      val time: FieldTime = previous.time
-      val newSchedule: Schedule = previous.copy(time = FieldTime(time.value.withMinute(iterator.next())))
-      slots(setPoint) = newSchedule
-    }
-  }
-
-  def putMacro(): Unit = {
-    forEachSetpoint { setPoint =>
-      val previous: Schedule = slots(setPoint)
-      val macroKey: MacroKey = KeyFactory.macroKey( iterator.next() + 1)
-      slots(setPoint) = previous.copy(selectedMacroToRun = MacroSelect(macroKey))
+   def dowBuilder(dow:Int): DowBase = {
+    val sDow = dow.toString
+    sDow.toCharArray match {
+      case Array(dow: Char) =>
+        DayOfWeek.values()(dow.asDigit)
+      case Array(wInMo, dow) =>
+        WeekAndDow(Week.values()(wInMo.asDigit), DayOfWeek.values()(dow.asDigit))
+      case _ =>
+        logger.error(s"DOW must be 1 or 2 chars, got $sDow")
+        DayOfWeek.EveryDay
     }
   }
 }

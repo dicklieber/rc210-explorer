@@ -29,7 +29,7 @@ import play.api.libs.json.JsValue
  */
 case class MuteDigit(value: String = selectOptions.head.display) extends FieldSelect[String] {
   override val selectOptions: Seq[SelectOption] = MuteDigit.selectOptions
-  override val name: String = DayOfWeek.name
+  override val name: String = "Mute Digit"
 
   override def update(paramValue: String): MuteDigit = {
     MuteDigit(paramValue)

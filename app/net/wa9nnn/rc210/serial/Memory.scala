@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.serial
 
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.serial.Memory.Chunk
 
 import java.io.PrintWriter
 import java.net.URL
@@ -70,7 +71,7 @@ class Memory(val data: Array[Int] = Array.empty) {
    * @param nChunks     how many.
    * @return
    */
-  def chunks(offset: Int, chunkLength: Int, nChunks: Int): Seq[Array[Int]] = {
+  def chunks(offset: Int, chunkLength: Int, nChunks: Int): Seq[Chunk] = {
     val size = chunkLength * nChunks
     data.slice(offset, offset + size)
       .grouped(chunkLength)
@@ -101,6 +102,7 @@ class Memory(val data: Array[Int] = Array.empty) {
 }
 
 object Memory extends LazyLogging {
+  type Chunk = Array[Int]
 
     val r: Regex = """(.*):\s+(.*)""".r
 

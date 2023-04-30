@@ -65,7 +65,7 @@ case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dt
 
 }
 
-object MacroNode extends ComplexExtractor {
+object MacroNode extends ComplexExtractor[MacroKey] {
   def header(count: Int): Header = Header(s"Macros ($count)", "Key", "Functions")
 
   override def positions: Seq[FieldOffset] = Seq(

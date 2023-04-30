@@ -138,7 +138,7 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
 
 object FieldEntry {
 
-  def apply(complexExtractor: ComplexExtractor, complexFieldValue: ComplexFieldValue[_]): FieldEntry = {
+  def apply(complexExtractor: ComplexExtractor[_], complexFieldValue: ComplexFieldValue[_]): FieldEntry = {
 
     new FieldEntry(complexExtractor, complexFieldValue.fieldKey, complexFieldValue)
   }

@@ -20,13 +20,14 @@ package net.wa9nnn.rc210.data.message
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldEntry, FieldOffset, FieldValue}
+import net.wa9nnn.rc210.key.KeyFactory.MessageKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.JsValue
 
 import java.util.concurrent.atomic.AtomicInteger
 
-object MesssageExtractor extends ComplexExtractor with LazyLogging {
+object MesssageExtractor extends ComplexExtractor[MessageKey] with LazyLogging {
   override def positions: Seq[FieldOffset] = {
     Seq(
       FieldOffset(1576, this)

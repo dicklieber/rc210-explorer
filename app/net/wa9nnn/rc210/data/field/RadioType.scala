@@ -28,7 +28,7 @@ import play.api.libs.json.JsValue
  */
 case class RadioType(value: String = selectOptions.head.display) extends FieldSelect[String] {
   override val selectOptions: Seq[SelectOption] = RadioType.selectOptions
-  override val name: String = DayOfWeek.name
+  override val name: String = RadioType.name
 
   override def update(paramValue: String): RadioType = {
     RadioType(paramValue)

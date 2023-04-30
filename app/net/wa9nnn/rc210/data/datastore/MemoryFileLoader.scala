@@ -57,7 +57,7 @@ class MemoryFileLoader @Inject()(fieldDefinitions: FieldDefinitions, datFile: Da
       fieldEntry
     }
 
-    val complexFields: Seq[FieldEntry] = fieldDefinitions.complexFd.flatMap { memoryExtractor: ComplexExtractor =>
+    val complexFields: Seq[FieldEntry] = fieldDefinitions.complexFd.flatMap { memoryExtractor: ComplexExtractor[_] =>
       try {
         memoryExtractor.extract(memory)
       } catch {

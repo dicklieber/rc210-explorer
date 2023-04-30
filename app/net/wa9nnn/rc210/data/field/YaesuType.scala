@@ -28,7 +28,7 @@ import play.api.libs.json.JsValue
  */
 case class YaesuType(value: String = selectOptions.head.display) extends FieldSelect[String] {
   override val selectOptions: Seq[SelectOption] = YaesuType.selectOptions
-  override val name: String = DayOfWeek.name
+  override val name: String = YaesuType.name
 
   override def update(paramValue: String): YaesuType = {
     YaesuType(paramValue)

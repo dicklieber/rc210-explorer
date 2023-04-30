@@ -103,6 +103,7 @@ object KeyFactory {
   def meterKey(number: Int): MeterKey = apply(KeyKind.meterKey, number)
 
   def messageKey(number: Int): MessageKey = apply(KeyKind.messageKey, number)
+  def scheduleKey(number: Int): ScheduleKey = apply(KeyKind.scheduleKey, number)
 
   def commonKey(number: Int): CommonKey = apply(KeyKind.commonKey, number)
 

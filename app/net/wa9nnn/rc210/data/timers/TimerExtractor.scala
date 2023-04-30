@@ -27,7 +27,7 @@ import net.wa9nnn.rc210.util.MacroSelect
 import play.api.libs.json.{Format, JsValue, Json}
 
 //noinspection ZeroIndexToHead
-object TimerExtractor extends ComplexExtractor with LazyLogging {
+object TimerExtractor extends ComplexExtractor[TimerKey] with LazyLogging {
   private val nTimers = KeyKind.timerKey.maxN()
   //  Memory Layout
   //  seconds for each timer 6 2-byte ints

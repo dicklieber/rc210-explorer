@@ -131,7 +131,7 @@ class FieldDefinitions @Inject()() {
     //todo finish
   )
 
-  val complexFd: Seq[ComplexExtractor] = Seq(
+  val complexFd: Seq[ComplexExtractor[_]] = Seq(
     Schedule,
     MacroNode,
     CourtesyExtractor,

@@ -17,28 +17,35 @@
 
 package net.wa9nnn.rc210.data.schedules
 
-import net.wa9nnn.rc210.data.field.{DayOfWeek, FieldBoolean, FieldTime, MonthOfYear, WeekInMonth}
-import net.wa9nnn.rc210.key.KeyFactory
-import net.wa9nnn.rc210.key.KeyFactory.FunctionKey
-import net.wa9nnn.rc210.util.MacroSelect
-import org.specs2.mutable.Specification
+import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.field.FieldEntryBase
+import net.wa9nnn.rc210.fixtures.WithMemory
 
-import java.time.LocalTime
-
-class ScheduleSpec extends Specification {
+class ScheduleSpec extends WithMemory {
+  val schedule: Schedule = Schedule(1)
 
   "Schedule" should {
     "toCommands" in {
-      val schedule: Schedule = Schedule(
-        key = KeyFactory.ScheduleKey(1),
-        dayOfWeek = new DayOfWeek(),
-        weekInMonth = new WeekInMonth(),
-        monthOfYear = new MonthOfYear(),
-        time = FieldTime(LocalTime.of(10, 15)),
-        selectedMacroToRun = MacroSelect(KeyFactory.defaultMacroKey),
-        enabled = FieldBoolean
-      )
+      val fieldEntryBase: FieldEntryBase = new FieldEntryBase {
+        override val fieldKey: FieldKey = schedule.fieldKey
+        override val template: String = "schedule handle this internally."
+      }
+      val commands: Seq[String] = schedule toCommands fieldEntryBase
+      commands.head must beEqualTo("1*400101*00*00*00*00*1")
       ok
+    }
+
+    "DOW single digit" >> {
+      pending
+    }
+    "DOW two digits becomes DOM" >> {
+      /*
+       * However, you may alternately use 2 digits for DOW entry and it now becomes DOM (Day Of Month) and consists of 2 digits.
+       * The first digit signifies which week within a month to use and the second digit signifies the day of that week to use.
+       * For example, if an event is wanted for the 2nd Thursday of every month, you’d enter 24 for the DOW entry.
+       */
+      //      val dow = schedule.dow
+      pending
     }
   }
 }

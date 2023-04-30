@@ -2,6 +2,7 @@ package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.key.KeyFactory.Key
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.JsValue
@@ -85,8 +86,9 @@ case class SimpleField(offset: Int,
   override def positions: Seq[FieldOffset] = Seq(FieldOffset(offset, this))
 }
 
-trait ComplexExtractor extends FieldExtractor with FieldDefinition  with LazyLogging{
+trait ComplexExtractor[K <: Key] extends FieldExtractor with FieldDefinition  with LazyLogging{
 
+  def fieldKey(key:K):FieldKey = FieldKey(fieldName, key)
   /**
    *
    * @param memory    source of RC-210 data.

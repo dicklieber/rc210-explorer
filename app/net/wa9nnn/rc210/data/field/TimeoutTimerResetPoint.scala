@@ -28,7 +28,7 @@ import play.api.libs.json.JsValue
  */
 case class TimeoutTimerResetPoint(value: String = selectOptions.head.display) extends FieldSelect[String] {
   override val selectOptions: Seq[SelectOption] = TimeoutTimerResetPoint.selectOptions
-  override val name: String = DayOfWeek.name
+  override val name: String = TimeoutTimerResetPoint.name
 
   override def update(paramValue: String): TimeoutTimerResetPoint = {
     TimeoutTimerResetPoint(paramValue)
