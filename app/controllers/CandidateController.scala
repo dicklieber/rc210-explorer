@@ -146,13 +146,13 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO, datF
               val withCr = "\r" + command + "\r"
               val triedResponse: Try[String] = serialPortOperation.preform(withCr)
               val transaction = CommandTransaction(sendIndex.incrementAndGet(), withCr, fieldEntry.fieldKey.toCell, triedResponse)
+              sendLogWriter.println(transaction.toString)
+              sendLogWriter.flush()
               if (transaction.isFailure) {
                 logger.error(transaction.toString)
                 if (stopOnError)
                   throw new IllegalStateException("Stoping on  error.")
               }
-              sendLogWriter.println(transaction.toString)
-              sendLogWriter.flush()
               val percent = 100.0 * sofar.getAndAdd(1.0) / expectedCount
               val sPercent = f"$percent%.1f"
               queue.offer(sPercent)

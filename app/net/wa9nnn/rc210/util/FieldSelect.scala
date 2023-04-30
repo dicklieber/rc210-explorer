@@ -30,6 +30,20 @@ trait FieldSelect[T] extends SimpleFieldValue {
   val name: String
   val value: T
 
+  /**
+   * This only works with String typw [[FieldSelect]]s.
+   * The only non-String is the [[MacroSelect]], but there the value:T is [[MacroKey]].
+   *
+   * @return
+   */
+  def number: Int = selectOptions.find(selectOption =>
+    if (value.isInstanceOf[String])
+      selectOption.display == value.asInstanceOf[String]
+    else
+      throw new IllegalStateException("THis onlly works for String selects.")
+  )
+    .map(_.id)
+    .getOrElse(1)
 
   override def display: String = value.toString
 

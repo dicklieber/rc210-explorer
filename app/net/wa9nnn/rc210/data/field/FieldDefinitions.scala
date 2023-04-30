@@ -40,7 +40,7 @@ class FieldDefinitions @Inject()() {
     SimpleField(17, "Hang Time 3", portKey, "n*10003v", FieldInt),
     SimpleField(20, "Initial ID Timer  ", portKey, "n*1000v", FieldInt) units "minutes",
     SimpleField(23, "Pending ID Timer  ", portKey, "n*1003v", FieldInt) units "minutes",
-    SimpleField(26, "Tx Enable", portKey, "n11b", FieldBoolean),
+    SimpleField(26, "Tx Enable", portKey, "nn10b", FieldBoolean),
     SimpleField(29, "DTMF Cover Tone", portKey, "nn13b", FieldBoolean),
     SimpleField(32, "DTMF Mute Timer", portKey, "n*1006v", FieldInt) max 999 units "100 ms",
     SimpleField(38, "Kerchunk", portKey, "nn15b", FieldBoolean),
@@ -53,7 +53,7 @@ class FieldDefinitions @Inject()() {
     SimpleField(60, "Guest Macro Range", portKey, "n*4009v", Field2Numbers),
     SimpleField(67, "DTMF COS Control", portKey, "nn22b", FieldBoolean),
     SimpleField(73, "DTMF Require Tone", portKey, "nn17b", FieldBoolean),
-    SimpleField(76, "Unlock", portKey, "n* 9 0 0 0 S", FieldDtmf) max 8,
+    SimpleField(76, "Unlock", portKey, "1*9000v", FieldDtmf) max 8,
     SimpleField(103, "Speech ID Override", portKey, "nn20b", FieldBoolean),
     SimpleField(118, "CWS Speed", portKey, "n*8000v", FieldInt) min 5 max 22 units "wpm",
     SimpleField(136, "CTCSS Decode", portKey, "n112b", FieldBoolean),
@@ -115,7 +115,7 @@ class FieldDefinitions @Inject()() {
     SimpleField(3541, "P1 Tail Message", portKey, "n*21101v", MacroSelect),
     SimpleField(3544, "P2 Tail Message", portKey, "n*21102v", MacroSelect),
     SimpleField(3547, "P3 Tail Message", portKey, "n*21103v", MacroSelect),
-    SimpleField(3550, "Tail Message Number", portKey, "n*2111v", MacroSelect),
+    SimpleField(3550, "Tail Message Number", portKey, "n*2111v", FieldInt),
     SimpleField(3553, "Tail Timer", portKey, "n*1020v", FieldInt) max 999 units "tails" tooltip "0 disables",
     SimpleField(3559, "Tail Counter", portKey, "n*2112v", FieldInt) max 999 units "tails" tooltip "0 disables",
     //FreqString - 3562-3641	remote base stuff
@@ -127,7 +127,7 @@ class FieldDefinitions @Inject()() {
     //APHangupCode - 3564-3669	 autopatch
     SimpleField(3670, "Use DR1", portKey, "n*2124b", FieldBoolean)
     ,
-    SimpleField(3671, "Timeout Reset Select", portKey, "1*2122", FieldBoolean)
+    SimpleField(3671, "Timeout Reset Select", portKey, "1*2122v", TimeoutTimerResetPoint)
     //todo finish
   )
 
