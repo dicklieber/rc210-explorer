@@ -23,16 +23,16 @@ import org.specs2.mutable.Specification
 
 class EnumSelectSpec extends Specification {
 
-  val enumSelect = new EnumSelect[Week]("theWeek", Week.values())
+  val enumSelect = new EnumSelect[Week]( Week.values())
   "EnumSelectSpec" should {
     "apply no selected" in {
-      val cell = enumSelect.toCell
+      val cell = enumSelect.toCell("theWeek")
       val html = cell.value
       html.trim startsWith """<select name="theWeek" class="form-select" aria-label="Default select example">"""
 
     }
     "apply wth selected" in {
-      val cell: Cell = enumSelect.toCell(Week.first)
+      val cell: Cell = enumSelect.toCell("theWeek", Week.first)
       val html = cell.value
       html must contain("<option value=\"first\" selected>first</option>")
     }

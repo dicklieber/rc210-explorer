@@ -30,15 +30,15 @@ import scala.reflect.ClassTag
  * @param classTag$E$0
  * @tparam E the Enum type.
  */
-class EnumSelect[E <: Enum[E] : ClassTag](param: String, values: Array[E]) {
+class EnumSelect[E <: Enum[E] : ClassTag]( values: Array[E]) {
   private val options = values.map(_.toString)
 
-  def toCell(current: E): Cell = {
+  def toCell(param: String, current: E): Cell = {
     val html = views.html.fieldSelect(param, current.toString, options).toString()
     Cell.rawHtml(html)
   }
 
-  def toCell: Cell = {
+  def toCell(param: String): Cell = {
     val html = views.html.fieldSelect(param, "", options).toString()
     Cell.rawHtml(html)
   }

@@ -5,13 +5,16 @@ import com.wa9nnn.util.JsonFormatUtils._
 import com.wa9nnn.util.tableui.{Cell, Header, Row}
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.data.schedules.Schedule.{kind, s02}
+import net.wa9nnn.rc210.data.schedules.Schedule.{dowSelect, moySelect, s02, weekSelect}
 import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, ScheduleKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.EnumSelect
+import net.wa9nnn.rc210.util.MacroSelect
 import play.api.libs.json.{Format, JsValue, Json}
+
+import java.time.LocalTime
 
 /**
  *
@@ -38,23 +41,37 @@ case class Schedule(override val key: ScheduleKey,
   }
 
   override def toRow: Row = {
-//        implicit val k: ScheduleKey = key
-//        val name: Cell = k.namedCell()
-//        val dow: Cell = dayOfWeek.toCell(RenderMetadata(DayOfWeek.name))
-//        val woy: Cell = Cell.rawHtml(monthOfYear.toHtmlField(RenderMetadata(MonthOfYear.name)))
-//        val localTime: Cell = time.toCell(RenderMetadata("Time"))
-//        val macroToRun: Cell = selectedMacroToRun.toCell(RenderMetadata(MacroSelect.name))
-//
-//        Row(Seq(
-//          name,
-//          enabled.toCell(RenderMetadata("Enabled")),
-//          dow,
-//          weekInMonth.toCell(RenderMetadata(WeekInMonth.name)),
-//          woy,
-//          localTime,
-//          macroToRun
-//        ))
-    ???
+    implicit val k: ScheduleKey = key
+    val dowParam = FieldKey("dow", k).param
+    val moyParam = FieldKey("moy", k).param
+    val weekParam = FieldKey("week", k).param
+
+    val (dowCell: Cell, moyCell: Cell, weekCell: Cell) = {
+      dow match {
+        case dayOfWeek: DayOfWeek =>
+          (dowSelect.toCell(dowParam, dayOfWeek), moySelect.toCell(moyParam), weekSelect.toCell(weekParam))
+        case WeekAndDow(week, dayOfWeek) =>
+          (dowSelect.toCell(dowParam, dayOfWeek), moySelect.toCell(moyParam), weekSelect.toCell(weekParam, week))
+      }
+    }
+    val name: Cell = k.namedCell()
+    val localTime: Cell = {
+      val h = if (hour > 24) // RC-210 use > 24 as disabled.
+        0 else hour
+
+      Cell(LocalTime.of(h, minute).toString).withName(FieldKey("time", k).param)
+    }
+    val macroToRun: Cell = MacroSelect(macroKey).toCell(RMD(name = FieldKey("macro", k).param))
+
+    Row(
+      name,
+      Cell(enabled).withName(FieldKey("enabled", k).param),
+      dowCell,
+      moyCell,
+      weekCell,
+      localTime,
+      macroToRun
+    )
   }
 
   /**
@@ -66,7 +83,7 @@ case class Schedule(override val key: ScheduleKey,
     val moy: String = s02(monthOfYear.ordinal())
     val hours: String = s02(hour)
     val minutes: String = s02(minute)
-    val sMacro =s02(macroKey.number)
+    val sMacro = s02(macroKey.number)
 
     val command = s"1*4001$setPoint*$sDow*${moy}*$hours*$minutes*$sMacro"
     Seq(command)
@@ -113,7 +130,10 @@ object Schedule extends LazyLogging with ComplexExtractor[ScheduleKey] {
       FieldEntry(this, FieldKey("Schedule", schedule.key), schedule)
     }
   }
-  val enumSelect = new EnumSelect[Week]("theWeek", Week.values())
+
+  val weekSelect = new EnumSelect[Week](Week.values())
+  val dowSelect = new EnumSelect[DayOfWeek](DayOfWeek.values())
+  val moySelect = new EnumSelect[MonthOfYear](MonthOfYear.values())
 
   def apply(setPoint: Int): Schedule = new Schedule(KeyFactory.scheduleKey(setPoint))
 

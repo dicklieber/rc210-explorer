@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.data.field
 
+import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Row, RowSource}
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.named.NamedSource
@@ -75,7 +76,7 @@ trait SimpleFieldValue extends FieldValue {
  *
  * @tparam K
  */
-trait ComplexFieldValue[K <: Key] extends FieldValue with RowSource {
+trait ComplexFieldValue[K <: Key] extends FieldValue with RowSource with LazyLogging{
   val key: K
   val fieldName: String
   lazy val fieldKey: FieldKey = FieldKey(fieldName, key)
