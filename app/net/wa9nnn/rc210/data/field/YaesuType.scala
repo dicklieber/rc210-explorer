@@ -38,21 +38,21 @@ case class YaesuType(value: String = selectOptions.head.display) extends FieldSe
 object YaesuType extends SimpleExtractor {
 
   def apply(id: Int): YaesuType = {
-    val maybeOption = selectOptions.find(_.id == id)
-    new YaesuType(maybeOption.get.display)
+    try {
+      val maybeOption = selectOptions.find(_.id == id)
+      new YaesuType(maybeOption.get.display)
+    } catch {
+      case e:Exception =>
+        new YaesuType()
+    }
   }
 
   val selectOptions: Seq[SelectOption] =
     Seq(
-      "Kenwood" -> 1,
-      "Icom" -> 2,
-      "Yaesu" -> 3,
-      "Kenwood V7a" -> 4,
-      "Doug Hall RBI - 1" -> 5,
-      // there is no 6
-      "Kenwood g707" -> 7,
-      "Kenwood 271A" -> 8,
-      "Kenwood V71a" -> 9).map { t => SelectOption(t._2, t._1) }
+      "FT-100D" -> 1,
+      "FT817, FT-857, FT-897" -> 2,
+      "FT847" -> 3,
+    ).map { t => SelectOption(t._2, t._1) }
 
   override def extractFromInts(itr: Iterator[Int], field: SimpleField): YaesuType = {
     val id = itr.next()
