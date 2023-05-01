@@ -18,6 +18,8 @@
 package net.wa9nnn.rc210.ui
 
 import com.wa9nnn.util.tableui.Cell
+import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.key.KeyFactory.Key
 
 import scala.reflect.ClassTag
 
@@ -25,20 +27,22 @@ import scala.reflect.ClassTag
  * Creates a [[Cell]] with <select>
  * and parses the value from the form back into an Enum.
  *
- * @param param  to be used as the name of the <select> element.
+ * @param name  to be used as the name of the <select> element Gets combined with [[Key]] and [[FieldKey]]
  * @param values from the enum
  * @param classTag$E$0
  * @tparam E the Enum type.
  */
-class EnumSelect[E <: Enum[E] : ClassTag]( values: Array[E]) {
+class EnumSelect[E <: Enum[E] : ClassTag](name:String, values: Array[E]) {
   private val options = values.map(_.toString)
 
-  def toCell(param: String, current: E): Cell = {
+  def toCell(current: E)(implicit key:Key): Cell = {
+    val param = FieldKey(name, key).param
     val html = views.html.fieldSelect(param, current.toString, options).toString()
     Cell.rawHtml(html)
   }
 
-  def toCell(param: String): Cell = {
+  def toCell()(implicit key:Key): Cell = {
+    val param = FieldKey(name, key).param
     val html = views.html.fieldSelect(param, "", options).toString()
     Cell.rawHtml(html)
   }

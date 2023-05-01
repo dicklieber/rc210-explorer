@@ -68,7 +68,7 @@ object KeyFactory {
   }
 
   def apply[K <: Key](sKey: String): K = {
-    map.getOrElse(sKey, throw new IllegalArgumentException(s"No key for : $sKey!")).asInstanceOf[K]
+    map(sKey).asInstanceOf[K]
   }
 
   def apply[K <: Key](keyKind: KeyKind, number: Int): K = {

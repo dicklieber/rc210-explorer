@@ -18,8 +18,10 @@
 package net.wa9nnn.rc210.data.field
 
 import com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase
+import com.wa9nnn.util.tableui.Cell
 import net.wa9nnn.rc210.data.field
 import net.wa9nnn.rc210.key.KeyFactory
+import net.wa9nnn.rc210.key.KeyFactory.Key
 import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue, Json}
 
 import java.time.LocalTime
@@ -76,4 +78,6 @@ object FieldTime extends SimpleExtractor {
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[FieldTime]
 
   override val name: String = "FieldTime"
+
+
 }

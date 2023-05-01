@@ -42,20 +42,12 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
         schedule.toRow
       }
 
-      val table = Table(Header("Schedules",
-        "SetPoint",
-        "Enabled",
-        "Day in Week",
-        Cell("Week").withToolTip("Week in month. 0 disables"),
-        "Month",
-        "Time",
-        "Macro To Run"),
-        rows)
+      val table = Table(Schedule.header, rows)
+        .withCssClass("table table-borderedtable-sm w-auto")
       Ok(views.html.schedules(table))
   }
 
   def save(): Action[AnyContent] = Action { implicit request =>
-    val namedKeyBuilder = Seq.newBuilder[NamedKey]
 
     val valuesMap: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
     val namedKeys = Seq.newBuilder[NamedKey]
@@ -82,11 +74,11 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
         val namedKey = NamedKey(key, nameToValue("name"))
         namedKeys += namedKey
 
-        val schedule = Schedule((key.asInstanceOf[ScheduleKey]))
+        val schedule = Schedule.fromForm(key.asInstanceOf[ScheduleKey], nameToValue)
         UpdateCandidate( schedule.fieldKey, Right(schedule))
       }.toSeq.sortBy(_.fieldKey.key)
 
-    dataStore.update(UpdateData(r, namedKeyBuilder.result()))
+    dataStore.update(UpdateData(r, namedKeys.result()))
 
 
     Redirect(routes.ScheduleController.index())

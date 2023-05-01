@@ -19,6 +19,7 @@ package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui.Cell
 import net.wa9nnn.rc210.key.KeyFactory
+import net.wa9nnn.rc210.key.KeyFactory.Key
 import play.api.libs.json._
 import views.html.fieldCheckbox
 
@@ -35,32 +36,37 @@ case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue {
     val fieldKey = fieldEntry.fieldKey
     val key: KeyFactory.Key = fieldKey.key
     Seq(key.replaceN(fieldEntry.template)
-      .replaceAll("v", if(value) "1" else "0")
-      .replaceAll("b", if(value) "1" else "0")
+      .replaceAll("v", if (value) "1" else "0")
+      .replaceAll("b", if (value) "1" else "0")
     )
   }
 
 
   override def display: String = value.toString
 
-  def toCell(name: String, renderMetadata: RenderMetadata): Cell = {
+  override def toCell(renderMetadata: RenderMetadata): Cell = {
     super.toCell(renderMetadata)
   }
 
   override def update(paramValue: String): FieldBoolean = {
     FieldBoolean(paramValue == "true")
   }
+
   override def toJsonValue: JsValue = Json.toJson(this)
 
 }
 
-object FieldBoolean extends SimpleExtractor{
+object FieldBoolean extends SimpleExtractor {
   def apply(name: String)(implicit nameToValue: Map[String, String]): FieldBoolean = {
     val sBool = nameToValue(name)
     new FieldBoolean(sBool == "true")
   }
 
-  override def extractFromInts(itr: Iterator[Int], fieldDefinition: SimpleField): FieldValue =  FieldBoolean(itr.next() > 0)
+  def toCell(value: Boolean, name: String)(implicit key: Key): Cell = {
+    FieldBoolean(value).toCell(RMD(name = name))
+  }
+
+  override def extractFromInts(itr: Iterator[Int], fieldDefinition: SimpleField): FieldValue = FieldBoolean(itr.next() > 0)
 
 
   implicit val fmtFieldBoolean: Format[FieldBoolean] = new Format[FieldBoolean] {
