@@ -37,19 +37,26 @@ case class Timer(key: TimerKey, seconds: FieldInt, macroSelect: MacroSelect) ext
       macroSelect.toCell(RenderMetadata("macro")))
   }
 
-
   override def display: String = s"$seconds => ${macroSelect.value}"
 
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = Seq("//todo")
+  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
+    val timeNumber: Int = key.number
+    val secs: Int = seconds.value
+    val macroNumber = macroSelect.value.number
+    Seq(
+      s"1*1017$timeNumber$secs",
+      s"1*2092$timeNumber$macroNumber"
+    )
+  }
+    override def toJsonValue: JsValue = Json.toJson(this)
+  }
 
-  override def toJsonValue: JsValue = Json.toJson(this)
-}
+  object Timer {
 
-object Timer {
+    import net.wa9nnn.rc210.key.KeyFormats._
 
-  import net.wa9nnn.rc210.key.KeyFormats._
-  implicit val fmtTimer: OFormat[Timer] = Json.format[Timer]
-}
+    implicit val fmtTimer: OFormat[Timer] = Json.format[Timer]
+  }
