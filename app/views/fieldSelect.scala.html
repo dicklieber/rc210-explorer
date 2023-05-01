@@ -1,0 +1,12 @@
+
+@(param: String, current: String, options: Seq[String])
+
+<select name="@param" class="form-select" aria-label="Default select example">
+@for(option <- options) {
+    @if(current == option) {
+        <option value="@option" selected>@option</option>
+    } else {
+        <option value="@option">@option</option>
+    }
+}
+</select>
