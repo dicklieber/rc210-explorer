@@ -27,32 +27,41 @@ import scala.reflect.ClassTag
  * Creates a [[Cell]] with <select>
  * and parses the value from the form back into an Enum.
  *
- * @param name  to be used as the name of the <select> element Gets combined with [[Key]] and [[FieldKey]]
- * @param values from the enum
- * @param classTag$E$0
+ * @param name   to be used as the name of the <select> element Gets combined with [[Key]] and [[FieldKey]]
  * @tparam E the Enum type.
  */
-class EnumSelect[E <: Enum[E] : ClassTag](name:String, values: Array[E]) {
-  private val options = values.map(_.toString)
 
-  def toCell(current: E)(implicit key:Key): Cell = {
-    val param = FieldKey(name, key).param
-    val html = views.html.fieldSelect(param, current.toString, options).toString()
+class EnumSelect[E <: Enum[E] : ClassTag](name: String) {
+
+  val clazz: Class[E] = implicitly[ClassTag[E]].runtimeClass.asInstanceOf[Class[E]]
+  val values: Array[E] = clazz.getEnumConstants
+
+  private val options: Seq[String] = values.map(_.toString)
+
+  def fromOrdinal(ordinal:Int): E = {
+    values(ordinal)
+  }
+
+
+  def toCell(current: E)(implicit key: Key): Cell = {
+    val html = toHtml(current)
     Cell.rawHtml(html)
   }
 
-  def toCell()(implicit key:Key): Cell = {
+   def toHtml(current: E)(implicit key: Key) = {
+    val param = FieldKey(name, key).param
+    views.html.fieldSelect(param, current.toString, options.toIndexedSeq).toString()
+  }
+
+  def toCell()(implicit key: Key): Cell = {
     val param = FieldKey(name, key).param
     val html = views.html.fieldSelect(param, "", options).toString()
     Cell.rawHtml(html)
   }
 
   def fromForm(in: String): E = {
-    val clazz = implicitly[ClassTag[E]].runtimeClass.asInstanceOf[Class[E]]
     Enum.valueOf(clazz, in)
   }
-
-
 }
 
 

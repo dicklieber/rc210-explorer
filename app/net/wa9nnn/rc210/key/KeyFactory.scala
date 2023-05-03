@@ -30,6 +30,7 @@ import play.twirl.api.Html
  */
 object KeyFactory {
 
+
   private val keys: Seq[Key] = {
     {
       for {
@@ -48,6 +49,7 @@ object KeyFactory {
           case KeyKind.portKey => PortKey(number)
           case KeyKind.scheduleKey => ScheduleKey(number)
           case KeyKind.timerKey => TimerKey(number)
+          case KeyKind.clockKey => ClockKey(number)
         }
       }
     }
@@ -106,6 +108,8 @@ object KeyFactory {
   def scheduleKey(number: Int): ScheduleKey = apply(KeyKind.scheduleKey, number)
 
   def commonKey(number: Int): CommonKey = apply(KeyKind.commonKey, number)
+
+  def clockKey: ClockKey = apply(KeyKind.clockKey, 1)
 
   lazy val defaultMacroKey: MacroKey = apply(KeyKind.macroKey, 1)
 
@@ -211,4 +215,5 @@ object KeyFactory {
   case class CommonKey(override val number: Int = 1) extends Key(KeyKind.commonKey, number)
 
   case class TimerKey(override val number: Int = 1) extends Key(KeyKind.timerKey, number)
+  case class ClockKey(override val number: Int = 1) extends Key(KeyKind.clockKey, number)
 }

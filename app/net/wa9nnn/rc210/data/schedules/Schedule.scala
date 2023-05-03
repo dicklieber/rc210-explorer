@@ -29,7 +29,7 @@ import java.time.LocalTime
 case class Schedule(override val key: ScheduleKey,
                     dow: DayOfWeek = DayOfWeek.EveryDay,
                     week: Week = Week.Every,
-                    monthOfYear: MonthOfYear = MonthOfYear.Every,
+                    monthOfYear: MonthOfYearSchedule = MonthOfYearSchedule.Every,
                     hour: Int = 0,
                     minute: Int = 0,
                     macroKey: MacroKey = KeyFactory.defaultMacroKey,
@@ -146,7 +146,7 @@ object Schedule extends LazyLogging with ComplexExtractor[ScheduleKey] {
     val enabled: Boolean = kv("enabled") == "true"
     val week: Week = weekSelect.fromForm(kv("week"))
     val dow: DayOfWeek = dowSelect.fromForm(kv("dow"))
-    val moy: MonthOfYear = moySelect.fromForm(kv("moy"))
+    val moy: MonthOfYearSchedule = moySelect.fromForm(kv("moy"))
     val macroKey:MacroKey = {
       val sMacroKey: String = kv("macro")
       KeyFactory(sMacroKey)
@@ -167,9 +167,9 @@ object Schedule extends LazyLogging with ComplexExtractor[ScheduleKey] {
   }
 
 
-  val dowSelect = new EnumSelect[DayOfWeek]("dow", DayOfWeek.values())
-  val weekSelect = new EnumSelect[Week]("week", Week.values())
-  val moySelect = new EnumSelect[MonthOfYear]("moy", MonthOfYear.values())
+  val dowSelect = new EnumSelect[DayOfWeek]("dow")
+  val weekSelect = new EnumSelect[Week]("week")
+  val moySelect = new EnumSelect[MonthOfYearSchedule]("moy")
 
   def apply(setPoint: Int): Schedule = new Schedule(KeyFactory.scheduleKey(setPoint))
 
@@ -177,7 +177,7 @@ object Schedule extends LazyLogging with ComplexExtractor[ScheduleKey] {
 
   implicit val fmtWeek: Format[Week] = javaEnumFormat[Week]
   implicit val fmtDayOfWeek: Format[DayOfWeek] = javaEnumFormat[DayOfWeek]
-  implicit val fmtMonthOfYear: Format[MonthOfYear] = javaEnumFormat[MonthOfYear]
+  implicit val fmtMonthOfYear: Format[MonthOfYearSchedule] = javaEnumFormat[MonthOfYearSchedule]
   implicit val fmtDaoBase: Format[DowBase] = new Format[DowBase] {
     override def writes(o: DowBase) = {
       throw new NotImplementedError() //todo

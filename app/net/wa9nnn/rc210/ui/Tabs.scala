@@ -25,7 +25,7 @@ object Tabs {
   val flowTab: Tab = Tab("Flow", routes.Flow2Controller.flow().url, "How to Macros to things. How this all works.")
   val commonTab: Tab = Tab("Common", routes.CommonEditorController.index().url, "Global settings")
   val ctTab: Tab = Tab("CT", routes.CourtesyToneEditorController.index().url, "Courtesy Tones")
-
+  val clockTab = Tab("Clock", routes.ClockController.index.url, "Set clock, DST etc.")
 
   val logicAlarmTab: Tab = Tab("Logic", routes.LogicAlarmEditorController.index().url, "Logic Alarm settings.")
   val metersTab: Tab = Tab("Meters", routes.MeterEditorController.index().url, "Meter Faces")
@@ -50,6 +50,7 @@ object Tabs {
     metersTab,
     logicAlarmTab,
     commonTab,
+    clockTab,
     macrosTab,
     messagesTab,
     ctTab,

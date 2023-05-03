@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.serial
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.serial.Memory.Chunk
+import net.wa9nnn.rc210.util.Chunk
 
 import java.io.PrintWriter
 import java.net.URL
@@ -36,10 +36,20 @@ import scala.util.{Try, Using}
  * @param data mutable array. The 1st 4097 ints are main memory the last
  */
 class Memory(val data: Array[Int] = Array.empty) {
+  def bool(offset: Int): Boolean = data(offset) == 1
+
+  def apply(offset: Int): Int = data(offset)
+
   val length: Int = data.length
 
   private val array = new ArraySeq.ofInt(data)
 
+  def stringAt(offset: Int):String = {
+    new String(iterator8At(offset)
+      .takeWhile(_ != 0)
+      .map(_.toChar)
+      .toArray)
+  }
   def iterator8At(offset: Int): Iterator[Int] = {
     val value: Iterator[Int] = array.drop(offset).iterator
     value
@@ -75,6 +85,7 @@ class Memory(val data: Array[Int] = Array.empty) {
     val size = chunkLength * nChunks
     data.slice(offset, offset + size)
       .grouped(chunkLength)
+      .map(Chunk)
       .toSeq
   }
 
@@ -102,7 +113,7 @@ class Memory(val data: Array[Int] = Array.empty) {
 }
 
 object Memory extends LazyLogging {
-  type Chunk = Array[Int]
+
 
     val r: Regex = """(.*):\s+(.*)""".r
 

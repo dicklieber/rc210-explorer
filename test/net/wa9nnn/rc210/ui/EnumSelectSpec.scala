@@ -19,20 +19,21 @@ package net.wa9nnn.rc210.ui
 
 import com.wa9nnn.util.tableui.Cell
 import net.wa9nnn.rc210.data.field.Week
+import net.wa9nnn.rc210.key.KeyFactory
 import org.specs2.mutable.Specification
 
 class EnumSelectSpec extends Specification {
-
-  val enumSelect = new EnumSelect[Week]( Week.values())
+  implicit val k = KeyFactory.defaultMacroKey
+  val enumSelect = new EnumSelect[Week]("name", Week.values())
   "EnumSelectSpec" should {
     "apply no selected" in {
-      val cell = enumSelect.toCell("theWeek")
+      val cell = enumSelect.toCell()
       val html = cell.value
       html.trim startsWith """<select name="theWeek" class="form-select" aria-label="Default select example">"""
 
     }
     "apply wth selected" in {
-      val cell: Cell = enumSelect.toCell("theWeek", Week.first)
+      val cell: Cell = enumSelect.toCell( Week.first)
       val html = cell.value
       html must contain("<option value=\"first\" selected>first</option>")
     }

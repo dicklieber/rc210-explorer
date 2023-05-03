@@ -1,0 +1,38 @@
+@import com.wa9nnn.util.tableui.Table
+@import com.wa9nnn.util.tableui.html.renderTable
+@import net.wa9nnn.rc210.ui.Tabs
+@import views.html.helper.form
+@import net.wa9nnn.rc210.data.clock.Clock
+@(clock: Clock)
+
+@tabbedmain(Tabs.clockTab) {
+    @defining(clock.key) { key =>
+        <div class="cont">
+            @form(action = routes.ClockController.index) {
+
+                <input type="checkbox" name="say24Hours" id="say24Hours" class="form-control"
+                @if(clock.say24Hours) { checked } >
+                <label for="say24Hours">Say 24 Hours</label>
+
+                <input type="checkbox" name="enableDST" id="enableDST" class="form-control"
+                @if(clock.enableDST) { checked } >
+                <label for="enableDST">Enable DST</label>
+
+                <input type="number" name="hourDST" id="hourDST" min="0" max="23" class="form-control">
+                <label for="hourDST">Hour DST change</label>
+                <div>
+                    @Html(Clock.monthOfYearDSTSelect.toHtml(clock.startDST.monthOfYearDST)(key))
+                    @Html(Clock.ocurrenceSelect.toHtml(clock.startDST.occurance)(key))
+                </div>
+
+                <div>
+                    @Html(Clock.monthOfYearDSTSelect.toHtml(clock.endDST.monthOfYearDST)(key))
+                    @Html(Clock.ocurrenceSelect.toHtml(clock.endDST.occurance)(key))
+                </div>
+
+                <input type="submit" class="btn btn-primary" name="save" value="Save">
+                }
+        </div>
+
+    }
+}

@@ -29,7 +29,7 @@ import play.api.libs.json.JsValue
  * Knows how to render as HTML control or string for JSON, showing to a user or RC-210 Command,
  * Has enough metadata needed yo render
  */
-sealed trait FieldValue {
+sealed trait FieldValue extends LazyLogging {
 
   def display: String
 

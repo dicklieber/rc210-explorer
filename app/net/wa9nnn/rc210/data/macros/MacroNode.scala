@@ -8,6 +8,7 @@ import net.wa9nnn.rc210.key.KeyFactory.{FunctionKey, MacroKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.util.Chunk
 import play.api.libs.json.{Format, JsValue, Json}
 
 import java.util.concurrent.atomic.AtomicInteger
@@ -80,9 +81,9 @@ object MacroNode extends ComplexExtractor[MacroKey] {
 
     def macroBuilder(offset: Int, chunkLength: Int, nChunks: Int) = {
       memory.chunks(offset, chunkLength, nChunks)
-        .map { chunk: Array[Int] =>
+        .map { chunk: Chunk =>
           val key: MacroKey = KeyFactory(KeyKind.macroKey, mai.getAndIncrement())
-          val sChunk = chunk
+          val sChunk = chunk.array
             .map(_.toString)
             .mkString(", ")
 

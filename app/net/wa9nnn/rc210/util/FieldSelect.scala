@@ -54,11 +54,16 @@ trait FieldSelect[T] extends SimpleFieldValue {
     val fieldKey = fieldEntry.fieldKey
     val key: KeyFactory.Key = fieldKey.key
 
-    val number = value match {
-      case s: String =>
-        selectOptions.find(_.display == s).get.id
-      case m: MacroKey =>
-        m.number
+    val number = try {
+      value match {
+        case s: String =>
+          selectOptions.find(_.display == s).get.id
+        case m: MacroKey =>
+          m.number
+      }
+    } catch {
+      case e:Exception =>
+        logger.error(s"Getting number for: $value", e)
     }
     Seq(key.replaceN(fieldEntry.template)
       .replaceAll("v", number.toString))

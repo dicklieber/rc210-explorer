@@ -4,6 +4,7 @@ import net.wa9nnn.rc210.data.Dtmf
 import net.wa9nnn.rc210.key.KeyFactory.MacroKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.util.Chunk
 
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -18,11 +19,11 @@ object DtmfMacroExtractor {
 
 
     def dtmfMap(offset: Int, nDtmfs: Int): Seq[(MacroKey, Dtmf)] = {
-      val chunks: Seq[Array[Int]] = memoryBuffer.chunks(offset, 5, nDtmfs)
+      val chunks: Seq[Chunk] = memoryBuffer.chunks(offset, 5, nDtmfs)
 
       chunks.map { chunk =>
         val key: MacroKey = KeyFactory.macroKey(mai.getAndIncrement())
-        key -> Dtmf(chunk.toIndexedSeq)
+        key -> Dtmf(chunk.toString)
       }
     }
 

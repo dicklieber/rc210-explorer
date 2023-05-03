@@ -1,7 +1,6 @@
 package net.wa9nnn.rc210.data.field;
 
-public enum MonthOfYear {
-    Every,
+public enum MonthOfYearDST {
     January,
     February,
     March,

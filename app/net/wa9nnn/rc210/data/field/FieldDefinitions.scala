@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.data.field
 
+import net.wa9nnn.rc210.data.clock.Clock
 import net.wa9nnn.rc210.data.courtesy.CourtesyExtractor
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.message.MesssageExtractor
@@ -88,7 +89,6 @@ class FieldDefinitions @Inject()() {
     SimpleField(1176, "Yaesu Type", commonKey, "n*2084 v", YaesuType),
     SimpleField(1177, "Fan Timeout", commonKey, "n*1004v", FieldInt) max 255 units "Minutes",
     //DTMFRegenPrefix1 - 1179-1185 need  special handling. part of IRLP stuff.
-    SimpleField(1186, "Clock 24 Hours", commonKey, "n*5103b", FieldBoolean),
     SimpleField(1187, "Fan Select", commonKey, "n*2119b", FieldBoolean),
     SimpleField(1188, "DTMF Duration", commonKey, "n*2106b", FieldBoolean),
     SimpleField(1189, "DTMF Pause", commonKey, "n*2107b", FieldBoolean),
@@ -136,7 +136,8 @@ class FieldDefinitions @Inject()() {
     MacroNode,
     CourtesyExtractor,
     TimerExtractor,
-    MesssageExtractor
+    MesssageExtractor,
+    Clock
   )
 
   val allFields:Seq[FieldDefinition] = simpleFields ++ complexFd

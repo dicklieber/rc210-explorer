@@ -23,6 +23,7 @@ import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldEntry, FieldOffset, F
 import net.wa9nnn.rc210.key.KeyFactory.MessageKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.util.Chunk
 import play.api.libs.json.JsValue
 
 import java.util.concurrent.atomic.AtomicInteger
@@ -44,10 +45,10 @@ object MesssageExtractor extends ComplexExtractor[MessageKey] with LazyLogging {
     // Have to dig for what cpomes from the RTC board.
     val mai = new AtomicInteger(1)
     for {
-      chunk: Array[Int] <- memory.chunks(1576, 10, 40)
+      chunk: Chunk <- memory.chunks(1576, 10, 40)
       key: KeyFactory.MessageKey = KeyFactory.messageKey(mai.getAndIncrement())
     } yield {
-      val message: Message = Message(key, chunk.toIndexedSeq
+      val message: Message = Message(key, chunk.array
         .takeWhile(_ != 0)
      )
       val fieldKey = FieldKey(fieldName, key)

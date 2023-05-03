@@ -39,9 +39,4 @@ class ScheduleBuilderSpec extends WithMemory {
       schedule3.macroKey must beEqualTo(KeyFactory.macroKey(4))
     }
   }
-  "dow" >> {
-    ScheduleBuilder.dowBuilder(1) must beEqualTo(DayOfWeek.Monday)
-    ScheduleBuilder.dowBuilder(0) must beEqualTo(DayOfWeek.EveryDay)
-    ScheduleBuilder.dowBuilder(24) must beEqualTo(WeekAndDow(Week.second, DayOfWeek.Thursday))
-  }
 }

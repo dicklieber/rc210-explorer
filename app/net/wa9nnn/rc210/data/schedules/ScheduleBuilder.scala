@@ -1,10 +1,10 @@
 package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.field.{DayOfWeek, MonthOfYear, Week}
+import net.wa9nnn.rc210.data.field.{DayOfWeek, MonthOfYearSchedule, Week}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.serial.Memory.Chunk
+import net.wa9nnn.rc210.util.Chunk
 
 object ScheduleBuilder extends LazyLogging {
   // indices into a [[Chunk]]
@@ -44,7 +44,7 @@ object ScheduleBuilder extends LazyLogging {
             Week.Every -> DayOfWeek.EveryDay
         }
       }
-      val monthOfYear = MonthOfYear.values()(chunks(MOY)(n))
+      val monthOfYear = MonthOfYearSchedule.values()(chunks(MOY)(n))
       val hour = chunks(HOUR)(n)
       val minute = chunks(MINUTE)(n)
       val macr0 = KeyFactory.macroKey(chunks(MACR0)(n) + 1)

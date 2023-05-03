@@ -128,6 +128,14 @@ object KeyFormats {
       JsString(key.toString)
     }
   }
+  implicit val fmtClockKey: Format[ClockKey] = new Format[ClockKey] {
+    override def reads(json: JsValue) = JsResult.fromTry(Try {
+      KeyFactory[ClockKey](json.as[String])
+    })
+
+
+    override def writes(o: ClockKey) =    JsString(o.toString)
+  }
 
   implicit def keyKindPathBinder(implicit intBinder: PathBindable[KeyKind]): PathBindable[KeyKind] = new PathBindable[KeyKind] {
     override def bind(key: String, fromPath: String): Either[String, KeyKind] = {
