@@ -49,6 +49,13 @@ class ClockController @Inject()(dataStore: DataStore) extends MessagesInjectedCo
 
     Ok(views.html.clock(fieldEntry.fieldValue.asInstanceOf[Clock]))
   }
+
+  def setClock:Action[AnyContent]= Action { implicit request =>
+
+
+    Ok("todo st clock in RC-210")
+  }
+
 }
 
 

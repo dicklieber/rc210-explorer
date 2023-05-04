@@ -43,6 +43,7 @@ GET         /candidates/sendAllCandidates              controllers.CandidateCont
 GET         /candidates/lastUpload                     controllers.CandidateController.lastSendAll()
 GET         /candidates/ws                             controllers.CandidateController.ws
 GET         /memory                                    controllers.MemoryController.index
+GET         /clock/set                                 controllers.ClockController.setClock()
 GET         /clock                                     controllers.ClockController.index
 GET         /                                          controllers.LandingController.tabs()
 
