@@ -219,8 +219,15 @@ body {
 
 .fieldLabel {
     white-space: nowrap;
+    text-align: center;
 }
 
+
+input {
+    background: #FFE99D;
+    border-color: #cc0000;
+    border: 3px;
+}
 .keyName input {
     width: auto;
 }
