@@ -1,36 +1,36 @@
-@import com.wa9nnn.util.tableui.Table
-@import com.wa9nnn.util.tableui.html.renderTable
+@import net.wa9nnn.rc210.data.clock.Clock
+@import net.wa9nnn.rc210.data.field.{FieldBoolean, RMD}
 @import net.wa9nnn.rc210.ui.Tabs
 @import views.html.helper.form
-@import net.wa9nnn.rc210.data.clock.Clock
 @(clock: Clock)
 
 @tabbedmain(Tabs.clockTab) {
     @defining(clock.key) { key =>
         <div class="container">
-            @form(action = routes.ClockController.index) {
-                <table class="table table-bordered table-sm"">
+            @form(action = routes.ClockController.save()) {
+                <input type="hidden" name="key" value="@clock.key.toString">
+                <table class="table table-bordered table-sm">
                     <tr>
-                        <td class="text-end"">Say 24 Hour</td>
+                        <td class="text-end">Say 24 Hour</td>
                         <td>
-                            <input type="checkbox" name="say24Hours" id="say24Hours" class="" checked >
+                            @Html(FieldBoolean(clock.say24Hours).toHtmlField( RMD(name = "say24Hours")(key)))
                         </td>
                     </tr>
                     <tr>
-                        <td class="text-end"">Enable DST</td>
+                        <td class="text-end">Enable DST</td>
                         <td>
-                            <input type="checkbox" name="enableDST" id="enableDST" class="">
+                            @Html(FieldBoolean(clock.enableDST).toHtmlField( RMD(name = "enableDST")(key)))
                         </td>
                     </tr>
                     <tr>
-                        <td class="text-end"">DST Schedule</td>
+                        <td class="text-end">DST Schedule</td>
                         <td>
                             <table>
                                 <tr>
                                     <td>Starts on the </td>
-                                    <td>@Html(Clock.ocurrenceSelect.toHtml(clock.startDST.occurance)(key))</td>
+                                    <td>@Html(Clock.startOcurrenceSelect.toHtml(clock.startDST.occurance)(key))</td>
                                     <td rowspan="2">  Sunday of</td>
-                                    <td>@Html(Clock.monthOfYearDSTSelect.toHtml(clock.startDST.monthOfYearDST)(key))</td>
+                                    <td>@Html(Clock.startMonthOfYearDSTSelect.toHtml(clock.startDST.monthOfYearDST)(key))</td>
                                     <td rowspan="2">
                                         at
                                     </td>
@@ -43,8 +43,8 @@
                                 </tr>
                                 <tr>
                                     <td>Ends on the </td>
-                                    <td>@Html(Clock.ocurrenceSelect.toHtml(clock.endDST.occurance)(key))</td>
-                                    <td>@Html(Clock.monthOfYearDSTSelect.toHtml(clock.endDST.monthOfYearDST)(key))</td>
+                                    <td>@Html(Clock.endOcurrenceSelect.toHtml(clock.endDST.occurance)(key))</td>
+                                    <td>@Html(Clock.endMonthOfYearDSTSelect.toHtml(clock.endDST.monthOfYearDST)(key))</td>
                                 </tr>
                             </table>
 

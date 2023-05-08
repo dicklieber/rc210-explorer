@@ -56,11 +56,12 @@ case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue {
 
 }
 
-object FieldBoolean extends SimpleExtractor {
-  def apply(name: String)(implicit nameToValue: Map[String, String]): FieldBoolean = {
-    val sBool = nameToValue(name)
-    new FieldBoolean(sBool == "true")
+object FieldBoolean extends SimpleExtractor[Boolean] {
+  override def fromForm(name: String)(implicit kv: Map[String, String], key: Key): Boolean = {
+    val sBool = formValue(name)
+    sBool == "true"
   }
+
 
   def toCell(value: Boolean, name: String)(implicit key: Key): Cell = {
     FieldBoolean(value).toCell(RMD(name = name))

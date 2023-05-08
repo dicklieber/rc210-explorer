@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.ui
 
+import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.Cell
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.key.KeyFactory.Key
@@ -31,7 +32,7 @@ import scala.reflect.ClassTag
  * @tparam E the Enum type.
  */
 
-class EnumSelect[E <: Enum[E] : ClassTag](name: String) {
+class EnumSelect[E <: Enum[E] : ClassTag](name: String) extends LazyLogging{
 
   val clazz: Class[E] = implicitly[ClassTag[E]].runtimeClass.asInstanceOf[Class[E]]
   val values: Array[E] = clazz.getEnumConstants
@@ -61,6 +62,17 @@ class EnumSelect[E <: Enum[E] : ClassTag](name: String) {
 
   def fromForm(in: String): E = {
     Enum.valueOf(clazz, in)
+  }
+
+  def fromKv()(implicit kv:Map[String,String], key: Key): E = {
+    val param = FieldKey(name, key).param
+    try {
+      fromForm(kv(param))
+    } catch {
+      case e:Exception =>
+        logger.error(s"name: $name param: $param", e)
+        throw e
+    }
   }
 }
 

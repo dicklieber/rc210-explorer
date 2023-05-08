@@ -17,29 +17,14 @@
 
 package controllers
 
-import akka.stream.{Materializer, OverflowStrategy}
-import com.google.common.util.concurrent.AtomicDouble
-import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
-import controllers.CandidateController.performInit
-import net.wa9nnn.rc210.data.clock.{Clock, DSTPoint}
-import net.wa9nnn.rc210.data.{FieldKey}
-import net.wa9nnn.rc210.data.datastore.DataStore
+import net.wa9nnn.rc210.data.clock.Clock
+import net.wa9nnn.rc210.data.datastore.{DataStore, UpdateCandidate, UpdateData}
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.io.DatFile
-import net.wa9nnn.rc210.key.KeyKind
-import net.wa9nnn.rc210.serial.{CommandTransaction, RC210IO, SerialPortOpenException, SerialPortOperation}
-import play.api.data.Form
-import play.api.data.Forms.{boolean, mapping, number}
+import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.mvc._
 
-import java.io.PrintWriter
-import java.nio.file.Files
-import java.time.{Duration, Instant}
-import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.{Inject, Singleton}
-import scala.util.{Try, Using}
 
 @Singleton()
 class ClockController @Inject()(dataStore: DataStore) extends MessagesInjectedController with LazyLogging {
@@ -50,12 +35,20 @@ class ClockController @Inject()(dataStore: DataStore) extends MessagesInjectedCo
     Ok(views.html.clock(fieldEntry.fieldValue.asInstanceOf[Clock]))
   }
 
-  def setClock:Action[AnyContent]= Action { implicit request =>
-
-
-    Ok("todo st clock in RC-210")
+  def save(): Action[AnyContent] = Action { implicit request =>
+    val formEncoded = request.body.asFormUrlEncoded.get
+    val kv: Map[String, String] = formEncoded.filter(_._2.nonEmpty)
+      .map { case (name, values) => name -> values.head }.toMap
+    val clock = Clock(kv)
+    val updateCandidate = UpdateCandidate(Clock.fieldKey(KeyFactory.clockKey), Right(clock))
+    val updateData = UpdateData(Seq(updateCandidate))
+    dataStore.update(updateData)
+    Redirect(routes.ClockController.index)
   }
 
+  def setClock: Action[AnyContent] = Action { implicit request =>
+    Ok("todo set clock in RC-210")
+  }
 }
 
 

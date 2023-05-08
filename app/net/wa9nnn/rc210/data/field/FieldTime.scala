@@ -58,7 +58,7 @@ case class FieldTime(value: LocalTime = LocalTime.MIN) extends SimpleFieldValue 
 
 }
 
-object FieldTime extends SimpleExtractor {
+object FieldTime extends SimpleExtractor[LocalTime] {
   val time = "Time"
 
   def apply()(implicit nameToValue: Map[String, String]): FieldTime = {
@@ -79,5 +79,7 @@ object FieldTime extends SimpleExtractor {
 
   override val name: String = "FieldTime"
 
-
+  override def fromForm(name: String)(implicit kv: Map[String, String],key: Key): LocalTime = {
+    LocalTime.parse(formValue(name))
+  }
 }

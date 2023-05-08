@@ -17,16 +17,16 @@
 
 package net.wa9nnn.rc210.util
 
-import com.wa9nnn.util.tableui.{Cell, Row}
-import net.wa9nnn.rc210.data.field.{FieldExtractor, FieldValue, RenderMetadata, SimpleExtractor, SimpleField}
-import net.wa9nnn.rc210.key.KeyFactory.MacroKey
+import com.wa9nnn.util.tableui.Row
+import net.wa9nnn.rc210.data.field.{FieldValue, RenderMetadata, SimpleExtractor, SimpleField}
+import net.wa9nnn.rc210.key.KeyFactory.{Key, MacroKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.model.TriggerNode
 import play.api.libs.json._
 
 /**
  */
-case class MacroSelect(value: MacroKey = KeyFactory.defaultMacroKey) extends FieldSelect[MacroKey] with TriggerNode{
+case class MacroSelect(value: MacroKey = KeyFactory.defaultMacroKey) extends FieldSelect[MacroKey] with TriggerNode {
 
   override val key: KeyFactory.Key = value
 
@@ -60,7 +60,7 @@ case class MacroSelect(value: MacroKey = KeyFactory.defaultMacroKey) extends Fie
   override def canRunMacro(macroKey: MacroKey): Boolean = value == macroKey
 }
 
-object MacroSelect extends SimpleExtractor {
+object MacroSelect extends SimpleExtractor[MacroKey] {
   val name: String = "Macro"
 
   /**
@@ -87,7 +87,7 @@ object MacroSelect extends SimpleExtractor {
     override def writes(o: MacroSelect): JsValue = JsString(o.value.toString)
   }
 
-   val options: Seq[SelectOption] = KeyFactory[MacroKey](KeyKind.macroKey).map { macroKey =>
+  val options: Seq[SelectOption] = KeyFactory[MacroKey](KeyKind.macroKey).map { macroKey =>
     SelectOption(macroKey.number, macroKey.toString)
   }
 
@@ -97,6 +97,9 @@ object MacroSelect extends SimpleExtractor {
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[MacroSelect]
 
+  override def fromForm(name: String)(implicit kv: Map[String, String],key: Key): MacroKey = {
+    KeyFactory(formValue(name))
+  }
 }
 
 

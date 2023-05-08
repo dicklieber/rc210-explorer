@@ -17,8 +17,8 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.data.field
 import net.wa9nnn.rc210.data.field.MuteDigit.selectOptions
+import net.wa9nnn.rc210.key.KeyFactory.Key
 import net.wa9nnn.rc210.util.{FieldSelect, SelectOption}
 import play.api.libs.json.JsValue
 
@@ -37,7 +37,7 @@ case class MuteDigit(value: String = selectOptions.head.display) extends FieldSe
 
 }
 
-object MuteDigit extends SimpleExtractor {
+object MuteDigit extends SimpleExtractor[String] {
 
   def apply(id: Int): MuteDigit = {
     val maybeOption = selectOptions.find(_.id == id)
@@ -58,4 +58,7 @@ object MuteDigit extends SimpleExtractor {
   override def parse(jsValue: JsValue): FieldValue = new  MuteDigit(jsValue.as[String])
 
   override val name: String = "MuteDigit"
+
+  override def fromForm(name: String)(implicit kv: Map[String, String],key: Key): String =
+    formValue(name)
 }

@@ -19,7 +19,6 @@ package net.wa9nnn.rc210.data.clock
 
 import com.wa9nnn.util.JsonFormatUtils.javaEnumFormat
 import com.wa9nnn.util.tableui.Row
-import net.wa9nnn.rc210.data.clock.Clock.{monthOfYearDSTSelect, ocurrenceSelect}
 import net.wa9nnn.rc210.data.field._
 import net.wa9nnn.rc210.key.KeyFactory.ClockKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
@@ -58,7 +57,7 @@ case class Clock(enableDST: Boolean = true,
     Seq("todo")
   }
 
-  override def toJsonValue: JsValue = ???
+  override def toJsonValue: JsValue = Json.toJson(this)
 
   override def toRow: Row = ???
 }
@@ -67,9 +66,9 @@ case class DSTPoint(monthOfYearDST: MonthOfYearDST, occurance: Occurrence)
 
 object DSTPoint {
   def apply(s: String): DSTPoint = {
-    val month: MonthOfYearDST = monthOfYearDSTSelect.fromOrdinal(s.take(2).toInt)
+    val month: MonthOfYearDST = Clock.startMonthOfYearDSTSelect.fromOrdinal(s.take(2).toInt)
     val occurance: Int = s.takeRight(1).toInt - 1
-    new DSTPoint(month, ocurrenceSelect.fromOrdinal(occurance))
+    new DSTPoint(month, Clock.startOcurrenceSelect.fromOrdinal(occurance))
   }
 }
 
@@ -100,6 +99,22 @@ object Clock extends ComplexExtractor[ClockKey] {
     )
   }
 
+  def apply(implicit kv: Map[String, String]): Clock = {
+    implicit val key: ClockKey = KeyFactory(kv("key"))
+    val say24Hours = FieldBoolean.fromForm("say24Hours")
+
+    val startDst: DSTPoint = DSTPoint(startMonthOfYearDSTSelect.fromKv(), startOcurrenceSelect.fromKv())
+    val endDst: DSTPoint = DSTPoint(endMonthOfYearDSTSelect.fromKv(), endOcurrenceSelect.fromKv())
+    val enableDST = FieldBoolean.fromForm("enableDST")
+    val hourDST = kv("hourDST").toInt
+    new Clock(say24Hours = say24Hours,
+      enableDST = enableDST,
+      hourDST = hourDST,
+      startDST = startDst,
+      endDST = endDst
+    )
+  }
+
   /**
    * for various things e.g. parser name.
    */
@@ -117,8 +132,11 @@ object Clock extends ComplexExtractor[ClockKey] {
 
   )
 
-  val monthOfYearDSTSelect: EnumSelect[MonthOfYearDST] = new EnumSelect[MonthOfYearDST]("month")
-  val ocurrenceSelect: EnumSelect[Occurrence] = new EnumSelect[Occurrence]("occurrence")
+  val startMonthOfYearDSTSelect: EnumSelect[MonthOfYearDST] = new EnumSelect[MonthOfYearDST]("start.month")
+  val startOcurrenceSelect: EnumSelect[Occurrence] = new EnumSelect[Occurrence]("start.occurrence")
+  val endMonthOfYearDSTSelect: EnumSelect[MonthOfYearDST] = new EnumSelect[MonthOfYearDST]("end.month")
+  val endOcurrenceSelect: EnumSelect[Occurrence] = new EnumSelect[Occurrence]("end.occurrence")
+
   implicit val fmtOccurrence: Format[Occurrence] = javaEnumFormat[Occurrence]
   implicit val fmtMonthOfYearDST: Format[MonthOfYearDST] = javaEnumFormat[MonthOfYearDST]
   implicit val fmtDSTPoint: Format[DSTPoint] = Json.format[DSTPoint]

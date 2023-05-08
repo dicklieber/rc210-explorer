@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.field.TimeoutTimerResetPoint.selectOptions
+import net.wa9nnn.rc210.key.KeyFactory.Key
 import net.wa9nnn.rc210.util.{FieldSelect, SelectOption}
 import play.api.libs.json.JsValue
 
@@ -35,7 +36,7 @@ case class TimeoutTimerResetPoint(value: String = selectOptions.head.display) ex
   }
 }
 
-object TimeoutTimerResetPoint extends SimpleExtractor {
+object TimeoutTimerResetPoint extends SimpleExtractor[String] {
 
   def apply(id: Int): TimeoutTimerResetPoint = {
     val maybeOption = selectOptions.find(_.id == id)
@@ -59,4 +60,8 @@ object TimeoutTimerResetPoint extends SimpleExtractor {
   override def parse(jsValue: JsValue): FieldValue = new TimeoutTimerResetPoint(jsValue.as[String])
 
   override val name: String = "TOT Reset Point"
+
+  override def fromForm(name: String)(implicit kv: Map[String, String],key: Key): String = {
+    formValue(name)
+  }
 }

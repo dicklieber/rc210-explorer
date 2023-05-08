@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.field.RadioType.selectOptions
+import net.wa9nnn.rc210.key.KeyFactory.Key
 import net.wa9nnn.rc210.util.{FieldSelect, SelectOption}
 import play.api.libs.json.JsValue
 
@@ -35,7 +36,7 @@ case class RadioType(value: String = selectOptions.head.display) extends FieldSe
   }
 }
 
-object RadioType extends SimpleExtractor {
+object RadioType extends SimpleExtractor[String] {
 
   def apply(id: Int): RadioType = {
     val maybeOption = selectOptions.find(_.id == id)
@@ -62,4 +63,8 @@ object RadioType extends SimpleExtractor {
   override def parse(jsValue: JsValue): FieldValue = new RadioType(jsValue.as[String])
 
   override val name: String = "RadioType"
+
+  override def fromForm(name: String)(implicit kv: Map[String, String],key: Key): String = {
+    formValue(name)
+  }
 }

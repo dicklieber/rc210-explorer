@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.field.YaesuType.selectOptions
+import net.wa9nnn.rc210.key.KeyFactory.Key
 import net.wa9nnn.rc210.util.{FieldSelect, SelectOption}
 import play.api.libs.json.JsValue
 
@@ -35,7 +36,7 @@ case class YaesuType(value: String = selectOptions.head.display) extends FieldSe
   }
 }
 
-object YaesuType extends SimpleExtractor {
+object YaesuType extends SimpleExtractor[String] {
 
   def apply(id: Int): YaesuType = {
     try {
@@ -62,4 +63,8 @@ object YaesuType extends SimpleExtractor {
   override def parse(jsValue: JsValue): FieldValue = new YaesuType(jsValue.as[String])
 
   override val name: String = "YaesuType"
+
+  override def fromForm(name: String)(implicit kv: Map[String, String],key: Key): String = {
+    formValue(name)
+  }
 }

@@ -40,7 +40,7 @@ case class SimpleField(offset: Int,
                        fieldName: String,
                        kind: KeyKind,
                        override val template: String,
-                       fieldExtractor: SimpleExtractor,
+                       fieldExtractor: SimpleExtractor[_],
                        override val tooltip: String = "",
                        override val units: String = "",
                        min: Int = 1,
@@ -107,8 +107,14 @@ trait ComplexExtractor[K <: Key] extends FieldExtractor with FieldDefinition  wi
 
 }
 
-trait SimpleExtractor extends FieldExtractor {
+abstract class SimpleExtractor[T] extends FieldExtractor {
   def extractFromInts(iterator: Iterator[Int], fieldDefinition: SimpleField): FieldValue
+  def fromForm(name:String)(implicit kv: Map[String, String], key: Key):T =
+    throw new NotImplementedError() //todo
+
+  def formValue(name:String)(implicit kv: Map[String, String], key: Key):String = {
+    kv(FieldKey(name, key).param)
+  }
 }
 
 trait FieldExtractor {
