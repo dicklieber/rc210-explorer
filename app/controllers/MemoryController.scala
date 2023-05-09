@@ -18,11 +18,9 @@
 package controllers
 
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
-import net.wa9nnn.rc210.data.datastore.{DataStore, MemoryFileLoader}
-import net.wa9nnn.rc210.data.field.{FieldDefinition, FieldDefinitions, FieldEntry, FieldOffset}
-import net.wa9nnn.rc210.key.KeyKind
+import net.wa9nnn.rc210.data.datastore.MemoryFileLoader
+import net.wa9nnn.rc210.data.field.{FieldDefinition, FieldDefinitions, FieldOffset}
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.FormParser
 import play.api.mvc._
 
 import javax.inject.Inject
@@ -30,12 +28,19 @@ import javax.inject.Inject
 class MemoryController @Inject()(memoryFileLoader: MemoryFileLoader, fieldDefinitions: FieldDefinitions)(implicit val controllerComponents: ControllerComponents)
   extends BaseController {
 
-  private lazy val offsetToField: Map[Int, FieldDefinition] =
+  private lazy val offsetToField: Map[Int, Seq[Cell]] =
     (for {
-      fd <- fieldDefinitions.allFields
-      position <- fd.positions
+      fd: FieldDefinition <- fieldDefinitions.allFields
+      position: FieldOffset <- fd.positions
     } yield {
-      position.offset -> fd
+      val extraCells: Seq[Cell] = Seq(
+        fd.kind,
+        fd.fieldName,
+        position.field.getOrElse(""),
+        fd.template
+      ).map(Cell(_))
+
+      position.offset -> extraCells
     }).toMap
 
   def index: Action[AnyContent] = Action {
@@ -44,17 +49,12 @@ class MemoryController @Inject()(memoryFileLoader: MemoryFileLoader, fieldDefini
       val memory: Memory = memoryFileLoader.loadMemory
       val rows: Seq[Row] = memory.data.zipWithIndex.toIndexedSeq.map { case (int, index) =>
         val row = Row(Cell(index), Cell(int))
-        offsetToField.get(index).map { fieldDefinition =>
-          val extraCells: Seq[Cell] = Seq(
-            fieldDefinition.kind,
-            fieldDefinition.fieldName,
-            fieldDefinition.template
-          ).map(Cell(_))
+        offsetToField.get(index).map { extraCells =>
           row.copy(cells = row.cells :++ extraCells)
         }.getOrElse(row)
 
       }
-      val header = Header("RC-210 Memory Map", "Offset", "Value", "Kind", "Field Name", "Command Template")
+      val header = Header("RC-210 Memory Map", "Offset", "Value", "Kind", "Field Name","Field",  "Command Template")
       val table = Table(header, rows)
 
       Ok(views.html.dat(Seq(table)))

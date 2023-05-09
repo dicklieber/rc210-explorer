@@ -111,21 +111,6 @@ object Clock extends ComplexExtractor[ClockKey] {
     )
   }
 
-  //  def apply(implicit kv: Map[String, String]): Clock = {
-  //    implicit val key: ClockKey = KeyFactory(kv("key"))
-  //    val say24Hours = FieldBoolean.fromForm("say24Hours")
-  //
-  //    val startDst: DSTPoint = DSTPoint(startMonthOfYearDSTSelect.fromKv(), startOcurrenceSelect.fromKv())
-  //    val endDst: DSTPoint = DSTPoint(endMonthOfYearDSTSelect.fromKv(), endOcurrenceSelect.fromKv())
-  //    val enableDST = FieldBoolean.fromForm("enableDST")
-  //    val hourDST = kv("hourDST").toInt
-  //    new Clock(say24Hours = say24Hours,
-  //      enableDST = enableDST,
-  //      hourDST = hourDST,
-  //      startDST = startDst,
-  //      endDST = endDst
-  //    )
-  //  }
 
   /**
    * for various things e.g. parser name.
@@ -138,10 +123,11 @@ object Clock extends ComplexExtractor[ClockKey] {
   override val kind: KeyKind = KeyKind.clockKey
 
   override def positions: Seq[FieldOffset] = Seq(
-    FieldOffset(4042, this),
-    FieldOffset(4046, this),
-    FieldOffset(3687, this), //DSTFlag - 3687
-
+    FieldOffset(1186, this, "say24Hours"),
+    FieldOffset(3687, this, "DSTFlag"),
+    FieldOffset(4042, this, "startDST"),
+    FieldOffset(4046, this, "endDST"),
+    FieldOffset(4050, this, "hour"),
   )
 
   //  implicit val startMonthOfYearDSTSelect: EnumSelect[MonthOfYearDST] = new EnumSelect[MonthOfYearDST]("start.month")
