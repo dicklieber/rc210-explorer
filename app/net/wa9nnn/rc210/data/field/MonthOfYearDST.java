@@ -1,6 +1,7 @@
 package net.wa9nnn.rc210.data.field;
 
 public enum MonthOfYearDST {
+
     January,
     February,
     March,
@@ -12,5 +13,11 @@ public enum MonthOfYearDST {
     September,
     October,
     November,
-    December,
+    December;
+
+
+    public int number() {
+        return ordinal() + 1;
+    }
+
 }

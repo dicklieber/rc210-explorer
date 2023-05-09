@@ -18,19 +18,13 @@
 package net.wa9nnn.rc210.data.clock;
 
 public enum Occurrence {
-    First(1),
-    Second(2),
-    Third(3),
-    Forth(4),
-    Fifth(5);
+    First,
+    Second,
+    Third,
+    Forth,
+    Fifth;
 
-    private final int number;
-
-    public int getNumber() {
-        return number;
-    }
-
-    Occurrence(int i) {
-        number = i;
+    public int number() {
+        return ordinal() + 1;
     }
 }
