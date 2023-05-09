@@ -23,9 +23,6 @@ import net.wa9nnn.rc210.data.field._
 import net.wa9nnn.rc210.key.KeyFactory.ClockKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.EnumSelect
-import play.api.data.FormError
-import play.api.data.format.Formatter
 import play.api.libs.json.{Format, JsValue, Json}
 
 
@@ -58,30 +55,30 @@ case class Clock(
     *2132 1 02 <-----Program DST End Hour to 2 AM
 
      */
-    Seq("todo")
+    val startHour = f"1*21321$hourDST%02d"
+
+    val start: String = if (enableDST)
+      s"1*21311${startDST.commandPiece}"
+    else
+      s"1*21310"
+
+    val end = s"1*21311${endDST.commandPiece}"
+
+    val say24 = if (say24Hours)
+      s"1*51031"
+    else
+      s"1*51030"
+    Seq(
+      startHour,
+      start,
+      end,
+      say24
+    )
   }
 
   override def toJsonValue: JsValue = Json.toJson(this)
 
-  override def toRow: Row = ???
-}
-
-case class DSTPoint(monthOfYearDST: MonthOfYearDST, occurance: Occurrence)
-
-object DSTPoint {
-  def apply(s: String): DSTPoint = {
-    val month: MonthOfYearDST = {
-      val i: Int = s.take(2).toInt
-      MonthOfYearDST.values()(i)
-    }
-    val occurance: Occurrence = {
-      val i = s.takeRight(1).toInt - 1
-      Occurrence.values()(i)
-    }
-    new DSTPoint(month, occurance)
-  }
-
-
+  override def toRow: Row = throw new IllegalStateException("Not used with clock.")
 }
 
 
@@ -92,12 +89,6 @@ object Clock extends ComplexExtractor[ClockKey] {
    * @return what we extracted.
    */
   override def extract(memory: Memory): Seq[FieldEntry] = {
-    //DST Start Date - 4042-4045
-    //DST End Date - 4046-4049
-    //NOTE: To disable DST program the START month to 0, i.e. *21310
-    // DSTFlag - 3687
-
-
     val startHour: Int = memory(4050)
     val enableDST: Boolean = memory.bool(3687) //DSTFlag - 3687
     val startDST = DSTPoint(memory.stringAt(4042))
@@ -110,7 +101,6 @@ object Clock extends ComplexExtractor[ClockKey] {
       FieldEntry(this, fieldKey(KeyFactory.clockKey), clock)
     )
   }
-
 
   /**
    * for various things e.g. parser name.
@@ -129,11 +119,6 @@ object Clock extends ComplexExtractor[ClockKey] {
     FieldOffset(4046, this, "endDST"),
     FieldOffset(4050, this, "hour"),
   )
-
-  //  implicit val startMonthOfYearDSTSelect: EnumSelect[MonthOfYearDST] = new EnumSelect[MonthOfYearDST]("start.month")
-  //  implicit val startOcurrenceSelect: EnumSelect[Occurrence] = new EnumSelect[Occurrence]("start.occurrence")
-  //  implicit val endMonthOfYearDSTSelect: EnumSelect[MonthOfYearDST] = new EnumSelect[MonthOfYearDST]("end.month")
-  //  implicit val endOcurrenceSelect: EnumSelect[Occurrence] = new EnumSelect[Occurrence]("end.occurrence")
 
   implicit val fmtOccurrence: Format[Occurrence] = javaEnumFormat[Occurrence]
   implicit val fmtMonthOfYearDST: Format[MonthOfYearDST] = javaEnumFormat[MonthOfYearDST]

@@ -76,7 +76,6 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
       .toCommands(this)
   }
 
-
   def toHtml: String = {
     value.toHtmlField(this)
   }
