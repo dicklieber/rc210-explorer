@@ -76,7 +76,7 @@ class DataStore @Inject()(dataStoreJson: DataStoreJson) extends NamedSource with
   /**
    *
    * @param key of interest
-   * @return al the field for the key.
+   * @return al the rc2input for the key.
    */
   def apply(key: Key): Seq[FieldEntry] = {
     valuesMap.values

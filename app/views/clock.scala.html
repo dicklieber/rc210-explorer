@@ -1,25 +1,26 @@
-@import net.wa9nnn.rc210.data.clock.Clock
-@import net.wa9nnn.rc210.data.field.{FieldBoolean, RMD}
+@import net.wa9nnn.rc210.data.clock.{Clock, Occurrence}
+@import net.wa9nnn.rc210.data.field.MonthOfYearDST
+@import net.wa9nnn.rc210.ui.EnumSelect.e2o
 @import net.wa9nnn.rc210.ui.Tabs
-@import views.html.helper.form
-@(clock: Clock)
+@import views.html.helper.{FieldConstructor, form, input}
+@(clockForm: Form[Clock])(implicit messages: MessagesProvider)
+@implicitField = @{ FieldConstructor(views.html.rc2input.f) }
 
 @tabbedmain(Tabs.clockTab) {
-    @defining(clock.key) { key =>
         <div class="container">
             @form(action = routes.ClockController.save()) {
-                <input type="hidden" name="key" value="@clock.key.toString">
                 <table class="table table-bordered table-sm">
                     <tr>
                         <td class="text-end">Say 24 Hour</td>
                         <td>
-                            @Html(FieldBoolean(clock.say24Hours).toHtmlField( RMD(name = "say24Hours")(key)))
+                            @helper.checkbox(clockForm("say24Hours"))
                         </td>
                     </tr>
                     <tr>
                         <td class="text-end">Enable DST</td>
                         <td>
-                            @Html(FieldBoolean(clock.enableDST).toHtmlField( RMD(name = "enableDST")(key)))
+                            @helper.checkbox(clockForm("enableDST"))
+@*//                           @Html(FieldBoolean(clock.enableDST).toHtmlField( RMD(name = "enableDST")(key)))*@
                         </td>
                     </tr>
                     <tr>
@@ -28,14 +29,15 @@
                             <table>
                                 <tr>
                                     <td>Starts on the </td>
-                                    <td>@Html(Clock.startOcurrenceSelect.toHtml(clock.startDST.occurance)(key))</td>
+                                    <td>@helper.select(clockForm("startDST.occurrence"),e2o[Occurrence])</td>
                                     <td rowspan="2">  Sunday of</td>
-                                    <td>@Html(Clock.startMonthOfYearDSTSelect.toHtml(clock.startDST.monthOfYearDST)(key))</td>
+                                    <td>@helper.select(clockForm("startDST.month"), e2o[MonthOfYearDST])</td>
                                     <td rowspan="2">
                                         at
                                     </td>
                                     <td rowspan="2">
-                                        <input type="number" name="hourDST" id="hourDST" min="0" max="23" class="form-control" value="@clock.hourDST" >
+                                        @helper.inputText(clockForm("hourDST"))
+@*                                        <input type="number" name="hourDST" id="hourDST" min="0" max="23" class="form-control" value="@clock.hourDST" >*@
                                     </td>
                                     <td rowspan="2">
                                         Hours
@@ -43,8 +45,8 @@
                                 </tr>
                                 <tr>
                                     <td>Ends on the </td>
-                                    <td>@Html(Clock.endOcurrenceSelect.toHtml(clock.endDST.occurance)(key))</td>
-                                    <td>@Html(Clock.endMonthOfYearDSTSelect.toHtml(clock.endDST.monthOfYearDST)(key))</td>
+                                    <td>@helper.select(clockForm("endDST.occurrence"),e2o[Occurrence])</td>
+                                    <td>@helper.select(clockForm("endDST.month"),e2o[MonthOfYearDST])</td>
                                 </tr>
                             </table>
 
@@ -63,5 +65,4 @@
             </div>
     }
 
-    }
 }

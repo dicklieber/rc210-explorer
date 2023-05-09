@@ -25,10 +25,10 @@ import play.api.mvc.PathBindable
 
 import scala.util.Try
 /**
- * Identifies a field value
+ * Identifies a rc2input value
  *
- * @param fieldName name of field. Shown in UIs
- * @param key       qualifier for the field.
+ * @param fieldName name of rc2input. Shown in UIs
+ * @param key       qualifier for the rc2input.
  */
 case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey] with CellProvider{
   assert(!fieldName.contains('|'), "Field Name can't contain '|'!")

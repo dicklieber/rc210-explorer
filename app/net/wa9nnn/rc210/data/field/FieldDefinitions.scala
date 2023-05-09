@@ -30,7 +30,7 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class FieldDefinitions @Inject()() {
   /**
-   * Everything about each field.
+   * Everything about each rc2input.
    */
   val simpleFields: Seq[SimpleField] = Seq(
     SimpleField(0, "Site Prefix", commonKey, "1*2108v", FieldDtmf) max 3,
@@ -69,7 +69,7 @@ class FieldDefinitions @Inject()() {
     SimpleField(169, "Enable", logicAlarmKey, "1n91b", FieldBoolean),
     SimpleField(174, "Macro Low", logicAlarmKey, "1*2101nv", MacroSelect),
     SimpleField(179, "Macro High", logicAlarmKey, "1*2102nv", MacroSelect),
-    // needs to be complex field   SimpleField(184, "Vref", meterKey, "*2065 n v", UiNumber(255, "todo three numbers?")), //*2065 4 9 6
+    // needs to be complex rc2input   SimpleField(184, "Vref", meterKey, "*2065 n v", UiNumber(255, "todo three numbers?")), //*2065 4 9 6
     //###########################################################################################  //todo
     ///For meters, we gather all the parameters needed, then assemble them to actually store
     //###########################################################################################

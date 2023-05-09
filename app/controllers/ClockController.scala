@@ -18,10 +18,14 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.clock.Clock
+import controllers.ClockController.{monthOfYearDSTSelect, ocurrenceSelect}
+import net.wa9nnn.rc210.data.clock.{Clock, DSTPoint, Occurrence}
 import net.wa9nnn.rc210.data.datastore.{DataStore, UpdateCandidate, UpdateData}
-import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.field.{FieldEntry, MonthOfYearDST}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.ui.EnumSelect
+import play.api.data.Forms._
+import play.api.data.{Form, Mapping}
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
@@ -29,26 +33,57 @@ import javax.inject.{Inject, Singleton}
 @Singleton()
 class ClockController @Inject()(dataStore: DataStore) extends MessagesInjectedController with LazyLogging {
 
+
+  val dstPointForm: Mapping[DSTPoint] =
+    mapping(
+      "month" -> of[MonthOfYearDST],
+      "occurrence" -> of[Occurrence]
+    )(DSTPoint.apply)(DSTPoint.unapply)
+
+  val clockForm = Form[Clock](
+    mapping(
+      "enableDST" -> boolean,
+      "hourDST" -> number(min = 0, max = 23),
+      "startDST" -> dstPointForm,
+      "endDST" -> dstPointForm,
+      "say24Hours" -> boolean
+    )(Clock.apply)(Clock.unapply)
+  )
+
   def index: Action[AnyContent] = Action { implicit request =>
     val fieldEntry: FieldEntry = dataStore(KeyKind.clockKey).head
 
-    Ok(views.html.clock(fieldEntry.fieldValue.asInstanceOf[Clock]))
+    val clock: Clock = fieldEntry.value.asInstanceOf[Clock]
+    val filledInForm = clockForm.fill(clock)
+
+    Ok(views.html.clock(filledInForm))
   }
 
   def save(): Action[AnyContent] = Action { implicit request =>
-    val formEncoded = request.body.asFormUrlEncoded.get
-    val kv: Map[String, String] = formEncoded.filter(_._2.nonEmpty)
-      .map { case (name, values) => name -> values.head }.toMap
-    val clock = Clock(kv)
-    val updateCandidate = UpdateCandidate(Clock.fieldKey(KeyFactory.clockKey), Right(clock))
-    val updateData = UpdateData(Seq(updateCandidate))
-    dataStore.update(updateData)
-    Redirect(routes.ClockController.index)
+
+    clockForm.bindFromRequest.fold(
+      formWithErrors => {
+        // binding failure, you retrieve the form containing errors:
+        BadRequest(views.html.clock(formWithErrors))
+      },
+      (clock: Clock) => {
+        /* binding success, you get the actual value. */
+        val updateCandidate = UpdateCandidate(Clock.fieldKey(KeyFactory.clockKey), Right(clock))
+        val updateData = UpdateData(Seq(updateCandidate))
+        dataStore.update(updateData)
+        Redirect(routes.ClockController.index)
+      }
+    )
   }
 
   def setClock: Action[AnyContent] = Action { implicit request =>
     Ok("todo set clock in RC-210")
   }
+}
+
+object ClockController {
+  implicit val ocurrenceSelect: EnumSelect[Occurrence] = new EnumSelect[Occurrence]("occurrence")
+  implicit val monthOfYearDSTSelect: EnumSelect[MonthOfYearDST] = new EnumSelect[MonthOfYearDST]("month")
 }
 
 

@@ -41,7 +41,7 @@ case class MacroSelect(value: MacroKey = KeyFactory.defaultMacroKey) extends Fie
 
   /**
    *
-   * Render as HTML. Either a single field of an entire HTML Form.
+   * Render as HTML. Either a single rc2input of an entire HTML Form.
    *
    * @param renderMetadata metadata needed  to render html etc
    * @return html

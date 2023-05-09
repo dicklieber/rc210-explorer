@@ -34,7 +34,7 @@ class CommonEditorController @Inject()(implicit val controllerComponents: Contro
       val commonFields: Seq[FieldEntry] = dataStore(KeyKind.commonKey)
 
       val rows: Seq[Row] = commonFields.map { fieldEntry =>
-        // Can't use fieldEntry's toRow because we just want the field name not key, as they are all commonKey1
+        // Can't use fieldEntry's toRow because we just want the rc2input name not key, as they are all commonKey1
         Row(
           fieldEntry.fieldKey.fieldName,
           fieldEntry.toCell

@@ -75,7 +75,7 @@ trait FieldSelect[T] extends SimpleFieldValue {
 
   /**
    *
-   * Render as HTML. Either a single field of an entire HTML Form.
+   * Render as HTML. Either a single rc2input of an entire HTML Form.
    *
    */
   override def toHtmlField(renderMetadata: RenderMetadata): String = {

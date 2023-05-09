@@ -67,7 +67,7 @@ object FieldTime extends SimpleExtractor[LocalTime] {
     new field.FieldTime(localTime)
   }
 
-  override def extractFromInts(itr: Iterator[Int], field: SimpleField): FieldValue = throw new IllegalStateException("Can't exrtract as field!")
+  override def extractFromInts(itr: Iterator[Int], field: SimpleField): FieldValue = throw new IllegalStateException("Can't exrtract as rc2input!")
 
   implicit val fmtFieldTime: Format[FieldTime] = new Format[FieldTime] {
     override def reads(json: JsValue): JsResult[FieldTime] = JsSuccess(new FieldTime())

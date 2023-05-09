@@ -17,7 +17,7 @@ object ScheduleBuilder extends LazyLogging {
   val fieldsInRC210Schedule = 6
 
   def apply(memory: Memory): Seq[Schedule] = {
-    // Each chunk is one RC-210 memory setpoint field. With all the setpopint's value withinb that chunk.
+    // Each chunk is one RC-210 memory setpoint rc2input. With all the setpopint's value withinb that chunk.
     implicit val chunks: Seq[Chunk] = memory.chunks(616, KeyKind.scheduleKey.maxN(), fieldsInRC210Schedule)
 
 

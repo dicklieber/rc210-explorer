@@ -210,7 +210,7 @@ object KeyFactory {
   case class CourtesyToneKey(override val number: Int) extends Key(KeyKind.courtesyToneKey, number)
 
   /**
-   * There can be any number of [[CommonKey]] but they don't index into a map by themselves. MaxN just indicates how many to extract for a given field name.
+   * There can be any number of [[CommonKey]] but they don't index into a map by themselves. MaxN just indicates how many to extract for a given rc2input name.
    */
   case class CommonKey(override val number: Int = 1) extends Key(KeyKind.commonKey, number)
 

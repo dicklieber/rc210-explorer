@@ -25,7 +25,7 @@ import net.wa9nnn.rc210.key.KeyFactory.Key
 import play.api.libs.json.JsValue
 
 /**
- * Holds the value for a field.
+ * Holds the value for a rc2input.
  * Knows how to render as HTML control or string for JSON, showing to a user or RC-210 Command,
  * Has enough metadata needed yo render
  */
@@ -39,7 +39,7 @@ sealed trait FieldValue extends LazyLogging {
   def toCommands(fieldEntry: FieldEntryBase): Seq[String]
 
   /**
-   * Render as HTML. Either a single field of an entire HTML Form.
+   * Render as HTML. Either a single rc2input of an entire HTML Form.
    *
    * @param fieldEntry all the metadata.
    * @return html
@@ -82,7 +82,7 @@ trait ComplexFieldValue[K <: Key] extends FieldValue with RowSource with LazyLog
   lazy val fieldKey: FieldKey = FieldKey(fieldName, key)
 
   /**
-   * Render as HTML. Either a single field of an entire HTML Form.
+   * Render as HTML. Either a single rc2input of an entire HTML Form.
    *
    * @param fieldEntry all the metadata.
    * @return html

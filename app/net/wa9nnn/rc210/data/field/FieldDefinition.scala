@@ -24,7 +24,7 @@ trait FieldDefinition {
 }
 
 /**
- * A [[SimpleField]] produces one RC-210 command as opposed to a complex field like [[net.wa9nnn.rc210.data.schedules.Schedule]] that may produce multiple commands.
+ * A [[SimpleField]] produces one RC-210 command as opposed to a complex rc2input like [[net.wa9nnn.rc210.data.schedules.Schedule]] that may produce multiple commands.
  * And generally will be an HTML form itself to edit.
  *
  * @param offset         where in [[Memory]] this comes from.
@@ -32,7 +32,7 @@ trait FieldDefinition {
  * @param kind           e.g. [[net.wa9nnn.rc210.key.KeyFactory.MacroKey]] or [[net.wa9nnn.rc210.key.KeyFactory.LogicAlarmKey]]
  * @param template       used to generate the rc-210 command.
  * @param fieldExtractor that knows how to get this from the [[net.wa9nnn.rc210.serial.Memory]]
- * @param tooltip        for this field.
+ * @param tooltip        for this rc2input.
  * @param units          suffix for <input>
  * @param max            used by the extractor. e.g. max DtMF digits or max number.
  */

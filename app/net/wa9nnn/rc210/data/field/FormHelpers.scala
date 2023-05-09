@@ -30,7 +30,7 @@ object SelectKeyHelper {
    *
    * @param current key, will be selected in <select>
    * @param param   will be key for POSTed data.
-   * @return the HtmL fragment for this field.
+   * @return the HtmL fragment for this rc2input.
    */
   def apply(current: Key, param: String): String = {
 

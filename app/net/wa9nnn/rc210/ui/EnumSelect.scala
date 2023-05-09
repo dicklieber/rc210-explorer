@@ -21,6 +21,9 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.Cell
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.key.KeyFactory.Key
+import play.api.data.FormError
+import play.api.data.format.Formats._
+import play.api.data.format.Formatter
 
 import scala.reflect.ClassTag
 
@@ -32,14 +35,14 @@ import scala.reflect.ClassTag
  * @tparam E the Enum type.
  */
 
-class EnumSelect[E <: Enum[E] : ClassTag](name: String) extends LazyLogging{
+class EnumSelect[E <: Enum[E] : ClassTag](name: String) extends LazyLogging with Formatter[E] {
 
   val clazz: Class[E] = implicitly[ClassTag[E]].runtimeClass.asInstanceOf[Class[E]]
   val values: Array[E] = clazz.getEnumConstants
 
   private val options: Seq[String] = values.map(_.toString)
 
-  def fromOrdinal(ordinal:Int): E = {
+  def fromOrdinal(ordinal: Int): E = {
     values(ordinal)
   }
 
@@ -49,7 +52,7 @@ class EnumSelect[E <: Enum[E] : ClassTag](name: String) extends LazyLogging{
     Cell.rawHtml(html)
   }
 
-   def toHtml(current: E)(implicit key: Key) = {
+  def toHtml(current: E)(implicit key: Key) = {
     val param = FieldKey(name, key).param
     views.html.fieldSelect(param, current.toString, options.toIndexedSeq).toString()
   }
@@ -64,17 +67,47 @@ class EnumSelect[E <: Enum[E] : ClassTag](name: String) extends LazyLogging{
     Enum.valueOf(clazz, in)
   }
 
-  def fromKv()(implicit kv:Map[String,String], key: Key): E = {
+  def fromKv()(implicit kv: Map[String, String], key: Key): E = {
     val param = FieldKey(name, key).param
     try {
       fromForm(kv(param))
     } catch {
-      case e:Exception =>
+      case e: Exception =>
         logger.error(s"name: $name param: $param", e)
         throw e
     }
   }
+
+  override val format: Some[(String, Nil.type)] = Some(("format.url", Nil))
+
+  override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], E] = {
+    parsing(fromForm, "error.url", Nil)(key, data)
+  }
+
+  override def unbind(key: String, value: E): Map[String, String] = {
+    Map(key -> value.toString)
+  }
 }
+
+object EnumSelect {
+  /**
+   * Build option for play  <select>
+   *
+   * @tparam E any Java enum
+   * @return suitable for select.
+   */
+  def e2o[E <: Enum[E] : ClassTag]: Seq[(String, String)] = {
+    val clazz: Class[E] = implicitly[ClassTag[E]].runtimeClass.asInstanceOf[Class[E]]
+    for {
+      e <- clazz.getEnumConstants
+    } yield {
+      val str = e.name()
+      str -> str
+    }
+  }
+}
+
+
 
 
 
