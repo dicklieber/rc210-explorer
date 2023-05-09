@@ -24,7 +24,7 @@ import org.specs2.mutable.Specification
 
 class EnumSelectSpec extends Specification {
   implicit val k = KeyFactory.defaultMacroKey
-  val enumSelect = new EnumSelect[Week]("name", Week.values())
+  val enumSelect = new EnumSelect[Week]("name")
   "EnumSelectSpec" should {
     "apply no selected" in {
       val cell = enumSelect.toCell()

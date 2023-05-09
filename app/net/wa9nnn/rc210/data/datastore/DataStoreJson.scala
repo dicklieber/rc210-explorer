@@ -45,6 +45,7 @@ class DataStoreJson @Inject()(datFile: DatFile) extends LazyLogging {
 
     Using(Files.newInputStream(path)) { inputStream: InputStream =>
       dataStore.fromJson(Json.parse(inputStream).as[DataTransferJson])
+
     }
   }
 

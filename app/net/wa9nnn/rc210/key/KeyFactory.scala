@@ -20,7 +20,7 @@ package net.wa9nnn.rc210.key
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.named.NamedSource
-import net.wa9nnn.rc210.key.KeyFactory.Key.namedSource
+import net.wa9nnn.rc210.key.KeyFactory.Key._namedSource
 import play.twirl.api.Html
 
 /**
@@ -131,7 +131,7 @@ object KeyFactory {
 
 
     override def toCell: Cell = {
-      val name = namedSource.nameForKey(this)
+      val name = nameForKey(this)
       val c = if (name.isEmpty)
         Cell(number)
       else
@@ -139,7 +139,12 @@ object KeyFactory {
       c.withCssClass(kind.toString)
     }
 
-    def keyName:String = namedSource.nameForKey(this)
+    def nameForKey(key:Key):String =
+      _namedSource.map(_.nameForKey(key)).getOrElse("")
+
+    def keyWithName:String = {
+     s"$number ${nameForKey(this)}"
+    }
     /**
      * Display the Key. Number: <input>
      * This can be placed in a [[com.wa9nnn.util.tableui.Row]].
@@ -147,17 +152,17 @@ object KeyFactory {
      * @param name for name attribute in <input>
      */
     def namedCell(param: String = fieldKey("name").param): Cell = {
-      val html: Html = views.html.fieldNamedKey(this, namedSource.nameForKey(this), param)
+      val html: Html = views.html.fieldNamedKey(this, nameForKey(this), param)
       Cell.rawHtml(html.toString())
     }
 
     def namedHtml: String = {
-      val html: Html = views.html.fieldNamedKey(this, namedSource.nameForKey(this), "name")
+      val html: Html = views.html.fieldNamedKey(this, nameForKey(this), "name")
       html.toString()
     }
 
     def noEdit: String = {
-      s"$number: ${namedSource.nameForKey(this)}"
+      s"$number: ${nameForKey(this)}"
     }
 
     /**
@@ -180,10 +185,9 @@ object KeyFactory {
   }
 
   object Key {
-    def namedSource: NamedSource = _namedSource.get
 
     def setNamedSource(namedsource: NamedSource): Unit = {
-      if (_namedSource.isDefined) throw new IllegalStateException("NamedSource alrady set.")
+      if (_namedSource.isDefined) throw new IllegalStateException("NamedSource already set.")
       _namedSource = Option(namedsource)
     }
 

@@ -53,7 +53,7 @@ object RadioType extends SimpleExtractor[String] {
       // there is no 6
       "Kenwood g707" -> 7,
       "Kenwood 271A" -> 8,
-      "Kenwood V71a" -> 9).map { t => SelectOption(t._2, t._1) }
+      "Kenwood V71a" -> 9).map { t: (String, Int) => SelectOption(t._2, t._1) }
 
   override def extractFromInts(itr: Iterator[Int], field: SimpleField): RadioType = {
     val id = itr.next()

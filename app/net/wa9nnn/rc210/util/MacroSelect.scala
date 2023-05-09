@@ -34,9 +34,10 @@ case class MacroSelect(value: MacroKey = KeyFactory.defaultMacroKey) extends Fie
     Row(headerCell = value.toCell)
   }
 
-  override val selectOptions: Seq[SelectOption] = KeyFactory[MacroKey](KeyKind.macroKey).map { macroKey =>
-    SelectOption(macroKey.number, macroKey.toString)
+  override def selectOptions: Seq[SelectOption] = KeyFactory[MacroKey](KeyKind.macroKey).map { macroKey =>
+    SelectOption(macroKey.toString, macroKey.keyWithName)
   }
+
   override val name: String = MacroSelect.name
 
   /**
@@ -50,12 +51,17 @@ case class MacroSelect(value: MacroKey = KeyFactory.defaultMacroKey) extends Fie
     super.toHtmlField(renderMetadata)
   }
 
+  /**
+   *
+   * @param paramValue from html form.
+   * @return a new [[MacroSelect]].
+   */
   override def update(paramValue: String): MacroSelect = {
-    new MacroSelect(KeyFactory(paramValue))
+    new MacroSelect(KeyFactory.macroKey(paramValue.toInt))
   }
 
   def fromParam(param: String): MacroKey =
-    KeyFactory(param)
+    KeyFactory.macroKey(param.toInt)
 
   override def canRunMacro(macroKey: MacroKey): Boolean = value == macroKey
 }
@@ -87,17 +93,13 @@ object MacroSelect extends SimpleExtractor[MacroKey] {
     override def writes(o: MacroSelect): JsValue = JsString(o.value.toString)
   }
 
-  val options: Seq[SelectOption] = KeyFactory[MacroKey](KeyKind.macroKey).map { macroKey =>
-    SelectOption(macroKey.number, macroKey.toString)
-  }
-
   override def extractFromInts(itr: Iterator[Int], field: SimpleField): MacroSelect = {
     MacroSelect(itr.next() + 1)
   }
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[MacroSelect]
 
-  override def fromForm(name: String)(implicit kv: Map[String, String],key: Key): MacroKey = {
+  override def fromForm(name: String)(implicit kv: Map[String, String], key: Key): MacroKey = {
     KeyFactory(formValue(name))
   }
 }

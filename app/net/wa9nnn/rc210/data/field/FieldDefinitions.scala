@@ -24,6 +24,7 @@ import net.wa9nnn.rc210.data.message.MesssageExtractor
 import net.wa9nnn.rc210.data.schedules.Schedule
 import net.wa9nnn.rc210.data.timers.TimerExtractor
 import net.wa9nnn.rc210.key.KeyKind._
+import net.wa9nnn.rc210.ui.EnumSelect
 import net.wa9nnn.rc210.util.MacroSelect
 
 import javax.inject.{Inject, Singleton}

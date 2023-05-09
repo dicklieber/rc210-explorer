@@ -26,24 +26,9 @@ import play.api.libs.json.{JsString, JsValue}
  * An enumeration with behaviour.
  */
 trait FieldSelect[T] extends SimpleFieldValue {
-  val selectOptions: Seq[SelectOption]
+  def selectOptions: Seq[SelectOption]
   val name: String
   val value: T
-
-  /**
-   * This only works with String typw [[FieldSelect]]s.
-   * The only non-String is the [[MacroSelect]], but there the value:T is [[MacroKey]].
-   *
-   * @return
-   */
-  def number: Int = selectOptions.find(selectOption =>
-    if (value.isInstanceOf[String])
-      selectOption.display == value.asInstanceOf[String]
-    else
-      throw new IllegalStateException("THis onlly works for String selects.")
-  )
-    .map(_.id)
-    .getOrElse(1)
 
   override def display: String = value.toString
 
@@ -97,18 +82,7 @@ trait FieldSelect[T] extends SimpleFieldValue {
 }
 
 
-/**
- *
- * @param id       this is used in the application logic not HTML <select><option>
- * @param display  what to show  users and use as value attribute in <option>s
- * @param selected true if this is currently selected.
- */
-case class SelectOption protected(id: Int, display: String, selected: Boolean = false) {
-  def html: String = {
-    val s: String = if (selected) " selected " else " "
-    s"""<option value="$display" $s >$display</option>"""
-  }
-}
+
 
 trait FieldSelectComp {
   val name: String

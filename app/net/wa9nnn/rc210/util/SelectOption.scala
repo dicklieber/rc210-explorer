@@ -17,18 +17,20 @@
 
 package net.wa9nnn.rc210.util
 
-case class Chunk(array: Array[Int]){
-  def size = array.length
-
-  def apply(n: Int) = array(n)
-
-
-  override def toString: String = {
-    new String(array
-      .takeWhile(_!=0)
-      .map(_.toChar)
-    )
+/**
+ *
+ * @param id       this is used in the application logic not HTML <select><option>
+ * @param display  what to show users = <option>s
+ * @param selected true if this is currently selected.
+ */
+case class SelectOption protected(id: String, display: String, selected: Boolean = false) {
+  def html: String = {
+    val s: String = if (selected) " selected " else " "
+    s"""<option value="$id" $s >$display</option>"""
   }
+}
 
-  def iterator:Iterator[Int] = array.iterator
+object SelectOption {
+  def apply(id:Int, display:String):SelectOption = new SelectOption(id.toString, display)
+  def apply(both:String):SelectOption = new SelectOption(both, both)
 }
