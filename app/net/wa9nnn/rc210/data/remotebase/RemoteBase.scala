@@ -1,0 +1,119 @@
+/*
+ * Copyright (C) 2023  Dick Lieber, WA9NNN
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package net.wa9nnn.rc210.data.remotebase
+
+import com.wa9nnn.util.tableui.Row
+import net.wa9nnn.rc210.data.field._
+import net.wa9nnn.rc210.key.KeyFactory.RemoteBaseKey
+import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.util.Chunk
+import play.api.libs.json.{Format, JsValue, Json}
+
+case class RemoteBase(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[RBMemory] = Seq.empty) extends ComplexFieldValue[RemoteBaseKey] {
+  override val key: RemoteBaseKey = KeyFactory.remoteBsaeKey
+  override val fieldName: String = "RemoteBase"
+
+  override def toRow: Row = throw new IllegalStateException("Not used with RemoteBase!")
+
+  override def display: String = fieldName
+
+  /**
+   * Render this value as an RD-210 command string.
+   */
+  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = Seq(
+    s"1*2083${radio.number}",
+    s"1*2084${yaesu.number}",
+  )
+
+  override def toJsonValue: JsValue = Json.toJson(this)
+}
+
+object RemoteBase extends ComplexExtractor[RemoteBaseKey] {
+  /**
+   *
+   * @param memory    source of RC-210 data.
+   * @return what we extracted.
+   */
+  override def extract(memory: Memory): Seq[FieldEntry] = {
+    //    SimpleField(1176, "Radio Type", commonKey, "n*2083 v", RadioType)
+    //    SimpleField(1177, "Yaesu Type", commonKey, "n*2084 v", YaesuType
+    //    SimpleField(3525, "Remote Base Prefix", commonKey, "n*2060v", FieldDtmf) max 5,
+    ////FreqString - 3562-3641	remote base stuff
+    ////InactivityMacro - 1545-1550
+
+    val radio: Radio = Radio(memory(1176))
+    val yaesu: Yaesu = Yaesu(memory(1177))
+    val prefix = memory.stringAt(3525)
+
+    val freqs: Seq[String] = memory.chunks(3562, 8, 10).map((chunk: Chunk) => chunk.toString)
+//    val offsets: Seq[Offset] = memory.sub8(3562, 10).map { Offset(_)}
+    val ctcsss: Seq[Int] = memory.sub8(3642, 10)
+    val ctcsssModes: Seq[CtcssMode] = memory.sub8(3652, 10).map(CtcssMode(_))
+    val modes: Seq[Mode] = memory.sub8(1535, 10).map(Mode(_))
+    val memories: IndexedSeq[RBMemory] = for {
+      i <- 0 until 10
+    } yield {
+      val freqOffset: String = freqs(i)
+      val offset = Offset(freqOffset.last)
+      val freq = freqOffset.dropRight(1)
+      RBMemory(
+        frequency = freq,
+        offset = offset,
+        mode = modes(i),
+        ctcssMode = ctcsssModes(1),
+        ctssCode = ctcsss(i),
+      )
+    }
+
+
+    val remoteBase = RemoteBase(radio, yaesu, prefix, memories)
+    Seq(FieldEntry(this, remoteBase.fieldKey, remoteBase))
+  }
+
+  override def parse(jsValue: JsValue): FieldValue = jsValue.as[RemoteBase]
+
+  override val kind: KeyKind = KeyKind.remoteBaseKey
+
+  override def positions: Seq[FieldOffset] = Seq(
+    FieldOffset(1176, this, "Radio Type"),
+    FieldOffset(1177, this, "Yaesu"),
+    FieldOffset(3525, this, "Remote Base Prefix"),
+    FieldOffset(3562, this, "Frequencies"),
+    FieldOffset(3562, this, "Offset"),
+  )
+
+  /**
+   * for various things e.g. parser name.
+   */
+  override val name: String = "RemoteBase"
+  override val fieldName: String = name
+
+  implicit val fmtRBMemory: Format[RBMemory] = Json.format[RBMemory]
+  implicit val fmtRemoteBase: Format[RemoteBase] = Json.format[RemoteBase]
+}
+
+/**
+ *
+ * @param frequency no decimal point. e.g. 146.52 is "146520"
+ * @param offset
+ * @param mode
+ * @param ctcssMode
+ * @param ctssCode  See appendix B
+ */
+case class RBMemory(frequency: String, offset: Offset, mode: Mode, ctcssMode: CtcssMode, ctssCode: Int)

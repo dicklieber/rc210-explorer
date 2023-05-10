@@ -22,7 +22,7 @@ import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.key.KeyFactory
 import net.wa9nnn.rc210.key.KeyFactory._
 import play.api.data.FormError
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{Format, Json, OFormat}
 
 /**
  * URL formatters.
@@ -59,6 +59,7 @@ object Formatters {
   }
 
   implicit val fmtMacroKey: OFormat[MacroKey] = Json.format[MacroKey]
+  implicit val fmtRemoteBaseKey: Format[RemoteBaseKey] = Json.format[RemoteBaseKey]
   implicit val fmtLogicAlarmKey: OFormat[LogicAlarmKey] = Json.format[LogicAlarmKey]
   implicit val fmtAnalogAlarmKey: OFormat[MeterKey] = Json.format[MeterKey]
   implicit val fmtScheduleKey: OFormat[ScheduleKey] = Json.format[ScheduleKey]

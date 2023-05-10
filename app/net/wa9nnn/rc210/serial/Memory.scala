@@ -55,6 +55,8 @@ class Memory(val data: Array[Int] = Array.empty) {
     value
   }
 
+
+
   def iterator16At(offset: Int): Iterator[Int] =
     new Iterator16(offset)
 

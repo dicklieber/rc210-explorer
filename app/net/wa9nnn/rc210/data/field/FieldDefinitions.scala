@@ -21,6 +21,7 @@ import net.wa9nnn.rc210.data.clock.Clock
 import net.wa9nnn.rc210.data.courtesy.CourtesyExtractor
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.message.MesssageExtractor
+import net.wa9nnn.rc210.data.remotebase.RemoteBase
 import net.wa9nnn.rc210.data.schedules.Schedule
 import net.wa9nnn.rc210.data.timers.TimerExtractor
 import net.wa9nnn.rc210.key.KeyKind._
@@ -86,8 +87,8 @@ class FieldDefinitions @Inject()() {
     //P1, P2, P3INITIALID2 - 484-549
     //P1, P2, P3INITIALID3 - 550-615
 
-    SimpleField(1176, "Radio Type", commonKey, "n*2083 v", RadioType),
-    SimpleField(1176, "Yaesu Type", commonKey, "n*2084 v", YaesuType),
+//    SimpleField(1176, "Radio Type", commonKey, "n*2083 v", RadioType),
+//    SimpleField(1176, "Yaesu Type", commonKey, "n*2084 v", YaesuType),
     SimpleField(1177, "Fan Timeout", commonKey, "n*1004v", FieldInt) max 255 units "Minutes",
     //DTMFRegenPrefix1 - 1179-1185 need  special handling. part of IRLP stuff.
     SimpleField(1187, "Fan Select", commonKey, "n*2119b", FieldBoolean),
@@ -108,7 +109,7 @@ class FieldDefinitions @Inject()() {
     SimpleField(3515, "Speak Pending ID Timer", portKey, "n*1019v", FieldInt) max 600 units "seconds",
     SimpleField(3521, "Enable Speech ID", portKey, "n*8008b", FieldBoolean),
     SimpleField(3524, "Guest Macro Enable", portKey, "n280b", FieldBoolean),
-    SimpleField(3525, "Remote Base Prefix", commonKey, "n*2060v", FieldDtmf) max 5,
+
     SimpleField(3531, "Lock Code", commonKey, "n*9010v", FieldDtmf) max 4,
     SimpleField(3536, "Terminator", commonKey, "1*9020v", FieldDtmf) max 1,
     //ClockCorrection - 3538-3539 Humm, only two bytes but doc shows:  Docs shows this as *5105! Not *5101! In any event needs some special handling.
@@ -138,7 +139,8 @@ class FieldDefinitions @Inject()() {
     CourtesyExtractor,
     TimerExtractor,
     MesssageExtractor,
-    Clock
+    Clock,
+    RemoteBase
   )
 
   val allFields:Seq[FieldDefinition] = simpleFields ++ complexFd

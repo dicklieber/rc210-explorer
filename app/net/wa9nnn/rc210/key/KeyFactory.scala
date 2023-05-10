@@ -29,6 +29,7 @@ import play.twirl.api.Html
  * Instances can only be obtained by calling methods on the object.
  */
 object KeyFactory {
+  def remoteBsaeKey: RemoteBaseKey = RemoteBaseKey()
 
 
   private val keys: Seq[Key] = {
@@ -50,6 +51,7 @@ object KeyFactory {
           case KeyKind.scheduleKey => ScheduleKey(number)
           case KeyKind.timerKey => TimerKey(number)
           case KeyKind.clockKey => ClockKey(number)
+          case KeyKind.`remoteBaseKey` => RemoteBaseKey(number)
         }
       }
     }
@@ -220,4 +222,5 @@ object KeyFactory {
 
   case class TimerKey(override val number: Int = 1) extends Key(KeyKind.timerKey, number)
   case class ClockKey(override val number: Int = 1) extends Key(KeyKind.clockKey, number)
+  case class RemoteBaseKey(override val number: Int = 1) extends Key(KeyKind.remoteBaseKey, number)
 }

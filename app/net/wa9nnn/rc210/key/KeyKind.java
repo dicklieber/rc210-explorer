@@ -31,7 +31,8 @@ public enum KeyKind {
     portKey(3),
     scheduleKey(40),
     timerKey(6),
-    clockKey(1);
+    clockKey(1),
+    remoteBaseKey(1);
     private final int MaxN;
     private boolean nameable = true;
 
