@@ -39,6 +39,7 @@ case class RemoteBase(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = Seq(
     s"1*2083${radio.number}",
     s"1*2084${yaesu.number}",
+    s"1*2060$prefix"
   )
 
   override def toJsonValue: JsValue = Json.toJson(this)
