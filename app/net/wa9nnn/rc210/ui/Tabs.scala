@@ -43,7 +43,7 @@ object Tabs {
   val rc210Tab: Tab = Tab("RC-210", routes.IOController.listSerialPorts().url, "RC-210 Download.")
   val fileUpload: Tab = Tab("Upload", routes.DataStoreController.upload.url, "Upload a saved JSON file.")
   val changes: Tab = Tab("Changes", routes.CandidateController.index().url, "Pending changes that need to be sent to the RC-210.")
-
+  val remoteBase: Tab = Tab("Remote Base", routes.RemoteBaseController.index.url, "Manabge Remote Base radio.")
 
   val tabs: Seq[Tab] = Seq(
     flowTab,
@@ -57,6 +57,7 @@ object Tabs {
     portsTab,
     schedulesTab,
     timersTab,
+    remoteBase,
     rc210Tab,
     changes,
     //    Tab(KeyKind.dtmfMacroKey),
@@ -70,6 +71,8 @@ object Tabs {
 
 
   type TabName = String
+
+
 }
 
 case class Tab(name: TabName, url: String, tooltip: String)

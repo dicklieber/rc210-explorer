@@ -1,0 +1,58 @@
+@import net.wa9nnn.rc210.data.remotebase.RemoteBase
+@import views.html.helper.{FieldConstructor, form}
+@import net.wa9nnn.rc210.data.remotebase.Radio
+@import net.wa9nnn.rc210.data.remotebase.Yaesu
+@import net.wa9nnn.rc210.data.remotebase.Offset
+@import net.wa9nnn.rc210.data.remotebase.Mode
+@import net.wa9nnn.rc210.data.remotebase.CtcssMode
+@import views.html.helper._
+@import net.wa9nnn.rc210.ui.Tabs
+@(remoteBaseForm: Form[RemoteBase])(implicit messages: MessagesProvider)
+@implicitField = @{
+    FieldConstructor(views.html.rc2input.f)
+}
+@tabbedmain(Tabs.remoteBase) {
+
+    @form(action = routes.RemoteBaseController.save()) {
+        <table>
+            <tr>
+                <td>Radio:</td>
+                <td>@select(remoteBaseForm("radio"), Radio.options)</td>
+            </tr>
+            <tr>
+                <td>Yaesu:</td>
+                <td>@select(remoteBaseForm("yaesu"), Yaesu.options)</td>
+            </tr>
+            <tr>
+                <td>Prefix:</td>
+                <td>@inputText(remoteBaseForm("prefix"))</td>
+            </tr>
+        </table>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Number</th>
+                    <th>Frequency</th>
+                    <th>Offset</th>
+                    <th>Mode</th>
+                    <th>CTCSS Mode</th>
+                    <th>CTCSS Code</th>
+                </tr>
+            </thead>
+            @repeatWithIndex(remoteBaseForm("memories"), min = 1) { (memory, index) =>
+                <tr>
+                    <td>@{
+                        index + 1
+                    }</td>
+                    <td>@inputText(memory("frequency"))</td>
+                    <td>@select(memory("offset"), Offset.options)</td>
+                    <td>@select(memory("mode"), Mode.options)</td>
+                    <td>@select(memory("ctcssMode"), CtcssMode.options)</td>
+                    <td>@inputText(memory("ctssCode"))</td>
+                </tr>
+            }
+        </table>
+        <input type="submit" class="btn btn-primary" name="save" value="Save">
+    }
+}

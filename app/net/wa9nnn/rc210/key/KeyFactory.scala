@@ -29,7 +29,7 @@ import play.twirl.api.Html
  * Instances can only be obtained by calling methods on the object.
  */
 object KeyFactory {
-  def remoteBsaeKey: RemoteBaseKey = RemoteBaseKey()
+  def remoteBaseKey: RemoteBaseKey = RemoteBaseKey()
 
 
   private val keys: Seq[Key] = {

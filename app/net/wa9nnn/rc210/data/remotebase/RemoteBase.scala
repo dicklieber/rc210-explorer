@@ -26,7 +26,7 @@ import net.wa9nnn.rc210.util.Chunk
 import play.api.libs.json.{Format, JsValue, Json}
 
 case class RemoteBase(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[RBMemory] = Seq.empty) extends ComplexFieldValue[RemoteBaseKey] {
-  override val key: RemoteBaseKey = KeyFactory.remoteBsaeKey
+  override val key: RemoteBaseKey = KeyFactory.remoteBaseKey
   override val fieldName: String = "RemoteBase"
 
   override def toRow: Row = throw new IllegalStateException("Not used with RemoteBase!")
