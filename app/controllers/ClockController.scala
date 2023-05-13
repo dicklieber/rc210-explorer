@@ -61,7 +61,7 @@ class ClockController @Inject()(dataStore: DataStore) extends MessagesInjectedCo
 
   def save(): Action[AnyContent] = Action { implicit request =>
 
-    clockForm.bindFromRequest.fold(
+    clockForm.bindFromRequest().fold(
       formWithErrors => {
         // binding failure, you retrieve the form containing errors:
         BadRequest(views.html.clock(formWithErrors))

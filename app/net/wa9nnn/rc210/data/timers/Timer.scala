@@ -21,10 +21,10 @@ import com.wa9nnn.util.tableui.{Cell, Row}
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldEntryBase, FieldInt, RenderMetadata}
 import net.wa9nnn.rc210.data.named.NamedSource
 import net.wa9nnn.rc210.key.KeyFactory.TimerKey
-import net.wa9nnn.rc210.util.MacroSelect
+import net.wa9nnn.rc210.util.MacroSelectField
 import play.api.libs.json.{JsValue, Json, OFormat}
 
-case class Timer(key: TimerKey, seconds: FieldInt, macroSelect: MacroSelect) extends ComplexFieldValue[TimerKey] {
+case class Timer(key: TimerKey, seconds: FieldInt, macroSelect: MacroSelectField) extends ComplexFieldValue[TimerKey] {
   override val fieldName: String = "Timer"
   implicit val k: TimerKey = key
 

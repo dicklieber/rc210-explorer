@@ -26,7 +26,7 @@ import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.data.timers.Timer
 import net.wa9nnn.rc210.key.KeyFactory.{Key, MacroKey, TimerKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
-import net.wa9nnn.rc210.util.MacroSelect
+import net.wa9nnn.rc210.util.MacroSelectField
 import play.api.mvc._
 
 import javax.inject._
@@ -66,7 +66,7 @@ class TimerEditorController @Inject()(val controllerComponents: ControllerCompon
           namedKeyBuilder += NamedKey(key, name)
           val seconds = FieldInt(valueMap("seconds").toInt)
           val macrotoRun: MacroKey = KeyFactory.apply(valueMap("macro"))
-          val macroSelect = MacroSelect(macrotoRun)
+          val macroSelect = MacroSelectField(macrotoRun)
           val timer = Timer(key.asInstanceOf[TimerKey] , seconds = seconds, macroSelect = macroSelect)
           UpdateCandidate(timer.fieldKey, Right(timer))
         }.toSeq

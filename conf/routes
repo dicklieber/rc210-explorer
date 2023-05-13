@@ -9,7 +9,7 @@ GET         /timers                                    controllers.TimerEditorCo
 POST        /courtesytones/save                        controllers.CourtesyToneEditorController.save()
 GET         /courtesytones                             controllers.CourtesyToneEditorController.index()
 POST        /meter/save                                controllers.MeterEditorController.save()
-GET         /meter                                     controllers.MeterEditorController.index()
+GET         /meter                                     controllers.MeterEditorController.index
 POST        /logic/save                                controllers.LogicAlarmEditorController.save()
 GET         /logic                                     controllers.LogicAlarmEditorController.index()
 POST        /common/save                               controllers.CommonEditorController.save()

@@ -45,13 +45,13 @@ object KeyFactory {
           case KeyKind.courtesyToneKey => CourtesyToneKey(number)
           case KeyKind.functionKey => FunctionKey(number)
           case KeyKind.macroKey => MacroKey(number)
-          case KeyKind.`messageKey` => MessageKey(number)
+          case KeyKind.messageKey => MessageKey(number)
           case KeyKind.commonKey => CommonKey()
           case KeyKind.portKey => PortKey(number)
           case KeyKind.scheduleKey => ScheduleKey(number)
           case KeyKind.timerKey => TimerKey(number)
           case KeyKind.clockKey => ClockKey(number)
-          case KeyKind.`remoteBaseKey` => RemoteBaseKey(number)
+          case KeyKind.remoteBaseKey => RemoteBaseKey(number)
         }
       }
     }
@@ -104,7 +104,7 @@ object KeyFactory {
 
   def logicAlarmKey(number: Int): LogicAlarmKey = apply(KeyKind.logicAlarmKey, number)
 
-  def meterKey(number: Int): MeterKey = apply(KeyKind.meterKey, number)
+  def meterKey(): MeterKey = apply(KeyKind.meterKey, 1)
 
   def messageKey(number: Int): MessageKey = apply(KeyKind.messageKey, number)
   def scheduleKey(number: Int): ScheduleKey = apply(KeyKind.scheduleKey, number)

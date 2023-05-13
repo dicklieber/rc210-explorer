@@ -37,8 +37,8 @@ case class RemoteBase(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[
    * Render this value as an RD-210 command string.
    */
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = Seq(
-    s"1*2083${radio.number}",
-    s"1*2084${yaesu.number}",
+    s"1*2083${radio.value}",
+    s"1*2084${yaesu.value}",
     s"1*2060$prefix"
   )
 
@@ -58,20 +58,20 @@ object RemoteBase extends ComplexExtractor[RemoteBaseKey] {
     ////FreqString - 3562-3641	remote base stuff
     ////InactivityMacro - 1545-1550
 
-    val radio: Radio = Radio(memory(1176))
-    val yaesu: Yaesu = Yaesu(memory(1177))
+    val radio: Radio = Radio.lookup(memory(1176))
+    val yaesu: Yaesu = Yaesu.lookup(memory(1177))
     val prefix = memory.stringAt(3525)
 
     val freqs: Seq[String] = memory.chunks(3562, 8, 10).map((chunk: Chunk) => chunk.toString)
 //    val offsets: Seq[Offset] = memory.sub8(3562, 10).map { Offset(_)}
     val ctcsss: Seq[Int] = memory.sub8(3642, 10)
-    val ctcsssModes: Seq[CtcssMode] = memory.sub8(3652, 10).map(CtcssMode(_))
-    val modes: Seq[Mode] = memory.sub8(1535, 10).map(Mode(_))
+    val ctcsssModes: Seq[CtcssMode] = memory.sub8(3652, 10).map(CtcssMode.lookup)
+    val modes: Seq[Mode] = memory.sub8(1535, 10).map(Mode.lookup)
     val memories: IndexedSeq[RBMemory] = for {
       i <- 0 until 10
     } yield {
       val freqOffset: String = freqs(i)
-      val offset = Offset(freqOffset.last)
+      val offset = Offset.lookup(freqOffset.last)
       val freq = freqOffset.dropRight(1)
       RBMemory(
         frequency = freq,

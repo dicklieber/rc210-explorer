@@ -2,12 +2,12 @@
     display: block;
 }
 
-.valueCell input{
+.valueCell input {
     text-align: right;
     width: 50px;
 }
 
-.valueCell .units{
+.valueCell .units {
     font-size: small;
     /*color: darkgrey;*/
     font-weight: lighter;
@@ -68,6 +68,12 @@
     border: 1px solid black;
 }
 
+table th {
+    text-align: center;
+    vertical-align: top;
+    background: #F0F0F0;
+}
+
 .functionsTable {
     border-collapse: collapse;
     border: 1px;
@@ -125,6 +131,7 @@ fieldset {
 .cornerCell {
     text-align: right;
 }
+
 body {
     /*background: #f5f5f5;*/
     color: #555;
@@ -195,15 +202,18 @@ body {
     border-collapse: separate !important;
     border-spacing: 0;
 }
+
 .flowTriggersCell {
     border: blueviolet;
     background: lightskyblue;
 }
+
 .flowMarcoCell {
     border: #cc0000;
     background: lightpink;
 }
-.flowFunctionsCell{
+
+.flowFunctionsCell {
     border: #cc0000;
     background: lightgreen;
 }
@@ -228,6 +238,7 @@ input {
     border-color: #cc0000;
     border: 3px;
 }
+
 .keyName input {
     width: auto;
 }

@@ -25,14 +25,19 @@ case class DSTPoint(monthOfYearDST: MonthOfYearDST, occurance: Occurrence){
 
 object DSTPoint {
   def apply(s: String): DSTPoint = {
-    val month: MonthOfYearDST = {
-      val i: Int = s.take(2).toInt
-      MonthOfYearDST.values()(i)
+    try {
+      val month: MonthOfYearDST = {
+        val i: Int = s.take(2).toInt
+        MonthOfYearDST.values()(i)
+      }
+      val occurance: Occurrence = {
+        val i = s.takeRight(1).toInt - 1
+        Occurrence.values()(i)
+      }
+      new DSTPoint(month, occurance)
+    } catch {
+      case e:Exception =>
+        new DSTPoint(MonthOfYearDST.values().head, Occurrence.values().head)
     }
-    val occurance: Occurrence = {
-      val i = s.takeRight(1).toInt - 1
-      Occurrence.values()(i)
-    }
-    new DSTPoint(month, occurance)
   }
 }

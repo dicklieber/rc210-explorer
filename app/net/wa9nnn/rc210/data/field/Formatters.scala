@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.data.field
 
+import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.Dtmf
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.key.KeyFactory
@@ -33,10 +34,20 @@ object Formatters {
   import play.api.data.format.Formats._
   import play.api.data.format.Formatter
 
-  implicit object MacroKeyFormatter extends Formatter[MacroKey] {
+  implicit object MacroKeyFormatter extends Formatter[MacroKey] with LazyLogging {
     override val format: Option[(String, Nil.type)] = Some(("format.macrokey", Nil))
 
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], MacroKey] = parsing(s => KeyFactory(s), "error.url", Nil)(key, data)
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], MacroKey] = {
+      parsing(s => {
+        try {
+          KeyFactory(s).asInstanceOf[MacroKey]
+        } catch {
+          case e:Exception =>
+            logger.error(s"Parsing $s to MacroKey!")
+            throw e
+        }
+      }, "error.macroKey", Nil)(key, data)
+    }
 
     override def unbind(key: String, value: MacroKey): Map[String, String] = Map(key -> value.toString)
   }
@@ -61,7 +72,7 @@ object Formatters {
   implicit val fmtMacroKey: OFormat[MacroKey] = Json.format[MacroKey]
   implicit val fmtRemoteBaseKey: Format[RemoteBaseKey] = Json.format[RemoteBaseKey]
   implicit val fmtLogicAlarmKey: OFormat[LogicAlarmKey] = Json.format[LogicAlarmKey]
-  implicit val fmtAnalogAlarmKey: OFormat[MeterKey] = Json.format[MeterKey]
+  implicit val fmtMeterKey: OFormat[MeterKey] = Json.format[MeterKey]
   implicit val fmtScheduleKey: OFormat[ScheduleKey] = Json.format[ScheduleKey]
   implicit val fmtCommonKey: OFormat[CommonKey] = Json.format[CommonKey]
   implicit val fmtFunctionKey: OFormat[FunctionKey] = Json.format[FunctionKey]

@@ -21,12 +21,13 @@ import net.wa9nnn.rc210.data.clock.Clock
 import net.wa9nnn.rc210.data.courtesy.CourtesyExtractor
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.message.MesssageExtractor
+import net.wa9nnn.rc210.data.meter.Meters
 import net.wa9nnn.rc210.data.remotebase.RemoteBase
 import net.wa9nnn.rc210.data.schedules.Schedule
 import net.wa9nnn.rc210.data.timers.TimerExtractor
 import net.wa9nnn.rc210.key.KeyKind._
 import net.wa9nnn.rc210.ui.EnumSelect
-import net.wa9nnn.rc210.util.MacroSelect
+import net.wa9nnn.rc210.util.MacroSelectField
 
 import javax.inject.{Inject, Singleton}
 @Singleton
@@ -69,8 +70,8 @@ class FieldDefinitions @Inject()() {
     SimpleField(160, "Timeout Timer", portKey, "n*1001v", FieldInt) max 32767 units "seconds",
     SimpleField(166, "DTMF Mute", portKey, "n121b", FieldBoolean),
     SimpleField(169, "Enable", logicAlarmKey, "1n91b", FieldBoolean),
-    SimpleField(174, "Macro Low", logicAlarmKey, "1*2101nv", MacroSelect),
-    SimpleField(179, "Macro High", logicAlarmKey, "1*2102nv", MacroSelect),
+    SimpleField(174, "Macro Low", logicAlarmKey, "1*2101nv", MacroSelectField),
+    SimpleField(179, "Macro High", logicAlarmKey, "1*2102nv", MacroSelectField),
     // needs to be complex rc2input   SimpleField(184, "Vref", meterKey, "*2065 n v", UiNumber(255, "todo three numbers?")), //*2065 4 9 6
     //###########################################################################################  //todo
     ///For meters, we gather all the parameters needed, then assemble them to actually store
@@ -79,8 +80,8 @@ class FieldDefinitions @Inject()() {
     //MeterFaceName - 186-201
     //    *2064 C * M* X1* Y1* X2* Y2* C= Channel 1 to 8 M=Meter Type 0 to 6 X1, Y1, X2, Y2 represent two calibration points. There must be 6 parameters entered to define a meter face, each value ending with *.
 
-    SimpleField(322, "Rx Rcv Macro Active", portKey, "n*2113 1 v", MacroSelect),
-    SimpleField(325, "Rx Rcv Macro Low", portKey, "n*2113  v", MacroSelect),
+    SimpleField(322, "Rx Rcv Macro Active", portKey, "n*2113 1 v", MacroSelectField),
+    SimpleField(325, "Rx Rcv Macro Low", portKey, "n*2113  v", MacroSelectField),
     //P1, P2, P3CWDI1 - 328-357
     //P1, P2, P3CWD2 - 358-402
     //P1, P2, P3INITIALID1 - 403-483
@@ -114,9 +115,9 @@ class FieldDefinitions @Inject()() {
     SimpleField(3536, "Terminator", commonKey, "1*9020v", FieldDtmf) max 1,
     //ClockCorrection - 3538-3539 Humm, only two bytes but doc shows:  Docs shows this as *5105! Not *5101! In any event needs some special handling.
     SimpleField(3540, "Say Year", commonKey, "n*5102b", FieldBoolean),
-    SimpleField(3541, "P1 Tail Message", portKey, "n*21101v", MacroSelect),
-    SimpleField(3544, "P2 Tail Message", portKey, "n*21102v", MacroSelect),
-    SimpleField(3547, "P3 Tail Message", portKey, "n*21103v", MacroSelect),
+    SimpleField(3541, "P1 Tail Message", portKey, "n*21101v", MacroSelectField),
+    SimpleField(3544, "P2 Tail Message", portKey, "n*21102v", MacroSelectField),
+    SimpleField(3547, "P3 Tail Message", portKey, "n*21103v", MacroSelectField),
     SimpleField(3550, "Tail Message Number", portKey, "n*2111v", FieldInt),
     SimpleField(3553, "Tail Timer", portKey, "n*1020v", FieldInt) max 999 units "tails" tooltip "0 disables",
     SimpleField(3559, "Tail Counter", portKey, "n*2112v", FieldInt) max 999 units "tails" tooltip "0 disables",
@@ -140,7 +141,8 @@ class FieldDefinitions @Inject()() {
     TimerExtractor,
     MesssageExtractor,
     Clock,
-    RemoteBase
+    RemoteBase,
+    Meters
   )
 
   val allFields:Seq[FieldDefinition] = simpleFields ++ complexFd

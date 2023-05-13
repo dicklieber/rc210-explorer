@@ -11,7 +11,7 @@ import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.EnumSelect
-import net.wa9nnn.rc210.util.MacroSelect
+import net.wa9nnn.rc210.util.MacroSelectField
 import play.api.libs.json.{Format, JsValue, Json}
 
 import java.time.LocalTime
@@ -58,7 +58,7 @@ case class Schedule(override val key: ScheduleKey,
       Cell.rawHtml(html)
     }
     val macroToRun: Cell = {
-      MacroSelect(macroKey).toCell(RMD(name = "macro"))
+      MacroSelectField(macroKey).toCell(RMD(name = "macro"))
     }
 
     Row(

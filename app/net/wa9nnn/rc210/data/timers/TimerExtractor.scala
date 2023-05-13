@@ -23,7 +23,7 @@ import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldEntry, FieldInt, Fiel
 import net.wa9nnn.rc210.key.KeyFactory.TimerKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.util.MacroSelect
+import net.wa9nnn.rc210.util.MacroSelectField
 import play.api.libs.json.{Format, JsValue, Json}
 
 //noinspection ZeroIndexToHead
@@ -55,7 +55,7 @@ object TimerExtractor extends ComplexExtractor[TimerKey] with LazyLogging {
     } yield {
       val key: TimerKey = KeyFactory(KeyKind.timerKey, index + 1)
       val fieldKey = FieldKey("Timer", key)
-      val macroSelect: MacroSelect = MacroSelect(macroInts.next() + 1)
+      val macroSelect: MacroSelectField = MacroSelectField(macroInts.next() + 1)
       FieldEntry(this, fieldKey, Timer(key, FieldInt(seconds.next()), macroSelect))
     })
     r

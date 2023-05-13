@@ -18,72 +18,81 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
-import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.datastore.{DataStore, UpdateCandidate, UpdateData}
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.data.named.NamedKey
-import net.wa9nnn.rc210.key.KeyFactory.MeterKey
+import net.wa9nnn.rc210.data.field.Formatters._
+import net.wa9nnn.rc210.data.meter._
+import net.wa9nnn.rc210.key.KeyFactory.MacroKey
+import net.wa9nnn.rc210.key.KeyFormats._
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.util.MacroSelectField
+import play.api.data.Forms._
+import play.api.data.{Form, Mapping}
+import play.api.mvc.{MessagesInjectedController, _}
 import play.api.mvc._
 
 import javax.inject._
 
-class MeterEditorController @Inject()(val controllerComponents: ControllerComponents,
-                                      dataStore: DataStore
-                                     )
-  extends BaseController with LazyLogging {
+class MeterEditorController @Inject()(dataStore: DataStore) extends MessagesInjectedController with LazyLogging {
 
 
-  def index(): Action[AnyContent] = Action {
-    implicit request: Request[AnyContent] =>
-      val meterFields: Seq[FieldEntry] = dataStore(KeyKind.meterKey)
-      val map: Map[FieldKey, FieldEntry] = meterFields
-        .map(fieldEntry => fieldEntry.fieldKey -> fieldEntry).
-        toMap
-      val fieldNames: Seq[String] = meterFields.foldLeft(Set.empty[String]) { case (set: Set[String], fieldEntry) =>
-        set + fieldEntry.fieldKey.fieldName
-      }.toSeq
-        .sorted
+  val alarmMapping: Mapping[MeterAlarm] =
+    mapping(
+      "name" -> text,
+      "meterNumber" -> number,
+      "alarmType" -> of[AlarmType],
+      "tripPoint" -> default(number, 0  ),
+      "macroKey" -> of[MacroKey],
+    )(MeterAlarm.apply)(MeterAlarm.unapply)
 
-      val rows: Seq[Row] = for {
-        fieldName <- fieldNames
-      } yield {
-        val cells: Seq[Cell] = for {
-          number <- 1 to KeyKind.meterKey.maxN()
-        } yield {
-          map(FieldKey(fieldName, KeyFactory(KeyKind.meterKey, number))).toCell
-        }
-        Row(fieldName, cells: _*)
-      }
 
-      val colHeaders: Seq[Cell] = for {
-        alarmKey <- KeyFactory[MeterKey](KeyKind.meterKey)
-      } yield {
-        alarmKey.namedCell()
-      }
-      val header = Header(s"Alarms (${rows.length} values)", "Field" +: colHeaders: _*)
-      val table = Table(header, rows)
+  val voltToReadingMapping: Mapping[VoltToReading] =
+    mapping(
+      "hundredthVolt" -> number,
+      "reading" -> number,
+    )(VoltToReading.apply)(VoltToReading.unapply)
 
-      Ok(views.html.ports(table))
+  val meterMapping: Mapping[Meter] =
+    mapping(
+      "name" -> text,
+      "faceName" -> of[MeterFaceName],
+      "low" -> voltToReadingMapping,
+      "high" -> voltToReadingMapping,
+    )(Meter.apply)(Meter.unapply)
+
+
+  val metersForm: Form[Meters] = Form[Meters](
+    mapping(
+      "referenceVoltage" -> number,
+      "meters" -> seq(meterMapping),
+      "alarms" -> seq(alarmMapping),
+    )(Meters.apply)(Meters.unapply)
+  )
+
+  def index: Action[AnyContent] = Action {
+    implicit request: MessagesRequest[AnyContent] =>
+      val fieldKey = Meters.fieldKey(KeyFactory.meterKey())
+      val fieldEntry: FieldEntry = dataStore(fieldKey).get
+      val meters: Meters = fieldEntry.fieldValue.asInstanceOf[Meters]
+
+      val filledInForm = metersForm.fill(meters)
+
+      Ok(views.html.meters(filledInForm))
   }
 
   def save(): Action[AnyContent] = Action {
-    implicit request: Request[AnyContent] =>
-      val namedKeyBuilder = Seq.newBuilder[NamedKey]
-      val kv: Map[String, String] = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }.filterNot(_._1 == "save")
+    implicit request =>
 
-      val r: Seq[UpdateCandidate] = (kv.flatMap { case (name, formValue: String) =>
-        val fieldKey = FieldKey.fromParam(name)
-        if (fieldKey.fieldName == "name") {
-          namedKeyBuilder += NamedKey(fieldKey.key, formValue)
-          Seq.empty
-        } else
-          Seq(UpdateCandidate(fieldKey, Left(formValue)))
-      }.toSeq)
 
-      dataStore.update(UpdateData(r, namedKeyBuilder.result()))
-
-      Redirect(routes.MeterEditorController.index())
+      metersForm.bindFromRequest.fold(
+        formWithErrors => {
+          BadRequest(views.html.meters(formWithErrors))
+        },
+        meters => {
+          val updateCandidate = UpdateCandidate(meters)
+          dataStore.update(UpdateData(Seq(updateCandidate)))
+          Redirect(routes.MeterEditorController.index)
+        }
+      )
   }
 }
