@@ -8,137 +8,91 @@
 @import net.wa9nnn.rc210.util.MacroSelectField
 @import net.wa9nnn.rc210.util.MacroSelect
 @(metersForm: Form[Meters])(implicit messages: MessagesProvider)
-@implicitField = @{
-    FieldConstructor(views.html.rc2input.f)
-}
+    @implicitField = @{
+        FieldConstructor(views.html.rc2input.f)
+    }
 
-@tabbedmain(Tabs.metersTab) {
-    <div >
-@*    <div class="container">*@
-    @form(action = routes.MeterEditorController.save()) {
+    @tabbedmain(Tabs.metersTab) {
+        <div >
+            @* <div class="container">*@
+            @form(action = routes.MeterEditorController.save()) {
 
-        referenceVoltage: @inputText(metersForm("referenceVoltage"))
+                referenceVoltage: @inputText(metersForm("referenceVoltage"))
+                @* <table class=" rc210-table">*@
+                <table class="table table-bordered table-sm  w-auto rc210-table">
 
-@*        <table class=" rc210-table">*@
-        <table class="table table-bordered table-sm  w-auto rc210-table">
+                    <thead>
+                        <tr class="table-secondary">
+                            <th colspan="7">Meter Channels</th>
+                        </tr>
+                        <tr class="table-secondary">
+                            <th rowspan="2">Meter</th>
+                            <th rowspan="2">Name</th>
+                            <th rowspan="2">Face</th>
+                            <th colspan="2">Low Calibration</th>
+                            <th colspan="2">High Calibration</th>
+                        </tr>
+                        <tr class="table-secondary">
+                            <th>Hundreths/Volt</th>
+                            <th>Reading</th>
+                            <th>Hundreths/Volt</th>
+                            <th>Reading</th>
+                        </tr>
+                    </thead>
 
-            <thead>
-                <tr class="table-secondary">
-                    <th colspan="7">Meter Channels</th>
-                </tr>
-                <tr class="table-secondary">
-                    <th rowspan="2">Meter</th>
-                    <th rowspan="2">Name</th>
-                    <th rowspan="2">Face</th>
-                    <th colspan="2">Low Calibration</th>
-                    <th colspan="2">High Calibration</th>
-                </tr>
-                <tr class="table-secondary">
-                    <th>Hundreths/Volt</th>
-                    <th>Reading</th>
-                    <th>Hundreths/Volt</th>
-                    <th>Reading</th>
-                </tr>
-            </thead>
+                    <tbody>
+                    @repeatWithIndex(metersForm("meters"), min = 1) { (meter, index) =>
+                        <tr>
+                            <td>@{
+                                index + 1
+                            }</td>
+                            <td>@inputText(meter("name"))</td>
+                            @* <td>@inputText(meter("name"), Symbol("class") -> "nameField")</td>*@
+                            <td>@select(meter("faceName"), MeterFaceName.options)</td>
+                            <td>@inputText(meter("low.hundredthVolt"))</td>
+                            <td>@inputText(meter("low.reading"))</td>
+                            <td>@inputText(meter("high.hundredthVolt"))</td>
+                            <td>@inputText(meter("high.reading"))</td>
+                        </tr>
+                    }
 
-            <tbody>
-            @repeatWithIndex(metersForm("meters"), min = 1) { (meter, index) =>
-                <tr>
-                    <td>@{index+1}</td>
-                    <td>@inputText(meter("name"))</td>
-@*                    <td>@inputText(meter("name"), Symbol("class") -> "nameField")</td>*@
-                    <td>@select(meter("faceName"), MeterFaceName.options)</td>
-                    <td>@inputText(meter("low.hundredthVolt"))</td>
-                    <td>@inputText(meter("low.reading"))</td>
-                    <td>@inputText(meter("high.hundredthVolt"))</td>
-                    <td>@inputText(meter("high.reading"))</td>
-                </tr>
-            }
+                    </tbody>
+                </table>
+                <table class="table table-bordered table-sm  w-auto rc210-table">
+                    <thead>
+                        <tr class="table-secondary">
+                            <th colspan="6">Meter  Alarms</th>
+                        </tr>
+                        <tr class="table-secondary">
+                            <th>Alarm</th>
+                            <th>Name</th>
+                            <th>Meter</th>
+                            <th>Type</th>
+                            <th>Trip Point</th>
+                            <th>Macro</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @repeatWithIndex(metersForm("alarms"), min = 1) { (alarm, index) =>
+                        <tr>
+                            <td>@{
+                                index + 1
+                            }</td>
+                            <td>@inputText(alarm("name"))</td>
+                            <td>@select(alarm("meterNumber"), for(n <- 1 to 8) yield {
+                                n.toString -> n.toString
+                            })</td>
+                            <td>@select(alarm("alarmType"), AlarmType.options)</td>
+                            <td>@inputText(alarm("tripPoint")) </td>
+                            <td>@select(alarm("macroKey"), MacroSelect.options)</td>
+                        </tr>
+                    }
 
-            </tbody>
-        </table>
-        <table class="table table-bordered table-sm  w-auto rc210-table">
-            <thead>
-                <tr class="table-secondary">
-                    <th colspan="6">Meter  Alarms</th>
-                </tr>
-                <tr class="table-secondary">
-                    <th>Alarm</th>
-                    <th>Name</th>
-                    <th>Meter</th>
-                    <th>Type</th>
-                    <th>Trip Point</th>
-                    <th>Macro</th>
-                </tr>
-            </thead>
-            <tbody>
-            @repeatWithIndex(metersForm("alarms"), min = 1) { (alarm, index) =>
-                <tr>
-                    <td>@{index+1}</td>
-                    <td>@inputText(alarm("name"))</td>
-                    <td>@select(alarm("meterNumber"), for(n <- 1 to 8)yield{ n.toString -> n.toString})</td>
-                    <td>@select(alarm("alarmType"), AlarmType.options)</td>
-                    <td>@inputText(alarm("tripPoint")) </td>
-                    <td>@select(alarm("macroKey"), MacroSelect.options)</td>
-                </tr>
-            }
+                    </tbody>
+                </table>
+                <input type="submit" class="btn btn-primary" name="save" value="Save">
 
-            </tbody>
-        </table>
-        <input type="submit" class="btn btn-primary" name="save" value="Save">
-        @*
-        <table class="table table-bordered table-sm">
-        <tr>
-        <td class="text-end">Say 24 Hour</td>
-        <td>
-        @helper.checkbox(clockForm("say24Hours"))
-        </td>
-        </tr>
-        <tr>
-        <td class="text-end">Enable DST</td>
-        <td>
-        @helper.checkbox(clockForm("enableDST"))
-        </td>
-        </tr>
-        <tr>
-        <td class="text-end">DST Schedule</td>
-        <td>
-        <table>
-        <tr>
-        <td>Starts on the </td>
-        <td>@helper.select(clockForm("startDST.occurrence"),e2o[Occurrence])</td>
-        <td rowspan="2"> Sunday of</td>
-        <td>@helper.select(clockForm("startDST.month"), e2o[MonthOfYearDST])</td>
-        <td rowspan="2">
-        at
-        </td>
-        <td rowspan="2">
-        @helper.inputText(clockForm("hourDST"))
-        </td>
-        <td rowspan="2">
-        Hours
-        </td>
-        </tr>
-        <tr>
-        <td>Ends on the </td>
-        <td>@helper.select(clockForm("endDST.occurrence"),e2o[Occurrence])</td>
-        <td>@helper.select(clockForm("endDST.month"),e2o[MonthOfYearDST])</td>
-        </tr>
-        </table>
+            </div>
+    }
 
-        </td>
-        </tr>
-        <tr>
-        <td>&nbsp;</td>
-        <td>
-        <input type="submit" class="btn btn-primary" name="save" value="Save">
-
-        </td>
-        </tr>
-        </table>
-        *@
-
-    </div>
-}
-
-}
+    }

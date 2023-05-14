@@ -100,7 +100,7 @@ trait SelectItemNumber extends SelectItem {
   override def item: (String, String) = display -> display
 
   override def isSelected(formValue: String): Boolean = {
-    display == value
+    display == formValue
   }
 
   /**

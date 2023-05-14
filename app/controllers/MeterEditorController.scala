@@ -73,7 +73,7 @@ class MeterEditorController @Inject()(dataStore: DataStore) extends MessagesInje
     implicit request: MessagesRequest[AnyContent] =>
       val fieldKey = Meters.fieldKey(KeyFactory.meterKey())
       val fieldEntry: FieldEntry = dataStore(fieldKey).get
-      val meters: Meters = fieldEntry.fieldValue.asInstanceOf[Meters]
+      val meters: Meters = fieldEntry.value.asInstanceOf[Meters]
 
       val filledInForm = metersForm.fill(meters)
 

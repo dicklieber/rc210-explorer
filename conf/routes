@@ -22,6 +22,7 @@ GET         /messages                                  controllers.MessageContro
 GET         /message/edit/:key                         controllers.MessageController.edit(key:MessageKey)
 POST        /message/save                              controllers.MessageController.save()
 GET         /datastore/download                        controllers.DataStoreController.downloadJson()
+GET         /datastore/view                            controllers.DataStoreController.viewJson()
 GET         /datastore/upload                          controllers.DataStoreController.upload
 POST        /datastore/save                            controllers.DataStoreController.save()
 GET         /rc210/download/:descriptor                controllers.IOController.download(descriptor:String)

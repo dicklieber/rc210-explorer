@@ -62,6 +62,7 @@ libraryDependencies ++= Seq(
   "org.fusesource.jansi" % "jansi" % "2.4.0",
   "org.apache.commons" % "commons-text" % "1.10.0",
   "com.github.kxbmap" %% "configs" % "0.6.1",
+  "com.github.skjolber.jackson" % "jackson-syntax-highlight" % "1.0.7",
 )
 
 

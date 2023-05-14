@@ -45,6 +45,13 @@ class DataStoreController @Inject()(implicit val controllerComponents: Controlle
       "Content-Disposition" -> s"""attachment; filename="rc210.json""""
     )
   }
+  def viewJson(): Action[AnyContent] = Action {
+    val jsValue = Json.toJson(dataStore.toJson)
+    val sJson = Json.prettyPrint(jsValue)
+    Ok(sJson).withHeaders(
+      "Content-Type" -> "text/json",
+    )
+  }
 
   def upload: Action[AnyContent] = Action {
     Ok(views.html.fileUpload())
