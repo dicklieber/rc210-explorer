@@ -13,15 +13,18 @@
 }
 
 @tabbedmain(Tabs.metersTab) {
-    <div class="container">
+    <div >
+@*    <div class="container">*@
     @form(action = routes.MeterEditorController.save()) {
 
         referenceVoltage: @inputText(metersForm("referenceVoltage"))
 
-        <table class="table table-bordered table-sm  w-auto">
+@*        <table class=" rc210-table">*@
+        <table class="table table-bordered table-sm  w-auto rc210-table">
+
             <thead>
                 <tr class="table-secondary">
-                    <th colspan="6">Meter Channels</th>
+                    <th colspan="7">Meter Channels</th>
                 </tr>
                 <tr class="table-secondary">
                     <th rowspan="2">Meter</th>
@@ -37,11 +40,13 @@
                     <th>Reading</th>
                 </tr>
             </thead>
+
             <tbody>
             @repeatWithIndex(metersForm("meters"), min = 1) { (meter, index) =>
                 <tr>
                     <td>@{index+1}</td>
                     <td>@inputText(meter("name"))</td>
+@*                    <td>@inputText(meter("name"), Symbol("class") -> "nameField")</td>*@
                     <td>@select(meter("faceName"), MeterFaceName.options)</td>
                     <td>@inputText(meter("low.hundredthVolt"))</td>
                     <td>@inputText(meter("low.reading"))</td>
@@ -52,7 +57,7 @@
 
             </tbody>
         </table>
-        <table class="table table-bordered table-sm  w-auto">
+        <table class="table table-bordered table-sm  w-auto rc210-table">
             <thead>
                 <tr class="table-secondary">
                     <th colspan="6">Meter  Alarms</th>

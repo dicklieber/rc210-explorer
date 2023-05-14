@@ -232,14 +232,15 @@ body {
     text-align: center;
 }
 
-
-input {
-    background: #FFE99D;
-    border-color: #cc0000;
-    border: 3px;
+.nameField {
+    border: #cc0000;
+    border-width: 3px;
 }
 
 .keyName input {
     width: auto;
 }
 
+.rc210-table input {
+    width: 7em;
+}
