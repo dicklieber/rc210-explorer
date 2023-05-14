@@ -10,7 +10,7 @@ import play.api.libs.json.JsValue
 import java.text.FieldPosition
 import scala.util.Try
 
-trait FieldDefinition {
+trait FieldDefinition extends LazyLogging {
   def parse(jsValue: JsValue): FieldValue
 
 
@@ -86,7 +86,7 @@ case class SimpleField(offset: Int,
   override def positions: Seq[FieldOffset] = Seq(FieldOffset(offset, this))
 }
 
-trait ComplexExtractor[K <: Key] extends FieldExtractor with FieldDefinition  with LazyLogging{
+trait ComplexExtractor[K <: Key] extends FieldExtractor with FieldDefinition  {
 
   def fieldKey(key:K):FieldKey = FieldKey(fieldName, key)
   /**

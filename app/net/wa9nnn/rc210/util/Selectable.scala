@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.util
 
+import com.wa9nnn.util.tableui.Cell
 import play.api.data.FormError
 import play.api.data.format.Formats.parsing
 import play.api.data.format.Formatter
@@ -109,4 +110,5 @@ trait SelectItemNumber extends SelectItem {
    * @return
    */
   override def isSelected(number: Int): Boolean = number == value
+  def toCell = Cell(display)
 }

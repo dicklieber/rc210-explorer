@@ -1,13 +1,8 @@
-@import net.wa9nnn.rc210.data.meter.Meters
+@import net.wa9nnn.rc210.data.meter.{AlarmType, Meter, MeterFaceName}
 @import net.wa9nnn.rc210.ui.Tabs
-@import views.html.helper.FieldConstructor
-@import views.html.helper._
-
-@import net.wa9nnn.rc210.data.meter.MeterFaceName
-@import net.wa9nnn.rc210.data.meter.AlarmType
-@import net.wa9nnn.rc210.util.MacroSelectField
 @import net.wa9nnn.rc210.util.MacroSelect
-@(metersForm: Form[Meters])(implicit messages: MessagesProvider)
+@import views.html.helper.{FieldConstructor, _}
+@(metersForm: Form[Meter])(implicit messages: MessagesProvider)
     @implicitField = @{
         FieldConstructor(views.html.rc2input.f)
     }

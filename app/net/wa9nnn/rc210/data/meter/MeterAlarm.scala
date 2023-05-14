@@ -19,54 +19,34 @@ package net.wa9nnn.rc210.data.meter
 
 import com.wa9nnn.util.tableui.Row
 import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, MeterKey}
+import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, MeterAlarmKey, MeterKey}
 import net.wa9nnn.rc210.key.KeyFormats._
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.{Format, JsValue, Json}
 
-case class Meters(referenceVoltage: Int, channels: Seq[Meter], alarms: Seq[MeterAlarm]) extends ComplexFieldValue[MeterKey] {
-  override def display: String = {
+import java.util.concurrent.atomic.AtomicInteger
 
-    "Meters"
-  }
+
+case class MeterAlarm(val key: MeterAlarmKey, name: String, meter: MeterKey, alarmType: AlarmType, tripPoint: Int, macroKey: MacroKey) extends ComplexFieldValue[MeterAlarmKey] {
+  override val fieldName: String = "MeterAlarm"
+
+  override def display: String = toString
 
   /**
    * Render this value as an RD-210 command string.
    */
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
-
-    Seq("todo")
-  }
-
-  /**
-   * Render as HTML. Either a single rc2input of an entire HTML Form.
-   *
-   * @return html
-   */
-  override def toHtmlField(renderMetadata: RenderMetadata): String = {
-
     throw new NotImplementedError() //todo
   }
 
   override def toJsonValue: JsValue = Json.toJson(this)
 
-  override val key: MeterKey = KeyFactory.meterKey()
-  override val fieldName: String = "Meter"
-
-  override def toRow: Row = throw new NotImplementedError() //todo
+  override def toRow: Row = Row(
+    key.toCell,
+    name, meter, alarmType, tripPoint, macroKey
+  )
 }
-
-/**
- * Obe of the 6 Meter channels.
- *
- * @param meterKind
- * @param high calibrate for low.
- * @param low  calibrate for high.
- */
-case class Meter(name:String, meterKind: MeterFaceName, high: VoltToReading, low: VoltToReading)
-
-case class MeterAlarm(name: String, meterNumber: Int, alarmType: AlarmType, tripPoint: Int, macroKey: MacroKey)
 
 /*
 *2064 C * M* X1* Y1* X2* Y2* C= Channel 1 to 8 M=MeterKind Type 0 to 6 X1, Y1, X2, Y2 represent two calibration points. There must be 6 parameters entered to define a meter face, each value ending with *.
@@ -84,7 +64,7 @@ case class MeterAlarm(name: String, meterNumber: Int, alarmType: AlarmType, trip
 * */
 
 
-object Meters extends ComplexExtractor[MeterKey] {
+object MeterAlarm extends ComplexExtractor[MeterKey] {
   private val nMeters = 8
 
   /**
@@ -93,44 +73,32 @@ object Meters extends ComplexExtractor[MeterKey] {
    * @return what we extracted.
    */
   override def extract(memory: Memory): Seq[FieldEntry] = {
-    val vref: Int = memory.iterator16At(186).next()
-    val meters = Meters(vref, extractMeters(memory), meterAlarms(memory))
-    val meterKey = KeyFactory.meterKey()
-    Seq(
-      FieldEntry(this, fieldKey(meterKey), meters)
-    )
-  }
-
-  private def meterAlarms(memory: Memory): Seq[MeterAlarm] = {
-    val meterAlarm = memory.sub8(266, nMeters)
+    val mai = new AtomicInteger()
     val alarmType: Array[AlarmType] = memory.sub8(274, nMeters).map(AlarmType.lookup)
+    val macroKeys: Seq[MacroKey] = memory.sub8(314, nMeters).map(KeyFactory.macroKey)
     val setPoint: Seq[String] = memory.chunks(282, 4, nMeters).map { chunk =>
       val array = chunk.array
       //      new String(array.map(_.toChar))
       "42"
     }
-    val macroKeys: Seq[MacroKey] = memory.sub8(314, nMeters).map(KeyFactory.macroKey)
-    for {i <- 0 until nMeters}
-      yield {
-        MeterAlarm("", meterAlarm(i), alarmType(i), setPoint(i).toInt, KeyFactory.macroKey(i + 1))
+    val meters: Array[MeterKey] = memory.sub8(266, nMeters).map {number =>
+      try {
+        val r: MeterKey = KeyFactory.meterKey(number)
+        r
+      } catch {
+        case e:Exception =>
+          logger.error(s"Bad meter number got: $number , expecting 1 to $nMeters. Will use Meter 1")
+          KeyFactory.meterKey(1)
       }
-  }
-
-  private def extractMeters(memory: Memory): Seq[Meter] = {
-    val faceNames: Array[MeterFaceName] = memory.sub8(186, nMeters).map(MeterFaceName.lookup)
-    val lowX: Seq[Int] = memory.iterator16At(202).take(nMeters).toSeq
-    val lowY: Seq[Int] = memory.iterator16At(218).take(nMeters).toSeq
-    val highX: Seq[Int] = memory.iterator16At(234).take(nMeters).toSeq
-    val highY: Seq[Int] = memory.iterator16At(250).take(nMeters).toSeq
-
-    val meters: Seq[Meter] = for {
-      i <- 0 until nMeters
-    } yield {
-      val low = VoltToReading(lowX(i), lowY(i))
-      val high = VoltToReading(highX(i), highY(i))
-      Meter("", faceNames(i), low, high)
     }
-    meters
+    val r: Seq[FieldEntry] = (for {i <- 0 until nMeters}
+      yield {
+        val key = KeyFactory.meterAlarmKey(mai.incrementAndGet())
+        val meterAlarm = MeterAlarm(key, "", meters(i), alarmType(i), setPoint(i).toInt, macroKeys(i))
+        new FieldEntry(this, meterAlarm.fieldKey, meterAlarm)
+      }
+      )
+    r
   }
 
   /**
@@ -138,25 +106,21 @@ object Meters extends ComplexExtractor[MeterKey] {
    */
   override val name: String = "Meter"
 
-  override def parse(jsValue: JsValue): FieldValue = jsValue.as[Meters]
+  override def parse(jsValue: JsValue): FieldValue = jsValue.as[MeterAlarm]
 
   override val fieldName: String = name
   override val kind: KeyKind = KeyKind.meterKey
 
   override def positions: Seq[FieldOffset] = Seq(
-    FieldOffset(184, this, "vRef"), //VREF - 184-185
+    FieldOffset(266, this, "Alarm Type"),
+
     FieldOffset(186, this, "meterFace"),
     FieldOffset(202, this, "meterLowVolt"),
     FieldOffset(218, this, "meterLowrReading"),
     FieldOffset(282, this, "alarm Set Point"),
-    FieldOffset(2064, this, "meter"),
-    FieldOffset(2066, this, "alarm")
   )
 
-  implicit val fmtVoltToReading: Format[VoltToReading] = Json.format[VoltToReading]
-  implicit val fmtMeter: Format[Meter] = Json.format[Meter]
   implicit val fmtMeterAlarm: Format[MeterAlarm] = Json.format[MeterAlarm]
-  implicit val fmtMeters: Format[Meters] = Json.format[Meters]
 }
 
 
@@ -165,4 +129,3 @@ object Meters extends ComplexExtractor[MeterKey] {
  * @param hundredthVolt input voltaqge
  * @param reding        what "shows" on the4 meter face.
  */
-case class VoltToReading(hundredthVolt: Int, reading: Int)

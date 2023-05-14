@@ -68,6 +68,20 @@ object Formatters {
 
     override def unbind(key: String, value: Dtmf): Map[String, String] = Map(key -> value.toString)
   }
+  implicit object MeterFormatter extends Formatter[MeterKey] {
+    override val format: Option[(String, Nil.type)] = Some(("format.dtmf", Nil))
+
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], MeterKey] = parsing(KeyFactory(_).asInstanceOf[MeterKey], "error.url", Nil)(key, data)
+
+    override def unbind(key: String, value: MeterKey): Map[String, String] = Map(key -> value.toString)
+  }
+  implicit object MeterAlarmFormatter extends Formatter[MeterAlarmKey] {
+    override val format: Option[(String, Nil.type)] = Some(("format.dtmf", Nil))
+
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], MeterAlarmKey] = parsing(KeyFactory(_).asInstanceOf[MeterAlarmKey], "error.url", Nil)(key, data)
+
+    override def unbind(key: String, value: MeterAlarmKey): Map[String, String] = Map(key -> value.toString)
+  }
 
   implicit val fmtMacroKey: OFormat[MacroKey] = Json.format[MacroKey]
   implicit val fmtRemoteBaseKey: Format[RemoteBaseKey] = Json.format[RemoteBaseKey]

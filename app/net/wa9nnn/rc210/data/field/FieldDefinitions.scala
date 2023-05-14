@@ -21,12 +21,11 @@ import net.wa9nnn.rc210.data.clock.Clock
 import net.wa9nnn.rc210.data.courtesy.CourtesyExtractor
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.message.MesssageExtractor
-import net.wa9nnn.rc210.data.meter.Meters
+import net.wa9nnn.rc210.data.meter.{Meter, MeterAlarm}
 import net.wa9nnn.rc210.data.remotebase.RemoteBase
 import net.wa9nnn.rc210.data.schedules.Schedule
 import net.wa9nnn.rc210.data.timers.TimerExtractor
 import net.wa9nnn.rc210.key.KeyKind._
-import net.wa9nnn.rc210.ui.EnumSelect
 import net.wa9nnn.rc210.util.MacroSelectField
 
 import javax.inject.{Inject, Singleton}
@@ -144,7 +143,8 @@ class FieldDefinitions @Inject()() {
     MesssageExtractor,
     Clock,
     RemoteBase,
-    Meters
+    Meter,
+    MeterAlarm
   )
 
   val allFields:Seq[FieldDefinition] = simpleFields ++ complexFd

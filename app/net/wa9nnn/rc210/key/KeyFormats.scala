@@ -116,6 +116,24 @@ object KeyFormats {
       JsSuccess(KeyFactory.apply(json.as[String]))
     }
   }
+  implicit val fmtMeterKey: Format[MeterKey] = new Format[MeterKey] {
+    def writes(key: MeterKey): JsValue = {
+      JsString(key.toString)
+    }
+
+    override def reads(json: JsValue): JsResult[MeterKey] = {
+      JsSuccess(KeyFactory.apply(json.as[String]))
+    }
+  }
+  implicit val fmtMeterAlarmKey: Format[MeterAlarmKey] = new Format[MeterAlarmKey] {
+    def writes(key: MeterAlarmKey): JsValue = {
+      JsString(key.toString)
+    }
+
+    override def reads(json: JsValue): JsResult[MeterAlarmKey] = {
+      JsSuccess(KeyFactory.apply(json.as[String]))
+    }
+  }
 
   implicit val fmtKey: Format[Key] = new Format[Key] {
     override def reads(json: JsValue): JsResult[Key] = {

@@ -18,17 +18,13 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.datastore.{DataStore, UpdateCandidate, UpdateData}
-import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.Formatters._
 import net.wa9nnn.rc210.data.meter._
-import net.wa9nnn.rc210.key.KeyFactory.MacroKey
+import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, MeterAlarmKey, MeterKey}
 import net.wa9nnn.rc210.key.KeyFormats._
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
-import net.wa9nnn.rc210.util.MacroSelectField
 import play.api.data.Forms._
-import play.api.data.{Form, Mapping}
-import play.api.mvc.{MessagesInjectedController, _}
+import play.api.data.Mapping
 import play.api.mvc._
 
 import javax.inject._
@@ -38,11 +34,12 @@ class MeterEditorController @Inject()(dataStore: DataStore) extends MessagesInje
 
   val alarmMapping: Mapping[MeterAlarm] =
     mapping(
+      "key" -> of[MeterAlarmKey],
       "name" -> text,
-      "meterNumber" -> number,
+      "meter" -> of[MeterKey],
       "alarmType" -> of[AlarmType],
       "tripPoint" -> default(number, 0  ),
-      "macroKey" -> of[MacroKey],
+      "macroKey" -> of[MacroKey]
     )(MeterAlarm.apply)(MeterAlarm.unapply)
 
 
@@ -54,6 +51,7 @@ class MeterEditorController @Inject()(dataStore: DataStore) extends MessagesInje
 
   val meterMapping: Mapping[Meter] =
     mapping(
+      "key" -> of[MeterKey],
       "name" -> text,
       "faceName" -> of[MeterFaceName],
       "low" -> voltToReadingMapping,
@@ -61,38 +59,32 @@ class MeterEditorController @Inject()(dataStore: DataStore) extends MessagesInje
     )(Meter.apply)(Meter.unapply)
 
 
-  val metersForm: Form[Meters] = Form[Meters](
-    mapping(
-      "referenceVoltage" -> number,
-      "meters" -> seq(meterMapping),
-      "alarms" -> seq(alarmMapping),
-    )(Meters.apply)(Meters.unapply)
-  )
 
   def index: Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] =>
-      val fieldKey = Meters.fieldKey(KeyFactory.meterKey())
-      val fieldEntry: FieldEntry = dataStore(fieldKey).get
-      val meters: Meters = fieldEntry.value.asInstanceOf[Meters]
-
-      val filledInForm = metersForm.fill(meters)
-
-      Ok(views.html.meters(filledInForm))
+//      val fieldKey = Meters.fieldKey(KeyFactory.meterKey())
+//      val fieldEntry: FieldEntry = dataStore(fieldKey).get
+//      val meters: Meters = fieldEntry.value.asInstanceOf[Meters]
+//
+//      val filledInForm = metersForm.fill(meters)
+//
+//      Ok(views.html.meters(filledInForm))
+      Ok("todo")
   }
 
   def save(): Action[AnyContent] = Action {
     implicit request =>
 
-
-      metersForm.bindFromRequest.fold(
-        formWithErrors => {
-          BadRequest(views.html.meters(formWithErrors))
-        },
-        meters => {
-          val updateCandidate = UpdateCandidate(meters)
-          dataStore.update(UpdateData(Seq(updateCandidate)))
+//
+//      metersForm.bindFromRequest.fold(
+//        formWithErrors => {
+//          BadRequest(views.html.meters(formWithErrors))
+//        },
+//        meters => {
+//          val updateCandidate = UpdateCandidate(meters)
+//          dataStore.update(UpdateData(Seq(updateCandidate)))
           Redirect(routes.MeterEditorController.index)
-        }
-      )
+//        }
+//      )
   }
 }

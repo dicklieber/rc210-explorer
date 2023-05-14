@@ -105,7 +105,8 @@ object KeyFactory {
 
   def logicAlarmKey(number: Int): LogicAlarmKey = apply(KeyKind.logicAlarmKey, number)
 
-  def meterKey(): MeterKey = apply(KeyKind.meterKey, 1)
+  def meterKey(number:Int): MeterKey = apply(KeyKind.meterKey, number)
+  def meterAlarmKey(number:Int): MeterAlarmKey = apply(KeyKind.meterAlarmKey, number)
 
   def messageKey(number: Int): MessageKey = apply(KeyKind.messageKey, number)
   def scheduleKey(number: Int): ScheduleKey = apply(KeyKind.scheduleKey, number)
