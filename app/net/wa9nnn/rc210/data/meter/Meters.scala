@@ -28,7 +28,7 @@ import play.api.libs.json.{Format, JsValue, Json}
 case class Meters(referenceVoltage: Int, channels: Seq[Meter], alarms: Seq[MeterAlarm]) extends ComplexFieldValue[MeterKey] {
   override def display: String = {
 
-    throw new NotImplementedError() //todo
+    "Meters"
   }
 
   /**
