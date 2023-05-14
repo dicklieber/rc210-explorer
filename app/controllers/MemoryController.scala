@@ -48,7 +48,7 @@ class MemoryController @Inject()(memoryFileLoader: MemoryFileLoader, fieldDefini
 
       val memory: Memory = memoryFileLoader.loadMemory
       val rows: Seq[Row] = memory.data.zipWithIndex.toIndexedSeq.map { case (int, index) =>
-        val row = Row(Cell(index), Cell(int))
+        val row = Row(Cell(index.toString ), Cell(f"$int 0x${int.toHexString}"))
         offsetToField.get(index).map { extraCells =>
           row.copy(cells = row.cells :++ extraCells)
         }.getOrElse(row)

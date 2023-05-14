@@ -14,17 +14,20 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 object DtmfMacroExtractor {
 
-  def apply(memoryBuffer: Memory): DtmfMacros = {
+  def apply(memory: Memory): DtmfMacros = {
     val mai = new AtomicInteger(1) // cause macro numbers start at 1
 
 
     def dtmfMap(offset: Int, nDtmfs: Int): Seq[(MacroKey, Dtmf)] = {
-      val chunks: Seq[Chunk] = memoryBuffer.chunks(offset, 5, nDtmfs)
+      val chunks: Seq[Chunk] = memory.chunks(offset, 5, nDtmfs)
 
-      chunks.map { chunk =>
-        val key: MacroKey = KeyFactory.macroKey(mai.getAndIncrement())
-        key -> Dtmf(chunk.toString)
-      }
+      (for {
+        chunk <- chunks
+        macroKey: MacroKey = KeyFactory.macroKey(mai.getAndIncrement())
+        dtmf <- Dtmf(chunk.array)
+      } yield {
+        macroKey -> dtmf
+      })
     }
 
     val longMacroDtmf: Seq[(MacroKey, Dtmf)] = dtmfMap(2625, 40) //SlicePos("//MacroRecallCode - 2625-2824"))

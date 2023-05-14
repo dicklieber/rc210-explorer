@@ -9,6 +9,7 @@ import play.api.libs.json._
  */
 case class Dtmf(value: String = "") {
   val enabled: Boolean = value.nonEmpty
+
   override def toString: String = value
 }
 
@@ -16,13 +17,20 @@ object Dtmf {
   // Note the RC210 binary can't encode 'D'
   val dtmfDigits = "x1234567890*#ABC"
 
-  def apply(in: Seq[Int]): Dtmf = {
+  def apply(in: Seq[Int]): Option[Dtmf] = {
 
     val digits: Seq[Char] = in.flatMap { int =>
       Seq(int & 0x0f, (int & 0xf0) >> 4)
     }.takeWhile(_ != 0)
-      .map(dtmfDigits(_)) // convert to dtmf keys
-    new Dtmf(new String(digits.toArray))
+      .map(int => {
+        val c: Char = dtmfDigits(int)
+        c
+      }) // convert to dtmf keys
+    val str = new String(digits.toArray)
+    Option.when(str.nonEmpty) {
+      new Dtmf(str)
+    }
+
   }
 
   implicit val fmtKey: Format[Dtmf] = new Format[Dtmf] {

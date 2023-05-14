@@ -1,6 +1,5 @@
 package net.wa9nnn.rc210.data.macros
 
-import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row}
 import net.wa9nnn.rc210.data.Dtmf
 import net.wa9nnn.rc210.data.field._
@@ -48,7 +47,7 @@ case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dt
 
     Seq(
       mCmd,
-      s"1*2050${macroNumber}$dtmfPart"
+      s"1*2050$macroNumber$dtmfPart"
     )
   }
 
@@ -76,7 +75,7 @@ object MacroNode extends ComplexExtractor[MacroKey] {
 
   override def extract(memory: Memory): Seq[FieldEntry] = {
 
-    val dtmfMap: DtmfMacros = DtmfMacroExtractor(memory)
+    val dtmfMacros: DtmfMacros = DtmfMacroExtractor(memory)
     val mai = new AtomicInteger(1)
 
     def macroBuilder(offset: Int, chunkLength: Int, nChunks: Int) = {
@@ -99,7 +98,7 @@ object MacroNode extends ComplexExtractor[MacroKey] {
               Seq.empty
 
           }
-          MacroNode(key, functions, dtmfMap(key))
+          MacroNode(key, functions, dtmfMacros(key))
         }
     }
 
