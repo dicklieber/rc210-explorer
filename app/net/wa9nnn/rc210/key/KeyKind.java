@@ -21,7 +21,8 @@ public enum KeyKind {
 
     logicAlarmKey(5),
 
-    meterKey(1, false),
+    meterKey(8, false),
+    meterAlarmKey(8, true),
     dtmfMacroKey(195, false),
     courtesyToneKey(10),
     functionKey(1005, false),

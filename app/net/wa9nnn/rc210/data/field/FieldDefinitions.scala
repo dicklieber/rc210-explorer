@@ -72,6 +72,8 @@ class FieldDefinitions @Inject()() {
     SimpleField(169, "Enable", logicAlarmKey, "1n91b", FieldBoolean),
     SimpleField(174, "Macro Low", logicAlarmKey, "1*2101nv", MacroSelectField),
     SimpleField(179, "Macro High", logicAlarmKey, "1*2102nv", MacroSelectField),
+    SimpleField(184, "vRef", commonKey, "1*2065", FieldInt) max 20000,
+
     // needs to be complex rc2input   SimpleField(184, "Vref", meterKey, "*2065 n v", UiNumber(255, "todo three numbers?")), //*2065 4 9 6
     //###########################################################################################  //todo
     ///For meters, we gather all the parameters needed, then assemble them to actually store

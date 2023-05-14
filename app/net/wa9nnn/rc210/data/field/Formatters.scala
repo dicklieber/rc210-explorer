@@ -73,6 +73,7 @@ object Formatters {
   implicit val fmtRemoteBaseKey: Format[RemoteBaseKey] = Json.format[RemoteBaseKey]
   implicit val fmtLogicAlarmKey: OFormat[LogicAlarmKey] = Json.format[LogicAlarmKey]
   implicit val fmtMeterKey: OFormat[MeterKey] = Json.format[MeterKey]
+  implicit val fmtMeterAlarmKey: OFormat[MeterAlarmKey] = Json.format[MeterAlarmKey]
   implicit val fmtScheduleKey: OFormat[ScheduleKey] = Json.format[ScheduleKey]
   implicit val fmtCommonKey: OFormat[CommonKey] = Json.format[CommonKey]
   implicit val fmtFunctionKey: OFormat[FunctionKey] = Json.format[FunctionKey]

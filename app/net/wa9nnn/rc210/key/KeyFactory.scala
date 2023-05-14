@@ -41,6 +41,7 @@ object KeyFactory {
         keyKind match {
           case KeyKind.logicAlarmKey => LogicAlarmKey(number)
           case KeyKind.meterKey => MeterKey(number)
+          case KeyKind.meterAlarmKey => MeterAlarmKey(number)
           case KeyKind.dtmfMacroKey => DtmfMacroKey(number)
           case KeyKind.courtesyToneKey => CourtesyToneKey(number)
           case KeyKind.functionKey => FunctionKey(number)
@@ -201,6 +202,7 @@ object KeyFactory {
   case class LogicAlarmKey(override val number: Int) extends Key(KeyKind.logicAlarmKey, number)
 
   case class MeterKey(override val number: Int) extends Key(KeyKind.meterKey, number)
+  case class MeterAlarmKey(override val number: Int) extends Key(KeyKind.meterAlarmKey, number)
 
   case class MacroKey private(override val number: Int) extends Key(KeyKind.macroKey, number)
 

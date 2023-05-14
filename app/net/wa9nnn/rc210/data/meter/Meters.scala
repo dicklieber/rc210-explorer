@@ -93,7 +93,7 @@ object Meters extends ComplexExtractor[MeterKey] {
    * @return what we extracted.
    */
   override def extract(memory: Memory): Seq[FieldEntry] = {
-    val vref = memory.iterator16At(186).next()
+    val vref: Int = memory.iterator16At(186).next()
     val meters = Meters(vref, extractMeters(memory), meterAlarms(memory))
     val meterKey = KeyFactory.meterKey()
     Seq(

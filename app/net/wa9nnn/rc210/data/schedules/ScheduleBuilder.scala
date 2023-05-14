@@ -58,8 +58,6 @@ object ScheduleBuilder extends LazyLogging {
         enabled = enable,
         week = week
       )
-
     }
-
   }
 }
