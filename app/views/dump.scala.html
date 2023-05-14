@@ -29,29 +29,15 @@
                                     </a>
                                     </td>
                                     <td>
-                                    <ul class="list-unstyled">
-                                        @for(command <- fieldEntry.fieldValue.toCommands(fieldEntry)) {
-                                            <li>@command</li>
-                                        }
-                                    </ul>
+                                        @views.html.commandList(fieldEntry.fieldValue.toCommands(fieldEntry))
                                 </td>
 
                                 @for(candidate <- fieldEntry.candidate) {
                                     <td>@candidate.display</td>
                                     <td >
-                                        <div>
-                                            <ul class="list-unstyled">
-                                                <a>@for(command <- candidate.toCommands(fieldEntry)) {
-                                                    <li>@command</li>
-                                                }
-                                                </a>
-                                            </ul>
-                                            <a href="@routes.CandidateController.sendCandidate(fieldEntry.fieldKey)" title="Send to RC-210">
-                                            <i class="bi bi-send"></i>
-                                            </a>
-                                            </div>
-                                            </td>
-                                            }
+                                    @views.html.commandList(candidate.toCommands(fieldEntry), Option(fieldEntry.fieldKey))
+                                    </td>
+                                }
                             </tr>
 
                         }
