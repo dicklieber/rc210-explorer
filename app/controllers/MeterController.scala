@@ -23,7 +23,8 @@ import net.wa9nnn.rc210.data.datastore.{DataStore, UpdateCandidate, UpdateData}
 import net.wa9nnn.rc210.data.field.Formatters._
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldInt}
 import net.wa9nnn.rc210.data.meter._
-import net.wa9nnn.rc210.key.KeyFactory.{MeterAlarmKey, MeterKey}
+import net.wa9nnn.rc210.data.named.NamedKey
+import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, MeterAlarmKey, MeterKey}
 import net.wa9nnn.rc210.key.KeyFormats._
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.data.Forms._
@@ -35,17 +36,15 @@ import javax.inject._
 
 class MeterController @Inject()(dataStore: DataStore) extends MessagesInjectedController with LazyLogging {
 
-  /*
-
-  val alarmMapping: Mapping[MeterAlarm] =
+  val alarmForm: Form[MeterAlarm] = Form(
     mapping(
       "key" -> of[MeterAlarmKey],
       "meter" -> of[MeterKey],
       "alarmType" -> of[AlarmType],
       "tripPoint" -> default(number, 0),
       "macroKey" -> of[MacroKey]
-    )((key: MeterAlarmKey, name: String, meter: MeterKey, alarmType: AlarmType, tripPoint: Int, macroKey: MacroKey) => MeterAlarm.apply(key, meter, alarmType, tripPoint, macroKey))((key, name, meter, alarmType, tripPoint, macroKey) => MeterAlarm.unapply())
-*/
+    )(MeterAlarm.apply)(MeterAlarm.unapply)
+  )
 
   private val voltToReadingMapping: Mapping[VoltToReading] =
     mapping(
@@ -82,11 +81,21 @@ class MeterController @Inject()(dataStore: DataStore) extends MessagesInjectedCo
   }
 
   def editAlarm(alarmKey: MeterAlarmKey): Action[AnyContent] = Action {
-    Ok(s"todo: $alarmKey")
+    implicit request: MessagesRequest[AnyContent] =>
+      val fieldKey = FieldKey("MeterAlarm", alarmKey)
+      val fieldEntry: FieldEntry = dataStore(fieldKey).get
+      val meter: MeterAlarm = fieldEntry.value
+      val fillInForm = alarmForm.fill(meter)
+      Ok(html.meterAlarm(alarmKey, fillInForm))
+
   }
 
   def saveMeter(): Action[AnyContent] = Action {
     implicit request =>
+      val formUrlEncoded: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
+      val meterKey: MeterKey = KeyFactory(formUrlEncoded("key").head)
+      val name: String = formUrlEncoded("name").headOption.getOrElse("")
+
       meterForm.bindFromRequest.fold(
         formWithErrors => {
           val maybeString = formWithErrors.data.get("key")
@@ -95,7 +104,8 @@ class MeterController @Inject()(dataStore: DataStore) extends MessagesInjectedCo
         },
         (meter: Meter) => {
           val updateCandidate: UpdateCandidate = UpdateCandidate(meter)
-          dataStore.update(UpdateData(Seq(updateCandidate)))
+          val updateData = UpdateData(Seq(updateCandidate), Seq(NamedKey(meterKey, name)))
+          dataStore.update(updateData)
           //        }
           //      )
           Redirect(routes.MeterController.index)
@@ -105,8 +115,23 @@ class MeterController @Inject()(dataStore: DataStore) extends MessagesInjectedCo
 
   def saveAlarm(): Action[AnyContent] = Action {
     implicit request =>
-      Ok("todo")
-  }
+      val formUrlEncoded: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
+      val meterAlarmKey: MeterAlarmKey = KeyFactory(formUrlEncoded("key").head)
+      val name: String = formUrlEncoded("name").headOption.getOrElse("")
+      alarmForm.bindFromRequest.fold(
+        formWithErrors => {
+          BadRequest(html.meterAlarm(meterAlarmKey, formWithErrors))
+        },
+        (meterAlarm: MeterAlarm) => {
+          val updateCandidate: UpdateCandidate = UpdateCandidate(meterAlarm)
+          val updateData = UpdateData(Seq(updateCandidate), Seq(NamedKey(meterAlarmKey, name)))
+          dataStore.update(updateData)
+          //        }
+          //      )
+          Redirect(routes.MeterController.index)
+        }
+      )
+    }
 }
 
 case class MeterStuff(vref: Int, meters: Seq[Meter], alarms: Seq[MeterAlarm])

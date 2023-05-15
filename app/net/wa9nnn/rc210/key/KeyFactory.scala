@@ -20,7 +20,7 @@ package net.wa9nnn.rc210.key
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.named.NamedSource
-import net.wa9nnn.rc210.key.KeyFactory.Key._namedSource
+import net.wa9nnn.rc210.key.KeyFactory.Key.nameForKey
 import play.twirl.api.Html
 
 /**
@@ -105,13 +105,16 @@ object KeyFactory {
 
   def logicAlarmKey(number: Int): LogicAlarmKey = apply(KeyKind.logicAlarmKey, number)
 
-  def meterKey(number:Int): MeterKey = apply(KeyKind.meterKey, number)
-  def meterAlarmKey(number:Int): MeterAlarmKey = apply(KeyKind.meterAlarmKey, number)
+  def meterKey(number: Int): MeterKey = apply(KeyKind.meterKey, number)
+
+  def meterAlarmKey(number: Int): MeterAlarmKey = apply(KeyKind.meterAlarmKey, number)
 
   def messageKey(number: Int): MessageKey = apply(KeyKind.messageKey, number)
+
   def scheduleKey(number: Int): ScheduleKey = apply(KeyKind.scheduleKey, number)
 
   def commonKey(number: Int): CommonKey = apply(KeyKind.commonKey, number)
+
   def commonKey(): CommonKey = apply(KeyKind.commonKey, 1)
 
   def clockKey: ClockKey = apply(KeyKind.clockKey, 1)
@@ -144,12 +147,11 @@ object KeyFactory {
       c.withCssClass(kind.toString)
     }
 
-    def nameForKey(key:Key):String =
-      _namedSource.map(_.nameForKey(key)).getOrElse("")
 
-    def keyWithName:String = {
-     s"$number ${nameForKey(this)}"
+    def keyWithName: String = {
+      s"$number ${nameForKey(this)}"
     }
+
     /**
      * Display the Key. Number: <input>
      * This can be placed in a [[com.wa9nnn.util.tableui.Row]].
@@ -197,6 +199,8 @@ object KeyFactory {
     }
 
     protected var _namedSource: Option[NamedSource] = None
+    def nameForKey(key: Key): String =
+      _namedSource.map(_.nameForKey(key)).getOrElse("")
   }
 
   case class PortKey protected(override val number: Int) extends Key(KeyKind.portKey, number)
@@ -204,6 +208,7 @@ object KeyFactory {
   case class LogicAlarmKey(override val number: Int) extends Key(KeyKind.logicAlarmKey, number)
 
   case class MeterKey(override val number: Int) extends Key(KeyKind.meterKey, number)
+
   case class MeterAlarmKey(override val number: Int) extends Key(KeyKind.meterAlarmKey, number)
 
   case class MacroKey private(override val number: Int) extends Key(KeyKind.macroKey, number)
@@ -225,6 +230,8 @@ object KeyFactory {
   case class CommonKey(override val number: Int = 1) extends Key(KeyKind.commonKey, number)
 
   case class TimerKey(override val number: Int = 1) extends Key(KeyKind.timerKey, number)
+
   case class ClockKey(override val number: Int = 1) extends Key(KeyKind.clockKey, number)
+
   case class RemoteBaseKey(override val number: Int = 1) extends Key(KeyKind.remoteBaseKey, number)
 }
