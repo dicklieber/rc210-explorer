@@ -67,6 +67,9 @@ trait SelectItem {
 
   val display: String
 
+
+  override def toString: String = display
+
   /**
    *
    * @param formValue as seledcted by user in form.

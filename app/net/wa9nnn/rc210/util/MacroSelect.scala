@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.util
 
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
-import net.wa9nnn.rc210.key.KeyFactory.MacroKey
+import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, MeterKey}
 
 object MacroSelect extends Selectable {
   val choices: Seq[SelectItem] = Seq.empty // only options need  be used.
@@ -29,26 +29,14 @@ object MacroSelect extends Selectable {
     }
   }
 }
+object MeterSelect extends Selectable {
+  val choices: Seq[SelectItem] = Seq.empty // only options need  be used.
 
-case class MacroItem(macroKey: MacroKey) extends SelectItem {
 
-  override def item: (String, String) = {
-    macroKey.toString -> display
+  override def options: Seq[(String, String)] = {
+    KeyFactory[MeterKey](KeyKind.meterKey).map { meterKey => meterKey.toString -> meterKey.keyWithName
+    }
   }
-
-  override val display: String = macroKey.keyWithName
-
-  /**
-   *
-   * @param formValue as seledcted by user in form.
-   * @return
-   */
-  override def isSelected(formValue: String): Boolean = formValue == macroKey.toString
-
-  /**
-   *
-   * @param number from RC-210 data
-   * @return
-   */
-  override def isSelected(number: Int): Boolean = throw new IllegalStateException("")
 }
+
+

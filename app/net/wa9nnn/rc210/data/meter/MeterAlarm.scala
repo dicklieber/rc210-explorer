@@ -28,7 +28,7 @@ import play.api.libs.json.{Format, JsValue, Json}
 import java.util.concurrent.atomic.AtomicInteger
 
 
-case class MeterAlarm(val key: MeterAlarmKey, name: String, meter: MeterKey, alarmType: AlarmType, tripPoint: Int, macroKey: MacroKey) extends ComplexFieldValue[MeterAlarmKey] {
+case class MeterAlarm(val key: MeterAlarmKey, meter: MeterKey, alarmType: AlarmType, tripPoint: Int, macroKey: MacroKey) extends ComplexFieldValue[MeterAlarmKey] {
   override val fieldName: String = "MeterAlarm"
 
   override def display: String = toString
@@ -42,10 +42,7 @@ case class MeterAlarm(val key: MeterAlarmKey, name: String, meter: MeterKey, ala
 
   override def toJsonValue: JsValue = Json.toJson(this)
 
-  override def toRow: Row = Row(
-    key.toCell,
-    name, meter, alarmType, tripPoint, macroKey
-  )
+  override def toRow: Row = throw new NotImplementedError() //todo
 }
 
 /*
@@ -94,7 +91,7 @@ object MeterAlarm extends ComplexExtractor[MeterKey] {
     val r: Seq[FieldEntry] = (for {i <- 0 until nMeters}
       yield {
         val key = KeyFactory.meterAlarmKey(mai.incrementAndGet())
-        val meterAlarm = MeterAlarm(key, "", meters(i), alarmType(i), setPoint(i).toInt, macroKeys(i))
+        val meterAlarm = MeterAlarm(key, meters(i), alarmType(i), setPoint(i).toInt, macroKeys(i))
         new FieldEntry(this, meterAlarm.fieldKey, meterAlarm)
       }
       )

@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210
 
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, MessageKey}
+import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, MessageKey, MeterAlarmKey, MeterKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import play.api.mvc.PathBindable
 
@@ -34,7 +34,7 @@ object Binders {
     }
   }
 
-  implicit def pathBinder: PathBindable[MacroKey] = new PathBindable[MacroKey] {
+  implicit def pathBinderMacro: PathBindable[MacroKey] = new PathBindable[MacroKey] {
     override def bind(key: String, value: String): Either[String, MacroKey] = {
 
       Right(KeyFactory(value))
@@ -42,6 +42,27 @@ object Binders {
 
     override def unbind(key: String, macroKey: MacroKey): String = {
       macroKey.toString
+    }
+  }
+
+  implicit def pathBinderMeter: PathBindable[MeterKey] = new PathBindable[MeterKey] {
+    override def bind(key: String, value: String): Either[String, MeterKey] = {
+
+      Right(KeyFactory(value))
+    }
+
+    override def unbind(key: String, meterKey: MeterKey): String = {
+      meterKey.toString
+    }
+  }
+  implicit def pathBinderMeterAlarm: PathBindable[MeterAlarmKey] = new PathBindable[MeterAlarmKey] {
+    override def bind(key: String, value: String): Either[String, MeterAlarmKey] = {
+
+      Right(KeyFactory(value))
+    }
+
+    override def unbind(key: String, meterAlarmKey: MeterAlarmKey): String = {
+      meterAlarmKey.toString
     }
   }
 

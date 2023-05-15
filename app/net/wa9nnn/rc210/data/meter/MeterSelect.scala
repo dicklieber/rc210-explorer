@@ -20,10 +20,7 @@ package net.wa9nnn.rc210.data.meter
 import net.wa9nnn.rc210.util.{SelectItemNumber, Selectable}
 import play.api.libs.json.{Format, Json}
 
-case class MeterFaceName(value: Int, display: String) extends SelectItemNumber {
-
-
-}
+case class MeterFaceName(value: Int, display: String) extends SelectItemNumber
 
 object MeterFaceName extends Selectable[MeterFaceName] {
   val choices: Seq[MeterFaceName] = Seq(

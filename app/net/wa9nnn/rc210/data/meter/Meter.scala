@@ -27,46 +27,15 @@ import play.api.libs.json.{Format, JsValue, Json}
 
 import java.util.concurrent.atomic.AtomicInteger
 
-//case class Meters(referenceVoltage: Int, channels: Seq[Meter], alarms: Seq[MeterAlarm]) extends ComplexFieldValue[MeterKey] {
-//  override def display: String = {
-//
-//    "Meters"
-//  }
-//
-//  /**
-//   * Render this value as an RD-210 command string.
-//   */
-//  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
-//
-//    Seq("todo")
-//  }
-//
-//  /**
-//   * Render as HTML. Either a single rc2input of an entire HTML Form.
-//   *
-//   * @return html
-//   */
-//  override def toHtmlField(renderMetadata: RenderMetadata): String = {
-//
-//    throw new NotImplementedError() //todo
-//  }
-//
-//  override def toJsonValue: JsValue = Json.toJson(this)
-//
-//  override val key: MeterKey = KeyFactory.meterKey()
-//  override val fieldName: String = "Meter"
-//
-//  override def toRow: Row = throw new NotImplementedError() //todo
-//}
 
 /**
  * Obe of the 6 Meter channels.
  *
  * @param meterKind face name.
- * @param high calibrate for low.
- * @param low  calibrate for high.
+ * @param high      calibrate for low.
+ * @param low       calibrate for high.
  */
-case class Meter(key: MeterKey, name: String, meterKind: MeterFaceName, high: VoltToReading, low: VoltToReading) extends ComplexFieldValue[MeterKey] {
+case class Meter(key: MeterKey, meterKind: MeterFaceName, high: VoltToReading, low: VoltToReading) extends ComplexFieldValue[MeterKey] {
   override val fieldName: String = "Meter"
 
   override def display: String = toString
@@ -78,16 +47,10 @@ case class Meter(key: MeterKey, name: String, meterKind: MeterFaceName, high: Vo
     "todo"
   )
 
-  override def toJsonValue: JsValue = Json.toJson((this))
+  override def toJsonValue: JsValue = Json.toJson(this)
 
-  override def toRow: Row = Row(
-    Cell(key.keyWithName),
-    meterKind.toCell,
-    low.cells,
-    high.cells
-  )
+  override def toRow: Row = throw new NotImplementedError() //todo}
 }
-
 
 object Meter extends ComplexExtractor[MeterKey] {
 
@@ -113,7 +76,7 @@ object Meter extends ComplexExtractor[MeterKey] {
       val meterKey = KeyFactory.meterKey(mai.incrementAndGet())
       val low = VoltToReading(lowX(i), lowY(i))
       val high = VoltToReading(highX(i), highY(i))
-      val meter: Meter = Meter(meterKey, "", faceNames(i), low, high)
+      val meter: Meter = Meter(meterKey, faceNames(i), low, high)
       new FieldEntry(this, meter.fieldKey, meter)
     }
     meters

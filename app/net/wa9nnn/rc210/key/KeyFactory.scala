@@ -112,6 +112,7 @@ object KeyFactory {
   def scheduleKey(number: Int): ScheduleKey = apply(KeyKind.scheduleKey, number)
 
   def commonKey(number: Int): CommonKey = apply(KeyKind.commonKey, number)
+  def commonKey(): CommonKey = apply(KeyKind.commonKey, 1)
 
   def clockKey: ClockKey = apply(KeyKind.clockKey, 1)
 
