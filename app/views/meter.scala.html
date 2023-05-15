@@ -1,0 +1,51 @@
+@import net.wa9nnn.rc210.data.meter.Meter
+@import net.wa9nnn.rc210.ui.Tabs
+@import net.wa9nnn.rc210.key.KeyFactory.MeterKey
+@import net.wa9nnn.rc210.data.meter.MeterFaceName
+@import views.html.helper._
+@(meterKey: MeterKey, meterForm: Form[Meter])(implicit messages: MessagesProvider)
+    @implicitField = @{
+        FieldConstructor(views.html.rc2input.f)
+    }
+    @tabbedmain(Tabs.metersTab) {
+        @form(action = routes.MeterController.saveMeter()) {
+            <input type="hidden" name="key" value="@meterKey.toString">
+            <div class="col-">
+                <table class="table table-bordered table-sm  w-auto rc210-table">
+                    <thead>
+                        <tr>
+                            <th>Field</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Meter</td>
+                            <td><input name="name" value="@meterKey.name"></td>
+                        </tr>
+                        <tr>
+                            <td>Face</td>
+                            <td>@select(meterForm("faceName"), MeterFaceName.options) </td>
+                        </tr>
+                        <tr>
+                            <td >Low Voltage</td>
+                            <td>@inputText(meterForm("low.hundredthVolt"))</td>
+                        </tr>
+                        <tr>
+                            <td >Low Reading</td>
+                            <td>@inputText(meterForm("low.reading"))</td>
+                        </tr>
+                        <tr>
+                            <td >High Voltage</td>
+                            <td>@inputText(meterForm("high.hundredthVolt"))</td>
+                        </tr>
+                        <tr>
+                            <td >High Reading</td>
+                            <td>@inputText(meterForm("high.reading"))</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="submit" class="btn btn-primary" name="save" value="Save">
+            </div>
+        }
+    }

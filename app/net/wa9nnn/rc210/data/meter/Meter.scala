@@ -32,10 +32,10 @@ import java.util.concurrent.atomic.AtomicInteger
  * Obe of the 6 Meter channels.
  *
  * @param meterKind face name.
- * @param high      calibrate for low.
  * @param low       calibrate for high.
+ * @param high      calibrate for low.
  */
-case class Meter(key: MeterKey, meterKind: MeterFaceName, high: VoltToReading, low: VoltToReading) extends ComplexFieldValue[MeterKey] {
+case class Meter(key: MeterKey, meterKind: MeterFaceName, low: VoltToReading, high: VoltToReading) extends ComplexFieldValue[MeterKey] {
   override val fieldName: String = "Meter"
 
   override def display: String = toString
@@ -64,7 +64,8 @@ object Meter extends ComplexExtractor[MeterKey] {
   def extract(memory: Memory): Seq[FieldEntry] = {
     val mai = new AtomicInteger()
     val nMeters = KeyKind.meterKey.maxN()
-    val faceNames: Array[MeterFaceName] = memory.sub8(186, nMeters).map(MeterFaceName.lookup)
+    val faceInts = memory.sub8(186, nMeters)
+    val faceNames: Array[MeterFaceName] = faceInts.map(MeterFaceName.lookup)
     val lowX: Seq[Int] = memory.iterator16At(202).take(nMeters).toSeq
     val lowY: Seq[Int] = memory.iterator16At(218).take(nMeters).toSeq
     val highX: Seq[Int] = memory.iterator16At(234).take(nMeters).toSeq
