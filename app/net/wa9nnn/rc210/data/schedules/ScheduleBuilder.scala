@@ -28,8 +28,9 @@ object ScheduleBuilder extends LazyLogging {
 
       val sDow = chunks(DOW)(n).toString
       val (week: Week, dow: DayOfWeek) = {
+        val ints: Array[Int] = sDow.toCharArray.map(_.asDigit)
         try {
-          sDow.toCharArray.map(_.asDigit) match {
+          ints match {
             case Array(dow) =>
               Week.Every -> DayOfWeek.values()(dow)
             case Array(wInMo, dow) =>
@@ -40,7 +41,7 @@ object ScheduleBuilder extends LazyLogging {
           }
         } catch {
           case e: Exception =>
-            logger.error(s"Extracting DOW for: $scheduleKey", e)
+            logger.error(s"Extracting DOW for: $scheduleKey data: ${ints.mkString(",")}", e)
             Week.Every -> DayOfWeek.EveryDay
         }
       }
