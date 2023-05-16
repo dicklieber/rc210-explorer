@@ -43,9 +43,22 @@ case class Meter(key: MeterKey, meterKind: MeterFaceName, low: VoltToReading, hi
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = Seq(
-    "todo"
-  )
+  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
+    val c = key.number.toString
+    val m = meterKind.value
+    val x1 = low.hundredthVolt
+    val y1 = low.reading
+    val x2 = high.hundredthVolt
+    val y2 = high.reading
+
+    Seq(
+      /*
+      *2064 C * M* X1* Y1* X2* Y2* C= Channel 1 to 8 M=Meter Type 0 to 6 X1, Y1, X2, Y2 represent two calibration points.
+      * There must be 6 parameters entered to define a meter face, each value ending with *.
+       */
+      s"1*2064$c*$m*$x1*$y1*$x2*$y2*"
+    )
+  }
 
   override def toJsonValue: JsValue = Json.toJson(this)
 

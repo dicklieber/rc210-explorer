@@ -63,6 +63,7 @@ libraryDependencies ++= Seq(
   "org.apache.commons" % "commons-text" % "1.10.0",
   "com.github.kxbmap" %% "configs" % "0.6.1",
   "com.github.skjolber.jackson" % "jackson-syntax-highlight" % "1.0.7",
+  "org.pac4j" %% "play-pac4j" % "12.0.0-PLAY2.8-RC1",
 )
 
 

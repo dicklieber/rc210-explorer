@@ -37,7 +37,20 @@ case class MeterAlarm(val key: MeterAlarmKey, meter: MeterKey, alarmType: AlarmT
    * Render this value as an RD-210 command string.
    */
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
-    throw new NotImplementedError() //todo
+    /**
+     * *2066 alarm number * meter number * alarmtype * trippoint * macro to run *
+     * There are 8 meter alarms, 1 through 8
+     * Meter Number is 1 through 8 (for the ADC channels) AlarmType determines the action taken by that alarm:
+     * 1 - Low Alarm 2 - High Alarm
+     */
+    val aNumber = key.number
+    val mNumber = meter.number
+    val at = alarmType.value
+    val trip = tripPoint
+    val macNumber = macroKey.number
+    Seq(
+      s"1*2066$aNumber*$mNumber*$at*$macNumber*"
+    )
   }
 
   override def toJsonValue: JsValue = Json.toJson(this)
