@@ -29,6 +29,11 @@ import java.nio.file.{Files, Path}
 import java.time.Instant
 import javax.inject.{Inject, Singleton}
 
+
+/**
+ * Where to find directories and files.
+ * @param config
+ */
 @Singleton
 class DatFile @Inject()(config: Config) extends LazyLogging {
 
@@ -38,6 +43,8 @@ class DatFile @Inject()(config: Config) extends LazyLogging {
   val dataStorePath: Path = config.get[Path]("vizRc210.dataStoreFile").value
   val dataStoreFile: URL = dataStorePath.toUri.toURL
   val sendLog:Path = config.get[Path]("vizRc210.sendLog").value
+  val usersFile:Path = config.get[Path]("vizRc210.usersFile").value
+  val sessionFile:Path = config.get[Path]("vizRc210.sessionFile").value
 
 
   def apply(rc210Data: RC210Data): Memory = {

@@ -20,6 +20,7 @@ package net.wa9nnn.rc210
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, MessageKey, MeterAlarmKey, MeterKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.security.UserId.UserId
 import play.api.mvc.PathBindable
 
 object Binders {
@@ -89,5 +90,18 @@ object Binders {
 
     override def unbind(key: String, fieldKey: FieldKey): String =
       fieldKey.param
+  }
+  implicit def userIdBinder: PathBindable[UserId] = new PathBindable[UserId] {
+    override def bind(key: String, value: String): Either[String, UserId] =
+
+      try {
+        Right(value)
+      } catch {
+        case e: Exception =>
+          Left(e.getMessage)
+      }
+
+    override def unbind(key: String, userId: UserId): String =
+      userId
   }
 }

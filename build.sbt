@@ -42,7 +42,7 @@ Compile / unmanagedResourceDirectories += baseDirectory.value / "resources"
 resolvers += ("Reposilite" at "http://194.113.64.105:8080/releases").withAllowInsecureProtocol(true)
 
 
-val logbackVersion = "1.4.5"
+val logbackVersion = "1.4.7"
 val specs2Version = "4.19.2"
 libraryDependencies += specs2 % Test
 
@@ -53,17 +53,19 @@ libraryDependencies ++= Seq(
   guice, specs2 % Test,
   "net.wa9nnn" %% "util" % "0.1.12-SNAPSHOT",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
-  "net.codingwell" %% "scala-guice" % "5.1.0",
+  "net.codingwell" %% "scala-guice" % "5.1.1",
   "ch.qos.logback" % "logback-classic" % logbackVersion,
   "ch.qos.logback" % "logback-core" % logbackVersion,
   "commons-io" % "commons-io" % "2.11.0",
-  "com.fazecast" % "jSerialComm" % "[2.0.0,3.0.0)",
+  "com.fazecast" % "jSerialComm" % "2.9.3",
   "io.suzaku" %% "boopickle" % "1.4.0",
   "org.fusesource.jansi" % "jansi" % "2.4.0",
   "org.apache.commons" % "commons-text" % "1.10.0",
   "com.github.kxbmap" %% "configs" % "0.6.1",
-  "com.github.skjolber.jackson" % "jackson-syntax-highlight" % "1.0.7",
-  "org.pac4j" %% "play-pac4j" % "12.0.0-PLAY2.8-RC1",
+  "be.objectify" %% "deadbolt-scala" % "2.8.2",
+  "org.mindrot" % "jbcrypt" % "0.4",
+  "com.github.andyglow" %% "typesafe-config-scala" % "2.0.0" % Compile,
+
 )
 
 

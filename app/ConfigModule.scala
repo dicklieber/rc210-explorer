@@ -42,7 +42,7 @@ class ConfigModule(configuration: Configuration) extends ScalaModule with LazyLo
   override def configure(): Unit = {
     val config = configuration.underlying
 
-    //    bind[Config].toInstance(config)
+    staticConfigs.config = config
     bindConfig(config)
   }
 

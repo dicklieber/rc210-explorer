@@ -6,3 +6,25 @@ tooLong={0} is to long, max (1)!
 
 format.dtmf=Touch tone digits
 schedule.dtmf= sdtmf
+
+
+
+callsignLabel=Callsign:
+session.header =Session
+session.callsignLabel=Callsign:
+session.userNameLabel=Name:
+session.emailLabel =Email:
+session.sinceLabel=Since:
+session.uuidLabel=UUID:
+session.sessionIdLabel=SessionId:
+session.touchedLabel=Touched:
+session.remoteLabel=Remote IP:
+
+sessions.listHeader =User Sessions
+sessions.sessionId =SessionId
+sessions.callsign =Callsign
+sessions.roles=Roles
+sessions.started=Started
+sessions.duration=Duration
+sessions.touched = Touched
+sessions.menu=Sessions

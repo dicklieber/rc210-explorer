@@ -21,6 +21,7 @@ import controllers.routes
 import net.wa9nnn.rc210.ui.Tabs.TabName
 
 object Tabs {
+
   val noTab:Tab = Tab("none", "", "this should never show.")
   val flowTab: Tab = Tab("Flow", routes.Flow2Controller.flow().url, "How to Macros to things. How this all works.")
   val commonTab: Tab = Tab("Common", routes.CommonEditorController.index().url, "Global settings")
@@ -43,7 +44,8 @@ object Tabs {
   val rc210Tab: Tab = Tab("RC-210", routes.IOController.listSerialPorts().url, "RC-210 Download.")
   val fileUpload: Tab = Tab("Upload", routes.DataStoreController.upload.url, "Upload a saved JSON file.")
   val changes: Tab = Tab("Changes", routes.CandidateController.index().url, "Pending changes that need to be sent to the RC-210.")
-  val remoteBase: Tab = Tab("Remote Base", routes.RemoteBaseController.index.url, "Manabge Remote Base radio.")
+  val remoteBase: Tab = Tab("Remote Base", controllers.routes.RemoteBaseController.index.url, "Manabge Remote Base radio.")
+  def security: Tab = Tab("Users", routes.AuthenticatationController.users().url, "Edit Users")
 
   val tabs: Seq[Tab] = Seq(
     flowTab,

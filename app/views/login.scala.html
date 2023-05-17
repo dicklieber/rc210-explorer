@@ -1,0 +1,33 @@
+@import net.wa9nnn.rc210.security.authentication.Login
+@(form: Form[Login], loginInfo: String,  errorMessage: Option[String] = None, needsAdmin: Boolean = false)(implicit messages: MessagesProvider)
+<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
+
+<p>@loginInfo</p>
+<h2>@Messages("login.header")</h2>
+<form method="post" action="/doLogin">
+    <input type="hidden" name="destination"  value="@form("destination").value">
+
+    @helper.inputText(form("callsign"))
+    @helper.inputPassword(form("password"))
+    <input type="submit" name="login" value="@Messages("login.submit.button")">
+@*    <table>*@
+@*        <tr>*@
+@*            <td>@Messages("login.callsignPrompt")</td>*@
+@*            <td><input type="text" name="callsign" id="user"></td>*@
+@*        </tr>*@
+@*        <tr>*@
+@*            <td>@Messages("login.passwordPrompt")</td>*@
+@*            <td><input type="password" name="password" id="password"></td>*@
+@*        </tr>*@
+@*        <tr>*@
+@*            <td colspan="2" align="center"><input type="submit" name="login" value="@Messages("login.submit.button")"></td>*@
+@*        </tr>*@
+@*    </table>*@
+    @if(errorMessage.isDefined) {
+        <p class="sadMessage">@Messages(errorMessage.get)</p>
+    }
+    @if(needsAdmin) {
+        <p class="sadMessage">@Messages("login.noadminMessage")</p>
+    }
+
+</form>
