@@ -3,8 +3,8 @@ package net.wa9nnn.rc210.security.authentication
 import com.typesafe.scalalogging.LazyLogging
 import controllers.UserEditDTO
 import net.wa9nnn.rc210.security.UserId.UserId
+import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.security.Who.Callsign
-import net.wa9nnn.rc210.security.{RcRole, Who}
 import play.api.libs.json.{Format, Json}
 
 import java.time.Instant
@@ -16,25 +16,12 @@ import java.time.Instant
  * @param users             all the user data.
  * @param stamp             when.
  */
-case class UserRecords(who: Who = Who(), users: List[UserRecord] = List.empty,  val stamp: Instant = Instant.now()) extends LazyLogging {
+case class UserRecords(who: Who = Who(), users: List[User] = List.empty, val stamp: Instant = Instant.now()) extends LazyLogging {
 
-  lazy val idMap: Map[UserId, UserRecord] = users.map(u => u.id -> u).toMap
-  lazy val callSignMap: Map[Callsign, UserRecord] = users.map(u => u.callsign -> u).toMap
+  lazy val idMap: Map[UserId, User] = users.map(u => u.id -> u).toMap
+  lazy val callSignMap: Map[Callsign, User] = users.map(u => u.callsign -> u).toMap
 
   def size: Int = users.size
-
-  def needsAdminUser: Boolean = {
-    try {
-      val map = idMap
-      !map.values.exists { userRecord =>
-        userRecord.role == RcRole.adminRole
-      }
-    } catch {
-      case e: Exception =>
-        logger.error("Looks for admin", e)
-        true
-    }
-  }
 
 
 //  def toTable()(implicit messagesProvider: MessagesProvider): Table = {
@@ -44,7 +31,12 @@ case class UserRecords(who: Who = Who(), users: List[UserRecord] = List.empty,  
 //  }
 
 
-  def validate(login: Login): Option[UserRecord] = {
+  /**
+   * get [[User]]
+    * @param login
+   * @return SOme[User] if callsign exists and password hash matches.
+   */
+  def validate(login: Login): Option[User] = {
 
     for {
       userRecord <- callSignMap.get(login.callsign)
@@ -54,22 +46,22 @@ case class UserRecords(who: Who = Who(), users: List[UserRecord] = List.empty,  
     }
   }
 
-  def get(id: UserId): Option[UserRecord] = {
+  def get(id: UserId): Option[User] = {
     idMap.get(id)
   }
 
   /**
-   * insert or replace a user [[UserRecord]]
+   * insert or replace a user [[User]]
    *
    * @param who is making this change.
    * @return a new [[UserRecords]]
    */
   def update(in: UserEditDTO)(implicit who: Who): UserRecords = {
 
-    val maybeRecord: Option[UserRecord] = idMap.get(in.id)
+    val maybeRecord: Option[User] = idMap.get(in.id)
 
-    val maybeUserRecord: Option[UserRecord] = maybeRecord.map(currentUserReord => currentUserReord.update(in))
-    val userRecord = maybeUserRecord.getOrElse(UserRecord(in))
+    val maybeUserRecord: Option[User] = maybeRecord.map(currentUserReord => currentUserReord.update(in))
+    val userRecord = maybeUserRecord.getOrElse(User(in))
 
     finish(idMap + (userRecord.id -> userRecord), who)
   }
@@ -86,7 +78,7 @@ case class UserRecords(who: Who = Who(), users: List[UserRecord] = List.empty,  
   }
 
   // common when changing anything
-  private def finish(uuidMap: Map[UserId, UserRecord], who: Who): UserRecords = {
+  private def finish(uuidMap: Map[UserId, User], who: Who): UserRecords = {
     val updatedUsers = uuidMap.values
       .toList
       .sorted

@@ -17,43 +17,49 @@
 
 package controllers
 
-import be.objectify.deadbolt.scala.ActionBuilders
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.security.authentication
 import net.wa9nnn.rc210.security.authentication.SessionManager.playSessionName
 import net.wa9nnn.rc210.security.authentication.{Login, RcSession, SessionManager, UserManager}
 import play.api.data.Forms.{mapping, text}
 import play.api.data.{Form, FormError}
+import play.api.i18n._
 import play.api.mvc._
 
-import java.net.InetAddress
-import javax.inject.{Inject, Singleton}
+import javax.inject._
+
 
 @Singleton
 class LoginController @Inject()(implicit config: Config,
                                 userManager: UserManager,
-                                actionBuilder: ActionBuilders,
                                 sessionManager: SessionManager,
-                                cc: ControllerComponents)
-  extends MessagesInjectedController with LazyLogging {
+                               ) extends MessagesInjectedController with LazyLogging with I18nSupport {
+  //  extends MessagesAbstractController
+
   val loginForm: Form[Login] = Form {
     mapping(
       "callsign" -> text,
       "password" -> text,
     )(Login.apply)(Login.unapply)
   }
-  val ownerMessage: String = config.getString("allstar.authentication.message")
+  val ownerMessage: String = "todo have ui for this"
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
+
+
+  //  def index = Action {
+  //    val messages: Messages = request.messages
+  //    val message: String = messages("info.error")
+  //    Ok(message)
+  //  }
 
   /**
    *
    * @param maybeMessage show as error message.
    */
-  def loginLanding(maybeMessage: Option[String] = None): Action[AnyContent] = Action {
-    implicit request =>
-      val form = loginForm.fill(authentication.Login())
-      Ok(views.html.login(form, ownerMessage, errorMessage = maybeMessage, userManager.needsAdminUser))
+  def loginLanding(maybeMessage: Option[String] = None) = Action {
+    implicit request: RequestHeader =>
+      val form = loginForm.fill(Login())
+      Ok(views.html.login(form, ownerMessage, errorMessage = maybeMessage))
   }
 
   private val discardingCookie: DiscardingCookie = DiscardingCookie(playSessionName)
@@ -63,33 +69,31 @@ class LoginController @Inject()(implicit config: Config,
    *
    * @return
    */
-  def dologin(): Action[AnyContent] = Action {
-    implicit request =>
-        val binded: Form[Login] = loginForm.bindFromRequest()
-        binded.fold(
-          (formWithErrors: Form[Login]) => {
-            val errors: Seq[FormError] = formWithErrors.errors
-            errors.foreach { err =>
-              logger.error(err.message)
-            }
-            //          val destination = formWithErrors.data.get("destination")
-            BadRequest(views.html.login(formWithErrors, ownerMessage, Option("auth.badlogin")))
-          },
-          (login: Login) => {
-            userManager.validate(login)
-              .map { userRecord =>
-                val remoteAddress: InetAddress = request.connection.remoteAddress
-                val session = sessionManager.create(userRecord, remoteAddress)
-                session
-              } match {
-              case Some(amSession: RcSession) =>
-                logger.info(s"Login callsign:${login.callsign}  roles:${amSession.roles} ip:${request.remoteAddress}")
-                Redirect(routes.PortsEditorController.index()).withCookies(amSession.cookie)
-              case None =>
-                logger.error(s"Login Failed callsign:${login.callsign} ip:${request.remoteAddress}")
-                Redirect(routes.LoginController.loginLanding(None)).discardingCookies(discardingCookie)
-            }
-          })
+  def dologin() = Action{ implicit request: Request[AnyContent] =>
+      val binded: Form[Login] = loginForm.bindFromRequest()
+      binded.fold(
+        (formWithErrors: Form[Login]) => {
+          val errors: Seq[FormError] = formWithErrors.errors
+          errors.foreach { err =>
+            logger.error(err.message)
+          }
+          //          val destination = formWithErrors.data.get("destination")
+          BadRequest(views.html.login(formWithErrors, ownerMessage, Option("auth.badlogin")))
+        },
+        (login: Login) => {
+          userManager.validate(login)
+            .map { user =>
+              val session = sessionManager.create(user)
+              session
+            } match {
+            case Some(rcSession: RcSession) =>
+              logger.info(s"Login callsign:${login.callsign}")
+              Redirect(routes.PortsEditorController.index()).withCookies(rcSession.cookie)
+            case None =>
+              logger.error(s"Login Failed callsign:${login.callsign} ip:${request.remoteAddress}")
+              Redirect(routes.LoginController.loginLanding(None)).discardingCookies(discardingCookie)
+          }
+        })
 
   }
 
@@ -99,7 +103,7 @@ class LoginController @Inject()(implicit config: Config,
       val maybeSession: Option[RcSession] = None
       maybeSession.foreach { session: RcSession =>
         sessionManager.remove(session.sessionId)
-        logger.info(s"Logout callsign:${session.who.callsign} ip:${request.remoteAddress}")
+        logger.info(s"Logout callsign:${session.callsign} ip:${request.remoteAddress}")
       }
 
       Redirect(routes.LoginController.loginLanding(None)).discardingCookies(discardingCookie)

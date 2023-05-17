@@ -17,23 +17,21 @@
 
 package controllers
 
+import net.wa9nnn.rc210.security.UserId
 import net.wa9nnn.rc210.security.UserId.UserId
 import net.wa9nnn.rc210.security.Who.Callsign
-import net.wa9nnn.rc210.security.{RcRole, UserId}
 
 /**
  *
  * @param callsign  user's callsign
  * @param name      friendly name
  * @param email     of user
- * @param role      for this user.
  * @param id        a unique ID for the user. Not normally showed to users.
  * @param password  Some[String] with new password. None will keep existing password.
  */
 case class UserEditDTO(callsign: Callsign = "",
                        name: String = "",
                        email: String = "",
-                       role: RcRole = RcRole.viewRole,
                        id: UserId = UserId(),
                        password: Option[String] = None,
                        password2: Option[String] = None

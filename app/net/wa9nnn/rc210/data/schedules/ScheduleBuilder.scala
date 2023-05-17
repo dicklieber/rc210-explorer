@@ -41,7 +41,7 @@ object ScheduleBuilder extends LazyLogging {
           }
         } catch {
           case e: Exception =>
-            logger.error(s"Extracting DOW for: $scheduleKey data: ${ints.mkString(",")}", e)
+            logger.error(s"Extracting DOW for: $scheduleKey data: ${ints.mkString(",")}")
             Week.Every -> DayOfWeek.EveryDay
         }
       }

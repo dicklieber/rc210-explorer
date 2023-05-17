@@ -19,9 +19,7 @@ package controllers
 
 import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.datastore.{DataStore, DataStoreJson}
-import net.wa9nnn.rc210.data.field.FieldValue
 import play.api.libs.Files
 import play.api.libs.json.Json
 import play.api.mvc._

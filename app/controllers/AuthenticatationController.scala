@@ -17,35 +17,29 @@
 
 package controllers
 
-import be.objectify.deadbolt.scala.{ActionBuilders, AuthenticatedRequest}
 import com.typesafe.config.Config
-import net.wa9nnn.rc210.security.RcRole
-import net.wa9nnn.rc210.security.RcRole.{adminRole, tempAdminRole}
+import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.security.UserId.UserId
+import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.security.authentication.{UserManager, UserRecords}
-import play.api.data.Forms.{mapping, of, optional, text}
+import play.api.data.Forms.{mapping, optional, text}
 import play.api.data.{Form, FormError}
-import play.api.mvc.{Action, AnyContent, ControllerComponents, MessagesInjectedController}
-import play.mvc.Controller
+import play.api.i18n.I18nSupport
+import play.api.mvc.{Action, AnyContent, MessagesInjectedController, MessagesRequest}
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.Future
 
 /**
  * User Management
  */
 @Singleton
-class AuthenticatationController @Inject()(implicit
-                                           config: Config,
-                                           userManager: UserManager,
-                                           actionBuilder: ActionBuilders,
-                                           cc: ControllerComponents) extends Controller {
+class AuthenticatationController @Inject()(implicit config: Config, userManager: UserManager)
+  extends MessagesInjectedController with I18nSupport with LazyLogging{
   val userDetailForm: Form[UserEditDTO] = Form {
     mapping(
       "callsign" -> text,
       "name" -> text,
       "email" -> text,
-      "role" -> of[RcRole],
       "id" -> text,
       "password" -> optional(text),
       "password" -> optional(text),
@@ -55,58 +49,48 @@ class AuthenticatationController @Inject()(implicit
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
 
-  def users: Action[AnyContent] = be.objectify.deadbolt.scala.SubjectActionBuilder(adminRole, tempAdminRole) {
-    implicit request =>
-      Future {
-        val userRecords: UserRecords = userManager.userRecords
-        Ok(views.html.users(userRecords))
-      }
+  def users: Action[AnyContent] = Action { implicit request =>
+    val userRecords: UserRecords = userManager.userRecords
+    Ok(views.html.users(userRecords))
   }
 
-  def editUser(id: String): Action[AnyContent] = allowRoles(adminRole, tempAdminRole) {
-    implicit request =>
-      Future {
-        userManager.get(id) match {
-          case Some(userRecord) =>
-            val userDetailData: UserEditDTO = userRecord.userEditDTO
-            val value: Form[UserEditDTO] = userDetailForm.fill(userDetailData)
-            Ok(views.html.userEditor(value))
-          case None =>
-            Ok(s"UUID: $id not found!")
-        }
-      }
+  def editUser(id: String): Action[AnyContent] = Action { implicit request =>
+    userManager.get(id) match {
+      case Some(userRecord) =>
+        val userDetailData: UserEditDTO = userRecord.userEditDTO
+        val userDtoForm: Form[UserEditDTO] = userDetailForm.fill(userDetailData)
+        Ok(views.html.userEditor(userDtoForm))
+      case None =>
+        Ok(s"UserId: $id not found!")
+    }
   }
 
-  def addUser(): Action[AnyContent] = allowRoles(adminRole) {
-    implicit request =>
-      val userDetailData = UserEditDTO()
-      val emptyForm = userDetailForm.fill(userDetailData)
-      Future(
-        Ok(views.html.security.userEditor(emptyForm))
-      )
+  def addUser(): Action[AnyContent] = Action { implicit request =>
+    val userDetailData = UserEditDTO()
+    val emptyForm = userDetailForm.fill(userDetailData)
+    Ok(views.html.userEditor(emptyForm))
   }
 
-  def remove(id: String): Action[AnyContent] = allowRoles(adminRole) {
-    implicit request: AuthenticatedRequest[AnyContent] =>
-      Future {
-        request.subject.map { _ =>
-          userManager.delete(id)
-          Redirect(routes.AuthenticatationController.users())
-        }.getOrElse {
-          InternalServerError("No subject")
-        }
-      }
+  def remove(userId: UserId): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
+    userManager.delete(userId)((Who()))
+    Redirect(routes.AuthenticatationController.users())
+/*
+    request.subject.map { _ =>
+      userManager.delete(id)
+      Redirect(routes.AuthenticatationController.users())
+    }.getOrElse {
+      InternalServerError("No subject")
+    }
+*/
   }
 
-  def saveUser(): Action[AnyContent] = allowRoles(adminRole) {
-    implicit request: AuthenticatedRequest[AnyContent] =>
-      Future {
+  def saveUser(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
         val binded: Form[UserEditDTO] = userDetailForm.bindFromRequest()
         val maybeString: Option[String] = binded.data.get("submit")
         maybeString.get match {
           case "delete" =>
             binded.data.get("id").foreach((id: UserId) =>
-              userManager.delete(id)
+              userManager.delete(id)(Who())
             )
             Redirect(routes.AuthenticatationController.users())
           case "cancel" =>
@@ -118,10 +102,10 @@ class AuthenticatationController @Inject()(implicit
                 errors.foreach { err =>
                   logger.error(err.message)
                 }
-                BadRequest(views.html.security.userEditor(formWithErrors))
+                BadRequest(views.html.userEditor(formWithErrors))
               },
               (userDetailData: UserEditDTO) => {
-                userManager.put(userDetailData)
+                userManager.put(userDetailData)(Who())
                 Redirect(routes.AuthenticatationController.users())
               }
             )
@@ -130,6 +114,5 @@ class AuthenticatationController @Inject()(implicit
             Redirect(routes.AuthenticatationController.users())
 
         }
-      }
   }
 }

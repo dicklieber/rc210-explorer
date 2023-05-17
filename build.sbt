@@ -62,7 +62,6 @@ libraryDependencies ++= Seq(
   "org.fusesource.jansi" % "jansi" % "2.4.0",
   "org.apache.commons" % "commons-text" % "1.10.0",
   "com.github.kxbmap" %% "configs" % "0.6.1",
-  "be.objectify" %% "deadbolt-scala" % "2.8.2",
   "org.mindrot" % "jbcrypt" % "0.4",
   "com.github.andyglow" %% "typesafe-config-scala" % "2.0.0" % Compile,
 

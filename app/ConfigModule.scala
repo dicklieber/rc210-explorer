@@ -4,6 +4,7 @@ import com.typesafe.config.{Config, ConfigValue}
 import com.typesafe.scalalogging.LazyLogging
 import net.codingwell.scalaguice.BindingExtensions._
 import net.codingwell.scalaguice.ScalaModule
+import net.wa9nnn.rc210.StaticConfigs
 import play.api.Configuration
 
 import java.util.Map.Entry
@@ -42,7 +43,7 @@ class ConfigModule(configuration: Configuration) extends ScalaModule with LazyLo
   override def configure(): Unit = {
     val config = configuration.underlying
 
-    staticConfigs.config = config
+    StaticConfigs.config = config
     bindConfig(config)
   }
 

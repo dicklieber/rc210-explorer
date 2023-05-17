@@ -6,14 +6,14 @@ import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.io.DatFile
 import net.wa9nnn.rc210.security.UserId.UserId
-import net.wa9nnn.rc210.security.authentication.SessionManager.{SessionId, sessionIdGenerator}
+import net.wa9nnn.rc210.security.authentication.RcSession.SessionId
+import net.wa9nnn.rc210.security.authentication.SessionManager.sessionIdGenerator
 import net.wa9nnn.rc210.util.JsonIoWithBackup
 import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.Cookie
 
 import java.io.FileNotFoundException
-import java.net.InetAddress
 import java.nio.file.Path
 import java.security.SecureRandom
 import java.time.Instant
@@ -21,10 +21,9 @@ import java.time.temporal.ChronoUnit
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
-
 /**
  * Creates and manages [[RcSession]] objects.
- * The SessionId in an [[RcSession]] is stored as a cookie, via play session support in the client.
+ * The RcSessionId in an [[RcSession]] is stored as a cookie, via play RcSession support in the client.
  * Periodically Persisted if dirty.
  * Loaded at startup
  */
@@ -32,7 +31,7 @@ import scala.language.postfixOps
 class SessionManager @Inject()(config: Config, datFile: DatFile, actorSystem: ActorSystem) extends LazyLogging {
 
   private val sessionMap = new TrieMap[SessionId, RcSession]
-  private val uuidMap = new TrieMap[UserId, RcSession]
+  private val userMap = new TrieMap[UserId, RcSession]
   private var dirty = false
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
@@ -40,85 +39,86 @@ class SessionManager @Inject()(config: Config, datFile: DatFile, actorSystem: Ac
   private val sessionFile: Path = datFile.sessionFile
 
   try {
-    val sessions = JsonIoWithBackup(sessionFile).as[Sessions]
-    sessions.sessions.foreach { session =>
+    val sessions = JsonIoWithBackup(sessionFile).as[RcSessions].sessions
+    sessions.foreach { session =>
       sessionMap.put(session.sessionId, session)
-      logger.debug("Loaded {} sessions from {}", sessionMap.size, sessionFile)
+      logger.debug("Loaded {} RcSessions from {}", sessionMap.size, sessionFile)
     }
   } catch {
     case _: FileNotFoundException =>
       logger.info("Session file: {} not found!", sessionFile)
     case e: Exception =>
-      logger.error("Error loading file: {}!", sessionFile, e)
-
+      logger.error("Error loading file: {}!", sessionFile)
   }
 
+  logger.info("Session Manager Started")
 
-  def create(userRecord: UserRecord, remoteAddress: InetAddress)(implicit messagesProvider: MessagesProvider): RcSession = {
-    val uuid = userRecord.id
-    val newSession = uuidMap.getOrElseUpdate(uuid, {
-      val newSession: RcSession = RcSession(sessionId = sessionIdGenerator.nextLong().toString,
-        who = userRecord.toWho,
-        roles = List(userRecord.role),
-        remoteAddress = remoteAddress.toString)
-      sessionMap.put(newSession.sessionId, newSession)
-      newSession
-    })
+  def create(user: User)(implicit messagesProvider: MessagesProvider): RcSession = {
+    val newRcSession = userMap.getOrElseUpdate(user.id, {
+      val newRcSession: RcSession = RcSession(sessionId = sessionIdGenerator.nextLong().toString, user = user)
+      sessionMap.put(newRcSession.sessionId, newRcSession)
+      userMap.put(user.id, newRcSession)
+      newRcSession
+    }
+
+    )
     dirty = true
-    newSession
+    newRcSession
   }
 
   def lookup(cookie: Cookie): Option[RcSession] = lookup(cookie.value)
 
   def lookup(sessionId: SessionId): Option[RcSession] = {
     sessionMap.get(sessionId)
-      .map { session =>
-        session.touch()
+      .map { RcSession =>
+        RcSession.touch()
         dirty = true
-        session
+        RcSession
       }
   }
 
   def remove(sessionId: SessionId): Unit = {
     sessionMap.remove(sessionId)
-      .foreach { session: RcSession =>
-        uuidMap.remove(session.who.id)
+      .foreach { RcSession: RcSession =>
+        userMap.remove(RcSession.user.id)
         dirty = true
       }
   }
 
   def purge(): Unit = {
-    logger.trace("Session Purge")
+    logger.trace("RcSession Purge")
     val removeOlderThan = Instant.now().minus(3, ChronoUnit.HOURS)
     val beforePurge = sessionMap.size
-    sessionMap.filterInPlace { (_, session) =>
-      session.touched isAfter removeOlderThan
+    sessionMap.filterInPlace { (_, RcSession) =>
+      RcSession.touched isAfter removeOlderThan
     }
-    uuidMap.filterInPlace { (_, session) =>
-      session.touched isAfter removeOlderThan
+    userMap.filterInPlace { (_, RcSession) =>
+      RcSession.touched isAfter removeOlderThan
     }
     if (beforePurge != sessionMap.size) {
       dirty = true
     }
     if (dirty) {
-      val sessions = Sessions(sessionMap.values.toList)
-      logger.debug("Wrote {} sessions to {}", sessions.sessions.size, sessionFile.toFile.toURI.toString)
+      val sessions = RcSessions(sessionMap.values.toList)
+      logger.debug("Wrote {} RcSessions to {}", sessions.size, sessionFile.toFile.toURI.toString)
       dirty = false
     }
   }
-
 
 
 }
 
 object SessionManager {
   val sessionIdGenerator = new SecureRandom()
-  type SessionId = String
-  val playSessionName = "rcsession"
+  type RcSessionId = String
+  val playSessionName = "rcSession"
 }
 
-case class Sessions(sessions: List[RcSession])
+case class RcSessions(sessions: Seq[RcSession]) {
+  def size: Int = sessions.size
 
-object Sessions {
-  implicit val fmtSessions: Format[Sessions] = Json.format[Sessions]
+}
+
+object RcSessions {
+  implicit val fmtRcSessions: Format[RcSessions] = Json.format[RcSessions]
 }

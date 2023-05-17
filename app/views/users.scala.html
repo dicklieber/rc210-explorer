@@ -1,6 +1,40 @@
 @import net.wa9nnn.rc210.security.authentication.UserRecords
 @import net.wa9nnn.rc210.ui.Tabs
 @(userRecords: UserRecords)
-@tabbedmain(Tabs.security){
+    @tabbedmain(Tabs.security) {
 
-}
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Callsign</th>
+                    <th>Name</th>
+                    <th>eMail</th>
+                </tr>
+            </thead>
+            <tbody>
+            @for(user <- userRecords.users) {
+                <tr>
+                    <td>
+                        @editButton( routes.AuthenticatationController.editUser(user.id).url)
+                    </td>
+                    <td>
+                        @user.callsign
+                    </td>
+                    <td>
+                        @user.name
+                    </td>
+                    <td>
+                        @user.email
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        <input type="submit" class="btn btn-primary" name="save" value="Save">
+
+
+        <button type="button" class="bi bi-person-add"  title="Add user"
+        onclick="window.location.href = '@routes.AuthenticatationController.addUser()'">
+
+    }
