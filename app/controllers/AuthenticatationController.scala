@@ -34,12 +34,12 @@ import javax.inject.{Inject, Singleton}
  */
 @Singleton
 class AuthenticatationController @Inject()(implicit config: Config, userManager: UserManager)
-  extends MessagesInjectedController with I18nSupport with LazyLogging{
+  extends MessagesInjectedController with LazyLogging {
   val userDetailForm: Form[UserEditDTO] = Form {
     mapping(
       "callsign" -> text,
-      "name" -> text,
-      "email" -> text,
+      "name" -> optional(text),
+      "email" -> optional(text),
       "id" -> text,
       "password" -> optional(text),
       "password" -> optional(text),
@@ -74,45 +74,25 @@ class AuthenticatationController @Inject()(implicit config: Config, userManager:
   def remove(userId: UserId): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
     userManager.delete(userId)((Who()))
     Redirect(routes.AuthenticatationController.users())
-/*
-    request.subject.map { _ =>
-      userManager.delete(id)
-      Redirect(routes.AuthenticatationController.users())
-    }.getOrElse {
-      InternalServerError("No subject")
-    }
-*/
+    /*
+        request.subject.map { _ =>
+          userManager.delete(id)
+          Redirect(routes.AuthenticatationController.users())
+        }.getOrElse {
+          InternalServerError("No subject")
+        }
+    */
   }
 
   def saveUser(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
-        val binded: Form[UserEditDTO] = userDetailForm.bindFromRequest()
-        val maybeString: Option[String] = binded.data.get("submit")
-        maybeString.get match {
-          case "delete" =>
-            binded.data.get("id").foreach((id: UserId) =>
-              userManager.delete(id)(Who())
-            )
-            Redirect(routes.AuthenticatationController.users())
-          case "cancel" =>
-            Redirect(routes.AuthenticatationController.users())
-          case "save" =>
-            binded.fold(
-              (formWithErrors: Form[UserEditDTO]) => {
-                val errors: Seq[FormError] = formWithErrors.errors
-                errors.foreach { err =>
-                  logger.error(err.message)
-                }
-                BadRequest(views.html.userEditor(formWithErrors))
-              },
-              (userDetailData: UserEditDTO) => {
-                userManager.put(userDetailData)(Who())
-                Redirect(routes.AuthenticatationController.users())
-              }
-            )
-          case x =>
-            logger.error(s"unknown command: $x")
-            Redirect(routes.AuthenticatationController.users())
-
-        }
+    userDetailForm.bindFromRequest.fold(
+      formWithErrors => {
+        BadRequest(views.html.userEditor(formWithErrors))
+      },
+      (userEditDTO: UserEditDTO) => {
+        userManager.put(userEditDTO)(Who())
+        Redirect(routes.AuthenticatationController.users())
+      }
+    )
   }
 }

@@ -30,8 +30,8 @@ import net.wa9nnn.rc210.security.Who.Callsign
  * @param password  Some[String] with new password. None will keep existing password.
  */
 case class UserEditDTO(callsign: Callsign = "",
-                       name: String = "",
-                       email: String = "",
+                       name: Option[String] = None,
+                       email: Option[String] = None,
                        id: UserId = UserId(),
                        password: Option[String] = None,
                        password2: Option[String] = None

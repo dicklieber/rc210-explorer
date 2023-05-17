@@ -1,5 +1,44 @@
 @import net.wa9nnn.rc210.ui.Tabs
-@(userForm: Form[UserEditDTO])
+@import views.html.helper.FieldConstructor
+@(userForm: Form[UserEditDTO])(implicit messages: MessagesProvider)
+@import views.html.helper.form
+@implicitField = @{
+    FieldConstructor(views.html.rc2input.f)
+}
+
 @tabbedmain(Tabs.security) {
-    //todo
+    @form(routes.AuthenticatationController.saveUser()) {
+        @defining(userForm("id").value.get) { id =>
+            <input type="hidden" value="@id" name="id">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <td>Callsign:</td>
+                        <td>@helper.inputText(userForm("callsign"))</td>
+                    </tr>
+                    <tr>
+                        <td>Name:</td>
+                        <td>@helper.inputText(userForm("name"))</td>
+                    </tr>
+                    <tr>
+                        <td>eMail:</td>
+                        <td>@helper.inputText(userForm("email"))</td>
+                    </tr>
+                    <tr>
+                        <td>Password:</td>
+                        <td>@helper.inputPassword(userForm("password"))</td>
+                    </tr>
+                    <tr>
+                        <td>Password Again:</td>
+                        <td>@helper.inputPassword(userForm("password2"))</td>
+                    </tr>
+                </tbody>
+            </table>
+            <input type="submit" class="btn btn-primary" name="save" value="Save">
+
+            <button type="submit" class="btn btn-primary" value="Delete">
+                <i class="bi bi-trash3"></i> Delete
+            </button>
+        }
+    }
 }
