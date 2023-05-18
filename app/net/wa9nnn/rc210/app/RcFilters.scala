@@ -23,17 +23,13 @@ import net.wa9nnn.rc210.security.authorzation.{AuthenticationFilter, LoggingFilt
 import javax.inject.{Inject, Singleton}
 import play.api.http.EnabledFilters
 import play.filters.gzip.GzipFilter
-import play.http.DefaultHttpFilters
+import play.api.http.DefaultHttpFilters
 
-class Filters @Inject()(
-                         defaultFilters: EnabledFilters,
-                         gzip: GzipFilter,
+class RcFilters @Inject()(
                          log: LoggingFilter,
                          authenticationFilter: AuthenticationFilter
-                       ) extends DefaultHttpFilters(gzip, log, authenticationFilter)
+                       ) extends DefaultHttpFilters(authenticationFilter, log)
   with LazyLogging {
-  logger.info(s"defaultFilters: $defaultFilters")
-  logger.info(s"gzip: $gzip")
   logger.info(s"log: $log")
   logger.info(s"authenticationFilter: $authenticationFilter")
 }

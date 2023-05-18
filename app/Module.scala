@@ -1,6 +1,6 @@
 
 import net.codingwell.scalaguice.ScalaModule
-import net.wa9nnn.rc210.app.Filters
+import net.wa9nnn.rc210.app.RcFilters
 import net.wa9nnn.rc210.data.datastore.{InitialLoader, MemoryFileLoader}
 import play.api.libs.concurrent.AkkaGuiceSupport
 import play.api.{Configuration, Environment}
@@ -21,7 +21,7 @@ class Module(environment: Environment, configuration: Configuration) extends Sca
   override def configure(): Unit = {
     install(new ConfigModule(configuration))
     bind[InitialLoader].asEagerSingleton()
-    bind[Filters].asEagerSingleton()
+//    bind[RcFilters].asEagerSingleton()
   }
 }
 
