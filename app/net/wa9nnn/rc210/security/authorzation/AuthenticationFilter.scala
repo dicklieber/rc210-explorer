@@ -17,29 +17,30 @@
 
 package net.wa9nnn.rc210.security.authorzation
 
-import javax.inject.{Inject, Singleton}
 import akka.stream.Materializer
 import com.typesafe.scalalogging.LazyLogging
-import play.api.Logging
+import net.wa9nnn.rc210.security.authentication.SessionManager.playSessionName
 import play.api.mvc._
 
-import scala.concurrent.ExecutionContext
-import scala.concurrent.Future
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
-class LoggingFilter @Inject() (implicit val mat: Materializer, ec: ExecutionContext) extends Filter with LazyLogging {
-  logger.info("LoggingFilter")
+@Singleton
+class AuthenticationFilter @Inject()(implicit val mat: Materializer, ec: ExecutionContext) extends Filter with LazyLogging {
+  logger.info("AuthenticationFilter")
   def apply(nextFilter: RequestHeader => Future[Result])(requestHeader: RequestHeader): Future[Result] = {
-    val startTime = System.currentTimeMillis
+
+    val cookies = requestHeader.cookies
+    cookies.find(_.name == playSessionName) match {
+      case Some(cookie: Cookie) =>
+        logger.info(s"have session: ${cookie.value}")
+      case None =>
+        logger.error("No session cookie. ")
+    }
 
     nextFilter(requestHeader).map { result =>
-      val endTime     = System.currentTimeMillis
-      val requestTime = endTime - startTime
 
-      logger.info(
-        s"${requestHeader.method} ${requestHeader.uri} took ${requestTime}ms and returned ${result.header.status}"
-      )
-
-      result.withHeaders("Request-Time" -> requestTime.toString)
+      result
     }
   }
 }

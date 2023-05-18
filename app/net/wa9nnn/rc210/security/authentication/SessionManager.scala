@@ -14,10 +14,12 @@ import play.api.libs.json.{Format, Json}
 import play.api.mvc.Cookie
 
 import java.io.FileNotFoundException
+import java.math.BigInteger
 import java.nio.file.Path
 import java.security.SecureRandom
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import java.util.Base64
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
@@ -55,7 +57,10 @@ class SessionManager @Inject()(config: Config, datFile: DatFile, actorSystem: Ac
 
   def create(user: User)(implicit messagesProvider: MessagesProvider): RcSession = {
     val newRcSession = userMap.getOrElseUpdate(user.id, {
-      val newRcSession: RcSession = RcSession(sessionId = sessionIdGenerator.nextLong().toString, user = user)
+      val lSession = sessionIdGenerator.nextLong()
+      val bytes: Array[Byte] = Base64.getEncoder.encode(BigInteger.valueOf(lSession).toByteArray)
+      val sessionId = new SessionId(bytes)
+      val newRcSession: RcSession = RcSession(sessionId = sessionId, user = user)
       sessionMap.put(newRcSession.sessionId, newRcSession)
       userMap.put(user.id, newRcSession)
       newRcSession

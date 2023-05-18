@@ -69,7 +69,7 @@ class LoginController @Inject()(implicit config: Config,
    *
    * @return
    */
-  def dologin() = Action{ implicit request: Request[AnyContent] =>
+  def dologin(): Action[AnyContent] = Action{ implicit request: Request[AnyContent] =>
       val binded: Form[Login] = loginForm.bindFromRequest()
       binded.fold(
         (formWithErrors: Form[Login]) => {
