@@ -40,5 +40,5 @@ case class UserEditDTO(callsign: Callsign = "",
 
   def withCallsign(newcallsign: String): UserEditDTO = copy(callsign = newcallsign)
 
-  def withName(name: String): UserEditDTO = copy(name = name)
+  def withName(newName: String): UserEditDTO = copy(name = Option(newName))
 }

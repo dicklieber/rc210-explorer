@@ -55,17 +55,3 @@ class UserManager @Inject()(config: Config)(implicit datFile: DatFile) extends  
   }
 
 }
-
-//trait UserManager {
-//
-//  def userRecords: UserRecords
-//
-//  def validate(login: Login): Option[User]
-//
-//  def put(userDetailData: UserEditDTO)(implicit who: Who): Unit
-//
-//  def get(id: UserId): Option[User]
-//
-//  def delete(id: UserId)(implicit who: Who): Unit
-//}
-

@@ -24,13 +24,6 @@ case class UserRecords(who: Who = Who(), users: List[User] = List.empty, val sta
   def size: Int = users.size
 
 
-//  def toTable()(implicit messagesProvider: MessagesProvider): Table = {
-//    val topHeader = s"Users (${users.length})"
-//    val header = Header(topHeader, headerCells: _*)
-//    Table(header, users.map(_.toRow()))
-//  }
-
-
   /**
    * get [[User]]
     * @param login

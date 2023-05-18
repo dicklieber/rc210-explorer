@@ -85,7 +85,7 @@ class AuthenticatationController @Inject()(implicit config: Config, userManager:
   }
 
   def saveUser(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
-    userDetailForm.bindFromRequest.fold(
+    userDetailForm.bindFromRequest().fold(
       formWithErrors => {
         BadRequest(views.html.userEditor(formWithErrors))
       },

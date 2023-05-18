@@ -10,32 +10,31 @@
     @form(routes.AuthenticatationController.saveUser()) {
         @defining(userForm("id").value.get) { id =>
             <input type="hidden" value="@id" name="id">
-            <table class="table table-bordered">
+            <table class="table table-bordered table-sm w-auto ">
                 <tbody>
                     <tr>
-                        <td>Callsign:</td>
+                        <td class="text-end">Callsign:</td>
                         <td>@helper.inputText(userForm("callsign"))</td>
                     </tr>
                     <tr>
-                        <td>Name:</td>
+                        <td class="text-end">Name:</td>
                         <td>@helper.inputText(userForm("name"))</td>
                     </tr>
                     <tr>
-                        <td>eMail:</td>
+                        <td class="text-end">eMail:</td>
                         <td>@helper.inputText(userForm("email"))</td>
                     </tr>
                     <tr>
-                        <td>Password:</td>
+                        <td class="text-end">Password:</td>
                         <td>@helper.inputPassword(userForm("password"))</td>
                     </tr>
                     <tr>
-                        <td>Password Again:</td>
+                        <td class="text-end">Password Again:</td>
                         <td>@helper.inputPassword(userForm("password2"))</td>
                     </tr>
                 </tbody>
             </table>
-            <input type="submit" class="btn btn-primary" name="save" value="Save">
-
+        @submitButton()
             <button type="submit" class="btn btn-primary" value="Delete">
                 <i class="bi bi-trash3"></i> Delete
             </button>

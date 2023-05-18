@@ -3,7 +3,7 @@
 @(userRecords: UserRecords)
     @tabbedmain(Tabs.security) {
 
-        <table>
+        <table class="table table-bordered table-sm w-auto">
             <thead>
                 <tr>
                     <th></th>
@@ -13,7 +13,7 @@
                 </tr>
             </thead>
             <tbody>
-            @for(user <- userRecords.users) {
+            @for(user <- userRecords.users.sorted) {
                 <tr>
                     <td>
                         @editButton( routes.AuthenticatationController.editUser(user.id).url)
@@ -31,7 +31,6 @@
             }
             </tbody>
         </table>
-        <input type="submit" class="btn btn-primary" name="save" value="Save">
 
 
         <button type="submit" class="btn btn-primary" value="Add" onclick="window.location.href = '@routes.AuthenticatationController.addUser()'">
