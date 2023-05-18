@@ -22,7 +22,7 @@ class DtmfSpec extends Specification with org.specs2.specification.Tables {
         Seq(161, 169, 0xe1, 0, 255) ! "10901B" | // another example row
         { (ints, expected) =>
           val dtmf = Dtmf(ints)
-          dtmf.value must beEqualTo(expected)
+          dtmf.get must beEqualTo(expected)
         } // the expectation to check on each row
     }
 """

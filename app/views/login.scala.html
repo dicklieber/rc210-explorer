@@ -6,8 +6,8 @@
 @loginInfo
 <p>@loginInfo</p>
 <h2>Signin</h2>
-<form method="post" action="/doLogin">
-    @helper.inputText(loginForm("callsign"))
+<form method="post" action="@routes.LoginController.dologin()">
+    @helper.inputText(loginForm("callsign"), Symbol("autocomplete") -> "off" ))
     @helper.inputPassword(loginForm("password"))
 <input type="submit" class="btn btn-primary" name="save" value="Sign In">
     @if(errorMessage.isDefined) {

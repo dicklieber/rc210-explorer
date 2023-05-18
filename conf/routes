@@ -53,8 +53,8 @@ GET         /clock                                     controllers.ClockControll
 POST        /remote/save                               controllers.RemoteBaseController.save()
 GET         /remote                                    controllers.RemoteBaseController.index
 
+POST        /loginDo                                   controllers.LoginController.dologin()
 GET         /login                                     controllers.LoginController.loginLanding(message:Option[String])
-POST        /doLogin                                   controllers.LoginController.dologin()
 GET         /logout                                    controllers.LoginController.logout()
 GET         /editUser/:id                              controllers.AuthenticatationController.editUser(id:String)
 GET         /users                                     controllers.AuthenticatationController.users()
