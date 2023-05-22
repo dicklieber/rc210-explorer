@@ -21,6 +21,7 @@ import com.wa9nnn.util.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.key.KeyKind
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.h2u
 import net.wa9nnn.rc210.ui.FormParser
 import play.api.mvc._
 
@@ -50,7 +51,7 @@ class CommonEditorController @Inject()(implicit val controllerComponents: Contro
   def save(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
       val updateData = FormParser(AnyContentAsFormUrlEncoded(request.body.asFormUrlEncoded.get))
-      dataStore.update(updateData)
+      dataStore.update(updateData)(h2u(request))
       Redirect(routes.CommonEditorController.index())
   }
 }

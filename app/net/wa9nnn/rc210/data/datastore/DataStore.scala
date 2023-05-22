@@ -24,6 +24,8 @@ import net.wa9nnn.rc210.data.named.{NamedKey, NamedSource}
 import net.wa9nnn.rc210.key.KeyFactory.{Key, MacroKey}
 import net.wa9nnn.rc210.key.KeyFormats._
 import net.wa9nnn.rc210.key.KeyKind
+import net.wa9nnn.rc210.security.Who
+import net.wa9nnn.rc210.security.authentication.User
 
 import javax.inject.{Inject, Singleton}
 import scala.collection.concurrent.TrieMap
@@ -97,26 +99,26 @@ class DataStore @Inject()(dataStoreJson: DataStoreJson) extends NamedSource with
    * @param fieldKey of
    * @throws IllegalStateException if there is no candidate.
    */
-  def acceptCandidate(fieldKey: FieldKey): Unit = {
+  def acceptCandidate(fieldKey: FieldKey)(implicit user:User): Unit = {
     valuesMap.put(fieldKey, valuesMap(fieldKey).acceptCandidate())
-    save()
+    save(user.who)
   }
 
-  def update(updateData: UpdateData): Unit = {
+  def update(updateData: UpdateData)(implicit user:User): Unit = {
     handleCandidates(updateData.candidates)
     handleNames(updateData.names)
-    save()
+    save(user.who)
   }
 
-  def update(fieldEntries: Seq[FieldEntry]): Unit = {
+  def update(fieldEntries: Seq[FieldEntry])(implicit user:User): Unit = {
     fieldEntries.foreach { fieldEntry =>
       valuesMap.put(fieldEntry.fieldKey, fieldEntry)
     }
-    save()
+    save(user.who)
   }
 
-  def toJson: DataTransferJson = {
-    DataTransferJson(all.map(_.toJson), allNamedKeys)
+  def toJson(who:Option[Who] = None): DataTransferJson = {
+    DataTransferJson(all.map(_.toJson), allNamedKeys, who)
   }
 
   /**
@@ -173,9 +175,8 @@ class DataStore @Inject()(dataStoreJson: DataStoreJson) extends NamedSource with
     }
   }
 
-
-  private def save(): Unit = {
-    dataStoreJson.write(toJson)
+  private def save(who: Who): Unit = {
+    dataStoreJson.write(toJson(Option(who)))
   }
 
   override def nameForKey(key: Key): String = {

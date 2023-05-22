@@ -23,6 +23,7 @@ import net.wa9nnn.rc210.data.clock.{Clock, DSTPoint, Occurrence}
 import net.wa9nnn.rc210.data.datastore.{DataStore, UpdateCandidate, UpdateData}
 import net.wa9nnn.rc210.data.field.{FieldEntry, MonthOfYearDST}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.h2u
 import net.wa9nnn.rc210.ui.EnumSelect
 import play.api.data.Forms._
 import play.api.data.{Form, Mapping}
@@ -70,7 +71,7 @@ class ClockController @Inject()(dataStore: DataStore) extends MessagesInjectedCo
         /* binding success, you get the actual value. */
         val updateCandidate = UpdateCandidate(Clock.fieldKey(KeyFactory.clockKey), Right(clock))
         val updateData = UpdateData(Seq(updateCandidate))
-        dataStore.update(updateData)
+        dataStore.update(updateData)(h2u(request))
         Redirect(routes.ClockController.index)
       }
     )

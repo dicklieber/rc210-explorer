@@ -17,23 +17,23 @@
 
 package net.wa9nnn.rc210.security.authorzation
 
-import javax.inject.Inject
 import akka.util.ByteString
+import com.typesafe.scalalogging.LazyLogging
 import controllers.LoginController
 import net.wa9nnn.rc210.security.Who
-import net.wa9nnn.rc210.security.authentication.{RcSession, SessionManager, User}
 import net.wa9nnn.rc210.security.authentication.SessionManager.playSessionName
+import net.wa9nnn.rc210.security.authentication.{RcSession, SessionManager, User}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 import play.api.Logging
 import play.api.libs.streams.Accumulator
 import play.api.libs.typedmap.{TypedEntry, TypedKey, TypedMap}
 import play.api.mvc._
 
-import scala.concurrent.ExecutionContext
+import javax.inject.Inject
 import scala.language.implicitConversions
 
-class AuthFilter @Inject()(implicit loginController: LoginController, sessionManager: SessionManager, ec: ExecutionContext) extends EssentialFilter with Logging {
-  def apply(nextFilter: EssentialAction) = new EssentialAction {
+class AuthFilter @Inject()(implicit loginController: LoginController, sessionManager: SessionManager) extends EssentialFilter with Logging {
+  def apply(nextFilter: EssentialAction): EssentialAction = new EssentialAction {
     def apply(requestHeader: RequestHeader) = {
       val path = requestHeader.path
 
@@ -66,7 +66,7 @@ class AuthFilter @Inject()(implicit loginController: LoginController, sessionMan
   }
 }
 
-object AuthFilter {
+object AuthFilter extends LazyLogging {
   val sessionKey: TypedKey[RcSession] = TypedKey[RcSession]("rcSession")
 
   implicit def h2s(requestHeader: RequestHeader): RcSession = {
@@ -76,7 +76,45 @@ object AuthFilter {
   implicit def h2u(requestHeader: RequestHeader): User = {
     requestHeader.attrs(sessionKey).user
   }
+
   implicit def h2w(requestHeader: RequestHeader): Who = {
     requestHeader.attrs(sessionKey).user.who
   }
 }
+
+//class AuthenticatedUserAction @Inject() (parser: BodyParsers.Default)(implicit ec: ExecutionContext)
+//  extends ActionBuilderImpl(parser) {
+//
+//  private val logger = play.api.Logger(this.getClass)
+//
+//  override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = {
+//    logger.debug("ENTERED AuthenticatedUserAction::invokeBlock")
+//    val user:User = request
+//    val ar: AuthenticatedRequest[A, User] = new AuthenticatedRequest(user, request)
+//
+//
+//    Security.Authenticated(ar)
+//
+//
+//    val builder: AuthenticatedBuilder[User] = AuthenticatedBuilder[User]
+//    builder.authenticate()
+//    authenticatedRequest.authenticate(request )
+//    val res: Future[Result] = block(authenticatedRequest)
+//    res
+//
+//
+//    maybeUsername match {
+//      case None => {
+//        logger.debug("CAME INTO 'NONE'")
+//        Future.successful(Forbidden("Dude, you’re not logged in."))
+//      }
+//      case Some(u: String) => {
+//        logger.debug("CAME INTO 'SOME'")
+//
+//        val authenticatedRequest: AuthenticatedBuilder[User] = AuthenticatedBuilder[User]
+//        val res: Future[Result] = block(authenticatedRequest)
+//        res
+//      }
+//    }
+//  }
+//}

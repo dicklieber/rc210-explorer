@@ -20,6 +20,7 @@ package net.wa9nnn.rc210.data.datastore
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.io.DatFile
+import net.wa9nnn.rc210.security.Who
 import play.api.libs.json.{Format, Json}
 
 import java.io.InputStream
@@ -58,7 +59,7 @@ class DataStoreJson @Inject()(datFile: DatFile) extends LazyLogging {
  * Data transfer between [[DataStoreJson]] and [[DataStore]].
  * Json-friendly data that is persisted or doewnloaded from the [[DataStore]].
  */
-case class DataTransferJson(values: Seq[FieldEntryJson], namedKeys: Seq[NamedKey]) {
+case class DataTransferJson(values: Seq[FieldEntryJson], namedKeys: Seq[NamedKey], who: Option[Who] = None ) {
   def toPrettyJson: String = {
     Json.prettyPrint(Json.toJson(this))
   }

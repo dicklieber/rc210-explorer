@@ -36,7 +36,7 @@ class DataStoreController @Inject()(implicit val controllerComponents: Controlle
 
   def downloadJson(): Action[AnyContent] = Action {
 
-    val sJson = Json.prettyPrint(Json.toJson(dataStore.toJson))
+    val sJson = Json.prettyPrint(Json.toJson(dataStore.toJson()))
 
     Ok(sJson).withHeaders(
       "Content-Type" -> "text/json",
@@ -44,7 +44,7 @@ class DataStoreController @Inject()(implicit val controllerComponents: Controlle
     )
   }
   def viewJson(): Action[AnyContent] = Action {
-    val jsValue = Json.toJson(dataStore.toJson)
+    val jsValue = Json.toJson(dataStore.toJson())
     val sJson = Json.prettyPrint(jsValue)
     Ok(sJson).withHeaders(
       "Content-Type" -> "text/json",

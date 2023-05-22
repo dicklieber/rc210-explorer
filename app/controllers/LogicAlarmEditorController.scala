@@ -24,6 +24,7 @@ import net.wa9nnn.rc210.data.datastore.{DataStore, FormValue, UpdateCandidate, U
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.key.KeyFactory.LogicAlarmKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.h2u
 import net.wa9nnn.rc210.ui.FormParser
 import play.api.mvc._
 
@@ -75,7 +76,7 @@ class LogicAlarmEditorController @Inject()(val controllerComponents: ControllerC
   def save(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
       val updateData = FormParser(AnyContentAsFormUrlEncoded(request.body.asFormUrlEncoded.get))
-      dataStore.update(updateData)
+      dataStore.update(updateData)(h2u(request))
 
       Redirect(routes.LogicAlarmEditorController.index())
   }
