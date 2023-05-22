@@ -22,6 +22,7 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.security.UserId.UserId
 import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.security.authentication.{UserManager, UserRecords}
+import net.wa9nnn.rc210.security.authorzation.AuthFilter
 import play.api.data.Forms.{mapping, optional, text}
 import play.api.data.{Form, FormError}
 import play.api.i18n.I18nSupport
@@ -90,7 +91,7 @@ class AuthenticatationController @Inject()(implicit config: Config, userManager:
         BadRequest(views.html.userEditor(formWithErrors))
       },
       (userEditDTO: UserEditDTO) => {
-        userManager.put(userEditDTO)(Who())
+        userManager.put(userEditDTO)(AuthFilter.h2w(request))
         Redirect(routes.AuthenticatationController.users())
       }
     )

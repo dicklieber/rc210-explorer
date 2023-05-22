@@ -26,57 +26,57 @@ case class UserRecords(who: Who = Who(), users: List[User] = List.empty, val sta
 
   /**
    * get [[User]]
-    * @param login
+   *
+   * @param login
    * @return SOme[User] if callsign exists and password hash matches.
    */
   def validate(login: Login): Option[User] = {
-
-    for {
-      userRecord <- callSignMap.get(login.callsign)
-      ur <- userRecord.validate(login.password)
-    } yield {
-      ur
+      for {
+        userRecord <- callSignMap.get(login.callsign)
+        ur <- userRecord.validate(login.password)
+      } yield {
+        ur
+      }
     }
-  }
 
-  def get(id: UserId): Option[User] = {
-    idMap.get(id)
-  }
+def get(id: UserId): Option[User] = {
+  idMap.get(id)
+}
 
-  /**
-   * insert or replace a user [[User]]
-   *
-   * @param who is making this change.
-   * @return a new [[UserRecords]]
-   */
-  def update(in: UserEditDTO)(implicit who: Who): UserRecords = {
+/**
+ * insert or replace a user [[User]]
+ *
+ * @param who is making this change.
+ * @return a new [[UserRecords]]
+ */
+def update(in: UserEditDTO)(implicit who: Who): UserRecords = {
 
-    val maybeRecord: Option[User] = idMap.get(in.id)
+  val maybeRecord: Option[User] = idMap.get(in.id)
 
-    val maybeUserRecord: Option[User] = maybeRecord.map(currentUserReord => currentUserReord.update(in))
-    val userRecord = maybeUserRecord.getOrElse(User(in))
+  val maybeUserRecord: Option[User] = maybeRecord.map(currentUserReord => currentUserReord.update(in))
+  val userRecord = maybeUserRecord.getOrElse(User(in))
 
-    finish(idMap + (userRecord.id -> userRecord), who)
-  }
+  finish(idMap + (userRecord.id -> userRecord), who)
+}
 
-  /**
-   * remove a user [[com.wa9nnn.allstarmgr.security.authentication.UserRecord]]
-   *
-   * @param uuid      new or changed.
-   * @param who       is making this change.
-   * @return a new [[com.wa9nnn.allstarmgr.security.authentication.UserRecords]]
-   */
-  def remove(uuid: UserId)(implicit who: Who): UserRecords = {
-    finish(idMap - uuid, who)
-  }
+/**
+ * remove a user [[com.wa9nnn.allstarmgr.security.authentication.UserRecord]]
+ *
+ * @param uuid      new or changed.
+ * @param who       is making this change.
+ * @return a new [[com.wa9nnn.allstarmgr.security.authentication.UserRecords]]
+ */
+def remove(uuid: UserId)(implicit who: Who): UserRecords = {
+  finish(idMap - uuid, who)
+}
 
-  // common when changing anything
-  private def finish(uuidMap: Map[UserId, User], who: Who): UserRecords = {
-    val updatedUsers = uuidMap.values
-      .toList
-      .sorted
-    UserRecords(who, updatedUsers)
-  }
+// common when changing anything
+private def finish(uuidMap: Map[UserId, User], who: Who): UserRecords = {
+  val updatedUsers = uuidMap.values
+    .toList
+    .sorted
+  UserRecords(who, updatedUsers)
+}
 }
 
 object UserRecords {
