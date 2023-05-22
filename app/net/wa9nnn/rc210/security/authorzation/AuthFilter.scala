@@ -20,13 +20,17 @@ package net.wa9nnn.rc210.security.authorzation
 import javax.inject.Inject
 import akka.util.ByteString
 import controllers.LoginController
-import net.wa9nnn.rc210.security.authentication.{RcSession, SessionManager}
+import net.wa9nnn.rc210.security.Who
+import net.wa9nnn.rc210.security.authentication.{RcSession, SessionManager, User}
 import net.wa9nnn.rc210.security.authentication.SessionManager.playSessionName
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 import play.api.Logging
 import play.api.libs.streams.Accumulator
+import play.api.libs.typedmap.{TypedEntry, TypedKey, TypedMap}
 import play.api.mvc._
 
 import scala.concurrent.ExecutionContext
+import scala.language.implicitConversions
 
 class AuthFilter @Inject()(implicit loginController: LoginController, sessionManager: SessionManager, ec: ExecutionContext) extends EssentialFilter with Logging {
   def apply(nextFilter: EssentialAction) = new EssentialAction {
@@ -42,7 +46,10 @@ class AuthFilter @Inject()(implicit loginController: LoginController, sessionMan
             sessionManager.lookup(cookie) match {
               case Some(session: RcSession) =>
                 logger.info(s"session: $session")
-                val value: Accumulator[ByteString, Result] = nextFilter(requestHeader)
+                val te: TypedEntry[RcSession] = TypedEntry(sessionKey, session)
+                val requestHeaderWithSession = requestHeader.withAttrs(TypedMap(te))
+
+                val value: Accumulator[ByteString, Result] = nextFilter(requestHeaderWithSession)
                 value
               case None =>
                 val message = "Bad Callsign or password!"
@@ -56,5 +63,20 @@ class AuthFilter @Inject()(implicit loginController: LoginController, sessionMan
         }
       }
     }
+  }
+}
+
+object AuthFilter {
+  val sessionKey: TypedKey[RcSession] = TypedKey[RcSession]("rcSession")
+
+  implicit def h2s(requestHeader: RequestHeader): RcSession = {
+    requestHeader.attrs(sessionKey)
+  }
+
+  implicit def h2u(requestHeader: RequestHeader): User = {
+    requestHeader.attrs(sessionKey).user
+  }
+  implicit def h2w(requestHeader: RequestHeader): Who = {
+    requestHeader.attrs(sessionKey).user.who
   }
 }
