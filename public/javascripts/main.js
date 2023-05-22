@@ -1,3 +1,10 @@
+
+$(document).ready(function(){
+    $('.callsign').keyup(function(){
+        $(this).val($(this).val().toUpperCase());
+    });
+});
+
 function handleClick(cb, param) {
     console.log("Clicked, new value = " + cb.checked + "param: " + param);
     var hiddenCb = document.getElementById(param)

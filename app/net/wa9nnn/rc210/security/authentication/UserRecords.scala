@@ -32,7 +32,7 @@ case class UserRecords(who: Who = Who(), users: List[User] = List.empty, val sta
    */
   def validate(login: Login): Option[User] = {
       for {
-        userRecord <- callSignMap.get(login.callsign)
+        userRecord <- callSignMap.get(login.callsign.toUpperCase())
         ur <- userRecord.validate(login.password)
       } yield {
         ur

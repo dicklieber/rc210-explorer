@@ -56,7 +56,7 @@ case class User(callsign: Callsign,
         logger.trace("Using existing hash for {} {}", id, callsign)
         hash
     }
-    new User(in.callsign, in.name, in.email, newHash, id)
+    new User(in.callsign.toUpperCase, in.name, in.email, newHash, id)
   }
 
   lazy val who: Who = Who(callsign, id, email.getOrElse(""))
