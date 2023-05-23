@@ -54,12 +54,12 @@ class AuthFilter @Inject()(implicit loginController: LoginController, sessionMan
               case None =>
                 val message = "Bad Callsign or password!"
                 logger.error(message)
-                val value: Accumulator[ByteString, Result] = loginController.loginLanding(Option("Bad Callsign or password!")).apply(requestHeader)
+                val value: Accumulator[ByteString, Result] = loginController.loginLanding().apply(requestHeader)
                 value
             }
           case None =>
             logger.error("No session cookie. Redirect to Login ")
-            loginController.loginLanding(Option("Bad Callsign or password!")).apply(requestHeader)
+            loginController.loginLanding().apply(requestHeader)
         }
       }
     }

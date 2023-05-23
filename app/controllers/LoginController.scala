@@ -27,6 +27,7 @@ import play.api.i18n._
 import play.api.mvc._
 
 import javax.inject._
+import scala.concurrent.Future
 
 
 @Singleton
@@ -42,7 +43,7 @@ class LoginController @Inject()(implicit config: Config,
       "password" -> text,
     )(Login.apply)(Login.unapply)
   }
-  val ownerMessage: String = "todo have ui for this"
+  val ownerMessage: String = config.getString("vizRc210.authentication.message")
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
 
@@ -56,10 +57,15 @@ class LoginController @Inject()(implicit config: Config,
    *
    * @param maybeMessage show as error message.
    */
-  def loginLanding(maybeMessage: Option[String] = None) = Action {
+  def loginLanding: Action[AnyContent] = Action {
     implicit request: RequestHeader =>
       val form = loginForm.fill(Login())
-      Ok(views.html.login(form, ownerMessage, errorMessage = maybeMessage))
+      Ok(views.html.login(form, ownerMessage))
+  }
+  def error(errorMessage:String): Action[AnyContent] = Action {
+    implicit request: RequestHeader =>
+      val form = loginForm.fill(Login())
+      Ok(views.html.login(form, ownerMessage, Option.when(errorMessage.nonEmpty){errorMessage}))
   }
 
   private val discardingCookie: DiscardingCookie = DiscardingCookie(playSessionName)
@@ -91,7 +97,7 @@ class LoginController @Inject()(implicit config: Config,
               Redirect(routes.PortsEditorController.index()).withCookies(rcSession.cookie)
             case None =>
               logger.error(s"Login Failed callsign:${login.callsign} ip:${request.remoteAddress}")
-              Redirect(routes.LoginController.loginLanding(None)).discardingCookies(discardingCookie)
+              Redirect(routes.LoginController.error("Unknown user or bad password!")).discardingCookies(discardingCookie)
           }
         })
 
@@ -106,6 +112,6 @@ class LoginController @Inject()(implicit config: Config,
         logger.info(s"Logout callsign:${session.callsign} ip:${request.remoteAddress}")
       }
 
-      Redirect(routes.LoginController.loginLanding(None)).discardingCookies(discardingCookie)
+      Redirect(routes.LoginController.loginLanding).discardingCookies(discardingCookie)
   }
 }

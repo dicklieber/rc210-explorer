@@ -22,11 +22,13 @@ import net.wa9nnn.rc210.data.message.{Message, MesssageExtractor}
 import net.wa9nnn.rc210.fixtures.WithTestConfiguration
 import net.wa9nnn.rc210.io.DatFile
 import net.wa9nnn.rc210.key.KeyFactory
+import net.wa9nnn.rc210.security.authentication.User
 import org.specs2.mutable.Specification
 
 import java.nio.file.Files
 
 class DataStoreSpec extends WithTestConfiguration {
+  implicit val user = new User(callsign = "W1AW", hash = "1234")
 
   "DataStore" should {
     "save" in {

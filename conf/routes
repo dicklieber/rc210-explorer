@@ -54,7 +54,6 @@ POST        /remote/save                               controllers.RemoteBaseCon
 GET         /remote                                    controllers.RemoteBaseController.index
 
 POST        /loginDo                                   controllers.LoginController.dologin()
-GET         /login                                     controllers.LoginController.loginLanding(message:Option[String])
 GET         /logout                                    controllers.LoginController.logout()
 GET         /editUser/:id                              controllers.AuthenticatationController.editUser(id:String)
 GET         /users                                     controllers.AuthenticatationController.users()
@@ -62,8 +61,8 @@ GET         /addUser                                   controllers.Authenticatat
 POST        /saveUser                                  controllers.AuthenticatationController.saveUser()
 POST        /deleteUser/:id                            controllers.AuthenticatationController.remove(id:String)
 GET         /sessions                                  controllers.SessionController.index
-
-GET         /                                          controllers.LandingController.tabs()
+GET         /loginError/:error                         controllers.LoginController.error(error:String)
+GET         /                                          controllers.LoginController.loginLanding
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                              controllers.Assets.versioned(path="/public", file: Asset)
