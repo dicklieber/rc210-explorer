@@ -61,6 +61,7 @@ GET         /users                                     controllers.Authenticatat
 GET         /addUser                                   controllers.AuthenticatationController.addUser()
 POST        /saveUser                                  controllers.AuthenticatationController.saveUser()
 POST        /deleteUser/:id                            controllers.AuthenticatationController.remove(id:String)
+GET         /sessions                                  controllers.SessionController.index
 
 GET         /                                          controllers.LandingController.tabs()
 

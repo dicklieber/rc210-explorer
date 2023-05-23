@@ -23,6 +23,7 @@ import java.util.Base64
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
+
 /**
  * Creates and manages [[RcSession]] objects.
  * The RcSessionId in an [[RcSession]] is stored as a cookie, via play RcSession support in the client.
@@ -75,10 +76,10 @@ class SessionManager @Inject()(config: Config, datFile: DatFile, actorSystem: Ac
 
   def lookup(sessionId: SessionId): Option[RcSession] = {
     sessionMap.get(sessionId)
-      .map { RcSession =>
-        RcSession.touch()
+      .map { rcSession =>
+        rcSession.touch()
         dirty = true
-        RcSession
+        rcSession
       }
   }
 
@@ -97,9 +98,6 @@ class SessionManager @Inject()(config: Config, datFile: DatFile, actorSystem: Ac
     sessionMap.filterInPlace { (_, RcSession) =>
       RcSession.touched isAfter removeOlderThan
     }
-    userMap.filterInPlace { (_, RcSession) =>
-      RcSession.touched isAfter removeOlderThan
-    }
     if (beforePurge != sessionMap.size) {
       dirty = true
     }
@@ -110,7 +108,9 @@ class SessionManager @Inject()(config: Config, datFile: DatFile, actorSystem: Ac
     }
   }
 
-
+  def sessions: Seq[RcSession] = {
+    sessionMap.values.toSeq.sorted
+  }
 }
 
 object SessionManager {

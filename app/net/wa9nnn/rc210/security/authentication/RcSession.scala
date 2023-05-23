@@ -1,6 +1,7 @@
 package net.wa9nnn.rc210.security.authentication
 
 import com.typesafe.scalalogging.LazyLogging
+import com.wa9nnn.util.tableui.{Header, Row, RowSource}
 import net.wa9nnn.rc210.StaticConfigs.maxSessionCookieAge
 import net.wa9nnn.rc210.security.Who.Callsign
 import net.wa9nnn.rc210.security.authentication.RcSession.SessionId
@@ -8,14 +9,24 @@ import net.wa9nnn.rc210.security.authentication.SessionManager.playSessionName
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.Cookie
 
-import java.time.Instant
+import java.time.{Duration, Instant}
 
 /**
  *
  */
+
+/**
+ * One authennticated user session.
+ * Note [[touched]] makes this mutable, but shouwlotherwise be treated as immutable.
+ *
+ * @param sessionId what gets stored in a cookie on the browser.
+ * @param user      who started this session.
+ * @param started   when it was started.
+ */
 case class RcSession(sessionId: SessionId,
-                   user: User,
-                   started: Instant = Instant.now()) extends Ordered[RcSession] {
+                     user: User,
+                     started: Instant = Instant.now()) extends Ordered[RcSession] with RowSource {
+
   def callsign: Callsign = user.callsign
 
   var touched: Instant = started
@@ -26,17 +37,28 @@ case class RcSession(sessionId: SessionId,
     httpOnly = true)
 
 
-  def touch(): RcSession = {
+  def touch(): Unit = {
     touched = Instant.now()
-    this
   }
 
 
-
   override def compare(that: RcSession): Int = this.user.callsign compareTo that.user.callsign
+
+  override def toRow: Row = Row.ofAny(
+    user.callsign,
+    user.name,
+    started,
+    touched,
+    Duration.between(started, Instant.now())
+  )
+
 }
 
 object RcSession extends LazyLogging {
   type SessionId = String
   implicit val fmtSession: Format[RcSession] = Json.format[RcSession]
+
+  def header(count: Int): Header = {
+    Header(s"Sessions ($count)", "Callsign", "Name", "Started", "Touched", "Age")
+  }
 }
