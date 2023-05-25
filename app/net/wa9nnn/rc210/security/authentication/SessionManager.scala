@@ -2,20 +2,17 @@ package net.wa9nnn.rc210.security.authentication
 
 import akka.actor.ActorSystem
 import com.fasterxml.jackson.module.scala.deser.overrides.TrieMap
-import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.io.DatFile
 import net.wa9nnn.rc210.security.authentication.RcSession.SessionId
 import net.wa9nnn.rc210.util.JsonIoWithBackup
-import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.Cookie
 
 import java.io.FileNotFoundException
-import java.nio.file.Path
+import java.nio.file.{Path, Paths}
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import javax.inject.{Inject, Singleton}
+import javax.inject.{Inject, Named, Singleton}
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
 
@@ -26,14 +23,12 @@ import scala.language.postfixOps
  * Loaded at startup
  */
 @Singleton
-class SessionManager @Inject()(config: Config, datFile: DatFile, actorSystem: ActorSystem) extends LazyLogging {
+class SessionManager @Inject()(@Named("vizRc210.sessionFile") sessionFileName: String) extends LazyLogging {
 
   private val sessionMap = new TrieMap[SessionId, RcSession]
   private var dirty = false
-  implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
-  actorSystem.scheduler.scheduleWithFixedDelay(5 seconds, 10 seconds) { () => purge() }
-  private val sessionFile: Path = datFile.sessionFile
+  private val sessionFile: Path = Paths.get(sessionFileName)
 
   try {
     val sessions = JsonIoWithBackup(sessionFile).as[RcSessions].sessions
@@ -50,15 +45,16 @@ class SessionManager @Inject()(config: Config, datFile: DatFile, actorSystem: Ac
 
   logger.info("Session Manager Started")
 
-  def removeAnyExistingSession(user: User): Unit =
-    sessionMap.filter { case (_, session) => session.user == user }
+  private def removeAnyExistingSession(user: User): Unit = {
+    val sessionsForUser = sessionMap.filter { case (_, session) => session.user == user }
+    sessionsForUser
       .foreach { case (sessionId, _) =>
-
         val maybeRemoved = sessionMap.remove(sessionId)
         maybeRemoved.foreach { session =>
           logger.trace("Removed session: {}", session.toString)
         }
       }
+  }
 
 
   def create(user: User): RcSession = {
@@ -70,7 +66,6 @@ class SessionManager @Inject()(config: Config, datFile: DatFile, actorSystem: Ac
   private def setupSession(user: User): RcSession = {
     val newRcSession = RcSession(user)
     sessionMap.put(newRcSession.sessionId, newRcSession)
-    sessionMap.put(user.id, newRcSession)
     newRcSession
   }
 
@@ -96,7 +91,12 @@ class SessionManager @Inject()(config: Config, datFile: DatFile, actorSystem: Ac
       }
   }
 
-  def purge(): Unit = {
+  /**
+   * Invoke periodically.
+   *
+   * [[SessionManager]] will purge stale sessions and write if dirty.
+   */
+  def tick(): Unit = {
     logger.trace("RcSession Purge")
     val removeOlderThan = Instant.now().minus(3, ChronoUnit.HOURS)
     val beforePurge = sessionMap.size
@@ -122,10 +122,7 @@ class SessionManager @Inject()(config: Config, datFile: DatFile, actorSystem: Ac
 }
 
 object SessionManager {
-  type RcSessionId = String
   val playSessionName = "rcSession"
-
-
 }
 
 case class RcSessions(sessions: Seq[RcSession]) {
@@ -135,4 +132,12 @@ case class RcSessions(sessions: Seq[RcSession]) {
 
 object RcSessions {
   implicit val fmtRcSessions: Format[RcSessions] = Json.format[RcSessions]
+}
+
+@Inject()
+class  SessionTicker@Inject()(sessionManager: SessionManager, actorSystem: ActorSystem) {
+  implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
+
+  actorSystem.scheduler.scheduleWithFixedDelay(5 seconds, 10 seconds) { () => sessionManager.tick() }
+
 }

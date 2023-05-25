@@ -27,7 +27,6 @@ import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 import play.api.libs.typedmap.{TypedEntry, TypedKey, TypedMap}
 import play.api.mvc.Results.Redirect
 import play.api.mvc._
-import play.api.mvc.request.{Cell, RequestAttrKey}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}

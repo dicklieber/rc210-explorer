@@ -17,8 +17,8 @@ import play.api.libs.json.{Format, Json}
  * @param id       uniqueID for this user. Allows changing any other field.
  */
 case class User(callsign: Callsign,
-                name: Option[String],
-                email: Option[String],
+                name: Option[String] = None,
+                email: Option[String] = None,
                 hash: String,
                 id: UserId = UserId())
   extends Ordered[User] with LazyLogging {
@@ -74,7 +74,7 @@ object User {
     assert(in.password.nonEmpty, "Must have a password to create a new UserRecord.")
     val password = in.password.get
     val hash = BCrypt.hashpw(password, BCrypt.gensalt())
-    new User(callsign = in.callsign,
+    new User(callsign = in.callsign.toUpperCase,
       name = in.name,
       email = in.email,
       hash = hash,

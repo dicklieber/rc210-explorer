@@ -77,6 +77,6 @@ object RcSession extends LazyLogging {
   }
 
   private val sessionIdGenerator = new SecureRandom()
-  val playSessionName: SessionId = "rcSession"
+  val playSessionName: String = "rcSession"
 
 }
