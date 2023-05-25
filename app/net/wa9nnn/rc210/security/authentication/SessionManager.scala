@@ -5,21 +5,16 @@ import com.fasterxml.jackson.module.scala.deser.overrides.TrieMap
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.io.DatFile
-import net.wa9nnn.rc210.security.UserId.UserId
 import net.wa9nnn.rc210.security.authentication.RcSession.SessionId
-import net.wa9nnn.rc210.security.authentication.SessionManager.sessionIdGenerator
 import net.wa9nnn.rc210.util.JsonIoWithBackup
 import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.Cookie
 
 import java.io.FileNotFoundException
-import java.math.BigInteger
 import java.nio.file.Path
-import java.security.SecureRandom
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import java.util.Base64
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
@@ -34,7 +29,6 @@ import scala.language.postfixOps
 class SessionManager @Inject()(config: Config, datFile: DatFile, actorSystem: ActorSystem) extends LazyLogging {
 
   private val sessionMap = new TrieMap[SessionId, RcSession]
-  private val userMap = new TrieMap[UserId, RcSession]
   private var dirty = false
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
@@ -56,29 +50,40 @@ class SessionManager @Inject()(config: Config, datFile: DatFile, actorSystem: Ac
 
   logger.info("Session Manager Started")
 
-  def create(user: User)(implicit messagesProvider: MessagesProvider): RcSession = {
-    val newRcSession = userMap.getOrElseUpdate(user.id, {
-      val lSession = sessionIdGenerator.nextLong()
-      val bytes: Array[Byte] = Base64.getEncoder.encode(BigInteger.valueOf(lSession).toByteArray)
-      val sessionId = new SessionId(bytes)
-      val newRcSession: RcSession = RcSession(sessionId = sessionId, user = user)
-      sessionMap.put(newRcSession.sessionId, newRcSession)
-      userMap.put(user.id, newRcSession)
-      newRcSession
-    }
+  def removeAnyExistingSession(user: User): Unit =
+    sessionMap.filter { case (_, session) => session.user == user }
+      .foreach { case (sessionId, _) =>
 
-    )
+        val maybeRemoved = sessionMap.remove(sessionId)
+        maybeRemoved.foreach { session =>
+          logger.trace("Removed session: {}", session.toString)
+        }
+      }
+
+
+  def create(user: User): RcSession = {
+    removeAnyExistingSession(user)
     dirty = true
+    setupSession(user)
+  }
+
+  private def setupSession(user: User): RcSession = {
+    val newRcSession = RcSession(user)
+    sessionMap.put(newRcSession.sessionId, newRcSession)
+    sessionMap.put(user.id, newRcSession)
     newRcSession
   }
 
-  def lookup(cookie: Cookie): Option[RcSession] = lookup(cookie.value)
+  def lookup(cookie: Cookie): Option[RcSession] = {
+    lookup(cookie.value)
+  }
 
   def lookup(sessionId: SessionId): Option[RcSession] = {
     sessionMap.get(sessionId)
       .map { rcSession =>
         rcSession.touch()
         dirty = true
+        logger.trace("Found sessionId: {}", sessionId)
         rcSession
       }
   }
@@ -86,7 +91,7 @@ class SessionManager @Inject()(config: Config, datFile: DatFile, actorSystem: Ac
   def remove(sessionId: SessionId): Unit = {
     sessionMap.remove(sessionId)
       .foreach { RcSession: RcSession =>
-        userMap.remove(RcSession.user.id)
+        sessionMap.remove(RcSession.user.id)
         dirty = true
       }
   }
@@ -103,6 +108,7 @@ class SessionManager @Inject()(config: Config, datFile: DatFile, actorSystem: Ac
     }
     if (dirty) {
       val sessions = RcSessions(sessionMap.values.toList)
+      JsonIoWithBackup(sessionFile, Json.toJson(sessions))
       logger.debug("Wrote {} RcSessions to {}", sessions.size, sessionFile.toFile.toURI.toString)
       dirty = false
     }
@@ -111,12 +117,15 @@ class SessionManager @Inject()(config: Config, datFile: DatFile, actorSystem: Ac
   def sessions: Seq[RcSession] = {
     sessionMap.values.toSeq.sorted
   }
+
+
 }
 
 object SessionManager {
-  val sessionIdGenerator = new SecureRandom()
   type RcSessionId = String
   val playSessionName = "rcSession"
+
+
 }
 
 case class RcSessions(sessions: Seq[RcSession]) {

@@ -23,9 +23,8 @@ import net.wa9nnn.rc210.security.UserId.UserId
 import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.security.authentication.{UserManager, UserRecords}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter
+import play.api.data.Form
 import play.api.data.Forms.{mapping, optional, text}
-import play.api.data.{Form, FormError}
-import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesInjectedController, MessagesRequest}
 
 import javax.inject.{Inject, Singleton}

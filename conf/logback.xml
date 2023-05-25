@@ -51,7 +51,8 @@
     <logger name="controllers.CandidateController" level="INFO"/>
     <logger name="net.wa9nnn.rc210.serial.SerialPortOperation" level="INFO"/>
     <logger name="net.wa9nnn.rc210.data.macros.MacroNode" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.security.authentication.SessionManager" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.security.authentication.SessionManager" level="TRACE"/>
+    <logger name="net.wa9nnn.rc210.security.authorzation.AuthFilter" level="TRACE"/>
 
     <root level="INFO">
         <appender-ref ref="ASYNCFILE"/>

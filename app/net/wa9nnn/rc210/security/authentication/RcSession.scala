@@ -9,7 +9,10 @@ import net.wa9nnn.rc210.security.authentication.SessionManager.playSessionName
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.Cookie
 
+import java.math.BigInteger
+import java.security.SecureRandom
 import java.time.{Duration, Instant}
+import java.util.Base64
 
 /**
  *
@@ -17,13 +20,14 @@ import java.time.{Duration, Instant}
 
 /**
  * One authennticated user session.
- * Note [[touched]] makes this mutable, but shouwlotherwise be treated as immutable.
+ * Note [[touched]] makes this mutable, but should otherwise be treated as immutable.
+ *
  *
  * @param sessionId what gets stored in a cookie on the browser.
  * @param user      who started this session.
  * @param started   when it was started.
  */
-case class RcSession(sessionId: SessionId,
+case class  RcSession(sessionId: SessionId,
                      user: User,
                      started: Instant = Instant.now()) extends Ordered[RcSession] with RowSource {
 
@@ -56,9 +60,23 @@ case class RcSession(sessionId: SessionId,
 
 object RcSession extends LazyLogging {
   type SessionId = String
+
+  def apply(user: User): RcSession = {
+    val lSession = sessionIdGenerator.nextLong()
+    val bytes: Array[Byte] = Base64.getEncoder.encode(BigInteger.valueOf(lSession).toByteArray)
+    val sessionId = new SessionId(bytes)
+
+
+    new RcSession(sessionId, user)
+  }
+
   implicit val fmtSession: Format[RcSession] = Json.format[RcSession]
 
   def header(count: Int): Header = {
     Header(s"Sessions ($count)", "Callsign", "Name", "Started", "Touched", "Age")
   }
+
+  private val sessionIdGenerator = new SecureRandom()
+  val playSessionName: SessionId = "rcSession"
+
 }

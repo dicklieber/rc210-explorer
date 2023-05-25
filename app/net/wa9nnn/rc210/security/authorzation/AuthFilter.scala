@@ -17,51 +17,58 @@
 
 package net.wa9nnn.rc210.security.authorzation
 
-import akka.util.ByteString
+import akka.stream.Materializer
 import com.typesafe.scalalogging.LazyLogging
-import controllers.LoginController
+import controllers.routes
 import net.wa9nnn.rc210.security.Who
-import net.wa9nnn.rc210.security.authentication.SessionManager.playSessionName
+import net.wa9nnn.rc210.security.authentication.RcSession.playSessionName
 import net.wa9nnn.rc210.security.authentication.{RcSession, SessionManager, User}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
-import play.api.Logging
-import play.api.libs.streams.Accumulator
 import play.api.libs.typedmap.{TypedEntry, TypedKey, TypedMap}
+import play.api.mvc.Results.Redirect
 import play.api.mvc._
+import play.api.mvc.request.{Cell, RequestAttrKey}
 
 import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 
-class AuthFilter @Inject()(implicit loginController: LoginController, sessionManager: SessionManager) extends EssentialFilter with Logging {
-  def apply(nextFilter: EssentialAction): EssentialAction = new EssentialAction {
-    def apply(requestHeader: RequestHeader) = {
-      val path = requestHeader.path
+class AuthFilter @Inject()(implicit val mat: Materializer, sessionManager: SessionManager, ec: ExecutionContext) extends Filter with LazyLogging {
 
-      if (path.startsWith("/login") || path.startsWith("/assets"))
-        nextFilter(requestHeader)
-      else {
-        val cookies = requestHeader.cookies
-        cookies.find(_.name == playSessionName) match {
-          case Some(cookie: Cookie) =>
-            sessionManager.lookup(cookie) match {
-              case Some(session: RcSession) =>
-                logger.info(s"session: $session")
-                val te: TypedEntry[RcSession] = TypedEntry(sessionKey, session)
-                val requestHeaderWithSession = requestHeader.withAttrs(TypedMap(te))
+  override def apply(next: RequestHeader => Future[Result])(requestHeader: RequestHeader): Future[Result] = {
+    val path: String = requestHeader.path
+    if (path.startsWith("/login") || path.startsWith("/assets") || path == "/") {
+      logger.trace("Don't look for session in path: {}", path)
+      next(requestHeader)
+    } else {
+      logger.trace("Looking for session by cookie with SessionId")
 
-                val value: Accumulator[ByteString, Result] = nextFilter(requestHeaderWithSession)
-                value
-              case None =>
-                val message = "Bad Callsign or password!"
-                logger.error(message)
-                val value: Accumulator[ByteString, Result] = loginController.loginLanding().apply(requestHeader)
-                value
-            }
-          case None =>
-            logger.error("No session cookie. Redirect to Login ")
-            loginController.loginLanding().apply(requestHeader)
-        }
+
+      val playSession: Session = requestHeader.session
+
+
+      val s: Option[RequestHeader] = for {
+        sessionId <-  playSession.get(playSessionName)
+        session <- sessionManager.lookup(sessionId)
+      } yield {
+        logger.trace("Got valid session from cookie")
+        val te: TypedEntry[RcSession] = TypedEntry(sessionKey, session)
+        val requestHeaderWithSession: RequestHeader = requestHeader.withAttrs(TypedMap(te))
+        requestHeaderWithSession
       }
+      val r: Future[Result] = s match {
+        case Some(requestHeaderWithSessiobn) =>
+          logger.trace("Invoking next")
+          val r: Future[Result] = next(requestHeaderWithSessiobn)
+          r
+        case None =>
+          Future {
+            logger.trace("Redirect to loginLanding page.")
+            val result: Result = Redirect(routes.LoginController.loginLanding)
+            result
+          }
+      }
+      r
     }
   }
 }
