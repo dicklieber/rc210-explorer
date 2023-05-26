@@ -20,6 +20,7 @@ import play.api.{Configuration, Environment}
 class Module(environment: Environment, configuration: Configuration) extends ScalaModule with AkkaGuiceSupport{
   override def configure(): Unit = {
     install(new ConfigModule(configuration))
+    install(ActorModule)
     bind[InitialLoader].asEagerSingleton()
     bind[SessionTicker].asEagerSingleton()
   }
