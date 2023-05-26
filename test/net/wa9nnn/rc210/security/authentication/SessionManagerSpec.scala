@@ -31,7 +31,12 @@ class SessionManagerSpec extends Specification {
 
     val sessionManager = new SessionManager(path.toFile.toString)
     sessionManager.sessions.length must beEqualTo(0)
-    val rcSession = sessionManager.create(user1)
+    val rcSession = sessionManager.create(user1, "127.00.1")
     sessionManager.sessions.length must beEqualTo(1)
+
+    val rcSession2 = sessionManager.create(user1, "127.00.1")
+    val rcSession3 = sessionManager.create(user1, "127.00.1")
+    sessionManager.sessions.length must beEqualTo(1)
+
   }
 }

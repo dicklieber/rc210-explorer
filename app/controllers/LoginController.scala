@@ -34,8 +34,7 @@ import javax.inject._
 class LoginController @Inject()(implicit config: Config,
                                 userManager: UserManager,
                                 sessionManager: SessionManager,
-                                val controllerComponents: ControllerComponents
-                               ) extends BaseController with LazyLogging  {
+                               ) extends MessagesInjectedController with LazyLogging  {
   //  extends MessagesAbstractController
 
   val loginForm: Form[Login] = Form {
@@ -94,11 +93,11 @@ class LoginController @Inject()(implicit config: Config,
       (login: Login) => {
         userManager.validate(login)
           .map { user =>
-            val session = sessionManager.create(user)
+            val session = sessionManager.create(user, request.remoteAddress)
             session
           } match {
           case Some(rcSession: RcSession) =>
-            logger.info(s"Login callsign:${login.callsign}")
+            logger.info(s"Login callsign:${login.callsign}  ip:${request.remoteAddress}")
             Ok(views.html.empty()).withSession(RcSession.playSessionName -> rcSession.sessionId)
           case None =>
             logger.error(s"Login Failed callsign:${login.callsign} ip:${request.remoteAddress}")

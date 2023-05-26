@@ -19,16 +19,17 @@ import java.util.Base64
  */
 
 /**
- * One authennticated user session.
+ * One authenticated user session.
  * Note [[touched]] makes this mutable, but should otherwise be treated as immutable.
- *
  *
  * @param sessionId what gets stored in a cookie on the browser.
  * @param user      who started this session.
+ * @param remoteId where this came from.
  * @param started   when it was started.
  */
-case class  RcSession(sessionId: SessionId,
+case class RcSession(sessionId: SessionId,
                      user: User,
+                     remoteIp: String,
                      started: Instant = Instant.now()) extends Ordered[RcSession] with RowSource {
 
   def callsign: Callsign = user.callsign
@@ -61,13 +62,13 @@ case class  RcSession(sessionId: SessionId,
 object RcSession extends LazyLogging {
   type SessionId = String
 
-  def apply(user: User): RcSession = {
+  def apply(user: User, remoteIp:String): RcSession = {
     val lSession = sessionIdGenerator.nextLong()
     val bytes: Array[Byte] = Base64.getEncoder.encode(BigInteger.valueOf(lSession).toByteArray)
     val sessionId = new SessionId(bytes)
 
 
-    new RcSession(sessionId, user)
+    new RcSession(sessionId, user, remoteIp)
   }
 
   implicit val fmtSession: Format[RcSession] = Json.format[RcSession]

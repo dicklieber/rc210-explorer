@@ -40,7 +40,7 @@ class SessionManager @Inject()(@Named("vizRc210.sessionFile") sessionFileName: S
     case _: FileNotFoundException =>
       logger.info("Session file: {} not found!", sessionFile)
     case e: Exception =>
-      logger.error("Error loading file: {}!", sessionFile)
+      logger.error("Error loading file: {} {}!", sessionFile, e.getMessage)
   }
 
   logger.info("Session Manager Started")
@@ -57,14 +57,14 @@ class SessionManager @Inject()(@Named("vizRc210.sessionFile") sessionFileName: S
   }
 
 
-  def create(user: User): RcSession = {
+  def create(user: User, ip:String): RcSession = {
     removeAnyExistingSession(user)
     dirty = true
-    setupSession(user)
+    setupSession(user, ip)
   }
 
-  private def setupSession(user: User): RcSession = {
-    val newRcSession = RcSession(user)
+  private def setupSession(user: User, remoteIp:String): RcSession = {
+    val newRcSession = RcSession(user, remoteIp)
     sessionMap.put(newRcSession.sessionId, newRcSession)
     newRcSession
   }

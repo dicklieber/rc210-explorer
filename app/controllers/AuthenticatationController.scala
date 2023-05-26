@@ -17,23 +17,23 @@
 
 package controllers
 
-import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.security.UserId.UserId
 import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.security.authentication.{UserManager, UserRecords}
-import net.wa9nnn.rc210.security.authorzation.AuthFilter
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.h2u
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional, text}
 import play.api.mvc.{Action, AnyContent, MessagesInjectedController, MessagesRequest}
 
 import javax.inject.{Inject, Singleton}
+import scala.language.implicitConversions
 
 /**
  * User Management
  */
 @Singleton
-class AuthenticatationController @Inject()(implicit config: Config, userManager: UserManager)
+class AuthenticatationController @Inject()(implicit userManager: UserManager)
   extends MessagesInjectedController with LazyLogging {
   val userDetailForm: Form[UserEditDTO] = Form {
     mapping(
@@ -74,23 +74,16 @@ class AuthenticatationController @Inject()(implicit config: Config, userManager:
   def remove(userId: UserId): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
     userManager.delete(userId)((Who()))
     Redirect(routes.AuthenticatationController.users())
-    /*
-        request.subject.map { _ =>
-          userManager.delete(id)
-          Redirect(routes.AuthenticatationController.users())
-        }.getOrElse {
-          InternalServerError("No subject")
-        }
-    */
   }
 
   def saveUser(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
+
     userDetailForm.bindFromRequest().fold(
       formWithErrors => {
         BadRequest(views.html.userEditor(formWithErrors))
       },
       (userEditDTO: UserEditDTO) => {
-        userManager.put(userEditDTO)(AuthFilter.h2w(request))
+        userManager.put(userEditDTO)(h2u(request))
         Redirect(routes.AuthenticatationController.users())
       }
     )

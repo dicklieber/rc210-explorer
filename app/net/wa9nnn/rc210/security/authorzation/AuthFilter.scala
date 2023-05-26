@@ -26,12 +26,15 @@ import net.wa9nnn.rc210.security.authentication.{RcSession, SessionManager, User
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 import play.api.libs.typedmap.{TypedEntry, TypedKey, TypedMap}
 import play.api.mvc.Results.Redirect
-import play.api.mvc._
+import play.api.mvc.{MessagesRequest, _}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 
+/**
+ * A Play filter that puts the current [[RcSession]] in to the Request or redirects to the Login Page.
+ */
 class AuthFilter @Inject()(implicit val mat: Materializer, sessionManager: SessionManager, ec: ExecutionContext) extends Filter with LazyLogging {
 
   override def apply(next: RequestHeader => Future[Result])(requestHeader: RequestHeader): Future[Result] = {
@@ -42,32 +45,26 @@ class AuthFilter @Inject()(implicit val mat: Materializer, sessionManager: Sessi
     } else {
       logger.trace("Looking for session by cookie with SessionId")
 
-
       val playSession: Session = requestHeader.session
 
-
-      val s: Option[RequestHeader] = for {
-        sessionId <-  playSession.get(playSessionName)
+      (for {
+        sessionId <- playSession.get(playSessionName)
         session <- sessionManager.lookup(sessionId)
       } yield {
         logger.trace("Got valid session from cookie")
         val te: TypedEntry[RcSession] = TypedEntry(sessionKey, session)
         val requestHeaderWithSession: RequestHeader = requestHeader.withAttrs(TypedMap(te))
         requestHeaderWithSession
-      }
-      val r: Future[Result] = s match {
+      }) match {
         case Some(requestHeaderWithSessiobn) =>
           logger.trace("Invoking next")
-          val r: Future[Result] = next(requestHeaderWithSessiobn)
-          r
+          next(requestHeaderWithSessiobn)
         case None =>
           Future {
             logger.trace("Redirect to loginLanding page.")
-            val result: Result = Redirect(routes.LoginController.loginLanding)
-            result
+            Redirect(routes.LoginController.loginLanding)
           }
       }
-      r
     }
   }
 }
@@ -75,52 +72,15 @@ class AuthFilter @Inject()(implicit val mat: Materializer, sessionManager: Sessi
 object AuthFilter extends LazyLogging {
   val sessionKey: TypedKey[RcSession] = TypedKey[RcSession]("rcSession")
 
-  implicit def h2s(requestHeader: RequestHeader): RcSession = {
-    requestHeader.attrs(sessionKey)
-  }
-
-  implicit def h2u(requestHeader: RequestHeader): User = {
-    requestHeader.attrs(sessionKey).user
-  }
-
-  implicit def h2w(requestHeader: RequestHeader): Who = {
-    requestHeader.attrs(sessionKey).user.who
-  }
-}
-
-//class AuthenticatedUserAction @Inject() (parser: BodyParsers.Default)(implicit ec: ExecutionContext)
-//  extends ActionBuilderImpl(parser) {
-//
-//  private val logger = play.api.Logger(this.getClass)
-//
-//  override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = {
-//    logger.debug("ENTERED AuthenticatedUserAction::invokeBlock")
-//    val user:User = request
-//    val ar: AuthenticatedRequest[A, User] = new AuthenticatedRequest(user, request)
-//
-//
-//    Security.Authenticated(ar)
-//
-//
-//    val builder: AuthenticatedBuilder[User] = AuthenticatedBuilder[User]
-//    builder.authenticate()
-//    authenticatedRequest.authenticate(request )
-//    val res: Future[Result] = block(authenticatedRequest)
-//    res
-//
-//
-//    maybeUsername match {
-//      case None => {
-//        logger.debug("CAME INTO 'NONE'")
-//        Future.successful(Forbidden("Dude, you’re not logged in."))
-//      }
-//      case Some(u: String) => {
-//        logger.debug("CAME INTO 'SOME'")
-//
-//        val authenticatedRequest: AuthenticatedBuilder[User] = AuthenticatedBuilder[User]
-//        val res: Future[Result] = block(authenticatedRequest)
-//        res
-//      }
-//    }
+//  implicit def h2s(requestHeader: Request[AnyContent]): RcSession = {
+//    requestHeader.attrs(sessionKey)
 //  }
-//}
+
+  implicit def h2u(request:Request[_]): User = {
+    request.attrs(sessionKey).user
+  }
+
+//  implicit def h2w(requestHeader: Request[AnyContent]): Who = {
+//    requestHeader.attrs(sessionKey).user.who
+//  }
+}

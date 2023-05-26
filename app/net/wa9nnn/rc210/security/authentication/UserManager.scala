@@ -43,8 +43,8 @@ class UserManager @Inject()(config: Config)(implicit datFile: DatFile) extends L
 
   def userRecords: UserRecords = _userRecords
 
-  def put(userDetailData: UserEditDTO)(implicit who: Who): Unit = {
-    _userRecords = _userRecords.update(userDetailData)
+  def put(userDetailData: UserEditDTO)(implicit user: User): Unit = {
+    _userRecords = _userRecords.update(userDetailData)(user.who)
     JsonIoWithBackup(usersFile, Json.toJson(_userRecords))
   }
 
