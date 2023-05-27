@@ -12,7 +12,7 @@ import java.io.FileNotFoundException
 import java.nio.file.{Path, Paths}
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import javax.inject.{Inject, Named, Singleton}
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
 
@@ -22,8 +22,7 @@ import scala.language.postfixOps
  * Periodically Persisted if dirty.
  * Loaded at startup
  */
-@Singleton
-class SessionManager @Inject()(@Named("vizRc210.sessionFile") sessionFileName: String) extends LazyLogging {
+class SessionManager (sessionFileName: String) extends LazyLogging {
 
   private val sessionMap = new TrieMap[SessionId, RcSession]
   private var dirty = false
@@ -57,13 +56,13 @@ class SessionManager @Inject()(@Named("vizRc210.sessionFile") sessionFileName: S
   }
 
 
-  def create(user: User, ip:String): RcSession = {
+  def create(user: User, ip: String): RcSession = {
     removeAnyExistingSession(user)
     dirty = true
     setupSession(user, ip)
   }
 
-  private def setupSession(user: User, remoteIp:String): RcSession = {
+  private def setupSession(user: User, remoteIp: String): RcSession = {
     val newRcSession = RcSession(user, remoteIp)
     sessionMap.put(newRcSession.sessionId, newRcSession)
     newRcSession
@@ -135,7 +134,7 @@ object RcSessions {
 }
 
 @Inject()
-class  SessionTicker@Inject()(sessionManager: SessionManager, actorSystem: ActorSystem) {
+class SessionTicker @Inject()(sessionManager: SessionManager, actorSystem: ActorSystem) {
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
   actorSystem.scheduler.scheduleWithFixedDelay(5 seconds, 10 seconds) { () => sessionManager.tick() }

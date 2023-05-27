@@ -17,10 +17,13 @@
 
 package controllers
 
+import akka.actor.typed.scaladsl.AskPattern.Askable
+import akka.actor.typed.{ActorRef, Scheduler}
+import akka.util.Timeout
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.security.authentication.SessionManager.playSessionName
-import net.wa9nnn.rc210.security.authentication.{Login, RcSession, SessionManager, UserManager}
+import net.wa9nnn.rc210.security.authentication.{Login, RcSession, SessionManagerActor, UserManager}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 import play.api.data.Forms.{mapping, text}
 import play.api.data.{Form, FormError}
@@ -28,13 +31,17 @@ import play.api.mvc._
 import play.twirl.api.HtmlFormat
 
 import javax.inject._
+import scala.concurrent.duration.DurationInt
+import scala.concurrent.{ExecutionContext, Future}
+import scala.language.postfixOps
 
 
 @Singleton
 class LoginController @Inject()(implicit config: Config,
                                 userManager: UserManager,
-                                sessionManager: SessionManager,
-                               ) extends MessagesInjectedController with LazyLogging  {
+                                val actor: ActorRef[SessionManagerActor.SessionManagerMessage],
+                                scheduler: Scheduler, ec: ExecutionContext
+                               ) extends MessagesInjectedController with LazyLogging {
   //  extends MessagesAbstractController
 
   val loginForm: Form[Login] = Form {
@@ -44,7 +51,7 @@ class LoginController @Inject()(implicit config: Config,
     )(Login.apply)(Login.unapply)
   }
   val ownerMessage: String = config.getString("vizRc210.authentication.message")
-  implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
+  implicit val timeout: Timeout = 3 seconds
 
   /**
    *
@@ -79,7 +86,7 @@ class LoginController @Inject()(implicit config: Config,
    *
    * @return
    */
-  def dologin(): Action[AnyContent] = Action { implicit request =>
+  def dologin(): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
     val binded: Form[Login] = loginForm.bindFromRequest()
     binded.fold(
       (formWithErrors: Form[Login]) => {
@@ -88,23 +95,24 @@ class LoginController @Inject()(implicit config: Config,
           logger.error(err.message)
         }
         //          val destination = formWithErrors.data.get("destination")
-        BadRequest(views.html.login(formWithErrors, ownerMessage, Option("auth.badlogin")))
+        val appendable = views.html.login(formWithErrors, ownerMessage, Option("auth.badlogin"))
+        Future(BadRequest(appendable))
       },
       (login: Login) => {
         userManager.validate(login)
           .map { user =>
-            val session = sessionManager.create(user, request.remoteAddress)
-            session
-          } match {
-          case Some(rcSession: RcSession) =>
-            logger.info(s"Login callsign:${login.callsign}  ip:${request.remoteAddress}")
-            Ok(views.html.empty()).withSession(RcSession.playSessionName -> rcSession.sessionId)
-          case None =>
+            val future: Future[RcSession] = actor.ask(ref => SessionManagerActor.Create(user, request.remoteAddress, ref))
+            future.map { rcSession =>
+              logger.info(s"Login callsign:${login.callsign}  ip:${request.remoteAddress}")
+              Ok(views.html.empty())
+                .withSession(RcSession.playSessionName -> rcSession.sessionId)
+            }
+          }
+          .getOrElse {
             logger.error(s"Login Failed callsign:${login.callsign} ip:${request.remoteAddress}")
-            Redirect(routes.LoginController.error("Unknown user or bad password!")).discardingCookies(discardingCookie)
-        }
+            Future(Redirect(routes.LoginController.error("Unknown user or bad password!")).discardingCookies(discardingCookie))
+          }
       })
-
   }
 
   def logout(): Action[AnyContent] = Action {
@@ -112,11 +120,11 @@ class LoginController @Inject()(implicit config: Config,
 
       try {
         val rcSession: RcSession = request.attrs(sessionKey)
-        sessionManager.remove(rcSession.sessionId)
         logger.info(s"Logout callsign:${rcSession.callsign} ip:${request.remoteAddress}")
+        actor ! SessionManagerActor.Remove(rcSession.sessionId)
       } catch {
-        case e:NoSuchElementException =>
-          // Ok might not have a session.
+        case e: NoSuchElementException =>
+        // Ok might not have a session.
         case e: Exception =>
           logger.error("Removing session", e)
       }

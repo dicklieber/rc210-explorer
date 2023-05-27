@@ -22,7 +22,7 @@ class Module(environment: Environment, configuration: Configuration) extends Sca
     install(new ConfigModule(configuration))
     install(ActorModule)
     bind[InitialLoader].asEagerSingleton()
-    bind[SessionTicker].asEagerSingleton()
+//    bind[SessionTicker].asEagerSingleton()
   }
 }
 
