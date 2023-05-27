@@ -17,13 +17,12 @@
 
 package net.wa9nnn.rc210.security.authorzation
 
-import akka.actor.typed.{ActorRef, Scheduler}
 import akka.actor.typed.scaladsl.AskPattern.Askable
+import akka.actor.typed.{ActorRef, Scheduler}
 import akka.stream.Materializer
 import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
 import controllers.routes
-import javafx.util.Duration.seconds
 import net.wa9nnn.rc210.security.authentication
 import net.wa9nnn.rc210.security.authentication.RcSession.playSessionName
 import net.wa9nnn.rc210.security.authentication.SessionManagerActor.Lookup
