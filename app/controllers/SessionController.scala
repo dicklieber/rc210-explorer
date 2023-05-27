@@ -17,32 +17,39 @@
 
 package controllers
 
-import com.typesafe.config.Config
+import akka.actor.typed.scaladsl.AskPattern.Askable
+import akka.actor.typed.{ActorRef, Scheduler}
+import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.Table
-import net.wa9nnn.rc210.security.UserId.UserId
-import net.wa9nnn.rc210.security.Who
-import net.wa9nnn.rc210.security.authentication.{RcSession, SessionManager, UserManager, UserRecords}
-import net.wa9nnn.rc210.security.authorzation.AuthFilter
-import play.api.data.Form
-import play.api.data.Forms.{mapping, optional, text}
-import play.api.mvc.{Action, AnyContent, MessagesInjectedController, MessagesRequest}
+import net.wa9nnn.rc210.security.authentication.SessionManagerActor.Sessions
+import net.wa9nnn.rc210.security.authentication.{RcSession, SessionManagerActor}
+import play.api.mvc.{Action, AnyContent, MessagesInjectedController}
 import views.html.dat
 
 import javax.inject.{Inject, Singleton}
+import scala.concurrent.duration.DurationInt
+import scala.concurrent.{ExecutionContext, Future}
+import scala.language.postfixOps
 
 /**
  * User Management
  */
 @Singleton
-class SessionController @Inject()(implicit sessionManager: SessionManager)
+class SessionController @Inject()( actor: ActorRef[SessionManagerActor.SessionManagerMessage])
+                                 (implicit scheduler: Scheduler, ec: ExecutionContext)
   extends MessagesInjectedController with LazyLogging {
+  implicit val timeout: Timeout = 3 seconds
 
+  def index: Action[AnyContent] = Action.async {
 
-  def index: Action[AnyContent] = Action {
-    val rows = sessionManager.sessions.map(_.toRow)
-    val table = Table(RcSession.header(rows.length), rows)
-    Ok(dat(Seq(table)))
+    val future: Future[Seq[RcSession]] = actor.ask(ref => Sessions(ref))
+    future.map { sessions =>
+      val rows = sessions.map(_.toRow)
+      val table = Table(RcSession.header(rows.length), rows)
+      Ok(dat(Seq(table)))
+
+    }
+
   }
-
 }

@@ -1,5 +1,5 @@
 @import net.wa9nnn.rc210.security.authentication.Login
-@(loginForm: Form[Login], loginInfo: String, err: Option[String] = None)(implicit messages: MessagesProvider)
+@(loginForm: Form[Login], loginInfo: String, err: Option[String] = None)(implicit messagesProvider: MessagesProvider)
 
 <head>
     <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
@@ -13,7 +13,7 @@
 <div class="container">
     <h1>@loginInfo</h1>
     <h2>Signin</h2>
-    <form method="post" action="@routes.LoginController.dologin()">
+    <form method="post" action="@routes.LoginController.doLogin()">
 
         @helper.inputText(loginForm("callsign"), Symbol("autocomplete") -> "off", Symbol("class") -> "callsign")
         @helper.inputPassword(loginForm("password"))

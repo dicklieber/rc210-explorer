@@ -15,20 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.field
+import com.google.inject.AbstractModule
+import net.wa9nnn.rc210.security.authentication.{SessionManager, SessionManagerActor, UserManagerActor}
+import play.api.libs.concurrent.AkkaGuiceSupport
 
-import org.specs2.mutable.Specification
-
-class FieldDtmfSpec extends Specification {
-
-  "FieldDtmf" should {
-    "extractFromInts" in {
-      val fieldDefinitions = new FieldDefinitions()
-      val remoteBaseDefinition: SimpleField = fieldDefinitions.simpleFields.find(_.fieldName == "Remote Base Prefix").get
-      val ints: Seq[Int] = Seq(53,0,0,255,255,255)
-      val fieldValue: FieldDtmf = FieldDtmf.extractFromInts(ints.iterator, remoteBaseDefinition).asInstanceOf[FieldDtmf]
-      fieldValue.display must beEqualTo ("5")
-
-    }
+object ActorModule extends AbstractModule with AkkaGuiceSupport {
+  override def configure(): Unit = {
+    bindTypedActor[SessionManagerActor.SessionManagerMessage](SessionManagerActor, "sessionManager-actor")
+    bindTypedActor[UserManagerActor.UserManagerMessage](UserManagerActor, "userManager-actor")
   }
 }
+
+
+

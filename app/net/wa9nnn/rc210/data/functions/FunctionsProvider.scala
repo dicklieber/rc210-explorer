@@ -44,12 +44,6 @@ class FunctionsProvider extends LazyLogging {
   } yield {
     destKey.asInstanceOf[MacroKey]
   }
-  lazy val invokedMessageMacros: Seq[MessageKey] = for {
-    function <- functions
-    destKey <- function.destination
-  } yield {
-    destKey.asInstanceOf[MessageKey]
-  }
 
 }
 

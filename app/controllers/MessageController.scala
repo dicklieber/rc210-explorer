@@ -25,7 +25,7 @@ import net.wa9nnn.rc210.data.message.Message
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.key.KeyFactory._
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.h2u
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
@@ -68,7 +68,7 @@ class MessageController @Inject()(dataStore: DataStore) extends MessagesInjected
     val name: String = kv("name")
     val namedKey = NamedKey(messageKey, name)
 
-    dataStore.update(UpdateData(Seq(candidate), Seq(namedKey)))(h2u(request))
+    dataStore.update(UpdateData(Seq(candidate), Seq(namedKey)))(who(request))
     Redirect(routes.MessageController.index())
   }
 }

@@ -1,41 +1,33 @@
-/*
- * Copyright (C) 2023  Dick Lieber, WA9NNN
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package controllers
 
+
+import akka.actor.typed.{ActorRef, Scheduler}
+import akka.actor.typed.scaladsl.AskPattern._
+import akka.util.Timeout
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.security.authentication.SessionManager.playSessionName
-import net.wa9nnn.rc210.security.authentication.{Login, RcSession, SessionManager, UserManager}
+import net.wa9nnn.rc210.security.authentication.SessionManagerActor.Create
+
+import scala.concurrent.duration._
+import net.wa9nnn.rc210.security.authentication._
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 import play.api.data.Forms.{mapping, text}
 import play.api.data.{Form, FormError}
 import play.api.mvc._
 import play.twirl.api.HtmlFormat
 
+import scala.language.postfixOps
+import scala.concurrent._
 import javax.inject._
 
 
-@Singleton
+@Singleton()
 class LoginController @Inject()(implicit config: Config,
-                                userManager: UserManager,
-                                sessionManager: SessionManager,
-                               ) extends MessagesInjectedController with LazyLogging  {
-  //  extends MessagesAbstractController
+                                val sessionActor: ActorRef[SessionManagerActor.Message],
+                                val userActor: ActorRef[UserManagerActor.Message],
+                                scheduler: Scheduler, ec: ExecutionContext
+                               ) extends MessagesInjectedController with LazyLogging {
 
   val loginForm: Form[Login] = Form {
     mapping(
@@ -43,14 +35,9 @@ class LoginController @Inject()(implicit config: Config,
       "password" -> text,
     )(Login.apply)(Login.unapply)
   }
-  val ownerMessage: String = config.getString("vizRc210.authentication.message")
-  implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
+  private val ownerMessage: String = config.getString("vizRc210.authentication.message")
 
-  /**
-   *
-   * @param maybeMessage show as error message.
-   */
-  def loginLanding = Action {
+  def loginLanding: Action[AnyContent] = Action {
     implicit request =>
       val form = loginForm.fill(Login())
       try {
@@ -73,13 +60,14 @@ class LoginController @Inject()(implicit config: Config,
   }
 
   private val discardingCookie: DiscardingCookie = DiscardingCookie(playSessionName)
+  implicit val timeout: Timeout = 3 seconds
 
   /**
    * Attempt to authenticate the user
    *
    * @return
    */
-  def dologin(): Action[AnyContent] = Action { implicit request =>
+  def doLogin(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
     val binded: Form[Login] = loginForm.bindFromRequest()
     binded.fold(
       (formWithErrors: Form[Login]) => {
@@ -87,41 +75,30 @@ class LoginController @Inject()(implicit config: Config,
         errors.foreach { err =>
           logger.error(err.message)
         }
-        //          val destination = formWithErrors.data.get("destination")
-        BadRequest(views.html.login(formWithErrors, ownerMessage, Option("auth.badlogin")))
+        val appendable = views.html.login(formWithErrors, ownerMessage, Option("auth.badlogin"))
+        BadRequest(appendable)
       },
       (login: Login) => {
-        userManager.validate(login)
-          .map { user =>
-            val session = sessionManager.create(user, request.remoteAddress)
-            session
-          } match {
-          case Some(rcSession: RcSession) =>
-            logger.info(s"Login callsign:${login.callsign}  ip:${request.remoteAddress}")
-            Ok(views.html.empty()).withSession(RcSession.playSessionName -> rcSession.sessionId)
-          case None =>
+        (for {
+          user: User <- Await.result[Option[User]](userActor.ask(UserManagerActor.Validate(login, _)), 3 seconds)
+          session: RcSession = Await.result[RcSession](sessionActor.ask(Create(user, request.remoteAddress, _)), 3 seconds)
+        } yield {
+          logger.info(s"Login callsign:${login.callsign}  ip:${request.remoteAddress}")
+          Ok(views.html.empty())
+            .withSession(RcSession.playSessionName -> session.sessionId)
+        })
+          .getOrElse {
             logger.error(s"Login Failed callsign:${login.callsign} ip:${request.remoteAddress}")
             Redirect(routes.LoginController.error("Unknown user or bad password!")).discardingCookies(discardingCookie)
-        }
+          }
       })
-
   }
 
-  def logout(): Action[AnyContent] = Action {
+  def logout(): Action[AnyContent] = Action.async {
     implicit request =>
-
-      try {
-        val rcSession: RcSession = request.attrs(sessionKey)
-        sessionManager.remove(rcSession.sessionId)
-        logger.info(s"Logout callsign:${rcSession.callsign} ip:${request.remoteAddress}")
-      } catch {
-        case e:NoSuchElementException =>
-          // Ok might not have a session.
-        case e: Exception =>
-          logger.error("Removing session", e)
+      val rcSession: RcSession = request.attrs(sessionKey)
+      (sessionActor ? (ref => SessionManagerActor.Remove(rcSession.sessionId, ref))).map { _ =>
+        Redirect(routes.LoginController.loginLanding).discardingCookies(discardingCookie)
       }
-
-      Redirect(routes.LoginController.loginLanding).discardingCookies(discardingCookie)
   }
-
 }

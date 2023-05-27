@@ -19,7 +19,7 @@
             @for(user <- userRecords.users.sorted) {
                 <tr>
                     <td>
-                        @editButton( routes.AuthenticatationController.editUser(user.id).url)
+                        @editButton( routes.UsersController.editUser(user.id).url)
                     </td>
                     <td>
                         @user.callsign
@@ -36,7 +36,7 @@
         </table>
 
 
-        <button type="submit" class="btn btn-primary" value="Add" onclick="window.location.href = '@routes.AuthenticatationController.addUser()'">
+        <button type="submit" class="btn btn-primary" value="Add" onclick="window.location.href = '@routes.UsersController.addUser()'">
             <i class="bi bi-person-add"></i> Add
         </button>
 

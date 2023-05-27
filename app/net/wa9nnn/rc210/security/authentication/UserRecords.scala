@@ -49,7 +49,7 @@ def get(id: UserId): Option[User] = {
  * @param who is making this change.
  * @return a new [[UserRecords]]
  */
-def update(in: UserEditDTO)(implicit who: Who): UserRecords = {
+def update(in: UserEditDTO, who: Who): UserRecords = {
 
   val maybeRecord: Option[User] = idMap.get(in.id)
 
@@ -66,7 +66,7 @@ def update(in: UserEditDTO)(implicit who: Who): UserRecords = {
  * @param who       is making this change.
  * @return a new [[com.wa9nnn.allstarmgr.security.authentication.UserRecords]]
  */
-def remove(uuid: UserId)(implicit who: Who): UserRecords = {
+def remove(uuid: UserId,  who: Who): UserRecords = {
   finish(idMap - uuid, who)
 }
 

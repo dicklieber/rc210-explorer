@@ -26,7 +26,7 @@ import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter._
 import net.wa9nnn.rc210.ui.FormParser
 import play.api.mvc._
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.h2u
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
 import javax.inject.Inject
 
 class PortsEditorController @Inject()(implicit val controllerComponents: ControllerComponents,
@@ -70,7 +70,7 @@ class PortsEditorController @Inject()(implicit val controllerComponents: Control
   def save(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
       val updateData = FormParser(AnyContentAsFormUrlEncoded(request.body.asFormUrlEncoded.get))
-      dataStore.update(updateData)(h2u(request))
+      dataStore.update(updateData)(who(request))
       Redirect(routes.PortsEditorController.index())
   }
 }

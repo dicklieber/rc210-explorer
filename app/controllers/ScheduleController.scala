@@ -26,7 +26,7 @@ import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.data.schedules.Schedule
 import net.wa9nnn.rc210.key.KeyFactory.ScheduleKey
 import net.wa9nnn.rc210.key.KeyKind
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.h2u
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
@@ -79,7 +79,7 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
         UpdateCandidate( schedule.fieldKey, Right(schedule))
       }.toSeq.sortBy(_.fieldKey.key)
 
-    dataStore.update(UpdateData(r, namedKeys.result()))(h2u(request))
+    dataStore.update(UpdateData(r, namedKeys.result()))(who(request))
 
 
     Redirect(routes.ScheduleController.index())

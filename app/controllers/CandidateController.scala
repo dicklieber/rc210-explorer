@@ -27,7 +27,7 @@ import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.io.DatFile
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.h2u
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
 import net.wa9nnn.rc210.serial.{CommandTransaction, RC210IO, SerialPortOpenException, SerialPortOperation}
 import play.api.mvc._
 
@@ -92,7 +92,7 @@ class CandidateController @Inject()(dataStore: DataStore, rc210IO: RC210IO, datF
             val withCr = "\r" + command + "\r"
             val transaction: CommandTransaction = CommandTransaction(0, withCr, fieldEntry.fieldKey.toCell, serialPortOperation.preform(withCr))
             if (!sendValue && transaction.isSuccess) {
-              dataStore.acceptCandidate(fieldKey)(h2u(request))
+              dataStore.acceptCandidate(fieldKey)(who(request))
             }
             transaction.toRow
           }

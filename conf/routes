@@ -53,14 +53,14 @@ GET         /clock                                     controllers.ClockControll
 POST        /remote/save                               controllers.RemoteBaseController.save()
 GET         /remote                                    controllers.RemoteBaseController.index
 
-POST        /loginDo                                   controllers.LoginController.dologin()
-GET         /logout                                    controllers.LoginController.logout()
-GET         /editUser/:id                              controllers.AuthenticatationController.editUser(id:String)
-GET         /users                                     controllers.AuthenticatationController.users()
-GET         /addUser                                   controllers.AuthenticatationController.addUser()
-POST        /saveUser                                  controllers.AuthenticatationController.saveUser()
-POST        /deleteUser/:id                            controllers.AuthenticatationController.remove(id:String)
+GET         /editUser/:id                              controllers.UsersController.editUser(id:String)
+GET         /users                                     controllers.UsersController.users()
+GET         /addUser                                   controllers.UsersController.addUser()
+POST        /saveUser                                  controllers.UsersController.saveUser()
+POST        /deleteUser/:id                            controllers.UsersController.remove(id:String)
 GET         /sessions                                  controllers.SessionController.index
+POST        /loginDo                                   controllers.LoginController.doLogin()
+GET         /logout                                    controllers.LoginController.logout()
 GET         /loginError/:error                         controllers.LoginController.error(error:String)
 GET         /                                          controllers.LoginController.loginLanding
 

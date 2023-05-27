@@ -7,7 +7,7 @@
 }
 
 @tabbedmain(Tabs.security) {
-    @form(routes.AuthenticatationController.saveUser()) {
+    @form(routes.UsersController.saveUser()) {
         @defining(userForm("id").value.get) { id =>
             <input type="hidden" value="@id" name="id">
             <table class="table table-bordered table-sm w-auto ">
