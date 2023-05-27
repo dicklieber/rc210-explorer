@@ -57,6 +57,7 @@ case class RcSession(sessionId: SessionId,
     Duration.between(started, Instant.now())
   )
 
+  override def toString: SessionId = s"Session Callsign: ${user.callsign} from $remoteIp"
 }
 
 object RcSession extends LazyLogging {

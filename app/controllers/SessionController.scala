@@ -36,8 +36,8 @@ import scala.language.postfixOps
  * User Management
  */
 @Singleton
-class SessionController @Inject()(implicit val actor: ActorRef[SessionManagerActor.SessionManagerMessage],
-                                  scheduler: Scheduler, ec: ExecutionContext)
+class SessionController @Inject()( actor: ActorRef[SessionManagerActor.SessionManagerMessage])
+                                 (implicit scheduler: Scheduler, ec: ExecutionContext)
   extends MessagesInjectedController with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 

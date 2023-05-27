@@ -1,6 +1,5 @@
 package net.wa9nnn.rc210.security.authentication
 
-import akka.actor.ActorSystem
 import com.fasterxml.jackson.module.scala.deser.overrides.TrieMap
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.security.authentication.RcSession.SessionId
@@ -12,8 +11,6 @@ import java.io.FileNotFoundException
 import java.nio.file.{Path, Paths}
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
 
 /**
@@ -83,11 +80,14 @@ class SessionManager (sessionFileName: String) extends LazyLogging {
   }
 
   def remove(sessionId: SessionId): Unit = {
-    sessionMap.remove(sessionId)
-      .foreach { RcSession: RcSession =>
-        sessionMap.remove(RcSession.user.id)
+    sessionMap.remove(sessionId) match {
+      case Some(removedSession) =>
+        logger.debug(s"Session: $sessionId removed.", removedSession)
+      case None =>
+        logger.error(s"Session: $sessionId did not exist! ")
+    }
+
         dirty = true
-      }
   }
 
   /**
@@ -116,8 +116,6 @@ class SessionManager (sessionFileName: String) extends LazyLogging {
   def sessions: Seq[RcSession] = {
     sessionMap.values.toSeq.sorted
   }
-
-
 }
 
 object SessionManager {
@@ -133,10 +131,3 @@ object RcSessions {
   implicit val fmtRcSessions: Format[RcSessions] = Json.format[RcSessions]
 }
 
-@Inject()
-class SessionTicker @Inject()(sessionManager: SessionManager, actorSystem: ActorSystem) {
-  implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
-
-  actorSystem.scheduler.scheduleWithFixedDelay(5 seconds, 10 seconds) { () => sessionManager.tick() }
-
-}

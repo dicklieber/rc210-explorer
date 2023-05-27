@@ -9,8 +9,8 @@ enablePlugins(JavaServerAppPackaging)
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
   .settings(
-    Compile / mappings := Seq(),
-    packageDoc / mappings := Seq(),
+//    Compile / mappings := Seq(),
+//    packageDoc / mappings := Seq(),
     scalaVersion := "2.13.10",
     buildInfoKeys :=
       Seq[BuildInfoKey](

@@ -50,14 +50,10 @@ class LoginController @Inject()(implicit config: Config,
       "password" -> text,
     )(Login.apply)(Login.unapply)
   }
-  val ownerMessage: String = config.getString("vizRc210.authentication.message")
+  private val ownerMessage: String = config.getString("vizRc210.authentication.message")
   implicit val timeout: Timeout = 3 seconds
 
-  /**
-   *
-   * @param maybeMessage show as error message.
-   */
-  def loginLanding = Action {
+  def loginLanding: Action[AnyContent] = Action {
     implicit request =>
       val form = loginForm.fill(Login())
       try {
@@ -115,21 +111,11 @@ class LoginController @Inject()(implicit config: Config,
       })
   }
 
-  def logout(): Action[AnyContent] = Action {
+  def logout(): Action[AnyContent] = Action.async {
     implicit request =>
-
-      try {
-        val rcSession: RcSession = request.attrs(sessionKey)
-        logger.info(s"Logout callsign:${rcSession.callsign} ip:${request.remoteAddress}")
-        actor ! SessionManagerActor.Remove(rcSession.sessionId)
-      } catch {
-        case e: NoSuchElementException =>
-        // Ok might not have a session.
-        case e: Exception =>
-          logger.error("Removing session", e)
+      val rcSession: RcSession = request.attrs(sessionKey)
+      (actor ? (ref => SessionManagerActor.Remove(rcSession.sessionId, ref))).map { _ =>
+        Redirect(routes.LoginController.loginLanding).discardingCookies(discardingCookie)
       }
-
-      Redirect(routes.LoginController.loginLanding).discardingCookies(discardingCookie)
   }
-
 }

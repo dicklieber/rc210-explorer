@@ -17,25 +17,35 @@
 
 package net.wa9nnn.rc210.security.authorzation
 
+import akka.actor.typed.{ActorRef, Scheduler}
+import akka.actor.typed.scaladsl.AskPattern.Askable
 import akka.stream.Materializer
+import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
 import controllers.routes
-import net.wa9nnn.rc210.security.Who
+import javafx.util.Duration.seconds
+import net.wa9nnn.rc210.security.authentication
 import net.wa9nnn.rc210.security.authentication.RcSession.playSessionName
-import net.wa9nnn.rc210.security.authentication.{RcSession, SessionManager, User}
+import net.wa9nnn.rc210.security.authentication.SessionManagerActor.Lookup
+import net.wa9nnn.rc210.security.authentication.{RcSession, SessionManagerActor, User}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 import play.api.libs.typedmap.{TypedEntry, TypedKey, TypedMap}
 import play.api.mvc.Results.Redirect
-import play.api.mvc.{MessagesRequest, _}
+import play.api.mvc._
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
-import scala.language.implicitConversions
+import scala.concurrent.duration.DurationInt
+import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.language.{implicitConversions, postfixOps}
 
 /**
  * A Play filter that puts the current [[RcSession]] in to the Request or redirects to the Login Page.
  */
-class AuthFilter @Inject()(implicit val mat: Materializer, sessionManager: SessionManager, ec: ExecutionContext) extends Filter with LazyLogging {
+class AuthFilter @Inject()(implicit val mat: Materializer,
+                           actor: ActorRef[SessionManagerActor.SessionManagerMessage],
+                           scheduler: Scheduler,
+                           ec: ExecutionContext) extends Filter with LazyLogging {
+  implicit val timeout: Timeout = 3 seconds
 
   override def apply(next: RequestHeader => Future[Result])(requestHeader: RequestHeader): Future[Result] = {
     val path: String = requestHeader.path
@@ -45,18 +55,18 @@ class AuthFilter @Inject()(implicit val mat: Materializer, sessionManager: Sessi
     } else {
       logger.trace("Looking for session by cookie with SessionId")
 
-      val playSession: Session = requestHeader.session
-
+      val eventualMaybeSession: Future[Option[RcSession]] = actor.ask(ref => Lookup("123", ref)).mapTo[Option[RcSession]]
+      val playSession = requestHeader.session
       (for {
         sessionId <- playSession.get(playSessionName)
-        session <- sessionManager.lookup(sessionId)
+        session <-  Await.result[Option[authentication.RcSession]](actor.ask(ref => Lookup(sessionId, ref)), 3 seconds)
       } yield {
         logger.trace("Got valid session from cookie")
         val te: TypedEntry[RcSession] = TypedEntry(sessionKey, session)
         val requestHeaderWithSession: RequestHeader = requestHeader.withAttrs(TypedMap(te))
         requestHeaderWithSession
       }) match {
-        case Some(requestHeaderWithSessiobn) =>
+        case Some(requestHeaderWithSessiobn: Any) =>
           logger.trace("Invoking next")
           next(requestHeaderWithSessiobn)
         case None =>
@@ -72,15 +82,15 @@ class AuthFilter @Inject()(implicit val mat: Materializer, sessionManager: Sessi
 object AuthFilter extends LazyLogging {
   val sessionKey: TypedKey[RcSession] = TypedKey[RcSession]("rcSession")
 
-//  implicit def h2s(requestHeader: Request[AnyContent]): RcSession = {
-//    requestHeader.attrs(sessionKey)
-//  }
+  //  implicit def h2s(requestHeader: Request[AnyContent]): RcSession = {
+  //    requestHeader.attrs(sessionKey)
+  //  }
 
-  implicit def h2u(request:Request[_]): User = {
+  implicit def h2u(request: Request[_]): User = {
     request.attrs(sessionKey).user
   }
 
-//  implicit def h2w(requestHeader: Request[AnyContent]): Who = {
-//    requestHeader.attrs(sessionKey).user.who
-//  }
+  //  implicit def h2w(requestHeader: Request[AnyContent]): Who = {
+  //    requestHeader.attrs(sessionKey).user.who
+  //  }
 }
