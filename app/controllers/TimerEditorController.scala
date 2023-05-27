@@ -26,7 +26,7 @@ import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.data.timers.Timer
 import net.wa9nnn.rc210.key.KeyFactory.{Key, MacroKey, TimerKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.h2u
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
 import net.wa9nnn.rc210.util.MacroSelectField
 import play.api.mvc._
 
@@ -71,7 +71,7 @@ class TimerEditorController @Inject()(val controllerComponents: ControllerCompon
           val timer = Timer(key.asInstanceOf[TimerKey] , seconds = seconds, macroSelect = macroSelect)
           UpdateCandidate(timer.fieldKey, Right(timer))
         }.toSeq
-      datastore.update(UpdateData(timers, namedKeyBuilder.result()))(h2u(request))
+      datastore.update(UpdateData(timers, namedKeyBuilder.result()))(who(request))
       Redirect(routes.TimerEditorController.index())
   }
 

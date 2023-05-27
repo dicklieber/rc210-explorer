@@ -2,32 +2,27 @@ package net.wa9nnn.rc210.security.authentication
 
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
+import configs.syntax._
 import controllers.UserEditDTO
-import net.wa9nnn.rc210.io.DatFile
 import net.wa9nnn.rc210.security.UserId.UserId
 import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.util.JsonIoWithBackup
 import play.api.libs.json.Json
 
 import java.nio.file.Path
-import javax.inject.{Inject, Singleton}
 
 /**
  * Handles persistence of [[User]]s
+ * This shoulsd only be access via [[UserManagerActor]]
  *
- * @param datFile      where all writeable files live.
- * @param config       to get allstar.authentication.defaultAdmin
  */
-@Singleton
-class UserManager @Inject()(config: Config)(implicit datFile: DatFile) extends LazyLogging {
-
-  private var _userRecords: UserRecords = UserRecords()
-  private val usersFile: Path = datFile.usersFile
-
+class UserManager(config: Config) extends LazyLogging {
+  private val usersFile: Path = config.get[Path]("vizRc210.usersFile").value
   private val defaultNoUserLogin: Login = Login(
     callsign = config.getString("vizRc210.authentication.defaultAdmin.callsign"),
     password = config.getString("vizRc210.authentication.defaultAdmin.password")
   )
+  private var _userRecords: UserRecords = UserRecords()
 
   def load(): Unit = {
 
@@ -41,10 +36,15 @@ class UserManager @Inject()(config: Config)(implicit datFile: DatFile) extends L
 
   load()
 
-  def userRecords: UserRecords = _userRecords
+  def users: UserRecords = _userRecords
 
-  def put(userDetailData: UserEditDTO)(implicit user: User): Unit = {
-    _userRecords = _userRecords.update(userDetailData)(user.who)
+  /**
+   *
+   * @param userDetailData for new user
+   * @param user           who is doing this.
+   */
+  def put(userDetailData: UserEditDTO, user: User): Unit = {
+    _userRecords = _userRecords.update(userDetailData, user.who)
     JsonIoWithBackup(usersFile, Json.toJson(_userRecords))
   }
 
@@ -56,18 +56,18 @@ class UserManager @Inject()(config: Config)(implicit datFile: DatFile) extends L
         name = Option("Default Admin"),
         password = Option(login.password)
       )
-      val user =  User(dto)
+      val user = User(dto)
       Option(user)
     } else
       _userRecords.validate(login)
   }
 
-  def delete(id: UserId)(implicit who: Who): Unit = {
-    _userRecords = _userRecords.remove(id)
+  def remove(id: UserId, who: Who): Unit = {
+    _userRecords = _userRecords.remove(id, who)
   }
 
   def get(id: UserId): Option[User] = {
-    userRecords.get(id)
+    users.get(id)
   }
 
 }

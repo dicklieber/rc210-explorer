@@ -26,7 +26,7 @@ import net.wa9nnn.rc210.data.remotebase.Offset._
 import net.wa9nnn.rc210.data.remotebase.Yaesu._
 import net.wa9nnn.rc210.data.remotebase._
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.h2u
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
 import play.api.data.Forms._
 import play.api.data.{Form, Mapping}
 import play.api.mvc._
@@ -65,7 +65,7 @@ class RemoteBaseController @Inject()(dataStore: DataStore) extends MessagesInjec
 
   def save(): Action[AnyContent] = Action { implicit request =>
 
-    remoteBaseForm.bindFromRequest.fold(
+    remoteBaseForm.bindFromRequest().fold(
       formWithErrors => {
         // binding failure, you retrieve the form containing errors:
         BadRequest(views.html.rermoteBase(formWithErrors))
@@ -74,7 +74,7 @@ class RemoteBaseController @Inject()(dataStore: DataStore) extends MessagesInjec
         /* binding success, you get the actual value. */
         val updateCandidate = UpdateCandidate(remoteBase.fieldKey, Right(remoteBase))
         val updateData = UpdateData(Seq(updateCandidate))
-        dataStore.update(updateData)(h2u(request))
+        dataStore.update(updateData)(who(request))
         Redirect(routes.RemoteBaseController.index)
       }
     )

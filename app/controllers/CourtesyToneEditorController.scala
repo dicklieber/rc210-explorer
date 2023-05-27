@@ -26,7 +26,7 @@ import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey
 import net.wa9nnn.rc210.key.KeyKind
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.h2u
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
 import net.wa9nnn.rc210.ui.FormParser
 import play.api.mvc._
 
@@ -80,7 +80,7 @@ class CourtesyToneEditorController @Inject()(val controllerComponents: Controlle
           val courtesyTone = CourtesyTone(ctKey, segs.toSeq)
           ctBuilder += UpdateCandidate(courtesyTone)
         }
-      dataStore.update(UpdateData(ctBuilder.result(), namedKeyBuilder.result()))(h2u(request))
+      dataStore.update(UpdateData(ctBuilder.result(), namedKeyBuilder.result()))(who(request))
       Redirect(routes.CourtesyToneEditorController.index())
   }
 }

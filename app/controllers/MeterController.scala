@@ -27,7 +27,7 @@ import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, MeterAlarmKey, MeterKey}
 import net.wa9nnn.rc210.key.KeyFormats._
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.h2u
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
 import play.api.data.Forms._
 import play.api.data.{Form, Mapping}
 import play.api.mvc._
@@ -106,7 +106,7 @@ class MeterController @Inject()(dataStore: DataStore) extends MessagesInjectedCo
         (meter: Meter) => {
           val updateCandidate: UpdateCandidate = UpdateCandidate(meter)
           val updateData = UpdateData(Seq(updateCandidate), Seq(NamedKey(meterKey, name)))
-          dataStore.update(updateData)(h2u(request))
+          dataStore.update(updateData)(who(request))
           //        }
           //      )
           Redirect(routes.MeterController.index)
@@ -126,7 +126,7 @@ class MeterController @Inject()(dataStore: DataStore) extends MessagesInjectedCo
         (meterAlarm: MeterAlarm) => {
           val updateCandidate: UpdateCandidate = UpdateCandidate(meterAlarm)
           val updateData = UpdateData(Seq(updateCandidate), Seq(NamedKey(meterAlarmKey, name)))
-          dataStore.update(updateData)(h2u(request))
+          dataStore.update(updateData)(who(request))
           //        }
           //      )
           Redirect(routes.MeterController.index)

@@ -25,7 +25,7 @@ import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.data.{Dtmf, FieldKey}
 import net.wa9nnn.rc210.key.KeyFactory._
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.h2u
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
 import play.api.mvc._
 import views.html.macroNodes
 
@@ -79,7 +79,7 @@ class MacroNodeController @Inject()(dataStore: DataStore
     val ud = UpdateCandidate( macroNode.fieldKey, Right(macroNode))
 
     val keyNames = Seq(NamedKey(key, formData("name").head))
-    dataStore.update(UpdateData(Seq(ud), keyNames))(h2u(request))
+    dataStore.update(UpdateData(Seq(ud), keyNames))(who(request))
 
     Redirect(routes.MacroNodeController.index())
   }

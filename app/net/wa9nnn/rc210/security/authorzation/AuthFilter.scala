@@ -85,7 +85,7 @@ object AuthFilter extends LazyLogging {
   //    requestHeader.attrs(sessionKey)
   //  }
 
-  implicit def h2u(request: Request[_]): User = {
+  implicit def who(implicit request: Request[_]): User = {
     request.attrs(sessionKey).user
   }
 

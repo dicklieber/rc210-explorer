@@ -13,7 +13,7 @@
 <div class="container">
     <h1>@loginInfo</h1>
     <h2>Signin</h2>
-    <form method="post" action="@routes.LoginController.dologin()">
+    <form method="post" action="@routes.LoginController.doLogin()">
 
         @helper.inputText(loginForm("callsign"), Symbol("autocomplete") -> "off", Symbol("class") -> "callsign")
         @helper.inputPassword(loginForm("password"))

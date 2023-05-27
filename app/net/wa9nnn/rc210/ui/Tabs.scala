@@ -45,7 +45,7 @@ object Tabs {
   val fileUpload: Tab = Tab("Upload", routes.DataStoreController.upload.url, "Upload a saved JSON file.")
   val changes: Tab = Tab("Changes", routes.CandidateController.index().url, "Pending changes that need to be sent to the RC-210.")
   val remoteBase: Tab = Tab("Remote Base", controllers.routes.RemoteBaseController.index.url, "Manabge Remote Base radio.")
-  def security: Tab = Tab("Users", routes.AuthenticatationController.users().url, "Edit Users")
+  def security: Tab = Tab("Users", routes.UsersController.users().url, "Edit Users")
 
   val tabs: Seq[Tab] = Seq(
     flowTab,
