@@ -54,6 +54,10 @@
     <logger name="net.wa9nnn.rc210.security.authentication.SessionManager" level="INFO"/>
     <logger name="net.wa9nnn.rc210.security.authorzation.AuthFilter" level="INFO"/>
 
+    <logger name="actors" level="INFO" />
+    <logger name="akka" level="INFO" />
+    <logger name="play" level="INFO" />
+
     <root level="INFO">
         <appender-ref ref="ASYNCFILE"/>
         <appender-ref ref="ASYNCSTDOUT"/>

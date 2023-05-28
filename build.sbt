@@ -9,8 +9,8 @@ enablePlugins(JavaServerAppPackaging)
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
   .settings(
-//    Compile / mappings := Seq(),
-//    packageDoc / mappings := Seq(),
+    //    Compile / mappings := Seq(),
+    //    packageDoc / mappings := Seq(),
     scalaVersion := "2.13.10",
     buildInfoKeys :=
       Seq[BuildInfoKey](
@@ -46,7 +46,7 @@ val logbackVersion = "1.4.7"
 val specs2Version = "4.19.2"
 libraryDependencies += specs2 % Test
 
-
+val akkaVersion = "2.6.20"
 //libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
 
 libraryDependencies ++= Seq(
@@ -57,8 +57,10 @@ libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % logbackVersion,
   "ch.qos.logback" % "logback-core" % logbackVersion,
   "commons-io" % "commons-io" % "2.11.0",
+  "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
+  "com.typesafe.akka" %% "akka-actor" % akkaVersion,
   "com.fazecast" % "jSerialComm" % "2.9.3",
-  "io.suzaku" %% "boopickle" % "1.4.0",
+  //  "io.suzaku" %% "boopickle" % "1.4.0",
   "org.fusesource.jansi" % "jansi" % "2.4.0",
   "org.apache.commons" % "commons-text" % "1.10.0",
   "com.github.kxbmap" %% "configs" % "0.6.1",
