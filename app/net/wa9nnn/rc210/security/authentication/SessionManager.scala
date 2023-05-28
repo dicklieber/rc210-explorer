@@ -1,15 +1,17 @@
 package net.wa9nnn.rc210.security.authentication
 
 import com.fasterxml.jackson.module.scala.deser.overrides.TrieMap
+import configs.syntax._
+import com.typesafe.config.Config
+
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.datastore.DataStorePersistence
 import net.wa9nnn.rc210.security.authentication.RcSession.SessionId
 import net.wa9nnn.rc210.util.JsonIoWithBackup
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.Cookie
 
 import java.io.FileNotFoundException
-import java.nio.file.{Path, Paths}
+import java.nio.file.Path
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import scala.language.postfixOps
@@ -20,7 +22,9 @@ import scala.language.postfixOps
  * Periodically Persisted if dirty.
  * Loaded at startup
  */
-class SessionManager (dataStoreJson: DataStorePersistence) extends LazyLogging {
+class SessionManager(config: Config) extends LazyLogging {
+
+  private val sessionFile: Path = config.get[Path]("vizRc210.sessionFile").value
 
   private val sessionMap = new TrieMap[SessionId, RcSession]
   private var dirty = false
@@ -87,7 +91,7 @@ class SessionManager (dataStoreJson: DataStorePersistence) extends LazyLogging {
         logger.error(s"Session: $sessionId did not exist! ")
     }
 
-        dirty = true
+    dirty = true
   }
 
   /**
