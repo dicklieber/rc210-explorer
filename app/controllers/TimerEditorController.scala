@@ -20,7 +20,7 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.datastore.{DataStore, UpdateCandidate, UpdateData}
+import net.wa9nnn.rc210.data.datastore.{UpdateCandidate, UpdateData}
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldInt}
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.data.timers.Timer

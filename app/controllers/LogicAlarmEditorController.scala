@@ -20,7 +20,7 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.datastore.{DataStore, FormValue, UpdateCandidate, UpdateData}
+import net.wa9nnn.rc210.data.datastore.{FormValue, UpdateCandidate, UpdateData}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.key.KeyFactory.LogicAlarmKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}

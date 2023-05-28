@@ -17,7 +17,7 @@
 
 package controllers
 
-import net.wa9nnn.rc210.data.datastore.{DataStore, UpdateCandidate, UpdateData}
+import net.wa9nnn.rc210.data.datastore.{UpdateCandidate, UpdateData}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.MacroNode

@@ -19,7 +19,7 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.datastore.{DataStore, UpdateCandidate, UpdateData}
+import net.wa9nnn.rc210.data.datastore.{UpdateCandidate, UpdateData}
 import net.wa9nnn.rc210.data.field.Formatters._
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldInt}
 import net.wa9nnn.rc210.data.meter._

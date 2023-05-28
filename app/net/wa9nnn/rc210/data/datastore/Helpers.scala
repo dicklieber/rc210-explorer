@@ -53,6 +53,7 @@ object FieldEntryJson {
     new FieldEntryJson(fieldKey, fieldEntry.fieldValue.toJsonValue, fieldEntry.candidate.map(_.toJsonValue))
   }
 
+
   implicit val fmtFieldEntryJson: Format[FieldEntryJson] = Json.format[FieldEntryJson]
 
 }
@@ -71,7 +72,7 @@ object UpdateCandidate {
   }
 }
 
-case class UpdateData(candidates: Seq[UpdateCandidate], names: Seq[NamedKey] = Seq.empty)
+//case class UpdateData(candidates: Seq[UpdateCandidate], names: Seq[NamedKey] = Seq.empty)
 
 case class NamedDataJson(key: Key, name: String)
 

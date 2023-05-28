@@ -18,48 +18,46 @@
 package net.wa9nnn.rc210.data.datastore
 
 import com.typesafe.scalalogging.LazyLogging
+import configs.Config
+import configs.syntax._
 import net.wa9nnn.rc210.data.named.NamedKey
-import net.wa9nnn.rc210.io.DatFile
 import net.wa9nnn.rc210.security.Who
 import play.api.libs.json.{Format, Json}
 
 import java.io.InputStream
 import java.nio.file.{Files, Path}
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
 import scala.collection.immutable.Seq
-import scala.util.Using
+import scala.util.{Try, Using}
 
 /**
  * Parses JSON saved from [[DataStore]]
  */
 
-@Singleton
-class DataStoreJson @Inject()(datFile: DatFile) extends LazyLogging {
-  /**
-   * Loads a JSON file into the [[DataStore]].
-   *
-   * @param dataStore where to send data to.
-   * @param path      default to applications configured directory. Can be overriden to the temp file from a multipart file upload.
-   * @return
-   */
-  def load(dataStore: DataStore, path: Path = datFile.dataStorePath): Unit = {
+class DataStorePersistence @Inject()(config: Config) extends LazyLogging {
+  def save(dataTransferJson: DataTransferJson): Unit = {
+    Files.writeString(path,
+      Json.prettyPrint(
+        Json.toJson(dataTransferJson)
 
+      ))
+  }
+
+  private val path: Path = config.get[Path]("vizRc210.dataStoreFile").value
+
+  def load(): Try[DataTransferJson] = {
     Using(Files.newInputStream(path)) { inputStream: InputStream =>
-      dataStore.fromJson(Json.parse(inputStream).as[DataTransferJson])
-
+      Json.parse(inputStream).as[DataTransferJson]
     }
   }
 
-  def write(dataTransferJson: DataTransferJson): Unit = {
-    Files.writeString(datFile.dataStorePath, dataTransferJson.toPrettyJson)
-  }
 }
 
 /**
- * Data transfer between [[DataStoreJson]] and [[DataStore]].
+ * Data transfer between [[DataStorePersistence]] and [[DataStore]].
  * Json-friendly data that is persisted or doewnloaded from the [[DataStore]].
  */
-case class DataTransferJson(values: Seq[FieldEntryJson], namedKeys: Seq[NamedKey], who: Option[Who] = None ) {
+case class DataTransferJson(values: Seq[FieldEntryJson], namedKeys: Seq[NamedKey], who: Option[Who] = None) {
   def toPrettyJson: String = {
     Json.prettyPrint(Json.toJson(this))
   }

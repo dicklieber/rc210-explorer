@@ -19,7 +19,7 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.clock.Clock
-import net.wa9nnn.rc210.data.datastore.{DataStore, UpdateCandidate, UpdateData}
+import net.wa9nnn.rc210.data.datastore.{UpdateCandidate, UpdateData}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.remotebase.Mode._
 import net.wa9nnn.rc210.data.remotebase.Offset._

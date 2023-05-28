@@ -33,7 +33,7 @@ class DataStoreSpec extends WithTestConfiguration {
   "DataStore" should {
     "save" in {
       val datFile = new DatFile(config)
-      val dataStoreJson = new DataStoreJson(datFile)
+      val dataStoreJson = new DataStorePersistence(datFile)
       val dataStore = new DataStore(dataStoreJson)
       val message = Message(KeyFactory.messageKey(1), Seq(1, 2, 3))
       val fieldEntry: FieldEntry = FieldEntry(MesssageExtractor, message)

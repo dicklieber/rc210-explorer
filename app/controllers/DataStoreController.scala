@@ -19,7 +19,7 @@ package controllers
 
 import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.datastore.{DataStore, DataStoreJson}
+import net.wa9nnn.rc210.data.datastore.DataStorePersistence
 import play.api.libs.Files
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -30,7 +30,7 @@ import scala.concurrent.duration.DurationInt
 @Singleton
 class DataStoreController @Inject()(implicit val controllerComponents: ControllerComponents,
                                     dataStore: DataStore,
-                                    dataStoreJson: DataStoreJson
+                                    dataStoreJson: DataStorePersistence
                                    ) extends BaseController with LazyLogging {
   implicit val timeout: Timeout = 5.seconds
 

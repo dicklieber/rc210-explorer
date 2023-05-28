@@ -21,7 +21,7 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.Row
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.courtesy.{CourtesyTone, CtSegmentKey, Segment}
-import net.wa9nnn.rc210.data.datastore.{DataStore, UpdateCandidate, UpdateData}
+import net.wa9nnn.rc210.data.datastore.{UpdateCandidate, UpdateData}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey

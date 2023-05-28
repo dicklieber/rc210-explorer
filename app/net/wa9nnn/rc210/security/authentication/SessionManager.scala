@@ -2,6 +2,7 @@ package net.wa9nnn.rc210.security.authentication
 
 import com.fasterxml.jackson.module.scala.deser.overrides.TrieMap
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.data.datastore.DataStorePersistence
 import net.wa9nnn.rc210.security.authentication.RcSession.SessionId
 import net.wa9nnn.rc210.util.JsonIoWithBackup
 import play.api.libs.json.{Format, Json}
@@ -19,12 +20,11 @@ import scala.language.postfixOps
  * Periodically Persisted if dirty.
  * Loaded at startup
  */
-class SessionManager (sessionFileName: String) extends LazyLogging {
+class SessionManager (dataStoreJson: DataStorePersistence) extends LazyLogging {
 
   private val sessionMap = new TrieMap[SessionId, RcSession]
   private var dirty = false
 
-  private val sessionFile: Path = Paths.get(sessionFileName)
 
   try {
     val sessions = JsonIoWithBackup(sessionFile).as[RcSessions].sessions

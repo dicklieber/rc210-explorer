@@ -20,7 +20,7 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import controllers.ClockController.{monthOfYearDSTSelect, ocurrenceSelect}
 import net.wa9nnn.rc210.data.clock.{Clock, DSTPoint, Occurrence}
-import net.wa9nnn.rc210.data.datastore.{DataStore, UpdateCandidate, UpdateData}
+import net.wa9nnn.rc210.data.datastore.{UpdateCandidate, UpdateData}
 import net.wa9nnn.rc210.data.field.{FieldEntry, MonthOfYearDST}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
