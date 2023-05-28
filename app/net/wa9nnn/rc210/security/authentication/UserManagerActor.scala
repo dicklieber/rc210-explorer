@@ -47,34 +47,29 @@ object UserManagerActor extends ActorModule with LazyLogging {
   case class Validate(login: Login, replyTo: ActorRef[Option[User]]) extends UserManagerMessage
 
   @Provides def apply(config: Config)(implicit ec: ExecutionContext): Behavior[UserManagerMessage] = {
-    val userManager = new UserManager(config)
-
-    Behaviors.receiveMessage {
-      case Put(userDetailData: UserEditDTO, user: User, replyTo: ActorRef[String]) =>
-        userManager.put(userDetailData, user)
-        replyTo ! "Added"
+    Behaviors.setup[UserManagerMessage] { actorContext =>
+      val userManager = new UserManager(config)
+      Behaviors.receiveMessage { message =>
+        message match {
+          case Put(userDetailData: UserEditDTO, user: User, replyTo: ActorRef[String]) =>
+            userManager.put(userDetailData, user)
+            replyTo ! "Added" // Don't need a return value but want client to wait until the actor is done.
+          case Get(userId: UserId, replyTo: ActorRef[Option[User]]) =>
+            val maybeUser: Option[User] = userManager.get(userId)
+            replyTo ! maybeUser
+          case Validate(login: Login, replyTo: ActorRef[Option[User]]) =>
+            val maybeUser: Option[User] = userManager.validate(login)
+            replyTo ! maybeUser
+          case Users(replyTo: ActorRef[UserRecords]) =>
+            replyTo ! userManager.users
+          case Remove(userId: UserId, user: User, replyTo: ActorRef[String]) =>
+            userManager.remove(userId, user.who)
+            replyTo ! "Removed"
+          case x =>
+            logger.error(s"Unexpected message: $x!")
+        }
         Behaviors.same
-      case Get(userId: UserId, replyTo: ActorRef[Option[User]]) =>
-        val maybeUser: Option[User] = userManager.get(userId)
-        replyTo ! maybeUser
-        Behaviors.same
-      case Validate(login: Login, replyTo: ActorRef[Option[User]]) =>
-        val maybeUser: Option[User] = userManager.validate(login)
-        replyTo ! maybeUser
-        Behaviors.same
-
-      case Users(replyTo: ActorRef[UserRecords]) =>
-        replyTo ! userManager.users
-        Behaviors.same
-
-      case Remove(userId: UserId, user: User, replyTo: ActorRef[String]) =>
-        userManager.remove(userId, user.who)
-        replyTo ! "Done"
-        Behaviors.same
-
-      case x =>
-        logger.error(s"Unexpected message: $x!")
-        Behaviors.same
+      }
     }
   }
 }

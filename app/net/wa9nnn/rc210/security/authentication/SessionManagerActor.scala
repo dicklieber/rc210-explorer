@@ -17,8 +17,8 @@
 
 package net.wa9nnn.rc210.security.authentication
 
-import akka.actor.typed.scaladsl.Behaviors
-import akka.actor.typed.{ActorRef, Behavior, Scheduler}
+import akka.actor.typed.scaladsl.{Behaviors, TimerScheduler}
+import akka.actor.typed.{ActorRef, Behavior}
 import com.google.inject.{Provides, Singleton}
 import net.wa9nnn.rc210.security.authentication.RcSession.SessionId
 import play.api.libs.concurrent.ActorModule
@@ -31,7 +31,7 @@ import scala.language.postfixOps
 
 @Singleton()
 object SessionManagerActor extends ActorModule {
-  trait SessionManagerMessage
+  sealed trait SessionManagerMessage
 
   type Message = SessionManagerMessage
 
@@ -43,34 +43,56 @@ object SessionManagerActor extends ActorModule {
 
   case class Sessions(replyTo: ActorRef[Seq[RcSession]]) extends SessionManagerMessage
 
+  case object Tick extends SessionManagerMessage
+
   @Provides def apply(@Named("vizRc210.sessionFile") sessionFileName: String)
-                     (implicit scheduler: Scheduler,
-                      ec:ExecutionContext): Behavior[SessionManagerMessage] = {
-    val sessionManager = new SessionManager(sessionFileName)
-    scheduler.scheduleWithFixedDelay(5 seconds, 10 seconds) { () => sessionManager.tick() }
+                     (implicit ec: ExecutionContext): Behavior[SessionManagerMessage] = {
 
-    Behaviors.receiveMessage {
-      case Create(user: User, ip: String, replyTo: ActorRef[RcSession]) =>
-        val rcSession: RcSession = sessionManager.create(user, ip)
-        replyTo ! rcSession
-        Behaviors.same
-      case Lookup(sessionId: SessionId, replyTo: ActorRef[Option[RcSession]]) =>
-        val rcSession: Option[RcSession] = sessionManager.lookup(sessionId)
-        replyTo ! rcSession
-        Behaviors.same
+    Behaviors.withTimers[SessionManagerMessage] { timerScheduler: TimerScheduler[SessionManagerMessage] =>
+      timerScheduler.startTimerWithFixedDelay(Tick, 5 seconds, 10 seconds)
+      Behaviors.setup[SessionManagerMessage] { actorContext =>
+        val sessionManager = new SessionManager(sessionFileName)
 
-      case Sessions(replyTo: ActorRef[Seq[RcSession]]) =>
-        replyTo ! sessionManager.sessions
-        Behaviors.same
+        Behaviors.receiveMessage[SessionManagerMessage] { message =>
+          message match {
+            case Create(user: User, ip: String, replyTo: ActorRef[RcSession]) =>
+              val rcSession: RcSession = sessionManager.create(user, ip)
+              replyTo ! rcSession
+            case Lookup(sessionId: SessionId, replyTo: ActorRef[Option[RcSession]]) =>
+              val rcSession: Option[RcSession] = sessionManager.lookup(sessionId)
+              replyTo ! rcSession
+            case Sessions(replyTo: ActorRef[Seq[RcSession]]) =>
+              replyTo ! sessionManager.sessions
+            case Remove(sessionId: SessionId, replyTo: ActorRef[String]) =>
+              sessionManager.remove(sessionId)
+              replyTo ! "Done"
+            case Tick =>
+              sessionManager.tick()
+          }
 
-      case Remove(sessionId: SessionId, replyTo: ActorRef[String]) =>
-        sessionManager.remove(sessionId)
-        replyTo ! "Done"
-        Behaviors.same
+          Behaviors.same
+        }
 
-      case x =>
+        Behaviors.receiveMessage { message =>
+          message match {
+            case Create(user: User, ip: String, replyTo: ActorRef[RcSession]) =>
+              val rcSession: RcSession = sessionManager.create(user, ip)
+              replyTo ! rcSession
+            case Lookup(sessionId: SessionId, replyTo: ActorRef[Option[RcSession]]) =>
+              val rcSession: Option[RcSession] = sessionManager.lookup(sessionId)
+              replyTo ! rcSession
+            case Sessions(replyTo: ActorRef[Seq[RcSession]]) =>
+              replyTo ! sessionManager.sessions
+            case Remove(sessionId: SessionId, replyTo: ActorRef[String]) =>
+              sessionManager.remove(sessionId)
+              replyTo ! "Done"
+            case Tick =>
+              sessionManager.tick()
+          }
 
-        Behaviors.same
+          Behaviors.same
+        }
+      }
     }
   }
 }
