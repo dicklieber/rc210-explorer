@@ -22,10 +22,16 @@ import play.api.libs.concurrent.AkkaGuiceSupport
 
 object ActorModule extends AbstractModule with AkkaGuiceSupport {
   override def configure(): Unit = {
+
+    bindActorFactory[]
+
     bindTypedActor[SessionManagerActor.Message](SessionManagerActor, "sessionManager-actor")
     bindTypedActor[UserManagerActor.Message](UserManagerActor, "userManager-actor")
     bindTypedActor[DataStoreActor.Message](DataStoreActor, "dataStore-actor")
   }
+
+
+  class Factory() extends MyChildActorFactory
 }
 
 

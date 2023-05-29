@@ -74,13 +74,14 @@ class MeterController @Inject()(actor: ActorRef[DataStoreActor.Message])
   def index: Action[AnyContent] = Action.async {
     implicit request: MessagesRequest[AnyContent] =>
       for {
-        vref: Option[FieldEntry] <- actor.ask(DataStoreActor.ForFieldKey(FieldKey("vRef", KeyFactory.commonKey()), _))
-        meters: Seq[FieldEntry] <- actor.ask(DataStoreActor.AllForKeyKind(KeyKind.meterKey, _))
-        meterAlarms: Seq[FieldEntry] <- actor.ask(DataStoreActor.AllForKeyKind(KeyKind.meterAlarmKey, _))
+        maybeVref: Option[FieldEntry] <- actor.ask(DataStoreActor.ForFieldKey(FieldKey("vRef", KeyFactory.commonKey()), _))
+        metersEntries: Seq[FieldEntry] <- actor.ask(DataStoreActor.AllForKeyKind(KeyKind.meterKey, _))
+        meterAlarmsEntries: Seq[FieldEntry] <- actor.ask(DataStoreActor.AllForKeyKind(KeyKind.meterAlarmKey, _))
       } yield {
-        val value: FieldInt = vref.map(_.value.asInstanceOf[FieldInt]).getOrElse(FieldInt(0))
-        val value1: Int = value.value
-        val meterStuff: MeterStuff = MeterStuff(value1, meters.map(_.value.asInstanceOf[Meter]), meterAlarms.map(_.value.asInstanceOf[MeterAlarm]))
+        val vRef: Int = maybeVref.map(_.value.asInstanceOf[FieldInt]).getOrElse(FieldInt(0)).value
+        val meters: Seq[Meter] = metersEntries.map { fe => fe.value.asInstanceOf[Meter] }
+        val meterAlarms: Seq[MeterAlarm] = meterAlarmsEntries.map { fe => fe.value.asInstanceOf[MeterAlarm] }
+        val meterStuff: MeterStuff = MeterStuff(vRef, meters, meterAlarms)
         Ok(html.meters(meterStuff))
       }
   }
@@ -103,9 +104,9 @@ class MeterController @Inject()(actor: ActorRef[DataStoreActor.Message])
       val fieldKey = FieldKey("MeterAlarm", alarmKey)
       actor.ask(ForFieldKey(fieldKey, _)).map {
         case Some(fieldEntry: FieldEntry) =>
-          val meter: Meter = fieldEntry.value
-          val fillInForm = meterForm.fill(meter)
-          Ok(html.meter(meter.key, fillInForm))
+          val meterAlarm: MeterAlarm = fieldEntry.value
+          val fillInForm = alarmForm.fill(meterAlarm)
+          Ok(html.meterAlarm(meterAlarm.key, fillInForm))
         case None =>
           NotFound(s"Not meterKey: $fieldKey")
 
@@ -140,7 +141,7 @@ class MeterController @Inject()(actor: ActorRef[DataStoreActor.Message])
       val name: String = formUrlEncoded("name").headOption.getOrElse("")
       alarmForm.bindFromRequest().fold(
         formWithErrors => {
-         Future(BadRequest(html.meterAlarm(meterAlarmKey, formWithErrors)))
+          Future(BadRequest(html.meterAlarm(meterAlarmKey, formWithErrors)))
         },
         (meterAlarm: MeterAlarm) => {
 
