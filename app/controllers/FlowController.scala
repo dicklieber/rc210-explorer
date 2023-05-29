@@ -17,19 +17,38 @@
 
 package controllers
 
+import akka.actor.typed.{ActorRef, Scheduler}
+import akka.actor.typed.scaladsl.AskPattern.Askable
+import akka.util.Timeout
 import com.wa9nnn.util.tableui.{Header, Row, Table}
+import net.wa9nnn.rc210.data.datastore.{DataStoreActor, MacroWithTriggers}
+import net.wa9nnn.rc210.data.datastore.DataStoreActor.Triggers
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.MacroBlock
 import net.wa9nnn.rc210.key.KeyKind
+import net.wa9nnn.rc210.security.authentication.SessionManagerActor
 import play.api.mvc._
 
 import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.duration.DurationInt
+import scala.language.postfixOps
 
-class Flow2Controller @Inject()(implicit val controllerComponents: ControllerComponents,
-                                dataStore: DataStore, functionsProvider: FunctionsProvider) extends BaseController {
+class FlowController @Inject()(implicit actor: ActorRef[DataStoreActor.Message], scheduler:Scheduler,
+                               functionsProvider: FunctionsProvider) extends MessagesInjectedController {
 
   def flow(): Action[AnyContent] = Action {
+    Ok("todo")
+/*
+    implicit val timeout: Timeout = 3 seconds
+
     implicit request: Request[AnyContent] =>
+
+     actor.ask (ref => Triggers(ref))
+       .map{
+
+       }
+
       val rows: Seq[Row] = dataStore.apply(KeyKind.macroKey)
         .map(fieldEntry =>
           MacroBlock(fieldEntry.value)
@@ -37,5 +56,6 @@ class Flow2Controller @Inject()(implicit val controllerComponents: ControllerCom
       val header = Header(s"Macro Flow (${rows.length})", "Triggers", "Macro", "Functions")
       val table = Table(header, rows)
       Ok(views.html.flow(table))
+*/
   }
 }

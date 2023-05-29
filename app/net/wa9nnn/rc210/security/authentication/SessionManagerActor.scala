@@ -20,6 +20,7 @@ package net.wa9nnn.rc210.security.authentication
 import akka.actor.typed.scaladsl.{Behaviors, TimerScheduler}
 import akka.actor.typed.{ActorRef, Behavior}
 import com.google.inject.{Provides, Singleton}
+import com.typesafe.config.Config
 import net.wa9nnn.rc210.security.authentication.RcSession.SessionId
 import play.api.libs.concurrent.ActorModule
 
@@ -45,13 +46,13 @@ object SessionManagerActor extends ActorModule {
 
   case object Tick extends SessionManagerMessage
 
-  @Provides def apply(@Named("vizRc210.sessionFile") sessionFileName: String)
+  @Provides def apply(config:Config)
                      (implicit ec: ExecutionContext): Behavior[SessionManagerMessage] = {
 
     Behaviors.withTimers[SessionManagerMessage] { timerScheduler: TimerScheduler[SessionManagerMessage] =>
       timerScheduler.startTimerWithFixedDelay(Tick, 5 seconds, 10 seconds)
       Behaviors.setup[SessionManagerMessage] { actorContext =>
-        val sessionManager = new SessionManager(sessionFileName)
+        val sessionManager = new SessionManager(config)
 
         Behaviors.receiveMessage[SessionManagerMessage] { message =>
           message match {

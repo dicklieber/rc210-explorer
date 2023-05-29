@@ -17,29 +17,7 @@
 
 package net.wa9nnn.rc210.data.datastore
 
-import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.macros.MacroNode
+import net.wa9nnn.rc210.model.TriggerNode
 
-import javax.inject.{Inject, Singleton}
-
-
-/**
- * Startup
- *
- * @param memoryFileLoader hwo to get memory image.
- * @param dataStore        where to put stuff
- * @param datFile          wjefre files are located based on [[com.typesafe.config.Config]].
- */
-@Singleton
-class InitialLoader @Inject()(memoryFileLoader: MemoryFileLoader, dataStoreJson: DataStoreJson, dataStore: DataStore) extends LazyLogging{
-
-   try {
-     val seq: Seq[FieldEntry] = memoryFileLoader.load
-     dataStore.load(seq)
-
-     dataStoreJson.load(dataStore)
-   } catch {
-     case e:Exception =>
-       logger.error("Initial load", e)
-   }
-}
+case class MacroWithTriggers(macroNode: MacroNode, triggers: Seq[TriggerNode])

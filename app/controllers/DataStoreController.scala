@@ -17,38 +17,40 @@
 
 package controllers
 
+import akka.actor.typed.scaladsl.AskPattern.Askable
+import akka.actor.typed.{ActorRef, Scheduler}
 import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.datastore.DataStorePersistence
+import net.wa9nnn.rc210.data.datastore.DataStoreActor
+import net.wa9nnn.rc210.data.datastore.DataStoreActor.IngestJson
 import play.api.libs.Files
-import play.api.libs.json.Json
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
+import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationInt
+import scala.language.postfixOps
 
 @Singleton
-class DataStoreController @Inject()(implicit val controllerComponents: ControllerComponents,
-                                    dataStore: DataStore,
-                                    dataStoreJson: DataStorePersistence
-                                   ) extends BaseController with LazyLogging {
-  implicit val timeout: Timeout = 5.seconds
+class DataStoreController @Inject()(actor: ActorRef[DataStoreActor.Message])
+                                   (implicit scheduler: Scheduler, ec: ExecutionContext)
+  extends MessagesInjectedController with LazyLogging {
+  implicit val timeout: Timeout = 3 seconds
 
-  def downloadJson(): Action[AnyContent] = Action {
 
-    val sJson = Json.prettyPrint(Json.toJson(dataStore.toJson()))
-
-    Ok(sJson).withHeaders(
-      "Content-Type" -> "text/json",
-      "Content-Disposition" -> s"""attachment; filename="rc210.json""""
-    )
+  def downloadJson(): Action[AnyContent] = Action.async {
+    actor.ask(DataStoreActor.Json).map { sJson =>
+      Ok(sJson).withHeaders(
+        "Content-Type" -> "text/json",
+        "Content-Disposition" -> s"""attachment; filename="rc210.json""""
+      )
+    }
   }
-  def viewJson(): Action[AnyContent] = Action {
-    val jsValue = Json.toJson(dataStore.toJson())
-    val sJson = Json.prettyPrint(jsValue)
-    Ok(sJson).withHeaders(
-      "Content-Type" -> "text/json",
-    )
+
+  def viewJson(): Action[AnyContent] = Action.async {
+    actor.ask(DataStoreActor.Json).map { sJson =>
+      Ok(sJson)
+    }
   }
 
   def upload: Action[AnyContent] = Action {
@@ -60,7 +62,8 @@ class DataStoreController @Inject()(implicit val controllerComponents: Controlle
     body
       .file("jsonFile")
       .foreach { jsonFile: MultipartFormData.FilePart[Files.TemporaryFile] =>
-        dataStoreJson.load(dataStore, jsonFile.ref.path)
+        val sJson = java.nio.file.Files.readString(jsonFile.ref.path)
+        actor.ask(IngestJson(sJson, _))
       }
     Redirect(routes.MacroNodeController.index())
   }

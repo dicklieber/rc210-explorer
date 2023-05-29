@@ -17,38 +17,43 @@
 
 package controllers
 
+import akka.actor.typed.scaladsl.AskPattern.Askable
+import akka.actor.typed.{ActorRef, Scheduler}
+import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.Row
-import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.courtesy.{CourtesyTone, CtSegmentKey, Segment}
-import net.wa9nnn.rc210.data.datastore.{UpdateCandidate, UpdateData}
+import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey
 import net.wa9nnn.rc210.key.KeyKind
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
-import net.wa9nnn.rc210.ui.FormParser
 import play.api.mvc._
 
 import javax.inject._
+import scala.concurrent.ExecutionContext
+import scala.concurrent.duration.DurationInt
+import scala.language.postfixOps
 
-class CourtesyToneEditorController @Inject()(val controllerComponents: ControllerComponents,
-                                             dataStore: DataStore
-                                            )
-  extends BaseController with LazyLogging {
+class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
+                                            (implicit scheduler: Scheduler, ec: ExecutionContext)
+  extends MessagesInjectedController with LazyLogging {
+  implicit val timeout: Timeout = 3 seconds
 
-  def index(): Action[AnyContent] = Action {
+  def index(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
 
-      val entries: Seq[FieldEntry] = dataStore(KeyKind.courtesyToneKey)
-      val rows: Seq[Row] = entries.flatMap { fe: FieldEntry =>
-        val ct: CourtesyTone = fe.value
-        ct.rows()
+      actor.ask(DataStoreActor.AllForKeyKind(KeyKind.courtesyToneKey, _)).map { entries =>
+        val rows: Seq[Row] = entries.flatMap { fe: FieldEntry =>
+          val ct: CourtesyTone = fe.value
+          ct.rows()
+        }
+        Ok(views.html.courtesyTones(rows))
       }
-      Ok(views.html.courtesyTones(rows))
   }
 
-  def save(): Action[AnyContent] = Action {
+  def save(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
       val namedKeyBuilder = Seq.newBuilder[NamedKey]
       val ctBuilder = Seq.newBuilder[UpdateCandidate]
@@ -56,7 +61,7 @@ class CourtesyToneEditorController @Inject()(val controllerComponents: Controlle
 
       val form = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }
 
-      form.filter(_._1 startsWith ("name"))
+      form.filter(_._1 startsWith "name")
         .foreach { case (sKey, value) =>
           val ctKey = CtSegmentKey(sKey)
           namedKeyBuilder += NamedKey(ctKey.ctKey, value)
@@ -69,7 +74,7 @@ class CourtesyToneEditorController @Inject()(val controllerComponents: Controlle
         .map { case (sKey, value) => CtSegmentKey(sKey) -> value } // convert from string name to CtSegmentKeys
         .groupBy(_._1.ctKey)
         .map { case (ctKey: CourtesyToneKey, values: Map[CtSegmentKey, String]) =>
-          val segs = values
+          val segments = values
             .groupBy(_._1.segment).map { case (seg, values) =>
             val valuesForSegment: Map[String, String] = values.map { case (crSKey: CtSegmentKey, value: String) =>
               crSKey.name -> value
@@ -77,10 +82,12 @@ class CourtesyToneEditorController @Inject()(val controllerComponents: Controlle
             // we now have a map of names to values
             Segment(valuesForSegment)
           }
-          val courtesyTone = CourtesyTone(ctKey, segs.toSeq)
+          val courtesyTone = CourtesyTone(ctKey, segments.toSeq)
           ctBuilder += UpdateCandidate(courtesyTone)
         }
-      dataStore.update(UpdateData(ctBuilder.result(), namedKeyBuilder.result()))(who(request))
-      Redirect(routes.CourtesyToneEditorController.index())
+
+      actor.ask[String](DataStoreActor.UpdateData(ctBuilder.result(), namedKeyBuilder.result(), user = who(request), _)).map { _ =>
+        Redirect(routes.CourtesyToneEditorController.index())
+      }
   }
 }

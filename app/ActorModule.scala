@@ -16,13 +16,15 @@
  */
 
 import com.google.inject.AbstractModule
+import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.security.authentication.{SessionManager, SessionManagerActor, UserManagerActor}
 import play.api.libs.concurrent.AkkaGuiceSupport
 
 object ActorModule extends AbstractModule with AkkaGuiceSupport {
   override def configure(): Unit = {
-    bindTypedActor[SessionManagerActor.SessionManagerMessage](SessionManagerActor, "sessionManager-actor")
-    bindTypedActor[UserManagerActor.UserManagerMessage](UserManagerActor, "userManager-actor")
+    bindTypedActor[SessionManagerActor.Message](SessionManagerActor, "sessionManager-actor")
+    bindTypedActor[UserManagerActor.Message](UserManagerActor, "userManager-actor")
+    bindTypedActor[DataStoreActor.Message](DataStoreActor, "dataStore-actor")
   }
 }
 

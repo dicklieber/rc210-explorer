@@ -89,15 +89,12 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
    * @param macroKey of interest.
    * @return FieldEntry that invokes the macroKey.
    */
-  def canTriggerMacro(macroKey: MacroKey): Option[FieldEntry] = {
+  def canTriggerMacro(macroKey: MacroKey): Boolean = {
     fieldValue match {
       case tn: TriggerNode =>
-        if (tn.canRunMacro(macroKey))
-          Option(this)
-        else
-          None
+        tn.canRunMacro(macroKey)
       case _ =>
-        None
+        false
     }
   }
 

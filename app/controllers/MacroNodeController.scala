@@ -17,7 +17,12 @@
 
 package controllers
 
-import net.wa9nnn.rc210.data.datastore.{UpdateCandidate, UpdateData}
+import akka.actor.typed.scaladsl.AskPattern.Askable
+import akka.actor.typed.{ActorRef, Scheduler}
+import akka.util.Timeout
+import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, ForFieldKey}
+import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.MacroNode
@@ -30,35 +35,38 @@ import play.api.mvc._
 import views.html.macroNodes
 
 import javax.inject.{Inject, Singleton}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.duration.DurationInt
+import scala.language.postfixOps
 import scala.util.Try
 import scala.util.matching.Regex
 
 @Singleton()
-class MacroNodeController @Inject()(dataStore: DataStore
-                                   )(implicit  functionsProvider: FunctionsProvider) extends MessagesInjectedController {
+class MacroNodeController @Inject()(actor: ActorRef[DataStoreActor.Message])
+                                   (implicit scheduler: Scheduler,
+                                    ec: ExecutionContext, functionsProvider: FunctionsProvider) extends MessagesInjectedController with LazyLogging {
+  implicit val timeout: Timeout = 3 seconds
 
-
-  def index(): Action[AnyContent] = Action { implicit request =>
-
-    val value: Seq[MacroNode] = dataStore.apply(KeyKind.macroKey).map { fieldEntry =>
-      fieldEntry.value.asInstanceOf[MacroNode]
+  def index(): Action[AnyContent] = Action.async { implicit request =>
+    actor.ask(AllForKeyKind(KeyKind.macroKey, _)).map { fe: Seq[FieldEntry] =>
+      Ok(macroNodes(fe.map((_.value.asInstanceOf[MacroNode]))))
     }
-    Ok(macroNodes(value))
   }
 
-  def edit(key: MacroKey): Action[AnyContent] = Action { implicit request =>
+  def edit(key: MacroKey): Action[AnyContent] = Action.async { implicit request =>
 
     val fieldKey = FieldKey("Macro", key)
-    val maybeEntry: Option[FieldEntry] = dataStore(fieldKey)
-    maybeEntry match {
-      case Some(fieldEntry: FieldEntry) =>
-        Ok(views.html.macroEditor(fieldEntry.value))
-      case None =>
-        NotFound(s"No keyField: $fieldKey")
+    actor.ask(ForFieldKey(fieldKey, _)).map { maybeFieldEntry: Option[FieldEntry] =>
+      maybeFieldEntry match {
+        case Some(fe: FieldEntry) =>
+          Ok(views.html.macroEditor(fe.value))
+        case None =>
+          NotFound(s"No keyField: $fieldKey")
+      }
     }
   }
 
-  def save(): Action[AnyContent] = Action { implicit request =>
+  def save(): Action[AnyContent] = Action.async { implicit request =>
     val formData: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
 
     val sKey = formData("key").head
@@ -76,12 +84,13 @@ class MacroNodeController @Inject()(dataStore: DataStore
       }
 
     val macroNode = MacroNode(key, functions, dtmf)
-    val ud = UpdateCandidate( macroNode.fieldKey, Right(macroNode))
+    val ud = UpdateCandidate(macroNode.fieldKey, Right(macroNode))
 
     val keyNames = Seq(NamedKey(key, formData("name").head))
-    dataStore.update(UpdateData(Seq(ud), keyNames))(who(request))
-
-    Redirect(routes.MacroNodeController.index())
+    actor.ask[String](DataStoreActor.UpdateData(Seq(UpdateCandidate(macroNode)), keyNames,
+      who(request), _)).map { _ =>
+      Redirect(routes.MacroNodeController.index())
+    }
   }
 }
 

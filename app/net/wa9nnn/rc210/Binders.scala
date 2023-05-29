@@ -18,6 +18,8 @@
 package net.wa9nnn.rc210
 
 import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.clock.Occurrence
+import net.wa9nnn.rc210.data.field.MonthOfYearDST
 import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, MessageKey, MeterAlarmKey, MeterKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.security.UserId.UserId
@@ -103,5 +105,31 @@ object Binders {
 
     override def unbind(key: String, userId: UserId): String =
       userId
+  }
+
+
+  implicit def monthOfYearDSTBinder: PathBindable[MonthOfYearDST] = new PathBindable[MonthOfYearDST] {
+    override def bind(key: String, value: String): Either[String, MonthOfYearDST] =
+      try {
+        Right(MonthOfYearDST.valueOf(value))
+      } catch {
+        case e: Exception =>
+          Left(e.getMessage)
+      }
+
+    override def unbind(key: String, monthOfYearDST: MonthOfYearDST): String =
+      monthOfYearDST.name()
+  }
+  implicit def occurrenceBinder: PathBindable[Occurrence] = new PathBindable[Occurrence] {
+    override def bind(key: String, value: String): Either[String, Occurrence] =
+      try {
+        Right(Occurrence.valueOf(value))
+      } catch {
+        case e: Exception =>
+          Left(e.getMessage)
+      }
+
+    override def unbind(key: String, occurrence: Occurrence): String =
+      occurrence.name()
   }
 }

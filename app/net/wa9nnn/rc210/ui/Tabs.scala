@@ -23,7 +23,7 @@ import net.wa9nnn.rc210.ui.Tabs.TabName
 object Tabs {
 
   val noTab:Tab = Tab("none", "", "this should never show.")
-  val flowTab: Tab = Tab("Flow", routes.Flow2Controller.flow().url, "How to Macros to things. How this all works.")
+  val flowTab: Tab = Tab("Flow", routes.FlowController.flow().url, "How to Macros to things. How this all works.")
   val commonTab: Tab = Tab("Common", routes.CommonEditorController.index().url, "Global settings")
   val ctTab: Tab = Tab("CT", routes.CourtesyToneEditorController.index().url, "Courtesy Tones")
   val clockTab = Tab("Clock", routes.ClockController.index.url, "Set clock, DST etc.")

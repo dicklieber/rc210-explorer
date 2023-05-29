@@ -17,10 +17,14 @@
 
 package controllers
 
+import akka.actor.typed.scaladsl.AskPattern.Askable
+import akka.actor.typed.{ActorRef, Scheduler}
+import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.datastore.{UpdateCandidate, UpdateData}
+import net.wa9nnn.rc210.data.datastore.DataStoreActor.AllForKeyKind
+import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldInt}
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.data.timers.Timer
@@ -31,25 +35,30 @@ import net.wa9nnn.rc210.util.MacroSelectField
 import play.api.mvc._
 
 import javax.inject._
+import scala.concurrent.ExecutionContext
+import scala.concurrent.duration.DurationInt
+import scala.language.postfixOps
 
-class TimerEditorController @Inject()(val controllerComponents: ControllerComponents, datastore: DataStore)
-  extends BaseController with LazyLogging {
+class TimerEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
+                                     (implicit scheduler: Scheduler, ec: ExecutionContext)
+  extends MessagesInjectedController with LazyLogging {
+  implicit val timeout: Timeout = 3 seconds
 
-  def index(): Action[AnyContent] = Action {
+  def index(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
-      val timerFields: Seq[FieldEntry] = datastore(KeyKind.timerKey)
+      actor.ask(AllForKeyKind(KeyKind.timerKey, _)).map { timerFields: Seq[FieldEntry] =>
+        val rows: Seq[Row] = timerFields.map { fieldEntry =>
+          val value: Timer = fieldEntry.value
+          value.toRow
+        }
+        val header = Header(s"Timers (${rows.length} values)", "Timer", "Seconds", "Macro To Run")
+        val table = Table(header, rows)
 
-      val rows: Seq[Row] = timerFields.map { fieldEntry =>
-        val value: Timer = fieldEntry.value
-        value.toRow
+        Ok(views.html.timers(table))
       }
-      val header = Header(s"Timers (${rows.length} values)", "Timer", "Seconds", "Macro To Run")
-      val table = Table(header, rows)
-
-      Ok(views.html.timers(table))
   }
 
-  def save(): Action[AnyContent] = Action {
+  def save(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
 
       val namedKeyBuilder = Seq.newBuilder[NamedKey]
@@ -62,19 +71,23 @@ class TimerEditorController @Inject()(val controllerComponents: ControllerCompon
         .map { case (key: Key, values: Map[FieldKey, String]) =>
           val valueMap = values.map { case (fk, value) =>
             fk.fieldName -> value
-          }.toMap
+          }
           val name = valueMap("name")
           namedKeyBuilder += NamedKey(key, name)
           val seconds = FieldInt(valueMap("seconds").toInt)
-          val macrotoRun: MacroKey = KeyFactory.apply(valueMap("macro"))
-          val macroSelect = MacroSelectField(macrotoRun)
-          val timer = Timer(key.asInstanceOf[TimerKey] , seconds = seconds, macroSelect = macroSelect)
+          val macroToRun: MacroKey = KeyFactory.apply(valueMap("macro"))
+          val macroSelect = MacroSelectField(macroToRun)
+          val timer = Timer(key.asInstanceOf[TimerKey], seconds = seconds, macroSelect = macroSelect)
           UpdateCandidate(timer.fieldKey, Right(timer))
         }.toSeq
-      datastore.update(UpdateData(timers, namedKeyBuilder.result()))(who(request))
-      Redirect(routes.TimerEditorController.index())
+
+
+      actor.ask[String](replyTo =>
+        DataStoreActor.UpdateData(candidates = timers,
+          namedKeys = namedKeyBuilder.result(),
+          user= who(request), replyTo)
+      ).map { _ =>
+        Redirect(routes.TimerEditorController.index())
+      }
   }
-
-
-
 }

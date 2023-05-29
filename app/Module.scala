@@ -1,6 +1,5 @@
 
 import net.codingwell.scalaguice.ScalaModule
-import net.wa9nnn.rc210.data.datastore.InitialLoader
 import play.api.libs.concurrent.AkkaGuiceSupport
 import play.api.{Configuration, Environment}
 
@@ -20,8 +19,6 @@ class Module(environment: Environment, configuration: Configuration) extends Sca
   override def configure(): Unit = {
     install(new ConfigModule(configuration))
     install(ActorModule)
-    bind[InitialLoader].asEagerSingleton()
-//    bind[SessionTicker].asEagerSingleton()
   }
 }
 

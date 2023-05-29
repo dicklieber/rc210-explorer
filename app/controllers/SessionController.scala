@@ -26,7 +26,7 @@ import net.wa9nnn.rc210.security.authentication.SessionManagerActor.Sessions
 import net.wa9nnn.rc210.security.authentication.{RcSession, SessionManagerActor}
 import play.api.mvc.{Action, AnyContent, MessagesInjectedController}
 import views.html.dat
-
+import akka.actor.typed.scaladsl._
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
@@ -36,14 +36,14 @@ import scala.language.postfixOps
  * User Management
  */
 @Singleton
-class SessionController @Inject()( actor: ActorRef[SessionManagerActor.SessionManagerMessage])
+class SessionController @Inject()(actor: ActorRef[SessionManagerActor.SessionManagerMessage])
                                  (implicit scheduler: Scheduler, ec: ExecutionContext)
   extends MessagesInjectedController with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 
   def index: Action[AnyContent] = Action.async {
 
-    val future: Future[Seq[RcSession]] = actor.ask(ref => Sessions(ref))
+    val future: Future[Seq[RcSession]] = actor.ask[Seq[RcSession]](ref => Sessions(ref))
     future.map { sessions =>
       val rows = sessions.map(_.toRow)
       val table = Table(RcSession.header(rows.length), rows)

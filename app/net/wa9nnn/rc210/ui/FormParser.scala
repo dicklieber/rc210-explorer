@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.ui
 
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.datastore.{UpdateCandidate, UpdateData}
+import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.ComplexFieldValue
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.key.KeyFactory.Key
@@ -29,14 +29,14 @@ object FormParser {
    * Parses [[ComplexFieldValue]]s from <form> data.
    *
    * @param f       (K,  Map[String, String]) )      function to instantiate a [[ComplexFieldValue[K]]] from a K  and map of named form values for the key.
-   * @param content whose boduy contains the HTML form data.
+   * @param content whose body contains the HTML form data.
    * @tparam K Key type.
-   * @return data to send to the [[net.wa9nnn.rc210.data.datastore.DataStore]].
+   * @return data to send to the DataStore
    */
-  def apply[K <: Key](content: AnyContentAsFormUrlEncoded, f: (K, Map[String, String]) => ComplexFieldValue[K]): UpdateData = {
+  def apply[K <: Key](content: AnyContentAsFormUrlEncoded, f: (K, Map[String, String]) => ComplexFieldValue[K]): CandidateAndNames = {
     val namedKeyBuilder = Seq.newBuilder[NamedKey]
     val candidates: Seq[UpdateCandidate] = content.data
-      .map { t => FieldKey.fromParam(t._1) -> t._2.head } // convert form inpout name to FieldKey
+      .map { t => FieldKey.fromParam(t._1) -> t._2.head } // convert form input name to FieldKey
       .groupBy(_._1.key)
       // build map of name to values for each Key
       .map { case (key: Key, values: Map[FieldKey, String]) =>
@@ -50,16 +50,16 @@ object FormParser {
         UpdateCandidate(complexValue.fieldKey, Right(complexValue))
       }.toSeq
 
-    UpdateData(candidates, namedKeyBuilder.result())
+    CandidateAndNames(candidates, namedKeyBuilder.result())
   }
 
   /**
    * Parses [[net.wa9nnn.rc210.data.field.SimpleFieldValue]]s from <form> data
    *
-   * @param content whose boduy contains the HTML form data.
-   * @return data to send to the [[net.wa9nnn.rc210.data.datastore.DataStore]].
+   * @param content whose body contains the HTML form data.
+   * @return data to send to the DataStore.
    */
-  def apply(content: AnyContentAsFormUrlEncoded): UpdateData = {
+  def apply(content: AnyContentAsFormUrlEncoded): CandidateAndNames = {
 
 
     val namedKeyBuilder = Seq.newBuilder[NamedKey]
@@ -76,6 +76,7 @@ object FormParser {
             candidateBuilder += UpdateCandidate(fieldKey, Left(value)) // this string will get parsed within the FieldValues in the [[DataStore]].
         }
       }
-    UpdateData(candidateBuilder.result(), namedKeyBuilder.result())
+    CandidateAndNames(candidateBuilder.result(), namedKeyBuilder.result())
   }
 }
+case class CandidateAndNames(candidates: Seq[UpdateCandidate], namedKeys: Seq[NamedKey] = Seq.empty)

@@ -17,10 +17,14 @@
 
 package controllers
 
+import akka.actor.typed.scaladsl.AskPattern.Askable
+import akka.actor.typed.{ActorRef, Scheduler}
+import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
+import com.wa9nnn.util.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.datastore.{UpdateCandidate, UpdateData}
+import net.wa9nnn.rc210.data.datastore.DataStoreActor.AllForKeyKind
+import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field._
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.data.schedules.Schedule
@@ -30,25 +34,31 @@ import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.duration.DurationInt
+import scala.language.postfixOps
 
 @Singleton()
-class ScheduleController @Inject()(val controllerComponents: ControllerComponents, dataStore: DataStore) extends BaseController with LazyLogging {
+class ScheduleController @Inject()(actor: ActorRef[DataStoreActor.Message])
+                                  (implicit scheduler: Scheduler, ec: ExecutionContext) extends MessagesInjectedController with LazyLogging {
+  implicit val timeout: Timeout = 3 seconds
 
-  def index(): Action[AnyContent] = Action {
+  def index(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
 
-      val entries: Seq[FieldEntry] = dataStore(KeyKind.scheduleKey)
-      val rows: Seq[Row] = entries.map { fieldEntry: FieldEntry =>
-        val schedule: Schedule = fieldEntry.value
-        schedule.toRow
+      actor.ask(AllForKeyKind(KeyKind.timerKey, _)).map { fields: Seq[FieldEntry] =>
+        val rows: Seq[Row] = fields.map { fieldEntry =>
+          val value: Schedule = fieldEntry.value
+          value.toRow
+        }
+        val header = Header(s"Timers (${rows.length} values)", "Timer", "Seconds", "Macro To Run")
+        val table = Table(Schedule.header, rows)
+          .withCssClass("table table-borderedtable-sm w-auto")
+        Ok(views.html.schedules(table))
       }
-
-      val table = Table(Schedule.header, rows)
-        .withCssClass("table table-borderedtable-sm w-auto")
-      Ok(views.html.schedules(table))
   }
 
-  def save(): Action[AnyContent] = Action { implicit request =>
+  def save(): Action[AnyContent] = Action.async { implicit request =>
 
     val valuesMap: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
     val namedKeys = Seq.newBuilder[NamedKey]
@@ -76,12 +86,13 @@ class ScheduleController @Inject()(val controllerComponents: ControllerComponent
         namedKeys += namedKey
 
         val schedule = Schedule.fromForm(key.asInstanceOf[ScheduleKey], nameToValue)
-        UpdateCandidate( schedule.fieldKey, Right(schedule))
+        UpdateCandidate(schedule.fieldKey, Right(schedule))
       }.toSeq.sortBy(_.fieldKey.key)
 
-    dataStore.update(UpdateData(r, namedKeys.result()))(who(request))
+    actor.ask[String](DataStoreActor.UpdateData(r, namedKeys.result(),
+      who(request), _)).map{_ =>
+      Redirect(routes.ScheduleController.index())
+    }
 
-
-    Redirect(routes.ScheduleController.index())
   }
 }

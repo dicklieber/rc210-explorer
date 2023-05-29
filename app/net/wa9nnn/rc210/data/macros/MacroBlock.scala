@@ -17,56 +17,59 @@
 
 package net.wa9nnn.rc210.data.macros
 
+import akka.actor.typed.ActorRef
 import com.wa9nnn.util.tableui._
+import net.wa9nnn.rc210.data.datastore.{DataStoreActor, MacroWithTriggers}
 import net.wa9nnn.rc210.data.field.FieldValue
 import net.wa9nnn.rc210.data.functions.{FunctionNode, FunctionsProvider}
 import net.wa9nnn.rc210.key.KeyFactory
+import net.wa9nnn.rc210.security.authentication.SessionManagerActor
 
 /**
  * Build function rows for a [[MacroNode]]
  * Prepends a column with MacroNode metadata key and name. etc.
  */
 object MacroBlock {
-  def apply(macroNode: MacroNode)(implicit dataStore: DataStore, functionsProvider: FunctionsProvider): Row = {
-    val macroKey = macroNode.key
-    val macroCell: Cell = macroKey.toCell
-      .withCssClass("flowMarcoCell")
-
-    val triggersCell: Cell = {
-      var triggerRows: Seq[Row] = dataStore.triggersForMacro(macroKey).map { fieldEntry =>
-        val value: FieldValue = fieldEntry.value
-        Row(fieldEntry.fieldKey.toCell, value.display)
-      }
-      macroNode.dtmf.foreach { dtmf =>
-        triggerRows = triggerRows.prepended(Row("DTMF", dtmf.toString))
-      }
-
-      if (macroKey.number == 1) {
-        val cell = Cell("--Start--")
-          .withColSpan(2)
-        val startRow = new Row(Seq(cell))
-
-        triggerRows = triggerRows.prepended(startRow)
-      }
-
-      val triggersTable = Table(Seq.empty, triggerRows)
-      TableInACell(triggersTable)
-        .withCssClass("flowMacroBottom flowMacroLeft flowMacroTop")
-        .withToolTip(s"Macro Command ${macroKey.number}")
-
-    }.withCssClass("flowTriggersCell")
-
-    val functionTableCell: Cell = {
-      val functionRows = for {
-        functionKey <- macroNode.functions
-        functionNode <- functionsProvider(functionKey)
-      } yield {
-        Row(functionKey.toCell, functionNode.description)
-      }.withCssClass("flowFunctionsCell")
-      TableInACell(Table(Seq.empty, functionRows))
-    }
-    Row(triggersCell, macroCell, functionTableCell)
-  }
+//  def apply(macroWithTriggers: MacroWithTriggers)(implicit actor: ActorRef[DataStoreActor.Message], functionsProvider: FunctionsProvider): Row = {
+//    val macroKey = macroWithTriggers.macroNode.key
+//    val macroCell: Cell = macroKey.toCell
+//      .withCssClass("flowMarcoCell")
+//
+//    val triggersCell: Cell = {
+//      var triggerRows: Seq[Row] = macroWithTriggers.triggers.map(_.toRow)
+//        val value: FieldValue = fieldEntry.value
+//        Row(fieldEntry.fieldKey.toCell, value.display)
+//      }
+//      macroNode.dtmf.foreach { dtmf =>
+//        triggerRows = triggerRows.prepended(Row("DTMF", dtmf.toString))
+//      }
+//
+//      if (macroKey.number == 1) {
+//        val cell = Cell("--Start--")
+//          .withColSpan(2)
+//        val startRow = new Row(Seq(cell))
+//
+//        triggerRows = triggerRows.prepended(startRow)
+//      }
+//
+//      val triggersTable = Table(Seq.empty, triggerRows)
+//      TableInACell(triggersTable)
+//        .withCssClass("flowMacroBottom flowMacroLeft flowMacroTop")
+//        .withToolTip(s"Macro Command ${macroKey.number}")
+//
+//    }.withCssClass("flowTriggersCell")
+//
+//    val functionTableCell: Cell = {
+//      val functionRows = for {
+//        functionKey <- macroNode.functions
+//        functionNode <- functionsProvider(functionKey)
+//      } yield {
+//        Row(functionKey.toCell, functionNode.description)
+//      }.withCssClass("flowFunctionsCell")
+//      TableInACell(Table(Seq.empty, functionRows))
+//    }
+//    Row(triggersCell, macroCell, functionTableCell)
+//  }
 
 
   private val cellSeperator: Cell = Cell("seperator")
@@ -74,6 +77,5 @@ object MacroBlock {
   //    .withCssClass("border-bottom border-3 border-secondary"))
   //  )
   val seperatorRow: Row = Row(Seq(cellSeperator))
-
-
 }
+

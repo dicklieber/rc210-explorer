@@ -17,26 +17,33 @@
 
 package controllers
 
+import akka.actor.typed.scaladsl.AskPattern.Askable
+import akka.actor.typed.{ActorRef, Scheduler}
+import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.clock.Clock
-import net.wa9nnn.rc210.data.datastore.{UpdateCandidate, UpdateData}
+import net.wa9nnn.rc210.data.datastore.DataStoreActor.AllForKeyKind
+import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.remotebase.Mode._
-import net.wa9nnn.rc210.data.remotebase.Offset._
-import net.wa9nnn.rc210.data.remotebase.Yaesu._
 import net.wa9nnn.rc210.data.remotebase._
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.key.KeyKind
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
 import play.api.data.Forms._
 import play.api.data.{Form, Mapping}
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
+import scala.concurrent.duration.DurationInt
+import scala.concurrent.{ExecutionContext, Future}
+import scala.language.postfixOps
+
 @Singleton()
-class RemoteBaseController @Inject()(dataStore: DataStore) extends MessagesInjectedController with LazyLogging {
+class RemoteBaseController @Inject()(actor: ActorRef[DataStoreActor.Message])
+                                    (implicit scheduler: Scheduler, ec: ExecutionContext) extends MessagesInjectedController with LazyLogging {
+  implicit val timeout: Timeout = 3 seconds
 
 
-  val rbMemory: Mapping[RBMemory] =
+  private val rbMemory: Mapping[RBMemory] =
     mapping(
       "frequency" -> text,
       "offset" -> of[Offset],
@@ -45,7 +52,7 @@ class RemoteBaseController @Inject()(dataStore: DataStore) extends MessagesInjec
       "ctssCode" -> number,
     )(RBMemory.apply)(RBMemory.unapply)
 
-  val remoteBaseForm = Form[RemoteBase](
+  val remoteBaseForm: Form[RemoteBase] = Form[RemoteBase](
     mapping(
       "radio" -> of[Radio],
       "yaesu" -> of[Yaesu],
@@ -54,34 +61,34 @@ class RemoteBaseController @Inject()(dataStore: DataStore) extends MessagesInjec
     )(RemoteBase.apply)(RemoteBase.unapply)
   )
 
-  def index: Action[AnyContent] = Action { implicit request =>
-    val fieldEntry: FieldEntry = dataStore(KeyKind.remoteBaseKey).head
-
-    val remoteBase: RemoteBase = fieldEntry.value.asInstanceOf[RemoteBase]
-    val filledInForm = remoteBaseForm.fill(remoteBase)
-
-    Ok(views.html.rermoteBase(filledInForm))
+  def index: Action[AnyContent] = Action.async { implicit request =>
+    actor.ask(AllForKeyKind(KeyKind.remoteBaseKey, _)).map { fields: Seq[FieldEntry] =>
+      val remoteBase: RemoteBase = fields.head.value.asInstanceOf[RemoteBase]
+      val filledInForm = remoteBaseForm.fill(remoteBase)
+      Ok(views.html.rermoteBase(filledInForm))
+    }
   }
 
-  def save(): Action[AnyContent] = Action { implicit request =>
+  def save(): Action[AnyContent] = Action.async { implicit request =>
 
     remoteBaseForm.bindFromRequest().fold(
       formWithErrors => {
         // binding failure, you retrieve the form containing errors:
-        BadRequest(views.html.rermoteBase(formWithErrors))
+        Future(BadRequest(views.html.rermoteBase(formWithErrors)))
       },
       (remoteBase: RemoteBase) => {
         /* binding success, you get the actual value. */
         val updateCandidate = UpdateCandidate(remoteBase.fieldKey, Right(remoteBase))
-        val updateData = UpdateData(Seq(updateCandidate))
-        dataStore.update(updateData)(who(request))
-        Redirect(routes.RemoteBaseController.index)
+
+        actor.ask[String](DataStoreActor.UpdateData(Seq(updateCandidate), Seq.empty,
+          who(request), _)).map { _ =>
+          Redirect(routes.RemoteBaseController.index)
+        }
       }
     )
   }
 
 }
-
 
 
 

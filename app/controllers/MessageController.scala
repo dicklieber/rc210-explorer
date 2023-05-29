@@ -17,9 +17,14 @@
 
 package controllers
 
-import com.wa9nnn.util.tableui.{Row, Table}
+import akka.actor.typed.scaladsl.AskPattern.Askable
+import akka.actor.typed.{ActorRef, Scheduler}
+import akka.util.Timeout
+import com.typesafe.scalalogging.LazyLogging
+import com.wa9nnn.util.tableui.Table
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.datastore.{UpdateCandidate, UpdateData}
+import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, ForFieldKey}
+import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.message.Message
 import net.wa9nnn.rc210.data.named.NamedKey
@@ -29,35 +34,39 @@ import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.duration.DurationInt
+import scala.language.postfixOps
 import scala.util.matching.Regex
 
 @Singleton()
-class MessageController @Inject()(dataStore: DataStore) extends MessagesInjectedController {
+class MessageController @Inject()(actor: ActorRef[DataStoreActor.Message])
+                                 (implicit scheduler: Scheduler, ec: ExecutionContext)
+  extends MessagesInjectedController with LazyLogging {
+  implicit val timeout: Timeout = 3 seconds
 
-
-  def index(): Action[AnyContent] = Action { implicit request =>
-
-    val rows: Seq[Row] = dataStore.apply(KeyKind.messageKey)
-      .map(_.value[Message].toRow)
-    val table = Table(Message.header(rows.length), rows)
-    Ok(views.html.messages(table))
-  }
-
-  def edit(key: MessageKey): Action[AnyContent] = Action { implicit request =>
-
-    val fieldKey = FieldKey("Message", key)
-    val maybeEntry: Option[FieldEntry] = dataStore(fieldKey)
-    maybeEntry match {
-      case Some(fieldEntry: FieldEntry) =>
-        val value: Message = fieldEntry.value
-        Ok(views.html.messageEditor(value))
-
-      case None =>
-        NotFound(s"No keyField: $fieldKey")
+  def index(): Action[AnyContent] = Action.async { implicit request =>
+    actor.ask[Seq[FieldEntry]](AllForKeyKind(KeyKind.messageKey, _)).map { f: Seq[FieldEntry] =>
+      val rows = f.map(_.toRow())
+      val table = Table(Message.header(rows.length), rows)
+      Ok(views.html.messages(table))
     }
   }
 
-  def save(): Action[AnyContent] = Action { implicit request =>
+  def edit(key: MessageKey): Action[AnyContent] = Action.async { implicit request =>
+
+    val fieldKey = FieldKey("Message", key)
+
+    actor.ask(ForFieldKey(fieldKey, _)).map {
+      case Some(fieldEntry: FieldEntry) =>
+        val message: Message = fieldEntry.value
+        Ok(views.html.messageEditor(message))
+      case None =>
+        NotFound(s"Not messageKey: $fieldKey")
+    }
+  }
+
+  def save(): Action[AnyContent] = Action.async { implicit request =>
     val kv: Map[String, String] = AnyContentAsFormUrlEncoded(request.body.asFormUrlEncoded.get)
       .data
       .map(t => t._1 -> t._2.headOption.getOrElse(""))
@@ -68,8 +77,9 @@ class MessageController @Inject()(dataStore: DataStore) extends MessagesInjected
     val name: String = kv("name")
     val namedKey = NamedKey(messageKey, name)
 
-    dataStore.update(UpdateData(Seq(candidate), Seq(namedKey)))(who(request))
-    Redirect(routes.MessageController.index())
+    actor.ask[String](DataStoreActor.UpdateData(Seq(candidate), Seq(namedKey), user=who(request), _)).map{_ =>
+      Redirect(routes.MessageController.index())
+    }
   }
 }
 

@@ -17,8 +17,8 @@
 
 package net.wa9nnn.rc210.data.datastore
 
+import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import configs.Config
 import configs.syntax._
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.security.Who
@@ -37,10 +37,13 @@ import scala.util.{Try, Using}
 class DataStorePersistence @Inject()(config: Config) extends LazyLogging {
   def save(dataTransferJson: DataTransferJson): Unit = {
     Files.writeString(path,
-      Json.prettyPrint(
-        Json.toJson(dataTransferJson)
+      toJson(dataTransferJson))
+  }
 
-      ))
+  def toJson(dataTransferJson: DataTransferJson): String = {
+    Json.prettyPrint(
+      Json.toJson(dataTransferJson)
+    )
   }
 
   private val path: Path = config.get[Path]("vizRc210.dataStoreFile").value

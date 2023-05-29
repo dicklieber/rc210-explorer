@@ -19,6 +19,7 @@ package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.Dtmf
+import net.wa9nnn.rc210.data.clock.Occurrence
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.key.KeyFactory
 import net.wa9nnn.rc210.key.KeyFactory._
@@ -81,6 +82,22 @@ object Formatters {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], MeterAlarmKey] = parsing(KeyFactory(_).asInstanceOf[MeterAlarmKey], "error.url", Nil)(key, data)
 
     override def unbind(key: String, value: MeterAlarmKey): Map[String, String] = Map(key -> value.toString)
+  }
+  implicit object OccurrenceFormatter extends Formatter[Occurrence] {
+    override val format: Option[(String, Nil.type)] = Some(("format.occurrence", Nil))
+
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Occurrence] =
+      parsing(KeyFactory(_).asInstanceOf[Occurrence], "error.url", Nil)(key, data)
+
+    override def unbind(key: String, value: Occurrence): Map[String, String] = Map(key -> value.toString)
+  }
+  implicit object MonthOfYearDSTFormatter extends Formatter[MonthOfYearDST] {
+    override val format: Option[(String, Nil.type)] = Some(("format.monthOfYearDST", Nil))
+
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], MonthOfYearDST] =
+      parsing(KeyFactory(_).asInstanceOf[MonthOfYearDST], "error.url", Nil)(key, data)
+
+    override def unbind(key: String, value: MonthOfYearDST): Map[String, String] = Map(key -> value.toString)
   }
 
   implicit val fmtMacroKey: OFormat[MacroKey] = Json.format[MacroKey]

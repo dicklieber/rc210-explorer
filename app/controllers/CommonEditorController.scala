@@ -17,40 +17,50 @@
 
 package controllers
 
+import akka.actor.typed.scaladsl.AskPattern.Askable
+import akka.actor.typed.{ActorRef, Scheduler}
+import akka.util.Timeout
+import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, Table}
-import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.key.KeyKind
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
-import net.wa9nnn.rc210.ui.FormParser
+import net.wa9nnn.rc210.ui.{CandidateAndNames, FormParser}
 import play.api.mvc._
 
 import javax.inject.Inject
+import scala.concurrent.ExecutionContext
+import scala.concurrent.duration.DurationInt
+import scala.language.postfixOps
 
-class CommonEditorController @Inject()(implicit val controllerComponents: ControllerComponents, dataStore: DataStore)
-  extends BaseController {
+class CommonEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
+                                      (implicit scheduler: Scheduler, ec: ExecutionContext)
+  extends MessagesInjectedController with LazyLogging {
+  implicit val timeout: Timeout = 3 seconds
 
-  def index(): Action[AnyContent] = Action {
+  def index(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
-      val commonFields: Seq[FieldEntry] = dataStore(KeyKind.commonKey)
+      actor.ask(DataStoreActor.AllForKeyKind(KeyKind.commonKey, _)).map { commonFields =>
+        val rows: Seq[Row] = commonFields.map { fieldEntry =>
+          // Can't use fieldEntry's toRow because we just want the rc2input name not key, as they are all commonKey1
+          Row(
+            fieldEntry.fieldKey.fieldName,
+            fieldEntry.toCell
+          )
+        }
+        val header = Header(s"Common (${rows.length} values)", "Field", "Value")
+        val table = Table(header, rows)
 
-      val rows: Seq[Row] = commonFields.map { fieldEntry =>
-        // Can't use fieldEntry's toRow because we just want the rc2input name not key, as they are all commonKey1
-        Row(
-          fieldEntry.fieldKey.fieldName,
-          fieldEntry.toCell
-        )
+        Ok(views.html.common(table))
       }
-
-      val header = Header(s"Common (${rows.length} values)", "Field", "Value")
-      val table = Table(header, rows)
-
-      Ok(views.html.common(table))
   }
 
-  def save(): Action[AnyContent] = Action {
+  def save(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
-      val updateData = FormParser(AnyContentAsFormUrlEncoded(request.body.asFormUrlEncoded.get))
-      dataStore.update(updateData)(who(request))
-      Redirect(routes.CommonEditorController.index())
+      val updateData: CandidateAndNames = FormParser(AnyContentAsFormUrlEncoded(request.body.asFormUrlEncoded.get))
+
+      actor.ask[String](DataStoreActor.UpdateData(updateData, who(request), _)).map { _ =>
+        Redirect(routes.CommonEditorController.index())
+      }
   }
 }

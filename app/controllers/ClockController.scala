@@ -17,10 +17,14 @@
 
 package controllers
 
+import akka.actor.typed.scaladsl.AskPattern.Askable
+import akka.actor.typed.{ActorRef, Scheduler}
+import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
-import controllers.ClockController.{monthOfYearDSTSelect, ocurrenceSelect}
 import net.wa9nnn.rc210.data.clock.{Clock, DSTPoint, Occurrence}
-import net.wa9nnn.rc210.data.datastore.{UpdateCandidate, UpdateData}
+import net.wa9nnn.rc210.data.datastore.DataStoreActor.UpdateData
+import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
+import net.wa9nnn.rc210.data.field.Formatters.{MonthOfYearDSTFormatter, OccurrenceFormatter}
 import net.wa9nnn.rc210.data.field.{FieldEntry, MonthOfYearDST}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
@@ -30,18 +34,25 @@ import play.api.data.{Form, Mapping}
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
+import scala.concurrent.duration.DurationInt
+import scala.concurrent.{ExecutionContext, Future}
+import scala.language.postfixOps
+
 
 @Singleton()
-class ClockController @Inject()(dataStore: DataStore) extends MessagesInjectedController with LazyLogging {
+class ClockController @Inject()(actor: ActorRef[DataStoreActor.Message])
+                               (implicit scheduler: Scheduler, ec: ExecutionContext)
+  extends MessagesInjectedController with LazyLogging {
+  implicit val timeout: Timeout = 3 seconds
 
 
-  val dstPointForm: Mapping[DSTPoint] =
+  private val dstPointForm: Mapping[DSTPoint] =
     mapping(
       "month" -> of[MonthOfYearDST],
       "occurrence" -> of[Occurrence]
     )(DSTPoint.apply)(DSTPoint.unapply)
 
-  val clockForm = Form[Clock](
+  private val clockForm = Form[Clock](
     mapping(
       "enableDST" -> boolean,
       "hourDST" -> number(min = 0, max = 23),
@@ -51,33 +62,34 @@ class ClockController @Inject()(dataStore: DataStore) extends MessagesInjectedCo
     )(Clock.apply)(Clock.unapply)
   )
 
-  def index: Action[AnyContent] = Action { implicit request =>
-    val fieldEntry: FieldEntry = dataStore(KeyKind.clockKey).head
-
-    val clock: Clock = fieldEntry.value.asInstanceOf[Clock]
-    val filledInForm = clockForm.fill(clock)
-
-    Ok(views.html.clock(filledInForm))
+  def index: Action[AnyContent] = Action.async { implicit request =>
+    actor.ask[Seq[FieldEntry]](DataStoreActor.AllForKeyKind(KeyKind.clockKey, _)).map { fieldEntries =>
+      val fieldEntry: FieldEntry = fieldEntries.head
+      val clock: Clock = fieldEntry.value.asInstanceOf[Clock]
+      val filledInForm = clockForm.fill(clock)
+      Ok(views.html.clock(filledInForm))
+    }
   }
 
-  def save(): Action[AnyContent] = Action { implicit request =>
+  def save(): Action[AnyContent] = Action.async { implicit request =>
 
     clockForm.bindFromRequest().fold(
       formWithErrors => {
         // binding failure, you retrieve the form containing errors:
-        BadRequest(views.html.clock(formWithErrors))
+        Future(BadRequest(views.html.clock(formWithErrors)))
       },
       (clock: Clock) => {
         /* binding success, you get the actual value. */
-        val updateCandidate = UpdateCandidate(Clock.fieldKey(KeyFactory.clockKey), Right(clock))
-        val updateData = UpdateData(Seq(updateCandidate))
-        dataStore.update(updateData)(who(request))
-        Redirect(routes.ClockController.index)
+        val updateCandidate: UpdateCandidate = UpdateCandidate(Clock.fieldKey(KeyFactory.clockKey), Right(clock))
+
+        actor.ask[String](UpdateData(Seq(updateCandidate), Seq.empty, who(request), _)).map { _ =>
+          Redirect(routes.ClockController.index)
+        }
       }
     )
   }
 
-  def setClock: Action[AnyContent] = Action { implicit request =>
+  def setClock(): Action[AnyContent] = Action { implicit request =>
     Ok("todo set clock in RC-210")
   }
 }
