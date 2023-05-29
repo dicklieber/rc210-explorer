@@ -46,7 +46,7 @@ class ScheduleController @Inject()(actor: ActorRef[DataStoreActor.Message])
   def index(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
 
-      actor.ask(AllForKeyKind(KeyKind.timerKey, _)).map { fields: Seq[FieldEntry] =>
+      actor.ask(AllForKeyKind(KeyKind.scheduleKey, _)).map { fields: Seq[FieldEntry] =>
         val rows: Seq[Row] = fields.map { fieldEntry =>
           val value: Schedule = fieldEntry.value
           value.toRow
