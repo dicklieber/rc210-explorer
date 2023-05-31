@@ -20,7 +20,7 @@ package net.wa9nnn.rc210.data.field
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Row, RowSource}
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.named.NamedSource
+import net.wa9nnn.rc210.data.named.NamedKeySource
 import net.wa9nnn.rc210.key.KeyFactory.Key
 import play.api.libs.json.JsValue
 

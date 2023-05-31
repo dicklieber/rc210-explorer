@@ -18,13 +18,13 @@
 package net.wa9nnn.rc210.data.datastore
 
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
-import akka.actor.typed.{ActorRef, Behavior, PostStop, PreRestart, Signal, SupervisorStrategy}
+import akka.actor.typed.{ActorRef, Behavior, Signal, SupervisorStrategy}
 import com.google.inject.Provides
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
 import net.wa9nnn.rc210.data.macros.MacroNode
-import net.wa9nnn.rc210.data.named.{NamedKey, NamedSource}
+import net.wa9nnn.rc210.data.named.{NamedKey, NamedKeySource}
 import net.wa9nnn.rc210.key.KeyFactory.Key
 import net.wa9nnn.rc210.key.KeyKind
 import net.wa9nnn.rc210.model.TriggerNode
@@ -35,7 +35,7 @@ import play.api.libs.json
 
 import scala.collection.concurrent.TrieMap
 
-object DataStoreActor extends ActorModule with LazyLogging {
+object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
   sealed trait DataStoreMessage
 
   type Message = DataStoreMessage
@@ -73,7 +73,11 @@ object DataStoreActor extends ActorModule with LazyLogging {
 
   case class UpdateFields(fieldEntries: Seq[FieldEntry], names: Seq[NamedKey] = Seq.empty, user: User) extends DataStoreMessage
 
-  //  Key.setNamedSource(this)
+  // This provides a back-door way to get names. But it's read-only access
+  // and greatly simplifies showing key names in the UIs.
+  private var keyNamesMap = new TrieMap[Key, String]
+  override def nameForKey(key: Key): String = keyNamesMap.getOrElse(key, "")
+  Key.setNamedSource(this)
 
   @Provides def apply(persistence: DataStorePersistence, memoryFileLoader: MemoryFileLoader): Behavior[DataStoreMessage] = {
     //    Behaviors.setup[DataStoreMessage] { actorContext =>
@@ -85,8 +89,7 @@ object DataStoreActor extends ActorModule with LazyLogging {
       map
     }
 
-    var valuesMap: TrieMap[FieldKey, FieldEntry] = loadFromRcMemory()
-    var keyNamesMap = new TrieMap[Key, String]
+    val valuesMap: TrieMap[FieldKey, FieldEntry] = loadFromRcMemory()
 
     def loadFromJson(): Unit = {
       // update values from datastore.json
@@ -108,7 +111,7 @@ object DataStoreActor extends ActorModule with LazyLogging {
       }
       // update namedKeys from datastore.json
       keyNamesMap.clear()
-      keyNamesMap.addAll(dto.namedKeys.map(namedkey => namedkey.key -> namedkey.name))
+      keyNamesMap.addAll(dto.namedKeys.map(namedKey => namedKey.key -> namedKey.name))
 
     }
 
@@ -213,9 +216,7 @@ object DataStoreActor extends ActorModule with LazyLogging {
           }
       }.onFailure[Exception](SupervisorStrategy.restart)
   }
+
 }
 
 
-//  override def nameForKey(key: Key): String =
-//    throw new NotImplementedError() //todo non message entry into Actor!
-//}

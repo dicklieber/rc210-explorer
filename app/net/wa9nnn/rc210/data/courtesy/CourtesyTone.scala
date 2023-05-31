@@ -21,7 +21,7 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Row}
 import net.wa9nnn.rc210.data.courtesy.CourtesyTone.{cell, cellSpan3}
 import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.data.named.NamedSource
+import net.wa9nnn.rc210.data.named.NamedKeySource
 import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey
 import net.wa9nnn.rc210.key.KeyFormats._
 import play.api.libs.json.{JsValue, Json, OFormat}

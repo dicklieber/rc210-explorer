@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.key
 
-import net.wa9nnn.rc210.data.named.NamedSource
+import net.wa9nnn.rc210.data.named.NamedKeySource
 import net.wa9nnn.rc210.key.KeyFactory.Key
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
@@ -28,7 +28,7 @@ class NamedKeySpec extends Specification with BeforeAll with Mockito {
   private val portKey2 = KeyFactory.portKey(2)
 
   override def beforeAll(): Unit = {
-    val namedSource = mock[NamedSource]
+    val namedSource = mock[NamedKeySource]
 
     Key.setNamedSource(namedSource)
     namedSource.nameForKey(portKey1).returns("Harpo")

@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.key
 
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.named.NamedSource
+import net.wa9nnn.rc210.data.named.NamedKeySource
 import net.wa9nnn.rc210.key.KeyFactory.Key.nameForKey
 import play.twirl.api.Html
 
@@ -193,12 +193,12 @@ object KeyFactory {
 
   object Key {
 
-    def setNamedSource(namedsource: NamedSource): Unit = {
+    def setNamedSource(namedsource: NamedKeySource): Unit = {
       if (_namedSource.isDefined) throw new IllegalStateException("NamedSource already set.")
       _namedSource = Option(namedsource)
     }
 
-    protected var _namedSource: Option[NamedSource] = None
+    protected var _namedSource: Option[NamedKeySource] = None
     def nameForKey(key: Key): String =
       _namedSource.map(_.nameForKey(key)).getOrElse("")
   }

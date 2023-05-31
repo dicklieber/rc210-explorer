@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.timers
 
 import com.wa9nnn.util.tableui.{Cell, Row}
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldEntryBase, FieldInt, RenderMetadata}
-import net.wa9nnn.rc210.data.named.NamedSource
+import net.wa9nnn.rc210.data.named.NamedKeySource
 import net.wa9nnn.rc210.key.KeyFactory.TimerKey
 import net.wa9nnn.rc210.util.MacroSelectField
 import play.api.libs.json.{JsValue, Json, OFormat}

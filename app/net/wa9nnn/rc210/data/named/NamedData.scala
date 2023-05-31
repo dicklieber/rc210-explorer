@@ -29,7 +29,7 @@ object NamedKey {
 }
 
 
-trait NamedSource {
+trait NamedKeySource {
   def nameForKey(key: Key): String
 }
 
