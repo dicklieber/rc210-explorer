@@ -57,7 +57,7 @@ case class MacroSelectField(value: MacroKey = KeyFactory.defaultMacroKey) extend
    * @return a new [[MacroSelectField]].
    */
   override def update(paramValue: String): MacroSelectField = {
-    new MacroSelectField(KeyFactory.macroKey(paramValue.toInt))
+    new MacroSelectField(KeyFactory(paramValue))
   }
 
   def fromParam(param: String): MacroKey =
