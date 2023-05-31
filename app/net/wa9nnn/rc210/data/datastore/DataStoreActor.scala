@@ -127,7 +127,6 @@ object DataStoreActor extends ActorModule with LazyLogging {
 
     Behaviors
       .supervise[Message] {
-        logger.info("Behaviors")
         Behaviors.receiveMessage[Message] { message: Message =>
           message match {
 
@@ -204,6 +203,7 @@ object DataStoreActor extends ActorModule with LazyLogging {
           }
           Behaviors.same
         }
+
           .receiveSignal {
             case (context: ActorContext[DataStoreMessage], signal: Signal) =>
               logger.error(s"signal: $signal")

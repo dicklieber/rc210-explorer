@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.security.authentication
 
 import akka.actor.typed.scaladsl.Behaviors
-import akka.actor.typed.{ActorRef, Behavior, Scheduler}
+import akka.actor.typed.{ActorRef, Behavior, Signal, SupervisorStrategy}
 import com.google.inject.{Provides, Singleton}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
@@ -47,29 +47,40 @@ object UserManagerActor extends ActorModule with LazyLogging {
   case class Validate(login: Login, replyTo: ActorRef[Option[User]]) extends UserManagerMessage
 
   @Provides def apply(config: Config)(implicit ec: ExecutionContext): Behavior[UserManagerMessage] = {
-    Behaviors.setup[UserManagerMessage] { actorContext =>
-      val userManager = new UserManager(config)
-      Behaviors.receiveMessage { message =>
-        message match {
-          case Put(userDetailData: UserEditDTO, user: User, replyTo: ActorRef[String]) =>
-            userManager.put(userDetailData, user)
-            replyTo ! "Added" // Don't need a return value but want client to wait until the actor is done.
-          case Get(userId: UserId, replyTo: ActorRef[Option[User]]) =>
-            val maybeUser: Option[User] = userManager.get(userId)
-            replyTo ! maybeUser
-          case Validate(login: Login, replyTo: ActorRef[Option[User]]) =>
-            val maybeUser: Option[User] = userManager.validate(login)
-            replyTo ! maybeUser
-          case Users(replyTo: ActorRef[UserRecords]) =>
-            replyTo ! userManager.users
-          case Remove(userId: UserId, user: User, replyTo: ActorRef[String]) =>
-            userManager.remove(userId, user.who)
-            replyTo ! "Removed"
-          case x =>
-            logger.error(s"Unexpected message: $x!")
+    val userManager = new UserManager(config)
+    Behaviors.supervise {
+      Behaviors.setup[UserManagerMessage] { actorContext =>
+        val userManager = new UserManager(config)
+        Behaviors.receiveMessage[Message] { message =>
+          message match {
+            case Put(userDetailData: UserEditDTO, user: User, replyTo: ActorRef[String]) =>
+              userManager.put(userDetailData, user)
+              replyTo ! "Added" // Don't need a return value but want client to wait until the actor is done.
+            case Get(userId: UserId, replyTo: ActorRef[Option[User]]) =>
+              val maybeUser: Option[User] = userManager.get(userId)
+              replyTo ! maybeUser
+            case Validate(login: Login, replyTo: ActorRef[Option[User]]) =>
+              val maybeUser: Option[User] = userManager.validate(login)
+              replyTo ! maybeUser
+            case Users(replyTo: ActorRef[UserRecords]) =>
+              replyTo ! userManager.users
+            case Remove(userId: UserId, user: User, replyTo: ActorRef[String]) =>
+              userManager.remove(userId, user.who)
+              replyTo ! "Removed"
+            case x =>
+              logger.error(s"Unexpected message: $x!")
+          }
+          Behaviors.same
         }
-        Behaviors.same
+          .receiveSignal {
+            case (_, signal: Signal) =>
+              logger.error(s"signal: $signal")
+              //              if signal == PreRestart || signal == PostStop =>
+              //          resource.close()
+              Behaviors.same
+          }
+
       }
-    }
+    }.onFailure[Exception](SupervisorStrategy.restart)
   }
 }

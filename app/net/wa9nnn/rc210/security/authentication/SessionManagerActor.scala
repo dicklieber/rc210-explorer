@@ -17,10 +17,11 @@
 
 package net.wa9nnn.rc210.security.authentication
 
-import akka.actor.typed.scaladsl.{Behaviors, TimerScheduler}
-import akka.actor.typed.{ActorRef, Behavior}
+import akka.actor.typed.scaladsl.{ActorContext, Behaviors, TimerScheduler}
+import akka.actor.typed.{ActorRef, Behavior, Signal, SupervisorStrategy}
 import com.google.inject.{Provides, Singleton}
 import com.typesafe.config.Config
+import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.security.authentication.RcSession.SessionId
 import play.api.libs.concurrent.ActorModule
 
@@ -31,7 +32,7 @@ import scala.language.postfixOps
 
 
 @Singleton()
-object SessionManagerActor extends ActorModule {
+object SessionManagerActor extends ActorModule with LazyLogging {
   sealed trait SessionManagerMessage
 
   type Message = SessionManagerMessage
@@ -46,55 +47,44 @@ object SessionManagerActor extends ActorModule {
 
   case object Tick extends SessionManagerMessage
 
-  @Provides def apply(config:Config)
+  @Provides def apply(config: Config)
                      (implicit ec: ExecutionContext): Behavior[SessionManagerMessage] = {
 
     Behaviors.withTimers[SessionManagerMessage] { timerScheduler: TimerScheduler[SessionManagerMessage] =>
       timerScheduler.startTimerWithFixedDelay(Tick, 5 seconds, 10 seconds)
 
-      Behaviors.setup[SessionManagerMessage] { actorContext =>
-        val sessionManager = new SessionManager(config)
+      Behaviors
+        .supervise[Message] {
+          Behaviors.setup[SessionManagerMessage] { actorContext =>
+            val sessionManager = new SessionManager(config)
 
-        Behaviors.receiveMessage[SessionManagerMessage] { message =>
-          message match {
-            case Create(user: User, ip: String, replyTo: ActorRef[RcSession]) =>
-              val rcSession: RcSession = sessionManager.create(user, ip)
-              replyTo ! rcSession
-            case Lookup(sessionId: SessionId, replyTo: ActorRef[Option[RcSession]]) =>
-              val rcSession: Option[RcSession] = sessionManager.lookup(sessionId)
-              replyTo ! rcSession
-            case Sessions(replyTo: ActorRef[Seq[RcSession]]) =>
-              replyTo ! sessionManager.sessions
-            case Remove(sessionId: SessionId, replyTo: ActorRef[String]) =>
-              sessionManager.remove(sessionId)
-              replyTo ! "Done"
-            case Tick =>
-              sessionManager.tick()
+            Behaviors.receiveMessage[SessionManagerMessage] { message =>
+              message match {
+                case Create(user: User, ip: String, replyTo: ActorRef[RcSession]) =>
+                  val rcSession: RcSession = sessionManager.create(user, ip)
+                  replyTo ! rcSession
+                case Lookup(sessionId: SessionId, replyTo: ActorRef[Option[RcSession]]) =>
+                  val rcSession: Option[RcSession] = sessionManager.lookup(sessionId)
+                  replyTo ! rcSession
+                case Sessions(replyTo: ActorRef[Seq[RcSession]]) =>
+                  replyTo ! sessionManager.sessions
+                case Remove(sessionId: SessionId, replyTo: ActorRef[String]) =>
+                  sessionManager.remove(sessionId)
+                  replyTo ! "Done"
+                case Tick =>
+                  sessionManager.tick()
+              }
+              Behaviors.same
+            }
+              .receiveSignal {
+                case (_, signal: Signal) =>
+                  logger.error(s"signal: $signal")
+                  //              if signal == PreRestart || signal == PostStop =>
+                  //          resource.close()
+                  Behaviors.same
+              }
           }
-
-          Behaviors.same
-        }
-
-        Behaviors.receiveMessage { message =>
-          message match {
-            case Create(user: User, ip: String, replyTo: ActorRef[RcSession]) =>
-              val rcSession: RcSession = sessionManager.create(user, ip)
-              replyTo ! rcSession
-            case Lookup(sessionId: SessionId, replyTo: ActorRef[Option[RcSession]]) =>
-              val rcSession: Option[RcSession] = sessionManager.lookup(sessionId)
-              replyTo ! rcSession
-            case Sessions(replyTo: ActorRef[Seq[RcSession]]) =>
-              replyTo ! sessionManager.sessions
-            case Remove(sessionId: SessionId, replyTo: ActorRef[String]) =>
-              sessionManager.remove(sessionId)
-              replyTo ! "Done"
-            case Tick =>
-              sessionManager.tick()
-          }
-
-          Behaviors.same
-        }
-      }
+        }.onFailure[Exception](SupervisorStrategy.restart)
     }
   }
 }
