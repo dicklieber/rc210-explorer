@@ -51,6 +51,7 @@ object SessionManagerActor extends ActorModule {
 
     Behaviors.withTimers[SessionManagerMessage] { timerScheduler: TimerScheduler[SessionManagerMessage] =>
       timerScheduler.startTimerWithFixedDelay(Tick, 5 seconds, 10 seconds)
+
       Behaviors.setup[SessionManagerMessage] { actorContext =>
         val sessionManager = new SessionManager(config)
 

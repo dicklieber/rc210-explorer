@@ -57,7 +57,7 @@ class ScheduleController @Inject()(actor: ActorRef[DataStoreActor.Message])
         Ok(views.html.schedules(table))
       }
   }
-
+1
   def save(): Action[AnyContent] = Action.async { implicit request =>
 
     val valuesMap: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
