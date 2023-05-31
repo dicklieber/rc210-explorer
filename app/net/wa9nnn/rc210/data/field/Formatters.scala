@@ -87,7 +87,7 @@ object Formatters {
     override val format: Option[(String, Nil.type)] = Some(("format.occurrence", Nil))
 
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Occurrence] =
-      parsing(KeyFactory(_).asInstanceOf[Occurrence], "error.url", Nil)(key, data)
+      parsing(formValue => Occurrence.valueOf(formValue), "error.url", Nil)(key, data)
 
     override def unbind(key: String, value: Occurrence): Map[String, String] = Map(key -> value.toString)
   }
@@ -95,7 +95,7 @@ object Formatters {
     override val format: Option[(String, Nil.type)] = Some(("format.monthOfYearDST", Nil))
 
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], MonthOfYearDST] =
-      parsing(KeyFactory(_).asInstanceOf[MonthOfYearDST], "error.url", Nil)(key, data)
+      parsing(formValue => MonthOfYearDST.valueOf(formValue) , "error.url", Nil)(key, data)
 
     override def unbind(key: String, value: MonthOfYearDST): Map[String, String] = Map(key -> value.toString)
   }

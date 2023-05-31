@@ -43,7 +43,8 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
 class MeterController @Inject()(actor: ActorRef[DataStoreActor.Message])
-                               (implicit scheduler: Scheduler, ec: ExecutionContext) extends MessagesInjectedController with LazyLogging {
+                               (implicit scheduler: Scheduler, ec: ExecutionContext)
+  extends MessagesInjectedController with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 
   private val alarmForm: Form[MeterAlarm] = Form(

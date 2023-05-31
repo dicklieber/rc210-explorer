@@ -72,6 +72,7 @@ class ClockController @Inject()(actor: ActorRef[DataStoreActor.Message])
   }
 
   def save(): Action[AnyContent] = Action.async { implicit request =>
+    val formUrlEncoded: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
 
     clockForm.bindFromRequest().fold(
       formWithErrors => {
