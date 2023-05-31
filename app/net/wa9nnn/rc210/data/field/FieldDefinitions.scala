@@ -102,8 +102,6 @@ class FieldDefinitions @Inject()() {
     //DVRRowsUsed - 1494-1533
     SimpleField(1534, "Allow Terminator Speech", commonKey, "n*2091b", FieldBoolean),
     //RemoteRadioMode - 1535-1544
-    SimpleField(1534, "AutoPatch Port", commonKey, "n*2116v", FieldBoolean),
-    SimpleField(1534, "AutoPatch Port Mute", commonKey, "n270", FieldBoolean),
     SimpleField(1571, "Program Prefix", commonKey, "n*2109v", FieldDtmf) max 4 min(1),
     //Phrase - 1576-1975 Handled as MessageMacros.
     //IDExtras - 1976-1984 needs special handling
