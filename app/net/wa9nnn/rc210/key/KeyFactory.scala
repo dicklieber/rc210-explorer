@@ -152,6 +152,8 @@ object KeyFactory {
       s"$number ${nameForKey(this)}"
     }
 
+    def userDefinedName: String = nameForKey(this)
+
     /**
      * Display the Key. Number: <input>
      * This can be placed in a [[com.wa9nnn.util.tableui.Row]].
@@ -199,6 +201,7 @@ object KeyFactory {
     }
 
     protected var _namedSource: Option[NamedKeySource] = None
+
     def nameForKey(key: Key): String =
       _namedSource.map(_.nameForKey(key)).getOrElse("")
   }

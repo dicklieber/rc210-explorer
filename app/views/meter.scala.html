@@ -3,6 +3,7 @@
 @import net.wa9nnn.rc210.key.KeyFactory.MeterKey
 @import net.wa9nnn.rc210.data.meter.MeterFaceName
 @import views.html.helper._
+@import net.wa9nnn.rc210.key.KeyFactory.Key
 @(meterKey: MeterKey, meterForm: Form[Meter])(implicit messages: MessagesProvider)
     @implicitField = @{
         FieldConstructor(views.html.rc2input.f)
@@ -14,14 +15,17 @@
                 <table class="table table-bordered table-sm  w-auto rc210-table">
                     <thead>
                         <tr>
+                            <th colspan="2">Meter @meterKey.number</th>
+                        </tr>
+                        <tr>
                             <th>Field</th>
                             <th>Value</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Meter</td>
-                            <td><input name="name" value="@meterKey.name"></td>
+                            <td>Name</td>
+                            <td><input name="name" value="@meterKey.userDefinedName"></td>
                         </tr>
                         <tr>
                             <td>Face</td>
