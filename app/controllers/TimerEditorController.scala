@@ -26,6 +26,7 @@ import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, UpdateData
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.field.Formatters._
+import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.data.timers.Timer
 import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, TimerKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
@@ -52,7 +53,7 @@ class TimerEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
     )(Timer.apply)(Timer.unapply)
   )
 
-  def index(): Action[AnyContent] = Action.async {
+  def index: Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
       actor.ask(AllForKeyKind(KeyKind.timerKey, _)).map { timerFields: Seq[FieldEntry] =>
         val timers: Seq[Timer] = timerFields.map {fieldEntry =>
@@ -87,8 +88,8 @@ class TimerEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
         },
         (timer: Timer) => {
           val updateCandidate: UpdateCandidate = UpdateCandidate(timer.fieldKey, Right(timer))
-          actor.ask[String](UpdateData(Seq(updateCandidate), Seq.empty, who(request), _)).map { _ =>
-            Redirect(routes.ClockController.index)
+          actor.ask[String](UpdateData(Seq(updateCandidate), Seq(NamedKey(timerKey, name)), who(request), _)).map { _ =>
+            Redirect(routes.TimerEditorController.index)
           }
         }
       )

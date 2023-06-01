@@ -6,7 +6,7 @@
 
 GET         /timer/edit/:timerKey                      controllers.TimerEditorController.edit(timerKey:TimerKey)
 POST        /timer/save                                controllers.TimerEditorController.save()
-GET         /timers                                    controllers.TimerEditorController.index()
+GET         /timers                                    controllers.TimerEditorController.index
 POST        /courtesytones/save                        controllers.CourtesyToneEditorController.save()
 GET         /courtesytones                             controllers.CourtesyToneEditorController.index()
 GET         /meter/editMeter/:meterKey                 controllers.MeterController.editMeter(meterKey:MeterKey)

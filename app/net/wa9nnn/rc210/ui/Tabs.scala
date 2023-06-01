@@ -26,7 +26,7 @@ object Tabs {
   val flowTab: Tab = Tab("Flow", routes.FlowController.flow().url, "How to Macros to things. How this all works.")
   val commonTab: Tab = Tab("Common", routes.CommonEditorController.index().url, "Global settings")
   val ctTab: Tab = Tab("CT", routes.CourtesyToneEditorController.index().url, "Courtesy Tones")
-  val clockTab = Tab("Clock", routes.ClockController.index.url, "Set clock, DST etc.")
+  val clockTab: Tab = Tab("Clock", routes.ClockController.index.url, "Set clock, DST etc.")
 
   val logicAlarmTab: Tab = Tab("Logic", routes.LogicAlarmEditorController.index().url, "Logic Alarm settings.")
   val metersTab: Tab = Tab("Meters", routes.MeterController.index.url, "Analog Meters and Alarms")
@@ -40,7 +40,7 @@ object Tabs {
   val portsTab: Tab = Tab("Ports", routes.PortsEditorController.index().url, "Port settings")
 
   val schedulesTab: Tab = Tab("Schedules", routes.ScheduleController.index().url, "Schedule settings.")
-  val timersTab: Tab = Tab("Timers", routes.TimerEditorController.index().url, "Timer settings.")
+  val timersTab: Tab = Tab("Timers", routes.TimerEditorController.index.url, "Timer settings.")
   val rc210Tab: Tab = Tab("RC-210", routes.IOController.listSerialPorts().url, "RC-210 Download.")
   val fileUpload: Tab = Tab("Upload", routes.DataStoreController.upload.url, "Upload a saved JSON file.")
   val changes: Tab = Tab("Changes", routes.CandidateController.index().url, "Pending changes that need to be sent to the RC-210.")
