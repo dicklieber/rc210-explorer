@@ -1,0 +1,49 @@
+@import com.wa9nnn.util.tableui.Table
+@import com.wa9nnn.util.tableui.html.renderTable
+@import net.wa9nnn.rc210.ui.Tabs
+@import views.html.helper._
+@import net.wa9nnn.rc210.data.timers.Timer
+@import net.wa9nnn.rc210.key.KeyFactory.TimerKey
+@import net.wa9nnn.rc210.util.MacroSelect
+@(timerForm: Form[Timer], timerKey: TimerKey)(implicit messagesProvider: MessagesProvider)
+    @implicitField = @{
+        FieldConstructor(views.html.rc2input.f)
+    }
+
+    @form(action = routes.TimerEditorController.save()) {
+        @tabbedmain(Tabs.timersTab) {
+            <input type="hidden" name="timerKey" value="@timerForm("timerKey").value">
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Timer</th>
+                        <th>Seconds</th>
+                        <th>Macro To Run</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Timer</td>
+                        <td>
+                        @Html(timerKey.namedHtml)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Seconds</td>
+                        <td>
+                            @helper.inputText(timerForm("seconds"))>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Macro</td>
+                        <td>
+                        @select(timerForm("macro"), MacroSelect.options)
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+            <input type="submit" class="btn btn-primary" name="save" value="Save">
+        }
+    }

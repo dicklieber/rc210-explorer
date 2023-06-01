@@ -17,7 +17,6 @@
 
 package net.wa9nnn.rc210.data.meter
 
-import com.wa9nnn.util.tableui.Row
 import net.wa9nnn.rc210.data.field._
 import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, MeterAlarmKey, MeterKey}
 import net.wa9nnn.rc210.key.KeyFormats._
@@ -54,8 +53,6 @@ case class MeterAlarm(val key: MeterAlarmKey, meter: MeterKey, alarmType: AlarmT
   }
 
   override def toJsonValue: JsValue = Json.toJson(this)
-
-  override def toRow: Row = throw new NotImplementedError() //todo
 }
 
 /*
@@ -84,14 +81,14 @@ object MeterAlarm extends ComplexExtractor[MeterKey] {
    */
   override def extract(memory: Memory): Seq[FieldEntry] = {
     val mai = new AtomicInteger()
-    val alarmType: Array[AlarmType] = memory.sub8(274, nMeters).map(AlarmType.lookup)
+    val alarmType: Seq[AlarmType] = memory.sub8(274, nMeters).map(AlarmType.lookup)
     val macroKeys: Seq[MacroKey] = memory.sub8(314, nMeters).map(KeyFactory.macroKey)
     val setPoint: Seq[String] = memory.chunks(282, 4, nMeters).map { chunk =>
-      val array = chunk.array
+      val array = chunk.ints
       //      new String(array.map(_.toChar))
       "42"
     }
-    val meters: Array[MeterKey] = memory.sub8(266, nMeters).map {number =>
+    val meters = memory.sub8(266, nMeters).map { number =>
       try {
         val r: MeterKey = KeyFactory.meterKey(number)
         r
@@ -101,14 +98,12 @@ object MeterAlarm extends ComplexExtractor[MeterKey] {
           KeyFactory.meterKey(1)
       }
     }
-    val r: Seq[FieldEntry] = (for {i <- 0 until nMeters}
+    for {i <- 0 until nMeters}
       yield {
         val key = KeyFactory.meterAlarmKey(mai.incrementAndGet())
         val meterAlarm = MeterAlarm(key, meters(i), alarmType(i), setPoint(i).toInt, macroKeys(i))
         new FieldEntry(this, meterAlarm.fieldKey, meterAlarm)
       }
-      )
-    r
   }
 
   /**

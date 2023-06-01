@@ -48,7 +48,7 @@ object MesssageExtractor extends ComplexExtractor[MessageKey] with LazyLogging {
       chunk: Chunk <- memory.chunks(1576, 10, 40)
       key: KeyFactory.MessageKey = KeyFactory.messageKey(mai.getAndIncrement())
     } yield {
-      val message: Message = Message(key, chunk.array
+      val message: Message = Message(key, chunk.ints
         .takeWhile(_ != 0)
      )
       val fieldKey = FieldKey(fieldName, key)

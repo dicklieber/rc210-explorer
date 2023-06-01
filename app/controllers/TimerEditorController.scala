@@ -21,22 +21,22 @@ import akka.actor.typed.scaladsl.AskPattern.Askable
 import akka.actor.typed.{ActorRef, Scheduler}
 import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.datastore.DataStoreActor.AllForKeyKind
+import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, UpdateData}
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldInt}
-import net.wa9nnn.rc210.data.named.NamedKey
+import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.field.Formatters._
 import net.wa9nnn.rc210.data.timers.Timer
-import net.wa9nnn.rc210.key.KeyFactory.{Key, MacroKey, TimerKey}
+import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, TimerKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
-import net.wa9nnn.rc210.util.MacroSelectField
+import play.api.data.Form
+import play.api.data.Forms._
 import play.api.mvc._
 
 import javax.inject._
-import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationInt
+import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
 class TimerEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
@@ -44,50 +44,56 @@ class TimerEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
   extends MessagesInjectedController with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 
+  private val timerForm: Form[Timer] = Form[Timer](
+    mapping(
+      "timerKey" -> of[TimerKey],
+      "seconds" -> number,
+      "macroKey" -> of[MacroKey],
+    )(Timer.apply)(Timer.unapply)
+  )
+
   def index(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
       actor.ask(AllForKeyKind(KeyKind.timerKey, _)).map { timerFields: Seq[FieldEntry] =>
-        val rows: Seq[Row] = timerFields.map { fieldEntry =>
-          val value: Timer = fieldEntry.value
-          value.toRow
+        val timers: Seq[Timer] = timerFields.map {fieldEntry =>
+          val fieldValue: Timer = fieldEntry.value
+          fieldValue.asInstanceOf[Timer]
         }
-        val header = Header(s"Timers (${rows.length} values)", "Timer", "Seconds", "Macro To Run")
-        val table = Table(header, rows)
+        Ok(views.html.timers(timers))
+      }
+  }
 
-        Ok(views.html.timers(table))
+  def edit(timerKey: TimerKey): Action[AnyContent] = Action.async {
+    implicit request: MessagesRequest[AnyContent] =>
+      val fieldKey = FieldKey("Timer", timerKey)
+      actor.ask(DataStoreActor.ForFieldKey(fieldKey, _)).map {
+        case Some(fieldEntry: FieldEntry) =>
+          Ok(views.html.timerEditor(timerForm.fill(fieldEntry.value), timerKey: TimerKey))
+        case None =>
+          NotFound(s"No timer: $timerKey")
       }
   }
 
   def save(): Action[AnyContent] = Action.async {
-    implicit request: Request[AnyContent] =>
+    implicit request: MessagesRequest[AnyContent] =>
 
-      val namedKeyBuilder = Seq.newBuilder[NamedKey]
+      val fields: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
+      val name: String = fields("name").head
+      val timerKey: TimerKey = KeyFactory(fields("timerKey").head)
 
-      val timers: Seq[UpdateCandidate] = request.body.asFormUrlEncoded
-        .get
-        .filterNot(_._1 == "save")
-        .map { t: (String, Seq[String]) => FieldKey.fromParam(t._1) -> t._2.head }
-        .groupBy(_._1.key)
-        .map { case (key: Key, values: Map[FieldKey, String]) =>
-          val valueMap = values.map { case (fk, value) =>
-            fk.fieldName -> value
+      timerForm.bindFromRequest().fold(
+        formWithErrors => {
+          Future(BadRequest(views.html.timerEditor(formWithErrors, timerKey)))
+        },
+        (timer: Timer) => {
+          val updateCandidate: UpdateCandidate = UpdateCandidate(timer.fieldKey, Right(timer))
+          actor.ask[String](UpdateData(Seq(updateCandidate), Seq.empty, who(request), _)).map { _ =>
+            Redirect(routes.ClockController.index)
           }
-          val name = valueMap("name")
-          namedKeyBuilder += NamedKey(key, name)
-          val seconds = FieldInt(valueMap("seconds").toInt)
-          val macroToRun: MacroKey = KeyFactory.apply(valueMap("macro"))
-          val macroSelect = MacroSelectField(macroToRun)
-          val timer = Timer(key.asInstanceOf[TimerKey], seconds = seconds, macroSelect = macroSelect)
-          UpdateCandidate(timer.fieldKey, Right(timer))
-        }.toSeq
+        }
+      )
 
-
-      actor.ask[String](replyTo =>
-        DataStoreActor.UpdateData(candidates = timers,
-          namedKeys = namedKeyBuilder.result(),
-          user= who(request), replyTo)
-      ).map { _ =>
-        Redirect(routes.TimerEditorController.index())
-      }
   }
 }
+
+case class Timers(timers: Seq[Timer])

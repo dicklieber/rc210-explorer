@@ -72,7 +72,7 @@ class Memory(val data: Array[Int] = Array.empty) {
     }
   }
 
-  def sub8(start: Int, length: Int): Array[Int] = {
+  def sub8(start: Int, length: Int): Seq[Int] = {
     data.slice(start, start + length)
   }
 
@@ -87,7 +87,7 @@ class Memory(val data: Array[Int] = Array.empty) {
     val size = chunkLength * nChunks
     data.slice(offset, offset + size)
       .grouped(chunkLength)
-      .map(Chunk)
+      .map(Chunk(_))
       .toSeq
   }
 

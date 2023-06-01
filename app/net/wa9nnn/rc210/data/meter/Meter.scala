@@ -61,8 +61,6 @@ case class Meter(key: MeterKey, meterKind: MeterFaceName, low: VoltToReading, hi
   }
 
   override def toJsonValue: JsValue = Json.toJson(this)
-
-  override def toRow: Row = throw new NotImplementedError() //todo}
 }
 
 object Meter extends ComplexExtractor[MeterKey] {
@@ -78,7 +76,7 @@ object Meter extends ComplexExtractor[MeterKey] {
     val mai = new AtomicInteger()
     val nMeters = KeyKind.meterKey.maxN()
     val faceInts = memory.sub8(186, nMeters)
-    val faceNames: Array[MeterFaceName] = faceInts.map(MeterFaceName.lookup)
+    val faceNames: Seq[MeterFaceName] = faceInts.map(MeterFaceName.lookup)
     val lowX: Seq[Int] = memory.iterator16At(202).take(nMeters).toSeq
     val lowY: Seq[Int] = memory.iterator16At(218).take(nMeters).toSeq
     val highX: Seq[Int] = memory.iterator16At(234).take(nMeters).toSeq

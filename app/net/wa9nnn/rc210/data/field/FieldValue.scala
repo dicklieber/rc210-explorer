@@ -76,7 +76,7 @@ trait SimpleFieldValue extends FieldValue {
  *
  * @tparam K
  */
-trait ComplexFieldValue[K <: Key] extends FieldValue with RowSource with LazyLogging{
+trait ComplexFieldValue[K <: Key] extends FieldValue  with LazyLogging{
   val key: K
   val fieldName: String
   lazy val fieldKey: FieldKey = FieldKey(fieldName, key)

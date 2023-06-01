@@ -24,7 +24,7 @@ object DtmfMacroExtractor {
       (for {
         chunk <- chunks
         macroKey: MacroKey = KeyFactory.macroKey(mai.getAndIncrement())
-        dtmf <- Dtmf(chunk.array)
+        dtmf <- Dtmf(chunk.ints)
       } yield {
         macroKey -> dtmf
       })

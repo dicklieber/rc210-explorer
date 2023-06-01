@@ -99,6 +99,14 @@ object Formatters {
 
     override def unbind(key: String, value: MonthOfYearDST): Map[String, String] = Map(key -> value.toString)
   }
+  implicit object TimerKeyFormatter extends Formatter[TimerKey] {
+    override val format: Option[(String, Nil.type)] = Some(("format.TimerKey", Nil))
+
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], TimerKey] =
+      parsing(formValue => KeyFactory[TimerKey](formValue) , "error.url", Nil)(key, data)
+
+    override def unbind(key: String, value: TimerKey): Map[String, String] = Map(key -> value.toString)
+  }
 
   implicit val fmtMacroKey: OFormat[MacroKey] = Json.format[MacroKey]
   implicit val fmtRemoteBaseKey: Format[RemoteBaseKey] = Json.format[RemoteBaseKey]

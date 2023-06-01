@@ -18,7 +18,6 @@
 package net.wa9nnn.rc210.data.clock
 
 import com.wa9nnn.util.JsonFormatUtils.javaEnumFormat
-import com.wa9nnn.util.tableui.Row
 import net.wa9nnn.rc210.data.field._
 import net.wa9nnn.rc210.key.KeyFactory.ClockKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
@@ -78,7 +77,6 @@ case class Clock(
 
   override def toJsonValue: JsValue = Json.toJson(this)
 
-  override def toRow: Row = throw new IllegalStateException("Not used with clock.")
 }
 
 

@@ -17,18 +17,18 @@
 
 package net.wa9nnn.rc210.util
 
-case class Chunk(array: Array[Int]){
-  def size = array.length
+case class Chunk(ints: Seq[Int]){
+  def size = ints.length
 
-  def apply(n: Int) = array(n)
+  def apply(n: Int) = ints(n)
 
 
   override def toString: String = {
-    new String(array
+    new String(ints.toArray
       .takeWhile(_!=0)
       .map(_.toChar)
     )
   }
 
-  def iterator:Iterator[Int] = array.iterator
+  def iterator:Iterator[Int] = ints.iterator
 }

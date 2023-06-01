@@ -53,9 +53,6 @@ case class CourtesyTone(override val key: CourtesyToneKey, segments: Seq[Segment
 
   override val fieldName: String = "CourtesyTone"
 
-  override def toRow: Row = {
-    throw new NotImplementedError() //todo
-  }
 
   def rows(): Seq[Row] = {
     val nameCell: Cell = key.namedCell(CtSegmentKey("name", 99).param)

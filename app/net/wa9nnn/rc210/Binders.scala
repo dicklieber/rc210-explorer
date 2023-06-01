@@ -20,7 +20,7 @@ package net.wa9nnn.rc210
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.clock.Occurrence
 import net.wa9nnn.rc210.data.field.MonthOfYearDST
-import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, MessageKey, MeterAlarmKey, MeterKey}
+import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, MessageKey, MeterAlarmKey, MeterKey, TimerKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.security.UserId.UserId
 import play.api.mvc.PathBindable
@@ -45,6 +45,16 @@ object Binders {
 
     override def unbind(key: String, macroKey: MacroKey): String = {
       macroKey.toString
+    }
+  }
+  implicit def pathBinderTimerKey: PathBindable[TimerKey] = new PathBindable[TimerKey] {
+    override def bind(key: String, value: String): Either[String, TimerKey] = {
+
+      Right(KeyFactory(value))
+    }
+
+    override def unbind(key: String, timerKey: TimerKey): String = {
+      timerKey.toString
     }
   }
 

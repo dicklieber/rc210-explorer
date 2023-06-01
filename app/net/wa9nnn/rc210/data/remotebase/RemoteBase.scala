@@ -29,8 +29,6 @@ case class RemoteBase(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[
   override val key: RemoteBaseKey = KeyFactory.remoteBaseKey
   override val fieldName: String = "RemoteBase"
 
-  override def toRow: Row = throw new IllegalStateException("Not used with RemoteBase!")
-
   override def display: String = fieldName
 
   /**

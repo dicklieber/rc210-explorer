@@ -82,7 +82,7 @@ object MacroNode extends ComplexExtractor[MacroKey] {
       memory.chunks(offset, chunkLength, nChunks)
         .map { chunk: Chunk =>
           val key: MacroKey = KeyFactory(KeyKind.macroKey, mai.getAndIncrement())
-          val sChunk = chunk.array
+          val sChunk = chunk.ints
             .map(_.toString)
             .mkString(", ")
 
