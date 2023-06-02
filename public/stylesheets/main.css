@@ -244,6 +244,9 @@ body {
 .rc210-table input {
     width: 7em;
 }
+.navbar {
+    margin-bottom: 0px;
+}
 
 pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
 .string { color: green; }

@@ -62,14 +62,7 @@ object Tabs {
     remoteBase,
     rc210Tab,
     changes,
-    //    Tab(KeyKind.dtmfMacroKey),
-    //    Tab(KeyKind.functionKey),
-    //    Tab(KeyKind.messageMacroKey),
-    //    Tab(KeyKind.commonKey),
-    //    Tab("Macros", routes.MacroNodeController.index().url),
-    //    Tab("Ports", routes.PortsEditorController.index().url),
-    //    Tab("Ports", routes.ScheduleController.index().url),
-  )
+  ).sortBy(_.name)
 
 
   type TabName = String
