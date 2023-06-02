@@ -61,8 +61,7 @@ class AuthFilter @Inject()(implicit val mat: Materializer,
         session <-  Await.result[Option[authentication.RcSession]](actor.ask(ref => Lookup(sessionId, ref)), 3 seconds)
       } yield {
         logger.trace("Got valid session from cookie")
-        val te: TypedEntry[RcSession] = TypedEntry(sessionKey, session)
-        val requestHeaderWithSession: RequestHeader = requestHeader.withAttrs(TypedMap(te))
+        val requestHeaderWithSession: RequestHeader = requestHeader.addAttr(sessionKey, session)
         requestHeaderWithSession
       }) match {
         case Some(requestHeaderWithSessiobn: Any) =>
