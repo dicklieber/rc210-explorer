@@ -38,7 +38,6 @@ GET         /rc210                                     controllers.IOController.
 GET         /flow                                      controllers.FlowController.flow()
 POST        /ports/save                                controllers.PortsEditorController.save()
 GET         /ports                                     controllers.PortsEditorController.index()
-GET         /tabs                                      controllers.LandingController.tabs()
 POST        /schedule/save                             controllers.ScheduleController.save()
 GET         /candidates                                controllers.CandidateController.index()
 GET         /datastore/dump                            controllers.CandidateController.dump()
