@@ -1,15 +1,39 @@
-@import com.wa9nnn.util.tableui.Table
-@import com.wa9nnn.util.tableui.html.renderTable
-@import views.html.helper._
-
+@import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
 @import net.wa9nnn.rc210.ui.Tabs
-@(table: Table)
+@(logicAlarms: Seq[LogicAlarm])
 
     @tabbedmain(Tabs.logicAlarmTab) {
+        <table class="table table-bordered table-sm  w-auto rc210-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Logic Alarm</th>
+                    <th>Enable</th>
+                    <th>Low Macro</th>
+                    <th>High Macro</th>
+                </tr>
+            </thead>
+            <tbody>
+            @for(logicAlarm <- logicAlarms) {
+                <tr>
+                    <td>
+                    @editButton(routes.LogicAlarmEditorController.edit(logicAlarm.key).url)
+                    </td>
+                    <td>
+                    @logicAlarm.key.keyWithName
+                    </td>
+                    <td>
+                    @logicAlarm.enable
+                    </td>
+                    <td>
+                    @logicAlarm.lowMacro
+                    </td>
+                    <td>
+                    @logicAlarm.highMacro
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
 
-        @form(action = routes.LogicAlarmEditorController.save()) {
-            <input type="submit" class="btn btn-primary" name="save" value="Save">
-            @renderTable(table.withCssClass("tablesorter"))
-            <input type="submit" class="btn btn-primary" name="save" value="Save">
-        }
     }

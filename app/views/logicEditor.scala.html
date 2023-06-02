@@ -1,0 +1,46 @@
+@import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
+@import net.wa9nnn.rc210.key.KeyFactory.LogicAlarmKey
+@import net.wa9nnn.rc210.ui.Tabs
+@import net.wa9nnn.rc210.util.MacroSelect
+@import views.html.helper._
+@(logicForm: Form[LogicAlarm], logicAlarmKey: LogicAlarmKey)(implicit messages: MessagesProvider)
+    @implicitField = @{
+        FieldConstructor(views.html.rc2input.f)
+    }
+
+    @tabbedmain(Tabs.logicAlarmTab) {
+        <div class="container">
+        @form(action = routes.LogicAlarmEditorController.save()) {
+            <input type="hidden" name="key" value="@logicAlarmKey.name">
+            <table>
+                <tr>
+                    <td>
+                        Enable
+                    </td>
+                    <td>@helper.checkbox(logicForm("enable"))
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        Low Macro
+                    </td>
+                    <td>@helper.select(logicForm("lowMacro"), MacroSelect.options)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        High Macro
+                    </td>
+                    <td>@helper.select(logicForm("highMacro"), MacroSelect.options)
+                    </td>
+                </tr>
+
+
+            </table>
+            @submitButton()
+
+        </div>
+    }
+    }
+

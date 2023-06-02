@@ -1,9 +1,7 @@
-@import net.wa9nnn.rc210.data.meter.Meter
-@import net.wa9nnn.rc210.ui.Tabs
+@import net.wa9nnn.rc210.data.meter.{Meter, MeterFaceName}
 @import net.wa9nnn.rc210.key.KeyFactory.MeterKey
-@import net.wa9nnn.rc210.data.meter.MeterFaceName
+@import net.wa9nnn.rc210.ui.Tabs
 @import views.html.helper._
-@import net.wa9nnn.rc210.key.KeyFactory.Key
 @(meterKey: MeterKey, meterForm: Form[Meter])(implicit messages: MessagesProvider)
     @implicitField = @{
         FieldConstructor(views.html.rc2input.f)
@@ -49,7 +47,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <input type="submit" class="btn btn-primary" name="save" value="Save">
+                @submitButton
             </div>
         }
     }

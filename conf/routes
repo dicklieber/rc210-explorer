@@ -15,6 +15,7 @@ GET         /meter                                     controllers.MeterControll
 POST        /meter/saveMeter                           controllers.MeterController.saveMeter()
 POST        /meter/saveAlarm                           controllers.MeterController.saveAlarm()
 POST        /logic/save                                controllers.LogicAlarmEditorController.save()
+GET         /logic/edit/:logicAlarmKey                 controllers.LogicAlarmEditorController.edit(logicAlarmKey:LogicAlarmKey)
 GET         /logic                                     controllers.LogicAlarmEditorController.index()
 POST        /common/save                               controllers.CommonEditorController.save()
 GET         /common                                    controllers.CommonEditorController.index()

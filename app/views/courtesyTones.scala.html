@@ -6,7 +6,7 @@
 
 @tabbedmain(Tabs.ctTab) {
     @form(action = routes.CourtesyToneEditorController.save()) {
-        <input type="submit" class="btn btn-primary" name="save" value="Save">
+        @submitButton()
         <table class="headeredTable">
             @defining("<th>Duration<br>Tone1<br>Tone2</th>") { DTT =>
                 <thead>
@@ -34,6 +34,6 @@
             }
             @renderTableBodyRows(rows)
         </table>
-        <input type="submit" class="btn btn-primary" name="save" value="Save">
+        @submitButton()
     }
 }

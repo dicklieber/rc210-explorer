@@ -174,6 +174,6 @@ object KeyFormats {
 
 
   implicit val fmtMacro: OFormat[MacroNode] = Json.format[MacroNode]
-
+  implicit val fmtLogicAlarmKey: Format[LogicAlarmKey] = Json.format[LogicAlarmKey]
 
 }

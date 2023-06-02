@@ -19,6 +19,7 @@ package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.clock.Clock
 import net.wa9nnn.rc210.data.courtesy.CourtesyExtractor
+import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.message.MesssageExtractor
 import net.wa9nnn.rc210.data.meter.{Meter, MeterAlarm}
@@ -68,9 +69,6 @@ class FieldDefinitions @Inject()() {
     SimpleField(157, "Repeat Mode", portKey, "nn14b", FieldBoolean),
     SimpleField(160, "Timeout Timer", portKey, "n*1001v", FieldInt) max 32767 units "seconds",
     SimpleField(166, "DTMF Mute", portKey, "n121b", FieldBoolean),
-    SimpleField(169, "Enable", logicAlarmKey, "1n91b", FieldBoolean),
-    SimpleField(174, "Macro Low", logicAlarmKey, "1*2101nv", MacroSelectField),
-    SimpleField(179, "Macro High", logicAlarmKey, "1*2102nv", MacroSelectField),
     SimpleField(184, "vRef", commonKey, "1*2065", FieldInt) max 20000,
 
     // needs to be complex rc2input   SimpleField(184, "Vref", meterKey, "*2065 n v", UiNumber(255, "todo three numbers?")), //*2065 4 9 6
@@ -142,7 +140,8 @@ class FieldDefinitions @Inject()() {
     Clock,
     RemoteBase,
     Meter,
-    MeterAlarm
+    MeterAlarm,
+    LogicAlarm
   )
 
   val allFields:Seq[FieldDefinition] = simpleFields ++ complexFd

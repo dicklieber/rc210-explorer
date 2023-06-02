@@ -8,8 +8,9 @@
 @tabbedmain(Tabs.portsTab) {
 
     @form(action = routes.PortsEditorController.save()) {
-        <input type="submit" class="btn btn-primary" name="save" value="Save">
+        @submitButton()
         @renderTable(table.withCssClass("tablesorter"))
-        <input type="submit" class="btn btn-primary" name="save" value="Save">
+        @submitButton()
+
     }
 }

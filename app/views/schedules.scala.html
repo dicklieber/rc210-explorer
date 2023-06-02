@@ -7,9 +7,11 @@
     @tabbedmain(Tabs.schedulesTab) {
 
         @form(action = routes.ScheduleController.save()) {
-            <input type="submit" class="btn btn-primary" name="save" value="Save">
+            @submitButton()
+
             @renderTable(table)
-            <input type="submit" class="btn btn-primary" name="save" value="Save">
+            @submitButton()
+
 
         }
     }
