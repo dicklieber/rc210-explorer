@@ -106,7 +106,6 @@ class ERamCollector(descriptor: String) extends Runnable with LazyLogging  {
             promise.complete {
               Try {
                 status.finish()
-                serialPort.closePort()
                 reader.close()
                 RC210Data(mainBuilder.result(), extBuilder.result(), status)
               }
@@ -120,11 +119,16 @@ class ERamCollector(descriptor: String) extends Runnable with LazyLogging  {
             builder = extBuilder
 
           case message: String =>
-            val ERamCollector.parser(sIndex, value) = message
-//            val index: Int = sIndex.toInt
-            status.update(count.incrementAndGet())
-            builder += value.toInt
-            write("\rOK\r\n")
+            try {
+              val ERamCollector.parser(sIndex, value) = message
+              //            val index: Int = sIndex.toInt
+              status.update(count.incrementAndGet())
+              builder += value.toInt
+              write("\rOK\r\n")
+            } catch {
+              case e:MatchError =>
+                logger.error(s"MatchError on $message")
+            }
           case x =>
             logger.error(s"Unexpected Message: $x")
         }
@@ -147,6 +151,7 @@ class ERamCollector(descriptor: String) extends Runnable with LazyLogging  {
       val bytes = s.getBytes
       serialPort.writeBytes(bytes, bytes.length)
     }
+    serialPort.closePort()
   }
 }
 

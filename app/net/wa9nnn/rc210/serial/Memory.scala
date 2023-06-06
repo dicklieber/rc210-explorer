@@ -30,7 +30,7 @@ import scala.util.matching.Regex
 import scala.util.{Try, Using}
 
 /**
- * Access RC-210 memory with iterators over 8 (1 bute) or 16 (2 byte) integers.
+ * Contains RC-210 memory with iterators over 8 (1 byte) or 16 (2 byte) integers.
  * and a few more helpers.
  *
  * @param data mutable array. The 1st 4097 ints are main memory the last

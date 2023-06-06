@@ -34,6 +34,7 @@ import play.api.libs.concurrent.ActorModule
 import play.api.libs.json
 
 import scala.collection.concurrent.TrieMap
+import scala.util.{Failure, Success}
 
 object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
   sealed trait DataStoreMessage
@@ -76,15 +77,22 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
   // This provides a back-door way to get names. But it's read-only access
   // and greatly simplifies showing key names in the UIs.
   private var keyNamesMap = new TrieMap[Key, String]
+
   override def nameForKey(key: Key): String = keyNamesMap.getOrElse(key, "")
+
   Key.setNamedSource(this)
 
   @Provides def apply(persistence: DataStorePersistence, memoryFileLoader: MemoryFileLoader): Behavior[DataStoreMessage] = {
     //    Behaviors.setup[DataStoreMessage] { actorContext =>
     def loadFromRcMemory(): TrieMap[FieldKey, FieldEntry] = {
       val map = new TrieMap[FieldKey, FieldEntry]
-      memoryFileLoader.load.foreach { fieldEntry =>
-        map.put(fieldEntry.fieldKey, fieldEntry)
+      memoryFileLoader.load match {
+        case Failure(exception) =>
+          logger.error(s"No memory: ${exception.getMessage} Need to load from RC-210!")
+        case Success(entries: Seq[FieldEntry]) =>
+          entries.map { fieldEntry =>
+            map.put(fieldEntry.fieldKey, fieldEntry)
+          }
       }
       map
     }

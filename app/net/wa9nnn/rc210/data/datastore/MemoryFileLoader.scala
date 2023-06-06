@@ -18,57 +18,65 @@
 package net.wa9nnn.rc210.data.datastore
 
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.data.datastore.MemoryFileLoader.notInitialized
 import net.wa9nnn.rc210.data.field._
 import net.wa9nnn.rc210.io.DatFile
 import net.wa9nnn.rc210.serial.Memory
 
-import java.net.URL
 import javax.inject.{Inject, Singleton}
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Try}
 
+/**
+ * Holds [[Memory]]
+ * @param fieldDefinitions
+ * @param datFile
+ */
 @Singleton
 class MemoryFileLoader @Inject()(fieldDefinitions: FieldDefinitions, datFile: DatFile) extends LazyLogging {
 
+  private var tryMemory: Try[Memory] = Failure(notInitialized)
+
+  def memory:Try[Memory] = tryMemory
   /**
-   * Get sacved Memory (Raw RC-210 download data.)
-    * @return
+   * Get saved Memory (Raw RC-210 download data.)
+   *
+   * @return [[Memory]] or the reason why.
    */
-  def loadMemory: Memory = {
-    Memory.load(datFile.memoryFile) match {
-      case Failure(exception) =>
-        logger.error(s"No Memory", exception)
-        throw exception
-      case Success(value) =>
-        value
-    }
+  def loadMemory: Try[Memory] = {
+    Memory.load(datFile.memoryFile)
   }
 
-  def load: Seq[FieldEntry] = {
-    implicit val memory = loadMemory
-    val simpleFields: Seq[FieldEntry] = for {
-      fieldDefinition <- fieldDefinitions.simpleFields
-      it = fieldDefinition.iterator()
-      number <- 1 to fieldDefinition.kind.maxN
-      fieldValue <- fieldDefinition.extractFromInts(it).toOption
-    } yield {
-      val fieldKey = fieldDefinition.fieldKey(number)
-      val fieldEntry = FieldEntry(fieldDefinition, fieldKey, fieldValue)
-      logger.trace("FieldEntry: offset: {} fieldEntry: {})", fieldDefinition.offset, fieldEntry.toString)
-      fieldEntry
-    }
-
-    val complexFields: Seq[FieldEntry] = fieldDefinitions.complexFd.flatMap { memoryExtractor: ComplexExtractor[_] =>
-      try {
-        memoryExtractor.extract(memory)
-      } catch {
-        case e: Throwable =>
-          logger.error(s"loading: ${memoryExtractor.fieldName}", e)
-          Seq.empty
+  def load: Try[Seq[FieldEntry]] = {
+    loadMemory.map { implicit memory =>
+      val simpleFields: Seq[FieldEntry] = for {
+        fieldDefinition <- fieldDefinitions.simpleFields
+        it = fieldDefinition.iterator()
+        number <- 1 to fieldDefinition.kind.maxN
+        fieldValue <- fieldDefinition.extractFromInts(it).toOption
+      } yield {
+        val fieldKey = fieldDefinition.fieldKey(number)
+        val fieldEntry = FieldEntry(fieldDefinition, fieldKey, fieldValue)
+        logger.trace("FieldEntry: offset: {} fieldEntry: {})", fieldDefinition.offset, fieldEntry.toString)
+        fieldEntry
       }
+
+      val complexFields: Seq[FieldEntry] = fieldDefinitions.complexFd.flatMap { memoryExtractor: ComplexExtractor[_] =>
+        try {
+          memoryExtractor.extract(memory)
+        } catch {
+          case e: Throwable =>
+            logger.error(s"loading: ${memoryExtractor.fieldName}", e)
+            Seq.empty
+        }
+      }
+      simpleFields ++: complexFields
     }
 
-    simpleFields ++: complexFields
   }
+}
+
+object MemoryFileLoader {
+  val notInitialized: Exception = new Exception("No RC-210 data!")
 }
 
 

@@ -3,7 +3,6 @@ import play.sbt.routes.RoutesKeys.routesImport
 name := """rc210-explorer"""
 organization := "net.wa9nnn"
 
-version := "1.0-SNAPSHOT"
 
 enablePlugins(JavaServerAppPackaging)
 
@@ -51,7 +50,7 @@ val akkaVersion = "2.6.20"
 
 libraryDependencies ++= Seq(
   guice, specs2 % Test,
-  "net.wa9nnn" %% "util" % "0.1.12-SNAPSHOT",
+  "net.wa9nnn" %% "util" % "0.1.14",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
   "net.codingwell" %% "scala-guice" % "5.1.1",
   "ch.qos.logback" % "logback-classic" % logbackVersion,
