@@ -2,6 +2,7 @@ import play.sbt.routes.RoutesKeys.routesImport
 
 name := """rc210-explorer"""
 organization := "net.wa9nnn"
+maintainer := "dick@u50.com"
 
 
 enablePlugins(JavaServerAppPackaging)
