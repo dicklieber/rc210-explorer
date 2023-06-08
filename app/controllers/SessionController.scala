@@ -25,8 +25,7 @@ import com.wa9nnn.util.tableui.Table
 import net.wa9nnn.rc210.security.authentication.SessionManagerActor.Sessions
 import net.wa9nnn.rc210.security.authentication.{RcSession, SessionManagerActor}
 import play.api.mvc.{Action, AnyContent, MessagesInjectedController}
-import views.html.{dat, juatdat}
-import akka.actor.typed.scaladsl._
+import views.html.juatdat
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
