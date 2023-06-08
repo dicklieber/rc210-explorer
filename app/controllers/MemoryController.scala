@@ -60,7 +60,7 @@ class MemoryController @Inject()(memoryFileLoader: MemoryFileLoader, fieldDefini
           val header = Header("RC-210 Memory Map", "Offset", "Value", "Kind", "Field Name", "Field", "Command Template")
           val table = Table(header, rows)
 
-          Ok(views.html.dat(Seq(table)))
+          Ok(views.html.juatdat(Seq(table)))
 
       }
   }

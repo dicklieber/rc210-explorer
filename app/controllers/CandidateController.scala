@@ -26,7 +26,7 @@ import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import configs.syntax._
-import controllers.CandidateController.performInit
+import controllers.CandidateController.LastSendAll
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.datastore.DataStoreActor._
 import net.wa9nnn.rc210.data.field.FieldEntry
@@ -120,7 +120,7 @@ class CandidateController @Inject()(config: Config,
             }
           case Success(rows: Seq[Row]) =>
             val table = Table(Header("Result", "Field", "Command", "Response"), rows)
-            Ok(views.html.dat(Seq(table)))
+            Ok(views.html.juatdat(Seq(table)))
         }
       }
   }

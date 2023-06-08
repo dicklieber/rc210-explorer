@@ -25,8 +25,9 @@ import com.wa9nnn.util.tableui.Table
 import net.wa9nnn.rc210.security.authentication.SessionManagerActor.Sessions
 import net.wa9nnn.rc210.security.authentication.{RcSession, SessionManagerActor}
 import play.api.mvc.{Action, AnyContent, MessagesInjectedController}
-import views.html.dat
+import views.html.{dat, juatdat}
 import akka.actor.typed.scaladsl._
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
@@ -47,7 +48,7 @@ class SessionController @Inject()(actor: ActorRef[SessionManagerActor.SessionMan
     future.map { sessions =>
       val rows = sessions.map(_.toRow)
       val table = Table(RcSession.header(rows.length), rows)
-      Ok(dat(Seq(table)))
+      Ok(juatdat(Seq(table)))
 
     }
 

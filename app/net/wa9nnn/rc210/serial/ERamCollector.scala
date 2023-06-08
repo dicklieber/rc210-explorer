@@ -33,7 +33,7 @@ import scala.util.Try
 import scala.util.matching.Regex
 
 /**
- * Collects ERAM dat from an RC-210 via the serial port.
+ * Collects ERAM juatdat from an RC-210 via the serial port.
  *
  * @param descriptor       for [[SerialPort]].open
  */
