@@ -90,7 +90,7 @@ object MeterAlarm extends ComplexExtractor[MeterKey] {
     }
     val meters = memory.sub8(266, nMeters).map { number =>
       try {
-        val r: MeterKey = KeyFactory.meterKey(number)
+        val r: MeterKey = KeyFactory.meterKey(number + 1)
         r
       } catch {
         case e:Exception =>
