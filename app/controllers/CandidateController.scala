@@ -26,7 +26,7 @@ import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import configs.syntax._
-import controllers.CandidateController.LastSendAll
+import controllers.CandidateController.performInit
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.datastore.DataStoreActor._
 import net.wa9nnn.rc210.data.field.FieldEntry
