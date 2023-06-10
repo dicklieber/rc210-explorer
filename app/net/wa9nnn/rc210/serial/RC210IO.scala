@@ -20,7 +20,8 @@ class RC210IO @Inject()(config: Config) extends LazyLogging {
   val parser: Regex = """(\d+),(\d+)""".r
 
   def listPorts: List[ComPort] = {
-    SerialPort.getCommPorts.map(ComPort(_)).toList
+    val ports = SerialPort.getCommPorts
+    ports.map(ComPort(_)).toList
   }
 
   /**

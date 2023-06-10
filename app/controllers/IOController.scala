@@ -80,7 +80,7 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
     implicit request: Request[AnyContent] =>
       val ports: List[ComPort] = rc210IO.listPorts
       val rows = ports.sortBy(_.friendlyName)
-        .filterNot(_.descriptor.contains("/dev/tty")) // these are just clutter.
+//        .filterNot(_.descriptor.contains("/dev/tty")) // these are just clutter.
         .map { port => {
           val value: String = routes.IOController.download(port.descriptor).url
           Row(Cell(port.descriptor)
