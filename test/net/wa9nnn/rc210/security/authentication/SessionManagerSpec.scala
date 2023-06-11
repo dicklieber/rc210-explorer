@@ -18,18 +18,19 @@
 package net.wa9nnn.rc210.security.authentication
 
 import controllers.UserEditDTO
+import net.wa9nnn.rc210.fixtures.{WithMemory, WithTestConfiguration}
 import org.specs2.mutable.Specification
 
 import java.nio.file.Files
 
-class SessionManagerSpec extends Specification {
+class SessionManagerSpec extends  WithTestConfiguration {
   val user1: User = User(UserEditDTO(callsign = "w1aw", password = Option("swordfish")))
   val user2: User = User(UserEditDTO(callsign = "WA9DEW", password = Option("password")))
 
   "Ensure only one session  per user" >> {
     val path = Files.createTempFile("sessions", ".json")
 
-    val sessionManager = new SessionManager(path.toFile.toString)
+    val sessionManager = new SessionManager(config)
     sessionManager.sessions.length must beEqualTo(0)
     val rcSession = sessionManager.create(user1, "127.00.1")
     sessionManager.sessions.length must beEqualTo(1)
