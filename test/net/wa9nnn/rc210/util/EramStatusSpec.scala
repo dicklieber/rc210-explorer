@@ -18,7 +18,8 @@
 package net.wa9nnn.rc210.util
 
 import net.wa9nnn.rc210.serial.ComPort
-import net.wa9nnn.rc210.util.EramStatus.expectedInts
+import net.wa9nnn.rc210.serial.comm.{DownloadStatus, Progress}
+import net.wa9nnn.rc210.serial.comm.DownloadStatus.expectedInts
 import org.specs2.mutable.Specification
 import play.api.libs.json.{JsObject, Json}
 
@@ -29,7 +30,7 @@ class EramStatusSpec extends Specification {
   val comPort = ComPort()
   "EramStatus" should {
     "happy path" in {
-      val eramStatus = new EramStatus(comPort)
+      val eramStatus = new DownloadStatus(comPort)
       eramStatus.progress must beEqualTo(Progress(running = true, "0.0%"))
       Thread.sleep(2000)
       eramStatus.update(2000)
@@ -40,7 +41,7 @@ class EramStatusSpec extends Specification {
     }
 
     "all" >> {
-      val eramStatus = new EramStatus(comPort)
+      val eramStatus = new DownloadStatus(comPort)
       for {
         n <- 0 until expectedInts
       } {

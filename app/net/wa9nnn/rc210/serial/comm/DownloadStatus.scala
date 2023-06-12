@@ -15,11 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.util
+package net.wa9nnn.rc210.serial.comm
 
 import com.wa9nnn.util.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.serial.ComPort
-import net.wa9nnn.rc210.util.EramStatus.expectedInts
+import net.wa9nnn.rc210.serial.comm.DownloadStatus.expectedInts
 import play.api.libs.json.{Format, Json}
 
 import java.time.{Duration, Instant}
@@ -28,7 +28,7 @@ import java.time.{Duration, Instant}
 /**
  * Mutable state for [[net.wa9nnn.rc210.serial.ERamCollector]].
  */
-class EramStatus(comPort: ComPort) {
+class DownloadStatus(comPort: ComPort) {
   private val start: Instant = Instant.now()
   private var running: Boolean = true // false when finished.
   private var n: Int = 0
@@ -67,8 +67,7 @@ class EramStatus(comPort: ComPort) {
   }
 }
 
-object EramStatus {
-
+object DownloadStatus {
   val expectedInts: Int = 4097 + 15 * 20 // main ints extended + macros * extendSlots.
 }
 

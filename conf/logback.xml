@@ -45,7 +45,6 @@
     <logger name="net.wa9nnn.rc210.data.courtesy.Segment" level="INFO"/>
     <logger name="controllers.CourtesyToneEditorController" level="INFO"/>
     <logger name="controllers.IOController" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.serial.ERamCollector" level="INFO"/>
     <logger name="net.wa9nnmacroNn.rc210.data.datastore.DataStore" level="INFO"/>
     <logger name="net.wa9nnn.rc210.data.field.FieldDtmf" level="INFO"/>
     <logger name="controllers.CandidateController" level="INFO"/>

@@ -20,7 +20,8 @@ package net.wa9nnn.rc210.serial
 import com.fazecast.jSerialComm.SerialPort
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Row, Table}
-import net.wa9nnn.rc210.util.{CircularBuffer, EramStatus, Progress}
+import net.wa9nnn.rc210.serial.comm.{DownloadStatus, Progress}
+import net.wa9nnn.rc210.util.CircularBuffer
 
 import java.io.IOException
 import java.time.Instant
@@ -32,128 +33,7 @@ import scala.io.BufferedSource
 import scala.util.Try
 import scala.util.matching.Regex
 
-/**
- * Collects ERAM juatdat from an RC-210 via the serial port.
- *
- * @param descriptor       for [[SerialPort]].open
- */
-class ERamCollector(descriptor: String) extends Runnable with LazyLogging  {
 
-  private val promise = Promise[RC210Data]()
-  private val serialPort: SerialPort = SerialPort.getCommPort(descriptor)
-  private val recentLines = new CircularBuffer[String](50)
-  private var status = new EramStatus(ComPort(serialPort))
-
-  // Note these are [[Array]]s rather than [[List]]s  as they will be accessed, a lot by the nth element,
-  // see https://stackoverflow.com/questions/2712877/difference-between-array-and-list-in-scala
-  private val mainBuilder: mutable.ArrayBuilder[Int] = Array.newBuilder[Int]
-  private val extBuilder: mutable.ArrayBuilder[Int] = Array.newBuilder[Int]
-  private var builder = mainBuilder // will get switch between main and ext eram.
-  private val count = new AtomicInteger()
-
-
-  def progress: Progress = status.progress
-  def resultStatus:EramStatus = status
-
-  /**
-   *
-   * @param executionContext where this will run.
-   * @return
-   */
-  def start()(implicit executionContext: ExecutionContext): Future[RC210Data] = {
-    executionContext.execute(this)
-    promise.future
-  }
-
-  private val allLines: mutable.Builder[String, Seq[String]] = Seq.newBuilder[String]
-
-  override def run(): Unit = {
-
-    implicit val start = Instant.now()
-    //    serialPort.setBaudRate(57600)
-    val reader: BufferedSource = try {
-      serialPort.setBaudRate(19200)
-      val timeoutMs = 1000 * 60 * 2
-      serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, timeoutMs, 0)
-
-      val opened: Boolean = serialPort.openPort()
-      if (!opened) {
-        throw new IOException(s"Did not open $serialPort")
-      }
-      new BufferedSource(serialPort.getInputStream)
-    } catch {
-      case e: Exception =>
-        promise.tryFailure(e)
-        return // out of the run
-    }
-
-    wakeup()
-
-    write("1SendEram\r\n") // tell RC-210 to send Erqam contents.
-
-    reader.getLines().foreach { line =>
-      try {
-        logger.debug(s"line: $line")
-        logger.whenInfoEnabled {
-          recentLines.add(line)
-        }
-        logger.whenTraceEnabled {
-          allLines += line
-        }
-        line match {
-          case "Complete" =>
-            logger.debug("Complete")
-            promise.complete {
-              Try {
-                status.finish()
-                reader.close()
-                RC210Data(mainBuilder.result(), extBuilder.result(), status)
-              }
-            }
-          case "Timeout" =>
-            logger.info("Timeout ignoring.")
-
-          case "EEPROM Done" =>
-            // done with main part switch to saving in external builder.
-            logger.debug("EEPROM Done switch to ext EEPROM.")
-            builder = extBuilder
-
-          case message: String =>
-            try {
-              val ERamCollector.parser(sIndex, value) = message
-              //            val index: Int = sIndex.toInt
-              status.update(count.incrementAndGet())
-              builder += value.toInt
-              write("\rOK\r\n")
-            } catch {
-              case e:MatchError =>
-                logger.error(s"MatchError on $message")
-            }
-          case x =>
-            logger.error(s"Unexpected Message: $x")
-        }
-
-      } catch {
-        case e: Exception =>
-          logger.error(s"""Line Processing line: "$line" """, e)
-        //        logger.error(recentLines.items.mkString("\n"))
-      }
-    }
-
-    def wakeup(): Unit = {
-      for (_ <- 0 to 3) {
-        write("\r")
-        Thread.sleep(100)
-      }
-    }
-
-    def write(s: String): Unit = {
-      val bytes = s.getBytes
-      serialPort.writeBytes(bytes, bytes.length)
-    }
-    serialPort.closePort()
-  }
-}
 
 object ERamCollector {
   val parser: Regex = """(\d+),(\d+)""".r
@@ -163,7 +43,7 @@ object ERamCollector {
   }
 }
 
-case class RC210Data(mainArray: Array[Int], extArray: Array[Int], progress: EramStatus)
+//case class RC210Data(mainArray: Array[Int], extArray: Array[Int], progress: EramStatus)
 
 object ErmamTest extends App {
   implicit val ec = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(1))

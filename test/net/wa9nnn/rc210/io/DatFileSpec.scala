@@ -18,8 +18,8 @@
 package net.wa9nnn.rc210.io
 
 import net.wa9nnn.rc210.fixtures.WithTestConfiguration
+import net.wa9nnn.rc210.serial.comm.DownloadStatus
 import net.wa9nnn.rc210.serial.{ComPort, RC210Data}
-import net.wa9nnn.rc210.util.EramStatus
 
 import java.nio.file.Files
 
@@ -42,7 +42,7 @@ class DatFileSpec extends WithTestConfiguration {
 
 
       val comPort = ComPort("com3", "fred")
-      val rC210Data = new RC210Data(main, ext, new EramStatus(comPort))
+      val rC210Data = new RC210Data(main, ext, new DownloadStatus(comPort))
       val memory = datFile.apply(rC210Data)
       memory.length must beEqualTo(main.length + ext.length)
     }
