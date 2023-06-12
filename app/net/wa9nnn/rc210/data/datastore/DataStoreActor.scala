@@ -29,11 +29,14 @@ import net.wa9nnn.rc210.key.KeyFactory.Key
 import net.wa9nnn.rc210.key.KeyKind
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.security.authentication.User
+import net.wa9nnn.rc210.serial.ComPort
+import net.wa9nnn.rc210.serial.comm.{DataCollector, Progress}
 import net.wa9nnn.rc210.ui.CandidateAndNames
 import play.api.libs.concurrent.ActorModule
 import play.api.libs.json
 
 import scala.collection.concurrent.TrieMap
+import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
 object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
@@ -62,8 +65,12 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
 
   case class AcceptCandidate(fieldKey: FieldKey, user: User) extends DataStoreMessage
 
+  case class RC210Result(mainArray: Seq[Int], extArray: Seq[Int], progress: Progress) extends DataStoreMessage
+
 
   case class UpdateData(candidates: Seq[UpdateCandidate], namedKeys: Seq[NamedKey] = Seq.empty, user: User, replyTo: ActorRef[String]) extends DataStoreMessage
+
+  case class StartDownload(descriptor:String) extends DataStoreMessage
 
   object UpdateData {
     def apply(candidateAndNames: CandidateAndNames, user: User, replyTo: ActorRef[String]): UpdateData = {
@@ -82,7 +89,7 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
 
   Key.setNamedSource(this)
 
-  @Provides def apply(persistence: DataStorePersistence, memoryFileLoader: MemoryFileLoader): Behavior[DataStoreMessage] = {
+  @Provides def apply(implicit persistence: DataStorePersistence, memoryFileLoader: MemoryFileLoader, ec:ExecutionContext): Behavior[DataStoreMessage] = {
     //    Behaviors.setup[DataStoreMessage] { actorContext =>
     def loadFromRcMemory(): TrieMap[FieldKey, FieldEntry] = {
       val map = new TrieMap[FieldKey, FieldEntry]
@@ -136,8 +143,8 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
       persistence.save(dto)
     }
 
-    Behaviors
-      .supervise[Message] {
+    Behaviors.setup { context =>
+      Behaviors.supervise[Message] {
         Behaviors.receiveMessage[Message] { message: Message =>
           message match {
 
@@ -211,6 +218,11 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
                 valuesMap.put(fieldEntry.fieldKey, fieldEntry)
               }
               save(user)
+            case StartDownload(comPort) =>
+              val dataCollector = new DataCollector(comPort)
+              dataCollector.future.map { rcResult: RC210Result =>
+                context.self ! rcResult
+              }
           }
           Behaviors.same
         }
@@ -223,8 +235,8 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
               Behaviors.same
           }
       }.onFailure[Exception](SupervisorStrategy.restart)
+    }
   }
-
 }
 
 

@@ -30,7 +30,7 @@ GET         /datastore/download                        controllers.DataStoreCont
 GET         /datastore/view                            controllers.DataStoreController.viewJson()
 GET         /datastore/upload                          controllers.DataStoreController.upload
 POST        /datastore/save                            controllers.DataStoreController.save()
-GET         /rc210/download/:descriptor                controllers.IOController.download(descriptor:String)
+GET         /rc210/download/:portDescriptor            controllers.IOController.download(portDescriptor:String)
 #POST        /rc210/progress                            controllers.IOController.progress()
 #GET         /rc210/progress                            controllers.IOController.progress()
 GET         /rc210/result                              controllers.IOController.downloadResult

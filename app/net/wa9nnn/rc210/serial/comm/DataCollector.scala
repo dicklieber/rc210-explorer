@@ -19,31 +19,35 @@ package net.wa9nnn.rc210.serial.comm
 
 import com.fazecast.jSerialComm.{SerialPort, SerialPortEvent, SerialPortMessageListenerWithExceptions}
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.TimeConverters
+import com.wa9nnn.util.TimeConverters.durationToString
+import net.wa9nnn.rc210.data.datastore.DataStoreActor.RC210Result
 import net.wa9nnn.rc210.serial.ComPort
 import net.wa9nnn.rc210.serial.comm.DataCollector._
 import play.api.libs.json.{Format, Json}
 
 import java.time.{Duration, Instant}
+import java.util.concurrent.atomic.AtomicInteger
 import scala.concurrent.{Future, Promise}
 import scala.util.matching.Regex
-import TimeConverters.durationToString
 
 /**
- * Download the full dump of RC210 eeprom and extneded eeprom.
+ * Download the full dump of RC210 eeprom and extended eeprom.
  *
  * @param comPort to connect to.
  */
-class DataCollector(comPort: ComPort) extends SerialPortMessageListenerWithExceptions with LazyLogging {
+class DataCollector(portDescriptor:String) extends SerialPortMessageListenerWithExceptions with LazyLogging {
+  logger.trace(s"Starting: $portDescriptor")
   private val promise = Promise[RC210Result]()
   private val start = Instant.now
-  private var count = 0
+  private var count = new AtomicInteger()
   private val eeprom = Seq.newBuilder[Int]
   private val extended = Seq.newBuilder[Int]
   private var builder = eeprom
-  private val serialPort = SerialPort.getCommPort(comPort.descriptor)
+  private val serialPort = SerialPort.getCommPort(portDescriptor)
   serialPort.setBaudRate(19200)
-  serialPort.openPort()
+  if(serialPort.openPort())
+    logger.trace("{} opened", portDescriptor)
+
   serialPort.addDataListener(this)
 
   private def write(s: String = ""): Unit = {
@@ -61,11 +65,11 @@ class DataCollector(comPort: ComPort) extends SerialPortMessageListenerWithExcep
   private def switchToExtended(): Unit = builder = extended
 
   def progress: Progress = {
-    val double = count * 100.0 / expectedInts
+    val double = count.get() * 100.0 / expectedInts
     Progress(serialPort.isOpen, f"$double%2.1f%%", Duration.between(start, Instant.now()))
   }
 
-  override def catchException(e: Exception): Unit = logger.error(s"comPort: $comPort", e)
+  override def catchException(e: Exception): Unit = logger.error(s"comPort: $portDescriptor", e)
 
   override def getMessageDelimiter: Array[Byte] = Array('\n')
 
@@ -95,12 +99,12 @@ class DataCollector(comPort: ComPort) extends SerialPortMessageListenerWithExcep
         promise.failure(new Exception(response))
       case x =>
         try {
-          count += 1
+          count.incrementAndGet()
           val parser(_, value) = response
           val int = value.toInt
           logger.trace(s"$x -> $int")
           logger.whenDebugEnabled {
-            if (count % 25 == 0)
+            if (count.get() % 25 == 0)
               logger.debug(s"$count")
           }
           builder += int
@@ -127,7 +131,6 @@ object DataCollector {
   private val expectedInts: Int = 4097 + 15 * 20 // main ints extended + macros * extendSlots.
 }
 
-case class RC210Result(mainArray: Seq[Int], extArray: Seq[Int], progress: Progress)
 
 case class Progress(running: Boolean, percent: String, duration: String)
 

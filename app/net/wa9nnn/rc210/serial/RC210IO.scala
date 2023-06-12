@@ -122,12 +122,18 @@ class RC210IO @Inject()(config: Config) extends LazyLogging {
 
 
 
-case class ComPort(descriptor: String = "com1", friendlyName: String = "com1")
+case class ComPort(descriptor: String = "com1", friendlyName: String = "com1") {
+  override def toString: String = s"$descriptor/$friendlyName"
+}
 
 object ComPort {
   implicit val comPortFmt: OFormat[ComPort] = Json.format[ComPort]
 
   def apply(serialPort: SerialPort): ComPort = {
     new ComPort(serialPort.getSystemPortPath, serialPort.getDescriptivePortName)
+  }
+  def apply(fromToString:String): ComPort = {
+    val tokens = fromToString.split("/")
+    new ComPort(tokens.head, tokens(1))
   }
 }

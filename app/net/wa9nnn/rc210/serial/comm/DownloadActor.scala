@@ -19,13 +19,10 @@ package net.wa9nnn.rc210.serial.comm
 
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
-import com.fazecast.jSerialComm.SerialPort.LISTENING_EVENT_DATA_RECEIVED
-import com.fazecast.jSerialComm.{SerialPort, SerialPortEvent, SerialPortMessageListenerWithExceptions}
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.serial.ComPort
-
-import scala.concurrent.{Future, Promise}
-import scala.util.matching.Regex
+import net.wa9nnn.rc210.data.datastore.DataStoreActor
+import net.wa9nnn.rc210.data.datastore.DataStoreActor.RC210Result
+import net.wa9nnn.rc210.serial.{ComPort, comm}
 
 /**
  * DownloadActor full EEROM dump from RC210.
@@ -35,24 +32,25 @@ object DownloadActor extends LazyLogging {
 
   type Message = DownloadMessage
 
-  case class ProgressReqest(replyTp:ActorRef[Progress]) extends DownloadMessage
-
-  private val parser: Regex = """(\d+),(\d+)""".r
+  case class ProgressReqest(replyTp: ActorRef[Progress]) extends DownloadMessage
 
 
-//  def apply(comPort: ComPort): Behavior[DownloadMessage] = {
-//    Behaviors.receive[DownloadMessage] { (context, message) =>
-//
-//    }
+  def apply(portDescriptor:String, actorRef: ActorRef[DataStoreActor.Message]): Behavior[DownloadMessage] = {
+
+    val collector = new DataCollector(portDescriptor)
+    //    collector.future.mapTo()
+    Behaviors.receiveMessage[DownloadMessage] { message =>
+      message match {
+        case ProgressReqest(replyTo) =>
+          replyTo ! collector.progress
+        case r: RC210Result =>
+          // send to DSA
+      }
+      Behaviors.same
+    }
 
 
-//    def progress:Progress = {
-//      val double = count * 100.0 / expectedInts
-//      Progress(serialPort.isOpen, f"$double%2.1f%%")
-//
-//    }
-
-
+  }
 }
 
 

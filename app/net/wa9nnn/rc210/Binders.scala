@@ -23,6 +23,7 @@ import net.wa9nnn.rc210.data.field.MonthOfYearDST
 import net.wa9nnn.rc210.key.KeyFactory.{LogicAlarmKey, MacroKey, MessageKey, MeterAlarmKey, MeterKey, TimerKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.security.UserId.UserId
+import net.wa9nnn.rc210.serial.ComPort
 import play.api.mvc.PathBindable
 
 object Binders {
@@ -151,5 +152,17 @@ object Binders {
 
     override def unbind(key: String, occurrence: Occurrence): String =
       occurrence.name()
+  }
+  implicit def comportBinder: PathBindable[ComPort] = new PathBindable[ComPort] {
+    override def bind(key: String, value: String): Either[String, ComPort] =
+      try {
+        Right(ComPort(value))
+      } catch {
+        case e: Exception =>
+          Left(e.getMessage)
+      }
+
+    override def unbind(key: String, comPort: ComPort): String =
+      comPort.toString()
   }
 }
