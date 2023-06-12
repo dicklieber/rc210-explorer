@@ -5,7 +5,7 @@
 @()(implicit request: RequestHeader)
     @tabbedmain(Tabs.rc210Tab) {
         <script>
-                const route = '@routes.IOController.progress().url';
+                @*const route = '@routes.IOController.progress().url';*@
                 setInterval(myMethod, 979);
 
                 function myMethod() {
@@ -28,7 +28,7 @@
                 }
         </script>
 
-        <h2>Download from RC-210</h2>
+        <h2>DownloadActor from RC-210</h2>
             <!-- Progress bar HTML -->
         <div class="progress">
             <div class="progress-bar progress-bar-striped" style="min-width: 0px;"></div>

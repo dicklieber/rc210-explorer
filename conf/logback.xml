@@ -52,7 +52,7 @@
     <logger name="net.wa9nnn.rc210.data.macros.MacroNode" level="INFO"/>
     <logger name="net.wa9nnn.rc210.security.authentication.SessionManager" level="INFO"/>
     <logger name="net.wa9nnn.rc210.security.authorzation.AuthFilter" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.serial.comm.Download" level="TRACE"/>
+    <logger name="net.wa9nnn.rc210.serial.comm.DownloadActor" level="TRACE"/>
 
     <logger name="actors" level="INFO" />
     <logger name="akka" level="INFO" />

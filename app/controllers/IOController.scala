@@ -20,8 +20,7 @@ package controllers
 import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
-import net.wa9nnn.rc210.io.DatFile
-import net.wa9nnn.rc210.serial.{ComPort, ERamCollector, RC210Data, RC210IO}
+import net.wa9nnn.rc210.serial.{ComPort, RC210IO}
 import play.api.libs.json.Json
 import play.api.mvc._
 
@@ -31,48 +30,48 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class IOController @Inject()(implicit val controllerComponents: ControllerComponents,
-                             datFile: DatFile,
                              executionContext: ExecutionContext,
                              rc210IO: RC210IO
                             ) extends BaseController with LazyLogging {
   implicit val timeout: Timeout = 5.seconds
 
 
-  def progress(): Action[AnyContent] = Action {
-    implicit request: Request[AnyContent] =>
-      val sJson: String = eramCollector.map { eRamCollector =>
-        val progress1 = eRamCollector.progress
-        val jsObject = Json.toJson(progress1)
-        Json.prettyPrint(jsObject)
-      }.getOrElse("no eramCollector")
-      Ok(sJson)
-  }
+//  def progress(): Action[AnyContent] = Action {
+//    implicit request: Request[AnyContent] =>
+//      val sJson: String = eramCollector.map { eRamCollector =>
+//        val progress1 = eRamCollector.progress
+//        val jsObject = Json.toJson(progress1)
+//        Json.prettyPrint(jsObject)
+//      }.getOrElse("no eramCollector")
+//      Ok(sJson)
+//  }
 
   def downloadResult: Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-
+throw new NotImplementedError() //todo
+/*
       eramCollector match {
         case Some(eramCollector: ERamCollector) =>
           val table: Table = eramCollector.resultStatus.toTable
           Ok(views.html.RC210DownloadLandings(table))
         case None =>
-          Ok("Download not performed!")
+          Ok("DownloadActor not performed!")
       }
+*/
   }
 
-  private var eramCollector: Option[ERamCollector] = None
 
   def download(serialPortDescriptor: String): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
 
-      val ec = new ERamCollector(serialPortDescriptor)
-      eramCollector = Option(ec)
-
-      val eventualRC210Data: Future[RC210Data] = ec.start()
-      eventualRC210Data.foreach { r: RC210Data =>
-        datFile((r))
-
-      }
+//      val ec = new ERamCollector(serialPortDescriptor)
+//      eramCollector = Option(ec)
+//
+//      val eventualRC210Data: Future[RC210Data] = ec.start()
+//      eventualRC210Data.foreach { r: RC210Data =>
+//        datFile((r))
+//
+//      }
       Ok(views.html.RC210DownloadProgress())
   }
 

@@ -15,25 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.serial
+package net.wa9nnn.rc210.serial.comm
 
-import org.specs2.concurrent.ExecutionEnv
-import org.specs2.mutable.Specification
-
-import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
-import scala.language.postfixOps
-
-class ERamCollectorSpec(implicit ee: ExecutionEnv) extends Specification {
-  "ERamCollectorSpec" should {
-    "start" in {
-
-      val maybePort = ERamCollector.listPorts.find(_.friendlyName.contains("FT232")).get
-      val collector = new ERamCollector(maybePort.descriptor)
-
-      val future: Future[RC210Data] = collector.start()
-      val result: RC210Data = Await.result[RC210Data](future, 2 minutes)
-      ok
-    }
-  }
-}
+val expectedInts: Int = 4097 + 15 * 20 // main ints extended + macros * extendSlots.

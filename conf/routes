@@ -31,8 +31,8 @@ GET         /datastore/view                            controllers.DataStoreCont
 GET         /datastore/upload                          controllers.DataStoreController.upload
 POST        /datastore/save                            controllers.DataStoreController.save()
 GET         /rc210/download/:descriptor                controllers.IOController.download(descriptor:String)
-POST        /rc210/progress                            controllers.IOController.progress()
-GET         /rc210/progress                            controllers.IOController.progress()
+#POST        /rc210/progress                            controllers.IOController.progress()
+#GET         /rc210/progress                            controllers.IOController.progress()
 GET         /rc210/result                              controllers.IOController.downloadResult
 GET         /rc210                                     controllers.IOController.listSerialPorts()
 GET         /flow                                      controllers.FlowController.flow()

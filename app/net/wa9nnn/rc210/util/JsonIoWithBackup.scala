@@ -1,7 +1,6 @@
 package net.wa9nnn.rc210.util
 
 import com.wa9nnn.util.TimeConverters._
-import net.wa9nnn.rc210.io.DatFile
 import org.apache.commons.io.{FileUtils, FilenameUtils}
 import org.apache.commons.io.file.PathUtils
 import play.api.libs.json.{JsValue, Json}

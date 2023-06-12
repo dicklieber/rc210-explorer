@@ -189,7 +189,7 @@ class CandidateController @Inject()(config: Config,
           queue.offer("Kinder das ist Alles")
         }
       }
-      val thread: Thread = new Thread(runnable, "Download")
+      val thread: Thread = new Thread(runnable, "DownloadActor")
       thread.setDaemon(true)
       thread.start()
     }

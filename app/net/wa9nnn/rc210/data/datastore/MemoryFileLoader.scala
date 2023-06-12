@@ -17,33 +17,40 @@
 
 package net.wa9nnn.rc210.data.datastore
 
+import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.MemoryFileLoader.notInitialized
 import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.io.DatFile
 import net.wa9nnn.rc210.serial.Memory
 
+import java.net.URL
+import java.nio.file.Path
 import javax.inject.{Inject, Singleton}
 import scala.util.{Failure, Try}
+import configs.syntax._
 
 /**
  * Holds [[Memory]]
+ *
  * @param fieldDefinitions
  * @param datFile
  */
 @Singleton
-class MemoryFileLoader @Inject()(fieldDefinitions: FieldDefinitions, datFile: DatFile) extends LazyLogging {
+class MemoryFileLoader @Inject()(fieldDefinitions: FieldDefinitions, config: Config) extends LazyLogging {
 
   private var tryMemory: Try[Memory] = Failure(notInitialized)
 
-  def memory:Try[Memory] = tryMemory
+  def memory: Try[Memory] = tryMemory
+
   /**
    * Get saved Memory (Raw RC-210 download data.)
    *
    * @return [[Memory]] or the reason why.
    */
   def loadMemory: Try[Memory] = {
-    Memory.load(datFile.memoryFile)
+    val memoryFilePath: Path = config.get[Path]("vizRc210.memoryFile").value
+    val memoryFile: URL = memoryFilePath.toUri.toURL
+    Memory.load(memoryFile)
   }
 
   def load: Try[Seq[FieldEntry]] = {
