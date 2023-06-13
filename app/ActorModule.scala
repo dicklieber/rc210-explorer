@@ -22,6 +22,7 @@ import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, DataStorePersistence, MemoryFileLoader}
 import net.wa9nnn.rc210.security.authentication.{SessionManagerActor, UserManagerActor}
+import net.wa9nnn.rc210.serial.comm.DataCollectorActor
 import play.api.libs.concurrent.{ActorModule, AkkaGuiceSupport}
 
 import scala.concurrent.ExecutionContext
@@ -34,6 +35,7 @@ object RcActorsModule extends AbstractModule with AkkaGuiceSupport {
     bindTypedActor[SessionManagerActor.Message](SessionManagerActor, "sessionManager-actor")
     bindTypedActor[UserManagerActor.Message](UserManagerActor, "userManager-actor")
     bindTypedActor[DataStoreActor.Message](DataStoreActor, "dataStore-actor")
+    bindTypedActor[DataCollectorActor.Message](DataCollectorActor, "dataCollector-actor")
   }
 
 }

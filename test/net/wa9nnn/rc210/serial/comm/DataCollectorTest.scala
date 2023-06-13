@@ -20,9 +20,11 @@ package net.wa9nnn.rc210.serial.comm
 import com.fazecast.jSerialComm.SerialPort
 import net.wa9nnn.rc210.serial.ComPort
 
+import java.io.{PrintWriter, StringWriter}
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
+import scala.util.{Failure, Success, Try, Using}
 
 /**
  * A guru test since it must be connected to an RC210
@@ -42,12 +44,24 @@ object DataCollectorTest extends App {
     }
   }
 
-  private val dataCollector = new DataCollector(ft232Port)
+  val lines: Try[String] = Using.Manager { use =>
+    val stringWriter = use(new StringWriter())
+    val writer = use(new PrintWriter(stringWriter))
 
-  private val progress: Progress = dataCollector.progress
+    val (future, progressSource) = DataCollector(writer, ft232Port.descriptor)
+    val starting: Progress = progressSource()
+    println(s"StartingProgress: $starting")
+    val finalProgress: Progress = Await.result[Progress](future, 600 seconds)
+    val progressDone: Progress = progressSource()
+    writer.flush()
+    stringWriter.toString
+  }
 
-  private val rC210Result: RC210Result = Await.result[RC210Result](dataCollector.future, 600 seconds)
-  private val progressDone: Progress = dataCollector.progress
+  lines match {
+    case Failure(exception) =>
+      exception.printStackTrace()
+    case Success(lines) =>
+      println(lines)
+  }
 
-  println(rC210Result)
 }

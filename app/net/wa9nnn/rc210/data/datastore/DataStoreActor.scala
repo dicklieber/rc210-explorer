@@ -29,8 +29,6 @@ import net.wa9nnn.rc210.key.KeyFactory.Key
 import net.wa9nnn.rc210.key.KeyKind
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.security.authentication.User
-import net.wa9nnn.rc210.serial.ComPort
-import net.wa9nnn.rc210.serial.comm.{DataCollector, Progress}
 import net.wa9nnn.rc210.ui.CandidateAndNames
 import play.api.libs.concurrent.ActorModule
 import play.api.libs.json
@@ -43,43 +41,6 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
   sealed trait DataStoreMessage
 
   type Message = DataStoreMessage
-
-  case class ReplaceEntries(entries: Seq[FieldEntry]) extends DataStoreMessage
-
-  case class All(replyTo: ActorRef[Seq[FieldEntry]]) extends DataStoreMessage
-
-  case class AllForKey(key: Key, replyTo: ActorRef[Seq[FieldEntry]]) extends DataStoreMessage
-
-  case class AllForKeyKind(keyKind: KeyKind, replyTo: ActorRef[Seq[FieldEntry]]) extends DataStoreMessage
-
-  case class ForFieldKey(fieldKey: FieldKey, replyTo: ActorRef[Option[FieldEntry]]) extends DataStoreMessage
-
-
-  case class Json(replyTo: ActorRef[String]) extends DataStoreMessage
-
-  case class IngestJson(sJson: String, replyTo: ActorRef[String]) extends DataStoreMessage
-
-  case class Candidates(replyTo: ActorRef[Seq[FieldEntry]]) extends DataStoreMessage
-
-  case class Triggers(replyTo: ActorRef[Seq[MacroWithTriggers]]) extends DataStoreMessage
-
-  case class AcceptCandidate(fieldKey: FieldKey, user: User) extends DataStoreMessage
-
-  case class RC210Result(mainArray: Seq[Int], extArray: Seq[Int], progress: Progress) extends DataStoreMessage
-
-
-  case class UpdateData(candidates: Seq[UpdateCandidate], namedKeys: Seq[NamedKey] = Seq.empty, user: User, replyTo: ActorRef[String]) extends DataStoreMessage
-
-  case class StartDownload(descriptor:String) extends DataStoreMessage
-
-  object UpdateData {
-    def apply(candidateAndNames: CandidateAndNames, user: User, replyTo: ActorRef[String]): UpdateData = {
-      new UpdateData(candidateAndNames.candidates, candidateAndNames.namedKeys, user, replyTo)
-    }
-  }
-
-
-  case class UpdateFields(fieldEntries: Seq[FieldEntry], names: Seq[NamedKey] = Seq.empty, user: User) extends DataStoreMessage
 
   // This provides a back-door way to get names. But it's read-only access
   // and greatly simplifies showing key names in the UIs.
@@ -218,11 +179,6 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
                 valuesMap.put(fieldEntry.fieldKey, fieldEntry)
               }
               save(user)
-            case StartDownload(comPort) =>
-              val dataCollector = new DataCollector(comPort)
-              dataCollector.future.map { rcResult: RC210Result =>
-                context.self ! rcResult
-              }
           }
           Behaviors.same
         }
@@ -237,6 +193,43 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
       }.onFailure[Exception](SupervisorStrategy.restart)
     }
   }
+
+
+  case class ReplaceEntries(entries: Seq[FieldEntry]) extends DataStoreMessage
+
+  case class All(replyTo: ActorRef[Seq[FieldEntry]]) extends DataStoreMessage
+
+  case class AllForKey(key: Key, replyTo: ActorRef[Seq[FieldEntry]]) extends DataStoreMessage
+
+  case class AllForKeyKind(keyKind: KeyKind, replyTo: ActorRef[Seq[FieldEntry]]) extends DataStoreMessage
+
+  case class ForFieldKey(fieldKey: FieldKey, replyTo: ActorRef[Option[FieldEntry]]) extends DataStoreMessage
+
+
+  case class Json(replyTo: ActorRef[String]) extends DataStoreMessage
+
+  case class IngestJson(sJson: String, replyTo: ActorRef[String]) extends DataStoreMessage
+
+  case class Candidates(replyTo: ActorRef[Seq[FieldEntry]]) extends DataStoreMessage
+
+  case class Triggers(replyTo: ActorRef[Seq[MacroWithTriggers]]) extends DataStoreMessage
+
+  case class AcceptCandidate(fieldKey: FieldKey, user: User) extends DataStoreMessage
+
+
+
+  case class UpdateData(candidates: Seq[UpdateCandidate], namedKeys: Seq[NamedKey] = Seq.empty, user: User, replyTo: ActorRef[String]) extends DataStoreMessage
+
+
+  object UpdateData {
+    def apply(candidateAndNames: CandidateAndNames, user: User, replyTo: ActorRef[String]): UpdateData = {
+      new UpdateData(candidateAndNames.candidates, candidateAndNames.namedKeys, user, replyTo)
+    }
+  }
+
+
+  case class UpdateFields(fieldEntries: Seq[FieldEntry], names: Seq[NamedKey] = Seq.empty, user: User) extends DataStoreMessage
+
 }
 
 

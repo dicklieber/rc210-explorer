@@ -40,6 +40,7 @@
   <logger name="net.wa9nnn.rc210.serial.RC210IO" level="" />
   <logger name="net.wa9nnn.rc210.serial.SerialPortOperation" level="INFO." />
   <logger name="net.wa9nnn.rc210.serial.comm.DownloadActor" level="DEBUG"/>
+  <logger name="net.wa9nnn.rc210.serial.comm.DataCollector" level="DEBUG"/>
 
   <root level="INFO">
     <appender-ref ref="ASYNCFILE" />
