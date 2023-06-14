@@ -43,14 +43,27 @@ resolvers += ("Reposilite" at "http://194.113.64.105:8080/releases").withAllowIn
 
 
 val logbackVersion = "1.4.7"
-val specs2Version = "4.19.2"
-libraryDependencies += specs2 % Test
+//val specs2Version = "4.20.0"
+//libraryDependencies += specs2 % Test
 
 val akkaVersion = "2.6.20"
 //libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
 
 libraryDependencies ++= Seq(
-  guice, specs2 % Test,
+  guice,
+
+
+
+//  "org.scalactic" %% "scalactic" % "3.2.16",
+//  "org.scalatest" %% "scalatest" % "3.2.16" % "test",
+//  "org.scalatest" %% "scalatest-flatspec" % "3.2.16" % "test",
+  "org.scalatest" %% "scalatest" % "3.2.16" % "test",
+//  "org.scalatest" %% "scalatest-wordspec" % "3.2.16" % "test",
+  "org.scalatestplus" %% "mockito-4-6" % "3.2.15.0" % Test,
+//  "org.scalatestplus" %% "mockito-4-6" % " 3.2.16" % "test",
+  //  "org.specs2" %% "specs2-core" % specs2Version % Test,
+  //  "org.specs2" %% "specs2-matcher-extra" % specs2Version % Test,
+  //  "org.specs2" % "specs2-scalaz" % specs2Version % "test",
   "net.wa9nnn" %% "util" % "0.1.14",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
   "net.codingwell" %% "scala-guice" % "5.1.1",
@@ -59,6 +72,7 @@ libraryDependencies ++= Seq(
   "commons-io" % "commons-io" % "2.11.0",
   "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
   "com.typesafe.akka" %% "akka-actor" % akkaVersion,
+  "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion % Test,
   "com.fazecast" % "jSerialComm" % "2.9.3",
   //  "io.suzaku" %% "boopickle" % "1.4.0",
   "org.fusesource.jansi" % "jansi" % "2.4.0",

@@ -17,12 +17,12 @@
 
 package net.wa9nnn.rc210.data
 
+import net.wa9nnn.RcSpec
 import net.wa9nnn.rc210.key.KeyFactory.MacroKey
-import org.specs2.mutable.Specification
 import play.api.libs.json.{JsValue, Json}
 
 
-class FieldKeySpec extends Specification {
+class FieldKeySpec extends RcSpec {
 
   "FieldKeySpec" should {
     val mk = MacroKey(42)
@@ -31,7 +31,7 @@ class FieldKeySpec extends Specification {
       val param = fieldKey.param
 
       val backAgain = FieldKey.fromParam(param)
-      backAgain must beEqualTo(fieldKey)
+      backAgain should equal(fieldKey)
     }
 
     "with space in name" in {
@@ -39,13 +39,13 @@ class FieldKeySpec extends Specification {
       val param = fieldKey.param
 
       val backAgain = FieldKey.fromParam(param)
-      backAgain must beEqualTo(fieldKey)
+      backAgain should equal(fieldKey)
     }
 
     "json round trip" in {
       val json: JsValue = Json.toJson(fieldKey)
       val sJson = json.as[String]
-      sJson must beEqualTo ("afield:macroKey42")
+      sJson should equal ("afield:macroKey42")
 
 /*
       val value1: JsValue = Json.parse(sJson)

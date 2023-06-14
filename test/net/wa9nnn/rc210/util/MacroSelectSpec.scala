@@ -17,15 +17,15 @@
 
 package net.wa9nnn.rc210.util
 
+import net.wa9nnn.RcSpec
 import net.wa9nnn.rc210.key.KeyKind
-import org.specs2.mutable.Specification
 
-class MacroSelectSpec extends Specification {
+class MacroSelectSpec extends RcSpec {
 
   "MacroSelect" should {
     "choices" in {
       val options: Seq[(String, String)] = MacroSelect.options
-      options must haveLength(KeyKind.macroKey.maxN())
+      options should have length (KeyKind.macroKey.maxN())
     }
   }
 }

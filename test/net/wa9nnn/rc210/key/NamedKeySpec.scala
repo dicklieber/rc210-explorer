@@ -17,38 +17,39 @@
 
 package net.wa9nnn.rc210.key
 
+import net.wa9nnn.RcSpec
 import net.wa9nnn.rc210.data.named.NamedKeySource
 import net.wa9nnn.rc210.key.KeyFactory.Key
-import org.specs2.mock.Mockito
-import org.specs2.mutable.Specification
-import org.specs2.specification.BeforeAll
+import org.mockito.Mockito.when
+import org.scalatest.BeforeAndAfter
+import org.scalatestplus.mockito.MockitoSugar.mock
 
-class NamedKeySpec extends Specification with BeforeAll with Mockito {
+class NamedKeySpec extends RcSpec with BeforeAndAfter {
   private val portKey1 = KeyFactory.portKey(1)
   private val portKey2 = KeyFactory.portKey(2)
 
-  override def beforeAll(): Unit = {
+  before {
     val namedSource = mock[NamedKeySource]
 
     Key.setNamedSource(namedSource)
-    namedSource.nameForKey(portKey1).returns("Harpo")
-    namedSource.nameForKey(portKey2).returns("")
+    when(namedSource.nameForKey(portKey1)) thenReturn "Harpo"
+    when(namedSource.nameForKey(portKey2)) thenReturn ""
 
   }
 
-  "NamedKey" >> {
-    "Name set to Harpo" >> {
+  "NamedKey" in {
+    "Name set to Harpo" in {
       val cell = portKey1.namedCell()
-      cell.value must beEqualTo(
+      cell.value  should equal(
         """
           |<div class="keyName">
           |    <label for="name:portKey1">1: </label>
           |    <input name="name:portKey1" id="name:portKey1" value="Harpo" title="User-supplied name.">
           |</div>""".stripMargin)
     }
-    "No name set" >> {
+    "No name set" in {
       val cell = portKey2.namedCell()
-      cell.value must beEqualTo(
+      cell.value should equal(
         """
           |<div class="keyName">
           |    <label for="name:portKey2">2: </label>
@@ -56,9 +57,9 @@ class NamedKeySpec extends Specification with BeforeAll with Mockito {
           |</div>""".stripMargin)
     }
 
-    "Custom parameter" >> {
+    "Custom parameter" in {
       val cell = portKey2.namedCell("custom")
-      cell.value must beEqualTo(
+      cell.value should equal(
         """
           |<div class="keyName">
           |    <label for="custom">2: </label>

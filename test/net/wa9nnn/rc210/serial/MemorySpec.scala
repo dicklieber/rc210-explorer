@@ -21,25 +21,25 @@ import net.wa9nnn.rc210.fixtures.WithMemory
 import net.wa9nnn.rc210.util.Chunk
 
 class MemorySpec extends WithMemory {
-  "8bit ints" >> {
+  "8bit ints" in {
     val value1: Iterator[Int] = memory.iterator8At(0)
-    value1.next() must beEqualTo(65)
-    value1.next() must beEqualTo(66)
-    value1.next() must beEqualTo(67)
+    value1.next() should equal(65)
+    value1.next() should equal(66)
+    value1.next() should equal(67)
   }
-  "16bit ints" >> {
+  "16bit ints" in {
     val int16s: Iterator[Int] = memory.iterator16At(1553) // 1553 is timer seconds.
     val i0 = int16s.next()
     val i1 = int16s.next()
-    int16s.next() must beEqualTo(4)
+    int16s.next() should equal(4)
   }
 
-  "chunks" >> {
+  "chunks" in {
 
     val chunks: Seq[Chunk] = memory.chunks(76, 9, 1)
-    chunks must haveLength(1)
+    chunks should have length(1)
     val head: Chunk = chunks.head
-    head.size must beEqualTo (9)
-    head.toString must beEqualTo ("72726")
+    head.size should equal(9)
+    head.toString should equal ("72726")
   }
 }

@@ -1,18 +1,18 @@
 package net.wa9nnn.rc210.data.functions
 
-import net.wa9nnn.rc210.key.KeyFactory.{FunctionKey, MacroKey, MessageKey}
-import org.specs2.mutable.Specification
+import net.wa9nnn.RcSpec
+import net.wa9nnn.rc210.key.KeyFactory.{FunctionKey, MacroKey}
 
-class FunctionsSpec extends Specification {
+class FunctionsSpec extends RcSpec {
 
   "Functions" should {
     "load" in {
       val functions = new FunctionsProvider()
-      functions(FunctionKey(1)).get.toString must beEqualTo ("FunctionNode(functionKey1,Port 1 CTCSS Access,None)")
-      functions.size must beEqualTo (872)
+      functions(FunctionKey(1)).get.toString  should equal ("FunctionNode(functionKey1,Port 1 CTCSS Access,None)")
+      functions.size should equal (872)
 
       val invokedMacros = functions.invokedMacros
-      invokedMacros.head must beEqualTo (MacroKey(1))
+      invokedMacros.head should equal (MacroKey(1))
 
     }
   }

@@ -17,20 +17,20 @@
 
 package net.wa9nnn.rc210.util
 
-import net.wa9nnn.rc210.fixtures.WithMemory
+import net.wa9nnn.RcSpec
 
-class CamelToWordsSpec extends WithMemory {
+class CamelToWordsSpec extends RcSpec {
 
-  "CamelToWordsSpec" should {
+  "CamelToWordsSpec" when {
     "apply" in {
       val in = "GuestMacroRange"
-      val words = CamelToWords(in)
-      words must beEqualTo ("Guest Macro Range")
+      val words: String = CamelToWords(in)
+      words should  equal ("Guest Macro Range")
     }
 
-    "HangTime3" >> {
+    "HangTime3" in  {
       val str = CamelToWords("HangTime3")
-      str must beEqualTo ("Hang Time 3")
+      str should  equal ("Hang Time 3")
     }
   }
 }

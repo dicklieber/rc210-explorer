@@ -17,11 +17,11 @@
 
 package net.wa9nnn.rc210.data.field
 
+import net.wa9nnn.RcSpec
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.key.KeyFactory
-import org.specs2.mutable.Specification
 
-class FieldBooleanSpec extends Specification {
+class FieldBooleanSpec extends RcSpec {
 
     "toCommand false" in {
       val fieldBoolean = FieldBoolean()
@@ -29,7 +29,7 @@ class FieldBooleanSpec extends Specification {
         override val fieldKey: FieldKey = FieldKey("nn", KeyFactory.defaultMacroKey)
         override val template: String = "1*999b"
       })
-      command must beEqualTo ("1*9990")
+      command should equal ("1*9990")
     }
     "toCommand true" in {
       val fieldBoolean = FieldBoolean(true)
@@ -37,6 +37,6 @@ class FieldBooleanSpec extends Specification {
         override val fieldKey: FieldKey = FieldKey("nn", KeyFactory.defaultMacroKey)
         override val template: String = "1*999b"
       })
-      command must beEqualTo ("1*9991")
+      command should equal ("1*9991")
     }
 }

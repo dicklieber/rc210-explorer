@@ -17,16 +17,15 @@
 
 package controllers
 
-import akka.actor.typed.ActorRef
+import akka.actor.typed.{ActorRef, Scheduler}
 import akka.actor.typed.scaladsl.AskPattern.Askable
 import akka.util.Timeout
 import com.fazecast.jSerialComm.SerialPort
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
-import controllers.IOController.listPorts
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.serial.ComPort
-import net.wa9nnn.rc210.serial.comm.DataCollectorActor
+import net.wa9nnn.rc210.serial.comm.{DataCollectorActor, SerialPortsActor, SerialPortsSource}
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
@@ -37,7 +36,9 @@ import scala.concurrent.duration.DurationInt
 class IOController @Inject()(implicit val controllerComponents: ControllerComponents,
                              executionContext: ExecutionContext,
                              dataStoreActor: ActorRef[DataStoreActor.Message],
-                             dataCollectorActor:ActorRef[DataCollectorActor.Message]
+                             scheduler: Scheduler,
+                             dataCollectorActor: ActorRef[DataCollectorActor.Message],
+                             serialPortsActor: ActorRef[SerialPortsActor.Message]
 
                             ) extends BaseController with LazyLogging {
   implicit val timeout: Timeout = 5.seconds
@@ -67,35 +68,32 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
     */
   }
 
-  def download(descriptor:String): Action[AnyContent] = Action {
+  def download(descriptor: String): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
       dataCollectorActor ! DataCollectorActor.StartDownload
       Ok(views.html.RC210DownloadProgress())
   }
 
-  def listSerialPorts(): Action[AnyContent] = Action {
+  def listSerialPorts(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
-      val ports: List[ComPort] = listPorts
-      val rows = ports.sortBy(_.friendlyName)
-        //        .filterNot(_.descriptor.contains("/dev/tty")) // these are just clutter.
-        .map { comPort: ComPort => {
-          val value: String = routes.IOController.download(comPort.descriptor).url
-          Row(Cell(comPort.descriptor)
-            .withUrl(value),
-            comPort.friendlyName)
-        }
-        }
-      val table = Table(Header("Serial Ports", "Descriptor", "Friendly Name"), rows)
 
-      Ok(views.html.RC210DownloadLandings(table))
+      serialPortsActor.ask(SerialPortsActor.SerialPorts)
+        .map { ports =>
+          val rows = ports.sortBy(_.friendlyName)
+            //        .filterNot(_.descriptor.contains("/dev/tty")) // these are just clutter.
+            .map { comPort: ComPort => {
+              val value: String = routes.IOController.download(comPort.descriptor).url
+              Row(Cell(comPort.descriptor)
+                .withUrl(value),
+                comPort.friendlyName)
+            }
+            }
+          val table = Table(Header("Serial Ports", "Descriptor", "Friendly Name"), rows)
+
+          Ok(views.html.RC210DownloadLandings(table))
+        }
+
+
   }
 }
 
-object IOController {
-  def listPorts: List[ComPort] = {
-    val ports = SerialPort.getCommPorts
-    ports.map(ComPort(_)).toList
-  }
-
-
-}

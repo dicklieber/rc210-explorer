@@ -19,14 +19,13 @@ package net.wa9nnn.rc210.data.courtesy
 
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.fixtures.WithMemory
-import org.specs2.mutable.Specification
 
 class CourtesyExtractorSpec extends WithMemory {
 
   "CourtesyExtractorSpec" should {
     "extract" in {
       val cts: Seq[FieldEntry] = CourtesyExtractor.extract(memory)
-      cts must haveLength(10)
+      cts should equal(10)
     }
   }
 }

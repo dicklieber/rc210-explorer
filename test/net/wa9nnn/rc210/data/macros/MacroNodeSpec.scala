@@ -20,33 +20,32 @@ package net.wa9nnn.rc210.data.macros
 
 import net.wa9nnn.rc210.fixtures.WithMemory
 import net.wa9nnn.rc210.key.KeyFactory
-import net.wa9nnn.rc210.key.KeyFactory.{FunctionKey, functionKey}
-import org.specs2.mutable.Specification
+import net.wa9nnn.rc210.key.KeyFactory.FunctionKey
 
 class MacroNodeSpec extends WithMemory {
 
-  "MacroNode" should {
+  "MacroNode" when {
     "parseChunk" in {
       val chunk: Seq[Int] = Seq(165, 85, 27, 60, 196, 255, 255, 255, 234, 0, 0, 0, 0, 0, 0, 0)
       val iterator = chunk.iterator
       val functionKeys: Seq[FunctionKey] = MacroNode.parseChunk(iterator)
-      functionKeys must haveLength(6)
-      functionKeys.map(_.number).mkString(",") must beEqualTo ("""165,85,27,60,196,999""")
+      functionKeys should have length (6)
+      functionKeys.map(_.number).mkString(",") should equal("""165,85,27,60,196,999""")
     }
 
     "parseFunction" in {
       val chunk: Seq[Int] = Seq(165, 85, 27, 60, 196, 255, 255, 255, 234, 0, 0, 0, 0, 0, 0, 0)
       val iterator = chunk.iterator
-      MacroNode.parseFunction(iterator).get.number must beEqualTo(165)
-      MacroNode.parseFunction(iterator).get.number must beEqualTo(85)
-      MacroNode.parseFunction(iterator).get.number must beEqualTo(27)
-      MacroNode.parseFunction(iterator).get.number must beEqualTo(60)
-      MacroNode.parseFunction(iterator).get.number must beEqualTo(196)
+      MacroNode.parseFunction(iterator).get.number should equal(165)
+      MacroNode.parseFunction(iterator).get.number should equal(85)
+      MacroNode.parseFunction(iterator).get.number should equal(27)
+      MacroNode.parseFunction(iterator).get.number should equal(60)
+      MacroNode.parseFunction(iterator).get.number should equal(196)
       val i = 255 + 255 + 255 + 234
-      i must beEqualTo(999)
-      MacroNode.parseFunction(iterator).get.number must beEqualTo(i)
-      val last = MacroNode.parseFunction(iterator)
-      last must beNone
+      i should equal(999)
+      MacroNode.parseFunction(iterator).get.number should equal(i)
+      val last: Option[FunctionKey] = MacroNode.parseFunction(iterator)
+      assert(last.isEmpty)
     }
     "parseFunction empty" in {
       val name = MacroNode.name
@@ -55,7 +54,7 @@ class MacroNodeSpec extends WithMemory {
       }
       val iterator = chunk.iterator
       val last = MacroNode.parseFunction(iterator)
-      last must beNone
+      assert(last.isEmpty)
     }
     "parseFunction no terminator" in {
       val name = MacroNode.name
@@ -71,20 +70,20 @@ class MacroNodeSpec extends WithMemory {
           count += 1
         } while (last.nonEmpty)
       } catch {
-        case e:Exception =>
-          e must beAnInstanceOf[NoSuchElementException]
+        case e: Exception =>
+          assert(e.isInstanceOf[NoSuchElementException])
       }
-      count must beEqualTo (16)
+      count should equal (16)
     }
   }
 
-  "extract" >> {
+  "extract" in {
     val macroNodes = MacroNode.extract(memory)
 
-    macroNodes must haveLength(90)
+    macroNodes should have length 90
     val fieldEntry = macroNodes(8)
     val display = fieldEntry.fieldValue.display
-    fieldEntry.fieldKey.key.number must beEqualTo (9)
-    display must beEqualTo ("165 85 817 818 195")
+    fieldEntry.fieldKey.key.number should equal(9)
+    display should equal ("165 85 817 818 195")
   }
 }

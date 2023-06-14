@@ -18,14 +18,14 @@
 package net.wa9nnn.rc210.security.authentication
 
 import controllers.UserEditDTO
-import org.specs2.mutable.Specification
+import net.wa9nnn.RcSpec
 
-class UserSpec extends Specification {
+class UserSpec extends RcSpec {
 
   "UserSpec" should {
     "all caps callsign" in {
       val user: User = User(UserEditDTO(callsign = "w1aw", password = Option("swordfish")))
-      user.callsign must beEqualTo ("W1AW")
+      user.callsign should equal ("W1AW")
     }
   }
 }

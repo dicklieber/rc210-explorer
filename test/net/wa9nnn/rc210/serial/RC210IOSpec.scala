@@ -1,17 +1,12 @@
 package net.wa9nnn.rc210.serial
 
 import com.fazecast.jSerialComm.SerialPort
-import com.typesafe.config.ConfigFactory
-import javafx.util.Duration.seconds
 import net.wa9nnn.rc210.fixtures.WithTestConfiguration
 import net.wa9nnn.rc210.serial.comm.RequestResponse
-import org.specs2.mutable.Specification
 
-import java.nio.file.{Files, Paths}
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, Future}
 import scala.language.postfixOps
-import scala.util.{Failure, Success, Try}
 
 class RC210IOSpec extends WithTestConfiguration {
 
@@ -28,9 +23,7 @@ class RC210IOSpec extends WithTestConfiguration {
         val sp = SerialPort.getCommPort(cp.descriptor)
         sp.closePort()
       }
-      ok
     }
-
   }
 }
 

@@ -17,21 +17,21 @@
 
 package net.wa9nnn.rc210.data.courtesy
 
+import net.wa9nnn.RcSpec
 import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey
-import org.specs2.mutable.Specification
 
-class CtSegmentKeySpec extends Specification {
+class CtSegmentKeySpec extends RcSpec {
 
   "CtSegmentKey" should {
     val csk =  CtSegmentKey("groucho", 2)(CourtesyToneKey(3))
     "rount trip" in {
       val param = csk.param
-      param must beEqualTo ("groucho.2.courtesyToneKey3")
+      param should equal ("groucho.2.courtesyToneKey3")
 
       val backAgain = CtSegmentKey(param)
-      backAgain.segment must beEqualTo (2)
-      backAgain.name must beEqualTo ("groucho")
-      backAgain.ctKey.toString must beEqualTo ("courtesyToneKey3")
+      backAgain.segment should equal (2)
+      backAgain.name should equal ("groucho")
+      backAgain.ctKey.toString should equal ("courtesyToneKey3")
     }
   }
 }

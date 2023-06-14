@@ -15,15 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.field
+package net.wa9nnn
 
-import org.specs2.mutable.Specification
+import org.scalatest._
+import org.scalatest.matchers._
+import org.scalatest.wordspec.AnyWordSpec
 
-class FieldEntrySpec extends Specification {
-
-  "FieldEntrySpec" should {
-    "candidate" in {
-      ok
-    }
-  }
-}
+abstract class RcSpec extends AnyWordSpec with should.Matchers with
+  OptionValues with Inside with Inspectors

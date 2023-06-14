@@ -26,17 +26,17 @@ class ScheduleBuilderSpec extends WithMemory {
 
   "ScheduleBuilder" should {
 
-    "Key number offset correct" >> {
-      schedules.head.key.number must beEqualTo(1)
-      schedules.last.key.number must beEqualTo(40)
+    "Key number offset correct" in {
+      schedules.head.key.number should equal(1)
+      schedules.last.key.number should equal(40)
     }
-    "Fields correct" >> {
+    "Fields correct" in {
       val schedule3: Schedule = schedules(2)
-      schedule3.key.number must beEqualTo(3)
-      schedule3.dow must beEqualTo(DayOfWeek.EveryDay)
-      schedule3.hour must beEqualTo(7)
-      schedule3.minute must beEqualTo(0)
-      schedule3.macroKey must beEqualTo(KeyFactory.macroKey(4))
+      schedule3.key.number should equal(3)
+      schedule3.dow should equal(DayOfWeek.EveryDay)
+      schedule3.hour should equal(7)
+      schedule3.minute should equal(0)
+      schedule3.macroKey should equal(KeyFactory.macroKey(4))
     }
   }
 }

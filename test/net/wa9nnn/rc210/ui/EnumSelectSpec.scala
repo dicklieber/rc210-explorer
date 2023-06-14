@@ -18,11 +18,11 @@
 package net.wa9nnn.rc210.ui
 
 import com.wa9nnn.util.tableui.Cell
+import net.wa9nnn.RcSpec
 import net.wa9nnn.rc210.data.field.Week
 import net.wa9nnn.rc210.key.KeyFactory
-import org.specs2.mutable.Specification
 
-class EnumSelectSpec extends Specification {
+class EnumSelectSpec extends RcSpec {
   implicit val k = KeyFactory.defaultMacroKey
   val enumSelect = new EnumSelect[Week]("name")
   "EnumSelectSpec" should {
@@ -32,15 +32,16 @@ class EnumSelectSpec extends Specification {
       html.trim startsWith """<select name="theWeek" class="form-select" aria-label="Default select example">"""
 
     }
-    "apply wth selected" in {
+    "apply with selected" in {
       val cell: Cell = enumSelect.toCell( Week.first)
-      val html = cell.value
-      html must contain("<option value=\"first\" selected>first</option>")
+      val html: String = cell.value
+      val bool = html.contains("<option value=\"first\" selected>first</option>")
+      bool should equal(true)
     }
 
     "fromForm" in {
       val week = enumSelect.fromForm("first")
-      week must beEqualTo(Week.first)
+      week should equal (Week.first)
     }
   }
 }

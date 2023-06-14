@@ -17,13 +17,13 @@
 
 package net.wa9nnn.rc210.data.field
 
+import net.wa9nnn.RcSpec
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.key.KeyKind
-import org.specs2.mutable.Specification
 
 import java.time.LocalTime
 
-class FieldTimeSpec extends Specification {
+class FieldTimeSpec extends RcSpec {
 val fieldTime = FieldTime(LocalTime.of(10, 15))
   "FieldTime" should {
     "toCommand" in {
@@ -32,7 +32,7 @@ val fieldTime = FieldTime(LocalTime.of(10, 15))
       val fieldKey: FieldKey = fieldDefinition.fieldKey(3)
       val fieldEntry = FieldEntry(fieldDefinition, fieldKey, fieldTime, Option(candidate))
       val command = fieldEntry.toCommands.head
-      command must beEqualTo ("3*40011*8*0*10*25*02")
+      command should equal ("3*40011*8*0*10*25*02")
     }
   }
 }

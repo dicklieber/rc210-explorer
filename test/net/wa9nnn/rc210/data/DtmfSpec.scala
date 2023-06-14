@@ -1,10 +1,11 @@
 package net.wa9nnn.rc210.data
 
-import org.specs2.mutable.Specification
+import net.wa9nnn.RcSpec
 
 
-
-class DtmfSpec extends Specification with org.specs2.specification.Tables {
+class DtmfSpec extends RcSpec {
+/*
+//class DtmfSpec extends RcSpec with org.specs2.specification.Tables {
   override def is =
     s2"""
 
@@ -26,4 +27,5 @@ class DtmfSpec extends Specification with org.specs2.specification.Tables {
         } // the expectation to check on each row
     }
 """
+*/
 }

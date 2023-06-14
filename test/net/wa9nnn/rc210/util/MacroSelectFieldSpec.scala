@@ -17,13 +17,12 @@
 
 package net.wa9nnn.rc210.util
 
-import com.wa9nnn.util.tableui.Cell
+import net.wa9nnn.RcSpec
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.RenderMetadata
 import net.wa9nnn.rc210.key.KeyFactory
-import org.specs2.mutable.Specification
 
-class MacroSelectFieldSpec extends Specification {
+class MacroSelectFieldSpec extends RcSpec {
   private val renderMetadata = new RenderMetadata {
     override def param = FieldKey("to Run", KeyFactory.defaultMacroKey).param
 
@@ -33,14 +32,14 @@ class MacroSelectFieldSpec extends Specification {
   }
   "MacroSelect" should {
     val macroSelect =new  MacroSelectField()
-    "initial state" >> {
-      macroSelect.value must beEqualTo(KeyFactory.defaultMacroKey)
+    "initial state" in {
+      macroSelect.value should equal (KeyFactory.defaultMacroKey)
 
     }
 
     "toHtmlField" in {
       val html = macroSelect.toHtmlField(renderMetadata)
-      html must contain("<option value=\"macroKey1\"   >1 </option>")
+      assert(html.contains("<option value=\"macroKey1\"   >1 </option>"))
 
     }
 

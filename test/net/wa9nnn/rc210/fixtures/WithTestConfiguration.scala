@@ -1,14 +1,14 @@
 package net.wa9nnn.rc210.fixtures
 
 import com.typesafe.config.{Config, ConfigFactory}
-import org.specs2.mutable.Specification
 import configs.syntax._
+import net.wa9nnn.RcSpec
 import org.apache.commons.io.FileUtils
 
 import java.io.File
-import java.nio.file.{Files, Path}
+import java.nio.file.Files
 
-class WithTestConfiguration extends Specification {
+class WithTestConfiguration extends RcSpec {
 
   implicit val config: Config = ConfigFactory.parseResources("test.conf")
     .withFallback(ConfigFactory.load())

@@ -26,7 +26,7 @@ class MacroKeySpec extends WithMemory {
   "MacroKeySpec" should {
     "number" in {
       val macroKey = MacroKey(42)
-      macroKey.toString must beEqualTo ("macroKey42")
+      macroKey.toString should equal ("macroKey42")
     }
 
     "round trip" in {
@@ -34,7 +34,7 @@ class MacroKeySpec extends WithMemory {
       val macroKey = MacroKey(42)
       val sJson = Json.prettyPrint( Json.toJson(macroKey))
       val backAgain = Json.parse(sJson).as[MacroKey]
-      backAgain must beEqualTo (macroKey)
+      backAgain should equal (macroKey)
     }
   }
 }

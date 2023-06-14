@@ -31,14 +31,13 @@ class ScheduleSpec extends WithMemory {
         override val template: String = "schedule handle this internally."
       }
       val commands: Seq[String] = schedule toCommands fieldEntryBase
-      commands.head must beEqualTo("1*400101*00*00*00*00*1")
-      ok
+      commands.head should  equal("1*400101*00*00*00*00*1")
     }
 
-    "DOW single digit" >> {
+    "DOW single digit" in {
       pending
     }
-    "DOW two digits becomes DOM" >> {
+    "DOW two digits becomes DOM" in {
       /*
        * However, you may alternately use 2 digits for DOW entry and it now becomes DOM (Day Of Month) and consists of 2 digits.
        * The first digit signifies which week within a month to use and the second digit signifies the day of that week to use.

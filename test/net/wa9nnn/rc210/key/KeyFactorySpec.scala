@@ -17,60 +17,60 @@
 
 package net.wa9nnn.rc210.key
 
+import net.wa9nnn.RcSpec
 import net.wa9nnn.rc210.key.KeyFactory.{FunctionKey, Key}
-import org.specs2.mutable.Specification
 
-class KeyFactorySpec extends Specification {
-  "Expected Number of Keys" >> {
+class KeyFactorySpec extends RcSpec {
+  "Expected Number of Keys" in {
     val nKeys = KeyKind.values().foldLeft(0) { case (accum, kk) =>
       accum + kk.maxN()
     }
-    KeyFactory.availableKeys must haveLength(nKeys)
+    KeyFactory.availableKeys should have length nKeys
     val value1 = KeyFactory(KeyKind.courtesyToneKey)
-    value1 must haveLength(KeyKind.courtesyToneKey.maxN())
+    value1 should have length (KeyKind.courtesyToneKey.maxN())
   }
   "apply keykind" in {
     val portKeys = KeyFactory(KeyKind.portKey)
-    portKeys must haveLength(3)
+    portKeys should have length (3)
 
     val cts = KeyFactory(KeyKind.courtesyToneKey)
-    cts must haveLength(10)
+    cts should have length 10
   }
 
   "apply sKey" in {
     val fKey: FunctionKey = KeyFactory("functionKey1")
-    fKey must beAnInstanceOf[FunctionKey]
-    fKey.toString must beEqualTo("functionKey1")
+    assert(fKey.isInstanceOf[FunctionKey])
+    fKey.toString should equal("functionKey1")
   }
   "apply sKey as[Key]" in {
     val fKey: Key = KeyFactory("functionKey1")
-    fKey must beAnInstanceOf[FunctionKey]
-    fKey.toString must beEqualTo("functionKey1")
+    assert(fKey.isInstanceOf[FunctionKey])
+    fKey.toString should equal("functionKey1")
   }
 
   "apply" in {
     val functionKey: FunctionKey = KeyFactory(KeyKind.functionKey, 1)
-    functionKey.number must beEqualTo(1)
-    functionKey.kind must beEqualTo(KeyKind.functionKey)
+    functionKey.number should equal(1)
+    functionKey.kind should equal(KeyKind.functionKey)
   }
 
   "unknown key" in {
-    KeyFactory[Key]("crap") must throwAn[IllegalArgumentException]
+    an[IllegalArgumentException] should be thrownBy KeyFactory[Key]("crap")
   }
 
   "bad number" in {
-    KeyFactory[Key](KeyKind.portKey, 42) must throwAn[IllegalArgumentException]
+    an[IllegalArgumentException] should be thrownBy KeyFactory[Key](KeyKind.portKey, 42)
   }
 
-  "kindAndCounts" >> {
+  "kindAndCounts" in {
     val kindAndCounts: Seq[(KeyKind, Int)] = KeyFactory.kindAndCounts
-    kindAndCounts must haveLength(KeyKind.values().length)
+    kindAndCounts should have length (KeyKind.values().length)
     val head = kindAndCounts.head
-    head._1 must beEqualTo(KeyKind.logicAlarmKey)
-    head._2 must beEqualTo(5)
+    head._1 should equal(KeyKind.logicAlarmKey)
+    head._2 should equal(5)
 
     val last = kindAndCounts.last
-    last._1 must beEqualTo(KeyKind.scheduleKey)
-    last._2 must beEqualTo(40)
+    last._1 should equal(KeyKind.scheduleKey)
+    last._2 should equal(40)
   }
 }
