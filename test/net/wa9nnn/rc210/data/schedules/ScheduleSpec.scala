@@ -34,6 +34,7 @@ class ScheduleSpec extends WithMemory {
       commands.head should  equal("1*40011*0*00*00*00*01")
     }
 
+/*
     "DOW single digit" in {
       pending
     }
@@ -46,5 +47,6 @@ class ScheduleSpec extends WithMemory {
       //      val dow = schedule.dow
       pending
     }
+*/
   }
 }

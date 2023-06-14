@@ -25,6 +25,7 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.security.authentication.RcSession.SessionId
 import play.api.libs.concurrent.ActorModule
 
+import java.nio.file.Paths
 import javax.inject.Named
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationInt
@@ -47,8 +48,8 @@ object SessionManagerActor extends ActorModule with LazyLogging {
 
   case object Tick extends SessionManagerMessage
 
-  @Provides def apply(config: Config)
-                     (implicit ec: ExecutionContext): Behavior[SessionManagerMessage] = {
+  @Provides def apply (@Named("vizRc210.sessionFile") sSessionFile:String)
+                     (implicit ec: ExecutionContext): Behavior[SessionManagerMessage] =
 
     Behaviors.withTimers[SessionManagerMessage] { timerScheduler: TimerScheduler[SessionManagerMessage] =>
       timerScheduler.startTimerWithFixedDelay(Tick, 5 seconds, 10 seconds)
@@ -56,7 +57,7 @@ object SessionManagerActor extends ActorModule with LazyLogging {
       Behaviors
         .supervise[Message] {
           Behaviors.setup[SessionManagerMessage] { actorContext =>
-            val sessionManager = new SessionManager(config)
+            val sessionManager = new SessionManager(Paths.get(sSessionFile))
 
             Behaviors.receiveMessage[SessionManagerMessage] { message =>
               message match {
@@ -86,5 +87,4 @@ object SessionManagerActor extends ActorModule with LazyLogging {
           }
         }.onFailure[Exception](SupervisorStrategy.restart)
     }
-  }
 }

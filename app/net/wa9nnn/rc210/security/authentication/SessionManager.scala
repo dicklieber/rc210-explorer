@@ -22,9 +22,8 @@ import scala.language.postfixOps
  * Periodically Persisted if dirty.
  * Loaded at startup
  */
-class SessionManager(config: Config) extends LazyLogging {
+class SessionManager(sessionFile: Path) extends LazyLogging {
 
-  private val sessionFile: Path = config.get[Path]("vizRc210.sessionFile").value
 
   private val sessionMap = new TrieMap[SessionId, RcSession]
   private var dirty = false

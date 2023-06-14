@@ -29,7 +29,7 @@ class SessionManagerSpec extends WithTestConfiguration {
     "Ensure only one session  per user" in {
       val path = Files.createTempFile("sessions", ".json")
 
-      val sessionManager = new SessionManager(config)
+      val sessionManager = new SessionManager(path)
       sessionManager.sessions.length should equal(0)
       val rcSession = sessionManager.create(user1, "127.00.1")
       sessionManager.sessions.length should equal(1)
