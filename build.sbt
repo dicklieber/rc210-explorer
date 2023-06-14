@@ -39,6 +39,9 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
   )
 Compile / unmanagedResourceDirectories += baseDirectory.value / "resources"
 
+logBuffered in Test := false
+testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-h", "target/scalatest.html")
+
 resolvers += ("Reposilite" at "http://194.113.64.105:8080/releases").withAllowInsecureProtocol(true)
 
 
@@ -57,6 +60,7 @@ libraryDependencies ++= Seq(
 //  "org.scalactic" %% "scalactic" % "3.2.16",
 //  "org.scalatest" %% "scalatest" % "3.2.16" % "test",
 //  "org.scalatest" %% "scalatest-flatspec" % "3.2.16" % "test",
+  "com.vladsch.flexmark" % "flexmark-all" % "0.64.8" % Test,
   "org.scalatest" %% "scalatest" % "3.2.16" % "test",
 //  "org.scalatest" %% "scalatest-wordspec" % "3.2.16" % "test",
   "org.scalatestplus" %% "mockito-4-6" % "3.2.15.0" % Test,

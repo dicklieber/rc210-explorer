@@ -29,7 +29,8 @@ class FieldBooleanSpec extends RcSpec {
         override val fieldKey: FieldKey = FieldKey("nn", KeyFactory.defaultMacroKey)
         override val template: String = "1*999b"
       })
-      command should equal ("1*9990")
+      command should have length 1
+      command.head should equal ("1*9990")
     }
     "toCommand true" in {
       val fieldBoolean = FieldBoolean(true)
@@ -37,6 +38,6 @@ class FieldBooleanSpec extends RcSpec {
         override val fieldKey: FieldKey = FieldKey("nn", KeyFactory.defaultMacroKey)
         override val template: String = "1*999b"
       })
-      command should equal ("1*9991")
+      command.head should equal ("1*9991")
     }
 }
