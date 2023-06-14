@@ -20,12 +20,26 @@ package net.wa9nnn.rc210.data.courtesy
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.fixtures.WithMemory
 
+//noinspection ZeroIndexToHead
 class CourtesyExtractorSpec extends WithMemory {
 
   "CourtesyExtractorSpec" should {
+    val cts: Seq[FieldEntry] = CourtesyExtractor.extract(memory)
     "extract" in {
-      val cts: Seq[FieldEntry] = CourtesyExtractor.extract(memory)
-      cts should equal(10)
+      cts should have length (10)
+    }
+    "ct1" when  {
+      val fieldEntry: FieldEntry = cts.head
+      fieldEntry.fieldKey.toString should equal ("courtesyToneKey1:CourtesyTone")
+      "commands" in {
+        val fieldEntry: FieldEntry = cts.head
+        val commands = fieldEntry.value.toCommands(fieldEntry)
+        commands should have length (4)
+        commands(0) should equal("1*31011200*100*660*880*")
+        commands(1) should equal("1*320111*10*1600*1800*")
+        commands(2) should equal("1*330122*20*2600*2800*")
+        commands(3) should equal("1*340133*30*360*380*")
+      }
     }
   }
 }
