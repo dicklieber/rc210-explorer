@@ -70,7 +70,7 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
 
   def download(descriptor: String): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      dataCollectorActor ! DataCollectorActor.StartDownload
+      dataCollectorActor ! DataCollectorActor.StartDownload(descriptor)
       Ok(views.html.RC210DownloadProgress())
   }
 

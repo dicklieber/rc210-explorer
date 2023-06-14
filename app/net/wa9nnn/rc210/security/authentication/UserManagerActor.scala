@@ -46,7 +46,8 @@ object UserManagerActor extends ActorModule with LazyLogging {
 
   case class Validate(login: Login, replyTo: ActorRef[Option[User]]) extends UserManagerMessage
 
-  @Provides def apply(config: Config)(implicit ec: ExecutionContext): Behavior[UserManagerMessage] = {
+  @Provides
+  def apply(config: Config)(implicit ec: ExecutionContext): Behavior[UserManagerMessage] = {
     val userManager = new UserManager(config)
     Behaviors.supervise {
       Behaviors.setup[UserManagerMessage] { actorContext =>

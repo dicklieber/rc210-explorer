@@ -48,12 +48,11 @@ object DataCollectorTest extends App {
     val stringWriter = use(new StringWriter())
     val writer = use(new PrintWriter(stringWriter))
 
-    val (future, progressSource) = DataCollector(writer, ft232Port.descriptor)
-    val starting: Progress = progressSource()
+    val dcs: DataCollectorStuff = DataCollector(writer, ft232Port.descriptor)
+    val starting: Progress = dcs.progressSource()
     println(s"StartingProgress: $starting")
-    val finalProgress: Progress = Await.result[Progress](future, 600 seconds)
-    val progressDone: Progress = progressSource()
-    writer.flush()
+    val finalProgress: Progress = Await.result[Progress](dcs.future, 600 seconds)
+    writer.close()
     stringWriter.toString
   }
 

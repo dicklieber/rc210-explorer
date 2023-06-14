@@ -31,16 +31,14 @@ object DataCollector extends LazyLogging {
   /**
    *
    * @param portDescriptor serial portto connect to.
-   * @param printWriter    where to send lines to.
+   * @param printWriter    where to send lines to. this will be closed at completion.
    * @return a Future that will be completed with the final [[Progress]] when done and a [[ProgressSource]] that can be used to obtain the current [[Progress]] while downloa is running.
    */
-  def apply(printWriter: PrintWriter, portDescriptor: String): (Future[Progress], ProgressSource) = {
-
-
+  def apply(printWriter: PrintWriter, portDescriptor: String): DataCollectorStuff = {
     logger.trace(s"Starting: $portDescriptor")
     val promise = Promise[Progress]()
     val start = Instant.now
-    var count = new AtomicInteger()
+    val count = new AtomicInteger()
     val serialPort = SerialPort.getCommPort(portDescriptor)
     serialPort.setBaudRate(19200)
     if (serialPort.openPort())
@@ -52,7 +50,6 @@ object DataCollector extends LazyLogging {
       serialPort.writeBytes(bytes, bytes.length)
     }
 
-    def future: Future[Progress] = promise.future
     // wakeup and maybe get to good state
     for (_ <- 0 to 3) {
       write()
@@ -64,10 +61,10 @@ object DataCollector extends LazyLogging {
       Progress(serialPort.isOpen, f"$double%2.1f%%", Duration.between(start, Instant.now()))
     }
 
-    def finish(): Unit = {
+    def cleanup(): Unit = {
       serialPort.closePort()
+      printWriter.close()
       logger.debug("Complete")
-      promise.success(progress)
     }
 
     serialPort.addDataListener(new SerialPortMessageListenerWithExceptions {
@@ -86,7 +83,8 @@ object DataCollector extends LazyLogging {
 
         response match {
           case "Complete" =>
-            finish()
+            cleanup()
+            promise.success(progress)
           case "+SENDE" =>
             serialPort.closePort()
             logger.debug("+SENDE")
@@ -95,9 +93,9 @@ object DataCollector extends LazyLogging {
             logger.debug("EEPROM Done")
           case "Timeout" =>
             logger.error(response)
-            serialPort.closePort()
+            cleanup()
             promise.failure(new Exception(response))
-          case x =>
+          case response =>
             try {
               count.incrementAndGet()
               logger.whenDebugEnabled {
@@ -126,9 +124,9 @@ object DataCollector extends LazyLogging {
 
 
     val progressSource = new ProgressSource {
-      override def apply: Progress = progress
+      override def apply(): Progress = progress
     }
-    (promise.future, progressSource)
+    DataCollectorStuff(promise.future, progressSource)
 
   }
 
@@ -136,8 +134,9 @@ object DataCollector extends LazyLogging {
   private val expectedInts: Int = 4097 + 15 * 20 // main ints extended + macros * extendSlots.
 }
 
+case class DataCollectorStuff(future:Future[Progress], progressSource: ProgressSource)
 
-case class Progress(running: Boolean, percent: String, duration: String)
+case class Progress(running: Boolean = false, percent: String = "", duration: String = "")
 
 object Progress {
   implicit val fmtProgress: Format[Progress] = Json.format[Progress]

@@ -55,11 +55,11 @@ class KeyFactorySpec extends RcSpec {
   }
 
   "unknown key" in {
-    an[IllegalArgumentException] should be thrownBy KeyFactory[Key]("crap")
+    an[NoSuchElementException] should be thrownBy KeyFactory[Key]("crap")
   }
 
   "bad number" in {
-    an[IllegalArgumentException] should be thrownBy KeyFactory[Key](KeyKind.portKey, 42)
+    an[NoSuchElementException] should be thrownBy KeyFactory[Key](KeyKind.portKey, 42)
   }
 
   "kindAndCounts" in {
@@ -70,7 +70,7 @@ class KeyFactorySpec extends RcSpec {
     head._2 should equal(5)
 
     val last = kindAndCounts.last
-    last._1 should equal(KeyKind.scheduleKey)
-    last._2 should equal(40)
+    last._1 should equal(KeyKind.remoteBaseKey)
+    last._2 should equal(1)
   }
 }

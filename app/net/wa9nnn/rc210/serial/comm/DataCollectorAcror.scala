@@ -16,32 +16,61 @@
  */
 
 package net.wa9nnn.rc210.serial.comm
+
 import akka.actor.typed.{ActorRef, Behavior, Signal, SupervisorStrategy}
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import akka.actor.typed.{ActorRef, Behavior, SupervisorStrategy}
+import com.google.inject.Provides
+import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.serial.ComPort
 import play.api.libs.concurrent.ActorModule
+
+import javax.inject.{Named, Singleton}
+import java.io.PrintWriter
+import java.nio.file.{Files, Paths}
+import scala.concurrent.{ExecutionContext, Future}
 
 object DataCollectorActor extends ActorModule with LazyLogging {
   sealed trait DataCollectorMessage
 
   type Message = DataCollectorMessage
 
-  case object StartDownload extends Message
+  case class StartDownload(descriptor:String) extends Message
 
   case class ProgressRequest(replyTo: ActorRef[Progress]) extends Message
 
-  case class RC210Result(mainArray: Seq[Int], extArray: Seq[Int], progress: Progress) extends Message
 
-  def apply(): Behavior[Message] = {
+  @Provides
+  def apply (implicit serialPortsActor: ActorRef[SerialPortsActor.Message], @Named("memoryFile") sMemoryFile: String, executionContext: ExecutionContext): Behavior[Message] = {
+    val path = Paths.get(sMemoryFile)
+    Files.createDirectories(path.getParent)
+    val temp = path.resolveSibling(sMemoryFile + ".temp")
+    /**
+     * DataCollectorStuff while running
+     * Progress final progress when completed.
+     */
+    var state: Either[Progress, ProgressSource] = Left(Progress())
 
     Behaviors.setup { context =>
       Behaviors.supervise[Message] {
         Behaviors.receiveMessage[Message] { message: Message =>
           message match {
-            case StartDownload => ???
-            case ProgressRequest(replyTo) => ???
-            case RC210Result(mainArray, extArray, progress) => ???
+            case StartDownload(descriptor) =>
+              val printWritter: PrintWriter = new PrintWriter(Files.newBufferedWriter(temp))
+              val collectorStuff = DataCollector(printWritter, descriptor)
+              collectorStuff.future.map { finalProgress =>
+                state = Left(finalProgress)
+              }
+              state = Right(collectorStuff.progressSource)
+            case ProgressRequest(replyTo) =>
+              val p: Progress = state match {
+                case Left(progress: Progress) =>
+                  progress
+                case Right(progressSource: ProgressSource) =>
+                  progressSource()
+              }
+              replyTo ! p
           }
           Behaviors.same
         }

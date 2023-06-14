@@ -20,6 +20,7 @@ package net.wa9nnn.rc210.serial.comm
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import akka.actor.typed.{ActorRef, Behavior, Signal, SupervisorStrategy}
 import com.fazecast.jSerialComm.SerialPort
+import com.google.inject.Provides
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.serial.ComPort
 import play.api.libs.concurrent.ActorModule
@@ -50,6 +51,8 @@ object SerialPortsActor extends ActorModule with LazyLogging {
    * @param comPortsSource gets serial port list.
    * @return Behavior for this actor.
    */
+
+  @Provides
   def apply(@Named("vizRc210.serialPortsFile") file: String, comPortsSource: SerialPortsSource): Behavior[Message] = {
     var currentComPort: Option[ComPort] = None
 

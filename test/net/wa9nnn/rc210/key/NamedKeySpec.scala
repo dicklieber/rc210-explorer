@@ -28,19 +28,15 @@ class NamedKeySpec extends RcSpec with BeforeAndAfter {
   private val portKey1 = KeyFactory.portKey(1)
   private val portKey2 = KeyFactory.portKey(2)
 
-  before {
-    val namedSource = mock[NamedKeySource]
+  val namedSource: NamedKeySource = mock[NamedKeySource]
+  Key.setNamedSource(namedSource)
+  when(namedSource.nameForKey(portKey1)) thenReturn "Harpo"
+  when(namedSource.nameForKey(portKey2)) thenReturn ""
 
-    Key.setNamedSource(namedSource)
-    when(namedSource.nameForKey(portKey1)) thenReturn "Harpo"
-    when(namedSource.nameForKey(portKey2)) thenReturn ""
-
-  }
-
-  "NamedKey" in {
+  "NamedKey" should {
     "Name set to Harpo" in {
       val cell = portKey1.namedCell()
-      cell.value  should equal(
+      cell.value should equal(
         """
           |<div class="keyName">
           |    <label for="name:portKey1">1: </label>

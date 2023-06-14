@@ -31,7 +31,7 @@ class ScheduleSpec extends WithMemory {
         override val template: String = "schedule handle this internally."
       }
       val commands: Seq[String] = schedule toCommands fieldEntryBase
-      commands.head should  equal("1*400101*00*00*00*00*1")
+      commands.head should  equal("1*40011*0*00*00*00*01")
     }
 
     "DOW single digit" in {
