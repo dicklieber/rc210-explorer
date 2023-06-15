@@ -24,8 +24,11 @@ import com.google.inject.Provides
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.serial.ComPort
 import play.api.libs.concurrent.ActorModule
+import play.api.libs.json.Json
 
+import java.nio.file.{Files, Paths}
 import javax.inject.{Named, Singleton}
+import scala.util.Using
 
 object SerialPortsActor extends ActorModule with LazyLogging {
   sealed trait DataCollectorMessage
@@ -45,6 +48,7 @@ object SerialPortsActor extends ActorModule with LazyLogging {
 
     private val unit: Unit = ddd(f)*/
 
+
   /**
    *
    * @param file           where to store currently selected port.
@@ -53,8 +57,18 @@ object SerialPortsActor extends ActorModule with LazyLogging {
    */
 
   @Provides
-  def apply(@Named("vizRc210.serialPortsFile") file: String, comPortsSource: SerialPortsSource): Behavior[Message] = {
-    var currentComPort: Option[ComPort] = None
+  def apply(@Named("vizRc210.serialPortsFile") sFile: String, comPortsSource: SerialPortsSource): Behavior[Message] = {
+    val file = Paths.get(sFile)
+
+    val dir = file.getParent
+    logger.debug(dir.toFile.toString)
+
+    var currentComPort: Option[ComPort] = try {
+      Option(Json.parse(Files.readString(file)).as[ComPort])
+    } catch {
+      case _: Exception =>
+        None
+    }
 
     Behaviors.setup { context =>
       Behaviors.supervise[Message] {
@@ -63,10 +77,12 @@ object SerialPortsActor extends ActorModule with LazyLogging {
             case SerialPorts(replyTo) =>
               replyTo ! comPortsSource()
             case SelectPort(comPort) =>
-              println(comPort)
-
+              currentComPort = Option(comPort)
+              val jsValue = Json.toJson(comPort)
+              val sJson = jsValue.toString()
+              Files.writeString(file, sJson)
             case CurrentPort(replyTo) =>
-              println(replyTo)
+              replyTo ! currentComPort
           }
           Behaviors.same
         }
@@ -80,8 +96,8 @@ object SerialPortsActor extends ActorModule with LazyLogging {
       }
         .onFailure[Exception](SupervisorStrategy.restart)
     }
-  }
 
+  }
 }
 
 @Singleton

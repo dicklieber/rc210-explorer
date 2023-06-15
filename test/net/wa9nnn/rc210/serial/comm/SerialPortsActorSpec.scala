@@ -21,17 +21,19 @@ import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import akka.actor.typed.scaladsl.AskPattern.Askable
 import akka.actor.typed.{ActorRef, Scheduler}
 import akka.util.Timeout
-import net.wa9nnn.RcSpec
+import net.wa9nnn.{RAsyncSpec, RcSpec}
 import net.wa9nnn.rc210.serial.ComPort
+import net.wa9nnn.rc210.serial.comm.SerialPortsActor.{CurrentPort, SelectPort, SerialPorts}
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar.mock
+import play.api.libs.json.Json
 
 import java.nio.file.{Files, Path}
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.language.postfixOps
 
-class SerialPortsActorSpec() extends RcSpec {
+class SerialPortsActorSpec() extends RAsyncSpec {
   private val testKit = ActorTestKit()
   implicit val sys = testKit.system
   implicit val context: ExecutionContextExecutor = sys.executionContext
@@ -39,34 +41,37 @@ class SerialPortsActorSpec() extends RcSpec {
   implicit val timeout: Timeout = 30 seconds
 
   val serialPortsSource: SerialPortsSource = mock[SerialPortsSource]
-  when(serialPortsSource.apply()).thenReturn(Seq(ComPort("com1", "1"), ComPort("com2", "2")))
+  private val comPort1: ComPort = ComPort("com1", "1")
+  private val comPort2: ComPort = ComPort("com2", "2")
+  when(serialPortsSource.apply()).thenReturn(Seq(comPort1, comPort2))
 
   private val file: Path = Files.createTempFile("currentPort", ".txt")
   private val sFile: String = file.toFile.toString
 
-  val portActor: ActorRef[SerialPortsActor.DataCollectorMessage] = testKit.spawn(SerialPortsActor(sFile, serialPortsSource))
+  val portActor: ActorRef[SerialPortsActor.Message] = testKit.spawn(SerialPortsActor(sFile, serialPortsSource))
 
   "SerialPortsActor" when {
     "List Ports " in {
-      val future: Future[Seq[ComPort]] = portActor.ref.ask(ref => SerialPortsActor.SerialPorts(ref))
-      future map { comports => assert(comports.nonEmpty) }
-    }
-/*
-    "Current Port " should {
-      "initial have none" in {
-        val future: Future[Option[ComPort]] = portActor.ref.ask(ref => SerialPortsActor.CurrentPort(ref))
-        future map { current => assert(current.isEmpty) }
+      portActor.ref.ask(SerialPorts) map { comports =>
+        comports.head.descriptor should equal("com1")
+        comports.head.friendlyName should equal("1")
+        assert(comports.nonEmpty)
       }
-      "one selected" in {
-        val comPort = ComPort("111", "1f")
-        portActor.ref ! SerialPortsActor.SelectPort(comPort)
-        val futureWithSelected = portActor.ref.ask(ref => SerialPortsActor.CurrentPort(ref))
-        futureWithSelected map { current => assert(current.get.descriptor == "111") }
-      }
-      val future: Future[Seq[ComPort]] = portActor.ref.ask(ref => SerialPortsActor.SerialPorts(ref))
-      future map { comports => assert(comports.nonEmpty) }
     }
-*/
+    "select and get current port" in {
+      portActor.ref.ask(CurrentPort) map { maybeCurrentPort =>
+        maybeCurrentPort shouldBe None
+      }
+      portActor.ref ! SelectPort(comPort2)
+
+      portActor.ref.ask(CurrentPort) map { maybeCurrentPort =>
+        maybeCurrentPort shouldBe Some(comPort2)
+        val fileContents = Files.readString(file)
+        val backAgain = Json.parse(fileContents).as[ComPort]
+        backAgain should equal(comPort2)
+      }
+
+    }
   }
 }
 
