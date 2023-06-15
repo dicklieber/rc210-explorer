@@ -19,7 +19,10 @@ package net.wa9nnn
 
 import org.scalatest._
 import org.scalatest.matchers._
-import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.wordspec.{AnyWordSpec, AsyncWordSpec}
 
 abstract class RcSpec extends AnyWordSpec with should.Matchers with
+  OptionValues with Inside with Inspectors
+
+abstract class RAsyncSpec extends AsyncWordSpec with should.Matchers with
   OptionValues with Inside with Inspectors
