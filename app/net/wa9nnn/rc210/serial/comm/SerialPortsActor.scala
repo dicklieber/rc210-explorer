@@ -24,11 +24,10 @@ import com.google.inject.Provides
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.serial.ComPort
 import play.api.libs.concurrent.ActorModule
-import play.api.libs.json.Json
 
 import java.nio.file.{Files, Paths}
 import javax.inject.{Named, Singleton}
-import scala.util.Using
+import scala.concurrent.ExecutionContext
 
 object SerialPortsActor extends ActorModule with LazyLogging {
   sealed trait DataCollectorMessage
@@ -37,9 +36,12 @@ object SerialPortsActor extends ActorModule with LazyLogging {
 
   case class SerialPorts(replyTo: ActorRef[Seq[ComPort]]) extends Message
 
-  case class SelectPort(comPort: ComPort) extends Message
+
+  case class SelectPort(portDescriptor: String) extends Message
 
   case class CurrentPort(replyTo: ActorRef[Option[ComPort]]) extends Message
+
+  case class SendReceive(request: String, replyTo: ActorRef[Seq[String]]) extends Message
 
   /*  val f: () => Array[SerialPort] = SerialPort.getCommPorts _
     def ddd(f:() => Array[SerialPort]): Unit {
@@ -57,17 +59,28 @@ object SerialPortsActor extends ActorModule with LazyLogging {
    */
 
   @Provides
-  def apply(@Named("vizRc210.serialPortsFile") sFile: String, comPortsSource: SerialPortsSource): Behavior[Message] = {
+  def apply(implicit @Named("vizRc210.serialPortsFile") sFile: String, serialPortsSource: SerialPortsSource, executionContext: ExecutionContext): Behavior[Message] = {
     val file = Paths.get(sFile)
 
     val dir = file.getParent
     logger.debug(dir.toFile.toString)
 
-    var currentComPort: Option[ComPort] = try {
-      Option(Json.parse(Files.readString(file)).as[ComPort])
+    var currentComPort: Option[ComPort] = None
+    try {
+      selectPort(Files.readString(file))
     } catch {
-      case _: Exception =>
+      case e: Exception =>
+        logger.error(e.getMessage)
         None
+    }
+
+    def selectPort(portDesctiptor: String): Unit = {
+      serialPortsSource()
+        .find(_.descriptor == portDesctiptor)
+        .foreach { comPort =>
+          currentComPort = Option(comPort)
+          Files.writeString(file, comPort.descriptor)
+        }
     }
 
     Behaviors.setup { context =>
@@ -75,14 +88,20 @@ object SerialPortsActor extends ActorModule with LazyLogging {
         Behaviors.receiveMessage[Message] { message: Message =>
           message match {
             case SerialPorts(replyTo) =>
-              replyTo ! comPortsSource()
-            case SelectPort(comPort) =>
-              currentComPort = Option(comPort)
-              val jsValue = Json.toJson(comPort)
-              val sJson = jsValue.toString()
-              Files.writeString(file, sJson)
+              replyTo ! serialPortsSource()
+            case SelectPort(portDesctiptor) =>
+              selectPort(portDesctiptor)
             case CurrentPort(replyTo) =>
               replyTo ! currentComPort
+            case SendReceive(request, replyTo) =>
+
+            /*currentComPort.map { comPort =>
+              Using(new RequestResponse(comPort)) { requestResponse: RequestResponse =>
+                requestResponse.perform(request).map {
+                  replyTo ! _
+                }
+              }
+            }*/
           }
           Behaviors.same
         }
@@ -104,6 +123,8 @@ object SerialPortsActor extends ActorModule with LazyLogging {
 class SerialPortsSource() {
   def apply(): Seq[ComPort] = {
     val ports = SerialPort.getCommPorts
-    ports.map(ComPort(_)).toList
+    ports.map(ComPort(_))
+      .filterNot(_.descriptor.contains("/tty")) // just want tty, callin, devices. Leaves COM alone
+      .toList
   }
 }

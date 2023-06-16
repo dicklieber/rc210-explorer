@@ -25,12 +25,14 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.serial.ComPort
+import net.wa9nnn.rc210.serial.comm.SerialPortsActor._
 import net.wa9nnn.rc210.serial.comm.{DataCollectorActor, SerialPortsActor, SerialPortsSource}
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
+import scala.language.postfixOps
 
 @Singleton
 class IOController @Inject()(implicit val controllerComponents: ControllerComponents,
@@ -38,7 +40,7 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
                              dataStoreActor: ActorRef[DataStoreActor.Message],
                              scheduler: Scheduler,
                              dataCollectorActor: ActorRef[DataCollectorActor.Message],
-                             serialPortsActor: ActorRef[SerialPortsActor.Message]
+                             serialPortsActor: ActorRef[Message]
 
                             ) extends BaseController with LazyLogging {
   implicit val timeout: Timeout = 5.seconds
@@ -73,27 +75,30 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
       dataCollectorActor ! DataCollectorActor.StartDownload(descriptor)
       Ok(views.html.RC210DownloadProgress())
   }
+  def select(descriptor: String): Action[AnyContent] = Action {
+    implicit request: Request[AnyContent] =>
+      serialPortsActor ! SelectPort(descriptor)
+      Redirect(routes.IOController.listSerialPorts())
+  }
 
   def listSerialPorts(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
 
-      serialPortsActor.ask(SerialPortsActor.SerialPorts)
-        .map { ports =>
-          val rows = ports.sortBy(_.friendlyName)
-            //        .filterNot(_.descriptor.contains("/dev/tty")) // these are just clutter.
-            .map { comPort: ComPort => {
-              val value: String = routes.IOController.download(comPort.descriptor).url
-              Row(Cell(comPort.descriptor)
-                .withUrl(value),
-                comPort.friendlyName)
-            }
-            }
-          val table = Table(Header("Serial Ports", "Descriptor", "Friendly Name"), rows)
+      val current: Option[ComPort] = Await.result[Option[ComPort]](serialPortsActor.ask(CurrentPort), 10 seconds)
 
-          Ok(views.html.RC210DownloadLandings(table))
-        }
+      serialPortsActor.ask(SerialPorts).map { comPorts =>
+        val table = Table(Header("Serial Ports", "Descriptor", "Friendly Name"), comPorts.map { comPort =>
+          val row: Row = Row(Cell(comPort.descriptor)
+            .withUrl(routes.IOController.select(comPort.descriptor).url), comPort.friendlyName)
+          if (current.contains(comPort))
+            row.withCssClass("selected")
+          else
+            row
+        })
 
-
+        Ok(views.html.RC210DownloadLandings(table))
+      }
   }
+
 }
 

@@ -44,15 +44,13 @@ object SerialPortOperationTest extends App {
     }
   }
 
-  private val serialPortOperation = new RequestResponse(ft232Port)
+  private val requestResponse = new RequestResponse(ft232Port)
 
   try {
-     val eventualString: Future[Seq[String]] = serialPortOperation.perform("1GetVersion")
-     val response: Seq[String] = Await.result[Seq[String]](eventualString, 20 seconds)
-
+     val response: Seq[String] = requestResponse.perform("1GetVersion")
     println(response)
   } finally
-    serialPortOperation.close()
+    requestResponse.close()
 }
 
 

@@ -27,6 +27,9 @@ import java.time.{Duration, Instant}
 import java.util.concurrent.atomic.AtomicInteger
 import scala.concurrent.{Future, Promise}
 
+/**
+ * Reads eeprom from RC210 using the "1SendEram" command
+ */
 object DataCollector extends LazyLogging {
   /**
    *

@@ -21,16 +21,18 @@ import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import akka.actor.typed.scaladsl.AskPattern.Askable
 import akka.actor.typed.{ActorRef, Scheduler}
 import akka.util.Timeout
-import net.wa9nnn.{RAsyncSpec, RcSpec}
+import net.wa9nnn.RAsyncSpec
 import net.wa9nnn.rc210.serial.ComPort
 import net.wa9nnn.rc210.serial.comm.SerialPortsActor.{CurrentPort, SelectPort, SerialPorts}
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.libs.json.Json
+import play.libs.Scala.None
 
 import java.nio.file.{Files, Path}
-import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContextExecutor, Future}
+import scala.concurrent.duration.DurationInt
+import scala.concurrent.impl.Promise
 import scala.language.postfixOps
 
 class SerialPortsActorSpec() extends RAsyncSpec {
@@ -48,7 +50,7 @@ class SerialPortsActorSpec() extends RAsyncSpec {
   private val file: Path = Files.createTempFile("currentPort", ".txt")
   private val sFile: String = file.toFile.toString
 
-  val portActor: ActorRef[SerialPortsActor.Message] = testKit.spawn(SerialPortsActor(sFile, serialPortsSource))
+  val portActor: ActorRef[SerialPortsActor.Message] = testKit.spawn(SerialPortsActor(sFile, serialPortsSource, testKit.system.executionContext))
 
   "SerialPortsActor" when {
     "List Ports " in {
@@ -56,6 +58,15 @@ class SerialPortsActorSpec() extends RAsyncSpec {
         comports.head.descriptor should equal("com1")
         comports.head.friendlyName should equal("1")
         assert(comports.nonEmpty)
+      }
+    }
+    "SendReceive" in {
+      val future: Future[Seq[String]] = portActor.ref.ask(SerialPortsActor.SendReceive("1GetVersion", _))
+
+
+      future.map { strings: Seq[String] =>
+        println(strings)
+        strings should have length (2)
       }
     }
     "select and get current port" in {

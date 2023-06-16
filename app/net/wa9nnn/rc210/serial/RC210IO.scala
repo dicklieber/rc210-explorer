@@ -127,7 +127,7 @@ case class ComPort(descriptor: String = "com1", friendlyName: String = "com1") {
 }
 
 object ComPort {
-  implicit val comPortFmt: OFormat[ComPort] = Json.format[ComPort]
+//  implicit val comPortFmt: OFormat[ComPort] = Json.format[ComPort]
 
   def apply(serialPort: SerialPort): ComPort = {
     new ComPort(serialPort.getSystemPortPath, serialPort.getDescriptivePortName)

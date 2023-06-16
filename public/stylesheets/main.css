@@ -47,6 +47,13 @@
     /*background-color: #bac9e7;*/
     white-space: nowrap;
 }
+.selected {
+    /*border-top-style: solid;*/
+    /*border-top-width: 3px;*/
+    font-weight: bolder;
+    background-color: #00FF00;
+    white-space: nowrap;
+}
 
 .rowHeader {
     font-weight: bold;

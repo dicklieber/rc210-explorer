@@ -6,10 +6,10 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.serial.ComPort
 
 import java.io.IOException
-import java.time.Instant
-import scala.annotation.tailrec
-import scala.concurrent.Future
+import scala.concurrent.Await
+import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
+import scala.util.{Failure, Success, Using}
 
 
 /**
@@ -17,7 +17,7 @@ import scala.language.postfixOps
  *
  * @param comPort from [[net.wa9nnn.rc210.serial.comm.Rc210Serial#listPorts()]].
  */
-class RequestResponse(comPort: ComPort) extends SerialPortMessageListenerWithExceptions with LazyLogging {
+class RequestResponse(comPort: ComPort) extends SerialPortMessageListenerWithExceptions with AutoCloseable with LazyLogging {
   val serialPort: SerialPort = SerialPort.getCommPort(comPort.descriptor)
 
   serialPort.setBaudRate(19200)
@@ -35,7 +35,7 @@ class RequestResponse(comPort: ComPort) extends SerialPortMessageListenerWithExc
    * @return
    */
 
-  def perform(request: String): Future[Seq[String]] = {
+  def perform(request: String): Seq[String] = {
     currentTransaction match {
       case Some(currentTransaction) =>
         throw BusyException(currentTransaction)
@@ -43,7 +43,7 @@ class RequestResponse(comPort: ComPort) extends SerialPortMessageListenerWithExc
         logger.trace("Perform: {}", request)
         val transaction = Transaction(request + "\r", serialPort)
         currentTransaction = Option(transaction)
-        transaction.future
+        Await.result[Seq[String]](transaction.future, 30 seconds)
     }
   }
 
@@ -77,7 +77,23 @@ class RequestResponse(comPort: ComPort) extends SerialPortMessageListenerWithExc
         logger.error(s"""received "$response" but no transaction is waiting, ignored!""")
     }
   }
+
 }
 
+object RequestResponse extends LazyLogging {
+  def apply(request: String, comPort: ComPort): Seq[String] = {
+    Using(new RequestResponse(comPort)) { rr =>
+      rr.perform(request)
+    }
+  } match {
+    case Failure(exception) =>
+      throw exception
+    case Success(value) =>
+      value
+  }
+}
+
+
 case class BusyException(currentTransaction: Transaction) extends Exception(currentTransaction.toString)
+
 
