@@ -28,6 +28,7 @@ import play.api.libs.concurrent.ActorModule
 import java.nio.file.{Files, Paths}
 import javax.inject.{Named, Singleton}
 import scala.concurrent.ExecutionContext
+import scala.util.{Failure, Try}
 
 object SerialPortsActor extends ActorModule with LazyLogging {
   sealed trait DataCollectorMessage
@@ -41,14 +42,7 @@ object SerialPortsActor extends ActorModule with LazyLogging {
 
   case class CurrentPort(replyTo: ActorRef[Option[ComPort]]) extends Message
 
-  case class SendReceive(request: String, replyTo: ActorRef[Seq[String]]) extends Message
-
-  /*  val f: () => Array[SerialPort] = SerialPort.getCommPorts _
-    def ddd(f:() => Array[SerialPort]): Unit {
-
-    }
-
-    private val unit: Unit = ddd(f)*/
+  case class SendReceive(request: String, replyTo: ActorRef[Try[Seq[String]]]) extends Message
 
 
   /**
@@ -94,14 +88,9 @@ object SerialPortsActor extends ActorModule with LazyLogging {
             case CurrentPort(replyTo) =>
               replyTo ! currentComPort
             case SendReceive(request, replyTo) =>
-
-            /*currentComPort.map { comPort =>
-              Using(new RequestResponse(comPort)) { requestResponse: RequestResponse =>
-                requestResponse.perform(request).map {
-                  replyTo ! _
-                }
-              }
-            }*/
+              replyTo ! currentComPort.map { comPort =>
+                RequestResponse(request, comPort)
+              }.getOrElse(Failure(new NpPortAvailable()))
           }
           Behaviors.same
         }
@@ -128,3 +117,5 @@ class SerialPortsSource() {
       .toList
   }
 }
+
+case class NpPortAvailable() extends Exception("No Serial POt Available")

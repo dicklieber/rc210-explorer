@@ -20,8 +20,11 @@ package net.wa9nnn.rc210.serial.comm
 import com.fazecast.jSerialComm.SerialPort
 import net.wa9nnn.RcSpec
 import net.wa9nnn.rc210.serial.ComPort
+import org.scalatest.TryValues
 
-class RequestResponseTest extends RcSpec {
+import scala.util.Try
+
+class RequestResponseTest extends RcSpec with TryValues{
   def listPorts: Seq[ComPort] = {
     val ports = SerialPort.getCommPorts
     ports.map(ComPort(_)).toList
@@ -44,7 +47,10 @@ class RequestResponseTest extends RcSpec {
     result(1) should equal("+GETVE")
   }
   "single shot" in {
-    val response: Seq[String] = RequestResponse("1GetVersion", ft232Port)
+    val tried: Try[Seq[String]] = RequestResponse("1GetVersion", ft232Port)
+
+    val response: Seq[String] = tried.success.value
+
     response should have length (2)
     response.head should equal("803")
     response(1) should equal("+GETVE")

@@ -17,22 +17,23 @@
 
 package controllers
 
-import akka.actor.typed.{ActorRef, Scheduler}
 import akka.actor.typed.scaladsl.AskPattern.Askable
+import akka.actor.typed.{ActorRef, Scheduler}
 import akka.util.Timeout
-import com.fazecast.jSerialComm.SerialPort
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.serial.ComPort
+import net.wa9nnn.rc210.serial.comm.DataCollectorActor
 import net.wa9nnn.rc210.serial.comm.SerialPortsActor._
-import net.wa9nnn.rc210.serial.comm.{DataCollectorActor, SerialPortsActor, SerialPortsSource}
 import play.api.mvc._
 
+import java.util.concurrent.TimeoutException
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.language.postfixOps
+import scala.util.Try
 
 @Singleton
 class IOController @Inject()(implicit val controllerComponents: ControllerComponents,
@@ -75,30 +76,46 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
       dataCollectorActor ! DataCollectorActor.StartDownload(descriptor)
       Ok(views.html.RC210DownloadProgress())
   }
+
   def select(descriptor: String): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
       serialPortsActor ! SelectPort(descriptor)
-      Redirect(routes.IOController.listSerialPorts())
+      Redirect(routes.IOController.listSerialPorts)
   }
 
-  def listSerialPorts(): Action[AnyContent] = Action.async {
+  def listSerialPorts: Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
-
       val current: Option[ComPort] = Await.result[Option[ComPort]](serialPortsActor.ask(CurrentPort), 10 seconds)
 
-      serialPortsActor.ask(SerialPorts).map { comPorts =>
-        val table = Table(Header("Serial Ports", "Descriptor", "Friendly Name"), comPorts.map { comPort =>
-          val row: Row = Row(Cell(comPort.descriptor)
-            .withUrl(routes.IOController.select(comPort.descriptor).url), comPort.friendlyName)
-          if (current.contains(comPort))
-            row.withCssClass("selected")
-          else
-            row
-        })
+      val r: Future[Result] = serialPortsActor.ask(SerialPorts).map { comPorts: Seq[ComPort] =>
+        val rows: Seq[Row] = comPorts.map { comPort =>
+          var row = Row(
+            Cell(comPort.descriptor)
+              .withUrl(routes.IOController.select(comPort.descriptor).url), comPort.friendlyName)
+          if (current.contains(comPort)) {
+            try {
+              row = row.withCssClass("selected")
+              val value = Await.result[Try[Seq[String]]](serialPortsActor.ask(SendReceive("1GetVersion", _)), 750 milliseconds)
+              val triedVersion = value.map(_.head)
+              triedVersion.foreach { version =>
+                val formatted = s"${version.head}.${version.tail}"
+                row = row :+ formatted
+              }
+            } catch {
+              case e:TimeoutException =>
+                row = row :+ "Not Connected!"
+              case x:Throwable =>
+                row = row :+ "Not Connected!"
 
+            }
+          }
+          row
+        }
+        val table = Table(Header("Serial Ports", "Descriptor", "Friendly Name", "RC210 Version"), rows)
         Ok(views.html.RC210DownloadLandings(table))
       }
+      r
   }
-
 }
+
 

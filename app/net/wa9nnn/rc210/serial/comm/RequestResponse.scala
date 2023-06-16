@@ -9,7 +9,7 @@ import java.io.IOException
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
-import scala.util.{Failure, Success, Using}
+import scala.util.{Failure, Success, Try, Using}
 
 
 /**
@@ -81,15 +81,8 @@ class RequestResponse(comPort: ComPort) extends SerialPortMessageListenerWithExc
 }
 
 object RequestResponse extends LazyLogging {
-  def apply(request: String, comPort: ComPort): Seq[String] = {
-    Using(new RequestResponse(comPort)) { rr =>
-      rr.perform(request)
-    }
-  } match {
-    case Failure(exception) =>
-      throw exception
-    case Success(value) =>
-      value
+  def apply(request: String, comPort: ComPort): Try[Seq[String]] = Using(new RequestResponse(comPort)) { rr =>
+    rr.perform(request)
   }
 }
 

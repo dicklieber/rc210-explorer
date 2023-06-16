@@ -25,6 +25,7 @@ import net.wa9nnn.RAsyncSpec
 import net.wa9nnn.rc210.serial.ComPort
 import net.wa9nnn.rc210.serial.comm.SerialPortsActor.{CurrentPort, SelectPort, SerialPorts}
 import org.mockito.Mockito._
+import org.scalatest.TryValues
 import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.libs.json.Json
 import play.libs.Scala.None
@@ -34,8 +35,9 @@ import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.impl.Promise
 import scala.language.postfixOps
+import scala.util.Try
 
-class SerialPortsActorSpec() extends RAsyncSpec {
+class SerialPortsActorSpec() extends RAsyncSpec with TryValues{
   private val testKit = ActorTestKit()
   implicit val sys = testKit.system
   implicit val context: ExecutionContextExecutor = sys.executionContext
@@ -61,25 +63,24 @@ class SerialPortsActorSpec() extends RAsyncSpec {
       }
     }
     "SendReceive" in {
-      val future: Future[Seq[String]] = portActor.ref.ask(SerialPortsActor.SendReceive("1GetVersion", _))
+      val future: Future[Try[Seq[String]]] = portActor.ref.ask(SerialPortsActor.SendReceive("1GetVersion", _))
 
 
-      future.map { strings: Seq[String] =>
-        println(strings)
-        strings should have length (2)
+      future.map { tried: Try[Seq[String]] =>
+        println(tried)
+        tried.get should have length (2)
       }
     }
     "select and get current port" in {
       portActor.ref.ask(CurrentPort) map { maybeCurrentPort =>
         maybeCurrentPort shouldBe None
       }
-      portActor.ref ! SelectPort(comPort2)
+      portActor.ref ! SelectPort(comPort2.descriptor)
 
       portActor.ref.ask(CurrentPort) map { maybeCurrentPort =>
         maybeCurrentPort shouldBe Some(comPort2)
         val fileContents = Files.readString(file)
-        val backAgain = Json.parse(fileContents).as[ComPort]
-        backAgain should equal(comPort2)
+        fileContents should equal(comPort2.descriptor)
       }
 
     }

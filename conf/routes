@@ -35,7 +35,7 @@ GET         /rc210/select/:portDescriptor            controllers.IOController.se
 #POST        /rc210/progress                            controllers.IOController.progress()
 #GET         /rc210/progress                            controllers.IOController.progress()
 GET         /rc210/result                              controllers.IOController.downloadResult
-GET         /rc210                                     controllers.IOController.listSerialPorts()
+GET         /rc210                                     controllers.IOController.listSerialPorts
 GET         /flow                                      controllers.FlowController.flow()
 POST        /ports/save                                controllers.PortsEditorController.save()
 GET         /ports                                     controllers.PortsEditorController.index()
