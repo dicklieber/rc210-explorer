@@ -19,8 +19,10 @@ package net.wa9nnn.rc210.serial
 
 import com.fazecast.jSerialComm.SerialPort
 
-case class ComPort(descriptor: String = "com1", friendlyName: String = "com1") {
+case class ComPort(descriptor: String = "com1", friendlyName: String = "com1") extends Ordered[ComPort] {
   override def toString: String = s"$descriptor/$friendlyName"
+
+  override def compare(that: ComPort): Int = friendlyName compareTo (that.friendlyName)
 }
 
 object ComPort {

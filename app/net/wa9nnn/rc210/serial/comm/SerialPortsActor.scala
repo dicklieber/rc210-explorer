@@ -82,7 +82,7 @@ object SerialPortsActor extends ActorModule with LazyLogging {
         Behaviors.receiveMessage[Message] { message: Message =>
           message match {
             case SerialPorts(replyTo) =>
-              replyTo ! serialPortsSource()
+              replyTo ! serialPortsSource().sorted
             case SelectPort(portDesctiptor) =>
               selectPort(portDesctiptor)
             case CurrentPort(replyTo) =>

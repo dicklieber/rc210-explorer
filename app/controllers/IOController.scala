@@ -64,7 +64,7 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
           eramCollector match {
             case Some(eramCollector: ERamCollector) =>
               val table: Table = eramCollector.resultStatus.toTable
-              Ok(views.html.RC210DownloadLandings(table))
+              Ok(views.html.RC210Landings(table))
             case None =>
               Ok("DownloadActor not performed!")
           }
@@ -112,7 +112,7 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
           row
         }
         val table = Table(Header("Serial Ports", "Descriptor", "Friendly Name", "RC210 Version"), rows)
-        Ok(views.html.RC210DownloadLandings(table))
+        Ok(views.html.RC210Landings(table))
       }
       r
   }
