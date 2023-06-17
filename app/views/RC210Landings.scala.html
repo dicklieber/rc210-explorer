@@ -2,6 +2,42 @@
 @import com.wa9nnn.util.tableui.html.renderTable
 @import net.wa9nnn.rc210.ui.Tabs
 @(table: Table)
-@tabbedmain(Tabs.rc210Tab) {
-    @renderTable(table.withCssClass("tablesorter"))
-}
+    @tabbedmain(Tabs.rc210Tab) {
+        <div class="container">
+            <div class="row">
+
+                <div class="col">
+                @renderTable(table.withCssClass("tablesorter"))
+                </div>
+                <div class="col">
+                    <ul class="list-unstyled">
+                        <li>
+                            <button type="submit" class="btn btn-primary" value="Set Clock" onclick="window.location.href = '@routes.ClockController.setClock()'">
+                                <i class="bi bi-clock"></i>  Set Clock
+                            </button>
+                        </li>
+                        <li>
+                            <button type="submit" class="btn btn-primary" value="Set Clock" onclick="window.location.href = '@routes.UsersController.addUser()'">
+                                <i class="bi bi-clock"></i>  Restart
+                            </button>
+                        </li>
+                        <li>
+                            <button type="submit" class="btn btn-primary" value="Set Clock" onclick="window.location.href = '@routes.UsersController.addUser()'">
+                                <i class="bi bi-box-arrow-down"></i>  Download
+                            </button>
+                        </li>
+                        <li>
+                            <button type="submit" class="btn btn-primary" value="Set Clock" onclick="window.location.href = '@routes.UsersController.addUser()'">
+                                <i class="bi bi-send"></i>  Upload Changes
+                            </button>
+                        </li>
+                        <li>
+                            <button type="submit" class="btn btn-primary" value="Set Clock" onclick="window.location.href = '@routes.UsersController.addUser()'">
+                                <i class="bi bi-send-plus"></i>  Upload All
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
