@@ -48,7 +48,6 @@
     <logger name="net.wa9nnmacroNn.rc210.data.datastore.DataStore" level="INFO"/>
     <logger name="net.wa9nnn.rc210.data.field.FieldDtmf" level="INFO"/>
     <logger name="controllers.CandidateController" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.serial.SerialPortOperation" level="INFO"/>
     <logger name="net.wa9nnn.rc210.data.macros.MacroNode" level="INFO"/>
     <logger name="net.wa9nnn.rc210.security.authentication.SessionManager" level="INFO"/>
     <logger name="net.wa9nnn.rc210.security.authorzation.AuthFilter" level="INFO"/>

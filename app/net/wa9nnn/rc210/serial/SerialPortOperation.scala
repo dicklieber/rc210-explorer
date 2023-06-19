@@ -24,59 +24,6 @@ import java.io._
 import scala.annotation.tailrec
 import scala.util.Try
 
-/**
- * Handles sending and receiving to the RC-210 via a serial port.
- *
- * @param comPort from [[RC210IO.listPorts]].
- */
-class SerialPortOperation(comPort: ComPort) extends Closeable with LazyLogging {
-  private val serialPort: SerialPort = SerialPort.getCommPort(comPort.descriptor)
-  serialPort.setBaudRate(19200)
-  serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 5000, 1000)
-  val opened: Boolean = serialPort.openPort()
-  if (!opened) {
-    logger.trace(s"Serialport: {} did not open!", comPort.toString)
-    throw  SerialPortOpenException(comPort)
-  }
-  val reader: BufferedReader = new BufferedReader(new InputStreamReader(serialPort.getInputStream))
-  val writer = new BufferedWriter(new OutputStreamWriter(serialPort.getOutputStream))
 
-  def preform(in: String): Try[String] = {
-    Try {
-      val prewriteReader = reader.ready()
-      writer.write(in)
-      writer.flush()
-
-      readResponse()
-    }
-  }
-
-  // Responses consist of one or more lines. Usually just one.
-  // the last line begins with '+' or '-'
-  private val terminaters = "-+"
-
-  @tailrec
-  private def readResponse(lines: Seq[String] = Seq.empty): String = {
-    val line = reader.readLine()
-    logger.trace("read line: {}", line)
-    val soFar = lines :+ line
-    val head = line.head
-    if (terminaters.contains(head)) {
-      logger.trace("\tGot terminator.")
-      soFar mkString (" ") // done, take what we have so far and add this
-    }
-    else {
-      logger.trace("\tNo +-, read another line.")
-      readResponse(soFar) // read another.
-    }
-  }
-
-  override def close(): Unit = {
-    logger.trace(s"Closing: {}", comPort.toString)
-    writer.close()
-    reader.close()
-    serialPort.closePort()
-  }
-}
 
 case class SerialPortOpenException(comPort: ComPort) extends Exception(s"Did not open: $comPort!")

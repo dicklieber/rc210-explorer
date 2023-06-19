@@ -40,14 +40,14 @@ class RequestResponseTest extends RcSpec with TryValues{
   }
 
   "testPerform" in {
-    val requestResponse = new RequestResponse(ft232Port)
+    val requestResponse = new RcOperation(ft232Port)
     val result: Seq[String] = requestResponse.perform("1GetVersion")
     result should have length (2)
     result.head should equal("803")
     result(1) should equal("+GETVE")
   }
   "single shot" in {
-    val tried: Try[Seq[String]] = RequestResponse("1GetVersion", ft232Port)
+    val tried: Try[Seq[String]] = RcOperation("1GetVersion", ft232Port)
 
     val response: Seq[String] = tried.success.value
 

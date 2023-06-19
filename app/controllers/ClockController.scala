@@ -28,23 +28,19 @@ import net.wa9nnn.rc210.data.field.Formatters.{MonthOfYearDSTFormatter, Occurren
 import net.wa9nnn.rc210.data.field.{FieldEntry, MonthOfYearDST}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
-import net.wa9nnn.rc210.serial.comm.{RequestResponse, SerialPortsActor}
-import net.wa9nnn.rc210.serial.comm.SerialPortsActor.Message
 import net.wa9nnn.rc210.ui.EnumSelect
 import play.api.data.Forms._
 import play.api.data.{Form, Mapping}
 import play.api.mvc._
 
-import java.time.LocalDateTime
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
-import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
 
 @Singleton()
-class ClockController @Inject()(actor: ActorRef[DataStoreActor.Message],
-                                serialPortsActor: ActorRef[SerialPortsActor.Message])
+class ClockController @Inject()(actor: ActorRef[DataStoreActor.Message])
                                (implicit scheduler: Scheduler, ec: ExecutionContext)
   extends MessagesInjectedController with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
@@ -94,20 +90,6 @@ class ClockController @Inject()(actor: ActorRef[DataStoreActor.Message],
     )
   }
 
-  def setClock(): Action[AnyContent] = Action { implicit request =>
-
-    //    serialPortsActor
-    //   clock:  *5100 12 12 23
-    // calander:   *5101 06 11 03 Set June 11, 2003 as the current date
-    val dt = LocalDateTime.now()
-    val clock = s"1*5100${dt.getHour}${dt.getMinute}${dt.getSecond}"
-    val calendar = s"1*5101${dt.getMonthValue}${dt.getDayOfMonth}${dt.getYear - 2000}"
-
-    Await.result(serialPortsActor.ask(SerialPortsActor.SendReceive(clock, _)), 2 seconds)
-    Await.result(serialPortsActor.ask(SerialPortsActor.SendReceive(calendar, _)), 2 seconds)
-
-    Redirect(routes.IOController.listSerialPorts.url)
-  }
 }
 
 object ClockController {

@@ -25,7 +25,7 @@ import com.wa9nnn.util.tableui.Table
 import net.wa9nnn.rc210.security.authentication.SessionManagerActor.Sessions
 import net.wa9nnn.rc210.security.authentication.{RcSession, SessionManagerActor}
 import play.api.mvc.{Action, AnyContent, MessagesInjectedController}
-import views.html.juatdat
+import views.html.justdat
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
@@ -47,7 +47,7 @@ class SessionController @Inject()(actor: ActorRef[SessionManagerActor.SessionMan
     future.map { sessions =>
       val rows = sessions.map(_.toRow)
       val table = Table(RcSession.header(rows.length), rows)
-      Ok(juatdat(Seq(table)))
+      Ok(justdat(Seq(table)))
 
     }
 

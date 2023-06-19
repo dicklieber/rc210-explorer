@@ -2,32 +2,13 @@ package net.wa9nnn.rc210.serial
 
 import com.fazecast.jSerialComm.SerialPort
 import net.wa9nnn.rc210.fixtures.WithTestConfiguration
-import net.wa9nnn.rc210.serial.comm.RequestResponse
+import net.wa9nnn.rc210.serial.comm.RcOperation
 
-import scala.concurrent.duration.DurationInt
-import scala.concurrent.{Await, Future}
 import scala.language.postfixOps
 
-class RC210IOSpec extends WithTestConfiguration {
 
-  private val rc210Io = new RC210IO(config)
-  "RC210Download" should {
-    "listPorts" in {
-      val ports =
-        rc210Io.listPorts
-      ports.foreach {
-        println(_)
-      }
 
-      ports.foreach { cp =>
-        val sp = SerialPort.getCommPort(cp.descriptor)
-        sp.closePort()
-      }
-    }
-  }
-}
-
-object SerialPortOperationTest extends App {
+object RcOperationTest extends App {
 
   def listPorts: Seq[ComPort] = {
     val ports = SerialPort.getCommPorts
@@ -44,17 +25,13 @@ object SerialPortOperationTest extends App {
     }
   }
 
-  private val requestResponse = new RequestResponse(ft232Port)
+  private val requestResponse = new RcOperation(ft232Port)
 
   try {
-     val response: Seq[String] = requestResponse.perform("1GetVersion")
+    val response: Seq[String] = requestResponse.perform("1GetVersion")
     println(response)
   } finally
     requestResponse.close()
 }
 
 
-//object SendResceiveTest extends App {
-//  println(RC210IO.sendReceive("\r\r1GetVersion\r"))
-//  println(RC210IO.sendReceive("\r\r1GetRTCVersion\r"))
-//}

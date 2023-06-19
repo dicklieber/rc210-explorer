@@ -1,0 +1,10 @@
+@import com.wa9nnn.util.tableui.Table
+@import com.wa9nnn.util.tableui.html.renderTable
+@(lastResults: Table)
+@if(lastResults.rows.isEmpty) {
+    <div></div>
+} else {
+    <div class="border border-2 rounded-1">
+    @renderTable(lastResults)
+    </div>
+}

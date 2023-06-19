@@ -54,6 +54,12 @@
     background-color: #00FF00;
     white-space: nowrap;
 }
+.badPort {
+    background-color: crimson;
+
+}
+
+
 
 .rowHeader {
     font-weight: bold;

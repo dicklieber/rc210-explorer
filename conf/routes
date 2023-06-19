@@ -31,7 +31,7 @@ GET         /datastore/view                            controllers.DataStoreCont
 GET         /datastore/upload                          controllers.DataStoreController.upload
 POST        /datastore/save                            controllers.DataStoreController.save()
 GET         /rc210/download/:portDescriptor            controllers.IOController.download(portDescriptor:String)
-GET         /rc210/select/:portDescriptor            controllers.IOController.select(portDescriptor:String)
+GET         /rc210/select/:portDescriptor              controllers.IOController.select(portDescriptor:String)
 #POST        /rc210/progress                            controllers.IOController.progress()
 #GET         /rc210/progress                            controllers.IOController.progress()
 GET         /rc210/result                              controllers.IOController.downloadResult
@@ -50,7 +50,9 @@ GET         /candidates/lastUpload                     controllers.CandidateCont
 GET         /candidates/ws                             controllers.CandidateController.ws
 GET         /memory                                    controllers.MemoryController.index
 POST        /clock/save                                controllers.ClockController.save()
-GET         /clock/set                                 controllers.ClockController.setClock()
+GET         /clock/set                                 controllers.Rc210Controller.setClock()
+GET         /restart                                   controllers.Rc210Controller.restart()
+GET         /lastResults                               controllers.Rc210Controller.lastResult
 GET         /clock                                     controllers.ClockController.index
 POST        /remote/save                               controllers.RemoteBaseController.save()
 GET         /remote                                    controllers.RemoteBaseController.index

@@ -23,7 +23,7 @@ import akka.actor.typed.{ActorRef, Scheduler}
 import akka.util.Timeout
 import net.wa9nnn.RAsyncSpec
 import net.wa9nnn.rc210.serial.ComPort
-import net.wa9nnn.rc210.serial.comm.SerialPortsActor.{CurrentPort, SelectPort, SerialPorts}
+import net.wa9nnn.rc210.serial.comm.RcOperationsActor.{CurrentPort, SelectPort, SerialPorts}
 import org.mockito.Mockito._
 import org.scalatest.TryValues
 import org.scalatestplus.mockito.MockitoSugar.mock
@@ -52,7 +52,7 @@ class SerialPortsActorSpec() extends RAsyncSpec with TryValues{
   private val file: Path = Files.createTempFile("currentPort", ".txt")
   private val sFile: String = file.toFile.toString
 
-  val portActor: ActorRef[SerialPortsActor.Message] = testKit.spawn(SerialPortsActor(sFile, serialPortsSource, testKit.system.executionContext))
+  val portActor: ActorRef[RcOperationsActor.Message] = testKit.spawn(RcOperationsActor(sFile, serialPortsSource))
 
   "SerialPortsActor" when {
     "List Ports " in {
@@ -63,7 +63,7 @@ class SerialPortsActorSpec() extends RAsyncSpec with TryValues{
       }
     }
     "SendReceive" in {
-      val future: Future[Try[Seq[String]]] = portActor.ref.ask(SerialPortsActor.SendReceive("1GetVersion", _))
+      val future: Future[Try[Seq[String]]] = portActor.ref.ask(RcOperationsActor.SendReceive("1GetVersion", _))
 
 
       future.map { tried: Try[Seq[String]] =>

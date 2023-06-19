@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.serial.comm
 
 import com.fazecast.jSerialComm.SerialPort
+import net.wa9nnn.rc210.serial.comm.RcOperation.RcResponse
 
 import java.time.{Duration, Instant}
 import scala.collection.mutable
@@ -46,7 +47,7 @@ case class Transaction(request: String, serialPort: SerialPort, start: Instant =
   }
 
   private val promise = Promise[Seq[String]]()
-  val future: Future[Seq[String]] = promise.future
+  val future: Future[RcResponse] = promise.future
   private val bytes: Array[Byte] = request.getBytes
   serialPort.writeBytes(bytes, bytes.length)
 

@@ -12,12 +12,12 @@
                 <div class="col">
                     <ul class="list-unstyled">
                         <li>
-                            <button type="submit" class="btn btn-primary" value="Set Clock" onclick="window.location.href = '@routes.ClockController.setClock()'">
+                            <button type="submit" class="btn btn-primary" value="Set Clock" onclick="window.location.href = '@routes.Rc210Controller.setClock()'">
                                 <i class="bi bi-clock"></i>  Set Clock
                             </button>
                         </li>
                         <li>
-                            <button type="submit" class="btn btn-primary" value="Set Clock" onclick="window.location.href = '@routes.UsersController.addUser()'">
+                            <button type="submit" class="btn btn-primary" value="Set Clock" onclick="window.location.href = '@routes.Rc210Controller.restart()'">
                                 <i class="bi bi-clock"></i>  Restart
                             </button>
                         </li>
@@ -37,6 +37,7 @@
                             </button>
                         </li>
                     </ul>
+                    <div id="resultDiv"></div>
                 </div>
             </div>
         </div>
