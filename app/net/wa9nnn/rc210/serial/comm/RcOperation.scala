@@ -16,8 +16,7 @@ import scala.util.{Failure, Success, Try, Using}
 
 /**
  * Allow one or more operations with a serial port.
- * Used directly  by the [[controllers.CandidateController]].
- * Most other uses should go through the
+ * This should be used for all RC210 IO except for download which should use [[DataCollectorActor]]
  *
  * @param comPort to use.
  */
@@ -73,7 +72,7 @@ case class RcOperation(comPort: ComPort) extends SerialPortMessageListenerWithEx
   override def getListeningEvents: Int = LISTENING_EVENT_DATA_RECEIVED
 
   /**
-   * INvoked by jSerialComm on it's own thread.
+   * Invoked by jSerialComm on it's own thread.
    *
    * @param event from [[SerialPort]].
    */
@@ -130,7 +129,7 @@ case class RcOperationResult(request: String, triedResponse: Try[RcResponse]) ex
 }
 
 object RcOperationResult {
-  def header(count: Int): Header = Header(s"RC Operation Results", "Field", "Command", "Response")
+  def header(count: Int): Header = Header(s"RC Operation Results ($count)", "Field", "Command", "Response")
 }
 
 object RcOperation extends LazyLogging {

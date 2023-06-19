@@ -20,11 +20,12 @@ package net.wa9nnn.rc210.serial.comm
 import com.fazecast.jSerialComm.SerialPort
 import net.wa9nnn.RcSpec
 import net.wa9nnn.rc210.serial.ComPort
+import net.wa9nnn.rc210.serial.comm.RcOperation.RcResponse
 import org.scalatest.TryValues
 
 import scala.util.Try
 
-class RequestResponseTest extends RcSpec with TryValues{
+class RcOperationTest extends RcSpec with TryValues{
   def listPorts: Seq[ComPort] = {
     val ports = SerialPort.getCommPorts
     ports.map(ComPort(_)).toList
@@ -40,16 +41,24 @@ class RequestResponseTest extends RcSpec with TryValues{
   }
 
   "testPerform" in {
-    val requestResponse = new RcOperation(ft232Port)
-    val result: Seq[String] = requestResponse.perform("1GetVersion")
-    result should have length (2)
-    result.head should equal("803")
-    result(1) should equal("+GETVE")
+    val rcOperation = new RcOperation(ft232Port)
+    try {
+      val result: RcOperationResult = rcOperation.perform("1GetVersion")
+      val triedRiedResponse: Try[RcResponse] = result.triedResponse
+
+      val rcRes: RcResponse = triedRiedResponse.success.value
+
+      rcRes should have length (2)
+      rcRes.head should equal("803")
+      rcRes(1) should equal("+GETVE")
+    } finally{
+      rcOperation.close()
+    }
   }
   "single shot" in {
-    val tried: Try[Seq[String]] = RcOperation("1GetVersion", ft232Port)
+    val tried: RcOperationResult = RcOperation("1GetVersion", ft232Port)
 
-    val response: Seq[String] = tried.success.value
+    val response = tried.triedResponse.success.value
 
     response should have length (2)
     response.head should equal("803")
