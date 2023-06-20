@@ -60,7 +60,7 @@ class Rc210Spec extends WithTestConfiguration with MockitoSugar with TryValues{
 
     }
     "handle batch" in {
-      val triedOperationsResult: Try[OperationsResult] = rc210.sendBatch("Version", Seq("1GetVersion", "1GetVersion"))
+      val triedOperationsResult: Try[OperationsResult] = rc210.send("Version", Seq("1GetVersion", "1GetVersion"))
       val operationsResult: OperationsResult = triedOperationsResult.get
       val rcRes: Seq[RcOperationResult] = operationsResult.results
       rcRes should have length (2)

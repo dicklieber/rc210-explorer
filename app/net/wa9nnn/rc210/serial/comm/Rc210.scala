@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.serial.comm
 
 import com.typesafe.scalalogging.LazyLogging
+import com.wa9nnn.util.tableui.{Cell, Row}
 import net.wa9nnn.rc210.serial.ComPortPersistence
 
 import javax.inject.{Inject, Singleton}
@@ -25,14 +26,13 @@ import scala.util.{Failure, Try, Using}
 
 /**
  * This is the primary API for RC210 access, except for download.
+ *
  * @param comPortPersistence whre to find the currently selected [[net.wa9nnn.rc210.serial.ComPort]].
  */
 @Singleton
 class Rc210 @Inject()(comPortPersistence: ComPortPersistence) extends LazyLogging {
-  def sendOne(name: String, request: String): Try[OperationsResult] =
-    sendBatch(name, Seq(request))
 
-  def sendBatch(name: String, requests: Seq[String]): Try[OperationsResult] = {
+  def send(name: String, requests: String *): Try[OperationsResult] = {
     comPortPersistence.currentComPort match {
       case None =>
         Failure(new IllegalStateException("No Serial Port Selected."))
@@ -46,4 +46,17 @@ class Rc210 @Inject()(comPortPersistence: ComPortPersistence) extends LazyLoggin
   }
 }
 
-case class OperationsResult(name: String, results: Seq[RcOperationResult])
+case class OperationsResult(name: String, results: Seq[RcOperationResult]) {
+  def toRows: Seq[Row] = {
+    val topRow: Row = results.head.toRow()
+    val withNameColl: Row = topRow.copy(cells =
+      topRow.cells.prepended(
+        Cell(name)
+          .withRowSpan(results.size)))
+    val moreRows: Seq[Row] = results.tail.map(_.toRow())
+
+    val rows: Seq[Row] = withNameColl +: moreRows
+    rows
+  }
+
+}

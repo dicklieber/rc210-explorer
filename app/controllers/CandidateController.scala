@@ -30,7 +30,8 @@ import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.data.datastore.DataStoreActor._
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
-import net.wa9nnn.rc210.serial.comm.{RcHelper, RcOperation, RcOperationResult, RcOperationsActor}
+import net.wa9nnn.rc210.serial.ComPortPersistence
+import net.wa9nnn.rc210.serial.comm.{OperationsResult, Rc210, RcOperation, RcOperationResult}
 import play.api.mvc._
 
 import java.io.PrintWriter
@@ -42,13 +43,15 @@ import scala.collection.immutable.Seq
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, ExecutionContext}
 import scala.language.postfixOps
-import scala.util.{Failure, Success, Using}
+import scala.util.{Failure, Success, Try, Using}
 
 @Singleton()
 class CandidateController @Inject()(config: Config,
                                     dataStoreActor: ActorRef[DataStoreActor.Message],
-                                    rcOperationsActor: ActorRef[RcOperationsActor.Message],
-                                    rcHelper: RcHelper)
+                                    rc210: Rc210,
+                                    //                                    rcOperationsActor: ActorRef[RcOperationsActor.Message],
+                                    comPortPersistence: ComPortPersistence)
+                                   //                                    rcHelper: RcHelper)
                                    (implicit scheduler: Scheduler, ec: ExecutionContext, mat: Materializer)
   extends MessagesInjectedController with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
@@ -107,19 +110,16 @@ class CandidateController @Inject()(config: Config,
           else
             fieldEntry.candidate.get.toCommands(fieldEntry) // throws if no candidate
 
-          val rows: Seq[Row] = commands
-            .map(rcHelper(_))
-            .map { rcOperationResult: RcOperationResult =>
-              rcOperationResult.triedResponse match {
-                case Failure(exception) =>
-                  Row(exception.getMessage)
-                case Success(value: RcOperationResult) =>
-                  value.toRow()
-              }
-            }
+          val triedOperationsResult: Try[OperationsResult] = rc210.send(fieldKey.toString, commands: _*)
+          triedOperationsResult match {
+            case Failure(exception) =>
+              InternalServerError(exception.getMessage)
+            case Success(operationsResult: OperationsResult) =>
+              val rows = operationsResult.toRows
+              val table = Table(Header("Result", "Field", "Command", "Response"), rows)
+              Ok(views.html.justdat(Seq(table)))
 
-          val table = Table(Header("Field", "Command", "Response"), rows)
-          Ok(views.html.justdat(Seq(table)))
+          }
       }
   }
 
@@ -151,7 +151,7 @@ class CandidateController @Inject()(config: Config,
           val sendLogWriter = new PrintWriter(Files.newBufferedWriter(sendFile))
           val sofar = new AtomicDouble()
 
-          Await.result(rcOperationsActor.ask(RcOperationsActor.CurrentPort), 1 second).foreach { comPort =>
+          comPortPersistence.currentComPort.foreach { comPort =>
 
             Using(RcOperation(comPort)) { rcOperation =>
 

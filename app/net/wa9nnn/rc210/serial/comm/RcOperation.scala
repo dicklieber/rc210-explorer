@@ -3,7 +3,7 @@ package net.wa9nnn.rc210.serial.comm
 import com.fazecast.jSerialComm.SerialPort.LISTENING_EVENT_DATA_RECEIVED
 import com.fazecast.jSerialComm.{SerialPort, SerialPortEvent, SerialPortMessageListenerWithExceptions}
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.{Header, Row, RowSource}
+import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
 import net.wa9nnn.rc210.serial.ComPort
 import net.wa9nnn.rc210.serial.comm.RcOperation.RcResponse
 
@@ -115,7 +115,17 @@ case class RcOperationResult(request: String, triedResponse: Try[RcResponse]) ex
       case Success(rcResponse: RcResponse) =>
         Row.ofAny(request, flatten(rcResponse))
     }
-
+  }
+   def toRow(rowHeader:Any, rowspan:Int): Row = {
+    triedResponse match {
+      case Failure(exception) =>
+        Row.ofAny(request, exception.getMessage)
+      case Success(rcResponse: RcResponse) =>
+        Row(Cell(rowHeader)
+          .withRowSpan(rowspan),
+          request,
+          flatten(rcResponse))
+    }
   }
 
   override def toString: String = {

@@ -42,7 +42,7 @@ object DataCollectorActor extends ActorModule with LazyLogging {
 
 
   @Provides
-  def apply (implicit serialPortsActor: ActorRef[RcOperationsActor.Message], @Named("vizRc210.memoryFile") sMemoryFile: String, executionContext: ExecutionContext): Behavior[Message] = {
+  def apply (implicit @Named("vizRc210.memoryFile") sMemoryFile: String, executionContext: ExecutionContext): Behavior[Message] = {
     val path = Paths.get(sMemoryFile)
     Files.createDirectories(path.getParent)
     val temp = path.resolveSibling(sMemoryFile + ".temp")
