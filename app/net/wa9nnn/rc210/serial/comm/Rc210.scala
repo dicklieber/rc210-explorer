@@ -32,21 +32,21 @@ import scala.util.{Failure, Try, Using}
 @Singleton
 class Rc210 @Inject()(comPortPersistence: ComPortPersistence) extends LazyLogging {
 
-  def send(name: String, requests: String *): Try[OperationsResult] = {
+  def send(name: String, requests: String *): Try[BatchOperationsResult] = {
     comPortPersistence.currentComPort match {
       case None =>
         Failure(new IllegalStateException("No Serial Port Selected."))
       case Some(comPort) =>
         Using(RcOperation(comPort)) { rcOperation =>
-          OperationsResult(name, requests.map { request =>
-            rcOperation.perform(request)
+          BatchOperationsResult(name, requests.map { request =>
+            rcOperation.sendOne(request)
           })
         }
     }
   }
 }
 
-case class OperationsResult(name: String, results: Seq[RcOperationResult]) {
+case class BatchOperationsResult(name: String, results: Seq[RcOperationResult]) {
   def toRows: Seq[Row] = {
     val topRow: Row = results.head.toRow()
     val withNameColl: Row = topRow.copy(cells =

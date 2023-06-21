@@ -31,12 +31,12 @@ import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.data.datastore.DataStoreActor._
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.serial.ComPortPersistence
-import net.wa9nnn.rc210.serial.comm.{OperationsResult, Rc210, RcOperation, RcOperationResult}
+import net.wa9nnn.rc210.serial.comm.{BatchOperationsResult, Rc210, RcOperation, RcOperationResult}
 import play.api.mvc._
 
 import java.io.PrintWriter
 import java.nio.file.{Files, Path}
-import java.time.{Duration, Instant}
+import java.time.{Duration, Instant, LocalTime}
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.{Inject, Singleton}
 import scala.collection.immutable.Seq
@@ -110,11 +110,11 @@ class CandidateController @Inject()(config: Config,
           else
             fieldEntry.candidate.get.toCommands(fieldEntry) // throws if no candidate
 
-          val triedOperationsResult: Try[OperationsResult] = rc210.send(fieldKey.toString, commands: _*)
+          val triedOperationsResult: Try[BatchOperationsResult] = rc210.send(fieldKey.toString, commands: _*)
           triedOperationsResult match {
             case Failure(exception) =>
               InternalServerError(exception.getMessage)
-            case Success(operationsResult: OperationsResult) =>
+            case Success(operationsResult: BatchOperationsResult) =>
               val rows = operationsResult.toRows
               val table = Table(Header("Result", "Field", "Command", "Response"), rows)
               Ok(views.html.justdat(Seq(table)))
@@ -155,34 +155,34 @@ class CandidateController @Inject()(config: Config,
 
             Using(RcOperation(comPort)) { rcOperation =>
 
-              val operations = Seq.newBuilder[RcOperationResult]
+              val operations = Seq.newBuilder[BatchOperationsResult]
 
-              for (command <- init) {
-                Thread.sleep(125)
-                operations += rcOperation.perform(command)
-              }
+              operations += rcOperation.sendBatch("Wakeup", init: _*)
 
               val fieldEntries: Seq[FieldEntry] = Await.result[Seq[FieldEntry]](dataStoreActor.ask(All), 5 seconds)
 
               for {
                 fieldEntry <- fieldEntries
                 fieldValue = fieldEntry.value.asInstanceOf[FieldValue]
-                command <- fieldValue.toCommands(fieldEntry)
               } yield {
-                val rcOperationResult: RcOperationResult = rcOperation.perform(command)
-                sendLogWriter.println(rcOperationResult.toString)
-                sendLogWriter.flush()
-                operations += rcOperationResult
 
-                val percent = 100.0 * sofar.getAndAdd(1.0) / expectedCount
+                val batchOperationsResult = rcOperation.sendBatch(fieldEntry.fieldKey.toString, fieldValue.toCommands(fieldEntry): _*)
+
+                batchOperationsResult.results.foreach { rcOperationResult =>
+                  sendLogWriter.println(s"${sofar.getAndAdd(1.0).toInt}\t${LocalTime.now()}\t ${rcOperationResult.toString}")
+                }
+                operations += batchOperationsResult
+                sendLogWriter.flush()
+
+                val percent = 100.0 * sofar.get() / expectedCount
                 val sPercent = f"$percent%.1f"
                 queue.offer(sPercent)
               }
 
               maybeLastSendAll = Option(LastSendAll(operations.result(), start))
+              queue.offer("Kinder das ist Alles")
             }
 
-            queue.offer("Kinder das ist Alles")
           }
         }
 
@@ -197,7 +197,9 @@ class CandidateController @Inject()(config: Config,
   def lastSendAll(): Action[AnyContent] = Action { implicit request =>
     maybeLastSendAll match {
       case Some(lastSendAll: LastSendAll) =>
-        val rows: Seq[Row] = lastSendAll.operations.map(_.toRow())
+
+
+        val rows: Seq[Row] = lastSendAll.operations.flatMap(_.toRows)
         val table = Table(RcOperationResult.header(rows.length), rows)
         Ok(views.html.lastSendAll(table, Option(lastSendAll)))
       case None =>
@@ -207,10 +209,19 @@ class CandidateController @Inject()(config: Config,
 }
 
 
-case class LastSendAll(operations: Seq[RcOperationResult], start: Instant, finish: Instant = Instant.now()) {
+case class LastSendAll(operations: Seq[BatchOperationsResult], start: Instant, finish: Instant = Instant.now()) {
   val duration: Duration = Duration.between(start, finish)
+  var successCount: Int = 0
+  var failCount: Int = 0
 
-  val successCount: Int = operations.count(_.isSuccess)
-  val failCount: Int = operations.count(!_.isFailure)
+  for {
+    bo: BatchOperationsResult <- operations
+    op: RcOperationResult <- bo.results
+  } {
+    if (op.isSuccess)
+      successCount += 1
+    else
+      failCount += 1
+  }
 
 }

@@ -43,7 +43,7 @@ class RcOperationTest extends RcSpec with TryValues{
   "testPerform" in {
     val rcOperation = new RcOperation(ft232Port)
     try {
-      val result: RcOperationResult = rcOperation.perform("1GetVersion")
+      val result: RcOperationResult = rcOperation.sendOne("1GetVersion")
       val triedRiedResponse: Try[RcResponse] = result.triedResponse
 
       val rcRes: RcResponse = triedRiedResponse.success.value

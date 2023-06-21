@@ -21,7 +21,7 @@ import akka.actor.typed.{ActorRef, Scheduler}
 import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
-import net.wa9nnn.rc210.serial.comm.{DataCollectorActor, OperationsResult, Rc210, RcOperationResult, SerialPortsSource}
+import net.wa9nnn.rc210.serial.comm.{DataCollectorActor, BatchOperationsResult, Rc210, RcOperationResult, SerialPortsSource}
 import net.wa9nnn.rc210.serial.{ComPort, ComPortPersistence}
 import play.api.mvc._
 
@@ -93,7 +93,7 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
         if (current.contains(comPort)) {
           row = row.withCssClass("selected")
           try {
-            val rcOperationResult: Try[OperationsResult] = rc210.send("ver", "1GetVersion")
+            val rcOperationResult: Try[BatchOperationsResult] = rc210.send("ver", "1GetVersion")
             val sVersion = rcOperationResult.get.results.head.head
             val formatted = s"${sVersion.head}.${sVersion.tail}"
             row = row :+ formatted

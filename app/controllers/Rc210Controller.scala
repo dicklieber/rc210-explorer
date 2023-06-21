@@ -23,7 +23,7 @@ import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Table}
 import net.wa9nnn.rc210.serial.ComPortPersistence
-import net.wa9nnn.rc210.serial.comm.{OperationsResult, Rc210}
+import net.wa9nnn.rc210.serial.comm.{BatchOperationsResult, Rc210}
 import play.api.mvc._
 
 import java.time.LocalDateTime
@@ -40,12 +40,12 @@ class Rc210Controller @Inject()(comPortPersistence: ComPortPersistence, rc210: R
 
   //  *21999
 
-  private var lastResults: Option[OperationsResult] = None //todo this belongs in the users session.
+  private var lastResults: Option[BatchOperationsResult] = None //todo this belongs in the users session.
 
   def lastResult: Action[AnyContent] = Action { implicit request =>
 
     val table = lastResults match {
-      case Some(opResult: OperationsResult) =>
+      case Some(opResult: BatchOperationsResult) =>
         Table(Header(), opResult.toRows)
       case None =>
         Table(Seq.empty,  Seq.empty)
@@ -68,7 +68,7 @@ class Rc210Controller @Inject()(comPortPersistence: ComPortPersistence, rc210: R
     rc210.send("SetClock", clock, calendar) match {
       case Failure(exception) =>
         throw exception
-      case Success(operationsResult: OperationsResult) =>
+      case Success(operationsResult: BatchOperationsResult) =>
         lastResults = Option(operationsResult)
         Redirect(routes.IOController.listSerialPorts.url)
     }
@@ -78,7 +78,7 @@ class Rc210Controller @Inject()(comPortPersistence: ComPortPersistence, rc210: R
     rc210.send("SetClock", "1*21999") match {
       case Failure(exception) =>
         throw exception
-      case Success(operationsResult: OperationsResult) =>
+      case Success(operationsResult: BatchOperationsResult) =>
         lastResults = Option(operationsResult)
         Redirect(routes.IOController.listSerialPorts.url)
     }

@@ -38,7 +38,7 @@ case class RcOperation(comPort: ComPort) extends SerialPortMessageListenerWithEx
    * @return
    */
 
-  def perform(request: String): RcOperationResult = {
+  def sendOne(request: String): RcOperationResult = {
     currentTransaction match {
       case Some(currentTransaction) =>
         throw BusyException(currentTransaction)
@@ -51,6 +51,13 @@ case class RcOperation(comPort: ComPort) extends SerialPortMessageListenerWithEx
         })
     }
   }
+
+  def sendBatch(name: String, requests: String*): BatchOperationsResult = {
+    BatchOperationsResult(name, requests.map { request =>
+      sendOne(request)
+    })
+  }
+
 
   def close(): Unit = {
     try {
@@ -151,7 +158,7 @@ object RcOperation extends LazyLogging {
    * @return response failure exception or Seq[String].
    */
   def apply(request: String, comPort: ComPort): RcOperationResult = Using(RcOperation(comPort)) { rr =>
-    rr.perform(request)
+    rr.sendOne(request)
   }.get
 
   type RcResponse = Seq[String]

@@ -49,8 +49,8 @@ class Rc210Spec extends WithTestConfiguration with MockitoSugar with TryValues{
     when(comPortPersistence.currentComPort).thenReturn(Option(ft232Port))
     val rc210 = new Rc210(comPortPersistence)
     "handle one shot" in {
-      val triedOperationsResult: Try[OperationsResult] = rc210.sendOne("Version", "1GetVersion")
-      val operationsResult: OperationsResult = triedOperationsResult.get
+      val triedOperationsResult: Try[BatchOperationsResult] = rc210.sendOne("Version", "1GetVersion")
+      val operationsResult: BatchOperationsResult = triedOperationsResult.get
       val rcRes: Seq[RcOperationResult] = operationsResult.results
       rcRes should have length (1)
       val rcOperationResult: RcOperationResult = rcRes.head
@@ -60,8 +60,8 @@ class Rc210Spec extends WithTestConfiguration with MockitoSugar with TryValues{
 
     }
     "handle batch" in {
-      val triedOperationsResult: Try[OperationsResult] = rc210.send("Version", Seq("1GetVersion", "1GetVersion"))
-      val operationsResult: OperationsResult = triedOperationsResult.get
+      val triedOperationsResult: Try[BatchOperationsResult] = rc210.send("Version", Seq("1GetVersion", "1GetVersion"))
+      val operationsResult: BatchOperationsResult = triedOperationsResult.get
       val rcRes: Seq[RcOperationResult] = operationsResult.results
       rcRes should have length (2)
       val rcOperationResult: RcOperationResult = rcRes.head
