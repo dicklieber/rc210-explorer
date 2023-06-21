@@ -7,7 +7,7 @@ It was inspired by https://github.com/KenArck/WebRCP written in PHP. I don't kno
 But I do know [Scala](https://www.scala-lang.org) a modern functional programming language. So this is written Scala.
 
 # Features
-* Numbered items can haven names.
+* Numbered items can have names.
   * Schedules
   * Macros
   * Message Macros
