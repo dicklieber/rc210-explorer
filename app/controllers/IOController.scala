@@ -17,26 +17,21 @@
 
 package controllers
 
-import akka.actor.typed.{ActorRef, Scheduler}
 import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
-import net.wa9nnn.rc210.serial.comm.{DataCollectorActor, BatchOperationsResult, Rc210, RcOperationResult, SerialPortsSource}
+import net.wa9nnn.rc210.serial.comm.{BatchOperationsResult, Rc210, SerialPortsSource}
 import net.wa9nnn.rc210.serial.{ComPort, ComPortPersistence}
 import play.api.mvc._
 
 import java.util.concurrent.TimeoutException
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
-import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.language.postfixOps
 import scala.util.Try
 
 @Singleton
 class IOController @Inject()(implicit val controllerComponents: ControllerComponents,
-                             executionContext: ExecutionContext,
-                             scheduler: Scheduler,
-                             dataCollectorActor: ActorRef[DataCollectorActor.Message],
                              serialPortsSource: SerialPortsSource,
                              comPortPersistence: ComPortPersistence,
                              rc210: Rc210,
@@ -68,11 +63,6 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
     */
   }
 
-  def download(descriptor: String): Action[AnyContent] = Action {
-    implicit request: Request[AnyContent] =>
-      dataCollectorActor ! DataCollectorActor.StartDownload(descriptor)
-      Ok(views.html.RC210DownloadProgress())
-  }
 
   def select(descriptor: String): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
@@ -84,16 +74,16 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
   def listSerialPorts: Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
 
-      val current: Option[ComPort] = comPortPersistence.currentComPort
+      val current: Try[ComPort] = comPortPersistence.currentComPort
 
       val rows: Seq[Row] = serialPortsSource().map { comPort =>
         var row = Row(
           Cell(comPort.descriptor)
             .withUrl(routes.IOController.select(comPort.descriptor).url), comPort.friendlyName)
-        if (current.contains(comPort)) {
+        if (current.toOption.contains(comPort)) {
           row = row.withCssClass("selected")
           try {
-            val rcOperationResult: Try[BatchOperationsResult] = rc210.send("ver", "1GetVersion")
+            val rcOperationResult: Try[BatchOperationsResult] = rc210.sendBatch("ver", "1GetVersion")
             val sVersion = rcOperationResult.get.results.head.head
             val formatted = s"${sVersion.head}.${sVersion.tail}"
             row = row :+ formatted

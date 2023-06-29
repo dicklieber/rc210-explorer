@@ -17,20 +17,23 @@
 
 package net.wa9nnn.rc210.serial.comm
 
-import com.fazecast.jSerialComm.SerialPort
-import net.wa9nnn.rc210.serial.ComPort
+import com.wa9nnn.util.tableui.{Cell, Row}
 
-import javax.inject.Singleton
-import scala.language.postfixOps
+/**
+ * Result for a named batch of RC210 operations under
+ * @param name often a [[net.wa9nnn.rc210.data.FieldKey]]
+ * @param results for each operation.
+ */
+case class BatchOperationsResult(name: String, results: Seq[RcOperationResult]) {
+  def toRows: Seq[Row] = {
+    val topRow: Row = results.head.toRow
+    val withNameColl: Row = topRow.copy(cells =
+      topRow.cells.prepended(
+        Cell(name)
+          .withRowSpan(results.size)))
+    val moreRows: Seq[Row] = results.tail.map(_.toRow)
 
-@Singleton
-class SerialPortsSource() {
-  def apply(): Seq[ComPort] = {
-    val ports = SerialPort.getCommPorts
-    ports.map(ComPort(_))
-      .filterNot(_.descriptor.contains("/tty")) // just want tty, callin, devices. Leaves COM alone
-      .toList
+    val rows: Seq[Row] = withNameColl +: moreRows
+    rows
   }
 }
-
-

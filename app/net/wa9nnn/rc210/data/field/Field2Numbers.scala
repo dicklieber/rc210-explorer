@@ -84,6 +84,7 @@ object Field2Numbers extends SimpleExtractor[Seq[Int]] {
     formValue(name)
       .split(" ")
       .map(_.toInt)
+      .toIndexedSeq
   }
 }
 

@@ -17,20 +17,26 @@
 
 package net.wa9nnn.rc210.serial.comm
 
-import com.fazecast.jSerialComm.SerialPort
-import net.wa9nnn.rc210.serial.ComPort
+import play.api.libs.json.{Format, Json}
+import play.api.mvc.WebSocket.MessageFlowTransformer
 
-import javax.inject.Singleton
-import scala.language.postfixOps
+import java.time.Instant
 
-@Singleton
-class SerialPortsSource() {
-  def apply(): Seq[ComPort] = {
-    val ports = SerialPort.getCommPorts
-    ports.map(ComPort(_))
-      .filterNot(_.descriptor.contains("/tty")) // just want tty, callin, devices. Leaves COM alone
-      .toList
-  }
+trait ProgressApi {
+  def doOne(message: String): Unit
+
+  def finish(message: String): Unit
+
+  def error(exception: Throwable): Unit
 }
 
+/**
+ * A DTO that is sent as JSON to client for progress display.
+ */
+case class Progress(running: Boolean = true, soFar: Int = 0, percent: String = "", sDuration: String = "", expected: Int, start: Instant, error: String = "")
 
+object Progress {
+  implicit val fmtProgress: Format[Progress] = Json.format[Progress]
+  implicit val messageFlowTransformer: MessageFlowTransformer[String, Progress] =
+    MessageFlowTransformer.jsonMessageFlowTransformer[String, Progress]
+}

@@ -20,10 +20,10 @@ package net.wa9nnn.rc210.serial
 import com.fazecast.jSerialComm.SerialPort
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.serial.comm.SerialPortsSource
-import org.apache.commons.logging.Log
 
 import java.nio.file.{Files, Paths}
 import javax.inject.{Inject, Named, Singleton}
+import scala.util.{Failure, Try}
 
 case class ComPort(descriptor: String = "com1", friendlyName: String = "com1") extends Ordered[ComPort] {
   override def toString: String = s"$descriptor/$friendlyName"
@@ -53,7 +53,7 @@ class ComPortPersistence @Inject()(@Named("vizRc210.serialPortsFile") sFile: Str
   private val dir = file.getParent
   Files.createDirectories(dir)
 
-  private var _currentComPort: Option[ComPort] = None
+  private var _currentComPort: Try[ComPort] = Failure( NoPortSelected())
   try {
     selectPort(Files.readString(file))
   } catch {
@@ -61,15 +61,20 @@ class ComPortPersistence @Inject()(@Named("vizRc210.serialPortsFile") sFile: Str
       logger.error(e.getMessage)
   }
 
-  def currentComPort: Option[ComPort] = _currentComPort
+  def currentComPort: Try[ComPort] = _currentComPort
 
   def selectPort(portDesctiptor: String): Unit = {
     serialPortsSource()
       .find(_.descriptor == portDesctiptor)
       .foreach { comPort =>
-        _currentComPort = Option(comPort)
+        _currentComPort = Try(comPort)
         Files.writeString(file, comPort.descriptor)
       }
   }
 
 }
+
+trait ComPortException extends Exception
+case class NoPortSelected() extends ComPortException
+case class NoVersion (portDescriptor:String) extends ComPortException
+case class Timeout (portDescriptor:String) extends ComPortException

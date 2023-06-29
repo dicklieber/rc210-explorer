@@ -1,62 +1,156 @@
-/*
- * Copyright (C) 2023  Dick Lieber, WA9NNN
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package net.wa9nnn.rc210.serial.comm
 
+import com.fazecast.jSerialComm.SerialPort.LISTENING_EVENT_DATA_RECEIVED
+import com.fazecast.jSerialComm.{SerialPort, SerialPortEvent, SerialPortMessageListenerWithExceptions}
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.{Cell, Row}
-import net.wa9nnn.rc210.serial.ComPortPersistence
+import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
+import net.wa9nnn.rc210.serial.comm.RcOperation.RcResponse
+import net.wa9nnn.rc210.serial.{ComPort, ComPortPersistence}
 
+import java.io.IOException
 import javax.inject.{Inject, Singleton}
-import scala.util.{Failure, Try, Using}
+import scala.concurrent.Await
+import scala.concurrent.duration.DurationInt
+import scala.language.postfixOps
+import scala.util.{Failure, Success, Try}
 
-/**
- * This is the primary API for RC210 access, except for download.
- *
- * @param comPortPersistence whre to find the currently selected [[net.wa9nnn.rc210.serial.ComPort]].
- */
+
 @Singleton
-class Rc210 @Inject()(comPortPersistence: ComPortPersistence) extends LazyLogging {
-
-  def send(name: String, requests: String *): Try[BatchOperationsResult] = {
-    comPortPersistence.currentComPort match {
-      case None =>
-        Failure(new IllegalStateException("No Serial Port Selected."))
-      case Some(comPort) =>
-        Using(RcOperation(comPort)) { rcOperation =>
-          BatchOperationsResult(name, requests.map { request =>
-            rcOperation.sendOne(request)
-          })
-        }
+class Rc210 @Inject()(comPortPersistence: ComPortPersistence) {
+  def sendOne(name: String, request: String): RcOperationResult = {
+    sendBatch(name, request) match {
+      case Failure(exception) =>
+        throw exception
+      case Success(bor: BatchOperationsResult) =>
+        bor.results.head
     }
+  }
+
+  def sendBatch(name: String, requests: String*): Try[BatchOperationsResult] = {
+    for {
+      comPort <- comPortPersistence.currentComPort
+    } yield {
+      val rcOperation = new RcOperationImpl(comPort)
+      try {
+        rcOperation.sendBatch(name, requests: _*)
+      } finally
+        rcOperation.close()
+    }
+  }
+
+  /**
+   *
+   * @return error or an [[RcOperation]] that can be used to [[RcOperation.sendBatch()]]
+   */
+  def start: Try[RcOperation] = {
+    for {
+      comPort <- comPortPersistence.currentComPort
+    } yield {
+      new RcOperationImpl(comPort)
+    }
+
+  }
+
+  /**
+   * Allow one or more operations with a serial port.
+   * This should be used for all RC210 IO except for download which should use [[DataCollector]]
+   *
+   * @param comPort to use.
+   */
+  class RcOperationImpl(comPort: ComPort) extends RcOperation with SerialPortMessageListenerWithExceptions with AutoCloseable with LazyLogging {
+    val serialPort: SerialPort = SerialPort.getCommPort(comPort.descriptor)
+
+    serialPort.setBaudRate(19200)
+    private val opened: Boolean = serialPort.openPort()
+    if (!opened) {
+      throw new IOException(s"Did not open $comPort")
+    }
+    serialPort.addDataListener(this)
+
+    private var currentTransaction: Option[Transaction] = None
+
+    /**
+     *
+     * @param request will have cr appended
+     * @return
+     */
+
+    def sendOne(request: String): RcOperationResult = {
+      currentTransaction match {
+        case Some(currentTransaction) =>
+          throw BusyException(currentTransaction)
+        case None =>
+          logger.trace("Perform: {}", request)
+          val transaction = Transaction(request + "\r", serialPort)
+          currentTransaction = Option(transaction)
+          RcOperationResult(request, Try {
+            val r: RcResponse = Await.result[RcResponse](transaction.future, 30 seconds)
+            r
+          })
+      }
+    }
+
+    def sendBatch(name: String, requests: String*): BatchOperationsResult = {
+      BatchOperationsResult(name, requests.map { request =>
+        sendOne(request)
+      })
+    }
+
+
+    def close(): Unit = {
+      try {
+        serialPort.closePort()
+      } catch {
+        case e: Exception =>
+          logger.error(s"Closing: $comPort ${e.getMessage}")
+      }
+    }
+
+    override def catchException(e: Exception): Unit = {
+      logger.error(s"$comPort", e)
+    }
+
+    override def getMessageDelimiter: Array[Byte] = Array('\n')
+
+    override def delimiterIndicatesEndOfMessage(): Boolean = true
+
+    override def getListeningEvents: Int = LISTENING_EVENT_DATA_RECEIVED
+
+    /**
+     * Invoked by jSerialComm on it's own thread.
+     *
+     * @param event from [[SerialPort]].
+     */
+    override def serialEvent(event: SerialPortEvent): Unit = {
+      val receivedData: Array[Byte] = event.getReceivedData
+      val response = new String(receivedData).trim
+      currentTransaction match {
+        case Some(transaction: Transaction) =>
+          if (transaction.collect(response))
+            currentTransaction = None
+        case None =>
+          logger.error(s"""received "$response" but no transaction is waiting, ignored!""")
+      }
+    }
+
   }
 }
 
-case class BatchOperationsResult(name: String, results: Seq[RcOperationResult]) {
-  def toRows: Seq[Row] = {
-    val topRow: Row = results.head.toRow()
-    val withNameColl: Row = topRow.copy(cells =
-      topRow.cells.prepended(
-        Cell(name)
-          .withRowSpan(results.size)))
-    val moreRows: Seq[Row] = results.tail.map(_.toRow())
 
-    val rows: Seq[Row] = withNameColl +: moreRows
-    rows
-  }
 
+object RcOperation extends LazyLogging {
+
+  type RcResponse = Seq[String]
+
+}
+
+
+case class BusyException(currentTransaction: Transaction) extends Exception(currentTransaction.toString)
+
+trait RcOperation {
+  def sendOne(request: String): RcOperationResult
+
+  def sendBatch(name: String, requests: String*): BatchOperationsResult
+
+  def close(): Unit
 }

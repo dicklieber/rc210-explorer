@@ -2,12 +2,12 @@
 @import com.wa9nnn.util.tableui.html.renderTable
 @import net.wa9nnn.rc210.ui.Tabs
 @import play.filters.csrf.CSRF
-@()(implicit request: RequestHeader)
+@import java.net.URL
+@(name:String, url:String)(implicit request: RequestHeader)
     @tabbedmain(Tabs.rc210Tab) {
         <script>
-                const url = '@routes.CandidateController.ws.webSocketURL()';
 
-                webSocket = new WebSocket(url);
+                webSocket = new WebSocket("@url");
                 webSocket.onmessage = (event) => {
                     const data = event.data;
                     if (data.startsWith("Kinder"))

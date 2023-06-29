@@ -17,43 +17,43 @@
 
 package controllers
 
-import akka.actor.typed.Scheduler
 import akka.stream.Materializer
 import akka.util.Timeout
+import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Table}
-import net.wa9nnn.rc210.serial.ComPortPersistence
-import net.wa9nnn.rc210.serial.comm.{BatchOperationsResult, Rc210}
+import configs.syntax._
+import net.wa9nnn.rc210.serial.comm.{BatchOperationsResult, DataCollector, ProcessWithProgress, Rc210}
 import play.api.mvc._
 
 import java.time.LocalDateTime
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
 import scala.util.{Failure, Success}
 
 @Singleton
-class Rc210Controller @Inject()(comPortPersistence: ComPortPersistence, rc210: Rc210)(implicit scheduler: Scheduler, ec: ExecutionContext, mat: Materializer)
+class Rc210Controller @Inject()(rc210: Rc210, dataCollector: DataCollector, config: Config)(implicit mat: Materializer)
   extends MessagesInjectedController with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
+  private val expectedLines: Int = config.get[Int]("vizRc210.expectedRcLines").value
 
   //  *21999
 
   private var lastResults: Option[BatchOperationsResult] = None //todo this belongs in the users session.
 
-  def lastResult: Action[AnyContent] = Action { implicit request =>
 
+  def lastResult: Action[AnyContent] = Action { implicit request =>
     val table = lastResults match {
       case Some(opResult: BatchOperationsResult) =>
         Table(Header(), opResult.toRows)
       case None =>
-        Table(Seq.empty,  Seq.empty)
+        Table(Seq.empty, Seq.empty)
     }
 
     lastResults = None // just shown once.
 
-     Ok(views.html.lastResults(table))
+    Ok(views.html.lastResults(table))
   }
 
   def setClock(): Action[AnyContent] = Action { implicit request =>
@@ -65,7 +65,7 @@ class Rc210Controller @Inject()(comPortPersistence: ComPortPersistence, rc210: R
     val clock = s"1*5100${dt.getHour}${dt.getMinute}${dt.getSecond}"
     val calendar = s"1*5101${dt.getMonthValue}${dt.getDayOfMonth}${dt.getYear - 2000}"
 
-    rc210.send("SetClock", clock, calendar) match {
+    rc210.sendBatch("SetClock", clock, calendar) match {
       case Failure(exception) =>
         throw exception
       case Success(operationsResult: BatchOperationsResult) =>
@@ -75,7 +75,7 @@ class Rc210Controller @Inject()(comPortPersistence: ComPortPersistence, rc210: R
   }
 
   def restart(): Action[AnyContent] = Action { implicit request =>
-    rc210.send("SetClock", "1*21999") match {
+    rc210.sendBatch("SetClock", "1*21999") match {
       case Failure(exception) =>
         throw exception
       case Success(operationsResult: BatchOperationsResult) =>
@@ -84,4 +84,21 @@ class Rc210Controller @Inject()(comPortPersistence: ComPortPersistence, rc210: R
     }
   }
 
+  /**
+   * Start a download from RC210 operqtion.
+   * All the work actualy happens in [[ws]] and utimately in [[DataCollector]].
+   *
+   * @return
+   */
+  def download(): Action[AnyContent] = Action {
+    implicit request: Request[AnyContent] =>
+      val webSocketURL: String = controllers.routes.Rc210Controller.ws(expectedLines).webSocketURL() //todo all fields expected.
+      Ok(views.html.progress("Download from RC210", webSocketURL))
+  }
+
+  def ws(expected: Int): WebSocket = {
+    ProcessWithProgress(expected, None)(progressApi =>
+      dataCollector(progressApi)
+    )
+  }
 }

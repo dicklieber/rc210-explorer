@@ -19,9 +19,8 @@ package controllers
 
 import akka.actor.typed.scaladsl.AskPattern.Askable
 import akka.actor.typed.{ActorRef, Scheduler}
-import akka.stream.{Materializer, OverflowStrategy}
+import akka.stream.Materializer
 import akka.util.Timeout
-import com.google.common.util.concurrent.AtomicDouble
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, Table}
@@ -30,32 +29,26 @@ import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.data.datastore.DataStoreActor._
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
-import net.wa9nnn.rc210.serial.ComPortPersistence
-import net.wa9nnn.rc210.serial.comm.{BatchOperationsResult, Rc210, RcOperation, RcOperationResult}
+import net.wa9nnn.rc210.serial.comm._
 import play.api.mvc._
 
-import java.io.PrintWriter
-import java.nio.file.{Files, Path}
-import java.time.{Duration, Instant, LocalTime}
-import java.util.concurrent.atomic.AtomicInteger
+import java.nio.file.Path
+import java.time.{Duration, Instant}
 import javax.inject.{Inject, Singleton}
 import scala.collection.immutable.Seq
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, ExecutionContext}
 import scala.language.postfixOps
-import scala.util.{Failure, Success, Try, Using}
+import scala.util.{Failure, Success, Try}
 
 @Singleton()
 class CandidateController @Inject()(config: Config,
                                     dataStoreActor: ActorRef[DataStoreActor.Message],
-                                    rc210: Rc210,
-                                    //                                    rcOperationsActor: ActorRef[RcOperationsActor.Message],
-                                    comPortPersistence: ComPortPersistence)
-                                   //                                    rcHelper: RcHelper)
+                                    rc210: Rc210)
                                    (implicit scheduler: Scheduler, ec: ExecutionContext, mat: Materializer)
   extends MessagesInjectedController with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
-  private val sendFile: Path = config.get[Path]("vizRc210.sendLog").value
+  private val maybeSendLogFile = config.get[Option[Path]]("vizRc210.sendLog").value
   private val stopOnError: Boolean = config.getBoolean("vizRc210.stopSendOnError")
 
   private val init = Seq(
@@ -110,7 +103,7 @@ class CandidateController @Inject()(config: Config,
           else
             fieldEntry.candidate.get.toCommands(fieldEntry) // throws if no candidate
 
-          val triedOperationsResult: Try[BatchOperationsResult] = rc210.send(fieldKey.toString, commands: _*)
+          val triedOperationsResult: Try[BatchOperationsResult] = rc210.sendBatch(fieldKey.toString, commands: _*)
           triedOperationsResult match {
             case Failure(exception) =>
               InternalServerError(exception.getMessage)
@@ -124,7 +117,8 @@ class CandidateController @Inject()(config: Config,
   }
 
   def sendAllFields(): Action[AnyContent] = Action { implicit request =>
-    Ok(views.html.commandsProgress())
+    val webSocketURL: String = routes.CandidateController.ws(471).webSocketURL()  //todo all fields expected.
+    Ok(views.html.progress("Send All Fields", webSocketURL))
   }
 
   def sendAllCandidates(): Action[AnyContent] = Action { implicit request =>
@@ -133,72 +127,36 @@ class CandidateController @Inject()(config: Config,
 
   var maybeLastSendAll: Option[LastSendAll] = None
 
-  import akka.stream.scaladsl._
   import play.api.mvc._
 
-  def ws: WebSocket = WebSocket.accept[String, String] { request =>
+  def ws(expected: Int): WebSocket = {
+    val start = Instant.now()
+    ProcessWithProgress(expected, maybeSendLogFile) { (progressApi: ProgressApi) =>
+      val rcOperation = rc210.start.get // throws if no port selected.
+      val operations = Seq.newBuilder[BatchOperationsResult]
+      operations += rcOperation.sendBatch("Wakeup", init: _*)
+      val fieldEntries: Seq[FieldEntry] = Await.result[Seq[FieldEntry]](dataStoreActor.ask(All), 5 seconds)
 
-    val (queue, source) = Source.queue[String](250, OverflowStrategy.dropHead).preMaterialize()
-
-    // Log events to the console
-    val in = Sink.foreach[String] { message =>
-      logger.info("message: {}", message)
-      val runnable: Runnable = new Runnable {
-        override def run(): Unit = {
-          val start = Instant.now()
-          val sendIndex = new AtomicInteger()
-          val expectedCount = 461.0
-          val sendLogWriter = new PrintWriter(Files.newBufferedWriter(sendFile))
-          val sofar = new AtomicDouble()
-
-          comPortPersistence.currentComPort.foreach { comPort =>
-
-            Using(RcOperation(comPort)) { rcOperation =>
-
-              val operations = Seq.newBuilder[BatchOperationsResult]
-
-              operations += rcOperation.sendBatch("Wakeup", init: _*)
-
-              val fieldEntries: Seq[FieldEntry] = Await.result[Seq[FieldEntry]](dataStoreActor.ask(All), 5 seconds)
-
-              for {
-                fieldEntry <- fieldEntries
-                fieldValue = fieldEntry.value.asInstanceOf[FieldValue]
-              } yield {
-
-                val batchOperationsResult = rcOperation.sendBatch(fieldEntry.fieldKey.toString, fieldValue.toCommands(fieldEntry): _*)
-
-                batchOperationsResult.results.foreach { rcOperationResult =>
-                  sendLogWriter.println(s"${sofar.getAndAdd(1.0).toInt}\t${LocalTime.now()}\t ${rcOperationResult.toString}")
-                }
-                operations += batchOperationsResult
-                sendLogWriter.flush()
-
-                val percent = 100.0 * sofar.get() / expectedCount
-                val sPercent = f"$percent%.1f"
-                queue.offer(sPercent)
-              }
-
-              maybeLastSendAll = Option(LastSendAll(operations.result(), start))
-              queue.offer("Kinder das ist Alles")
-            }
-
-          }
+      var errorEncountered = false
+      for {
+        fieldEntry <- fieldEntries
+        fieldValue = fieldEntry.value.asInstanceOf[FieldValue]
+        if !(errorEncountered && stopOnError)
+      } yield {
+        val batchOperationsResult = rcOperation.sendBatch(fieldEntry.fieldKey.toString, fieldValue.toCommands(fieldEntry): _*)
+        batchOperationsResult.results.foreach { rcOperationResult =>
+          errorEncountered = rcOperationResult.isFailure
+          progressApi.doOne(rcOperationResult.toString)
         }
-
+        operations += batchOperationsResult
       }
-      val thread: Thread = new Thread(runnable, "DownloadActor")
-      thread.setDaemon(true)
-      thread.start()
+      maybeLastSendAll = Option(LastSendAll(operations.result(), start))
     }
-    Flow.fromSinkAndSource(in, source)
   }
 
   def lastSendAll(): Action[AnyContent] = Action { implicit request =>
     maybeLastSendAll match {
       case Some(lastSendAll: LastSendAll) =>
-
-
         val rows: Seq[Row] = lastSendAll.operations.flatMap(_.toRows)
         val table = Table(RcOperationResult.header(rows.length), rows)
         Ok(views.html.lastSendAll(table, Option(lastSendAll)))
@@ -225,3 +183,4 @@ case class LastSendAll(operations: Seq[BatchOperationsResult], start: Instant, f
   }
 
 }
+

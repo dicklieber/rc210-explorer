@@ -38,6 +38,7 @@ import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
 object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
+
   sealed trait DataStoreMessage
 
   type Message = DataStoreMessage
@@ -138,6 +139,8 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
               ingest(json.Json.parse(sJson).as[DataTransferJson])
               replyTo ! "Done"
 
+            case  r:Reload =>
+              logger.error("todo Reload")
             case Json(replyTo) =>
 
               val dto = DataTransferJson(values = valuesMap.values.map(FieldEntryJson(_)).toSeq,
@@ -220,6 +223,7 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
 
   case class UpdateData(candidates: Seq[UpdateCandidate], namedKeys: Seq[NamedKey] = Seq.empty, user: User, replyTo: ActorRef[String]) extends DataStoreMessage
 
+  case class  Reload() extends DataStoreMessage
 
   object UpdateData {
     def apply(candidateAndNames: CandidateAndNames, user: User, replyTo: ActorRef[String]): UpdateData = {

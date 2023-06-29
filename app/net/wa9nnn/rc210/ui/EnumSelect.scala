@@ -38,7 +38,7 @@ import scala.reflect.ClassTag
 class EnumSelect[E <: Enum[E] : ClassTag](name: String) extends LazyLogging with Formatter[E] {
 
   val clazz: Class[E] = implicitly[ClassTag[E]].runtimeClass.asInstanceOf[Class[E]]
-  val values: Array[E] = clazz.getEnumConstants
+  val values: Seq[E] = clazz.getEnumConstants.toIndexedSeq
 
   private val options: Seq[String] = values.map(_.toString)
 
@@ -99,7 +99,7 @@ object EnumSelect {
   def e2o[E <: Enum[E] : ClassTag]: Seq[(String, String)] = {
     val clazz: Class[E] = implicitly[ClassTag[E]].runtimeClass.asInstanceOf[Class[E]]
     for {
-      e <- clazz.getEnumConstants
+      e <- clazz.getEnumConstants.toIndexedSeq
     } yield {
       val str = e.name()
       str -> str

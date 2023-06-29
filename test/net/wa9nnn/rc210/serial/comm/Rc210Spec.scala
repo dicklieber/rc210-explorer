@@ -25,7 +25,7 @@ import org.mockito.Mockito.when
 import org.scalatest.TryValues
 import org.scalatestplus.mockito.MockitoSugar
 
-import scala.util.Try
+import scala.util.{Success, Try}
 
 class Rc210Spec extends WithTestConfiguration with MockitoSugar with TryValues{
 
@@ -46,21 +46,17 @@ class Rc210Spec extends WithTestConfiguration with MockitoSugar with TryValues{
 
   "RC210" should {
     val comPortPersistence = mock[ComPortPersistence]
-    when(comPortPersistence.currentComPort).thenReturn(Option(ft232Port))
+    when(comPortPersistence.currentComPort).thenReturn(Success(ft232Port))
     val rc210 = new Rc210(comPortPersistence)
     "handle one shot" in {
-      val triedOperationsResult: Try[BatchOperationsResult] = rc210.sendOne("Version", "1GetVersion")
-      val operationsResult: BatchOperationsResult = triedOperationsResult.get
-      val rcRes: Seq[RcOperationResult] = operationsResult.results
-      rcRes should have length (1)
-      val rcOperationResult: RcOperationResult = rcRes.head
+      val rcOperationResult: RcOperationResult = rc210.sendOne("Version", "1GetVersion")
       val rcResponse: RcResponse = rcOperationResult.triedResponse.success.value
       rcResponse.head should equal("803")
       rcResponse(1) should equal("+GETVE")
 
     }
     "handle batch" in {
-      val triedOperationsResult: Try[BatchOperationsResult] = rc210.send("Version", Seq("1GetVersion", "1GetVersion"))
+      val triedOperationsResult: Try[BatchOperationsResult] = rc210.sendBatch("Version", "1GetVersion", "1GetVersion")
       val operationsResult: BatchOperationsResult = triedOperationsResult.get
       val rcRes: Seq[RcOperationResult] = operationsResult.results
       rcRes should have length (2)
@@ -70,7 +66,5 @@ class Rc210Spec extends WithTestConfiguration with MockitoSugar with TryValues{
       rcResponse(1) should equal("+GETVE")
 
     }
-
   }
-
 }
