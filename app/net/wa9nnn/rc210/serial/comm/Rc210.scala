@@ -3,11 +3,9 @@ package net.wa9nnn.rc210.serial.comm
 import com.fazecast.jSerialComm.SerialPort.LISTENING_EVENT_DATA_RECEIVED
 import com.fazecast.jSerialComm.{SerialPort, SerialPortEvent, SerialPortMessageListenerWithExceptions}
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
 import net.wa9nnn.rc210.serial.comm.RcOperation.RcResponse
-import net.wa9nnn.rc210.serial.{ComPort, ComPortPersistence}
+import net.wa9nnn.rc210.serial.{RcSerialPort, RcSerialPortManager}
 
-import java.io.IOException
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
@@ -16,7 +14,7 @@ import scala.util.{Failure, Success, Try}
 
 
 @Singleton
-class Rc210 @Inject()(comPortPersistence: ComPortPersistence) {
+class Rc210 @Inject()(rcSerialPortManager: RcSerialPortManager) {
   def sendOne(name: String, request: String): RcOperationResult = {
     sendBatch(name, request) match {
       case Failure(exception) =>
@@ -27,45 +25,37 @@ class Rc210 @Inject()(comPortPersistence: ComPortPersistence) {
   }
 
   def sendBatch(name: String, requests: String*): Try[BatchOperationsResult] = {
-    for {
-      comPort <- comPortPersistence.currentComPort
-    } yield {
-      val rcOperation = new RcOperationImpl(comPort)
-      try {
+    val rcSerialPort = rcSerialPortManager.serialPort()
+
+    val rcOperation = new RcOperationImpl(rcSerialPort)
+    try {
+      Try {
         rcOperation.sendBatch(name, requests: _*)
-      } finally
-        rcOperation.close()
-    }
+      }
+    } finally
+      rcOperation.close()
   }
+
 
   /**
    *
    * @return error or an [[RcOperation]] that can be used to [[RcOperation.sendBatch()]]
    */
   def start: Try[RcOperation] = {
-    for {
-      comPort <- comPortPersistence.currentComPort
-    } yield {
-      new RcOperationImpl(comPort)
+    Try {
+      new RcOperationImpl(rcSerialPortManager.serialPort())
     }
-
   }
 
   /**
    * Allow one or more operations with a serial port.
    * This should be used for all RC210 IO except for download which should use [[DataCollector]]
    *
-   * @param comPort to use.
+   * @param rcSerialPort to use.
    */
-  class RcOperationImpl(comPort: ComPort) extends RcOperation with SerialPortMessageListenerWithExceptions with AutoCloseable with LazyLogging {
-    val serialPort: SerialPort = SerialPort.getCommPort(comPort.descriptor)
+  private class RcOperationImpl(rcSerialPort: RcSerialPort) extends RcOperation with SerialPortMessageListenerWithExceptions with AutoCloseable with LazyLogging {
 
-    serialPort.setBaudRate(19200)
-    private val opened: Boolean = serialPort.openPort()
-    if (!opened) {
-      throw new IOException(s"Did not open $comPort")
-    }
-    serialPort.addDataListener(this)
+    rcSerialPort.addDataListener(this)
 
     private var currentTransaction: Option[Transaction] = None
 
@@ -81,12 +71,13 @@ class Rc210 @Inject()(comPortPersistence: ComPortPersistence) {
           throw BusyException(currentTransaction)
         case None =>
           logger.trace("Perform: {}", request)
-          val transaction = Transaction(request + "\r", serialPort)
+          val transaction = Transaction(request + "\r", rcSerialPort)
           currentTransaction = Option(transaction)
-          RcOperationResult(request, Try {
-            val r: RcResponse = Await.result[RcResponse](transaction.future, 30 seconds)
-            r
+          val rcOperationResult: RcOperationResult = RcOperationResult(request, Try {
+            Await.result[RcResponse](transaction.future, 2 seconds)
           })
+          currentTransaction = None
+          rcOperationResult
       }
     }
 
@@ -99,15 +90,15 @@ class Rc210 @Inject()(comPortPersistence: ComPortPersistence) {
 
     def close(): Unit = {
       try {
-        serialPort.closePort()
+        rcSerialPort.closePort()
       } catch {
         case e: Exception =>
-          logger.error(s"Closing: $comPort ${e.getMessage}")
+          logger.error(s"$rcSerialPort")
       }
     }
 
     override def catchException(e: Exception): Unit = {
-      logger.error(s"$comPort", e)
+      logger.error(s"$rcSerialPort", e)
     }
 
     override def getMessageDelimiter: Array[Byte] = Array('\n')
@@ -127,7 +118,6 @@ class Rc210 @Inject()(comPortPersistence: ComPortPersistence) {
       currentTransaction match {
         case Some(transaction: Transaction) =>
           if (transaction.collect(response))
-            currentTransaction = None
         case None =>
           logger.error(s"""received "$response" but no transaction is waiting, ignored!""")
       }
@@ -137,7 +127,6 @@ class Rc210 @Inject()(comPortPersistence: ComPortPersistence) {
 }
 
 
-
 object RcOperation extends LazyLogging {
 
   type RcResponse = Seq[String]
@@ -145,7 +134,7 @@ object RcOperation extends LazyLogging {
 }
 
 
-case class BusyException(currentTransaction: Transaction) extends Exception(currentTransaction.toString)
+case class BusyException(currentTransaction: Transaction) extends Exception(s"Busy: ${currentTransaction}")
 
 trait RcOperation {
   def sendOne(request: String): RcOperationResult
