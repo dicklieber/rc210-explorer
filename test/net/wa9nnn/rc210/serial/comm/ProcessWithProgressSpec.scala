@@ -17,25 +17,23 @@
 
 package net.wa9nnn.rc210.serial.comm
 
-import com.fazecast.jSerialComm.SerialPort
-import net.wa9nnn.rc210.serial.ComPort
+import akka.actor.testkit.typed.scaladsl.ActorTestKit
+import akka.stream.{ActorMaterializer, Materializer}
+import net.wa9nnn.RcSpec
+import org.scalatest.funsuite.AnyFunSuiteLike
+import play.api.mvc.WebSocket
 
-import javax.inject.Singleton
-import scala.language.postfixOps
+class ProcessWithProgressSpec extends RcSpec {
+  implicit val testKit: ActorTestKit = ActorTestKit()
+  implicit val materializer = Materializer(testKit.system)
 
-@Singleton
-class SerialPortsSource() {
-  /**
-   * All the serial ports.
-   *
-   * @return serial portw as [[ComPort]]
-   */
-  def apply(): Seq[ComPort] = {
-    val ports = SerialPort.getCommPorts
-    ports.map(ComPort(_))
-      .filterNot(_.descriptor.contains("/tty")) // just want callin, devices. Leaves COM alone
-      .toList
-  }
+ "ProcessWithProgress" should {
+   val websocket: WebSocket = ProcessWithProgress(10, None){ progApi =>
+
+     progApi.doOne("Hello one")
+     progApi.finish("Kinder das ist Alles")
+
+   }
+ }
+
 }
-
-

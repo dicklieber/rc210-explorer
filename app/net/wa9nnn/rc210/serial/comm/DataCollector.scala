@@ -23,18 +23,17 @@ import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import configs.syntax._
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
-import net.wa9nnn.rc210.serial.{ComPortPersistence, Timeout}
+import net.wa9nnn.rc210.serial.{CurrentSerialPort, OpenedSerialPort, RcSerialPort, RcSerialPortManager, Timeout}
 
 import java.io.PrintWriter
 import java.nio.file.{Files, Path}
 import javax.inject.{Inject, Singleton}
-import scala.util.{Failure, Success}
 
 /**
  * Reads eeprom from RC210 using the "1SendEram" command
  */
 @Singleton
-class DataCollector @Inject()(config: Config, comPortPersistence: ComPortPersistence, dataStoreActor: ActorRef[DataStoreActor.Message]) extends LazyLogging {
+class DataCollector @Inject()(config: Config, currentSerialPort: CurrentSerialPort, dataStoreActor: ActorRef[DataStoreActor.Message]) extends LazyLogging {
 
   val memoryFile: Path = config.get[Path]("vizRc210.memoryFile").value
   val tempFile = memoryFile.resolveSibling(memoryFile.toFile.toString + ".temp")
@@ -47,87 +46,92 @@ class DataCollector @Inject()(config: Config, comPortPersistence: ComPortPersist
    * @return a Future that will be completed with the final [[Progress]] when done and a [[ProgressSource]] that can be used to obtain the current [[Progress]] while download is running.
    */
   def apply(progressApi: ProgressApi): Unit = {
-    comPortPersistence.currentComPort match {
-      case Failure(exception) =>
-        progressApi.error(exception)
-      case Success(comPort) =>
-        val linesWriter = new PrintWriter(Files.newBufferedWriter(tempFile))
+    try {
+      val rcSerialPort: RcSerialPort = currentSerialPort.currentPort
+      doStuff(rcSerialPort.openPort)
 
-        val portDescriptor = comPort.descriptor
-        val serialPort = SerialPort.getCommPort(portDescriptor)
-        serialPort.setBaudRate(19200)
-        serialPort.openPort()
+    } catch {
+      case e: Exception =>
+        progressApi.error(e)
 
-        def write(s: String = ""): Unit = {
-          val bytes = (s + '\r').getBytes
-          serialPort.writeBytes(bytes, bytes.length)
-        }
+    } finally {
 
-        // wakeup and maybe get to good state
-        for (_ <- 0 to 3) {
-          write()
-          Thread.sleep(100)
-        }
+    }
 
-        def cleanup(): Unit = {
-          serialPort.closePort()
-          dataStoreActor ! DataStoreActor.Reload()
-          linesWriter.close()
-          progressApi.finish("Complete")
-        }
 
-        serialPort.addDataListener(new SerialPortMessageListenerWithExceptions {
-          // serialPort sends us messages here.
-          override def catchException(e: Exception): Unit = logger.error(s"comPort: $portDescriptor", e)
+    def doStuff(openedSerialPort: OpenedSerialPort): Unit = {
+      val linesWriter = new PrintWriter(Files.newBufferedWriter(tempFile))
 
-          override def getMessageDelimiter: Array[Byte] = Array('\n')
+      def write(s: String = ""): Unit = {
+        val bytes = (s + '\r')
+        openedSerialPort.write(bytes)
+      }
 
-          override def delimiterIndicatesEndOfMessage() = true
+      // wakeup and maybe get to good state
+      for (_ <- 0 to 3) {
+        write()
+        Thread.sleep(100)
+      }
 
-          override def getListeningEvents: Int = SerialPort.LISTENING_EVENT_DATA_RECEIVED
+      def cleanup(): Unit = {
+        openedSerialPort.close()
+        dataStoreActor ! DataStoreActor.Reload()
+        linesWriter.close()
+        progressApi.finish("Complete")
+      }
 
-          override def serialEvent(event: SerialPortEvent): Unit = {
-            val receivedData: Array[Byte] = event.getReceivedData
-            val response = new String(receivedData).trim
+      openedSerialPort.addDataListener(new SerialPortMessageListenerWithExceptions {
+        // serialPort sends us messages here.
+        override def catchException(e: Exception): Unit = logger.error(s"comPort: $openedSerialPort", e)
 
-            response match {
-              case "Complete" =>
-                cleanup()
-                Files.delete(memoryFile)
-                Files.move(tempFile, memoryFile)
-                progressApi.finish("Done")
+        override def getMessageDelimiter: Array[Byte] = Array('\n')
 
-              case "+SENDE" =>
-                serialPort.closePort()
-                logger.debug("+SENDE")
-              case "EEPROM Done" =>
-                write("OK")
-                logger.debug("EEPROM Done")
-              case "Timeout" =>
-                progressApi.error(Timeout(serialPort.getSystemPortName))
-                cleanup()
-              case response =>
-                try {
-                  linesWriter.println(response)
-                  progressApi.doOne(response)
-                } catch {
-                  case e: Exception =>
-                    logger.error(s"response: $response", e)
-                }
-                write("OK")
-            }
+        override def delimiterIndicatesEndOfMessage() = true
+
+        override def getListeningEvents: Int = SerialPort.LISTENING_EVENT_DATA_RECEIVED
+
+        override def serialEvent(event: SerialPortEvent): Unit = {
+          val receivedData: Array[Byte] = event.getReceivedData
+          val response = new String(receivedData).trim
+
+          response match {
+            case "Complete" =>
+              cleanup()
+              Files.delete(memoryFile)
+              Files.move(tempFile, memoryFile)
+              progressApi.finish("Done")
+
+            case "+SENDE" =>
+              openedSerialPort.close()
+              logger.debug("+SENDE")
+            case "EEPROM Done" =>
+              write("OK")
+              logger.debug("EEPROM Done")
+            case "Timeout" =>
+              progressApi.error(Timeout(openedSerialPort.toString))
+              cleanup()
+            case response =>
+              try {
+                linesWriter.println(response)
+                progressApi.doOne(response)
+              } catch {
+                case e: Exception =>
+                  logger.error(s"response: $response", e)
+              }
+              write("OK")
           }
         }
-        )
+      }
+      )
 
-        val bytesAvailable = serialPort.bytesAvailable()
-        if (bytesAvailable > 0) {
-          val drain: Array[Byte] = new Array[Byte](bytesAvailable)
-          serialPort.readBytes(drain, bytesAvailable)
-          logger.info(s"drained: $bytesAvailable bytes: ${drain.map(_.toHexString).mkString(" ")}")
-        }
+      val bytesAvailable = openedSerialPort.bytesAvailable()
+      if (bytesAvailable > 0) {
+        val drain: Array[Byte] = new Array[Byte](bytesAvailable)
+        openedSerialPort.readBytes(drain, bytesAvailable)
+        logger.info(s"drained: $bytesAvailable bytes: ${drain.map(_.toHexString).mkString(" ")}")
+      }
 
-        write("1SendEram") // start things off.
+      write("1SendEram") // start things off.
     }
   }
 }

@@ -18,17 +18,25 @@
 package net.wa9nnn.rc210.serial
 
 import com.fazecast.jSerialComm.SerialPort
-import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.serial.comm.SerialPortsSource
+import com.wa9nnn.util.tableui.{Cell, Row, RowSource}
+import controllers.routes
 
-import java.nio.file.{Files, Paths}
-import javax.inject.{Inject, Named, Singleton}
-import scala.util.{Failure, Try}
-
-case class ComPort(descriptor: String = "com1", friendlyName: String = "com1") extends Ordered[ComPort] {
+/**
+ * Reference tgo a [[SerialPort]].
+ *
+ * @param descriptor   used to actual get the [[SerialPort]]
+ * @param friendlyName depended on the OS a, somewhat, friendly name.
+ */
+case class ComPort(descriptor: String = "com1", friendlyName: String = "com1") extends Ordered[ComPort] with RowSource {
   override def toString: String = s"$descriptor/$friendlyName"
 
   override def compare(that: ComPort): Int = friendlyName compareTo (that.friendlyName)
+
+  override def toRow: Row = Row(
+    Cell(descriptor)
+      .withUrl(routes.IOController.select(descriptor).url),
+    friendlyName
+  )
 }
 
 object ComPort {
@@ -36,45 +44,24 @@ object ComPort {
     new ComPort(serialPort.getSystemPortPath, serialPort.getDescriptivePortName)
   }
 
-  def apply(fromToString: String): ComPort = {
-    val tokens = fromToString.split("/")
-    new ComPort(tokens.head, tokens(1))
-  }
+  //  def apply(fromToString: String): ComPort = {
+  //    val tokens = fromToString.split("/")
+  //    new ComPort(tokens.head, tokens(1))
+  //  }
 }
 
-/**
- *
- * @param sFile where to store currently slect [[ComPort].]
- * @param serialPortsSource whats known from OS.
- */
-@Singleton
-class ComPortPersistence @Inject()(@Named("vizRc210.serialPortsFile") sFile: String, serialPortsSource: SerialPortsSource) extends LazyLogging {
-  private val file = Paths.get(sFile)
-  private val dir = file.getParent
-  Files.createDirectories(dir)
-
-  private var _currentComPort: Try[ComPort] = Failure( NoPortSelected())
-  try {
-    selectPort(Files.readString(file))
-  } catch {
-    case e: Exception =>
-      logger.error(e.getMessage)
-  }
-
-  def currentComPort: Try[ComPort] = _currentComPort
-
-  def selectPort(portDesctiptor: String): Unit = {
-    serialPortsSource()
-      .find(_.descriptor == portDesctiptor)
-      .foreach { comPort =>
-        _currentComPort = Try(comPort)
-        Files.writeString(file, comPort.descriptor)
-      }
-  }
-
-}
 
 trait ComPortException extends Exception
+
 case class NoPortSelected() extends ComPortException
-case class NoVersion (portDescriptor:String) extends ComPortException
-case class Timeout (portDescriptor:String) extends ComPortException
+
+case class OpenFailed(portDescriptor: String) extends ComPortException
+
+case class NoVersion(portDescriptor: String) extends ComPortException
+
+case class Timeout(portDescriptor: String) extends ComPortException
+
+
+
+
+

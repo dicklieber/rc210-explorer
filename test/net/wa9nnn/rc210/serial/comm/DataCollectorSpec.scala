@@ -21,7 +21,7 @@ import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import com.fazecast.jSerialComm.SerialPort
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.fixtures.WithTestConfiguration
-import net.wa9nnn.rc210.serial.{ComPort, ComPortPersistence}
+import net.wa9nnn.rc210.serial.{ComPort, CurrentSerialPort, RcSerialPort, RcSerialPortManager}
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.file.PathUtils
 import org.mockito.Mockito.{verify, when}
@@ -39,13 +39,13 @@ import scala.util.Success
  * A guru test since it must be connected to an RC210
  */
 class DataCollectorSpec extends WithTestConfiguration with MockitoSugar with BeforeAndAfterAll {
-  def listPorts: Seq[ComPort] = {
-    val ports = SerialPort.getCommPorts
-    ports.map(ComPort(_)).toList
+  def listPorts: Array[RcSerialPort] = {
+    val ports = SerialPort.getCommPorts.map(RcSerialPort(_))
+    ports
   }
 
-  val ft232Port: ComPort = {
-    listPorts.find(_.friendlyName.contains("FT232")) match {
+  val ft232Port: RcSerialPort = {
+    listPorts.find(_.comPort.friendlyName.contains("FT232")) match {
       case Some(value) =>
         value
       case None =>
@@ -53,15 +53,15 @@ class DataCollectorSpec extends WithTestConfiguration with MockitoSugar with Bef
     }
   }
 
-  val comPortPersistence = mock[ComPortPersistence]
+  val currentSerialPort = mock[CurrentSerialPort]
   private val progressApi: ProgressApi = mock[ProgressApi]
   implicit val testKit: ActorTestKit = ActorTestKit()
   //  implicit val system: ActorSystem[Nothing] = testKit.system
   private val dataStoreProbe = testKit.createTestProbe[DataStoreActor.Message]()
-  when(comPortPersistence.currentComPort).thenReturn(Success(ft232Port))
+  when(currentSerialPort.currentPort) thenReturn(ft232Port)
   "DataCollector" should {
     "Produce File" in {
-      val dcs: DataCollector = new DataCollector(config, comPortPersistence, dataStoreProbe.ref)
+      val dcs: DataCollector = new DataCollector(config, currentSerialPort, dataStoreProbe.ref)
       dcs(progressApi)
 
 

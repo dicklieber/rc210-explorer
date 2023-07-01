@@ -77,6 +77,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
   "com.typesafe.akka" %% "akka-actor" % akkaVersion,
   "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion % Test,
+  "com.typesafe.akka" %% "akka-stream-testkit" % akkaVersion % Test,
   "com.fazecast" % "jSerialComm" % "2.9.3",
   //  "io.suzaku" %% "boopickle" % "1.4.0",
   "org.fusesource.jansi" % "jansi" % "2.4.0",

@@ -30,7 +30,6 @@ import java.time.LocalDateTime
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
-import scala.util.{Failure, Success}
 
 @Singleton
 class Rc210Controller @Inject()(rc210: Rc210, dataCollector: DataCollector, config: Config)(implicit mat: Materializer)
@@ -60,33 +59,26 @@ class Rc210Controller @Inject()(rc210: Rc210, dataCollector: DataCollector, conf
 
     //    serialPortsActor
     //   clock:  *5100 12 12 23
-    // calander:   *5101 06 11 03 Set June 11, 2003 as the current date
+    // calendar:   *5101 06 11 03 Set June 11, 2003 as the current date
     val dt = LocalDateTime.now()
     val clock = s"1*5100${dt.getHour}${dt.getMinute}${dt.getSecond}"
     val calendar = s"1*5101${dt.getMonthValue}${dt.getDayOfMonth}${dt.getYear - 2000}"
 
-    rc210.sendBatch("SetClock", clock, calendar) match {
-      case Failure(exception) =>
-        throw exception
-      case Success(operationsResult: BatchOperationsResult) =>
-        lastResults = Option(operationsResult)
-        Redirect(routes.IOController.listSerialPorts.url)
-    }
+    val operationsResult = rc210.sendBatch("SetClock", clock, calendar)
+    lastResults = Option(operationsResult)
+    Redirect(routes.IOController.listSerialPorts.url)
   }
 
+
   def restart(): Action[AnyContent] = Action { implicit request =>
-    rc210.sendBatch("SetClock", "1*21999") match {
-      case Failure(exception) =>
-        throw exception
-      case Success(operationsResult: BatchOperationsResult) =>
-        lastResults = Option(operationsResult)
-        Redirect(routes.IOController.listSerialPorts.url)
-    }
+    val batchOperationsResult = rc210.sendBatch("Restart", "1*21999")
+    lastResults = Option(batchOperationsResult)
+    Redirect(routes.IOController.listSerialPorts.url)
   }
 
   /**
-   * Start a download from RC210 operqtion.
-   * All the work actualy happens in [[ws]] and utimately in [[DataCollector]].
+   * Start a download from RC210 operation.
+   * All the work actually happens in [[ws]] and ultimately in [[DataCollector]].
    *
    * @return
    */

@@ -39,7 +39,6 @@ import scala.collection.immutable.Seq
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, ExecutionContext}
 import scala.language.postfixOps
-import scala.util.{Failure, Success, Try}
 
 @Singleton()
 class CandidateController @Inject()(config: Config,
@@ -103,67 +102,62 @@ class CandidateController @Inject()(config: Config,
           else
             fieldEntry.candidate.get.toCommands(fieldEntry) // throws if no candidate
 
-          val triedOperationsResult: Try[BatchOperationsResult] = rc210.sendBatch(fieldKey.toString, commands: _*)
-          triedOperationsResult match {
-            case Failure(exception) =>
-              InternalServerError(exception.getMessage)
-            case Success(operationsResult: BatchOperationsResult) =>
-              val rows = operationsResult.toRows
-              val table = Table(Header("Result", "Field", "Command", "Response"), rows)
-              Ok(views.html.justdat(Seq(table)))
-
-          }
+          val operationsResult: BatchOperationsResult = rc210.sendBatch(fieldKey.toString, commands: _*)
+          val rows = operationsResult.toRows
+          val table = Table(Header("Result", "Field", "Command", "Response"), rows)
+          Ok(views.html.justdat(Seq(table)))
       }
   }
 
-  def sendAllFields(): Action[AnyContent] = Action { implicit request =>
-    val webSocketURL: String = routes.CandidateController.ws(471).webSocketURL()  //todo all fields expected.
-    Ok(views.html.progress("Send All Fields", webSocketURL))
-  }
+def sendAllFields(): Action[AnyContent] = Action { implicit request =>
+  val webSocketURL: String = routes.CandidateController.ws(471).webSocketURL() //todo all fields expected.
+  Ok(views.html.progress("Send All Fields", webSocketURL))
+}
 
-  def sendAllCandidates(): Action[AnyContent] = Action { implicit request =>
-    Ok("todo")
-  }
+def sendAllCandidates(): Action[AnyContent] = Action { implicit request =>
+  Ok("todo")
+}
 
-  var maybeLastSendAll: Option[LastSendAll] = None
+var maybeLastSendAll: Option[LastSendAll] = None
 
-  import play.api.mvc._
+import play.api.mvc._
 
-  def ws(expected: Int): WebSocket = {
-    val start = Instant.now()
-    ProcessWithProgress(expected, maybeSendLogFile) { (progressApi: ProgressApi) =>
-      val rcOperation = rc210.start.get // throws if no port selected.
-      val operations = Seq.newBuilder[BatchOperationsResult]
-      operations += rcOperation.sendBatch("Wakeup", init: _*)
-      val fieldEntries: Seq[FieldEntry] = Await.result[Seq[FieldEntry]](dataStoreActor.ask(All), 5 seconds)
+def ws(expected: Int): WebSocket = {
+  val start = Instant.now()
+  ProcessWithProgress(expected, maybeSendLogFile) { (progressApi: ProgressApi) =>
+    val rcOperation = rc210.start // throws if no port selected.
+    val operations = Seq.newBuilder[BatchOperationsResult]
+    operations += rcOperation.sendBatch("Wakeup", init:_*)
+    val fieldEntries: Seq[FieldEntry] = Await.result[Seq[FieldEntry]](dataStoreActor.ask(All), 5 seconds)
 
-      var errorEncountered = false
-      for {
-        fieldEntry <- fieldEntries
-        fieldValue = fieldEntry.value.asInstanceOf[FieldValue]
-        if !(errorEncountered && stopOnError)
-      } yield {
-        val batchOperationsResult = rcOperation.sendBatch(fieldEntry.fieldKey.toString, fieldValue.toCommands(fieldEntry): _*)
-        batchOperationsResult.results.foreach { rcOperationResult =>
-          errorEncountered = rcOperationResult.isFailure
-          progressApi.doOne(rcOperationResult.toString)
-        }
-        operations += batchOperationsResult
+    var errorEncountered = false
+    for {
+      fieldEntry <- fieldEntries
+      fieldValue = fieldEntry.value.asInstanceOf[FieldValue]
+      if !(errorEncountered && stopOnError)
+    } yield {
+      val batchOperationsResult = rcOperation.sendBatch(fieldEntry.fieldKey.toString, fieldValue.toCommands(fieldEntry):_*)
+      batchOperationsResult.results.foreach { rcOperationResult =>
+        errorEncountered = rcOperationResult.isFailure
+        progressApi.doOne(rcOperationResult.toString)
       }
-      maybeLastSendAll = Option(LastSendAll(operations.result(), start))
+      operations += batchOperationsResult
     }
+    maybeLastSendAll = Option(LastSendAll(operations.result(), start))
+    progressApi.finish("Done")
   }
+}
 
-  def lastSendAll(): Action[AnyContent] = Action { implicit request =>
-    maybeLastSendAll match {
-      case Some(lastSendAll: LastSendAll) =>
-        val rows: Seq[Row] = lastSendAll.operations.flatMap(_.toRows)
-        val table = Table(RcOperationResult.header(rows.length), rows)
-        Ok(views.html.lastSendAll(table, Option(lastSendAll)))
-      case None =>
-        Ok(views.html.lastSendAll(Table(Seq.empty, Seq.empty), None))
-    }
+def lastSendAll(): Action[AnyContent] = Action { implicit request =>
+  maybeLastSendAll match {
+    case Some(lastSendAll: LastSendAll) =>
+      val rows: Seq[Row] = lastSendAll.operations.flatMap(_.toRows)
+      val table = Table(RcOperationResult.header(rows.length), rows)
+      Ok(views.html.lastSendAll(table, Option(lastSendAll)))
+    case None =>
+      Ok(views.html.lastSendAll(Table(Seq.empty, Seq.empty), None))
   }
+}
 }
 
 

@@ -20,14 +20,12 @@ package net.wa9nnn.rc210.serial.comm
 import com.fazecast.jSerialComm.SerialPort
 import net.wa9nnn.RcSpec
 import net.wa9nnn.rc210.serial.comm.RcOperation.RcResponse
-import net.wa9nnn.rc210.serial.{ComPort, RcSerialPort, RcSerialPortManager}
+import net.wa9nnn.rc210.serial.{ComPort, CurrentSerialPort, RcSerialPort, RcSerialPortManager}
 import org.mockito.Mockito.when
 import org.scalatest.TryValues.convertTryToSuccessOrFailure
 import org.scalatest.{Sequential, TryValues}
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.mockito.MockitoSugar.mock
-
-import scala.util.{Failure, Success}
 
 class Rc210Spec extends Sequential(
   new SendOne(),
@@ -37,14 +35,23 @@ class Rc210Spec extends Sequential(
 }
 
 class SendOne extends RcSpec {
-  val rcResponseSendOne: RcResponse = Rc210ForTest().sendOne("Version", "1GetVersion").triedResponse.success.value
-  rcResponseSendOne.head should equal("803")
-  rcResponseSendOne(1) should equal("+GETVE")
+  private val rc210: Rc210 = Rc210ForTest()
+  "first" in {
+    val rcResponseSendOne: RcResponse = rc210.sendOne("1GetVersion").triedResponse.success.value
+    rcResponseSendOne.head should equal("803")
+    rcResponseSendOne(1) should equal("+GETVE")
+  }
+  "second" in {
+    val rcResponseSendOne: RcResponse = rc210.sendOne("1GetVersion").triedResponse.success.value
+    rcResponseSendOne.head should equal("803")
+    rcResponseSendOne(1) should equal("+GETVE")
+  }
+
 }
 
 class SendBatch extends RcSpec {
-  val batchRespnses: Seq[RcOperationResult] = Rc210ForTest().sendBatch("Version", "1GetVersion", "1GetVersion").get.results
-  batchRespnses should have length (2)
+  val batchRespnses: Seq[RcOperationResult] = Rc210ForTest().sendBatch("Version", "1GetVersion", "1GetVersion").results
+  batchRespnses should have length 2
   val rcOperationResult: RcOperationResult = batchRespnses.head
   val rcResponse: RcResponse = rcOperationResult.triedResponse.success.value
   rcResponse.head should equal("803")
@@ -53,18 +60,15 @@ class SendBatch extends RcSpec {
 }
 
 class StartStopClose extends RcSpec {
-  Rc210ForTest().start match {
-    case Failure(exception) =>
-      throw exception
-    case Success(rcOperation: RcOperation) =>
-      val r1 = rcOperation.sendBatch("one", "1GetVersion", "1GetVersion")
-      val r2 = rcOperation.sendBatch("two", "1GetVersion", "1GetVersion")
+  val rcOperation: RcOperation = Rc210ForTest().start
+  private val r1 = rcOperation.sendBatch("one", "1GetVersion", "1GetVersion")
+  private val r2 = rcOperation.sendBatch("two", "1GetVersion", "1GetVersion")
 
-      r1.name should be("one")
-      r2.name should be("two")
-      rcOperation.close()
-  }
+  r1.name should be("one")
+  r2.name should be("two")
+  rcOperation.close()
 }
+
 
 object Rc210ForTest {
   def apply(): Rc210 = {
@@ -82,11 +86,10 @@ object Rc210ForTest {
       }
     }
 
-    val rcSerialPortManager = mock[RcSerialPortManager]
+    val rcSerialPortManager = mock[CurrentSerialPort]
     val serialPort = SerialPort.getCommPort(ft232Port.descriptor)
-    val rcSerialPort = new RcSerialPort(serialPort)
-    when(rcSerialPortManager.serialPort()).thenReturn(rcSerialPort)
+    val rcSerialPort = RcSerialPort(serialPort)
+    when(rcSerialPortManager.currentPort) thenReturn(rcSerialPort)
     new Rc210(rcSerialPortManager)
-
   }
 }

@@ -21,7 +21,7 @@ import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.serial.comm.{BatchOperationsResult, Rc210, SerialPortsSource}
-import net.wa9nnn.rc210.serial.{ComPort, ComPortPersistence}
+import net.wa9nnn.rc210.serial.{ComPort, CurrentSerialPort, RcSerialPortManager}
 import play.api.mvc._
 
 import java.util.concurrent.TimeoutException
@@ -32,41 +32,21 @@ import scala.util.Try
 
 @Singleton
 class IOController @Inject()(implicit val controllerComponents: ControllerComponents,
-                             serialPortsSource: SerialPortsSource,
-                             comPortPersistence: ComPortPersistence,
+                             currentSerialPort: CurrentSerialPort,
+                             rcSerialPortManager: RcSerialPortManager,
                              rc210: Rc210,
                             ) extends BaseController with LazyLogging {
   implicit val timeout: Timeout = 5.seconds
 
-
-  //  def progress(): Action[AnyContent] = Action {
-  //    implicit request: Request[AnyContent] =>
-  //      val sJson: String = eramCollector.map { eRamCollector =>
-  //        val progress1 = eRamCollector.progress
-  //        val jsObject = Json.toJson(progress1)
-  //        Json.prettyPrint(jsObject)
-  //      }.getOrElse("no eramCollector")
-  //      Ok(sJson)
-  //  }
-
   def downloadResult: Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
       throw new NotImplementedError() //todo
-    /*
-          eramCollector match {
-            case Some(eramCollector: ERamCollector) =>
-              val table: Table = eramCollector.resultStatus.toTable
-              Ok(views.html.RC210Landings(table))
-            case None =>
-              Ok("DownloadActor not performed!")
-          }
-    */
   }
 
 
   def select(descriptor: String): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      comPortPersistence.selectPort(descriptor)
+      rcSerialPortManager.selectPort(descriptor)
       Redirect(routes.IOController.listSerialPorts)
   }
 
@@ -74,31 +54,7 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
   def listSerialPorts: Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
 
-      val current: Try[ComPort] = comPortPersistence.currentComPort
-
-      val rows: Seq[Row] = serialPortsSource().map { comPort =>
-        var row = Row(
-          Cell(comPort.descriptor)
-            .withUrl(routes.IOController.select(comPort.descriptor).url), comPort.friendlyName)
-        if (current.toOption.contains(comPort)) {
-          row = row.withCssClass("selected")
-          try {
-            val rcOperationResult: Try[BatchOperationsResult] = rc210.sendBatch("ver", "1GetVersion")
-            val sVersion = rcOperationResult.get.results.head.head
-            val formatted = s"${sVersion.head}.${sVersion.tail}"
-            row = row :+ formatted
-          } catch {
-            case e: TimeoutException =>
-              logger.debug("timeout")
-              row = (row :+ "timeout").withCssClass("badPort")
-            case e: Exception =>
-              logger.debug("No response or understood response from serial port. Prosabaly not an RC-210.")
-              row = (row :+ "?").withCssClass("badPort")
-          }
-        }
-        row
-      }
-      val table = Table(Header("Serial Ports", "Descriptor", "Friendly Name", "RC210 Version"), rows)
+      val table = currentSerialPort.table(rc210)
       Ok(views.html.RC210Landings(table))
   }
 }

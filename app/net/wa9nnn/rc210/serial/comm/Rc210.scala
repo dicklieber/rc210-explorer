@@ -4,58 +4,46 @@ import com.fazecast.jSerialComm.SerialPort.LISTENING_EVENT_DATA_RECEIVED
 import com.fazecast.jSerialComm.{SerialPort, SerialPortEvent, SerialPortMessageListenerWithExceptions}
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.serial.comm.RcOperation.RcResponse
-import net.wa9nnn.rc210.serial.{RcSerialPort, RcSerialPortManager}
+import net.wa9nnn.rc210.serial.{CurrentSerialPort, NoPortSelected, OpenedSerialPort, RcSerialPortManager}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
-import scala.util.{Failure, Success, Try}
+import scala.util.{Try, Using}
 
 
 @Singleton
-class Rc210 @Inject()(rcSerialPortManager: RcSerialPortManager) {
-  def sendOne(name: String, request: String): RcOperationResult = {
-    sendBatch(name, request) match {
-      case Failure(exception) =>
-        throw exception
-      case Success(bor: BatchOperationsResult) =>
-        bor.results.head
+class Rc210 @Inject()(currentSerialPort: CurrentSerialPort) {
+  def sendOne(request: String): RcOperationResult = {
+    Using.resource(new RcOperationImpl(currentSerialPort.currentPort.openPort())) { rcOperation =>
+      rcOperation.sendOne(request)
     }
   }
 
-  def sendBatch(name: String, requests: String*): Try[BatchOperationsResult] = {
-    val rcSerialPort = rcSerialPortManager.serialPort()
-
-    val rcOperation = new RcOperationImpl(rcSerialPort)
-    try {
-      Try {
-        rcOperation.sendBatch(name, requests: _*)
-      }
-    } finally
-      rcOperation.close()
+  def sendBatch(name: String, requests: String*): BatchOperationsResult = {
+    Using.resource(new RcOperationImpl(currentSerialPort.currentPort.openPort())) { rcOperation =>
+      rcOperation.sendBatch(name, requests:_*)
+    }
   }
-
 
   /**
    *
-   * @return error or an [[RcOperation]] that can be used to [[RcOperation.sendBatch()]]
+   * @return an RcOperation
    */
-  def start: Try[RcOperation] = {
-    Try {
-      new RcOperationImpl(rcSerialPortManager.serialPort())
-    }
+  @throws[NoPortSelected]
+  def start: RcOperation = {
+    new RcOperationImpl(currentSerialPort.currentPort.openPort())
   }
 
   /**
    * Allow one or more operations with a serial port.
    * This should be used for all RC210 IO except for download which should use [[DataCollector]]
    *
-   * @param rcSerialPort to use.
+   * @param openedSerialPort to use.
    */
-  private class RcOperationImpl(rcSerialPort: RcSerialPort) extends RcOperation with SerialPortMessageListenerWithExceptions with AutoCloseable with LazyLogging {
-
-    rcSerialPort.addDataListener(this)
+  private[Rc210] class RcOperationImpl(openedSerialPort: OpenedSerialPort) extends RcOperation  with AutoCloseable with LazyLogging {
+    assert(openedSerialPort.rcSerialPort.serialPort.isOpen, "Serial port not open!")
 
     private var currentTransaction: Option[Transaction] = None
 
@@ -71,7 +59,7 @@ class Rc210 @Inject()(rcSerialPortManager: RcSerialPortManager) {
           throw BusyException(currentTransaction)
         case None =>
           logger.trace("Perform: {}", request)
-          val transaction = Transaction(request + "\r", rcSerialPort)
+          val transaction = Transaction(request + "\r", openedSerialPort)
           currentTransaction = Option(transaction)
           val rcOperationResult: RcOperationResult = RcOperationResult(request, Try {
             Await.result[RcResponse](transaction.future, 2 seconds)
@@ -82,46 +70,19 @@ class Rc210 @Inject()(rcSerialPortManager: RcSerialPortManager) {
     }
 
     def sendBatch(name: String, requests: String*): BatchOperationsResult = {
-      BatchOperationsResult(name, requests.map { request =>
-        sendOne(request)
-      })
+      BatchOperationsResult(name, requests.map(sendOne))
     }
 
 
     def close(): Unit = {
       try {
-        rcSerialPort.closePort()
+        openedSerialPort.close()
       } catch {
         case e: Exception =>
-          logger.error(s"$rcSerialPort")
+          logger.error(s"$openedSerialPort", e)
       }
     }
 
-    override def catchException(e: Exception): Unit = {
-      logger.error(s"$rcSerialPort", e)
-    }
-
-    override def getMessageDelimiter: Array[Byte] = Array('\n')
-
-    override def delimiterIndicatesEndOfMessage(): Boolean = true
-
-    override def getListeningEvents: Int = LISTENING_EVENT_DATA_RECEIVED
-
-    /**
-     * Invoked by jSerialComm on it's own thread.
-     *
-     * @param event from [[SerialPort]].
-     */
-    override def serialEvent(event: SerialPortEvent): Unit = {
-      val receivedData: Array[Byte] = event.getReceivedData
-      val response = new String(receivedData).trim
-      currentTransaction match {
-        case Some(transaction: Transaction) =>
-          if (transaction.collect(response))
-        case None =>
-          logger.error(s"""received "$response" but no transaction is waiting, ignored!""")
-      }
-    }
 
   }
 }
@@ -134,12 +95,12 @@ object RcOperation extends LazyLogging {
 }
 
 
-case class BusyException(currentTransaction: Transaction) extends Exception(s"Busy: ${currentTransaction}")
+case class BusyException(currentTransaction: Transaction) extends Exception(s"Busy: $currentTransaction")
 
 trait RcOperation {
-  def sendOne(request: String): RcOperationResult
-
   def sendBatch(name: String, requests: String*): BatchOperationsResult
+
+  def sendOne(request: String): RcOperationResult
 
   def close(): Unit
 }

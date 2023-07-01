@@ -17,14 +17,19 @@
 
 package net.wa9nnn.rc210.serial.comm
 
-import com.fazecast.jSerialComm.SerialPort
+import com.fazecast.jSerialComm.{SerialPort, SerialPortEvent, SerialPortMessageListenerWithExceptions}
+import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.serial.OpenedSerialPort
 import net.wa9nnn.rc210.serial.comm.RcOperation.RcResponse
 
 import java.time.{Duration, Instant}
 import scala.collection.mutable
 import scala.concurrent.{Future, Promise}
 
-case class Transaction(request: String, serialPort: SerialPort, start: Instant = Instant.now()) {
+case class Transaction(request: String, openedSerialPort: OpenedSerialPort, start: Instant = Instant.now()) extends SerialPortMessageListenerWithExceptions with LazyLogging {
+
+  assert(openedSerialPort.rcSerialPort.serialPort.isOpen, "Serial port not open!")
+  openedSerialPort.addDataListener(this)
   private val lineBuilder: mutable.Builder[String, Seq[String]] = Seq.newBuilder[String]
 
   /**
@@ -37,21 +42,43 @@ case class Transaction(request: String, serialPort: SerialPort, start: Instant =
     response.head match {
       case '+' =>
         promise.success(lineBuilder.result())
+        openedSerialPort.removeDataListener()
         true
       case '-' =>
         promise.success(lineBuilder.result())
+        openedSerialPort.removeDataListener()
         true
-      case x =>
+      case _ =>
         false
     }
   }
 
+  override def catchException(e: Exception): Unit = {
+    logger.error(s"$openedSerialPort", e)
+  }
+
+  override def getMessageDelimiter: Array[Byte] = Array('\n')
+
+  override def delimiterIndicatesEndOfMessage(): Boolean = true
+
+  override def getListeningEvents: Int = SerialPort.LISTENING_EVENT_DATA_RECEIVED
+
+  /**
+   * Invoked by jSerialComm on it's own thread.
+   *
+   * @param event from [[SerialPort]].
+   */
+  override def serialEvent(event: SerialPortEvent): Unit = {
+    val receivedData: Array[Byte] = event.getReceivedData
+    val response = new String(receivedData).trim
+    collect(response)
+  }
+
   private val promise = Promise[Seq[String]]()
   val future: Future[RcResponse] = promise.future
-  private val bytes: Array[Byte] = request.getBytes
-  serialPort.writeBytes(bytes, bytes.length)
+  openedSerialPort.write(request)
 
   override def toString: String = {
-    s"On: ${serialPort.getDescriptivePortName} Request: $request Duration: ${Duration.between(start, Instant.now())}"
+    s"On: $openedSerialPort Request: $request Duration: ${Duration.between(start, Instant.now())}"
   }
 }
