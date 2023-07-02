@@ -1,11 +1,14 @@
 package net.wa9nnn.rc210.serial.comm
 
-import com.fazecast.jSerialComm.SerialPort.LISTENING_EVENT_DATA_RECEIVED
-import com.fazecast.jSerialComm.{SerialPort, SerialPortEvent, SerialPortMessageListenerWithExceptions}
+import com.fazecast.jSerialComm.SerialPort
+import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
+import com.wa9nnn.util.tableui.{Header, Row, Table}
+import configs.syntax._
 import net.wa9nnn.rc210.serial.comm.RcOperation.RcResponse
-import net.wa9nnn.rc210.serial.{CurrentSerialPort, NoPortSelected, OpenedSerialPort, RcSerialPortManager}
+import net.wa9nnn.rc210.serial.{ComPort, NoPortSelected, OpenedSerialPort, RcSerialPort}
 
+import java.nio.file.{Files, Path}
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
@@ -14,16 +17,25 @@ import scala.util.{Try, Using}
 
 
 @Singleton
-class Rc210 @Inject()(currentSerialPort: CurrentSerialPort) {
+class Rc210 @Inject()(serialPortsSource: SerialPortsSource, config: Config) {
+  def openSerialPort: OpenedSerialPort = maybeRcSerialPort.map(_.openPort()).get
+
+  private val file: Path = config.get[Path]("vizRc210.serialPortsFile").value
+
+  Files.createDirectories(file.getParent)
+  var maybeRcSerialPort: Option[RcSerialPort] = None
+  selectPort(Files.readString(file))
+
+
   def sendOne(request: String): RcOperationResult = {
-    Using.resource(new RcOperationImpl(currentSerialPort.currentPort.openPort())) { rcOperation =>
+    Using.resource(new RcOperationImpl()) { rcOperation =>
       rcOperation.sendOne(request)
     }
   }
 
   def sendBatch(name: String, requests: String*): BatchOperationsResult = {
-    Using.resource(new RcOperationImpl(currentSerialPort.currentPort.openPort())) { rcOperation =>
-      rcOperation.sendBatch(name, requests:_*)
+    Using.resource(new RcOperationImpl()) { rcOperation =>
+      rcOperation.sendBatch(name, requests: _*)
     }
   }
 
@@ -33,17 +45,17 @@ class Rc210 @Inject()(currentSerialPort: CurrentSerialPort) {
    */
   @throws[NoPortSelected]
   def start: RcOperation = {
-    new RcOperationImpl(currentSerialPort.currentPort.openPort())
+    new RcOperationImpl()
   }
 
   /**
    * Allow one or more operations with a serial port.
    * This should be used for all RC210 IO except for download which should use [[DataCollector]]
+   * Clients only know about [[RcOperation]].
    *
-   * @param openedSerialPort to use.
    */
-  private[Rc210] class RcOperationImpl(openedSerialPort: OpenedSerialPort) extends RcOperation  with AutoCloseable with LazyLogging {
-    assert(openedSerialPort.rcSerialPort.serialPort.isOpen, "Serial port not open!")
+  private[Rc210] class RcOperationImpl() extends RcOperation with AutoCloseable with LazyLogging {
+    private val openedSerialPort: OpenedSerialPort = openSerialPort
 
     private var currentTransaction: Option[Transaction] = None
 
@@ -85,6 +97,29 @@ class Rc210 @Inject()(currentSerialPort: CurrentSerialPort) {
 
 
   }
+
+  def selectPort(portDescriptor: String): Unit =
+    serialPortsSource().find(_.descriptor == portDescriptor)
+      .foreach { comPort =>
+
+        Files.writeString(file, comPort.descriptor)
+        maybeRcSerialPort = Option(RcSerialPort(SerialPort.getCommPort(comPort.descriptor)))
+      }
+
+  def table(): Table = {
+    val currentComPOrt = maybeRcSerialPort.map(_.comPort)
+    val rows: Seq[Row] = serialPortsSource().map { comPort: ComPort =>
+      var row = comPort.toRow
+      if (currentComPOrt.contains(comPort)) {
+        row = row.withCssClass("selected")
+      }
+      row
+    }
+
+    val table = Table(Header("Serial Ports", "Descriptor", "Friendly Name"), rows)
+    table
+  }
+
 }
 
 
@@ -104,3 +139,5 @@ trait RcOperation {
 
   def close(): Unit
 }
+
+case class Rc210Version(version: String, comPort: ComPort)

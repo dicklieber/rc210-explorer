@@ -19,21 +19,15 @@ package controllers
 
 import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
-import net.wa9nnn.rc210.serial.comm.{BatchOperationsResult, Rc210, SerialPortsSource}
-import net.wa9nnn.rc210.serial.{ComPort, CurrentSerialPort, RcSerialPortManager}
+import net.wa9nnn.rc210.serial.comm.Rc210
 import play.api.mvc._
 
-import java.util.concurrent.TimeoutException
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
-import scala.util.Try
 
 @Singleton
 class IOController @Inject()(implicit val controllerComponents: ControllerComponents,
-                             currentSerialPort: CurrentSerialPort,
-                             rcSerialPortManager: RcSerialPortManager,
                              rc210: Rc210,
                             ) extends BaseController with LazyLogging {
   implicit val timeout: Timeout = 5.seconds
@@ -46,7 +40,7 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
 
   def select(descriptor: String): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      rcSerialPortManager.selectPort(descriptor)
+      rc210.selectPort(descriptor)
       Redirect(routes.IOController.listSerialPorts)
   }
 
@@ -54,7 +48,7 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
   def listSerialPorts: Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
 
-      val table = currentSerialPort.table(rc210)
+      val table = rc210.table()
       Ok(views.html.RC210Landings(table))
   }
 }

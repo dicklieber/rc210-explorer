@@ -21,7 +21,7 @@ import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import com.fazecast.jSerialComm.SerialPort
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.fixtures.WithTestConfiguration
-import net.wa9nnn.rc210.serial.{ComPort, CurrentSerialPort, RcSerialPort, RcSerialPortManager}
+import net.wa9nnn.rc210.serial.{ComPort, RcSerialPort}
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.file.PathUtils
 import org.mockito.Mockito.{verify, when}
@@ -40,7 +40,7 @@ import scala.util.Success
  */
 class DataCollectorSpec extends WithTestConfiguration with MockitoSugar with BeforeAndAfterAll {
   def listPorts: Array[RcSerialPort] = {
-    val ports = SerialPort.getCommPorts.map(RcSerialPort(_))
+    val ports = SerialPort.getCommPorts.map((serialPort: SerialPort) => RcSerialPort(serialPort))
     ports
   }
 

@@ -20,7 +20,7 @@ package net.wa9nnn.rc210.serial.comm
 import com.fazecast.jSerialComm.SerialPort
 import net.wa9nnn.RcSpec
 import net.wa9nnn.rc210.serial.comm.RcOperation.RcResponse
-import net.wa9nnn.rc210.serial.{ComPort, CurrentSerialPort, RcSerialPort, RcSerialPortManager}
+import net.wa9nnn.rc210.serial.{ComPort, RcSerialPort}
 import org.mockito.Mockito.when
 import org.scalatest.TryValues.convertTryToSuccessOrFailure
 import org.scalatest.{Sequential, TryValues}

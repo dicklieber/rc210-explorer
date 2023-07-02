@@ -30,19 +30,13 @@ import scala.annotation.unused
  * @param serialPort underlying
  */
 @unused
-case class RcSerialPort(serialPort: SerialPort, rcVersion: Option[String] = None) extends Ordered[RcSerialPort] with LazyLogging {
+case class RcSerialPort(serialPort: SerialPort) extends Ordered[RcSerialPort] with LazyLogging {
   def addDataListener(listener: SerialPortDataListener): Unit = {
     serialPort.addDataListener(listener)
   }
 
   val comPort: ComPort = ComPort(serialPort)
   serialPort.setBaudRate(19200)
-
-  def withVersion(rc210VersString: String): RcSerialPort = {
-    val value: String = s"${rc210VersString.head}.${rc210VersString.tail}"
-    copy(rcVersion = Option(value))
-  }
-
 
   /**
    *
@@ -56,14 +50,12 @@ case class RcSerialPort(serialPort: SerialPort, rcVersion: Option[String] = None
 
   override def toString: String = comPort.toString
 
-   def toRow: Row = {
-    var row = Row(
+  def toRow: Row = {
+    Row(
       Cell(comPort.descriptor)
         .withUrl(routes.IOController.select(comPort.descriptor).url)
-      , comPort.friendlyName)
-    rcVersion.map{ ver =>
-       row :+ ver
-     }.getOrElse(row)
+      ,
+      comPort.friendlyName)
   }
 }
 
@@ -87,6 +79,7 @@ case class OpenedSerialPort(rcSerialPort: RcSerialPort) {
   }
 
   def addDataListener(listner: SerialPortMessageListenerWithExceptions): Boolean = serialPort.addDataListener(listner)
+
   def removeDataListener(): Unit = serialPort.removeDataListener()
 
   def open(): Unit = if (!serialPort.openPort())

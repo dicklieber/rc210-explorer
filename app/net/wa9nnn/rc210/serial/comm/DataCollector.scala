@@ -23,7 +23,7 @@ import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import configs.syntax._
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
-import net.wa9nnn.rc210.serial.{CurrentSerialPort, OpenedSerialPort, RcSerialPort, RcSerialPortManager, Timeout}
+import net.wa9nnn.rc210.serial.{OpenedSerialPort, Timeout}
 
 import java.io.PrintWriter
 import java.nio.file.{Files, Path}
@@ -33,7 +33,7 @@ import javax.inject.{Inject, Singleton}
  * Reads eeprom from RC210 using the "1SendEram" command
  */
 @Singleton
-class DataCollector @Inject()(config: Config, currentSerialPort: CurrentSerialPort, dataStoreActor: ActorRef[DataStoreActor.Message]) extends LazyLogging {
+class DataCollector @Inject()(config: Config, rc210: Rc210, dataStoreActor: ActorRef[DataStoreActor.Message]) extends LazyLogging {
 
   val memoryFile: Path = config.get[Path]("vizRc210.memoryFile").value
   val tempFile = memoryFile.resolveSibling(memoryFile.toFile.toString + ".temp")
@@ -47,8 +47,7 @@ class DataCollector @Inject()(config: Config, currentSerialPort: CurrentSerialPo
    */
   def apply(progressApi: ProgressApi): Unit = {
     try {
-      val rcSerialPort: RcSerialPort = currentSerialPort.currentPort
-      doStuff(rcSerialPort.openPort)
+      doStuff()
 
     } catch {
       case e: Exception =>
@@ -59,7 +58,9 @@ class DataCollector @Inject()(config: Config, currentSerialPort: CurrentSerialPo
     }
 
 
-    def doStuff(openedSerialPort: OpenedSerialPort): Unit = {
+    def doStuff(): Unit = {
+      val openedSerialPort: OpenedSerialPort = rc210.openSerialPort
+
       val linesWriter = new PrintWriter(Files.newBufferedWriter(tempFile))
 
       def write(s: String = ""): Unit = {
