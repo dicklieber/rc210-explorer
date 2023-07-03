@@ -17,9 +17,9 @@
 
 package net.wa9nnn.rc210.serial
 
-import com.fazecast.jSerialComm.{SerialPort, SerialPortDataListener, SerialPortEvent, SerialPortMessageListenerWithExceptions}
+import com.fazecast.jSerialComm.{SerialPort, SerialPortDataListener, SerialPortMessageListenerWithExceptions}
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.{Cell, Row, RowSource}
+import com.wa9nnn.util.tableui.{Cell, CellProvider, Row}
 import controllers.routes
 
 import scala.annotation.unused
@@ -30,7 +30,7 @@ import scala.annotation.unused
  * @param serialPort underlying
  */
 @unused
-case class RcSerialPort(serialPort: SerialPort) extends Ordered[RcSerialPort] with LazyLogging {
+case class RcSerialPort(serialPort: SerialPort, maybeVersion: Option[Rc210Version] = None) extends Ordered[RcSerialPort] with LazyLogging {
   def addDataListener(listener: SerialPortDataListener): Unit = {
     serialPort.addDataListener(listener)
   }
@@ -45,6 +45,9 @@ case class RcSerialPort(serialPort: SerialPort) extends Ordered[RcSerialPort] wi
   def openPort(): OpenedSerialPort = {
     OpenedSerialPort(this)
   }
+
+  def withVersion(rc210Version: Rc210Version): RcSerialPort =
+    copy(maybeVersion = Option(rc210Version))
 
   override def compare(that: RcSerialPort): Int = this.comPort compareTo that.comPort
 
@@ -86,6 +89,14 @@ case class OpenedSerialPort(rcSerialPort: RcSerialPort) {
     throw new Exception(s"${rcSerialPort.comPort}comPort not opened!")
 
   def close(): Unit = serialPort.closePort()
+}
 
+case class Rc210Version(version: String, comPort: ComPort) extends CellProvider {
+  override def toCell: Cell = Cell(version)
+}
 
+object Rc210Version {
+  def apply(s: String, comPort: ComPort): Rc210Version = {
+    new Rc210Version(s"${s.head}.${s.tail}", comPort)
+  }
 }

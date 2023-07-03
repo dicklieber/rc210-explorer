@@ -28,7 +28,7 @@ import scala.concurrent.{Future, Promise}
 
 case class Transaction(request: String, openedSerialPort: OpenedSerialPort, start: Instant = Instant.now()) extends SerialPortMessageListenerWithExceptions with LazyLogging {
 
-  assert(openedSerialPort.rcSerialPort.serialPort.isOpen, "Serial port not open!")
+//  assert(openedSerialPort.rcSerialPort.serialPort.isOpen, "Serial port not open!")
   openedSerialPort.addDataListener(this)
   private val lineBuilder: mutable.Builder[String, Seq[String]] = Seq.newBuilder[String]
 

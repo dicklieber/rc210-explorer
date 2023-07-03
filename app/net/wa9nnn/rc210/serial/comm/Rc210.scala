@@ -6,7 +6,7 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, Table}
 import configs.syntax._
 import net.wa9nnn.rc210.serial.comm.RcOperation.RcResponse
-import net.wa9nnn.rc210.serial.{ComPort, NoPortSelected, OpenedSerialPort, RcSerialPort}
+import net.wa9nnn.rc210.serial._
 
 import java.nio.file.{Files, Path}
 import javax.inject.{Inject, Singleton}
@@ -17,13 +17,13 @@ import scala.util.{Try, Using}
 
 
 @Singleton
-class Rc210 @Inject()(serialPortsSource: SerialPortsSource, config: Config) {
+class Rc210 @Inject()(serialPortsSource: SerialPortsSource, config: Config) extends LazyLogging {
   def openSerialPort: OpenedSerialPort = maybeRcSerialPort.map(_.openPort()).get
 
   private val file: Path = config.get[Path]("vizRc210.serialPortsFile").value
 
   Files.createDirectories(file.getParent)
-  var maybeRcSerialPort: Option[RcSerialPort] = None
+  private var maybeRcSerialPort: Option[RcSerialPort] = None
   selectPort(Files.readString(file))
 
 
@@ -55,7 +55,7 @@ class Rc210 @Inject()(serialPortsSource: SerialPortsSource, config: Config) {
    *
    */
   private[Rc210] class RcOperationImpl() extends RcOperation with AutoCloseable with LazyLogging {
-    private val openedSerialPort: OpenedSerialPort = openSerialPort
+    private val openPort: OpenedSerialPort = openSerialPort
 
     private var currentTransaction: Option[Transaction] = None
 
@@ -71,7 +71,7 @@ class Rc210 @Inject()(serialPortsSource: SerialPortsSource, config: Config) {
           throw BusyException(currentTransaction)
         case None =>
           logger.trace("Perform: {}", request)
-          val transaction = Transaction(request + "\r", openedSerialPort)
+          val transaction = Transaction(request + "\r", openPort)
           currentTransaction = Option(transaction)
           val rcOperationResult: RcOperationResult = RcOperationResult(request, Try {
             Await.result[RcResponse](transaction.future, 2 seconds)
@@ -88,10 +88,10 @@ class Rc210 @Inject()(serialPortsSource: SerialPortsSource, config: Config) {
 
     def close(): Unit = {
       try {
-        openedSerialPort.close()
+        openPort.close()
       } catch {
         case e: Exception =>
-          logger.error(s"$openedSerialPort", e)
+          logger.error(s"$openPort", e)
       }
     }
 
@@ -99,19 +99,37 @@ class Rc210 @Inject()(serialPortsSource: SerialPortsSource, config: Config) {
   }
 
   def selectPort(portDescriptor: String): Unit =
-    serialPortsSource().find(_.descriptor == portDescriptor)
-      .foreach { comPort =>
-
-        Files.writeString(file, comPort.descriptor)
-        maybeRcSerialPort = Option(RcSerialPort(SerialPort.getCommPort(comPort.descriptor)))
-      }
+    try {
+      serialPortsSource().find(_.descriptor == portDescriptor)
+        .foreach { comPort =>
+          Files.writeString(file, comPort.descriptor)
+          val rcSerialPort = RcSerialPort(SerialPort.getCommPort(comPort.descriptor))
+          maybeRcSerialPort = Option(rcSerialPort)
+          for {
+            rcResponse <- sendOne("1GetVersion").triedResponse.toOption
+            head <- rcResponse.headOption
+            if !head.contains("t")
+          } {
+            maybeRcSerialPort = Option(rcSerialPort.withVersion(Rc210Version(head, comPort)))
+          }
+        }
+    } catch {
+      case e: Exception =>
+        logger.error(s"Selecting $portDescriptor", e)
+    }
 
   def table(): Table = {
-    val currentComPOrt = maybeRcSerialPort.map(_.comPort)
+    val currentComPort: Option[ComPort] = maybeRcSerialPort.map(_.comPort)
     val rows: Seq[Row] = serialPortsSource().map { comPort: ComPort =>
       var row = comPort.toRow
-      if (currentComPOrt.contains(comPort)) {
+      if (currentComPort.contains(comPort)) {
         row = row.withCssClass("selected")
+        for {
+          asp <- maybeRcSerialPort
+          ver <- asp.maybeVersion
+        } {
+          row = row :+ ver.toCell.withToolTip("Version reported by RC210.")
+        }
       }
       row
     }
@@ -139,5 +157,3 @@ trait RcOperation {
 
   def close(): Unit
 }
-
-case class Rc210Version(version: String, comPort: ComPort)
