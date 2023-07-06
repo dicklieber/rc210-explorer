@@ -17,26 +17,16 @@
 
 package net.wa9nnn.rc210.serial.comm
 
-import play.api.libs.json.{Format, Json}
-import play.api.mvc.WebSocket.MessageFlowTransformer
+import com.fazecast.jSerialComm.SerialPortDataListener
 
-import java.time.Instant
+class RcEventBased(rcSerialPort: RcSerialPort) extends RcOp(rcSerialPort) with AutoCloseable {
+  serialPort.flushIOBuffers() // get rid of any left over crap.
 
-trait ProgressApi {
-  def doOne(message: String): Unit
+  def addDataListener(serialPortDataListener: SerialPortDataListener): Unit = serialPort.addDataListener(serialPortDataListener)
 
-  def finish(message: String): Unit
 
-  def error(exception: Throwable): Unit
-}
-
-/**
- * A DTO that is sent as JSON to client for progress display.
- */
-case class Progress(running: Boolean = true, soFar: Int = 0, percent: String = "", sDuration: String = "", expected: Int, start: Instant, error: String = "")
-
-object Progress {
-  implicit val fmtProgress: Format[Progress] = Json.format[Progress]
-  implicit val messageFlowTransformer: MessageFlowTransformer[String, Progress] =
-    MessageFlowTransformer.jsonMessageFlowTransformer[String, Progress]
+  override def close(): Unit = {
+    serialPort.removeDataListener()
+    super.close()
+  }
 }

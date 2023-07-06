@@ -39,7 +39,7 @@
   <logger name="net.wa9nnn.rc210.data.named.NamedManager" level="INFO" />
   <logger name="net.wa9nnn.rc210.serial.RC210IO" level="" />
   <logger name="net.wa9nnn.rc210.serial.comm.DownloadActor" level="DEBUG"/>
-  <logger name="net.wa9nnn.rc210.serial.comm.DataCollector" level="DEBUG"/>
+  <logger name="net.wa9nnn.rc210.serial.DataCollector" level="DEBUG"/>
 
   <root level="INFO">
     <appender-ref ref="ASYNCFILE" />

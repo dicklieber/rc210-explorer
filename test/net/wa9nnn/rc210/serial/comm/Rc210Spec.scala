@@ -17,79 +17,64 @@
 
 package net.wa9nnn.rc210.serial.comm
 
-import com.fazecast.jSerialComm.SerialPort
+import com.typesafe.config.ConfigFactory
 import net.wa9nnn.RcSpec
-import net.wa9nnn.rc210.serial.comm.RcOperation.RcResponse
-import net.wa9nnn.rc210.serial.{ComPort, RcSerialPort}
-import org.mockito.Mockito.when
-import org.scalatest.TryValues.convertTryToSuccessOrFailure
+import net.wa9nnn.rc210.serial.{Rc210, RcOperationResult}
 import org.scalatest.{Sequential, TryValues}
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatestplus.mockito.MockitoSugar.mock
 
-class Rc210Spec extends Sequential(
-  new SendOne(),
-  new SendBatch(),
-  new StartStopClose(),
-) with MockitoSugar with TryValues {
-}
+import scala.util.{Failure, Success, Try}
 
-class SendOne extends RcSpec {
-  private val rc210: Rc210 = Rc210ForTest()
-  "first" in {
-    val rcResponseSendOne: RcResponse = rc210.sendOne("1GetVersion").triedResponse.success.value
-    rcResponseSendOne.head should equal("803")
-    rcResponseSendOne(1) should equal("+GETVE")
+class Rc210Spec extends RcSpec with  MockitoSugar with TryValues {
+  val rc210 = new Rc210(ConfigFactory.load())
+  new Sequential(
+    new SendOne(),
+    new SendBatch(),
+    new StartStopClose(),
+  )
+
+
+  class SendOne extends RcSpec {
+    "first" in {
+      val rcResponseSendOne: RcResponse = rc210.sendOne("1GetVersion").triedResponse.success.value
+      rcResponseSendOne.head should equal("803")
+      rcResponseSendOne.lines(1) should equal("+GETVE")
+    }
+    "second" in {
+      val rcResponseSendOne: RcResponse = rc210.sendOne("1GetVersion").triedResponse.success.value
+      rcResponseSendOne.head should equal("803")
+      rcResponseSendOne.lines(1) should equal("+GETVE")
+    }
   }
-  "second" in {
-    val rcResponseSendOne: RcResponse = rc210.sendOne("1GetVersion").triedResponse.success.value
-    rcResponseSendOne.head should equal("803")
-    rcResponseSendOne(1) should equal("+GETVE")
-  }
 
-}
-
-class SendBatch extends RcSpec {
-  val batchRespnses: Seq[RcOperationResult] = Rc210ForTest().sendBatch("Version", "1GetVersion", "1GetVersion").results
-  batchRespnses should have length 2
-  val rcOperationResult: RcOperationResult = batchRespnses.head
-  val rcResponse: RcResponse = rcOperationResult.triedResponse.success.value
-  rcResponse.head should equal("803")
-  rcResponse(1) should equal("+GETVE")
-  println("sendBatch done")
-}
-
-class StartStopClose extends RcSpec {
-  val rcOperation: RcOperation = Rc210ForTest().start
-  private val r1 = rcOperation.sendBatch("one", "1GetVersion", "1GetVersion")
-  private val r2 = rcOperation.sendBatch("two", "1GetVersion", "1GetVersion")
-
-  r1.name should be("one")
-  r2.name should be("two")
-  rcOperation.close()
-}
-
-
-object Rc210ForTest {
-  def apply(): Rc210 = {
-    def listPorts: Seq[ComPort] = {
-      val ports = SerialPort.getCommPorts
-      ports.map(ComPort(_)).toList
+  class SendBatch extends RcSpec {
+    val batchRespnses: Seq[RcOperationResult] = rc210.sendBatch("Version", "1GetVersion", "1GetVersion").results
+    batchRespnses should have length 2
+    val rcOperationResult: RcOperationResult = batchRespnses.head
+    private val triedResponse: Try[RcResponse] = rcOperationResult.triedResponse
+    triedResponse match {
+      case Failure(exception) =>
+        throw exception
+      case Success(value: RcResponse) =>
+        val rcResponse: RcResponse = triedResponse.success.value
+        rcResponse.head should equal("803")
+        rcResponse.lines(1) should equal("+GETVE")
+        println("sendBatch done")
     }
 
-    def ft232Port: ComPort = {
-      listPorts.find(_.friendlyName.contains("FT232")) match {
-        case Some(value) =>
-          value
-        case None =>
-          throw new IllegalStateException("Can't find FT232 port")
-      }
-    }
 
-    val rcSerialPortManager = mock[CurrentSerialPort]
-    val serialPort = SerialPort.getCommPort(ft232Port.descriptor)
-    val rcSerialPort = RcSerialPort(serialPort)
-    when(rcSerialPortManager.currentPort) thenReturn(rcSerialPort)
-    new Rc210(rcSerialPortManager)
   }
+
+  class StartStopClose extends RcSpec {
+    val rcOperation: RcStreamBased = rc210.openStreamBased
+    private val r1 = rcOperation.perform("one", Seq("1GetVersion", "1GetVersion"))
+    private val r2 = rcOperation.perform("two", Seq("1GetVersion", "1GetVersion"))
+
+    r1.name should be("one")
+    r2.name should be("two")
+    rcOperation.close()
+  }
+
 }
+
+

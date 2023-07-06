@@ -17,24 +17,9 @@
 
 package net.wa9nnn.rc210.serial.comm
 
-import akka.actor.testkit.typed.scaladsl.ActorTestKit
-import akka.stream.{ActorMaterializer, Materializer}
-import net.wa9nnn.RcSpec
-import net.wa9nnn.rc210.serial.ProcessWithProgress
-import org.scalatest.funsuite.AnyFunSuiteLike
-import play.api.mvc.WebSocket
+import net.wa9nnn.rc210.serial.comm.RcStreamBased.isOk
 
-class ProcessWithProgressSpec extends RcSpec {
-  implicit val testKit: ActorTestKit = ActorTestKit()
-  implicit val materializer = Materializer(testKit.system)
-
- "ProcessWithProgress" should {
-   val websocket: WebSocket = ProcessWithProgress(10, None){ progApi =>
-
-     progApi.doOne("Hello one")
-     progApi.finish("Kinder das ist Alles")
-
-   }
- }
-
+case class RcResponse(lines: Seq[String]) {
+  def head:String = lines.head
+  def isError: Boolean = isOk(lines.last)
 }

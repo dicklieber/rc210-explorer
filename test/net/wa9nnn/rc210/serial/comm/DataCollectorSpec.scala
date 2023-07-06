@@ -21,19 +21,15 @@ import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import com.fazecast.jSerialComm.SerialPort
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.fixtures.WithTestConfiguration
-import net.wa9nnn.rc210.serial.{ComPort, RcSerialPort}
-import org.apache.commons.io.FileUtils
-import org.apache.commons.io.file.PathUtils
-import org.mockito.Mockito.{verify, when}
+import net.wa9nnn.rc210.serial.{DataCollector, ProgressApi, Rc210}
+import org.mockito.Mockito.verify
 import org.scalatest.BeforeAndAfterAll
 import org.scalatestplus.mockito.MockitoSugar
 
 import java.nio.file.Files
-import java.util
 import scala.concurrent.duration.DurationInt
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 import scala.language.postfixOps
-import scala.util.Success
 
 /**
  * A guru test since it must be connected to an RC210
@@ -53,25 +49,35 @@ class DataCollectorSpec extends WithTestConfiguration with MockitoSugar with Bef
     }
   }
 
-  val currentSerialPort = mock[CurrentSerialPort]
-  private val progressApi: ProgressApi = mock[ProgressApi]
+
+  val progressApi = new ProgressApi {
+    override def doOne(message: String): Unit =
+      println(s"doOne: $message")
+
+    override def finish(message: String): Unit =
+      println(s"finish: $message")
+
+    override def error(exception: Throwable): Unit =
+      throw exception
+  }
   implicit val testKit: ActorTestKit = ActorTestKit()
   //  implicit val system: ActorSystem[Nothing] = testKit.system
   private val dataStoreProbe = testKit.createTestProbe[DataStoreActor.Message]()
-  when(currentSerialPort.currentPort) thenReturn(ft232Port)
+  private val rc210: Rc210 = new Rc210(config)
+
   "DataCollector" should {
     "Produce File" in {
-      val dcs: DataCollector = new DataCollector(config, currentSerialPort, dataStoreProbe.ref)
+      val dcs: DataCollector = new DataCollector(config, rc210, dataStoreProbe.ref)
       dcs(progressApi)
 
 
-      dataStoreProbe.expectMessage(120 seconds, DataStoreActor.Reload())
+      dataStoreProbe.expectMessage(120 seconds, DataStoreActor.Reload)
 
       Files.exists(dcs.memoryFile) should be(true)
       Files.exists(dcs.tempFile) should be(false)
       val strings: Seq[String] = Files.readAllLines(dcs.memoryFile).asScala.toIndexedSeq
       val last20 = strings.takeRight(20)
-      last20.last should( be("390,0"))
+      last20.last should be("390,0")
     }
   }
 

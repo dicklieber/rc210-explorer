@@ -23,7 +23,7 @@ import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Table}
 import configs.syntax._
-import net.wa9nnn.rc210.serial.comm.{BatchOperationsResult, DataCollector, ProcessWithProgress, Rc210}
+import net.wa9nnn.rc210.serial.{BatchOperationsResult, DataCollector, ProcessWithProgress, Rc210}
 import play.api.mvc._
 
 import java.time.LocalDateTime

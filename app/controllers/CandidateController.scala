@@ -30,6 +30,7 @@ import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.data.datastore.DataStoreActor._
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.serial.comm._
+import net.wa9nnn.rc210.serial._
 import play.api.mvc._
 
 import java.nio.file.Path
@@ -125,9 +126,9 @@ import play.api.mvc._
 def ws(expected: Int): WebSocket = {
   val start = Instant.now()
   ProcessWithProgress(expected, maybeSendLogFile) { (progressApi: ProgressApi) =>
-    val rcOperation = rc210.start // throws if no port selected.
+    val streamBased: RcStreamBased = rc210.openStreamBased
     val operations = Seq.newBuilder[BatchOperationsResult]
-    operations += rcOperation.sendBatch("Wakeup", init:_*)
+    operations += streamBased.perform("Wakeup", init)
     val fieldEntries: Seq[FieldEntry] = Await.result[Seq[FieldEntry]](dataStoreActor.ask(All), 5 seconds)
 
     var errorEncountered = false
@@ -136,7 +137,7 @@ def ws(expected: Int): WebSocket = {
       fieldValue = fieldEntry.value.asInstanceOf[FieldValue]
       if !(errorEncountered && stopOnError)
     } yield {
-      val batchOperationsResult = rcOperation.sendBatch(fieldEntry.fieldKey.toString, fieldValue.toCommands(fieldEntry):_*)
+      val batchOperationsResult = streamBased.perform(fieldEntry.fieldKey.toString, fieldValue.toCommands(fieldEntry))
       batchOperationsResult.results.foreach { rcOperationResult =>
         errorEncountered = rcOperationResult.isFailure
         progressApi.doOne(rcOperationResult.toString)

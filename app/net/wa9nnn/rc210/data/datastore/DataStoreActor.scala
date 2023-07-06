@@ -139,7 +139,7 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
               ingest(json.Json.parse(sJson).as[DataTransferJson])
               replyTo ! "Done"
 
-            case  r:Reload =>
+            case  Reload =>
               logger.error("todo Reload")
             case Json(replyTo) =>
 
@@ -223,7 +223,7 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
 
   case class UpdateData(candidates: Seq[UpdateCandidate], namedKeys: Seq[NamedKey] = Seq.empty, user: User, replyTo: ActorRef[String]) extends DataStoreMessage
 
-  case class  Reload() extends DataStoreMessage
+  case object  Reload extends DataStoreMessage
 
   object UpdateData {
     def apply(candidateAndNames: CandidateAndNames, user: User, replyTo: ActorRef[String]): UpdateData = {

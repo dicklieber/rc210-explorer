@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.serial.comm
+package net.wa9nnn.rc210.serial
 
 import akka.Done
 import akka.stream.scaladsl.{Flow, Sink, Source}

@@ -19,7 +19,7 @@ package controllers
 
 import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.serial.comm.Rc210
+import net.wa9nnn.rc210.serial.Rc210
 import play.api.mvc._
 
 import javax.inject.{Inject, Singleton}

@@ -51,8 +51,8 @@
     <logger name="net.wa9nnn.rc210.data.macros.MacroNode" level="INFO"/>
     <logger name="net.wa9nnn.rc210.security.authentication.SessionManager" level="INFO"/>
     <logger name="net.wa9nnn.rc210.security.authorzation.AuthFilter" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.serial.comm.DataCollector" level="TRACE"/>
-    <logger name="net.wa9nnn.rc210.serial.comm.Rc210.RcOperationImpl" level="TRACE"/>
+    <logger name="net.wa9nnn.rc210.serial.DataCollector" level="TRACE"/>
+    <logger name="net.wa9nnn.rc210.serial.Rc210.RcOperationImpl" level="TRACE"/>
 
     <logger name="actors" level="INFO" />
     <logger name="akka" level="INFO" />

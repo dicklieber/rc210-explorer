@@ -51,15 +51,18 @@ object ComPort {
 }
 
 
-trait ComPortException extends Exception
+abstract class ComPortException(message:String = "") extends Exception(message)
 
-case class NoPortSelected() extends ComPortException
+case class NoPortSelected() extends ComPortException()
 
-case class OpenFailed(portDescriptor: String) extends ComPortException
+case class OpenFailed(comPort: ComPort) extends ComPortException(comPort.toString)
+case class WriteFailed(comPort: ComPort, request:String) extends ComPortException(
+  s"Sending $request to $comPort"
+)
 
-case class NoVersion(portDescriptor: String) extends ComPortException
+case class NoVersion(comPort: ComPort) extends ComPortException(comPort.toString)
 
-case class Timeout(portDescriptor: String) extends ComPortException
+case class Timeout(comPort: ComPort) extends ComPortException(comPort.toString)
 
 
 

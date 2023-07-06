@@ -18,24 +18,29 @@
 package net.wa9nnn.rc210.serial.comm
 
 import com.fazecast.jSerialComm.SerialPort
+import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.serial.ComPort
 
-import javax.inject.Singleton
-import scala.language.postfixOps
+import java.io.PrintWriter
 
-@Singleton
-class SerialPortsSource() {
-  /**
-   * All the serial ports.
-   *
-   * @return serial portw as [[ComPort]]
-   */
-  def apply(): Seq[ComPort] = {
-    val ports = SerialPort.getCommPorts
-    ports.map(ComPort(_))
-      .filterNot(_.descriptor.contains("/tty")) // just want callin, devices. Leaves COM alone
-      .toList
+/**
+ * All access to the RC210 goes through subclasses of this class.
+ *
+ * @param rcSerialPort provides access to the serial port.
+ */
+abstract class RcOp(rcSerialPort: RcSerialPort) extends LazyLogging {
+  val serialPort: SerialPort = rcSerialPort.serialPort
+  val comPort: ComPort = rcSerialPort.comPort
+  if (serialPort.isOpen)
+    logger.error(s"${comPort.toString} is already open!}")
+  if (!serialPort.openPort())
+    logger.error(s"$comPort did not open!}")
+  private  val printWriter = new PrintWriter(serialPort.getOutputStream)
+
+  def send(request:String): Unit = {
+    printWriter.print(request + '\r')
+    printWriter.flush()
   }
+  def close():Unit =
+    serialPort.closePort()
 }
-
-

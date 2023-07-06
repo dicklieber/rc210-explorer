@@ -15,10 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.serial.comm
+package net.wa9nnn.rc210.serial
 
 import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
-import net.wa9nnn.rc210.serial.comm.RcOperation.RcResponse
+import net.wa9nnn.rc210.serial.comm.RcResponse
 
 import scala.util.{Failure, Success, Try}
 
@@ -38,7 +38,7 @@ case class RcOperationResult(request: String, triedResponse: Try[RcResponse]) ex
     in.replace("\r", "\\r")
       .replace("\n", "\\n")
 
-  private def flatten(rcResponse: RcResponse): String = rcResponse.map(fixUp).mkString(" ")
+  private def flatten(rcResponse: RcResponse): String = fixUp(rcResponse.lines.mkString(" "))
 
   override def toRow: Row = {
     triedResponse match {
@@ -59,6 +59,7 @@ case class RcOperationResult(request: String, triedResponse: Try[RcResponse]) ex
           request,
           flatten(rcResponse))
     }
+
   }
 
   override def toString: String = {
@@ -66,10 +67,11 @@ case class RcOperationResult(request: String, triedResponse: Try[RcResponse]) ex
       case Failure(exception) =>
         s"$request => ${exception.getMessage}"
       case Success(rcResponse: RcResponse) =>
-        s"$request => ${flatten(rcResponse)}"
+        s"$request => $rcResponse"
     }
   }
 }
 object RcOperationResult {
+
   def header(count: Int): Header = Header(s"RC Operation Results ($count)", "Field", "Command", "Response")
 }
