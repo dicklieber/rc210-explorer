@@ -38,6 +38,7 @@ class DataCollector @Inject()(config: Config, rc210: Rc210, dataStoreActor: Acto
   val memoryFile: Path = config.get[Path]("vizRc210.memoryFile").value
   val tempFile: Path = memoryFile.resolveSibling(memoryFile.toFile.toString + ".temp")
   val expectedLines: Int = config.get[Int]("vizRc210.expectedRcLines").value
+  val progreMod: Int = config.get[Int]("vizRc210.showProgressEvery").value
 
   /**
    *
@@ -50,7 +51,7 @@ class DataCollector @Inject()(config: Config, rc210: Rc210, dataStoreActor: Acto
     def cleanup(error:String = ""): Unit = {
       fileWriter.close()
       rcOp.close()
-      if(error.isBlank)
+      if (error.isBlank)
         dataStoreActor ! DataStoreActor.Reload
     }
 
@@ -72,10 +73,10 @@ class DataCollector @Inject()(config: Config, rc210: Rc210, dataStoreActor: Acto
         response match {
           case "Complete" =>
             cleanup()
-            Files.delete(memoryFile)
+            Files.deleteIfExists(memoryFile)
             Files.move(tempFile, memoryFile)
             progressApi.finish("Done")
-
+            logger.debug("Done")
           case "+SENDE" =>
             cleanup()
             logger.debug("+SENDE")

@@ -32,7 +32,6 @@
     <logger name="play" level="INFO"/>
     <logger name="application" level="DEBUG"/>
 
-    <!-- Off these ones as they are annoying, and anyway we manage configuration ourselves -->
     <logger name="net.wa9nnn.rc210.data.datastore.MemoryFileLoader" level="INFO"/>
     <logger name="net.wa9nnn.rc210.command.CommandParser" level="INFO"/>
     <logger name="net.wa9nnn.rc210.command.CommandSpecBase" level="INFO"/>
@@ -52,7 +51,7 @@
     <logger name="net.wa9nnn.rc210.security.authentication.SessionManager" level="INFO"/>
     <logger name="net.wa9nnn.rc210.security.authorzation.AuthFilter" level="INFO"/>
     <logger name="net.wa9nnn.rc210.serial.DataCollector" level="TRACE"/>
-    <logger name="net.wa9nnn.rc210.serial.Rc210.RcOperationImpl" level="TRACE"/>
+    <logger name="net.wa9nnn.rc210.serial.Rc210.RcOperationImpl" level="INFO"/>
 
     <logger name="actors" level="INFO" />
     <logger name="akka" level="INFO" />

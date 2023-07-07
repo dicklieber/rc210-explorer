@@ -32,6 +32,9 @@ import scala.util.{Try, Using}
 
 @Singleton
 class Rc210 @Inject()(config: Config) extends LazyLogging {
+  def comPort: ComPort = maybeRcSerialPort.map(_.comPort).get
+
+
   private val serialPortsSource = new SerialPortsSource()
 
   private val file: Path = config.get[Path]("vizRc210.serialPortsFile").value
@@ -58,7 +61,7 @@ class Rc210 @Inject()(config: Config) extends LazyLogging {
     })
   }
 
-  def openStreamBased:RcStreamBased = {
+  def openStreamBased: RcStreamBased = {
     new RcStreamBased(serialPort)
   }
 
@@ -79,7 +82,7 @@ class Rc210 @Inject()(config: Config) extends LazyLogging {
             val rawVersion = rcOperationResult.head
             maybeRcSerialPort = Option(rcSerialPort.withVersion(Rc210Version(rawVersion, comPort)))
           } catch {
-            case e:Exception =>
+            case e: Exception =>
               logger.error(s"Getting Version from RC210", e)
           }
         }

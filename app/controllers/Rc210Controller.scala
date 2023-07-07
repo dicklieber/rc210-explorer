@@ -35,7 +35,6 @@ import scala.language.postfixOps
 class Rc210Controller @Inject()(rc210: Rc210, dataCollector: DataCollector, config: Config)(implicit mat: Materializer)
   extends MessagesInjectedController with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
-  private val expectedLines: Int = config.get[Int]("vizRc210.expectedRcLines").value
 
   //  *21999
 
@@ -82,15 +81,4 @@ class Rc210Controller @Inject()(rc210: Rc210, dataCollector: DataCollector, conf
    *
    * @return
    */
-  def download(): Action[AnyContent] = Action {
-    implicit request: Request[AnyContent] =>
-      val webSocketURL: String = controllers.routes.Rc210Controller.ws(expectedLines).webSocketURL() //todo all fields expected.
-      Ok(views.html.progress("Download from RC210", webSocketURL))
-  }
-
-  def ws(expected: Int): WebSocket = {
-    ProcessWithProgress(expected, None)(progressApi =>
-      dataCollector(progressApi)
-    )
-  }
 }

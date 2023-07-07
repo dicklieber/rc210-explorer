@@ -112,7 +112,7 @@ class CandidateController @Inject()(config: Config,
 
 def sendAllFields(): Action[AnyContent] = Action { implicit request =>
   val webSocketURL: String = routes.CandidateController.ws(471).webSocketURL() //todo all fields expected.
-  Ok(views.html.progress("Send All Fields", webSocketURL))
+  Ok(views.html.progress( webSocketURL))
 }
 
 def sendAllCandidates(): Action[AnyContent] = Action { implicit request =>
@@ -125,7 +125,7 @@ import play.api.mvc._
 
 def ws(expected: Int): WebSocket = {
   val start = Instant.now()
-  ProcessWithProgress(expected, maybeSendLogFile) { (progressApi: ProgressApi) =>
+  ProcessWithProgress(expected, 7,  maybeSendLogFile) { (progressApi: ProgressApi) =>
     val streamBased: RcStreamBased = rc210.openStreamBased
     val operations = Seq.newBuilder[BatchOperationsResult]
     operations += streamBased.perform("Wakeup", init)

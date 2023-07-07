@@ -1,0 +1,29 @@
+@import net.wa9nnn.rc210.serial.ComPort
+@import net.wa9nnn.rc210.ui.Tabs
+@import views.html.helper.form
+@(comPort: ComPort)
+    @tabbedmain(Tabs.rc210Tab) {
+        @form(action = routes.DownloadController.startDownload()) {
+            <table class="table table-bordered w-auto">
+                <thead class="table-primary">
+                    <tr>
+                        <th colspan="2">Download From RC210</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ComPort:</td>
+                        <td>@comPort</td>
+                    </tr>
+                    <tr>
+                        <td>Comment:</td>
+                        <td><input name="comment"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>@submitButton()</td>
+                    </tr>
+                </tbody>
+            </table>
+        }
+    }

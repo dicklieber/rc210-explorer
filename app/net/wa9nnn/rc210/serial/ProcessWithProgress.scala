@@ -37,15 +37,16 @@ object ProcessWithProgress extends LazyLogging {
    * This runs the process in a new Thread and handles developer logging and send [[Progress]] message to the client.
    *
    * @param expected      for percent complete calculation.
+   * @param mod           send progress every.
    * @param maybeSendfile where to log for dev debugging.
    * @param callback      what to do to do. With ProgressApi for reporting status.
    * @param mat           needed to Akka streams use by Play WebSocket.
    */
-  def apply(expected: Int, maybeSendfile: Option[Path])(callback: ProgressApi => Unit)(implicit mat: Materializer): WebSocket = {
-    new Inner(expected, maybeSendfile, callback).webSocket
+  def apply(expected: Int, mod: Int, maybeSendfile: Option[Path])(callback: ProgressApi => Unit)(implicit mat: Materializer): WebSocket = {
+    new Inner(expected, mod, maybeSendfile, callback).webSocket
   }
 
-  private class Inner(expected: Int, maybeSendfile: Option[Path], callback: ProgressApi => Unit)(implicit mat: Materializer) extends Thread with Runnable with ProgressApi {
+  private class Inner(expected: Int, mod: Int, maybeSendfile: Option[Path], callback: ProgressApi => Unit)(implicit mat: Materializer) extends Thread with Runnable with ProgressApi {
     private val (queue, source) = Source.queue[Progress](250, OverflowStrategy.dropHead).preMaterialize()
 
     private val began = Instant.now()
@@ -74,23 +75,25 @@ object ProcessWithProgress extends LazyLogging {
       sendLogWriter.foreach { printWriter =>
         printWriter.println(s"$soFar\t${LocalTime.now()}\t $message")
         printWriter.flush()
-        sendProgress()
       }
+      sendProgress()
     }
 
     private def sendProgress(): Unit = {
       val soFar = count.get()
-      val double = soFar * 100.0 / expected
-      val progress = new Progress(
-        running = true,
-        soFar = soFar,
-        percent = f"$double%2.1f%%",
-        sDuration = Duration.between(began, Instant.now()),
-        expected = expected,
-        start = began,
-        error = ""
-      )
-      queue.offer(progress)
+      if (soFar % mod == 0) {
+        val double = soFar * 100.0 / expected
+        val progress = new Progress(
+          running = true,
+          soFar = soFar,
+          percent = f"$double%2.1f%%",
+          sDuration = Duration.between(began, Instant.now()),
+          expected = expected,
+          start = began,
+          error = ""
+        )
+        queue.offer(progress)
+      }
     }
 
     def finish(message: String): Unit = {
