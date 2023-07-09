@@ -47,7 +47,8 @@ class MessageController @Inject()(actor: ActorRef[DataStoreActor.Message])
 
   def index(): Action[AnyContent] = Action.async { implicit request =>
     actor.ask[Seq[FieldEntry]](AllForKeyKind(KeyKind.messageKey, _)).map { f: Seq[FieldEntry] =>
-      val rows = f.map(_.toRow())
+      val rows = f.map{fieldEntry =>
+        fieldEntry.value.asInstanceOf[Message].toRow}
       val table = Table(Message.header(rows.length), rows)
       Ok(views.html.messages(table))
     }

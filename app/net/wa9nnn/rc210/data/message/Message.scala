@@ -40,13 +40,12 @@ case class Message(key: MessageKey, words: Seq[Int]) extends ComplexFieldValue[M
 
   override val fieldName: String = "Message"
 
-//  override def toRow: Row = {
-//
-//    val editButton = EditButton(routes.MessageController.edit(key))
-//    val rowHeader = key.toCell
-//    val csvWords: Cell = Cell(display)
-//    Row(editButton, rowHeader, csvWords)
-//  }
+   def toRow: Row = {
+    val editButton = EditButton(routes.MessageController.edit(key))
+    val rowHeader = key.toCell
+    val csvWords: Cell = Cell(display)
+    Row(editButton, rowHeader, csvWords)
+  }
 
   override def display: String = words.map(id => Words(id).string).mkString(", ")
 
