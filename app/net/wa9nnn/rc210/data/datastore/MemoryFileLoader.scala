@@ -47,14 +47,15 @@ class MemoryFileLoader @Inject()(fieldDefinitions: FieldDefinitions, config: Con
    *
    * @return [[Memory]] or the reason why.
    */
-  def loadMemory: Try[Memory] = {
+  private def loadMemory():Unit = {
     val memoryFilePath: Path = config.get[Path]("vizRc210.memoryFile").value
     val memoryFile: URL = memoryFilePath.toUri.toURL
-    Memory.load(memoryFile)
+    tryMemory = Memory.load(memoryFile)
   }
 
   def load: Try[Seq[FieldEntry]] = {
-    loadMemory.map { implicit memory =>
+    loadMemory()
+    memory.map { implicit memory =>
       val simpleFields: Seq[FieldEntry] = for {
         fieldDefinition <- fieldDefinitions.simpleFields
         it = fieldDefinition.iterator()

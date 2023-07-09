@@ -91,26 +91,26 @@ class Memory(val data: Array[Int] = Array.empty) {
 
   }
 
-  /**
-   * File looks like:
-   * comment: comment\n
-   * stamp: ISO-8601\n as ISO-860
-   * size: data.length \n
-   * followed by one value per line.
-   *
-   * @param path where to save.
-   */
-  def save(path: Path): Unit = {
-    Using(new PrintWriter(Files.newBufferedWriter(path))) { writer: PrintWriter =>
-//      writer.println(s"comment: \t$comment")
-//      writer.println(s"stamp: \t${stamp.toString}")
-//      writer.println(s"size: \t${data.length}")
-      data.zipWithIndex.foreach { case (v, i) =>
-        val s = f"$i%04d:$v%d"
-        writer.println(s)
-      }
-    }
-  }
+//  /**
+//   * File looks like:
+//   * comment: comment\n
+//   * stamp: ISO-8601\n as ISO-860
+//   * size: data.length \n
+//   * followed by one value per line.
+//   *
+//   * @param path where to save.
+//   */
+//  def save(path: Path): Unit = {
+//    Using(new PrintWriter(Files.newBufferedWriter(path))) { writer: PrintWriter =>
+////      writer.println(s"comment: \t$comment")
+////      writer.println(s"stamp: \t${stamp.toString}")
+////      writer.println(s"size: \t${data.length}")
+//      data.zipWithIndex.foreach { case (v, i) =>
+//        val s = f"$i%04d:$v%d"
+//        writer.println(s)
+//      }
+//    }
+//  }
 
 }
 
@@ -141,8 +141,8 @@ object Memory extends LazyLogging {
           case r("size", rvalue) =>
             size = rvalue.toInt
           case line =>
-            line.drop(5) // get ride of index and colon
-            builder += line.drop(5).trim.toInt // get rid of index and colon
+            val value = line.drop(5) // get ride of index and colon
+            builder += value.trim.toInt // get rid of index and colon
         }
         new Memory(builder.result())
       }

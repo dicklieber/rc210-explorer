@@ -88,8 +88,10 @@ class DataCollector @Inject()(config: Config, rc210: Rc210, dataStoreActor: Acto
             cleanup("timeout")
           case response =>
             try {
-              fileWriter.println(response)
-              progressApi.doOne(response)
+              val tokens: Array[String] = response.split(',')
+              val line = f"${tokens.head.toInt}%04d:${tokens(1).toInt}"
+              fileWriter.println(line)
+              progressApi.doOne(line)
             } catch {
               case e: Exception =>
                 logger.error(s"response: $response", e)

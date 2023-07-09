@@ -51,7 +51,7 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
 
   Key.setNamedSource(this)
 
-  @Provides def apply(implicit persistence: DataStorePersistence, memoryFileLoader: MemoryFileLoader, ec:ExecutionContext): Behavior[DataStoreMessage] = {
+  @Provides def apply(implicit persistence: DataStorePersistence, memoryFileLoader: MemoryFileLoader, ec: ExecutionContext): Behavior[DataStoreMessage] = {
     //    Behaviors.setup[DataStoreMessage] { actorContext =>
     def loadFromRcMemory(): TrieMap[FieldKey, FieldEntry] = {
       val map = new TrieMap[FieldKey, FieldEntry]
@@ -66,7 +66,7 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
       map
     }
 
-    val valuesMap: TrieMap[FieldKey, FieldEntry] = loadFromRcMemory()
+    var valuesMap: TrieMap[FieldKey, FieldEntry] = new TrieMap[FieldKey, FieldEntry]()
 
     def loadFromJson(): Unit = {
       // update values from datastore.json
@@ -93,8 +93,15 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
     }
 
 
-    memoryFileLoader.load
-    loadFromJson()
+    def load(): Unit = {
+      valuesMap = loadFromRcMemory()
+      loadFromJson()
+      logger.info("Loaded")
+    }
+
+    load()
+    if(valuesMap.isEmpty)
+      logger.error("No data from RC210. Invoke RC210/Download.")
 
     def all: Seq[FieldEntry] = valuesMap.values.toSeq
 
@@ -106,8 +113,8 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
     }
 
     Behaviors.setup { context =>
-      Behaviors.supervise[Message] {
-        Behaviors.receiveMessage[Message] { message: Message =>
+      Behaviors.supervise[DataStoreMessage] {
+        Behaviors.receiveMessage[DataStoreMessage] { message: DataStoreMessage =>
           message match {
 
             case ReplaceEntries(entries: Seq[FieldEntry]) =>
@@ -139,10 +146,9 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
               ingest(json.Json.parse(sJson).as[DataTransferJson])
               replyTo ! "Done"
 
-            case  Reload =>
-              logger.error("todo Reload")
+            case Reload =>
+              load()
             case Json(replyTo) =>
-
               val dto = DataTransferJson(values = valuesMap.values.map(FieldEntryJson(_)).toSeq,
                 namedKeys = keyNamesMap.map { case (key, name) => NamedKey(key, name) }.toSeq)
               replyTo ! persistence.toJson(dto)
@@ -220,10 +226,9 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
   case class AcceptCandidate(fieldKey: FieldKey, user: User) extends DataStoreMessage
 
 
-
   case class UpdateData(candidates: Seq[UpdateCandidate], namedKeys: Seq[NamedKey] = Seq.empty, user: User, replyTo: ActorRef[String]) extends DataStoreMessage
 
-  case object  Reload extends DataStoreMessage
+  case object Reload extends DataStoreMessage
 
   object UpdateData {
     def apply(candidateAndNames: CandidateAndNames, user: User, replyTo: ActorRef[String]): UpdateData = {
