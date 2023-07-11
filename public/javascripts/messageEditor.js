@@ -22,12 +22,11 @@ $(function () {
         scroll: false,
         helper: "clone"
     });
-    $(".currentWords").draggable({
-        // containment: "parent",
-        helper: "clone"
-    });
+    // $(".currentWords").draggable({
+    //     // containment: "parent",
+    //     helper: "clone"
+    // });
     $(".wordDrop").droppable({
-
         drop: function (event, ui) {
             let targetId = event.target.id;
             let sourceTr = ui.draggable;
@@ -60,29 +59,32 @@ $(function () {
 
         }
     });
-    $(".dropTrash").droppable({
 
-        drop: function (event, ui) {
-            let targetId = event.target.id;
-            let sourceTr = ui.draggable;
-            console.log(`dropped in trash ${sourceTr} onto ${targetId}`)
+    $("#sortable").sortable();
 
-            const draggable = ui.draggable;
-            draggable.remove()
-        },
-        over: function (event, ui) {
-            const target = event.target;
-            const targetId = target.id;
-            console.log(`over::targetId: ${targetId}`)
-
-            if (targetId === "trash") {
-                // remove from table
-            } else {
-                // insert
-            }
-
-        }
-    });
+    // $(".dropTrash").droppable({
+    //
+    //     drop: function (event, ui) {
+    //         let targetId = event.target.id;
+    //         let sourceTr = ui.draggable;
+    //         console.log(`dropped in trash ${sourceTr} onto ${targetId}`)
+    //
+    //         const draggable = ui.draggable;
+    //         draggable.remove()
+    //     },
+    //     over: function (event, ui) {
+    //         const target = event.target;
+    //         const targetId = target.id;
+    //         console.log(`over::targetId: ${targetId}`)
+    //
+    //         if (targetId === "trash") {
+    //             // remove from table
+    //         } else {
+    //             // insert
+    //         }
+    //
+    //     }
+    // });
 
     $('#messageForm').on('submit', function () {
 

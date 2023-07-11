@@ -94,7 +94,7 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
 
 
     def load(): Unit = {
-      valuesMap = loadFromRcMemory()
+        valuesMap = loadFromRcMemory()
       loadFromJson()
       logger.info("Loaded")
     }

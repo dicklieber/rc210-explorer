@@ -30,21 +30,17 @@
                 <div class="col col-md-auto border border-primary">
                     <p class="sectionHeader">Current Words</p>
 
-                    <table id="currentWords" >
-                        @for(word <- message.words) {
-                            <tr id = "@Random.nextInt()" class="wordDrop wordDrag currentWords" data-word="@word">
-                                <td class="text-nowrap">
-                                @Words(word).string <td>
-                            </tr>
-                        }
-                        <tr id="droplast" class="wordDrop" >
-                            <td colspan="2">--droplast--</td>
-                        </tr>
+                    <ul id="sortable">
 
-                    </table>
-                    <div class="dropTrash">
-                        <i class="bi bi-trash3"></i>
-                    </div>
+                        @for(word <- message.words) {
+                            <li>
+                            @Words(word).string
+                            </li>
+                        }
+                    </ul>
+@*                    <div class="dropTrash">*@
+@*                        <i class="bi bi-trash3"></i>*@
+@*                    </div>*@
                 </div>
                 <div class="col col-md-auto ">
                     <p class="sectionHeader">Available Words</p>
