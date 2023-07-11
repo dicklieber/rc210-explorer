@@ -62,6 +62,11 @@ $(function () {
 
     $("#sortable").sortable();
 
+    $(".remove").on("click", function(){
+        const wordLi = $(this).parent();
+        wordLi.detach();
+    });
+
     // $(".dropTrash").droppable({
     //
     //     drop: function (event, ui) {
@@ -112,6 +117,9 @@ $(function () {
     });
 });
 
+function remove(dropee, targetId) {
+    console.log(`remove: dropee: ${dropee} targetId: ${targetId}`)
+}
 // Insert into currnbt
 function insert(dropee, targetId) {
     let elementToDropBefore = $("#" + targetId);
