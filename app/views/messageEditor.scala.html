@@ -28,23 +28,22 @@
                 <p class="text-break help">Drag from Available Words to Current Words.<br/>
                     Drag within Current Words to re-arrange or remove.</p>
             </div>
-            <div class="col col-md-auto border border-primary">
+            <div id="dropZone" class="col col-md-auto border border-primary">
                 <p class="sectionHeader">Current Words</p>
 
-                <ul id="sortable" class=currentList>
-
-                @for(word <- message.words) {
-                    <li>
-                        <button type="button" class="btn btn-default btn-xs remove" >
-                            <i class="bi bi-trash3"></i>
-                        </button>
-                        @Words(word).string
-                    </li>
-                }
-                </ul>
-                @* <div class="dropTrash">*@
-                @* <i class="bi bi-trash3"></i>*@
-                @* </div>*@
+                <table >
+                    <tbody id="currentList">
+                    @for(word <- message.words) {
+                        <tr class="wordSource" data-word="@word">
+                            <td class="text-nowrap">@Words(word).string</td>
+                            <td><button type="button" class="btn btn-default btn-xs" onclick="remove()">
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                    }
+                </table>
             </div>
             <div class="col col-md-auto ">
                 <p class="sectionHeader">Available Words</p>
@@ -55,7 +54,7 @@
                         <table>
                         @for(word <- Words.words) {
                             <tr class="wordSource" data-word="@word.id">
-                                <td class="text-nowrap">@word.string</td>
+                                <td class="text-nowrap" title="Phrase: @word.id" >@word.string</td>
                             </tr>
                         }
                         </table>

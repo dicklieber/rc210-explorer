@@ -26,27 +26,16 @@ $(function () {
     //     // containment: "parent",
     //     helper: "clone"
     // });
-    $(".wordDrop").droppable({
+    $("#dropZone").droppable({
         drop: function (event, ui) {
             let targetId = event.target.id;
             let sourceTr = ui.draggable;
             console.log(`dropped ${sourceTr} onto ${targetId}`)
 
-            if (targetId === "trash") {
-                $("#ddMessage").text(`Remove this function: ${targetId}`)
-            } else {
-                const newId = self.crypto.randomUUID();
-                sourceTr.attr("id", newId)
+            $("#currentList").append(sourceTr);
+            // insert(sourceTr, targetId)
 
-                insert(sourceTr, targetId)
-            }
-            $(this)
-                .addClass("ui-state-highlight")
-                .find("p")
-                .html("Dropped!");
-
-
-        },
+         },
         over: function (event, ui) {
             let targetId = event.target.id;
             console.log(`over::targetId: ${targetId}`)
@@ -60,45 +49,16 @@ $(function () {
         }
     });
 
-    $("#sortable").sortable();
-
-    $(".remove").on("click", function(){
-        const wordLi = $(this).parent();
-        wordLi.detach();
-    });
-
-    // $(".dropTrash").droppable({
-    //
-    //     drop: function (event, ui) {
-    //         let targetId = event.target.id;
-    //         let sourceTr = ui.draggable;
-    //         console.log(`dropped in trash ${sourceTr} onto ${targetId}`)
-    //
-    //         const draggable = ui.draggable;
-    //         draggable.remove()
-    //     },
-    //     over: function (event, ui) {
-    //         const target = event.target;
-    //         const targetId = target.id;
-    //         console.log(`over::targetId: ${targetId}`)
-    //
-    //         if (targetId === "trash") {
-    //             // remove from table
-    //         } else {
-    //             // insert
-    //         }
-    //
-    //     }
-    // });
+    $("#currentList").sortable();
 
     $('#messageForm').on('submit', function () {
-
-        var words = $("#currentWords tr")
+        const $currentList = $("#currentList");
+        var words = $currentList.children()
             .map(function () {
                 console.log(`this: ${this}`);
-                const dataset =  this.dataset;
+                const dataset = this.dataset;
                 console.log(`dataset: ${dataset}`);
-                const f =  dataset.word
+                const f = dataset.word
                 return f;
             }) //Project Ids
             .get(); //ToArray
@@ -117,16 +77,16 @@ $(function () {
     });
 });
 
-function remove(dropee, targetId) {
+
+function remove() {
     console.log(`remove: dropee: ${dropee} targetId: ${targetId}`)
-}
-// Insert into currnbt
-function insert(dropee, targetId) {
-    let elementToDropBefore = $("#" + targetId);
-    console.log("addFunction::  elementToDropBefore: " + elementToDropBefore);
-    elementToDropBefore.before(dropee);
+    $(this).parent().detach();
 }
 
-function potentialTrashDrop() {
-    console.log("potentialTrashDrop");
-}
+// Insert into currnbt
+// function insert(dropee, targetId) {
+//     let elementToDropBefore = $("#" + targetId);
+//     console.log("addFunction::  elementToDropBefore: " + elementToDropBefore);
+//     elementToDropBefore.before(dropee);
+// }
+
