@@ -17,11 +17,9 @@
         <div class="row">
             <div class="col col-md-auto border border-primary">
                 <p class="sectionHeader">@message.key</p>
-
                 <div><label for="name">Name: </label>
                     @Html(message.key.namedHtml)
                 </div>
-
                 <input class="btn btn-primary" type="submit" value="Save">
                 <p class="text-break help">Drag from Available Words to Current Words.<br/>
                     Drag within Current Words to re-arrange or remove.</p>
@@ -39,7 +37,7 @@
                 <p class="sectionHeader">Available Words</p>
 
                 <div id="myDropdown" class="dropdown-content show ">
-                    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+                    <input type="text" placeholder="Search.." id="filter" onkeyup="filterFunction()">
                         <ul id="availableList">
                         @for(word <- Words.words) {
                             <li data-wordid="@word.id" class="text-nowrap wordSource" onclick="remove(this)">@{word.string}</li>

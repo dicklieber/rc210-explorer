@@ -23,6 +23,7 @@ $(function () {
         helper: "clone"
     });
     $("#dropZone").droppable({
+        accept: ".wordSource",
         drop: function (event, ui) {
             const sourceTr = ui.draggable;
             $("#currentList").append(sourceTr);
@@ -32,11 +33,6 @@ $(function () {
             let targetId = event.target.id;
             console.log(`over::targetId: ${targetId}`)
 
-            if (targetId === "trash") {
-                // remove from table
-            } else {
-                // insert
-            }
         }
     });
 
@@ -44,36 +40,56 @@ $(function () {
 
     $('#messageForm').on('submit', function () {
         const $currentList = $("#currentList");
-        var words = $currentList.children()
+        const words = $currentList.children()
             .map(function () {
-                console.log(`this: ${this}`);
-                const dataset = this.dataset;
-                console.log(`dataset: ${dataset}`);
-                const word = dataset.wordid;
-                return word;
-            }) //Project Ids
-            .get(); //ToArray
-
-        let tf = typeof words
-
-        console.log(words)
+                return this.dataset.wordid;
+            })
+            .get();
 
         $("#words").val(words)
 
-        let formData = new FormData($('form')[0]);
+        const formData = new FormData($('form')[0]);
         formData.append("words", words);
-        // $("#btnSubmit").prop("disabled", true);
-
         return true;
     });
 });
 
-function remove(deleteButton) {
-    const inCurrentlist = $(deleteButton).closest("#currentList");
+
+/**
+ * Remove the word in #currentList
+ * Does nothing if anyplace else. e.g. The #availableList.
+ * @param liElement in
+ */
+function remove(liElement) {
+    const inCurrentlist = $(liElement).closest("#currentList");
     const s = inCurrentlist.size();
     if (s > 0) {
-        const tr = $(deleteButton).closest("tr");
-        tr.detach();
+        liElement.remove();
     }
+}
+
+function filterFunction() {
+    const filter = $("#filter").val().toUpperCase();
+
+    $("#availableList li").each(function () {
+        const $1 = $(this);
+        const wordText = $1.text();
+        const value = wordText.toUpperCase();
+        if(value.includes(filter) )
+            $1.show();
+        else
+            $1.hide();
+    });
+
+    // const div = document.getElementById("myDropdown");
+    // const a = div.getElementsByTagName("tr");
+    // for (i = 0; i < a.length; i++) {
+    //     txtValue = a[i].textContent || a[i].innerText;
+    //     if (txtValue.toUpperCase().indexOf(filter) > -1) {
+    //         a[i].style.display = "";
+    //     } else {
+    //         a[i].style.display = "none";
+    //     }
+    // }
 }
 
