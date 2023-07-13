@@ -22,20 +22,12 @@ $(function () {
         scroll: false,
         helper: "clone"
     });
-    // $(".currentWords").draggable({
-    //     // containment: "parent",
-    //     helper: "clone"
-    // });
     $("#dropZone").droppable({
         drop: function (event, ui) {
-            let targetId = event.target.id;
-            let sourceTr = ui.draggable;
-            console.log(`dropped ${sourceTr} onto ${targetId}`)
-
+            const sourceTr = ui.draggable;
             $("#currentList").append(sourceTr);
-            // insert(sourceTr, targetId)
 
-         },
+        },
         over: function (event, ui) {
             let targetId = event.target.id;
             console.log(`over::targetId: ${targetId}`)
@@ -45,7 +37,6 @@ $(function () {
             } else {
                 // insert
             }
-
         }
     });
 
@@ -58,8 +49,8 @@ $(function () {
                 console.log(`this: ${this}`);
                 const dataset = this.dataset;
                 console.log(`dataset: ${dataset}`);
-                const f = dataset.word
-                return f;
+                const word = dataset.wordid;
+                return word;
             }) //Project Ids
             .get(); //ToArray
 
@@ -77,16 +68,12 @@ $(function () {
     });
 });
 
-
-function remove() {
-    console.log(`remove: dropee: ${dropee} targetId: ${targetId}`)
-    $(this).parent().detach();
+function remove(deleteButton) {
+    const inCurrentlist = $(deleteButton).closest("#currentList");
+    const s = inCurrentlist.size();
+    if (s > 0) {
+        const tr = $(deleteButton).closest("tr");
+        tr.detach();
+    }
 }
-
-// Insert into currnbt
-// function insert(dropee, targetId) {
-//     let elementToDropBefore = $("#" + targetId);
-//     console.log("addFunction::  elementToDropBefore: " + elementToDropBefore);
-//     elementToDropBefore.before(dropee);
-// }
 

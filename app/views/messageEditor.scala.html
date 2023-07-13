@@ -2,8 +2,6 @@
 @import net.wa9nnn.rc210.data.vocabulary.Words
 @import net.wa9nnn.rc210.ui.Tabs
 @import views.html.helper.form
-
-@import scala.util.Random
 @(message: Message)(implicit messagesProvider: MessagesProvider)
 
 @tabbedmain(Tabs.messagesTab) {
@@ -31,34 +29,22 @@
             <div id="dropZone" class="col col-md-auto border border-primary">
                 <p class="sectionHeader">Current Words</p>
 
-                <table >
-                    <tbody id="currentList">
-                    @for(word <- message.words) {
-                        <tr class="wordSource" data-word="@word">
-                            <td class="text-nowrap">@Words(word).string</td>
-                            <td><button type="button" class="btn btn-default btn-xs" onclick="remove()">
-                                <i class="bi bi-trash3"></i>
-                            </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                    }
-                </table>
+                <ul id="currentList">
+                @for(word <- message.words) {
+                    <li data-wordid="@word" class="text-nowrap" onclick="remove(this)">@Words(word).string</li>
+                }
+                </ul>
             </div>
             <div class="col col-md-auto ">
                 <p class="sectionHeader">Available Words</p>
 
-                <div id="myDropdown" class="dropdown-content show wordList">
+                <div id="myDropdown" class="dropdown-content show ">
                     <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
-                    <div>
-                        <table>
+                        <ul id="availableList">
                         @for(word <- Words.words) {
-                            <tr class="wordSource" data-word="@word.id">
-                                <td class="text-nowrap" title="Phrase: @word.id" >@word.string</td>
-                            </tr>
+                            <li data-wordid="@word.id" class="text-nowrap wordSource" onclick="remove(this)">@{word.string}</li>
                         }
-                        </table>
-                    </div>
+                        </ul>
                 </div>
             </div>
         </div>
