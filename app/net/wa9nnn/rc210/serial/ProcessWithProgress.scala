@@ -81,10 +81,10 @@ object ProcessWithProgress extends LazyLogging {
 
     private def sendProgress(): Unit = {
       val soFar = count.get()
-      if (soFar % mod == 0) {
+      if (!running || soFar % mod == 0) {
         val double = soFar * 100.0 / expected
         val progress = new Progress(
-          running = true,
+          running = running,
           soFar = soFar,
           percent = f"$double%2.1f%%",
           sDuration = Duration.between(began, Instant.now()),

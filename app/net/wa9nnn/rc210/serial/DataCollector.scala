@@ -75,6 +75,7 @@ class DataCollector @Inject()(config: Config, rc210: Rc210, dataStoreActor: Acto
 
         response match {
           case "Complete" =>
+
             cleanup()
             Files.deleteIfExists(memoryFile)
             Files.move(tempFile, memoryFile)
