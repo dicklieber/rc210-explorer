@@ -27,6 +27,7 @@ import org.scalatest.BeforeAndAfterAll
 import org.scalatestplus.mockito.MockitoSugar
 
 import java.nio.file.Files
+import java.util.concurrent.atomic.AtomicInteger
 import scala.concurrent.duration.DurationInt
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 import scala.language.postfixOps
@@ -48,14 +49,15 @@ class DataCollectorSpec extends WithTestConfiguration with MockitoSugar with Bef
         throw new IllegalStateException("Can't find FT232 port")
     }
   }
-
-
+  val count = new AtomicInteger()
   val progressApi = new ProgressApi {
-    override def doOne(message: String): Unit =
-      println(s"doOne: $message")
+    override def doOne(message: String): Unit = {
+      if (count.getAndIncrement() % 50 == 0)
+        println(s"${count.get()}: doOne: $message")
+    }
 
     override def finish(message: String): Unit =
-      println(s"finish: $message")
+      println(s"finish: $message collected: ${count.get()} lines")
 
     override def error(exception: Throwable): Unit =
       throw exception
@@ -68,7 +70,7 @@ class DataCollectorSpec extends WithTestConfiguration with MockitoSugar with Bef
   "DataCollector" should {
     "Produce File" in {
       val dcs: DataCollector = new DataCollector(config, rc210, dataStoreProbe.ref)
-      dcs(progressApi)
+      dcs(progressApi, "unit test")
 
 
       dataStoreProbe.expectMessage(120 seconds, DataStoreActor.Reload)

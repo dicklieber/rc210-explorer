@@ -27,6 +27,7 @@ import net.wa9nnn.rc210.serial.comm.RcEventBased
 
 import java.io.PrintWriter
 import java.nio.file.{Files, Path}
+import java.time.Instant
 import javax.inject.{Inject, Singleton}
 
 /**
@@ -44,11 +45,13 @@ class DataCollector @Inject()(config: Config, rc210: Rc210, dataStoreActor: Acto
    *
    * @return a Future that will be completed with the final [[Progress]] when done and a [[sun.net.ProgressSource]] that can be used to obtain the current [[Progress]] while download is running.
    */
-  def apply(progressApi: ProgressApi): Unit = {
+  def apply(progressApi: ProgressApi, maybeComment: Option[String]): Unit = {
     val rcOp: RcEventBased = rc210.openEventBased()
     val fileWriter = new PrintWriter(Files.newOutputStream(tempFile))
+    fileWriter.println(s"stamp: ${Instant.now()}")
+    maybeComment.foreach(comment => fileWriter.println(s"comment: $comment"))
 
-    def cleanup(error:String = ""): Unit = {
+    def cleanup(error: String = ""): Unit = {
       fileWriter.close()
       rcOp.close()
       if (error.isBlank)
