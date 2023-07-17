@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data.vocabulary
 
 import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
+import play.api.libs.json.{Format, JsValue, Json}
 
 import scala.io.BufferedSource
 import scala.util.{Failure, Success, Using}
@@ -48,10 +49,6 @@ object Words {
    */
   def apply(string: String): Word = byText(string)
 
-  /**
-   * Lookup by Key
-   */
-  def apply(id: Int): Word = words(id)
 }
 
 /**
@@ -62,9 +59,11 @@ object Words {
  */
 case class Word(id: Int, string: String) extends RowSource {
   override def toRow: Row = Row(Cell(id), string)
+  val json: JsValue = Json.toJson(this)
 }
 
 object Word {
+  implicit val fmtWord: Format[Word] = Json.format[Word]
   def header(count: Int): Header = Header(s"Phrases ($count)", "Key", "String")
 
   val words: Seq[Word] = Using(new BufferedSource(getClass.getResourceAsStream("/Vocabulary.txt"))) { bs: BufferedSource =>
@@ -86,6 +85,9 @@ object Word {
   private val byText: Map[String, Word] = words.map { w =>
     w.string -> w
   }.toMap
+  private val byId: Map[Int, Word] = words.map { w =>
+    w.id -> w
+  }.toMap
 
 
   /**
@@ -96,5 +98,7 @@ object Word {
   /**
    * Lookup by Key
    */
-  def apply(id: Int): Word = words(id)
+  def apply(id: Int): Word = byId(id)
+
+  def parse(sJson:String): Word = Json.parse(sJson).as[Word]
 }

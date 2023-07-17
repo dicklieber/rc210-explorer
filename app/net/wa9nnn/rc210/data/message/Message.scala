@@ -21,7 +21,7 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row}
 import controllers.routes
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldEntryBase}
-import net.wa9nnn.rc210.data.vocabulary.Words
+import net.wa9nnn.rc210.data.vocabulary.{Word, Words}
 import net.wa9nnn.rc210.key.KeyFactory.{Key, MessageKey}
 import net.wa9nnn.rc210.ui.EditButton
 import play.api.libs.json.{Format, JsValue, Json}
@@ -40,14 +40,16 @@ case class Message(key: MessageKey, words: Seq[Int]) extends ComplexFieldValue[M
 
   override val fieldName: String = "Message"
 
-   def toRow: Row = {
+  def toWords: Seq[Word] = words.map(Word(_))
+
+  def toRow: Row = {
     val editButton = EditButton(routes.MessageController.edit(key))
     val rowHeader = key.toCell
     val csvWords: Cell = Cell(display)
     Row(editButton, rowHeader, csvWords)
   }
 
-  override def display: String = words.map(id => Words(id).string).mkString(", ")
+  override def display: String = words.map(id => Word(id).string).mkString(", ")
 
   /**
    * Render this value as an RD-210 command string.
@@ -72,8 +74,9 @@ object Message extends LazyLogging {
 
   def apply(key: Key, kv: Map[String, String]): Message = {
 
-    val words: Array[Int] = kv("words").split(",").filter(_.nonEmpty).map(_.toInt)
-    new Message(key.asInstanceOf[MessageKey], words.toIndexedSeq)
+    val csv: String = kv("words")
+    val wordIds: Array[Int] = csv.split(",").filter(_.nonEmpty).map(_.toInt)
+    new Message(key.asInstanceOf[MessageKey], wordIds)
   }
 }
 

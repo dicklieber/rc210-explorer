@@ -16,44 +16,41 @@
  */
 
 $(function () {
-    $(".wordSource").draggable({
-        appendTo: 'body',
-        containment: 'window',
-        scroll: false,
-        helper: "clone"
-    });
-    $("#dropZone").droppable({
-        accept: ".wordSource",
-        drop: function (event, ui) {
-            const sourceTr = ui.draggable;
-            $("#currentList").append(sourceTr);
 
-        },
-        over: function (event, ui) {
-            let targetId = event.target.id;
-            console.log(`over::targetId: ${targetId}`)
 
+    $(".wordSource").on("dblclick", function () {
+        const li = this;
+        const $currentList = $("#currentList");
+        const size = $currentList.children().size();
+        if (size >= 9) {
+            $("#maxWordsAlert").show()
+        } else {
+            $currentList.append($(li).clone());
         }
     });
 
-    $("#currentList").sortable();
+    $("#currentList").sortable({
+        sort: function () {
+            // gets added unintentionally by droppable interacting with sortable
+            // using connectWithSortable fixes this, but doesn't allow you to customize active/hoverClass options
+            $(this).removeClass("active");
+        }
+    });
 
     $('#messageForm').on('submit', function () {
         const $currentList = $("#currentList");
-        const words = $currentList.children()
+        const wordIds = $currentList.children()
             .map(function () {
                 return this.dataset.wordid;
-            })
-            .get();
-
-        $("#words").val(words)
+            }).get();
+        const csv = wordIds.join();
+        $("#words").val(csv);
 
         const formData = new FormData($('form')[0]);
-        formData.append("words", words);
+        formData.append("words", wordIds);
         return true;
     });
 });
-
 
 /**
  * Remove the word in #currentList
@@ -75,21 +72,11 @@ function filterFunction() {
         const $1 = $(this);
         const wordText = $1.text();
         const value = wordText.toUpperCase();
-        if(value.includes(filter) )
+        if (value.includes(filter))
             $1.show();
         else
             $1.hide();
     });
 
-    // const div = document.getElementById("myDropdown");
-    // const a = div.getElementsByTagName("tr");
-    // for (i = 0; i < a.length; i++) {
-    //     txtValue = a[i].textContent || a[i].innerText;
-    //     if (txtValue.toUpperCase().indexOf(filter) > -1) {
-    //         a[i].style.display = "";
-    //     } else {
-    //         a[i].style.display = "none";
-    //     }
-    // }
 }
 

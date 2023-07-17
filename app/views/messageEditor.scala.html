@@ -21,30 +21,35 @@
                     @Html(message.key.namedHtml)
                 </div>
                 <input class="btn btn-primary" type="submit" value="Save">
-                <p class="text-break help">Drag from Available Words to Current Words.<br/>
-                    Drag within Current Words to re-arrange or remove.</p>
+                <p class="text-break help">Double click Available Words append to Current Words.<br/>
+                    Drag within Current Words to re-arrange. Click to remove.</p>
             </div>
             <div id="dropZone" class="col col-md-auto border border-primary">
                 <p class="sectionHeader">Current Words</p>
 
-                <ul id="currentList">
-                @for(word <- message.words) {
-                    <li data-wordid="@word" class="text-nowrap" onclick="remove(this)">@Words(word).string</li>
+                <ul id="currentList" class="border border-primary">
+                @for(word <- message.toWords) {
+                    <li data-wordid="@{word.id}" class="text-nowrap" onclick="remove(this)">@{word.string} (@word.id)</li>
                 }
                 </ul>
+                <div id="maxWordsAlert" class="alert alert-warning" role="alert" style="display: none">
+                    Max words in a message is nine!
+                </div>
             </div>
             <div class="col col-md-auto ">
                 <p class="sectionHeader">Available Words</p>
 
                 <div id="myDropdown" class="dropdown-content show ">
                     <input type="text" placeholder="Search.." id="filter" onkeyup="filterFunction()">
-                        <ul id="availableList">
-                        @for(word <- Words.words) {
-                            <li data-wordid="@word.id" class="text-nowrap wordSource" onclick="remove(this)">@{word.string}</li>
-                        }
-                        </ul>
+                    <ul id="availableList">
+                    @for(word <- Words.words) {
+                        <li data-wordid="@word.id" class="text-nowrap wordSource" onclick="remove(this)">@{word.string} (@{word.id})</li>
+
+                    }
+                    </ul>
                 </div>
             </div>
         </div>
     }
+
 }
