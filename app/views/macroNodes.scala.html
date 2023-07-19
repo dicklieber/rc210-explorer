@@ -7,7 +7,7 @@
 
 @tabbedmain(Tabs.macrosTab) {
     <div class="container">
-    @form(action = routes.MacroNodeController.save()) {
+    @form(action = routes.MacroEditorController.save()) {
         <table class="table table-bordered w-auto">
             <thead class="table-primary">
                 <tr>
@@ -22,7 +22,7 @@
                 <td>
                     <button type="button" class="bi bi-pencil-square btn p-0"
                         title="Edit macro definition."
-                    onclick="window.location.href='@routes.MacroNodeController.edit(macroNode.key.asInstanceOf[MacroKey])'"></button>
+                    onclick="window.location.href='@routes.MacroEditorController.edit(macroNode.key.asInstanceOf[MacroKey])'"></button>
                 </td>
                 <td title="Click edit button to change name.">
                 @macroNode.key.noEdit

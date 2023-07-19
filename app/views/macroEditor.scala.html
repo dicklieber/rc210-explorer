@@ -6,60 +6,57 @@
 @import scala.util.Random
 @(macroNode: MacroNode)(implicit functionsProvider: FunctionsProvider, messagesProvider: MessagesProvider)
 
-@tabbedmain(Tabs.macrosTab) {
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    @tabbedmain(Tabs.macrosTab) {
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/dualList.css")">
 
-    <script src="@routes.Assets.versioned("javascripts/macroNode.js")"></script>
+        <script src="@routes.Assets.versioned("javascripts/macroNode.js")"></script>
 
 
-    @form(action = routes.MacroNodeController.save(), Symbol("id") -> "macroNodeForm") {
-        <input type="hidden" name="key", value="@macroNode.key">
-        <input type="hidden" name="functionIds" id="functionIds">
-        <div class="row">
-            <div class="col col-md-auto border border-primary">
-                <h2>@macroNode.key</h2>
-                @Html(macroNode.key.namedHtml)
-                <div><label for="dtmf">DTMF: </label>
-                    <input id="dtmf" name="dtmf" value="@macroNode.dtmf">
+        @form(action = routes.MacroEditorController.save(), Symbol("id") -> "macroNodeForm") {
+            <input type="hidden" name="key", value="@macroNode.key">
+            <input type="hidden" name="functionIds" id="functionIds">
+            <div class="row">
+                <div class="col col-md-auto border border-primary">
+                    <h2>@macroNode.key</h2>
+                    @Html(macroNode.key.namedHtml)
+                    <div><label for="dtmf">DTMF: </label>
+                        <input id="dtmf" name="dtmf" value="@macroNode.dtmf">
+                    </div>
+
+                    @submitButton()
                 </div>
+                <div class="col col-md-auto border border-primary">
+                    <h2>Current</h2>
 
-                @submitButton()
-            </div>
-            <div class="col col-md-auto border border-primary">
-                <h2>Current</h2>
-
-                <table id="currentFunctions" >
-                    @for(function <- macroNode.functions) {
-                        <tr id = "@Random.nextInt()" class="functionDrag functionDrop currentFunction" data-function="@function.toString">
-                            <td class=" text-end">@function.number </td>
-                            <td class="text-nowrap">@functionsProvider.apply(function).get.description</td>
-                        </tr>
+                    <ul id="currentList" class="border border-primary">
+                    @for(functionkey <- macroNode.functions) {
+                        <li
+                        class="functionSource"
+                        data-function="@functionkey.toString"
+                        onclick="remove(this)">
+                            @functionsProvider.apply(functionkey).get.description (@functionkey.number)
+                        </li>
                     }
-                    <tr id="droplast" class="functionDrop " >
-                        <td colspan="2">--droplast--</td>
-                    </tr>
-
-                </table>
-                <div class="dropTrash">
-                    <i class="bi bi-trash3"></i>
+                    </ul>
                 </div>
-            </div>
-            <div class="col col-md-auto ">
-                <h2>Available Functions</h2>
-                <div id="myDropdown" class="dropdown-content show functionList">
-                    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
-                    <div>
-                        <table>
-                        @for(function <- functionsProvider.functions) {
-                            <tr class="functionSource" data-function="@function.key.toString">
-                                <td class=" text-end">@function.key.number </td>
-                                <td class="text-nowrap">@function.description</td>
-                            </tr>
-                        }
-                        </table>
+                <div class="col col-md-auto ">
+                    <h2>Available Functions</h2>
+                    <div id="myDropdown" class="dropdown-content show functionList">
+                        <input type="text" placeholder="Search.." id="filter" onkeyup="filterFunction()">
+                        <div>
+                            <ul id="availableList">
+                            @for(function <- functionsProvider.functions) {
+                                <li class="functionSource"
+                                onclick="remove(this)"
+                                data-function="@function.key.toString">
+                                    @function.description (@function.key.number)
+                                </li>
+                            }
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        }
     }
-}

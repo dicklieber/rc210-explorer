@@ -16,107 +16,58 @@
  */
 
 $(function () {
-    $(".functionSource").draggable({
-        appendTo: 'body',
-        containment: 'window',
-        scroll: false,
-        helper: "clone"
-    });
-    $(".currentFunction").draggable({
-        // containment: "parent",
-        helper: "clone"
-    });
-    $(".functionDrop").droppable({
-
-        drop: function (event, ui) {
-            let targetId = event.target.id;
-            let sourceTr = ui.draggable;
-            console.log(`dropped ${sourceTr} onto ${targetId}`)
-
-            if (targetId === "trash") {
-                $("#ddMessage").text(`Remove this function: ${targetId}`)
-            } else {
-                const newId = self.crypto.randomUUID();
-                sourceTr.attr("id", newId)
-
-                insert(sourceTr, targetId)
-            }
-            $(this)
-                .addClass("ui-state-highlight")
-                .find("p")
-                .html("Dropped!");
-
-
-        },
-        over: function (event, ui) {
-            let targetId = event.target.id;
-            console.log(`over::targetId: ${targetId}`)
-
-            if (targetId === "trash") {
-                // remove from table
-            } else {
-                // insert
-            }
-
-        }
-    });
-    $(".dropTrash").droppable({
-
-        drop: function (event, ui) {
-            let targetId = event.target.id;
-            let sourceTr = ui.draggable;
-            console.log(`dropped in trash ${sourceTr} onto ${targetId}`)
-
-            const draggable = ui.draggable;
-            draggable.remove()
-        },
-        over: function (event, ui) {
-            const target = event.target;
-            const targetId = target.id;
-            console.log(`over::targetId: ${targetId}`)
-
-            if (targetId === "trash") {
-                // remove from table
-            } else {
-                // insert
-            }
-
-        }
-    });
 
     $('#macroNodeForm').on('submit', function () {
-
-        var functionIds = $("#currentFunctions tr")
+        const $currentList = $("#currentList");
+        const wordIds = $currentList.children()
             .map(function () {
-                console.log(`this: ${this}`);
-                const dataset =  this.dataset;
-                console.log(`dataset: ${dataset}`);
-                const f =  dataset.function
-                return f;
-            }) //Project Ids
-            .get(); //ToArray
+                return this.dataset.function;
+            }).get();
+        const csv = wordIds.join();
+        $("#functionIds").val(csv);
 
-        let tf = typeof functionIds
-
-        console.log(functionIds)
-
-        $("#functionIds").val(functionIds)
-
-        let formData = new FormData($('form')[0]);
-        formData.append("functionIds", functionIds);
-        // $("#btnSubmit").prop("disabled", true);
-
+        const formData = new FormData($('form')[0]);
+        formData.append("words", wordIds);
         return true;
     });
+;
+
+    $(".functionSource").on("dblclick", function () {
+        const li = this;
+        const $currentList = $("#currentList");
+        const size = $currentList.children().size();
+        // if (size >= 9) {
+        //     $("#maxWordsAlert").show()
+        // } else {
+        //     $currentList.append($(li).clone());
+        // }
+
+        $currentList.append($(li).clone());
+    });
+
 });
 
-// Insert into currnbt
-function insert(dropee, targetId) {
-    let elementToDropBefore = $("#" + targetId);
-    console.log("addFunction::  elementToDropBefore: " + elementToDropBefore);
-    elementToDropBefore.before(dropee);
+function filterFunction() {
+    const filter = $("#filter").val().toUpperCase();
+
+    $("#availableList li").each(function () {
+        const $1 = $(this);
+        const wordText = $1.text();
+        const value = wordText.toUpperCase();
+        if (value.includes(filter))
+            $1.show();
+        else
+            $1.hide();
+    });
 }
 
-function potentialTrashDrop() {
-    console.log("potentialTrashDrop");
+/**
+ * Remove the word in #currentList
+ * Does nothing if anyplace else. e.g. The #availableList.
+ * @param liElement in
+ */
+function remove(liElement) {
+    const inCurrentlist = $(liElement).closest("#currentList");
+    const s = inCurrentlist.size();
+    liElement.remove();
 }

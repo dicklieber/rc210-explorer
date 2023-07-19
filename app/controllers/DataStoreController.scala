@@ -65,7 +65,7 @@ class DataStoreController @Inject()(actor: ActorRef[DataStoreActor.Message])
         val sJson = java.nio.file.Files.readString(jsonFile.ref.path)
         actor.ask(IngestJson(sJson, _))
       }
-    Redirect(routes.MacroNodeController.index())
+    Redirect(routes.MacroEditorController.index())
   }
 
 }

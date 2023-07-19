@@ -44,7 +44,6 @@
                     <ul id="availableList">
                     @for(word <- Words.words) {
                         <li data-wordid="@word.id" class="text-nowrap wordSource" onclick="remove(this)">@{word.string} (@{word.id})</li>
-
                     }
                     </ul>
                 </div>

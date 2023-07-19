@@ -42,8 +42,8 @@ import scala.util.Try
 import scala.util.matching.Regex
 
 @Singleton()
-class MacroNodeController @Inject()(actor: ActorRef[DataStoreActor.Message])
-                                   (implicit scheduler: Scheduler,
+class MacroEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
+                                     (implicit scheduler: Scheduler,
                                     ec: ExecutionContext, functionsProvider: FunctionsProvider) extends MessagesInjectedController with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 
@@ -56,7 +56,8 @@ class MacroNodeController @Inject()(actor: ActorRef[DataStoreActor.Message])
   def edit(key: MacroKey): Action[AnyContent] = Action.async { implicit request =>
 
     val fieldKey = FieldKey("Macro", key)
-    actor.ask(ForFieldKey(fieldKey, _)).map { maybeFieldEntry: Option[FieldEntry] =>
+    actor.ask(ForFieldKey(fieldKey, _)).map { maybeFieldEntry:
+                                              Option[FieldEntry] =>
       maybeFieldEntry match {
         case Some(fe: FieldEntry) =>
           Ok(views.html.macroEditor(fe.value))
@@ -89,12 +90,12 @@ class MacroNodeController @Inject()(actor: ActorRef[DataStoreActor.Message])
     val keyNames = Seq(NamedKey(key, formData("name").head))
     actor.ask[String](DataStoreActor.UpdateData(Seq(UpdateCandidate(macroNode)), keyNames,
       who(request), _)).map { _ =>
-      Redirect(routes.MacroNodeController.index())
+      Redirect(routes.MacroEditorController.index())
     }
   }
 }
 
-object MacroNodeController {
+object MacroEditorController {
   val r: Regex = """[^\d]*(\d*)""".r
 }
 
