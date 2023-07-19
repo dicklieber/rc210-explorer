@@ -8,7 +8,7 @@
 @tabbedmain(Tabs.macrosTab) {
     <div class="container">
     @form(action = routes.MacroEditorController.save()) {
-        <table class="table table-bordered w-auto">
+        <table class="table table-bordered w-auto table-sm">
             <thead class="table-primary">
                 <tr>
                     <td>&nbsp;</td>
@@ -17,31 +17,26 @@
                     <td title="Functions that will run when this macro is triggered.">Function</td>
                 </tr>
             </thead>
-        @for(macroNode <- macroNodes) {
-            <tr>
-                <td>
-                    <button type="button" class="bi bi-pencil-square btn p-0"
+            @for(macroNode <- macroNodes) {
+                <tr>
+                    <td>
+                        <button type="button" class="bi bi-pencil-square btn p-0"
                         title="Edit macro definition."
-                    onclick="window.location.href='@routes.MacroEditorController.edit(macroNode.key.asInstanceOf[MacroKey])'"></button>
-                </td>
-                <td title="Click edit button to change name.">
-                @macroNode.key.noEdit
-                </td>
-                <td class="text-end">
+                        onclick="window.location.href = '@routes.MacroEditorController.edit(macroNode.key.asInstanceOf[MacroKey])'"></button>
+                    </td>
+                    <td title="Click edit button to change name.">
+                    @macroNode.key.noEdit
+                    </td>
+                    <td class="text-end">
                     @macroNode.dtmf
-                </td>
-                <td>
-                    <table class="table table-bordered table-sm w-auto" >
-                    @for(functionKey <- macroNode.functions) {
-                        <tr>
-                            <td class="text-end">@functionKey.number</td>
-                            <td>@functionsProvider(functionKey).map(_.description).getOrElse("???")</td>
-                        </tr>
-                    }
-                    </table>
-                </td>
-            </tr>
-        }
+                    </td>
+                    <td>
+                            <ul class="list-unstyled">
+                            @for(functionKey <- macroNode.functions) {<li>@functionsProvider(functionKey).map(_.toString).getOrElse("???")</li>}
+                            </ul>
+                    </td>
+                </tr>
+            }
         </table>
     }
     </div>

@@ -29,13 +29,13 @@
                 <div class="col col-md-auto border border-primary">
                     <h2>Current</h2>
 
-                    <ul id="currentList" class="border border-primary">
+                        <ul id="currentList" class="border border-primary list-unstyled">
                     @for(functionkey <- macroNode.functions) {
                         <li
                         class="functionSource"
                         data-function="@functionkey.toString"
                         onclick="remove(this)">
-                            @functionsProvider.apply(functionkey).get.description (@functionkey.number)
+                            @functionsProvider.apply(functionkey).get
                         </li>
                     }
                     </ul>
@@ -45,12 +45,12 @@
                     <div id="myDropdown" class="dropdown-content show functionList">
                         <input type="text" placeholder="Search.." id="filter" onkeyup="filterFunction()">
                         <div>
-                            <ul id="availableList">
+                            <ul id="availableList" class="list-unstyled">
                             @for(function <- functionsProvider.functions) {
                                 <li class="functionSource"
                                 onclick="remove(this)"
                                 data-function="@function.key.toString">
-                                    @function.description (@function.key.number)
+                                    @function
                                 </li>
                             }
                             </ul>
