@@ -41,7 +41,8 @@ class Rc210 @Inject()(config: Config) extends LazyLogging {
 
   Files.createDirectories(file.getParent)
   private var maybeRcSerialPort: Option[RcSerialPort] = None
-  selectPort(Files.readString(file))
+  if(Files.exists(file))
+    selectPort(Files.readString(file))
 
   implicit def serialPort: RcSerialPort = {
     maybeRcSerialPort.getOrElse(throw NoPortSelected())
