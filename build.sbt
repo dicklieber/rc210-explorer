@@ -55,7 +55,7 @@ val akkaVersion = "2.8.5"
 libraryDependencies ++= Seq(
   guice,
 
-
+  "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion % Test,
 
   //  "org.scalactic" %% "scalactic" % "3.2.16",
   //  "org.scalatest" %% "scalatest" % "3.2.16" % "test",

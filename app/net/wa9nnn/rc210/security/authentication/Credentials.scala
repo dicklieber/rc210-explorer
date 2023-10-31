@@ -24,4 +24,4 @@ import net.wa9nnn.rc210.security.Who.Callsign
  * @param callsign    who.
  * @param password    credentials.
  */
-case class Login(callsign: Callsign = "", password: String = "")
+case class Credentials(callsign: Callsign = "", password: String = "")

@@ -29,17 +29,17 @@ class LoginController @Inject()(implicit config: Config,
                                 scheduler: Scheduler, ec: ExecutionContext
                                ) extends MessagesInjectedController with LazyLogging {
 
-  val loginForm: Form[Login] = Form {
+  val loginForm: Form[Credentials] = Form {
     mapping(
       "callsign" -> text,
       "password" -> text,
-    )(Login.apply)(Login.unapply)
+    )(Credentials.apply)(Credentials.unapply)
   }
   private val ownerMessage: String = config.getString("vizRc210.authentication.message")
 
   def loginLanding: Action[AnyContent] = Action {
     implicit request =>
-      val form = loginForm.fill(Login())
+      val form = loginForm.fill(Credentials())
       try {
         val appendable: HtmlFormat.Appendable = views.html.login(form, ownerMessage)
         Ok(appendable)
@@ -53,7 +53,7 @@ class LoginController @Inject()(implicit config: Config,
 
   def error(errorMessage: String): Action[AnyContent] = Action {
     implicit request =>
-      val form = loginForm.fill(Login())
+      val form = loginForm.fill(Credentials())
       Ok(views.html.login(form, ownerMessage, Option.when(errorMessage.nonEmpty) {
         errorMessage
       }))
@@ -68,9 +68,9 @@ class LoginController @Inject()(implicit config: Config,
    * @return
    */
   def doLogin(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
-    val binded: Form[Login] = loginForm.bindFromRequest()
+    val binded: Form[Credentials] = loginForm.bindFromRequest()
     binded.fold(
-      (formWithErrors: Form[Login]) => {
+      (formWithErrors: Form[Credentials]) => {
         val errors: Seq[FormError] = formWithErrors.errors
         errors.foreach { err =>
           logger.error(err.message)
@@ -78,9 +78,9 @@ class LoginController @Inject()(implicit config: Config,
         val appendable = views.html.login(formWithErrors, ownerMessage, Option("auth.badlogin"))
         BadRequest(appendable)
       },
-      (login: Login) => {
+      (login: Credentials) => {
         (for {
-          user: User <- Await.result[Option[User]](userActor.ask(UserManagerActor.Validate(login, _)), 3 seconds)
+          user: User <- Await.result[Option[User]](userActor.ask(UserManagerActor.Validate(login, _)), 30 seconds)
           session: RcSession = Await.result[RcSession](sessionActor.ask(Create(user, request.remoteAddress, _)), 3 seconds)
         } yield {
           logger.info(s"Login callsign:${login.callsign}  ip:${request.remoteAddress}")

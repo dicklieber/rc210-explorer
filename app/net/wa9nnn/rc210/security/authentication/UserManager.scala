@@ -2,7 +2,6 @@ package net.wa9nnn.rc210.security.authentication
 
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import configs.syntax._
 import controllers.UserEditDTO
 import net.wa9nnn.rc210.security.UserId.UserId
 import net.wa9nnn.rc210.security.Who
@@ -13,15 +12,10 @@ import java.nio.file.Path
 
 /**
  * Handles persistence of [[User]]s
- * This shoulsd only be access via [[UserManagerActor]]
+ * This should only be accessed via [[UserManagerActor]]
  *
  */
-class UserManager(config: Config) extends LazyLogging {
-  private val usersFile: Path = config.get[Path]("vizRc210.usersFile").value
-  private val defaultNoUserLogin: Login = Login(
-    callsign = config.getString("vizRc210.authentication.defaultAdmin.callsign"),
-    password = config.getString("vizRc210.authentication.defaultAdmin.password")
-  )
+class UserManager(usersFile: Path, defaultNoUserLogin: Credentials) extends LazyLogging {
   private var _userRecords: UserRecords = UserRecords()
 
   def load(): Unit = {
@@ -48,18 +42,18 @@ class UserManager(config: Config) extends LazyLogging {
     JsonIoWithBackup(usersFile, Json.toJson(_userRecords))
   }
 
-  def validate(login: Login): Option[User] = {
-    if (_userRecords.size == 0 && login == defaultNoUserLogin) {
+  def validate(credentials: Credentials): Option[User] = {
+    if (_userRecords.size == 0 && credentials == defaultNoUserLogin) {
       logger.info("No users and default credentials used")
       val dto = UserEditDTO(
-        login.callsign,
+        credentials.callsign,
         name = Option("Default Admin"),
-        password = Option(login.password)
+        password = Option(credentials.password)
       )
       val user = User(dto)
       Option(user)
     } else
-      _userRecords.validate(login)
+      _userRecords.validate(credentials)
   }
 
   def remove(id: UserId, who: Who): Unit = {
@@ -69,5 +63,4 @@ class UserManager(config: Config) extends LazyLogging {
   def get(id: UserId): Option[User] = {
     users.get(id)
   }
-
 }

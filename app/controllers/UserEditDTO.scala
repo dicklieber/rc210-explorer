@@ -26,7 +26,7 @@ import net.wa9nnn.rc210.security.Who.Callsign
  * @param callsign  user's callsign
  * @param name      friendly name
  * @param email     of user
- * @param id        a unique ID for the user. Not normally showed to users.
+ * @param id        a unique ID for the user. Not normally shown to users.
  * @param password  Some[String] with new password. None will keep existing password.
  */
 case class UserEditDTO(callsign: Callsign = "",

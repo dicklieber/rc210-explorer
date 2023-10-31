@@ -29,8 +29,8 @@ case class User(callsign: Callsign,
       Option(this)
     else
       None
-
   }
+
 
   override def compare(that: User): Int = {
     this.callsign compare that.callsign

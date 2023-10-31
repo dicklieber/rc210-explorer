@@ -26,8 +26,10 @@ import controllers.UserEditDTO
 import net.wa9nnn.rc210.security.UserId.UserId
 import play.api.libs.concurrent.ActorModule
 
+import java.nio.file.Path
 import scala.concurrent.ExecutionContext
 import scala.language.postfixOps
+import configs.syntax._
 
 
 @Singleton()
@@ -44,35 +46,36 @@ object UserManagerActor extends ActorModule with LazyLogging {
 
   case class Get(userId: UserId, replyTo: ActorRef[Option[User]]) extends UserManagerMessage
 
-  case class Validate(login: Login, replyTo: ActorRef[Option[User]]) extends UserManagerMessage
+  case class Validate(credentials: Credentials, replyTo: ActorRef[Option[User]]) extends UserManagerMessage
 
   @Provides
-  def apply(config: Config)(implicit ec: ExecutionContext): Behavior[UserManagerMessage] = {
-    val userManager = new UserManager(config)
+  def apply(config: Config, defaultNoUsersLogin: DefaultNoUsersLogin)(implicit ec: ExecutionContext): Behavior[UserManagerMessage] = {
+    val usersFile: Path = config.get[Path]("vizRc210.usersFile").value
+
+    val userManager = new UserManager(usersFile, defaultNoUsersLogin())
     Behaviors.supervise {
       Behaviors.setup[UserManagerMessage] { actorContext =>
-        val userManager = new UserManager(config)
         Behaviors.receiveMessage[Message] { message =>
-          message match {
-            case Put(userDetailData: UserEditDTO, user: User, replyTo: ActorRef[String]) =>
-              userManager.put(userDetailData, user)
-              replyTo ! "Added" // Don't need a return value but want client to wait until the actor is done.
-            case Get(userId: UserId, replyTo: ActorRef[Option[User]]) =>
-              val maybeUser: Option[User] = userManager.get(userId)
-              replyTo ! maybeUser
-            case Validate(login: Login, replyTo: ActorRef[Option[User]]) =>
-              val maybeUser: Option[User] = userManager.validate(login)
-              replyTo ! maybeUser
-            case Users(replyTo: ActorRef[UserRecords]) =>
-              replyTo ! userManager.users
-            case Remove(userId: UserId, user: User, replyTo: ActorRef[String]) =>
-              userManager.remove(userId, user.who)
-              replyTo ! "Removed"
-            case x =>
-              logger.error(s"Unexpected message: $x!")
+            message match {
+              case Put(userDetailData: UserEditDTO, user: User, replyTo: ActorRef[String]) =>
+                userManager.put(userDetailData, user)
+                replyTo ! "Added" // Don't need a return value but want client to wait until the actor is done.
+              case Get(userId: UserId, replyTo: ActorRef[Option[User]]) =>
+                val maybeUser: Option[User] = userManager.get(userId)
+                replyTo ! maybeUser
+              case Validate(login: Credentials, replyTo: ActorRef[Option[User]]) =>
+                val maybeUser: Option[User] = userManager.validate(login)
+                replyTo ! maybeUser
+              case Users(replyTo: ActorRef[UserRecords]) =>
+                replyTo ! userManager.users
+              case Remove(userId: UserId, user: User, replyTo: ActorRef[String]) =>
+                userManager.remove(userId, user.who)
+                replyTo ! "Removed"
+              case x =>
+                logger.error(s"Unexpected message: $x!")
+            }
+            Behaviors.same
           }
-          Behaviors.same
-        }
           .receiveSignal {
             case (_, signal: Signal) =>
               logger.error(s"signal: $signal")

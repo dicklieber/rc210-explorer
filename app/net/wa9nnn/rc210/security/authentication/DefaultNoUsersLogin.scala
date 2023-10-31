@@ -15,26 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.serial.comm
+package net.wa9nnn.rc210.security.authentication
 
-import akka.actor.testkit.typed.scaladsl.ActorTestKit
-import akka.stream.{ActorMaterializer, Materializer}
-import net.wa9nnn.RcSpec
-import net.wa9nnn.rc210.serial.ProcessWithProgress
-import org.scalatest.funsuite.AnyFunSuiteLike
-import play.api.mvc.WebSocket
+import com.typesafe.config.Config
 
-class ProcessWithProgressSpec extends RcSpec {
-  implicit val testKit: ActorTestKit = ActorTestKit()
-  implicit val materializer = Materializer(testKit.system)
+import javax.inject.{Inject, Singleton}
 
- "ProcessWithProgress" should {
-   val websocket: WebSocket = ProcessWithProgress(10, 7, None){ progApi =>
+@Singleton
+class DefaultNoUsersLogin @Inject()(config: Config) {
+  private val login = Credentials(
+    callsign = config.getString("vizRc210.authentication.defaultAdmin.callsign"),
+    password = config.getString("vizRc210.authentication.defaultAdmin.password")
+  )
 
-     progApi.doOne("Hello one")
-     progApi.finish("Kinder das ist Alles")
-
-   }
- }
+  def apply(): Credentials = {
+    login
+  }
 
 }

@@ -70,7 +70,7 @@ class DataCollectorSpec extends WithTestConfiguration with MockitoSugar with Bef
   "DataCollector" should {
     "Produce File" in {
       val dcs: DataCollector = new DataCollector(config, rc210, dataStoreProbe.ref)
-      dcs(progressApi, "unit test")
+      dcs(progressApi, Option("unit test"))
 
 
       dataStoreProbe.expectMessage(120 seconds, DataStoreActor.Reload)

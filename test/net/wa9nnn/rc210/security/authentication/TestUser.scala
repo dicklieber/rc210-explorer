@@ -15,26 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.serial.comm
+package net.wa9nnn.rc210.security.authentication
 
-import akka.actor.testkit.typed.scaladsl.ActorTestKit
-import akka.stream.{ActorMaterializer, Materializer}
-import net.wa9nnn.RcSpec
-import net.wa9nnn.rc210.serial.ProcessWithProgress
-import org.scalatest.funsuite.AnyFunSuiteLike
-import play.api.mvc.WebSocket
+import net.wa9nnn.rc210.security.Who
 
-class ProcessWithProgressSpec extends RcSpec {
-  implicit val testKit: ActorTestKit = ActorTestKit()
-  implicit val materializer = Materializer(testKit.system)
-
- "ProcessWithProgress" should {
-   val websocket: WebSocket = ProcessWithProgress(10, 7, None){ progApi =>
-
-     progApi.doOne("Hello one")
-     progApi.finish("Kinder das ist Alles")
-
-   }
- }
+private object TestUser {
+  val who: Who = Who()
 
 }

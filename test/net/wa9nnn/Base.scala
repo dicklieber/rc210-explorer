@@ -17,12 +17,15 @@
 
 package net.wa9nnn
 
+import net.wa9nnn.rc210.security.Who
 import org.scalatest._
 import org.scalatest.matchers._
 import org.scalatest.wordspec.{AnyWordSpec, AsyncWordSpec}
 
-abstract class RcSpec extends AnyWordSpec with should.Matchers with
-  OptionValues with Inside with Inspectors
+abstract class RcSpec extends AnyWordSpec with should.Matchers with OptionValues with Inside with Inspectors {
+  val who: Who = Who("testCs")
+
+}
 
 abstract class RAsyncSpec extends AsyncWordSpec with should.Matchers with
   OptionValues with Inside with Inspectors

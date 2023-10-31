@@ -1,5 +1,5 @@
-@import net.wa9nnn.rc210.security.authentication.Login
-@(loginForm: Form[Login], loginInfo: String, err: Option[String] = None)(implicit messagesProvider: MessagesProvider)
+@import net.wa9nnn.rc210.security.authentication.Credentials
+@(credentialsForm: Form[Credentials], loginInfo: String, err: Option[String] = None)(implicit messagesProvider: MessagesProvider)
 
 <head>
     <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
@@ -15,8 +15,8 @@
     <h2>Signin</h2>
     <form method="post" action="@routes.LoginController.doLogin()">
 
-        @helper.inputText(loginForm("callsign"), Symbol("autocomplete") -> "off", Symbol("class") -> "callsign")
-        @helper.inputPassword(loginForm("password"))
+        @helper.inputText(credentialsForm("callsign"), Symbol("autocomplete") -> "off", Symbol("class") -> "callsign")
+        @helper.inputPassword(credentialsForm("password"))
 
     <button type="submit" class="btn btn-primary">
         <i class="bi bi-person-check"></i> Login
