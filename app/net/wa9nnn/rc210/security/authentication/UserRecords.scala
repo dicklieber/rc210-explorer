@@ -16,7 +16,7 @@ import java.time.Instant
  * @param users             all the user data.
  * @param stamp             when.
  */
-case class UserRecords(who: Who = Who(), users: List[User] = List.empty,  stamp: Instant = Instant.now()) extends LazyLogging {
+case class UserRecords(who: Who = Who(), users: List[User] = List.empty, stamp: Instant = Instant.now()) extends LazyLogging {
   private lazy val idMap: Map[UserId, User] = {
     users.map(u => u.id -> u).toMap
   }
@@ -33,8 +33,6 @@ case class UserRecords(who: Who = Who(), users: List[User] = List.empty,  stamp:
    * @return Some[User] if callsign exists and password hash matches.
    */
   def validate(credentials: Credentials): Option[User] = {
-    val csm = callSignMap
-    val option = csm.headOption
     for {
       userRecord <- callSignMap.get(credentials.callsign.toUpperCase())
       ur <- userRecord.validate(credentials.password)
@@ -68,7 +66,7 @@ case class UserRecords(who: Who = Who(), users: List[User] = List.empty,  stamp:
    *
    * @param uuid      new or changed.
    * @param who       is making this change.
-   * @return a new [[com.wa9nnn.allstarmgr.security.authentication.UserRecords]]
+   * @return a new [[UserRecords]]
    */
   def remove(uuid: UserId, who: Who): UserRecords = {
     finish(idMap - uuid, who)
