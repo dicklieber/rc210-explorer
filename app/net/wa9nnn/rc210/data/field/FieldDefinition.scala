@@ -20,6 +20,7 @@ trait FieldDefinition extends LazyLogging {
   val kind: KeyKind
   val template: String = ""
   val units: String = ""
+
   def positions: Seq[FieldOffset]
 }
 
@@ -45,12 +46,12 @@ case class SimpleField(offset: Int,
                        override val units: String = "",
                        min: Int = 1,
                        max: Int = 255,
-                      ) extends FieldDefinition with LazyLogging{
+                      ) extends FieldDefinition with LazyLogging {
   def extractFromInts(iterator: Iterator[Int]): Try[FieldValue] = {
     val tried: Try[FieldValue] = Try {
       fieldExtractor.extractFromInts(iterator, this)
     }
-    if(tried.isFailure)
+    if (tried.isFailure)
       logger.error(s"Extracting: $this. Ignored!")
     tried
   }
@@ -86,15 +87,20 @@ case class SimpleField(offset: Int,
   override def positions: Seq[FieldOffset] = Seq(FieldOffset(offset, this))
 }
 
-trait ComplexExtractor[K <: Key] extends FieldExtractor with FieldDefinition  {
+trait ComplexExtractor[K <: Key] extends FieldExtractor with FieldDefinition {
 
-  def fieldKey(key:K):FieldKey = FieldKey(fieldName, key)
+  def fieldKey(key: K): FieldKey = FieldKey(fieldName, key)
+
   /**
    *
    * @param memory    source of RC-210 data.
    * @return what we extracted.
    */
   def extract(memory: Memory): Seq[FieldEntry]
+
+  def parseFormFields[T <: ComplexFieldValue[K]](valuesMap: Map[String, String]): ComplexFieldValue[K] = {
+    throw new NotImplementedError() //todo
+  }
 
   //   lazy val fieldDefinition: FieldDefinition = {
   //    new FieldDefinition {
@@ -109,10 +115,11 @@ trait ComplexExtractor[K <: Key] extends FieldExtractor with FieldDefinition  {
 
 abstract class SimpleExtractor[T] extends FieldExtractor {
   def extractFromInts(iterator: Iterator[Int], fieldDefinition: SimpleField): FieldValue
-  def fromForm(name:String)(implicit kv: Map[String, String], key: Key):T =
+
+  def fromForm(name: String)(implicit kv: Map[String, String], key: Key): T =
     throw new NotImplementedError() //todo
 
-  def formValue(name:String)(implicit kv: Map[String, String], key: Key):String = {
+  def formValue(name: String)(implicit kv: Map[String, String], key: Key): String = {
     kv(FieldKey(name, key).param)
   }
 }
@@ -128,8 +135,8 @@ trait FieldExtractor {
 
 }
 
-case class FieldOffset(offset:Int, fieldDefinition: FieldDefinition, field:Option[String] = None)
+case class FieldOffset(offset: Int, fieldDefinition: FieldDefinition, field: Option[String] = None)
 
 object FieldOffset {
-  def apply(offset:Int, fieldDefinition: FieldDefinition, field:String) = new FieldOffset(offset = offset, fieldDefinition = fieldDefinition, field = Option(field))
+  def apply(offset: Int, fieldDefinition: FieldDefinition, field: String) = new FieldOffset(offset = offset, fieldDefinition = fieldDefinition, field = Option(field))
 }

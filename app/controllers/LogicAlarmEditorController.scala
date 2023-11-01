@@ -29,18 +29,22 @@ import net.wa9nnn.rc210.data.field.{FieldEntry, Formatters}
 import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
 import net.wa9nnn.rc210.data.meter.{AlarmType, MeterAlarm}
 import net.wa9nnn.rc210.key.KeyFactory.{LogicAlarmKey, MacroKey, MeterAlarmKey, MeterKey}
-import net.wa9nnn.rc210.key.KeyKind
+import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.security.authentication.Credentials
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
 import net.wa9nnn.rc210.ui.{CandidateAndNames, FormParser}
-import play.api.data.Form
+import play.api.data.{Form, FormError}
 import play.api.data.Forms._
+import play.api.data.Forms.text.key
 import play.api.mvc._
 import play.api.i18n._
+
 import javax.inject._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
 
+@Singleton
 class LogicAlarmEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
                                           (implicit scheduler: Scheduler, ec: ExecutionContext)
   extends MessagesInjectedController with LazyLogging {
@@ -66,7 +70,7 @@ class LogicAlarmEditorController @Inject()(actor: ActorRef[DataStoreActor.Messag
 
   def edit(logicAlarmKey: LogicAlarmKey) = Action.async {
     implicit request: MessagesRequest[AnyContent] =>
-    val fieldKey = FieldKey("LogicAlarm", logicAlarmKey)
+      val fieldKey = FieldKey("LogicAlarm", logicAlarmKey)
       actor.ask[Option[FieldEntry]](DataStoreActor.ForFieldKey(fieldKey, _)).map {
         {
           case Some(fieldEntry) =>
@@ -81,7 +85,16 @@ class LogicAlarmEditorController @Inject()(actor: ActorRef[DataStoreActor.Messag
 
   def save(): Action[AnyContent] = Action.async {
     implicit request: MessagesRequest[AnyContent] =>
-      val candidateAndNames: CandidateAndNames = FormParser(AnyContentAsFormUrlEncoded(request.body.asFormUrlEncoded.get))
+
+      val encoded = AnyContentAsFormUrlEncoded(request.body.asFormUrlEncoded.get)
+      val candidateAndNames: CandidateAndNames =
+        FormParser(encoded, (valuesMap: Map[String, String]) => {
+          val value: Form[LogicAlarm] = logicForm.bind(valuesMap)
+          value.get
+        }
+        )
+
+      //      val candidateAndNames: CandidateAndNames = FormParser(encoded)
       actor.ask[String](UpdateData(candidateAndNames, user = who(request), _)).map { _ =>
         Redirect(routes.LogicAlarmEditorController.index())
       }
