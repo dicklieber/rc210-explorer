@@ -17,14 +17,11 @@
 
 package controllers
 
-import akka.actor.typed.scaladsl.AskPattern.Askable
-import akka.actor.typed.{ActorRef, Scheduler}
-import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, UpdateData}
-import net.wa9nnn.rc210.data.field.Formatters._
+import net.wa9nnn.rc210.data.field.Formatters.*
 import net.wa9nnn.rc210.data.field.{FieldEntry, Formatters}
 import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
 import net.wa9nnn.rc210.data.meter.{AlarmType, MeterAlarm}
@@ -33,13 +30,15 @@ import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.security.authentication.Credentials
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
 import net.wa9nnn.rc210.ui.{CandidateAndNames, FormParser}
+import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
+import org.apache.pekko.util.Timeout
 import play.api.data.{Form, FormError}
-import play.api.data.Forms._
+import play.api.data.Forms.*
 import play.api.data.Forms.text.key
-import play.api.mvc._
-import play.api.i18n._
+import play.api.mvc.*
+import play.api.i18n.*
 
-import javax.inject._
+import javax.inject.*
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps

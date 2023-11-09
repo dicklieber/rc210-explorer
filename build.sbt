@@ -11,7 +11,8 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
   .settings(
     //    Compile / mappings := Seq(),
     //    packageDoc / mappings := Seq(),
-    scalaVersion := "2.13.10",
+//    scalaVersion := "2.13.10",
+    scalaVersion := "3.3.1",
     buildInfoKeys :=
       Seq[BuildInfoKey](
         name, version, scalaVersion, sbtVersion,
@@ -33,7 +34,6 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
       "-deprecation",
       //      "-Xfatal-warnings",
       //      "-Ymacro-annotations",
-      "-Xlog-implicits"
     )
 
   )
@@ -55,7 +55,7 @@ val akkaVersion = "2.8.5"
 libraryDependencies ++= Seq(
   guice,
 
-  "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion % Test,
+//  "org.apache.pekko" %% "akka-actor-testkit-typed" % akkaVersion % Test,
 
   //  "org.scalactic" %% "scalactic" % "3.2.16",
   //  "org.scalatest" %% "scalatest" % "3.2.16" % "test",
@@ -68,9 +68,10 @@ libraryDependencies ++= Seq(
   //  "org.specs2" %% "specs2-core" % specs2Version % Test,
   //  "org.specs2" %% "specs2-matcher-extra" % specs2Version % Test,
   //  "org.specs2" % "specs2-scalaz" % specs2Version % "test",
-  "net.wa9nnn" %% "util" % "0.1.14",
+  "net.wa9nnn" %% "util" % "0.1.15-SNAPSHOT",
+
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
-  "net.codingwell" %% "scala-guice" % "5.1.1",
+  "net.codingwell" %% "scala-guice" % "7.0.0",
   "ch.qos.logback" % "logback-classic" % logbackVersion,
   "ch.qos.logback" % "logback-core" % logbackVersion,
   "commons-io" % "commons-io" % "2.11.0",
@@ -83,7 +84,7 @@ libraryDependencies ++= Seq(
   //  "io.suzaku" %% "boopickle" % "1.4.0",
   "org.fusesource.jansi" % "jansi" % "2.4.0",
   "org.apache.commons" % "commons-text" % "1.10.0",
-  "com.github.kxbmap" %% "configs" % "0.6.1",
+//  "com.github.kxbmap" %% "configs" % "0.6.1",
   "org.mindrot" % "jbcrypt" % "0.4",
   "com.github.andyglow" %% "typesafe-config-scala" % "2.0.0" % Compile,
 

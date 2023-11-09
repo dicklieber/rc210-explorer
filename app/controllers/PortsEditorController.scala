@@ -16,10 +16,8 @@
  */
 
 package controllers
+import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 
-import akka.actor.typed.scaladsl.AskPattern.Askable
-import akka.actor.typed.{ActorRef, Scheduler}
-import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
@@ -30,7 +28,9 @@ import net.wa9nnn.rc210.key.KeyFactory.PortKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
 import net.wa9nnn.rc210.ui.{CandidateAndNames, FormParser}
-import play.api.mvc._
+import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
+import org.apache.pekko.util.Timeout
+import play.api.mvc.*
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
@@ -43,7 +43,7 @@ class PortsEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
 
   def index(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
-      actor.ask[Seq[FieldEntry]](AllForKeyKind(KeyKind.portKey, _)).map { portEntries: Seq[FieldEntry] =>
+      actor ? (AllForKeyKind(KeyKind.portKey, _)).map { portEntries =>
         val map: Map[FieldKey, FieldEntry] = portEntries
           .map(fieldEntry => fieldEntry.fieldKey -> fieldEntry).toMap
         val fieldNames: Seq[String] = portEntries.foldLeft(Set.empty[String]) { case (set: Set[String], fieldEntry) =>

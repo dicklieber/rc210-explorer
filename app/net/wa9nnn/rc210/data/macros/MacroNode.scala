@@ -2,7 +2,7 @@ package net.wa9nnn.rc210.data.macros
 
 import com.wa9nnn.util.tableui.{Header, Row}
 import net.wa9nnn.rc210.data.Dtmf
-import net.wa9nnn.rc210.data.field._
+import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.key.KeyFactory.{FunctionKey, MacroKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.model.TriggerNode
@@ -80,7 +80,7 @@ object MacroNode extends ComplexExtractor[MacroKey] {
 
     def macroBuilder(offset: Int, chunkLength: Int, nChunks: Int) = {
       memory.chunks(offset, chunkLength, nChunks)
-        .map { chunk: Chunk =>
+        .map { chunk =>
           val key: MacroKey = KeyFactory(KeyKind.macroKey, mai.getAndIncrement())
           val sChunk = chunk.ints
             .map(_.toString)
@@ -105,7 +105,7 @@ object MacroNode extends ComplexExtractor[MacroKey] {
     val macros: Seq[MacroNode] = macroBuilder(1985, 16, 40) //SlicePos("//Macro - 1985-2624"), memory, 16)
       .concat(macroBuilder(2825, 7, 50)) // SlicePos("//ShortMacro - 2825-3174"), memory, 7))
 
-    val r: Seq[FieldEntry] = macros.map { m: MacroNode =>
+    val r: Seq[FieldEntry] = macros.map { m =>
       FieldEntry(this, m.fieldKey, m)
     }
     r
@@ -147,7 +147,7 @@ object MacroNode extends ComplexExtractor[MacroKey] {
     }
   }
 
-  import net.wa9nnn.rc210.key.KeyFormats._
+  import net.wa9nnn.rc210.key.KeyFormats.*
 
   implicit val fmtMacroNode: Format[MacroNode] = Json.format[MacroNode]
 

@@ -40,7 +40,7 @@ case class MuteDigit(value: String = selectOptions.head.display) extends FieldSe
 object MuteDigit extends SimpleExtractor[String] {
 
   def apply(id: Int): MuteDigit = {
-    val maybeOption = selectOptions.find(_.id == id)
+    val maybeOption = selectOptions.find(_.id == id.toString)
     new MuteDigit(maybeOption.get.display)
   }
 

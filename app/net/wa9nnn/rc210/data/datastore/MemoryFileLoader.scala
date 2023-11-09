@@ -20,14 +20,14 @@ package net.wa9nnn.rc210.data.datastore
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.MemoryFileLoader.notInitialized
-import net.wa9nnn.rc210.data.field._
+import net.wa9nnn.rc210.data.field.{FieldDefinitions, FieldEntry}
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.util.Configs
 
 import java.net.URL
 import java.nio.file.Path
 import javax.inject.{Inject, Singleton}
 import scala.util.{Failure, Try}
-import configs.syntax._
 
 /**
  * Holds [[Memory]]
@@ -47,8 +47,8 @@ class MemoryFileLoader @Inject()(fieldDefinitions: FieldDefinitions, config: Con
    *
    * @return [[Memory]] or the reason why.
    */
-  private def loadMemory():Unit = {
-    val memoryFilePath: Path = config.get[Path]("vizRc210.memoryFile").value
+  private def loadMemory(): Unit = {
+    val memoryFilePath: Path = Configs.path("vizRc210.memoryFile", config)
     val memoryFile: URL = memoryFilePath.toUri.toURL
     tryMemory = Memory.load(memoryFile)
   }
@@ -68,7 +68,7 @@ class MemoryFileLoader @Inject()(fieldDefinitions: FieldDefinitions, config: Con
         fieldEntry
       }
 
-      val complexFields: Seq[FieldEntry] = fieldDefinitions.complexFd.flatMap { memoryExtractor: ComplexExtractor[_] =>
+      val complexFields: Seq[FieldEntry] = fieldDefinitions.complexFd.flatMap { memoryExtractor =>
         try {
           memoryExtractor.extract(memory)
         } catch {

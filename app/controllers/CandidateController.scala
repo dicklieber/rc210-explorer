@@ -17,21 +17,17 @@
 
 package controllers
 
-import akka.actor.typed.scaladsl.AskPattern.Askable
-import akka.actor.typed.{ActorRef, Scheduler}
-import akka.stream.Materializer
-import akka.util.Timeout
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, Table}
-import configs.syntax._
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
-import net.wa9nnn.rc210.data.datastore.DataStoreActor._
+import net.wa9nnn.rc210.data.datastore.DataStoreActor.*
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
-import net.wa9nnn.rc210.serial.comm._
-import net.wa9nnn.rc210.serial._
-import play.api.mvc._
+import net.wa9nnn.rc210.serial.comm.*
+import net.wa9nnn.rc210.serial.*
+import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
+import play.api.mvc.*
 
 import java.nio.file.Path
 import java.time.{Duration, Instant}

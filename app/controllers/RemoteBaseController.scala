@@ -16,21 +16,19 @@
  */
 
 package controllers
-
-import akka.actor.typed.scaladsl.AskPattern.Askable
-import akka.actor.typed.{ActorRef, Scheduler}
-import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.AllForKeyKind
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.data.remotebase.Mode._
-import net.wa9nnn.rc210.data.remotebase._
+import net.wa9nnn.rc210.data.remotebase.*
+import net.wa9nnn.rc210.data.remotebase.Mode.*
 import net.wa9nnn.rc210.key.KeyKind
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
-import play.api.data.Forms._
+import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
+import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
+import play.api.data.Forms.*
 import play.api.data.{Form, Mapping}
-import play.api.mvc._
+import play.api.mvc.*
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
@@ -62,7 +60,7 @@ class RemoteBaseController @Inject()(actor: ActorRef[DataStoreActor.Message])
   )
 
   def index: Action[AnyContent] = Action.async { implicit request =>
-    actor.ask(AllForKeyKind(KeyKind.remoteBaseKey, _)).map { fields: Seq[FieldEntry] =>
+    actor.ask(AllForKeyKind(KeyKind.remoteBaseKey, _)).map { (fields: Seq[FieldEntry]) =>
       val remoteBase: RemoteBase = fields.head.value.asInstanceOf[RemoteBase]
       val filledInForm = remoteBaseForm.fill(remoteBase)
       Ok(views.html.rermoteBase(filledInForm))

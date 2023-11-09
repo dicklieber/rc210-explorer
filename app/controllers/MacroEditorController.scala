@@ -17,9 +17,6 @@
 
 package controllers
 
-import akka.actor.typed.scaladsl.AskPattern.Askable
-import akka.actor.typed.{ActorRef, Scheduler}
-import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, ForFieldKey}
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
@@ -48,7 +45,7 @@ class MacroEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
   implicit val timeout: Timeout = 3 seconds
 
   def index(): Action[AnyContent] = Action.async { implicit request =>
-    actor.ask(AllForKeyKind(KeyKind.macroKey, _)).map { fe: Seq[FieldEntry] =>
+    actor.ask(AllForKeyKind(KeyKind.macroKey, _)).map { fe =>
       Ok(macroNodes(fe.map((_.value.asInstanceOf[MacroNode]))))
     }
   }
@@ -56,8 +53,7 @@ class MacroEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
   def edit(key: MacroKey): Action[AnyContent] = Action.async { implicit request =>
 
     val fieldKey = FieldKey("Macro", key)
-    actor.ask(ForFieldKey(fieldKey, _)).map { maybeFieldEntry:
-                                              Option[FieldEntry] =>
+    actor.ask(ForFieldKey(fieldKey, _)).map { maybeFieldEntry =>
       maybeFieldEntry match {
         case Some(fe: FieldEntry) =>
           Ok(views.html.macroEditor(fe.value))

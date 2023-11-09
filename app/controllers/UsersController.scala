@@ -17,9 +17,8 @@
 
 package controllers
 
-import akka.actor.typed.scaladsl.AskPattern.Askable
-import akka.actor.typed.{ActorRef, Scheduler}
-import akka.util.Timeout
+import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
+import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.security.UserId.UserId
 import net.wa9nnn.rc210.security.authentication.UserManagerActor

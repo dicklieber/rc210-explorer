@@ -57,8 +57,7 @@ object FormParser {
     //        val complexValue = f(valueMap)
     //        UpdateCandidate(complexValue.fieldKey, Right(complexValue))
     //      }.toSeq
-
-   CandidateAndNames(Seq(UpdateCandidate(fieldValue)), namedKeys)
+    CandidateAndNames(Seq(UpdateCandidate(fieldValue)), namedKeys)
   }
 
   /**

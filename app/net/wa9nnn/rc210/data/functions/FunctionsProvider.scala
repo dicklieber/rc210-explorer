@@ -13,7 +13,7 @@ import scala.util.{Failure, Success, Using}
 @Singleton
 class FunctionsProvider extends LazyLogging {
 
-  val functions: Seq[FunctionNode] = Using(getClass.getResourceAsStream("/FunctionList.json")) { is: InputStream =>
+  val functions: Seq[FunctionNode] = Using(getClass.getResourceAsStream("/FunctionList.json")) { (is: InputStream) =>
     Json.parse(is).as[List[FunctionNode]]
 
   } match {

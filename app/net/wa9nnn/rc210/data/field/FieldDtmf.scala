@@ -23,7 +23,7 @@ import net.wa9nnn.rc210.key.KeyFactory.Key
 import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue, Json}
 import views.html.fieldDtmf
 
-case class FieldDtmf(value: String) extends SimpleFieldValue with LazyLogging{
+case class FieldDtmf(value: String) extends SimpleFieldValue with LazyLogging {
   logger.debug("value: {}", value)
 
   def toHtmlField(renderMetadata: RenderMetadata): String = {
@@ -36,9 +36,9 @@ case class FieldDtmf(value: String) extends SimpleFieldValue with LazyLogging{
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
     val fieldKey = fieldEntry.fieldKey
     val key: KeyFactory.Key = fieldKey.key
-   Seq( key.replaceN(fieldEntry.template)
+    Seq(key.replaceN(fieldEntry.template)
       .replaceAll("v", value) //todo probably not right.
-   )
+    )
   }
 
 
@@ -78,7 +78,7 @@ object FieldDtmf extends SimpleExtractor[String] {
 
   override val name: String = "FieldDtmf"
 
-  override def fromForm(name: String)(implicit kv: Map[String, String],key: Key): String = {
+  override def fromForm(name: String)(implicit kv: Map[String, String], key: Key): String = {
     formValue(name)
   }
 }

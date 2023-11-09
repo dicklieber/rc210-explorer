@@ -17,19 +17,19 @@
 
 package net.wa9nnn.rc210.security.authentication
 
-import akka.actor.typed.scaladsl.Behaviors
-import akka.actor.typed.{ActorRef, Behavior, Signal, SupervisorStrategy}
+import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
+import org.apache.pekko.actor.typed.{ActorRef, Behavior, Scheduler}
 import com.google.inject.{Provides, Singleton}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import controllers.UserEditDTO
 import net.wa9nnn.rc210.security.UserId.UserId
+import org.apache.pekko.actor.typed.scaladsl.Behaviors
 import play.api.libs.concurrent.ActorModule
 
-import java.nio.file.Path
+import java.nio.file.{Path, Paths}
 import scala.concurrent.ExecutionContext
 import scala.language.postfixOps
-import configs.syntax._
 
 
 @Singleton()
@@ -50,7 +50,7 @@ object UserManagerActor extends ActorModule with LazyLogging {
 
   @Provides
   def apply(config: Config, defaultNoUsersLogin: DefaultNoUsersLogin)(implicit ec: ExecutionContext): Behavior[UserManagerMessage] = {
-    val usersFile: Path = config.get[Path]("vizRc210.usersFile").value
+    val usersFile: Path = Paths.get( config.getString("vizRc210.usersFile"))
 
     val userManager = new UserManager(usersFile, defaultNoUsersLogin())
     Behaviors.supervise {

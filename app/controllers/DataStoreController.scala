@@ -16,15 +16,14 @@
  */
 
 package controllers
-
-import akka.actor.typed.scaladsl.AskPattern.Askable
-import akka.actor.typed.{ActorRef, Scheduler}
-import akka.util.Timeout
+import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.IngestJson
+import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
+import org.apache.pekko.util.Timeout
 import play.api.libs.Files
-import play.api.mvc._
+import play.api.mvc.*
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -61,7 +60,7 @@ class DataStoreController @Inject()(actor: ActorRef[DataStoreActor.Message])
     val body = request.body
     body
       .file("jsonFile")
-      .foreach { jsonFile: MultipartFormData.FilePart[Files.TemporaryFile] =>
+      .foreach { jsonFile =>
         val sJson = java.nio.file.Files.readString(jsonFile.ref.path)
         actor.ask(IngestJson(sJson, _))
       }

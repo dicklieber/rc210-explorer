@@ -19,7 +19,6 @@ package net.wa9nnn.rc210.data.datastore
 
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import configs.syntax._
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.security.Who
 import play.api.libs.json.{Format, Json}
@@ -29,12 +28,13 @@ import java.nio.file.{Files, Path}
 import javax.inject.Inject
 import scala.collection.immutable.Seq
 import scala.util.{Try, Using}
-
+import com.github.andyglow.config.*
+import net.wa9nnn.rc210.util.Configs
 /**
  * Parses JSON saved from [[DataStore]]
  */
 
-class DataStorePersistence @Inject()(config: Config) extends LazyLogging {
+class DataStorePersistence @Inject()( config: Config) extends LazyLogging {
   def save(dataTransferJson: DataTransferJson): Unit = {
     Files.writeString(path,
       toJson(dataTransferJson))
@@ -46,10 +46,10 @@ class DataStorePersistence @Inject()(config: Config) extends LazyLogging {
     )
   }
 
-  private val path: Path = config.get[Path]("vizRc210.dataStoreFile").value
+  private val path: Path = Configs.path("vizRc210.dataStoreFile", config)
 
   def load(): Try[DataTransferJson] = {
-    Using(Files.newInputStream(path)) { inputStream: InputStream =>
+    Using(Files.newInputStream(path)) { inputStream =>
       Json.parse(inputStream).as[DataTransferJson]
     }
   }

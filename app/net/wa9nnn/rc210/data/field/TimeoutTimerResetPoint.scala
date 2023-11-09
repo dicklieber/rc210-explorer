@@ -39,7 +39,7 @@ case class TimeoutTimerResetPoint(value: String = selectOptions.head.display) ex
 object TimeoutTimerResetPoint extends SimpleExtractor[String] {
 
   def apply(id: Int): TimeoutTimerResetPoint = {
-    val maybeOption = selectOptions.find(_.id == id)
+    val maybeOption = selectOptions.find(_.id == id.toString)
     new TimeoutTimerResetPoint(maybeOption.get.display)
   }
 

@@ -17,10 +17,10 @@
 
 package controllers
 
-import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.serial.Rc210
-import play.api.mvc._
+import org.apache.pekko.util.Timeout
+import play.api.mvc.*
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt

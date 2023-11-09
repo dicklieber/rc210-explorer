@@ -17,9 +17,8 @@
 
 package controllers
 
-import akka.actor.typed.scaladsl.AskPattern.Askable
-import akka.actor.typed.{ActorRef, Scheduler}
-import akka.util.Timeout
+import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
+
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.Row
 import net.wa9nnn.rc210.data.courtesy.{CourtesyTone, CtSegmentKey, Segment}
@@ -29,9 +28,11 @@ import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey
 import net.wa9nnn.rc210.key.KeyKind
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
-import play.api.mvc._
+import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
+import org.apache.pekko.util.Timeout
+import play.api.mvc.*
 
-import javax.inject._
+import javax.inject.*
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
@@ -45,7 +46,7 @@ class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Mess
     implicit request: Request[AnyContent] =>
 
       actor.ask(DataStoreActor.AllForKeyKind(KeyKind.courtesyToneKey, _)).map { entries =>
-        val rows: Seq[Row] = entries.flatMap { fe: FieldEntry =>
+        val rows: Seq[Row] = entries.flatMap { fe =>
           val ct: CourtesyTone = fe.value
           ct.rows()
         }
@@ -76,12 +77,12 @@ class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Mess
         .map { case (ctKey: CourtesyToneKey, values: Map[CtSegmentKey, String]) =>
           val segments = values
             .groupBy(_._1.segment).map { case (seg, values) =>
-            val valuesForSegment: Map[String, String] = values.map { case (crSKey: CtSegmentKey, value: String) =>
-              crSKey.name -> value
+              val valuesForSegment: Map[String, String] = values.map { case (crSKey: CtSegmentKey, value: String) =>
+                crSKey.name -> value
+              }
+              // we now have a map of names to values
+              Segment(valuesForSegment)
             }
-            // we now have a map of names to values
-            Segment(valuesForSegment)
-          }
           val courtesyTone = CourtesyTone(ctKey, segments.toSeq)
           ctBuilder += UpdateCandidate(courtesyTone)
         }

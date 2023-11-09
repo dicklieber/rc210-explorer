@@ -139,7 +139,7 @@ object FieldEntry {
     new FieldEntry(complexExtractor, complexFieldValue.fieldKey, complexFieldValue)
   }
 
-  def header(keyKind: KeyKind): Header = Header(s"${keyKind.name()}", "Number", "Field",
+  def header(keyKind: KeyKind): Header = Header(s"${keyKind}", "Number", "Field",
     Cell("Value")
       .withToolTip("Either the candidate or current value."),
     Cell("Change")

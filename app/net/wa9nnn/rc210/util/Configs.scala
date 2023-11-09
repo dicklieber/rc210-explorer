@@ -17,23 +17,12 @@
 
 package net.wa9nnn.rc210.util
 
-import scala.util.matching.Regex
+import com.typesafe.config.Config
 
-object CamelToWords {
+import java.nio.file.{Path, Paths}
 
-  // Thanks to https://www.baeldung.com/java-camel-case-title-case-to-words
-  private val regex: Regex = """(([A-Z]?[a-z]+)|([A-Z\d]))""".r
-
-  /**
-   * Convert camel-case to words
-   *
-   * @param text i.e GuestMacroRange
-   * @return i.e. "GuestMacroRange"
-   *
-   */
-  def apply(text: String): String = {
-    regex.findAllMatchIn(text).map { (m: Regex.Match) =>
-      m.group(0)
-    }.toSeq.mkString(" ")
+object Configs:
+  def path(configPath: String, config: Config): Path = {
+    val str = config.getString(configPath)
+    Paths.get(str)
   }
-}

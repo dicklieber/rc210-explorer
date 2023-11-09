@@ -27,7 +27,7 @@ import play.api.libs.json.{Format, JsValue, Json}
 
 //noinspection ZeroIndexToHead
 object TimerExtractor extends ComplexExtractor[TimerKey] with LazyLogging {
-  private val nTimers = KeyKind.timerKey.maxN()
+  private val nTimers = KeyKind.timerKey.maxN
   //  Memory Layout
   //  seconds for each timer 6 2-byte ints
   //  macroToRun for each timer 6 1-byte ints
@@ -50,7 +50,7 @@ object TimerExtractor extends ComplexExtractor[TimerKey] with LazyLogging {
 
 
     val r: Seq[FieldEntry] = (for {
-      index <- 0 until KeyKind.timerKey.maxN()
+      index <- 0 until KeyKind.timerKey.maxN
     } yield {
       val key: TimerKey = KeyFactory(KeyKind.timerKey, index + 1)
       val fieldKey = FieldKey("Timer", key)

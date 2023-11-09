@@ -17,9 +17,6 @@
 
 package controllers
 
-import akka.actor.typed.{ActorRef, Scheduler}
-import akka.actor.typed.scaladsl.AskPattern.Askable
-import akka.util.Timeout
 import com.wa9nnn.util.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, MacroWithTriggers}
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.Triggers
@@ -27,7 +24,8 @@ import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.MacroBlock
 import net.wa9nnn.rc210.key.KeyKind
 import net.wa9nnn.rc210.security.authentication.SessionManagerActor
-import play.api.mvc._
+import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
+import play.api.mvc.*
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}

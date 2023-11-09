@@ -24,15 +24,14 @@ import scala.io.BufferedSource
 import scala.util.{Failure, Success, Using}
 
 object Words {
-  val words: Seq[Word] = Using(new BufferedSource(getClass.getResourceAsStream("/Vocabulary.txt"))) { bs: BufferedSource =>
+  val words: Seq[Word] = Using(new BufferedSource(getClass.getResourceAsStream("/Vocabulary.txt"))) { (bs: BufferedSource) =>
     bs.getLines()
-      .map { line: String =>
+      .map { line =>
         val n: String = line.take(3)
         val t = line.drop(4).trim
         Word(n.toInt, t)
       }
       .toSeq
-
   } match {
     case Failure(exception) =>
       throw exception
@@ -54,24 +53,24 @@ object Words {
 /**
  * A things the the RC-210 can say.
  *
- * @param id  id.
+ * @param id       id.
  * @param string   what shows or would be spoken.
  */
 case class Word(id: Int, string: String) extends RowSource {
   override def toRow: Row = Row(Cell(id), string)
+
   val json: JsValue = Json.toJson(this)
 }
 
 object Word {
   implicit val fmtWord: Format[Word] = Json.format[Word]
+
   def header(count: Int): Header = Header(s"Phrases ($count)", "Key", "String")
 
-  val words: Seq[Word] = Using(new BufferedSource(getClass.getResourceAsStream("/Vocabulary.txt"))) { bs: BufferedSource =>
+  val words: Seq[Word] = Using(new BufferedSource(getClass.getResourceAsStream("/Vocabulary.txt"))) { (bs: BufferedSource) =>
     bs.getLines()
-      .map { line: String =>
-        val n = line.take(3)
-        val t = line.drop(4).trim
-        Word(n.toInt, t)
+      .map { line =>
+        Word(line.take(3).toInt, line.drop(4).trim)
       }
       .toSeq
       .sortBy(_.string)
@@ -100,5 +99,5 @@ object Word {
    */
   def apply(id: Int): Word = byId(id)
 
-  def parse(sJson:String): Word = Json.parse(sJson).as[Word]
+  def parse(sJson: String): Word = Json.parse(sJson).as[Word]
 }

@@ -17,12 +17,14 @@
 
 package controllers
 
-import akka.stream.Materializer
-import akka.util.Timeout
+//import akka.stream.Materializer
+//import akka.util.Timeout
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Table}
-import configs.syntax._
+import org.apache.pekko.stream.Materializer
+import org.apache.pekko.util.Timeout
+//import configs.syntax._
 import net.wa9nnn.rc210.serial.{BatchOperationsResult, DataCollector, ProcessWithProgress, Rc210}
 import play.api.mvc._
 

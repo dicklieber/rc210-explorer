@@ -22,8 +22,6 @@ import net.wa9nnn.rc210.key.KeyFactory.Key
 import net.wa9nnn.rc210.util.SelectOption
 
 
-
-
 object SelectKeyHelper {
   /**
    * Generate an Html string.
@@ -36,8 +34,8 @@ object SelectKeyHelper {
 
     val keys: Seq[Key] = KeyFactory(current.kind)
 
-    val options = keys.map { k: Key =>
-      val opt = SelectOption(k.number, k.toString)
+    val options = keys.map { k =>
+      val opt: SelectOption = SelectOption(k.number, k.toString)
       if (k == current)
         opt.copy(selected = true)
       else

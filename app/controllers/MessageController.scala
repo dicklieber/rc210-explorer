@@ -16,10 +16,8 @@
  */
 
 package controllers
+import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 
-import akka.actor.typed.scaladsl.AskPattern.Askable
-import akka.actor.typed.{ActorRef, Scheduler}
-import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.Table
 import net.wa9nnn.rc210.data.FieldKey

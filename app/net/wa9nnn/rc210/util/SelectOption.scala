@@ -23,7 +23,7 @@ package net.wa9nnn.rc210.util
  * @param display  what to show users = <option>s
  * @param selected true if this is currently selected.
  */
-case class SelectOption protected(id: String, display: String, selected: Boolean = false) {
+case class SelectOption (id: String, display: String, selected: Boolean = false) {
   def html: String = {
     val s: String = if (selected) " selected " else " "
     s"""<option value="$id" $s >$display</option>"""

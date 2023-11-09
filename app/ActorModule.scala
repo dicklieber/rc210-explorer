@@ -15,18 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import akka.actor.typed.scaladsl.Behaviors
-import akka.actor.typed.{ActorRef, Terminated}
 import com.google.inject.{AbstractModule, Provides}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.security.authentication.{SessionManagerActor, UserManagerActor}
-import play.api.libs.concurrent.{ActorModule, AkkaGuiceSupport}
+import play.api.libs.concurrent.PekkoGuiceSupport
+//import play.api.libs.concurrent.{ActorModule, AkkaGuiceSupport}
 
 import scala.concurrent.ExecutionContext
 
-object RcActorsModule extends AbstractModule with AkkaGuiceSupport {
+object RcActorsModule extends AbstractModule with PekkoGuiceSupport {
   override def configure(): Unit = {
 
     bindTypedActor[Supervisor.Message](Supervisor, "supervisor")

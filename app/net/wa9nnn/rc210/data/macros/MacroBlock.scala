@@ -17,7 +17,6 @@
 
 package net.wa9nnn.rc210.data.macros
 
-import akka.actor.typed.ActorRef
 import com.wa9nnn.util.tableui._
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, MacroWithTriggers}
 import net.wa9nnn.rc210.data.field.FieldValue

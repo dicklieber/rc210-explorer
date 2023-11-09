@@ -1,6 +1,5 @@
 
 import net.codingwell.scalaguice.ScalaModule
-import play.api.libs.concurrent.AkkaGuiceSupport
 import play.api.{Configuration, Environment}
 
 /**
@@ -15,7 +14,7 @@ import play.api.{Configuration, Environment}
  *
  * This uses scala-guice. https://github.com/codingwell/scala-guice for details.
  */
-class Module(environment: Environment, configuration: Configuration) extends ScalaModule with AkkaGuiceSupport{
+class Module(environment: Environment, configuration: Configuration) extends ScalaModule {
   override def configure(): Unit = {
     install(new ConfigModule(configuration))
     install(RcActorsModule)

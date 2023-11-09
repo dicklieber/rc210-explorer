@@ -31,7 +31,7 @@ import scala.xml.Atom
 
 //noinspection ZeroIndexToHead
 case class CourtesyTone(override val key: CourtesyToneKey, segments: Seq[Segment]) extends ComplexFieldValue[CourtesyToneKey] {
-  implicit val k = key
+  implicit val k: CourtesyToneKey = key
 
   override def display: String = s"$key"
 

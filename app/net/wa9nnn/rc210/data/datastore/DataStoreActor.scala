@@ -17,8 +17,6 @@
 
 package net.wa9nnn.rc210.data.datastore
 
-import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
-import akka.actor.typed.{ActorRef, Behavior, Signal, SupervisorStrategy}
 import com.google.inject.Provides
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.FieldKey
@@ -30,6 +28,7 @@ import net.wa9nnn.rc210.key.KeyKind
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.security.authentication.User
 import net.wa9nnn.rc210.ui.CandidateAndNames
+import org.apache.pekko.actor.typed.{ActorRef, Behavior}
 import play.api.libs.concurrent.ActorModule
 import play.api.libs.json
 
@@ -76,7 +75,7 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
     }
 
     def ingest(dto: DataTransferJson): Unit = {
-      dto.values.foreach { fieldEntryJson: FieldEntryJson =>
+      dto.values.foreach { fieldEntryJson =>
         val fieldKey = fieldEntryJson.fieldKey
         valuesMap.get(fieldKey).foreach { fieldEntry =>
           val newFieldValue: FieldValue = fieldEntry.fieldDefinition.parse(fieldEntryJson.fieldValue)
@@ -94,13 +93,13 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
 
 
     def load(): Unit = {
-        valuesMap = loadFromRcMemory()
+      valuesMap = loadFromRcMemory()
       loadFromJson()
       logger.info("Loaded")
     }
 
     load()
-    if(valuesMap.isEmpty)
+    if (valuesMap.isEmpty)
       logger.error("No data from RC210. Invoke RC210/Download.")
 
     def all: Seq[FieldEntry] = valuesMap.values.toSeq
@@ -115,82 +114,82 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
     Behaviors.setup { context =>
       Behaviors.supervise[DataStoreMessage] {
         Behaviors.receiveMessage[DataStoreMessage] { message: DataStoreMessage =>
-          message match {
+            message match {
 
-            case ReplaceEntries(entries: Seq[FieldEntry]) =>
+              case ReplaceEntries(entries: Seq[FieldEntry]) =>
 
-            case All(replyTo: ActorRef[Seq[FieldEntry]]) =>
-              replyTo ! all.sorted
-            case AllForKey(key: Key, replyTo: ActorRef[Seq[FieldEntry]]) =>
-              replyTo ! all
-                .filter(_.fieldKey.key == key)
-                .sortBy(_.fieldKey.fieldName)
-            case AllForKeyKind(keyKind: KeyKind, replyTo: ActorRef[Seq[FieldEntry]]) =>
-              replyTo ! all.filter(_.fieldKey.key.kind == keyKind).sortBy(_.fieldKey)
-            case ForFieldKey(fieldKey: FieldKey, replyTo: ActorRef[Option[FieldEntry]]) =>
-              replyTo ! all.find(_.fieldKey == fieldKey)
-            case Candidates(replyTo: ActorRef[Seq[FieldEntry]]) =>
-              replyTo ! all.filter(_.candidate.nonEmpty)
-            case Triggers(replyTo: ActorRef[Seq[MacroWithTriggers]]) =>
-              val triggerNodes: Seq[TriggerNode] = all.filter { fe => fe.isInstanceOf[TriggerNode] }.map(_.asInstanceOf[TriggerNode])
-              replyTo !
-                (for {
-                  fieldEntry <- all.filter(_.fieldKey.key.kind == KeyKind.macroKey).sorted
-                  macroNode: MacroNode = fieldEntry.fieldValue.asInstanceOf[MacroNode]
-                } yield {
-                  val triggers: Seq[TriggerNode] = triggerNodes.filter(_.canRunMacro(macroNode.key))
-                  MacroWithTriggers(macroNode = macroNode, triggers = triggers)
-                })
+              case All(replyTo: ActorRef[Seq[FieldEntry]]) =>
+                replyTo ! all.sorted
+              case AllForKey(key: Key, replyTo: ActorRef[Seq[FieldEntry]]) =>
+                replyTo ! all
+                  .filter(_.fieldKey.key == key)
+                  .sortBy(_.fieldKey.fieldName)
+              case AllForKeyKind(keyKind: KeyKind, replyTo: ActorRef[Seq[FieldEntry]]) =>
+                replyTo ! all.filter(_.fieldKey.key.kind == keyKind).sortBy(_.fieldKey)
+              case ForFieldKey(fieldKey: FieldKey, replyTo: ActorRef[Option[FieldEntry]]) =>
+                replyTo ! all.find(_.fieldKey == fieldKey)
+              case Candidates(replyTo: ActorRef[Seq[FieldEntry]]) =>
+                replyTo ! all.filter(_.candidate.nonEmpty)
+              case Triggers(replyTo: ActorRef[Seq[MacroWithTriggers]]) =>
+                val triggerNodes: Seq[TriggerNode] = all.filter { fe => fe.isInstanceOf[TriggerNode] }.map(_.asInstanceOf[TriggerNode])
+                replyTo !
+                  (for {
+                    fieldEntry <- all.filter(_.fieldKey.key.kind == KeyKind.macroKey).sorted
+                    macroNode: MacroNode = fieldEntry.fieldValue.asInstanceOf[MacroNode]
+                  } yield {
+                    val triggers: Seq[TriggerNode] = triggerNodes.filter(_.canRunMacro(macroNode.key))
+                    MacroWithTriggers(macroNode = macroNode, triggers = triggers)
+                  })
 
-            case IngestJson(sJson, replyTo) =>
-              ingest(json.Json.parse(sJson).as[DataTransferJson])
-              replyTo ! "Done"
+              case IngestJson(sJson, replyTo) =>
+                ingest(json.Json.parse(sJson).as[DataTransferJson])
+                replyTo ! "Done"
 
-            case Reload =>
-              load()
-            case Json(replyTo) =>
-              val dto = DataTransferJson(values = valuesMap.values.map(FieldEntryJson(_)).toSeq,
-                namedKeys = keyNamesMap.map { case (key, name) => NamedKey(key, name) }.toSeq)
-              replyTo ! persistence.toJson(dto)
+              case Reload =>
+                load()
+              case Json(replyTo) =>
+                val dto = DataTransferJson(values = valuesMap.values.map(FieldEntryJson(_)).toSeq,
+                  namedKeys = keyNamesMap.map { case (key, name) => NamedKey(key, name) }.toSeq)
+                replyTo ! persistence.toJson(dto)
 
-            case AcceptCandidate(fieldKey: FieldKey, user: User) =>
-              valuesMap.put(fieldKey, valuesMap(fieldKey).acceptCandidate())
-              save(user)
-            case ud: UpdateData =>
-              ud.candidates.foreach { candidate: UpdateCandidate =>
-                val fieldKey = candidate.fieldKey
+              case AcceptCandidate(fieldKey: FieldKey, user: User) =>
+                valuesMap.put(fieldKey, valuesMap(fieldKey).acceptCandidate())
+                save(user)
+              case ud: UpdateData =>
+                ud.candidates.foreach { candidate =>
+                  val fieldKey = candidate.fieldKey
 
-                val currentEntry = valuesMap(candidate.fieldKey)
-                val newEntry: FieldEntry = candidate.candidate match {
-                  case Left(formValue: String) =>
-                    currentEntry.setCandidate(formValue)
+                  val currentEntry = valuesMap(candidate.fieldKey)
+                  val newEntry: FieldEntry = candidate.candidate match {
+                    case Left(formValue: String) =>
+                      currentEntry.setCandidate(formValue)
 
-                  case Right(value: ComplexFieldValue[_]) =>
-                    currentEntry.setCandidate(value)
-                  case x =>
-                    logger.error(s"Neither right nor left.  $x")
-                    throw new NotImplementedError() //todo
+                    case Right(value: ComplexFieldValue[_]) =>
+                      currentEntry.setCandidate(value)
+                    case x =>
+                      logger.error(s"Neither right nor left.  $x")
+                      throw new NotImplementedError() //todo
+                  }
+                  valuesMap.put(fieldKey, newEntry)
                 }
-                valuesMap.put(fieldKey, newEntry)
-              }
-              ud.namedKeys.foreach { namedKey =>
-                val key = namedKey.key
-                val name = namedKey.name
-                if (name.isBlank)
-                  keyNamesMap.remove(key)
-                else
-                  keyNamesMap.put(key, name)
-              }
-              save(ud.user)
-              ud.replyTo ! "Done"
-            case UpdateFields(fieldEntries: Seq[FieldEntry], names: Seq[NamedKey], user: User) =>
-              fieldEntries.foreach { fieldEntry =>
-                valuesMap.put(fieldEntry.fieldKey, fieldEntry)
-              }
-              save(user)
+                ud.namedKeys.foreach { namedKey =>
+                  val key = namedKey.key
+                  val name = namedKey.name
+                  if (name.isBlank)
+                    keyNamesMap.remove(key)
+                  else
+                    keyNamesMap.put(key, name)
+                }
+                save(ud.user)
+                ud.replyTo ! "Done"
+              case UpdateFields(fieldEntries: Seq[FieldEntry], names: Seq[NamedKey], user: User) =>
+                fieldEntries.foreach { fieldEntry =>
+                  valuesMap.put(fieldEntry.fieldKey, fieldEntry)
+                }
+                save(user)
+            }
+            Behaviors.same
           }
-          Behaviors.same
-        }
 
           .receiveSignal {
             case (context: ActorContext[DataStoreMessage], signal: Signal) =>
