@@ -21,7 +21,7 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Row, RowSource}
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.named.NamedKeySource
-import net.wa9nnn.rc210.key.KeyFactory.Key
+import net.wa9nnn.rc210.key.Key
 import play.api.libs.json.JsValue
 
 /**
@@ -34,7 +34,7 @@ sealed trait FieldValue extends LazyLogging {
   def display: String
 
   /**
-   * Render this value as an RD-210 command string.
+   * Render this value as an RC-210 command string.
    */
   def toCommands(fieldEntry: FieldEntryBase): Seq[String]
 

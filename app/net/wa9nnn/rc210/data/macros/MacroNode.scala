@@ -1,8 +1,9 @@
 package net.wa9nnn.rc210.data.macros
 
 import com.wa9nnn.util.tableui.{Header, Row}
+import net.wa9nnn.rc210.data.Dtmf
 import net.wa9nnn.rc210.data.field.*
-import net.wa9nnn.rc210.key._
+import net.wa9nnn.rc210.key.*
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.util.Chunk
@@ -79,7 +80,7 @@ object MacroNode extends ComplexExtractor[MacroKey] {
     def macroBuilder(offset: Int, chunkLength: Int, nChunks: Int) = {
       memory.chunks(offset, chunkLength, nChunks)
         .map { chunk =>
-          val key: MacroKey = KeyFactory(KeyKind.macroKey, mai.getAndIncrement())
+          val key: MacroKey = KeyFactory(KeyKind.macroKey, mai.getAndIncrement()).asInstanceOf[MacroKey]
           val sChunk = chunk.ints
             .map(_.toString)
             .mkString(", ")

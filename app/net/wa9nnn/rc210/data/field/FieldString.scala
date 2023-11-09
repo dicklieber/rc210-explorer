@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.key.KeyFactory
-import net.wa9nnn.rc210.key.KeyFactory.Key
+import net.wa9nnn.rc210.key.Key
 import play.api.libs.json._
 import views.html.fieldString
 
@@ -37,7 +37,7 @@ case class FieldString(value: String) extends SimpleFieldValue {
 
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
     val fieldKey = fieldEntry.fieldKey
-    val key: KeyFactory.Key = fieldKey.key
+    val key: Key = fieldKey.key
 
     Seq(key.replaceN(fieldEntry.template)
       .replaceAll("v", value))

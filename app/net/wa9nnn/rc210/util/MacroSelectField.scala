@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.util
 
 import com.wa9nnn.util.tableui.Row
 import net.wa9nnn.rc210.data.field.{FieldValue, RenderMetadata, SimpleExtractor, SimpleField}
-import net.wa9nnn.rc210.key.KeyFactory.{Key, MacroKey}
+import net.wa9nnn.rc210.key.{Key, MacroKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.model.TriggerNode
 import play.api.libs.json._

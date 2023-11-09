@@ -17,14 +17,13 @@
 
 package controllers
 
-import akka.actor.typed.Scheduler
-import akka.stream.Materializer
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, Table}
-import configs.syntax._
 import net.wa9nnn.rc210.serial.{ComPort, DataCollector, ProcessWithProgress, Rc210}
-import play.api.mvc._
+import org.apache.pekko.actor.typed.Scheduler
+import org.apache.pekko.stream.Materializer
+import play.api.mvc.*
 
 import java.time.Instant
 import javax.inject.{Inject, Singleton}
@@ -36,7 +35,7 @@ class DownloadController @Inject()(config: Config,
                                    rc210: Rc210)
                                   (implicit scheduler: Scheduler, ec: ExecutionContext, mat: Materializer)
   extends MessagesInjectedController with LazyLogging {
-  private val expectedLines: Int = config.get[Int]("vizRc210.expectedRcLines").value
+  private val expectedLines: Int = config.getInt("vizRc210.expectedRcLines")
   private var maybeComment:Option[String] = None
 
 

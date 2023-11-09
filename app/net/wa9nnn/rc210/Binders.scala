@@ -20,7 +20,7 @@ package net.wa9nnn.rc210
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.clock.Occurrence
 import net.wa9nnn.rc210.data.field.MonthOfYearDST
-import net.wa9nnn.rc210.key.KeyFactory.{LogicAlarmKey, MacroKey, MessageKey, MeterAlarmKey, MeterKey, TimerKey}
+import net.wa9nnn.rc210.key.{LogicAlarmKey, MacroKey, MessageKey, MeterAlarmKey, MeterKey, TimerKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.security.UserId.UserId
 import net.wa9nnn.rc210.serial.ComPort
@@ -151,7 +151,7 @@ object Binders {
       }
 
     override def unbind(key: String, occurrence: Occurrence): String =
-      occurrence.name()
+      occurrence.toString
   }
   implicit def comportBinder: PathBindable[ComPort] = new PathBindable[ComPort] {
     override def bind(key: String, value: String): Either[String, ComPort] =

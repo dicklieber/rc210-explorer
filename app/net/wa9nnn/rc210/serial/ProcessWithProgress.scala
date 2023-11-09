@@ -17,11 +17,10 @@
 
 package net.wa9nnn.rc210.serial
 
-import akka.Done
-import akka.stream.scaladsl.{Flow, Sink, Source}
-import akka.stream.{Materializer, OverflowStrategy}
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.TimeConverters.durationToString
+import org.apache.pekko.stream.scaladsl.Source
+import org.apache.pekko.stream.{Materializer, OverflowStrategy}
 import play.api.mvc.{RequestHeader, WebSocket}
 
 import java.io.PrintWriter

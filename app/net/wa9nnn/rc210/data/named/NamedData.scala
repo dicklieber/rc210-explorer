@@ -17,9 +17,10 @@
 
 package net.wa9nnn.rc210.data.named
 
-import net.wa9nnn.rc210.key.KeyFactory.Key
+import net.wa9nnn.rc210.key.Key
 import play.api.libs.json.{Format, Json}
 import net.wa9nnn.rc210.key.KeyFormats._
+
 case class NamedKey(key: Key, name: String) extends Ordered[NamedKey] {
   override def compare(that: NamedKey): Int = key compareTo that.key
 }

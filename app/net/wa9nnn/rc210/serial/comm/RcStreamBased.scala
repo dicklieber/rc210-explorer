@@ -49,10 +49,12 @@ class RcStreamBased(rcSerialPort: RcSerialPort) extends RcOp(rcSerialPort) with 
     val resultBuilder = Seq.newBuilder[String]
 
     var line = ""
-    do {
+    while
+      !isTerminal(line)
+    do{
       line = lines.next()
       resultBuilder += line
-    } while (!isTerminal(line))
+    }
     RcResponse(resultBuilder.result())
   }
 

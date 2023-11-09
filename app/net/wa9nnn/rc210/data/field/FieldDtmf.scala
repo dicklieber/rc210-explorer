@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.key.KeyFactory
-import net.wa9nnn.rc210.key.KeyFactory.Key
+import net.wa9nnn.rc210.key.Key
 import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue, Json}
 import views.html.fieldDtmf
 
@@ -35,7 +35,7 @@ case class FieldDtmf(value: String) extends SimpleFieldValue with LazyLogging {
    */
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
     val fieldKey = fieldEntry.fieldKey
-    val key: KeyFactory.Key = fieldKey.key
+    val key: Key = fieldKey.key
     Seq(key.replaceN(fieldEntry.template)
       .replaceAll("v", value) //todo probably not right.
     )

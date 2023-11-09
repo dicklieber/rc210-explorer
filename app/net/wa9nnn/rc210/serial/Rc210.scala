@@ -21,7 +21,6 @@ import com.fazecast.jSerialComm.{SerialPort, SerialPortDataListener}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, Table}
-import configs.syntax._
 import net.wa9nnn.rc210.serial.comm.{Rc210Version, RcEventBased, RcSerialPort, RcStreamBased}
 
 import java.nio.file.{Files, Path}
@@ -55,7 +54,7 @@ class Rc210 @Inject()(config: Config) extends LazyLogging {
   }
 
   def sendBatch(name: String, requests: String*): BatchOperationsResult = {
-    BatchOperationsResult(name, Using.resource(openStreamBased) { rcOp: RcStreamBased =>
+    BatchOperationsResult(name, Using.resource(openStreamBased) { (rcOp: RcStreamBased) =>
       requests.map { request =>
         RcOperationResult(request, Try(rcOp.perform(request)))
       }

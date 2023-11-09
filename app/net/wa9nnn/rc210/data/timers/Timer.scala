@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.timers
 
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntryBase}
-import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, TimerKey}
+import net.wa9nnn.rc210.key.{MacroKey, TimerKey}
 import play.api.libs.json.{JsValue, Json, OFormat}
 
 case class Timer(key: TimerKey, seconds: Int, macroKey: MacroKey) extends ComplexFieldValue[TimerKey] {

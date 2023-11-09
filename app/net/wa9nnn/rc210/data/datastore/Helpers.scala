@@ -20,7 +20,7 @@ package net.wa9nnn.rc210.data.datastore
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry}
 import net.wa9nnn.rc210.data.named.NamedKey
-import net.wa9nnn.rc210.key.KeyFactory.Key
+import net.wa9nnn.rc210.key.Key
 import play.api.libs.json.{Format, JsValue, Json}
 import net.wa9nnn.rc210.key.KeyFormats._
 

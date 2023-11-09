@@ -17,12 +17,11 @@
 
 package net.wa9nnn.rc210.data.logicAlarm
 
-import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.key.KeyFactory.{LogicAlarmKey, MacroKey}
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.{Format, JsValue, Json}
-import net.wa9nnn.rc210.key.KeyFormats._
+import net.wa9nnn.rc210.key.KeyFormats.*
+import net.wa9nnn.rc210.key._
 
 case class LogicAlarm(key: LogicAlarmKey, enable: Boolean, lowMacro: MacroKey, highMacro: MacroKey) extends ComplexFieldValue[LogicAlarmKey] {
   override val fieldName: String = LogicAlarm.name

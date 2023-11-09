@@ -18,8 +18,7 @@
 package net.wa9nnn.rc210.util
 
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldEntryBase, RenderMetadata, SimpleFieldValue}
-import net.wa9nnn.rc210.key.KeyFactory
-import net.wa9nnn.rc210.key.KeyFactory.MacroKey
+import net.wa9nnn.rc210.key.{Key, KeyFactory, MacroKey}
 import play.api.libs.json.{JsString, JsValue}
 
 /**
@@ -37,7 +36,7 @@ trait FieldSelect[T] extends SimpleFieldValue {
    */
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
     val fieldKey = fieldEntry.fieldKey
-    val key: KeyFactory.Key = fieldKey.key
+    val key: Key = fieldKey.key
 
     val number = try {
       value match {
@@ -65,7 +64,7 @@ trait FieldSelect[T] extends SimpleFieldValue {
    */
   override def toHtmlField(renderMetadata: RenderMetadata): String = {
 
-    val optionsHtml: String = selectOptions.map { selectOption: SelectOption =>
+    val optionsHtml: String = selectOptions.map { selectOption =>
       val bool = selectOption.display == value.toString
       selectOption.copy(selected = bool).html
     }.mkString("\n")

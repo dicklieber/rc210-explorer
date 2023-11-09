@@ -25,42 +25,56 @@ import play.twirl.api.Html
 
 object KeyFactory:
 
-  def apply[K <: Key](keyKind: KeyKind, number: Int): Option[K] =
+  def key[K <: Key](keyKind: KeyKind, number: Int): Option[K] =
     assert(number != 0, "Keys cannot have number 0!")
 
-    val t: Seq[Key] = apply(keyKind)
-    t.find(_.number == number)
+    val t: Seq[Key] = key(keyKind)
+    val r: Option[Key] = t.find(_.number == number)
+    r.map(_.asInstanceOf[K])
 
 
-  def apply[K <: Key](keyKind: KeyKind): Seq[K] = keys
-    .filter(_.keyKind.eq(keyKind))
-    .map(_.asInstanceOf[K])
+  def key[K <: Key](keyKind: KeyKind): Seq[K] =
+    keys
+      .filter(_.keyKind.eq(keyKind))
+      .map(_.asInstanceOf[K])
 
-  private val keys: Seq[Key] = {
-    {
-      for {
-        keyKind <- KeyKind.values.toIndexedSeq
-        number <- 1 to keyKind.maxN
-      } yield {
-        keyKind match {
-          case KeyKind.logicAlarmKey => LogicAlarmKey(number)
-          case KeyKind.meterKey => MeterKey(number)
-          case KeyKind.meterAlarmKey => MeterAlarmKey(number)
-          case KeyKind.dtmfMacroKey => DtmfMacroKey(number)
-          case KeyKind.courtesyToneKey => CourtesyToneKey(number)
-          case KeyKind.functionKey => FunctionKey(number)
-          case KeyKind.macroKey => MacroKey(number)
-          case KeyKind.messageKey => MessageKey(number)
-          case KeyKind.commonKey => CommonKey()
-          case KeyKind.portKey => PortKey(number)
-          case KeyKind.scheduleKey => ScheduleKey(number)
-          case KeyKind.timerKey => TimerKey()
-          case KeyKind.clockKey => ClockKey()
-          case KeyKind.remoteBaseKey => RemoteBaseKey()
-        }
+  private val r = """(\D+)(\d*)""".r
+
+  def key[K <: Key](sKey: String): Option[K] =
+    sKey match
+      case r(sKeyKind, number) =>
+        val kk = KeyKind.valueOf(sKeyKind)
+        key(kk, number.toInt)
+      case r(sKeyKind, _) =>
+        val kk = KeyKind.valueOf(sKeyKind)
+        key[K](kk, 0)
+
+
+private val keys: Seq[Key] = {
+  {
+    for {
+      keyKind <- KeyKind.values.toIndexedSeq
+      number <- 1 to keyKind.maxN
+    } yield {
+      keyKind match {
+        case KeyKind.logicAlarmKey => LogicAlarmKey(number)
+        case KeyKind.meterKey => MeterKey(number)
+        case KeyKind.meterAlarmKey => MeterAlarmKey(number)
+        case KeyKind.dtmfMacroKey => DtmfMacroKey(number)
+        case KeyKind.courtesyToneKey => CourtesyToneKey(number)
+        case KeyKind.functionKey => FunctionKey(number)
+        case KeyKind.macroKey => MacroKey(number)
+        case KeyKind.messageKey => MessageKey(number)
+        case KeyKind.commonKey => CommonKey()
+        case KeyKind.portKey => PortKey(number)
+        case KeyKind.scheduleKey => ScheduleKey(number)
+        case KeyKind.timerKey => TimerKey()
+        case KeyKind.clockKey => ClockKey()
+        case KeyKind.remoteBaseKey => RemoteBaseKey()
       }
     }
   }
+}
 
 ///**
 // * All keys live here

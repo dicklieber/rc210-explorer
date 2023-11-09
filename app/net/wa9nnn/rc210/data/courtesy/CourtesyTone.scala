@@ -20,8 +20,8 @@ package net.wa9nnn.rc210.data.courtesy
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Row}
 import net.wa9nnn.rc210.data.courtesy.CourtesyTone.{cell, cellSpan3}
+import net.wa9nnn.rc210.data.field.ComplexFieldValue
 import net.wa9nnn.rc210.key.CourtesyToneKey
-import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey
 import net.wa9nnn.rc210.key.KeyFormats.*
 import play.api.libs.json.{JsValue, Json, OFormat}
 

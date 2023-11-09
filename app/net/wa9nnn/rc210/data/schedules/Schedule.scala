@@ -6,7 +6,7 @@ import com.wa9nnn.util.tableui.{Cell, Header, Row}
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field._
 import net.wa9nnn.rc210.data.schedules.Schedule.{dowSelect, moySelect, s02, weekSelect}
-import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, ScheduleKey}
+import net.wa9nnn.rc210.key.{MacroKey, ScheduleKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.Memory

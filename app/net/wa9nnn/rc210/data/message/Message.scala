@@ -22,7 +22,7 @@ import com.wa9nnn.util.tableui.{Cell, Header, Row}
 import controllers.routes
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldEntryBase}
 import net.wa9nnn.rc210.data.vocabulary.{Word, Words}
-import net.wa9nnn.rc210.key.KeyFactory.{Key, MessageKey}
+import net.wa9nnn.rc210.key.MessageKey
 import net.wa9nnn.rc210.ui.EditButton
 import play.api.libs.json.{Format, JsValue, Json}
 

@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.meter
 
 import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, MeterAlarmKey, MeterKey}
+import net.wa9nnn.rc210.key.{MacroKey, MeterAlarmKey, MeterKey}
 import net.wa9nnn.rc210.key.KeyFormats._
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.Memory

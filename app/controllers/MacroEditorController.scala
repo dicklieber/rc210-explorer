@@ -25,7 +25,7 @@ import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.data.{Dtmf, FieldKey}
-import net.wa9nnn.rc210.key.{FunctionKey, KeyFactory, MacroKey}
+import net.wa9nnn.rc210.key.{FunctionKey, KeyFactory, KeyKind, MacroKey}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout

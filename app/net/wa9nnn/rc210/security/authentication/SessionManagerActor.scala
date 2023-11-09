@@ -17,12 +17,12 @@
 
 package net.wa9nnn.rc210.security.authentication
 
-import akka.actor.typed.scaladsl.{ActorContext, Behaviors, TimerScheduler}
-import akka.actor.typed.{ActorRef, Behavior, Signal, SupervisorStrategy}
 import com.google.inject.{Provides, Singleton}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.security.authentication.RcSession.SessionId
+import org.apache.pekko.actor.typed.scaladsl.{Behaviors, TimerScheduler}
+import org.apache.pekko.actor.typed.{ActorRef, Behavior, Signal, SupervisorStrategy}
 import play.api.libs.concurrent.ActorModule
 
 import java.nio.file.Paths
@@ -51,7 +51,7 @@ object SessionManagerActor extends ActorModule with LazyLogging {
   @Provides def apply (@Named("vizRc210.sessionFile") sSessionFile:String)
                      (implicit ec: ExecutionContext): Behavior[SessionManagerMessage] =
 
-    Behaviors.withTimers[SessionManagerMessage] { timerScheduler: TimerScheduler[SessionManagerMessage] =>
+    Behaviors.withTimers[SessionManagerMessage] { timerScheduler =>
       timerScheduler.startTimerWithFixedDelay(Tick, 5 seconds, 10 seconds)
 
       Behaviors

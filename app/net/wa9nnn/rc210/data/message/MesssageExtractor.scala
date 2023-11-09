@@ -20,7 +20,7 @@ package net.wa9nnn.rc210.data.message
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldEntry, FieldOffset, FieldValue}
-import net.wa9nnn.rc210.key.KeyFactory.MessageKey
+import net.wa9nnn.rc210.key.MessageKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.util.Chunk

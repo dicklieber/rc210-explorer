@@ -20,7 +20,7 @@ package net.wa9nnn.rc210.data.courtesy
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldDefinition, FieldEntry, FieldOffset, FieldValue}
-import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey
+import net.wa9nnn.rc210.key.CourtesyToneKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.JsValue

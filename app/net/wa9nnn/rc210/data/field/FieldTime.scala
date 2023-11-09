@@ -20,8 +20,7 @@ package net.wa9nnn.rc210.data.field
 import com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase
 import com.wa9nnn.util.tableui.Cell
 import net.wa9nnn.rc210.data.field
-import net.wa9nnn.rc210.key.KeyFactory
-import net.wa9nnn.rc210.key.KeyFactory.Key
+import net.wa9nnn.rc210.key.{Key, KeyFactory}
 import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue, Json}
 
 import java.time.LocalTime
@@ -37,7 +36,7 @@ case class FieldTime(value: LocalTime = LocalTime.MIN) extends SimpleFieldValue 
    */
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
     val fieldKey = fieldEntry.fieldKey
-    val key: KeyFactory.Key = fieldKey.key
+    val key:Key = fieldKey.key
     val minute = value.getMinute
     val hour = value.getHour
     val timePiece = f"$hour%02d*$minute%02d"

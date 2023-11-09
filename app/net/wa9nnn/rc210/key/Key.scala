@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.key
 
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
 import net.wa9nnn.rc210.data.named.NamedKeySource
-import net.wa9nnn.rc210.key.KeyKind.{clockKey, commonKey, remoteBaseKey, timerKey}
+import net.wa9nnn.rc210.key.KeyKind._
 
 sealed abstract class Key(val number: Int, val keyKind: KeyKind) extends Ordered[Key] with CellProvider with NamedKeySource {
 
@@ -41,13 +41,23 @@ sealed abstract class Key(val number: Int, val keyKind: KeyKind) extends Ordered
     c.withCssClass(keyKind.toString)
   }
 
+  /**
+   * Replace's 'n' in the template with the number (usually a port number).
+   *
+   * @param template in
+   * @return with 'n' replaced by the port number.
+   */
+  def replaceN(template: String): String = {
+    template.replaceAll("n", number.toString)
+  }
+
 
   def setNamedSource(namedsource: NamedKeySource): Unit = {
     if (_namedSource.isDefined) throw new IllegalStateException("NamedSource already set.")
     _namedSource = Option(namedsource)
   }
 
-   var _namedSource: Option[NamedKeySource] = None
+  var _namedSource: Option[NamedKeySource] = None
 
   def nameForKey(key: Key): String =
     _namedSource.map(_.nameForKey(key)).getOrElse("")
@@ -58,37 +68,34 @@ abstract class SingleKey(keyKind: KeyKind) extends Key(0, keyKind):
   override def toString: String = keyKind.toString
 
 
-case class MacroKey (number: Int) extends Key(number, KeyKind.macroKey)
+case class MacroKey(number: Int) extends Key(number, KeyKind.macroKey)
 
-case class PortKey (number: Int) extends Key(number, KeyKind.portKey)
+case class PortKey(number: Int) extends Key(number, KeyKind.portKey)
 
-case class LogicAlarmKey (number: Int) extends Key(number, KeyKind.logicAlarmKey)
+case class LogicAlarmKey(number: Int) extends Key(number, KeyKind.logicAlarmKey)
 
-case class MeterKey (number: Int) extends Key(number, KeyKind.meterKey)
+case class MeterKey(number: Int) extends Key(number, KeyKind.meterKey)
 
-case class MeterAlarmKey (number: Int)extends Key(number, KeyKind.meterAlarmKey)
+case class MeterAlarmKey(number: Int) extends Key(number, KeyKind.meterAlarmKey)
 
-case class MessageKey (number: Int) extends Key(number, KeyKind.messageKey)
+case class MessageKey(number: Int) extends Key(number, KeyKind.messageKey)
 
-case class FunctionKey (number: Int) extends Key(number, KeyKind.functionKey)
+case class FunctionKey(number: Int) extends Key(number, KeyKind.functionKey)
 
-case class ScheduleKey (number: Int) extends Key(number, KeyKind.scheduleKey)
+case class ScheduleKey(number: Int) extends Key(number, KeyKind.scheduleKey)
 
-case class DtmfMacroKey (number: Int) extends Key(number, KeyKind.dtmfMacroKey)
+case class DtmfMacroKey(number: Int) extends Key(number, KeyKind.dtmfMacroKey)
 
-case class CourtesyToneKey (number: Int) extends Key(number, KeyKind.courtesyToneKey)
+case class CourtesyToneKey(number: Int) extends Key(number, KeyKind.courtesyToneKey)
 
 /**
  * There can be any number of [[CommonKey]] but they don't index into a map by themselves. MaxN just indicates how many to extract for a given rc2input name.
  */
-case class CommonKey () extends SingleKey() {
-  val keyKind: KeyKind = KeyKind.commonKey
-}
+case class CommonKey() extends SingleKey(KeyKind.commonKey)
 
-case class TimerKey () extends SingleKey(KeyKind.timerKey)
+case class TimerKey() extends SingleKey(KeyKind.timerKey)
 
-case class ClockKey () extends SingleKey(clockKey)
+case class ClockKey() extends SingleKey(KeyKind.clockKey)
 
-
-case class RemoteBaseKey () extends SingleKey(remoteBaseKey)
+case class RemoteBaseKey() extends SingleKey(KeyKind.remoteBaseKey)
 

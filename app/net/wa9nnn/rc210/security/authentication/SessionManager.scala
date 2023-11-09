@@ -1,7 +1,6 @@
 package net.wa9nnn.rc210.security.authentication
 
 import com.fasterxml.jackson.module.scala.deser.overrides.TrieMap
-import configs.syntax._
 import com.typesafe.config.Config
 
 import com.typesafe.scalalogging.LazyLogging

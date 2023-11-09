@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.remotebase
 
 import com.wa9nnn.util.tableui.Row
 import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.key.KeyFactory.RemoteBaseKey
+import net.wa9nnn.rc210.key._
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.util.Chunk

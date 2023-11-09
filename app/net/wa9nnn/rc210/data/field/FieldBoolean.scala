@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui.Cell
 import net.wa9nnn.rc210.key.KeyFactory
-import net.wa9nnn.rc210.key.KeyFactory.Key
+import net.wa9nnn.rc210.key.Key
 import play.api.libs.json._
 import views.html.fieldCheckbox
 
@@ -34,7 +34,7 @@ case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue {
    */
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
     val fieldKey = fieldEntry.fieldKey
-    val key: KeyFactory.Key = fieldKey.key
+    val key: Key = fieldKey.key
     Seq(key.replaceN(fieldEntry.template)
       .replaceAll("v", if (value) "1" else "0")
       .replaceAll("b", if (value) "1" else "0")
@@ -61,7 +61,6 @@ object FieldBoolean extends SimpleExtractor[Boolean] {
     val sBool = formValue(name)
     sBool == "true"
   }
-
 
   def toCell(value: Boolean, name: String)(implicit key: Key): Cell = {
     FieldBoolean(value).toCell(RMD(name = name))

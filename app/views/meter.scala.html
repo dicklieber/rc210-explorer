@@ -1,7 +1,7 @@
 @import net.wa9nnn.rc210.data.meter.{Meter, MeterFaceName}
-@import net.wa9nnn.rc210.key.KeyFactory.MeterKey
 @import net.wa9nnn.rc210.ui.Tabs
 @import views.html.helper._
+@import net.wa9nnn.rc210.key.MeterKey
 @(meterKey: MeterKey, meterForm: Form[Meter])(implicit messages: MessagesProvider)
     @implicitField = @{
         FieldConstructor(views.html.rc2input.f)

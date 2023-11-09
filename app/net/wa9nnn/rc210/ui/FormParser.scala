@@ -21,8 +21,7 @@ import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.ComplexFieldValue
 import net.wa9nnn.rc210.data.named.NamedKey
-import net.wa9nnn.rc210.key.KeyFactory
-import net.wa9nnn.rc210.key.KeyFactory.Key
+import net.wa9nnn.rc210.key.{Key, KeyFactory}
 import play.api.mvc.AnyContentAsFormUrlEncoded
 
 object FormParser {
@@ -37,7 +36,7 @@ object FormParser {
   def apply[K <: Key, T <: ComplexFieldValue[K]](content: AnyContentAsFormUrlEncoded, f: Map[String, String] => ComplexFieldValue[K]): CandidateAndNames = {
     val data: Map[String, String] = content.data.map(t => t._1 -> t._2.head)
     val sKey: String = data.getOrElse("key", throw new IllegalArgumentException("No key in form data!"))
-    val key: K = KeyFactory(sKey)
+    val key: K = KeyFactory.key(sKey)
 
     val fieldValue: ComplexFieldValue[K] = f(data)
 
