@@ -1,10 +1,8 @@
 package net.wa9nnn.rc210.data.macros
 
 import com.wa9nnn.util.tableui.{Header, Row}
-import net.wa9nnn.rc210.data.Dtmf
 import net.wa9nnn.rc210.data.field.*
-import net.wa9nnn.rc210.key.KeyFactory.{FunctionKey, MacroKey}
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.key._
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.util.Chunk

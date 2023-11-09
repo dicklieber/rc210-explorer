@@ -24,6 +24,7 @@ import net.wa9nnn.rc210.security.UserId.UserId
 import net.wa9nnn.rc210.security.authentication.UserManagerActor
 import net.wa9nnn.rc210.security.authentication.UserManagerActor.{Get, Put, Remove}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
+import org.apache.pekko.util.Timeout
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional, text}
 import play.api.mvc.{Action, AnyContent, MessagesInjectedController, MessagesRequest}
@@ -60,7 +61,7 @@ class UsersController @Inject()(val userActor: ActorRef[UserManagerActor.Message
   implicit val timeout: Timeout = 3 seconds
 
   def users: Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
-    userActor.ask(UserManagerActor.Users)
+    userActor.ask(UserManagerActor.Users.apply)
       .map(userRecords =>
         Ok(views.html.users(userRecords))
       )

@@ -18,15 +18,13 @@
 package controllers
 
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
-
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.Row
 import net.wa9nnn.rc210.data.courtesy.{CourtesyTone, CtSegmentKey, Segment}
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.named.NamedKey
-import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey
-import net.wa9nnn.rc210.key.KeyKind
+import net.wa9nnn.rc210.key.{CourtesyToneKey, KeyKind}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout

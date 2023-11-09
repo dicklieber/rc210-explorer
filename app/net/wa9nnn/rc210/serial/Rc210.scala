@@ -94,7 +94,7 @@ class Rc210 @Inject()(config: Config) extends LazyLogging {
 
   def table(): Table = {
     val currentComPort: Option[ComPort] = maybeRcSerialPort.map(_.comPort)
-    val rows: Seq[Row] = serialPortsSource().map { comPort: ComPort =>
+    val rows: Seq[Row] = serialPortsSource().map { comPort =>
       var row = comPort.toRow
       if (currentComPort.contains(comPort)) {
         row = row.withCssClass("selected")

@@ -18,10 +18,9 @@
 package net.wa9nnn.rc210.data.meter
 
 import com.wa9nnn.util.tableui.{Cell, Row}
-import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.key.KeyFactory.MeterKey
-import net.wa9nnn.rc210.key.KeyFormats._
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.data.field.ComplexFieldValue
+import net.wa9nnn.rc210.key.KeyFormats.*
+import net.wa9nnn.rc210.key.MeterKey
 import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.{Format, JsValue, Json}
 

@@ -16,7 +16,6 @@
  */
 
 package controllers
-import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, UpdateData}
@@ -28,6 +27,8 @@ import net.wa9nnn.rc210.data.timers.Timer
 import net.wa9nnn.rc210.key.KeyFactory.{MacroKey, TimerKey}
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
+import org.apache.pekko.actor.typed.ActorRef
+import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.util.Timeout
 import play.api.data.Form
 import play.api.data.Forms.*
@@ -53,7 +54,7 @@ class TimerEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
 
   def index: Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
-      actor.ask(AllForKeyKind(KeyKind.timerKey, _)).map { timerFields: Seq[FieldEntry] =>
+      actor.ask(AllForKeyKind(KeyKind.timerKey, _)).map { timerFields =>
         val timers: Seq[Timer] = timerFields.map {fieldEntry =>
           val fieldValue: Timer = fieldEntry.value
           fieldValue.asInstanceOf[Timer]

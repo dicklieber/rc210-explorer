@@ -19,8 +19,8 @@ package net.wa9nnn.rc210.data.clock
 
 import com.wa9nnn.util.JsonFormatUtils.javaEnumFormat
 import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.key.KeyFactory.ClockKey
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.key._
+import net.wa9nnn.rc210.key.KeyKind._
 import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.{Format, JsValue, Json}
 

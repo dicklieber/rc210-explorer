@@ -16,6 +16,10 @@
  */
 
 package controllers
+import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
+import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
+import org.apache.pekko.util.Timeout
+
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
@@ -24,7 +28,6 @@ import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.data.schedules.Schedule
-import net.wa9nnn.rc210.key.KeyFactory.ScheduleKey
 import net.wa9nnn.rc210.key.KeyKind
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
 import org.apache.pekko.actor.typed.ActorRef
@@ -44,7 +47,7 @@ class ScheduleController @Inject()(actor: ActorRef[DataStoreActor.Message])
   def index(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
 
-      actor.ask(AllForKeyKind(KeyKind.scheduleKey, _)).map { fields: Seq[FieldEntry] =>
+      actor.ask(AllForKeyKind(KeyKind.scheduleKey, _)).map { fields =>
         val rows: Seq[Row] = fields.map { fieldEntry =>
           val value: Schedule = fieldEntry.value
           value.toRow
@@ -75,11 +78,11 @@ class ScheduleController @Inject()(actor: ActorRef[DataStoreActor.Message])
         logger.trace(s"==== {} ====", key.toString)
 
 
-        implicit val nameToValue: Map[String, String] = items.map { case (fieldey, value) =>
-          fieldey.fieldName -> value
+        implicit val nameToValue: Map[String, String] = items.map { case (fieldKey, value) =>
+          fieldKey.fieldName -> value
         }.toMap
 
-        // named keys are seperate.
+        // named keys are separate.
         val namedKey = NamedKey(key, nameToValue("name"))
         namedKeys += namedKey
 

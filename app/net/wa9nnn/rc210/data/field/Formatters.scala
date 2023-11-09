@@ -21,11 +21,9 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.Dtmf
 import net.wa9nnn.rc210.data.clock.Occurrence
 import net.wa9nnn.rc210.data.named.NamedKey
-import net.wa9nnn.rc210.key.KeyFactory
-import net.wa9nnn.rc210.key.KeyFactory._
+import net.wa9nnn.rc210.key._
 import play.api.data.FormError
 import play.api.libs.json.{Format, Json, OFormat}
-
 /**
  * URL formatters.
  * Converts HTML form values to and from application objects.

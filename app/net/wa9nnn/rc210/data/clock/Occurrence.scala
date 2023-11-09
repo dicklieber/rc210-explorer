@@ -17,14 +17,7 @@
 
 package net.wa9nnn.rc210.data.clock;
 
-public enum Occurrence {
-    First,
-    Second,
-    Third,
-    Forth,
-    Fifth;
-
-    public int number() {
-        return ordinal() + 1;
-    }
+enum Occurrence {
+  case First, Second, Third, Forth, Fifth
+  def number: Int = ordinal + 1
 }

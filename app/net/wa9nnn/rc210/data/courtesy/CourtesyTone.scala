@@ -20,10 +20,9 @@ package net.wa9nnn.rc210.data.courtesy
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Row}
 import net.wa9nnn.rc210.data.courtesy.CourtesyTone.{cell, cellSpan3}
-import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.data.named.NamedKeySource
+import net.wa9nnn.rc210.key.CourtesyToneKey
 import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey
-import net.wa9nnn.rc210.key.KeyFormats._
+import net.wa9nnn.rc210.key.KeyFormats.*
 import play.api.libs.json.{JsValue, Json, OFormat}
 
 import java.util.concurrent.atomic.AtomicInteger
@@ -44,12 +43,6 @@ case class CourtesyTone(override val key: CourtesyToneKey, segments: Seq[Segment
       segment.toCommand(key.number, segN.getAndIncrement())
     }
   }
-
-  /**
-   *
-   * @param paramValue candidate from form.
-   * @return None if value has not changed, otherwise a new [[FieldValue]].
-   */
 
   override val fieldName: String = "CourtesyTone"
 
@@ -75,18 +68,18 @@ case class CourtesyTone(override val key: CourtesyToneKey, segments: Seq[Segment
       ,
       // tone1 row
       Row(
-        cell(segments(0).tone1Hz, CtSegmentKey("Tone1", 0, units = "Hz")),
-        cell(segments(1).tone1Hz, CtSegmentKey("Tone1", 1, units = "Hz")),
-        cell(segments(2).tone1Hz, CtSegmentKey("Tone1", 2, units = "Hz")),
-        cell(segments(3).tone1Hz, CtSegmentKey("Tone1", 3, units = "Hz")),
+        cell(segments(0).tone1Hz, CtSegmentKey("Tone1", 0)),
+        cell(segments(1).tone1Hz, CtSegmentKey("Tone1", 1)),
+        cell(segments(2).tone1Hz, CtSegmentKey("Tone1", 2)),
+        cell(segments(3).tone1Hz, CtSegmentKey("Tone1", 3)),
       )
       ,
       // tone2 row
       Row(
-        cell(segments(0).tone2Hz, CtSegmentKey("Tone2", 0, units = "Hz")),
-        cell(segments(1).tone2Hz, CtSegmentKey("Tone2", 1, units = "Hz")),
-        cell(segments(2).tone2Hz, CtSegmentKey("Tone2", 2, units = "Hz")),
-        cell(segments(3).tone2Hz, CtSegmentKey("Tone2", 3, units = "Hz")),
+        cell(segments(0).tone2Hz, CtSegmentKey("Tone2", 0)),
+        cell(segments(1).tone2Hz, CtSegmentKey("Tone2", 1)),
+        cell(segments(2).tone2Hz, CtSegmentKey("Tone2", 2)),
+        cell(segments(3).tone2Hz, CtSegmentKey("Tone2", 3)),
       )
     )
   }

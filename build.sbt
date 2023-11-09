@@ -11,7 +11,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
   .settings(
     //    Compile / mappings := Seq(),
     //    packageDoc / mappings := Seq(),
-//    scalaVersion := "2.13.10",
+    //    scalaVersion := "2.13.10",
     scalaVersion := "3.3.1",
     buildInfoKeys :=
       Seq[BuildInfoKey](
@@ -55,7 +55,7 @@ val akkaVersion = "2.8.5"
 libraryDependencies ++= Seq(
   guice,
 
-//  "org.apache.pekko" %% "akka-actor-testkit-typed" % akkaVersion % Test,
+  //  "org.apache.pekko" %% "akka-actor-testkit-typed" % akkaVersion % Test,
 
   //  "org.scalactic" %% "scalactic" % "3.2.16",
   //  "org.scalatest" %% "scalatest" % "3.2.16" % "test",
@@ -75,16 +75,16 @@ libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % logbackVersion,
   "ch.qos.logback" % "logback-core" % logbackVersion,
   "commons-io" % "commons-io" % "2.11.0",
-//  "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
-//  "com.typesafe.akka" %% "akka-actor" % akkaVersion,
-//  "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion % Test,
-//  "com.typesafe.akka" %% "akka-actor-ivytestkit-typed" % akkaVersion % Test,
-//  "com.typesafe.akka" %% "akka-stream-testkit" % akkaVersion % Test,
+  //  "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
+  //  "com.typesafe.akka" %% "akka-actor" % akkaVersion,
+  //  "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion % Test,
+  //  "com.typesafe.akka" %% "akka-actor-ivytestkit-typed" % akkaVersion % Test,
+  //  "com.typesafe.akka" %% "akka-stream-testkit" % akkaVersion % Test,
   "com.fazecast" % "jSerialComm" % "2.9.3",
   //  "io.suzaku" %% "boopickle" % "1.4.0",
   "org.fusesource.jansi" % "jansi" % "2.4.0",
   "org.apache.commons" % "commons-text" % "1.10.0",
-//  "com.github.kxbmap" %% "configs" % "0.6.1",
+  //  "com.github.kxbmap" %% "configs" % "0.6.1",
   "org.mindrot" % "jbcrypt" % "0.4",
   "com.github.andyglow" %% "typesafe-config-scala" % "2.0.0" % Compile,
 

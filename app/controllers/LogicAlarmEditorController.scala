@@ -16,21 +16,18 @@
  */
 
 package controllers
-
-import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.datastore.DataStoreActor
-import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, UpdateData}
-import net.wa9nnn.rc210.data.field.Formatters.*
-import net.wa9nnn.rc210.data.field.{FieldEntry, Formatters}
-import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
-import net.wa9nnn.rc210.data.meter.{AlarmType, MeterAlarm}
-import net.wa9nnn.rc210.key.KeyFactory.{LogicAlarmKey, MacroKey, MeterAlarmKey, MeterKey}
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
-import net.wa9nnn.rc210.security.authentication.Credentials
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
-import net.wa9nnn.rc210.ui.{CandidateAndNames, FormParser}
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
+import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
+import org.apache.pekko.util.Timeout
+import com.typesafe.scalalogging.LazyLogging
+import _root_.net.wa9nnn.rc210.datastore.DataStoreActor
+import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
+import net.wa9nnn.rc210.key.*
+import net.wa9nnn.rc210.ui.CandidateAndNames
+import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
+import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.util.Timeout
 import play.api.data.{Form, FormError}
 import play.api.data.Forms.*
@@ -61,7 +58,7 @@ class LogicAlarmEditorController @Inject()(actor: ActorRef[DataStoreActor.Messag
 
   def index(): Action[AnyContent] = Action.async {
     implicit request =>
-      actor.ask[Seq[FieldEntry]](AllForKeyKind(KeyKind.logicAlarmKey, _)).map { alarmFields: Seq[FieldEntry] =>
+      actor.ask[Seq[FieldEntry]](AllForKeyKind(KeyKind.logicAlarmKey, _)).map { alarmFields =>
         val logicAlarms: Seq[LogicAlarm] = alarmFields.map(_.value.asInstanceOf[LogicAlarm])
         Ok(views.html.logic(logicAlarms))
       }

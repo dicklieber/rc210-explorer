@@ -16,7 +16,9 @@
  */
 
 package controllers
+import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
+import org.apache.pekko.util.Timeout
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.Table
@@ -44,7 +46,7 @@ class MessageController @Inject()(actor: ActorRef[DataStoreActor.Message])
   implicit val timeout: Timeout = 3 seconds
 
   def index(): Action[AnyContent] = Action.async { implicit request =>
-    actor.ask[Seq[FieldEntry]](AllForKeyKind(KeyKind.messageKey, _)).map { f: Seq[FieldEntry] =>
+    actor.ask[Seq[FieldEntry]](AllForKeyKind(KeyKind.messageKey, _)).map { f =>
       val rows = f.map{fieldEntry =>
         fieldEntry.value.asInstanceOf[Message].toRow}
       val table = Table(Message.header(rows.length), rows)

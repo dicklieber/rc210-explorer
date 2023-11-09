@@ -25,11 +25,13 @@ import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.data.{Dtmf, FieldKey}
-import net.wa9nnn.rc210.key.KeyFactory._
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.key.{FunctionKey, KeyFactory, MacroKey}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
-import play.api.mvc._
+import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
+import org.apache.pekko.util.Timeout
+import play.api.mvc.*
 import views.html.macroNodes
+import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -41,7 +43,7 @@ import scala.util.matching.Regex
 @Singleton()
 class MacroEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
                                      (implicit scheduler: Scheduler,
-                                    ec: ExecutionContext, functionsProvider: FunctionsProvider) extends MessagesInjectedController with LazyLogging {
+                                      ec: ExecutionContext, functionsProvider: FunctionsProvider) extends MessagesInjectedController with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 
   def index(): Action[AnyContent] = Action.async { implicit request =>
@@ -53,13 +55,11 @@ class MacroEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
   def edit(key: MacroKey): Action[AnyContent] = Action.async { implicit request =>
 
     val fieldKey = FieldKey("Macro", key)
-    actor.ask(ForFieldKey(fieldKey, _)).map { maybeFieldEntry =>
-      maybeFieldEntry match {
-        case Some(fe: FieldEntry) =>
-          Ok(views.html.macroEditor(fe.value))
-        case None =>
-          NotFound(s"No keyField: $fieldKey")
-      }
+    actor.ask(ForFieldKey(fieldKey, _)).map {
+      case Some(fe: FieldEntry) =>
+        Ok(views.html.macroEditor(fe.value))
+      case None =>
+        NotFound(s"No keyField: $fieldKey")
     }
   }
 

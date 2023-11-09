@@ -106,55 +106,55 @@ class CandidateController @Inject()(config: Config,
       }
   }
 
-def sendAllFields(): Action[AnyContent] = Action { implicit request =>
-  val webSocketURL: String = routes.CandidateController.ws(471).webSocketURL() //todo all fields expected.
-  Ok(views.html.progress( webSocketURL))
-}
+  def sendAllFields(): Action[AnyContent] = Action { implicit request =>
+    val webSocketURL: String = routes.CandidateController.ws(471).webSocketURL() //todo all fields expected.
+    Ok(views.html.progress(webSocketURL))
+  }
 
-def sendAllCandidates(): Action[AnyContent] = Action { implicit request =>
-  Ok("todo")
-}
+  def sendAllCandidates(): Action[AnyContent] = Action { implicit request =>
+    Ok("todo")
+  }
 
-var maybeLastSendAll: Option[LastSendAll] = None
+  var maybeLastSendAll: Option[LastSendAll] = None
 
-import play.api.mvc._
+  import play.api.mvc._
 
-def ws(expected: Int): WebSocket = {
-  val start = Instant.now()
-  ProcessWithProgress(expected, 7,  maybeSendLogFile) { (progressApi: ProgressApi) =>
-    val streamBased: RcStreamBased = rc210.openStreamBased
-    val operations = Seq.newBuilder[BatchOperationsResult]
-    operations += streamBased.perform("Wakeup", init)
-    val fieldEntries: Seq[FieldEntry] = Await.result[Seq[FieldEntry]](dataStoreActor.ask(All), 5 seconds)
+  def ws(expected: Int): WebSocket = {
+    val start = Instant.now()
+    ProcessWithProgress(expected, 7, maybeSendLogFile) { (progressApi: ProgressApi) =>
+      val streamBased: RcStreamBased = rc210.openStreamBased
+      val operations = Seq.newBuilder[BatchOperationsResult]
+      operations += streamBased.perform("Wakeup", init)
+      val fieldEntries: Seq[FieldEntry] = Await.result[Seq[FieldEntry]](dataStoreActor.ask(All), 5 seconds)
 
-    var errorEncountered = false
-    for {
-      fieldEntry <- fieldEntries
-      fieldValue = fieldEntry.value.asInstanceOf[FieldValue]
-      if !(errorEncountered && stopOnError)
-    } yield {
-      val batchOperationsResult = streamBased.perform(fieldEntry.fieldKey.toString, fieldValue.toCommands(fieldEntry))
-      batchOperationsResult.results.foreach { rcOperationResult =>
-        errorEncountered = rcOperationResult.isFailure
-        progressApi.doOne(rcOperationResult.toString)
+      var errorEncountered = false
+      for {
+        fieldEntry <- fieldEntries
+        fieldValue = fieldEntry.value.asInstanceOf[FieldValue]
+        if !(errorEncountered && stopOnError)
+      } yield {
+        val batchOperationsResult = streamBased.perform(fieldEntry.fieldKey.toString, fieldValue.toCommands(fieldEntry))
+        batchOperationsResult.results.foreach { rcOperationResult =>
+          errorEncountered = rcOperationResult.isFailure
+          progressApi.doOne(rcOperationResult.toString)
+        }
+        operations += batchOperationsResult
       }
-      operations += batchOperationsResult
+      maybeLastSendAll = Option(LastSendAll(operations.result(), start))
+      progressApi.finish("Done")
     }
-    maybeLastSendAll = Option(LastSendAll(operations.result(), start))
-    progressApi.finish("Done")
   }
-}
 
-def lastSendAll(): Action[AnyContent] = Action { implicit request =>
-  maybeLastSendAll match {
-    case Some(lastSendAll: LastSendAll) =>
-      val rows: Seq[Row] = lastSendAll.operations.flatMap(_.toRows)
-      val table = Table(RcOperationResult.header(rows.length), rows)
-      Ok(views.html.lastSendAll(table, Option(lastSendAll)))
-    case None =>
-      Ok(views.html.lastSendAll(Table(Seq.empty, Seq.empty), None))
+  def lastSendAll(): Action[AnyContent] = Action { implicit request =>
+    maybeLastSendAll match {
+      case Some(lastSendAll: LastSendAll) =>
+        val rows: Seq[Row] = lastSendAll.operations.flatMap(_.toRows)
+        val table = Table(RcOperationResult.header(rows.length), rows)
+        Ok(views.html.lastSendAll(table, Option(lastSendAll)))
+      case None =>
+        Ok(views.html.lastSendAll(Table(Seq.empty, Seq.empty), None))
+    }
   }
-}
 }
 
 

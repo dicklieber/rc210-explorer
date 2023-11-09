@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.courtesy
 
 import net.wa9nnn.rc210.data.field.RenderMetadata
-import net.wa9nnn.rc210.key.KeyFactory
+import net.wa9nnn.rc210.key.{CourtesyToneKey, KeyFactory}
 import net.wa9nnn.rc210.key.KeyFactory.CourtesyToneKey
 
 import scala.util.matching.Regex

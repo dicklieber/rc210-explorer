@@ -32,12 +32,12 @@ object DSTPoint {
       }
       val occurance: Occurrence = {
         val i = s.takeRight(1).toInt - 1
-        Occurrence.values()(i)
+        Occurrence.values(i)
       }
       new DSTPoint(month, occurance)
     } catch {
       case e:Exception =>
-        new DSTPoint(MonthOfYearDST.values().head, Occurrence.values().head)
+        new DSTPoint(MonthOfYearDST.values().head, Occurrence.values.head)
     }
   }
 }

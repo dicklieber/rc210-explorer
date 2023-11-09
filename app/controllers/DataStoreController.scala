@@ -38,7 +38,7 @@ class DataStoreController @Inject()(actor: ActorRef[DataStoreActor.Message])
 
 
   def downloadJson(): Action[AnyContent] = Action.async {
-    actor.ask(DataStoreActor.Json).map { sJson =>
+    actor.ask(DataStoreActor.Json.apply).map { sJson =>
       Ok(sJson).withHeaders(
         "Content-Type" -> "text/json",
         "Content-Disposition" -> s"""attachment; filename="rc210.json""""
@@ -47,7 +47,7 @@ class DataStoreController @Inject()(actor: ActorRef[DataStoreActor.Message])
   }
 
   def viewJson(): Action[AnyContent] = Action.async {
-    actor.ask(DataStoreActor.Json).map { sJson =>
+    actor.ask(DataStoreActor.Json.apply).map { sJson =>
       Ok(sJson)
     }
   }
