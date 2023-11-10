@@ -213,7 +213,6 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
 
   case class ForFieldKey(fieldKey: FieldKey, replyTo: ActorRef[Option[FieldEntry]]) extends DataStoreMessage
 
-
   case class Json(replyTo: ActorRef[String]) extends DataStoreMessage
 
   case class IngestJson(sJson: String, replyTo: ActorRef[String]) extends DataStoreMessage

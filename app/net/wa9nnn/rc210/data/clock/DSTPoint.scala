@@ -19,16 +19,18 @@ package net.wa9nnn.rc210.data.clock
 
 import net.wa9nnn.rc210.data.field.MonthOfYearDST
 
-case class DSTPoint(monthOfYearDST: MonthOfYearDST, occurance: Occurrence){
-  def commandPiece:String = f"${monthOfYearDST.number}%02d${occurance.number}"
+case class DSTPoint(monthOfYearDST: MonthOfYearDST, occurance: Occurrence) {
+  def commandPiece: String = f"${monthOfYearDST.number}%02d${occurance.number}"
 }
 
 object DSTPoint {
+  def unapply(dstPoint: DSTPoint): Option[(MonthOfYearDST, Occurrence)] = Some(dstPoint.monthOfYearDST, dstPoint.occurance)
+
   def apply(s: String): DSTPoint = {
     try {
       val month: MonthOfYearDST = {
         val i: Int = s.take(2).toInt
-        MonthOfYearDST.values()(i)
+        MonthOfYearDST.values(i)
       }
       val occurance: Occurrence = {
         val i = s.takeRight(1).toInt - 1
@@ -36,8 +38,8 @@ object DSTPoint {
       }
       new DSTPoint(month, occurance)
     } catch {
-      case e:Exception =>
-        new DSTPoint(MonthOfYearDST.values().head, Occurrence.values.head)
+      case e: Exception =>
+        new DSTPoint(MonthOfYearDST.values.head, Occurrence.values.head)
     }
   }
 }

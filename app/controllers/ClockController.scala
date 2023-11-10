@@ -17,27 +17,27 @@
 
 package controllers
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
-
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.clock.{Clock, DSTPoint, Occurrence}
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.UpdateData
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.Formatters.{MonthOfYearDSTFormatter, OccurrenceFormatter}
 import net.wa9nnn.rc210.data.field.{FieldEntry, MonthOfYearDST}
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.key._
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
 import net.wa9nnn.rc210.ui.EnumSelect
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
+import play.api.data.*
 import play.api.data.Forms.*
-import play.api.data.{Form, Mapping}
+import play.api.mvc.MessagesInjectedController
 import play.api.mvc.*
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
-
+import net.wa9nnn.rc210.data.field.MonthOfYearDSTFormatter._
 
 @Singleton()
 class ClockController @Inject()(actor: ActorRef[DataStoreActor.Message])
@@ -59,10 +59,10 @@ class ClockController @Inject()(actor: ActorRef[DataStoreActor.Message])
       "startDST" -> dstPointForm,
       "endDST" -> dstPointForm,
       "say24Hours" -> boolean
-    )(Clock.apply)(Clock.unapply)
-  )
+    )(Clock.apply)(Clock.unapply))
 
-  def index: Action[AnyContent] = Action.async { implicit request =>
+  def index: Action[AnyContent] = Action.async {
+    implicit request =>
     actor.ask[Seq[FieldEntry]](DataStoreActor.AllForKeyKind(KeyKind.clockKey, _)).map { fieldEntries =>
       val fieldEntry: FieldEntry = fieldEntries.head
       val clock: Clock = fieldEntry.value.asInstanceOf[Clock]
@@ -81,7 +81,7 @@ class ClockController @Inject()(actor: ActorRef[DataStoreActor.Message])
       },
       (clock: Clock) => {
         /* binding success, you get the actual value. */
-        val updateCandidate: UpdateCandidate = UpdateCandidate(Clock.fieldKey(KeyFactory.clockKey), Right(clock))
+        val updateCandidate: UpdateCandidate = UpdateCandidate(Clock.fieldKey(clock.key), Right(clock))
 
         actor.ask[String](UpdateData(Seq(updateCandidate), Seq.empty, who(request), _)).map { _ =>
           Redirect(routes.ClockController.index)

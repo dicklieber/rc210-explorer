@@ -1,5 +1,6 @@
 
 import com.google.inject.{AbstractModule, Binder}
+import net.codingwell.scalaguice.ScalaModule
 import play.api.{Configuration, Environment}
 
 /**
@@ -14,9 +15,10 @@ import play.api.{Configuration, Environment}
  *
  * This uses scala-guice. https://github.com/codingwell/scala-guice for details.
  */
-class Module(environment: Environment, configuration: Configuration) extends AbstractModule {
+class MainModule(environment: Environment, configuration: Configuration) extends AbstractModule {
   override def configure(): Unit = {
-    install(new ConfigModule(configuration))
+    val configModule: ConfigModule = new ConfigModule(configuration)
+    install(configModule)
     install(RcActorsModule)
   }
 }

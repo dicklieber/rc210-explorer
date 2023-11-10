@@ -25,12 +25,12 @@ import play.twirl.api.Html
 
 object KeyFactory:
 
-  def key[K <: Key](keyKind: KeyKind, number: Int): Option[K] =
+  def key[K <: Key](keyKind: KeyKind, number: Int): K =
     assert(number != 0, "Keys cannot have number 0!")
 
     val t: Seq[Key] = key(keyKind)
     val r: Option[Key] = t.find(_.number == number)
-    r.map(_.asInstanceOf[K])
+    r.get.asInstanceOf[K]
 
 
   def key[K <: Key](keyKind: KeyKind): Seq[K] =

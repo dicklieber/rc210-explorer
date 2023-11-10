@@ -100,7 +100,7 @@ object CtcssMode extends Selectable[CtcssMode] {
 
 case class CtcssTone(value: Int, display: String) extends SelectItemNumber
 
-object CtcssTone extends Selectable {
+object CtcssTone extends Selectable[CtcssMode] {
   val choices: Seq[CtcssTone] = Seq.empty
   implicit val fmtCtcssTone: Format[CtcssTone] = Json.format[CtcssTone]
 }

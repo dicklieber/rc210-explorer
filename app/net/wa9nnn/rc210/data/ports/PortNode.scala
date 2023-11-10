@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.ports
 
 import com.wa9nnn.util.tableui.Row
-import net.wa9nnn.rc210.key.KeyFactory.PortKey
+import net.wa9nnn.rc210.key.PortKey
 import net.wa9nnn.rc210.model.Node
 
 case class PortNode(key: PortKey,

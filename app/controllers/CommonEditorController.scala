@@ -20,17 +20,17 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
+import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.key.KeyKind
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
 import net.wa9nnn.rc210.ui.{CandidateAndNames, FormParser}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
-
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
 import play.api.mvc.*
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
 
@@ -40,20 +40,38 @@ class CommonEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
   implicit val timeout: Timeout = 3 seconds
 
   def index(): Action[AnyContent] = Action.async {
-    implicit request: Request[AnyContent] =>
-      actor.ask(DataStoreActor.AllForKeyKind(KeyKind.commonKey, _)).map { commonFields =>
-        val rows: Seq[Row] = commonFields.map { fieldEntry =>
-          // Can't use fieldEntry's toRow because we just want the rc2input name not key, as they are all commonKey1
+    implicit request =>
+      val eventualFieldEntries: Future[Seq[FieldEntry]] = actor.ask(DataStoreActor.AllForKeyKind(KeyKind.commonKey, _))
+
+      eventualFieldEntries.map { fieldEntries =>
+        val rows: Seq[Row] = fieldEntries.map { fieldEntry =>
+          //          // Can't use fieldEntry's toRow because we just want the rc2input name not key, as they are all commonKey1
           Row(
             fieldEntry.fieldKey.fieldName,
             fieldEntry.toCell
           )
+
         }
         val header = Header(s"Common (${rows.length} values)", "Field", "Value")
         val table = Table(header, rows)
-
         Ok(views.html.common(table))
+
+
       }
+
+    //        .map { (commonFields: Seq[FieldEntry]) =>
+    //        commonFields.map { fieldEntry =>
+    //          // Can't use fieldEntry's toRow because we just want the rc2input name not key, as they are all commonKey1
+    //          Row(
+    //            fieldEntry.fieldKey.fieldName,
+    //            fieldEntry.toCell
+    //          )
+    //        }
+    //      }
+    //      eventualRows.map { rows =>
+    //        val header = Header(s"Common (${rows.length} values)", "Field", "Value")
+    //        val table = Table(header, rows)
+    //        Ok(views.html.common(table))
   }
 
   def save(): Action[AnyContent] = Action.async {

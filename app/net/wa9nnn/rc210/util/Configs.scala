@@ -22,7 +22,7 @@ import com.typesafe.config.Config
 import java.nio.file.{Path, Paths}
 
 object Configs:
-  def path(configPath: String, config: Config): Path = {
+  def path(configPath: String)(using config: Config): Path = {
     val str = config.getString(configPath)
     Paths.get(str)
   }

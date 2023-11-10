@@ -76,11 +76,12 @@ case class Clock(
   }
 
   override def toJsonValue: JsValue = Json.toJson(this)
-
 }
 
 
 object Clock extends ComplexExtractor[ClockKey] {
+  def unapply(c: Clock): Option[(Boolean, Int, DSTPoint, DSTPoint, Boolean)] = Some(c.enableDST, c.hourDST, c.startDST, c.endDST, c.say24Hours)
+
   /**
    *
    * @param memory    source of RC-210 data.
@@ -96,7 +97,7 @@ object Clock extends ComplexExtractor[ClockKey] {
 
     val clock = new Clock(enableDST, startHour, startDST, endDST, say24Hours)
     Seq(
-      FieldEntry(this, fieldKey(KeyFactory.clockKey), clock)
+      FieldEntry(this, fieldKey(Key.clockKey), clock)
     )
   }
 

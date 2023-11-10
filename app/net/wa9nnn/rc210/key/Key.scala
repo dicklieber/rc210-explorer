@@ -18,8 +18,10 @@
 package net.wa9nnn.rc210.key
 
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
+import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.named.NamedKeySource
-import net.wa9nnn.rc210.key.KeyKind._
+import net.wa9nnn.rc210.key.KeyKind.*
+import play.twirl.api.Html
 
 sealed abstract class Key(val number: Int, val keyKind: KeyKind) extends Ordered[Key] with CellProvider with NamedKeySource {
 
@@ -30,6 +32,17 @@ sealed abstract class Key(val number: Int, val keyKind: KeyKind) extends Ordered
     if (ret == 0)
       ret = number compareTo that.number
     ret
+
+  def fieldKey(fieldName: String): FieldKey = FieldKey(fieldName, this)
+
+  def namedCell(param: String = fieldKey("name").param): Cell = {
+    val html: Html = views.html.fieldNamedKey(this, nameForKey(this), param)
+    Cell.rawHtml(html.toString())
+  }
+
+  def keyWithName: String = {
+    s"$number ${nameForKey(this)}"
+  }
 
 
   override def toCell: Cell = {

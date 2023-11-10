@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.key.KeyFactory
-import net.wa9nnn.rc210.key.KeyFactory.Key
+import net.wa9nnn.rc210.key.Key
 import net.wa9nnn.rc210.util.SelectOption
 
 
@@ -32,7 +32,7 @@ object SelectKeyHelper {
    */
   def apply(current: Key, param: String): String = {
 
-    val keys: Seq[Key] = KeyFactory(current.kind)
+    val keys: Seq[Key] = KeyFactory.key(current.kind)
 
     val options = keys.map { k =>
       val opt: SelectOption = SelectOption(k.number, k.toString)

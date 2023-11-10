@@ -31,7 +31,7 @@ import org.apache.pekko.util.Timeout
 import play.api.mvc.*
 
 import javax.inject.*
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
 
@@ -44,11 +44,12 @@ class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Mess
     implicit request: Request[AnyContent] =>
 
       actor.ask(DataStoreActor.AllForKeyKind(KeyKind.courtesyToneKey, _)).map { entries =>
-        val rows: Seq[Row] = entries.flatMap { fe =>
-          val ct: CourtesyTone = fe.value
-          ct.rows()
-        }
-        Ok(views.html.courtesyTones(rows))
+        //        val rows: Seq[Row] = entries.map { fe =>
+        //          val ct: CourtesyTone = fe.value
+        //          ct.rows()
+        //        }
+        //        Ok(views.html.courtesyTones(rows))
+        Ok("todo")
       }
   }
 

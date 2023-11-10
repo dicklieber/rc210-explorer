@@ -22,11 +22,15 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
+import net.wa9nnn.rc210.data.datastore.DataStoreActor._
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.serial.comm.*
 import net.wa9nnn.rc210.serial.*
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.stream.Materializer
+import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
+import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
+import org.apache.pekko.util.Timeout
 import play.api.mvc.*
 
 import java.nio.file.Path
@@ -34,18 +38,22 @@ import java.time.{Duration, Instant}
 import javax.inject.{Inject, Singleton}
 import scala.collection.immutable.Seq
 import scala.concurrent.duration.DurationInt
-import scala.concurrent.{Await, ExecutionContext}
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.language.postfixOps
 import org.apache.pekko.util.Timeout
+import net.wa9nnn.rc210.util.Configs.path
+
+import javax.inject.Inject
+
+
 
 @Singleton()
-class CandidateController @Inject()(config: Config,
-                                    dataStoreActor: ActorRef[DataStoreActor.Message],
+class CandidateController @Inject()(dataStoreActor: ActorRef[DataStoreActor.Message],
                                     rc210: Rc210)
-                                   (implicit scheduler: Scheduler, ec: ExecutionContext, mat: Materializer)
+                                   (implicit config: Config, scheduler: Scheduler, ec: ExecutionContext, mat: Materializer)
   extends MessagesInjectedController with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
-  private val maybeSendLogFile = config.get[Option[Path]]("vizRc210.sendLog").value
+  private val sendLogFile: Path = path("vizRc210.sendLog")
   private val stopOnError: Boolean = config.getBoolean("vizRc210.stopSendOnError")
 
   private val init = Seq(
@@ -56,7 +64,7 @@ class CandidateController @Inject()(config: Config,
   )
 
   def index(): Action[AnyContent] = Action.async { implicit request =>
-    dataStoreActor.ask(Candidates).map { candidates =>
+    dataStoreActor.ask(Candidates.apply).map { candidates =>
       val rows: Seq[Row] =
         candidates.map { fieldEntry =>
           val candidate = fieldEntry.candidate.get
@@ -69,7 +77,7 @@ class CandidateController @Inject()(config: Config,
   }
 
   def dump(): Action[AnyContent] = Action.async {
-    dataStoreActor.ask(All).map { entries =>
+    dataStoreActor.ask(All.apply).map { entries =>
       Ok(views.html.dump(entries))
     }
   }
@@ -92,18 +100,21 @@ class CandidateController @Inject()(config: Config,
   def send(fieldKey: FieldKey, sendValue: Boolean = false): Action[AnyContent] = Action.async {
     implicit request =>
 
-      dataStoreActor.ask(ForFieldKey(fieldKey, _)).map {
-        maybeFieldEntry =>
-          val fieldEntry: FieldEntry = maybeFieldEntry.get
-          val commands: Seq[String] = if (sendValue)
-            fieldEntry.value.toCommands(fieldEntry)
-          else
-            fieldEntry.candidate.get.toCommands(fieldEntry) // throws if no candidate
+      val eventualMaybeEntry: Future[Option[FieldEntry]] = dataStoreActor.ask(repTo => ForFieldKey(fieldKey, repTo))
+      eventualMaybeEntry.map { (maybeFieldEntry: Option[FieldEntry]) =>
+        maybeFieldEntry match
+          case Some(fieldEntry) =>
+            val commands: Seq[String] = if (sendValue)
+              fieldEntry.value.toCommands(fieldEntry)
+            else
+              fieldEntry.candidate.get.toCommands(fieldEntry) // throws if no candidate
 
-          val operationsResult: BatchOperationsResult = rc210.sendBatch(fieldKey.toString, commands: _*)
-          val rows = operationsResult.toRows
-          val table = Table(Header("Result", "Field", "Command", "Response"), rows)
-          Ok(views.html.justdat(Seq(table)))
+            val operationsResult: BatchOperationsResult = rc210.sendBatch(fieldKey.toString, commands: _*)
+            val rows = operationsResult.toRows
+            val table = Table(Header("Result", "Field", "Command", "Response"), rows)
+            Ok(views.html.justdat(Seq(table)))
+          case None =>
+            NoContent
       }
   }
 
@@ -118,15 +129,15 @@ class CandidateController @Inject()(config: Config,
 
   var maybeLastSendAll: Option[LastSendAll] = None
 
-  import play.api.mvc._
+//  import play.api.mvc._
 
   def ws(expected: Int): WebSocket = {
     val start = Instant.now()
-    ProcessWithProgress(expected, 7, maybeSendLogFile) { (progressApi: ProgressApi) =>
+    ProcessWithProgress(expected, 7, Option(sendLogFile)) { (progressApi: ProgressApi) =>
       val streamBased: RcStreamBased = rc210.openStreamBased
       val operations = Seq.newBuilder[BatchOperationsResult]
       operations += streamBased.perform("Wakeup", init)
-      val fieldEntries: Seq[FieldEntry] = Await.result[Seq[FieldEntry]](dataStoreActor.ask(All), 5 seconds)
+      val fieldEntries: Seq[FieldEntry] = Await.result[Seq[FieldEntry]](dataStoreActor.ask(All.apply), 5 seconds)
 
       var errorEncountered = false
       for {

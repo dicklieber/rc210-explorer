@@ -1,14 +1,15 @@
 
-import com.typesafe.config.ConfigValueType._
+import com.google.inject.AbstractModule
+import com.typesafe.config.ConfigValueType.*
 import com.typesafe.config.{Config, ConfigValue}
 import com.typesafe.scalalogging.LazyLogging
-import net.codingwell.scalaguice.BindingExtensions._
+import net.codingwell.scalaguice.BindingExtensions.*
 import net.codingwell.scalaguice.ScalaModule
 import net.wa9nnn.rc210.StaticConfigs
 import play.api.Configuration
 
 import java.util.Map.Entry
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 
 
 /**
@@ -39,7 +40,7 @@ import scala.jdk.CollectionConverters._
  * can be declared to inject config with the active Config object.
  *
  */
-class ConfigModule(configuration: Configuration) extends ScalaModule with LazyLogging {
+class ConfigModule(configuration: Configuration) extends AbstractModule with ScalaModule with LazyLogging {
   override def configure(): Unit = {
     val config = configuration.underlying
 

@@ -100,7 +100,7 @@ object MeterAlarm extends ComplexExtractor[MeterKey] {
     }
     for {i <- 0 until nMeters}
       yield {
-        val key = KeyFactory.meterAlarmKey(mai.incrementAndGet())
+        val key: MeterAlarmKey = KeyFactory.key(KeyKind.meterAlarmKey, mai.incrementAndGet())
         val meterAlarm = MeterAlarm(key, meters(i), alarmType(i), setPoint(i).toInt, macroKeys(i))
         new FieldEntry(this, meterAlarm.fieldKey, meterAlarm)
       }

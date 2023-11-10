@@ -46,7 +46,7 @@ object MesssageExtractor extends ComplexExtractor[MessageKey] with LazyLogging {
     val mai = new AtomicInteger(1)
     for {
       chunk: Chunk <- memory.chunks(1576, 10, 40)
-      key: KeyFactory.MessageKey = KeyFactory.messageKey(mai.getAndIncrement())
+      key: MessageKey = KeyFactory.key[MessageKey](KeyKind.messageKey, mai.getAndIncrement())
     } yield {
       val message: Message = Message(key, chunk.ints
         .takeWhile(_ != 0)

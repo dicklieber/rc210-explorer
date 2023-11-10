@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.field.TimeoutTimerResetPoint.selectOptions
-import net.wa9nnn.rc210.key.KeyFactory.Key
+import net.wa9nnn.rc210.key.Key
 import net.wa9nnn.rc210.util.{FieldSelect, SelectOption}
 import play.api.libs.json.JsValue
 

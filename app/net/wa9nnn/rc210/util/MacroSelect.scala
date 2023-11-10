@@ -20,21 +20,21 @@ package net.wa9nnn.rc210.util
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.key.{MacroKey, MeterKey}
 
-object MacroSelect extends Selectable {
+object MacroSelect extends Selectable[SelectItem] {
   val choices: Seq[SelectItem] = Seq.empty // only options need  be used.
 
 
   override def options: Seq[(String, String)] = {
-    KeyFactory.key[MacroKey](KeyKind.macroKey).map { macroKey => macroKey.toString -> macroKey.keyWithName
+    KeyFactory.key[MacroKey](KeyKind.macroKey).map { macroKey => macroKey.toString -> macroKey.toString
     }
   }
 }
-object MeterSelect extends Selectable {
+object MeterSelect extends Selectable[SelectItem] {
   val choices: Seq[SelectItem] = Seq.empty // only options need  be used.
 
 
   override def options: Seq[(String, String)] = {
-    KeyFactory[MeterKey](KeyKind.meterKey).map { meterKey => meterKey.toString -> meterKey.keyWithName
+    KeyFactory.key[MeterKey](KeyKind.meterKey).map { meterKey => meterKey.toString -> meterKey.keyWithName
     }
   }
 }
