@@ -26,8 +26,7 @@ import play.api.data.format.Formatter
 
 import scala.reflect.ClassTag
 
-abstract class Selectable[T <: SelectItem : ClassTag] extends Formatter[T] {
-  val choices: Seq[SelectItem]
+abstract class Selectable(choices: SelectItem *) {
 
   def options: Seq[(String, String)] = choices.map(_.item)
 
@@ -35,30 +34,23 @@ abstract class Selectable[T <: SelectItem : ClassTag] extends Formatter[T] {
    *
    * @param number RC-210 number
    */
-  def lookup(number: Int): T = {
-    choices.find(_.isSelected(number)).getOrElse(choices.head).asInstanceOf[T]
+  def lookup(number: Int): SelectItem = {
+    choices.find(_.isSelected(number)).getOrElse(choices.head)
   }
 
   /**
    *
    * @param display user display. Typically from a <form>
    */
-  def lookup(display: String): T = {
-    val t: T = choices.find(_.isSelected(display)).getOrElse(choices.head).asInstanceOf[T]
-    t
+  def lookup(display: String): SelectItem = {
+    choices.find(_.isSelected(display)).getOrElse(choices.head)
   }
-
-
-  override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], T] =
-    parsing(formValue => lookup(formValue), "error.offset", Nil)(key, data)
-
-  override def unbind(key: String, value: T): Map[String, String] = Map(key -> value.toString)
 }
 
 /**
  *
  */
-trait SelectItem[T] extends Formatter[T]{
+trait SelectItem[T] extends Formatter[SelectItem] {
 
   val display: String
 
@@ -108,6 +100,7 @@ trait SelectItemNumber[T <: SelectItem[T]] extends SelectItem[T] {
    * @return
    */
   override def isSelected(number: Int): Boolean = number == value
+
   def toCell = Cell(display)
 }
 
