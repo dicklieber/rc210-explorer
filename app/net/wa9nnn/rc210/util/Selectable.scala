@@ -58,7 +58,7 @@ abstract class Selectable[T <: SelectItem : ClassTag] extends Formatter[T] {
 /**
  *
  */
-trait SelectItem {
+trait SelectItem[T] extends Formatter[T]{
 
   val display: String
 
@@ -86,7 +86,7 @@ trait SelectItem {
 /**
  * A slelectable item that has a number that goes into an RC-210 command.
  */
-trait SelectItemNumber extends SelectItem {
+trait SelectItemNumber[T <: SelectItem[T]] extends SelectItem[T] {
   /**
    * as passed to/from RC-210
    */

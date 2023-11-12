@@ -24,9 +24,9 @@ import play.api.data.format.Formatter
 import play.api.libs.json.{Format, Json}
 
 
-case class Radio(value: Int, display: String) extends SelectItemNumber
+case class Radio(value: Int, display: String) extends SelectItemNumber[Radio]
 
-case class Yaesu(value: Int, display: String) extends SelectItemNumber
+case class Yaesu(value: Int, display: String) extends SelectItemNumber[Yaesu]
 
 
 object Radios extends Selectable[Radio] {
