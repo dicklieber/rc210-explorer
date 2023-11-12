@@ -115,3 +115,6 @@ trait SelectItemNumber extends SelectItem {
   override def isSelected(number: Int): Boolean = number == value
   def toCell = Cell(display)
 }
+
+
+

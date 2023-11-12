@@ -45,11 +45,11 @@ Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-h", "target/sca
 resolvers += ("Reposilite" at "http://194.113.64.105:8080/releases").withAllowInsecureProtocol(true)
 
 
-val logbackVersion = "1.4.7"
+val logbackVersion = "1.4.11"
 //val specs2Version = "4.20.0"
 //libraryDependencies += specs2 % Test
 
-val akkaVersion = "2.8.5"
+//val akkaVersion = "2.8.5"
 //libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
 
 libraryDependencies ++= Seq(
@@ -75,11 +75,6 @@ libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % logbackVersion,
   "ch.qos.logback" % "logback-core" % logbackVersion,
   "commons-io" % "commons-io" % "2.11.0",
-  //  "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
-  //  "com.typesafe.akka" %% "akka-actor" % akkaVersion,
-  //  "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion % Test,
-  //  "com.typesafe.akka" %% "akka-actor-ivytestkit-typed" % akkaVersion % Test,
-  //  "com.typesafe.akka" %% "akka-stream-testkit" % akkaVersion % Test,
   "com.fazecast" % "jSerialComm" % "2.9.3",
   //  "io.suzaku" %% "boopickle" % "1.4.0",
   "org.fusesource.jansi" % "jansi" % "2.4.0",

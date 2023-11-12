@@ -22,7 +22,6 @@ import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.named.NamedKeySource
 import net.wa9nnn.rc210.key.KeyKind.*
 import play.twirl.api.Html
-
 sealed abstract class Key(val number: Int, val keyKind: KeyKind) extends Ordered[Key] with CellProvider with NamedKeySource {
 
   override def toString: String = s"$keyKind$number"

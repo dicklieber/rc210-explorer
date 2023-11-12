@@ -71,6 +71,19 @@ object Offset extends Selectable[Offset] {
     Offset(3, "Plus"),
   )
   implicit val fmtOffset: Format[Offset] = Json.format[Offset]
+
+  import play.api.data.format.Formats._
+  import play.api.data.format.Formatter
+
+  implicit object offsetFormatter extends Formatter[Offset] {
+    override val format: Option[(String, Seq[Any])] = Some(("format.offset", Nil))
+
+    override def bind(key: String, data: Map[String, String]) = parsing(Offset., "error.url", Nil)(key, data)
+
+    override def unbind(key: String, value: Offset) = Map(key -> value.toString)
+  }
+
+
 }
 
 case class Mode(value: Int, display: String) extends SelectItemNumber
