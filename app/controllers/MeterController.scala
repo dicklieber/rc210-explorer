@@ -23,7 +23,7 @@ import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, ForFieldKey}
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldInt}
-import net.wa9nnn.rc210.data.meter.{AlarmType, Meter, MeterAlarm, MeterFaceName, VoltToReading}
+import net.wa9nnn.rc210.data.meter.{ Meter, MeterAlarm, MeterFaceName, VoltToReading}
 import net.wa9nnn.rc210.key.{KeyKind, *}
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout

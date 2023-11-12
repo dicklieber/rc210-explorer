@@ -24,84 +24,58 @@ import play.api.data.format.Formatter
 import play.api.libs.json.{Format, Json}
 
 
-case class Radio(value: Int, display: String) extends SelectItemNumber[Radio]
+case class Radio(value: Int, display: String) extends SelectItemNumber
 
-case class Yaesu(value: Int, display: String) extends SelectItemNumber[Yaesu]
-
-
-object Radios extends Selectable[Radio] {
-  //  def apply(number: Int): Radio =
-  //    lookup(number)
-  //
-  //  def apply(s: String): Radio = {
-  //    choices.find(_.display == s).getOrElse(choices.head)
-  //  }
-
-  val choices: Seq[Radio] = Seq(
-    Radio(1, "Kenwood"),
-    Radio(2, "Icom"),
-    Radio(3, "Yaesu"),
-    Radio(4, "Kenwood V7"),
-    Radio(5, "Doug Hall RBI-1"),
-    // no 6
-    Radio(7, "Kenwood g707"),
-    Radio(8, "Kenwood 271A"),
-    Radio(9, "Kenwood V71a"),
-  )
-
-  implicit val fmtRadio: Format[Radio] = Json.format[Radio]
-}
+case class Yaesu(value: Int, display: String) extends SelectItemNumber
 
 
-object Yaesus extends Selectable[Yaesu] {
-  val choices: Seq[Yaesu] = Seq(
-    Yaesu(1, "FT-100D"),
-    Yaesu(2, "FT817, FT-857, FT-897"),
-    Yaesu(3, "FT847"),
-  )
-  implicit val fmtYaesu: Format[Yaesu] = Json.format[Yaesu]
-}
+object Radios extends Selectable[Radio](
+  Radio(1, "Kenwood"),
+  Radio(2, "Icom"),
+  Radio(3, "Yaesu"),
+  Radio(4, "Kenwood V7"),
+  Radio(5, "Doug Hall RBI-1"),
+  // no 6
+  Radio(7, "Kenwood g707"),
+  Radio(8, "Kenwood 271A"),
+  Radio(9, "Kenwood V71a"),
+)
+
+object Yaesus extends Selectable[Yaesu](
+  Yaesu(1, "FT-100D"),
+  Yaesu(2, "FT817, FT-857, FT-897"),
+  Yaesu(3, "FT847"),
+)
+
 
 case class Offset(value: Int, display: String) extends SelectItemNumber
 
-object Offsets extends Selectable[Offset] {
-  val choices: Seq[Offset] = Seq(
-    Offset(1, "Minus"),
-    Offset(2, "Simplex"),
-    Offset(3, "Plus"),
-  )
-  implicit val fmtOffset: Format[Offset] = Json.format[Offset]
-}
+object Offsets extends Selectable[Offset](
+  Offset(1, "Minus"),
+  Offset(2, "Simplex"),
+  Offset(3, "Plus"),
+)
 
 case class Mode(value: Int, display: String) extends SelectItemNumber
 
-object Modes extends Selectable[Mode] {
-  val choices: Seq[Mode] = Seq(
-    Mode(1, " LSB"),
-    Mode(2, " USB"),
-    Mode(3, " CW"),
-    Mode(4, " FM"),
-    Mode(5, " AM"),
-  )
-  implicit val fmtMode: Format[Mode] = Json.format[Mode]
-}
+object Modes extends Selectable[Mode](
+  Mode(1, " LSB"),
+  Mode(2, " USB"),
+  Mode(3, " CW"),
+  Mode(4, " FM"),
+  Mode(5, " AM"),
+)
 
 case class CtcssMode(value: Int, display: String) extends SelectItemNumber
 
-object CtcssModes extends Selectable[CtcssMode] {
-  val choices: Seq[CtcssMode] = Seq(
-    CtcssMode(0, "None"),
-    CtcssMode(1, "Encode Only"),
-    CtcssMode(2, "Encode/Decode"),
-  )
+object CtcssModes extends Selectable[CtcssMode](
+  CtcssMode(0, "None"),
+  CtcssMode(1, "Encode Only"),
+  CtcssMode(2, "Encode/Decode"),
+)
 
-  implicit val fmtCtcssMode: Format[CtcssMode] = Json.format[CtcssMode]
-}
 
 case class CtcssTone(value: Int, display: String) extends SelectItemNumber
 
-object CtcssTones extends Selectable[CtcssMode] {
-  val choices: Seq[CtcssTone] = Seq.empty
-  implicit val fmtCtcssTone: Format[CtcssTone] = Json.format[CtcssTone]
-}
+object CtcssTones extends Selectable[CtcssTone]() //todo add options 
 

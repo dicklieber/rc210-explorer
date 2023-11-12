@@ -26,13 +26,18 @@ import play.api.data.format.Formatter
 
 import scala.reflect.ClassTag
 
-abstract class Selectable(choices: SelectItem *) {
-
+/**
+ * A collection of [[SelectItem]]s that can be used in a <select> tag.
+ *
+ * @param choices possible choices.
+ * @tparam T
+ */
+abstract class Selectable[T <: SelectItem](choices: T*) {
   def options: Seq[(String, String)] = choices.map(_.item)
 
   /**
    *
-   * @param number RC-210 number
+   * @param number RC-210 number for this item.
    */
   def lookup(number: Int): SelectItem = {
     choices.find(_.isSelected(number)).getOrElse(choices.head)
@@ -50,16 +55,14 @@ abstract class Selectable(choices: SelectItem *) {
 /**
  *
  */
-trait SelectItem[T] extends Formatter[SelectItem] {
-
+trait SelectItem {
   val display: String
-
 
   override def toString: String = display
 
   /**
    *
-   * @param formValue as seledcted by user in form.
+   * @param formValue as selected by user in form.
    * @return
    */
   def isSelected(formValue: String): Boolean
@@ -76,9 +79,9 @@ trait SelectItem[T] extends Formatter[SelectItem] {
 }
 
 /**
- * A slelectable item that has a number that goes into an RC-210 command.
+ * A selectable item that has a number that goes into an RC-210 command.
  */
-trait SelectItemNumber[T <: SelectItem[T]] extends SelectItem[T] {
+trait SelectItemNumber extends SelectItem {
   /**
    * as passed to/from RC-210
    */
@@ -101,7 +104,7 @@ trait SelectItemNumber[T <: SelectItem[T]] extends SelectItem[T] {
    */
   override def isSelected(number: Int): Boolean = number == value
 
-  def toCell = Cell(display)
+  def toCell: Cell = Cell(display)
 }
 
 

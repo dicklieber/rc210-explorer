@@ -21,6 +21,7 @@ import com.wa9nnn.util.tableui.{Cell, CellProvider}
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.named.NamedKeySource
 import net.wa9nnn.rc210.key.KeyKind.*
+import net.wa9nnn.rc210.util.SelectItem
 import play.twirl.api.Html
 sealed abstract class Key(val number: Int, val keyKind: KeyKind) extends Ordered[Key] with CellProvider with NamedKeySource {
 
@@ -80,13 +81,13 @@ abstract class SingleKey(keyKind: KeyKind) extends Key(0, keyKind):
   override def toString: String = keyKind.toString
 
 
-case class MacroKey(number: Int) extends Key(number, KeyKind.macroKey)
+case class MacroKey(number: Int) extends Key(number, KeyKind.macroKey) with SelectItem
 
 case class PortKey(number: Int) extends Key(number, KeyKind.portKey)
 
 case class LogicAlarmKey(number: Int) extends Key(number, KeyKind.logicAlarmKey)
 
-case class MeterKey(number: Int) extends Key(number, KeyKind.meterKey)
+case class MeterKey(number: Int) extends Key(number, KeyKind.meterKey) with SelectItem
 
 case class MeterAlarmKey(number: Int) extends Key(number, KeyKind.meterAlarmKey)
 
