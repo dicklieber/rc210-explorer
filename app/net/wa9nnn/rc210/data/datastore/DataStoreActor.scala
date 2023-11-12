@@ -28,7 +28,7 @@ import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.security.authentication.User
 import net.wa9nnn.rc210.ui.CandidateAndNames
 import org.apache.pekko.actor.typed.scaladsl.Behaviors
-import org.apache.pekko.actor.typed.{ActorRef, Behavior}
+import org.apache.pekko.actor.typed.{ActorRef, Behavior, SupervisorStrategy}
 import play.api.libs.concurrent.ActorModule
 import play.api.libs.json
 

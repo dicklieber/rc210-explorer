@@ -80,7 +80,7 @@ object MacroNode extends ComplexExtractor[MacroKey] {
     def macroBuilder(offset: Int, chunkLength: Int, nChunks: Int) = {
       memory.chunks(offset, chunkLength, nChunks)
         .map { chunk =>
-          val key: MacroKey = KeyFactory.key(KeyKind.macroKey, mai.getAndIncrement()).asInstanceOf[MacroKey]
+          val key: MacroKey = KeyFactory.apply(KeyKind.macroKey, mai.getAndIncrement()).asInstanceOf[MacroKey]
           val sChunk = chunk.ints
             .map(_.toString)
             .mkString(", ")
@@ -140,7 +140,7 @@ object MacroNode extends ComplexExtractor[MacroKey] {
         None // Done. function numbers don't allow 255,512,767.
       case x: Int if x < 255 =>
         val number = soFar + x
-        Some(KeyFactory.key[FunctionKey](functionKey, number))
+        Some(KeyFactory.apply[FunctionKey](functionKey, number))
       case 255 =>
         parseFunction(iterator, soFar + int) // add next int, which will always be 255.
     }

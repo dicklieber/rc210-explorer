@@ -21,12 +21,14 @@ import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.security.UserId.UserId
-import net.wa9nnn.rc210.security.authentication.UserManagerActor
+import net.wa9nnn.rc210.security.authentication.{User, UserManagerActor}
 import net.wa9nnn.rc210.security.authentication.UserManagerActor.{Get, Put, Remove}
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
+import net.wa9nnn.rc210.util.FormHelper
 import org.apache.pekko.util.Timeout
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional, text}
+import play.api.mvc.Security.AuthenticatedRequest
 import play.api.mvc.{Action, AnyContent, MessagesInjectedController, MessagesRequest}
 
 import javax.inject.{Inject, Singleton}
@@ -46,16 +48,6 @@ class UsersController @Inject()(val userActor: ActorRef[UserManagerActor.Message
   implicit scheduler: Scheduler
 )
   extends MessagesInjectedController with LazyLogging {
-  private val userDetailForm: Form[UserEditDTO] = Form {
-    mapping(
-      "callsign" -> text,
-      "name" -> optional(text),
-      "email" -> optional(text),
-      "id" -> text,
-      "password" -> optional(text),
-      "password" -> optional(text),
-    )(UserEditDTO.apply)(UserEditDTO.unapply)
-  }
 
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
   implicit val timeout: Timeout = 3 seconds
@@ -70,36 +62,32 @@ class UsersController @Inject()(val userActor: ActorRef[UserManagerActor.Message
   def editUser(id: UserId): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
     userActor.ask(Get(id, _))
       .map {
-        case Some(user) =>
-          val userDtoForm: Form[UserEditDTO] = userDetailForm.fill(user.userEditDTO)
-          Ok(views.html.userEditor(userDtoForm))
+        case Some(user: User) =>
+          Ok(views.html.userEditor(user.userEditDTO))
         case None =>
           Ok(s"UserId: $id not found!")
       }
   }
 
   def addUser(): Action[AnyContent] = Action { implicit request =>
-    val userDetailData = UserEditDTO()
-    val emptyForm = userDetailForm.fill(userDetailData)
-    Ok(views.html.userEditor(emptyForm))
+    val newUser: UserEditDTO = UserEditDTO()
+    Ok(views.html.userEditor(newUser))
   }
 
   def remove(userId: UserId): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
-    userActor.ask(Remove(userId, who, _)).map { _ =>
+    userActor.ask(Remove(userId, user, _)).map { _ =>
       Redirect(routes.UsersController.users())
     }
   }
 
   def saveUser(): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
-    userDetailForm.bindFromRequest().fold(
-      formWithErrors => {
-        Future(BadRequest(views.html.userEditor(formWithErrors)))
-      },
-      (userEditDTO: UserEditDTO) => {
-        userActor.ask(Put(userEditDTO, who, _)).map { _ =>
-          Redirect(routes.UsersController.users())
-        }
-      }
-    )
+
+    val helper = FormHelper()
+
+    val userEditDTO = UserEditDTO(helper)
+
+    userActor.ask(Put(userEditDTO, helper.user, _)).map { _ =>
+      Redirect(routes.UsersController.users())
+    }
   }
 }

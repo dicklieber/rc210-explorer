@@ -84,7 +84,7 @@ object Meter extends ComplexExtractor[MeterKey] {
     val meters: Seq[FieldEntry] = for {
       i <- 0 until nMeters
     } yield {
-      val meterKey: MeterKey = KeyFactory.key(KeyKind.meterKey, (mai.incrementAndGet()))
+      val meterKey: MeterKey = KeyFactory.apply(KeyKind.meterKey, (mai.incrementAndGet()))
       val low = VoltToReading(lowX(i), lowY(i))
       val high = VoltToReading(highX(i), highY(i))
       val meter: Meter = Meter(meterKey, faceNames(i), low, high)

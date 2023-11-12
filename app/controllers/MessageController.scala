@@ -29,7 +29,7 @@ import net.wa9nnn.rc210.data.message.Message
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.key.KeyFactory.*
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind, MessageKey}
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import play.api.mvc.*
 
 import javax.inject.{Inject, Singleton}
@@ -71,13 +71,13 @@ class MessageController @Inject()(actor: ActorRef[DataStoreActor.Message])
       .data
       .map(t => t._1 -> t._2.headOption.getOrElse(""))
 
-    val messageKey: MessageKey = KeyFactory.key(kv("key"))
+    val messageKey: MessageKey = KeyFactory.apply(kv("key"))
     val message = Message(messageKey, kv)
     val candidate = UpdateCandidate(message)
     val name: String = kv("name")
     val namedKey = NamedKey(messageKey, name)
 
-    actor.ask[String](DataStoreActor.UpdateData(Seq(candidate), Seq(namedKey), user=who(request), _)).map{_ =>
+    actor.ask[String](DataStoreActor.UpdateData(Seq(candidate), Seq(namedKey), user=user(request), _)).map{ _ =>
       Redirect(routes.MessageController.index())
     }
   }

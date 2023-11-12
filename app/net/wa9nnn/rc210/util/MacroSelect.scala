@@ -22,7 +22,7 @@ import net.wa9nnn.rc210.key.{MacroKey, MeterKey}
 
 object MacroSelect extends Selectable[MacroKey]() {
   override def options: Seq[(String, String)] = {
-    KeyFactory.key[MacroKey](KeyKind.macroKey).map { macroKey => macroKey.toString -> macroKey.toString
+    KeyFactory.apply[MacroKey](KeyKind.macroKey).map { macroKey => macroKey.toString -> macroKey.toString
     }
   }
 }
@@ -31,7 +31,7 @@ object MacroSelect extends Selectable[MacroKey]() {
 object MeterSelects extends Selectable[MeterKey]() {
 
   override def options: Seq[(String, String)] = {
-    KeyFactory.key[MeterKey](KeyKind.meterKey).map { meterKey => meterKey.toString -> meterKey.keyWithName
+    KeyFactory.apply[MeterKey](KeyKind.meterKey).map { meterKey => meterKey.toString -> meterKey.keyWithName
     }
   }
 }

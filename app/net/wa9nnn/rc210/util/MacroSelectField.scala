@@ -26,7 +26,7 @@ import play.api.libs.json._
 
 /**
  */
-case class MacroSelectField(value: MacroKey = KeyFactory.key(KeyKind.macroKey, 1)) extends FieldSelect[MacroKey] with TriggerNode {
+case class MacroSelectField(value: MacroKey = KeyFactory.apply(KeyKind.macroKey, 1)) extends FieldSelect[MacroKey] with TriggerNode {
 
   override val key: Key = value
 
@@ -34,7 +34,7 @@ case class MacroSelectField(value: MacroKey = KeyFactory.key(KeyKind.macroKey, 1
     Row(headerCell = value.toCell)
   }
 
-  override def selectOptions: Seq[SelectOption] = KeyFactory.key[MacroKey](KeyKind.macroKey).map { macroKey =>
+  override def selectOptions: Seq[SelectOption] = KeyFactory.apply[MacroKey](KeyKind.macroKey).map { macroKey =>
     SelectOption(macroKey.toString, macroKey.keyWithName)
   }
 
@@ -57,11 +57,11 @@ case class MacroSelectField(value: MacroKey = KeyFactory.key(KeyKind.macroKey, 1
    * @return a new [[MacroSelectField]].
    */
   override def update(paramValue: String): MacroSelectField = {
-    new MacroSelectField(KeyFactory.key(paramValue))
+    new MacroSelectField(KeyFactory.apply(paramValue))
   }
 
   def fromParam(param: String): MacroKey =
-    KeyFactory.key(KeyKind.macroKey, param.toInt)
+    KeyFactory.apply(KeyKind.macroKey, param.toInt)
 
   override def canRunMacro(macroKey: MacroKey): Boolean = value == macroKey
 }

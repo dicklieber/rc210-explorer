@@ -20,6 +20,7 @@ package controllers
 import net.wa9nnn.rc210.security.UserId
 import net.wa9nnn.rc210.security.UserId.UserId
 import net.wa9nnn.rc210.security.Who.Callsign
+import net.wa9nnn.rc210.util.FormHelper
 
 /**
  *
@@ -38,7 +39,18 @@ case class UserEditDTO(callsign: Callsign = "",
                       ) {
   def withPassword(password: String): UserEditDTO = copy(password = Option(password))
 
-  def withCallsign(newcallsign: String): UserEditDTO = copy(callsign = newcallsign)
+  def withCallsign(newCallsign: String): UserEditDTO = copy(callsign = newCallsign)
 
   def withName(newName: String): UserEditDTO = copy(name = Option(newName))
+}
+
+object UserEditDTO {
+  def apply(fh: FormHelper): UserEditDTO = new UserEditDTO(
+    fh("callSign"),
+    fh.opt("name"),
+    fh.opt("email"),
+    fh("id"),
+    fh.opt("password"),
+    fh.opt("password2")
+  )
 }

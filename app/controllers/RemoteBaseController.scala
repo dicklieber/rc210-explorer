@@ -16,6 +16,7 @@
  */
 
 package controllers
+
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.AllForKeyKind
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
@@ -24,7 +25,7 @@ import net.wa9nnn.rc210.data.remotebase.*
 import net.wa9nnn.rc210.data.remotebase.Mode.*
 import net.wa9nnn.rc210.data.remotebase.RBMemory.*
 import net.wa9nnn.rc210.key.KeyKind
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
@@ -43,49 +44,52 @@ class RemoteBaseController @Inject()(actor: ActorRef[DataStoreActor.Message])
   implicit val timeout: Timeout = 3 seconds
 
 
-  private val rbMemory: Mapping[RBMemory] =
-    mapping(
-      "frequency" -> text,
-      "offset" -> of[Offset],
-      "mode" -> of[Mode],
-      "ctcssMode" -> of[CtcssMode],
-      "ctssCode" -> number,
-    )(RBMemory.apply)(RBMemory.unapply)
+  //  private val rbMemory: Mapping[RBMemory] =
+  //    mapping(
+  //      "frequency" -> text,
+  //      "offset" -> of[Offset],
+  //      "mode" -> of[Mode],
+  //      "ctcssMode" -> of[CtcssMode],
+  //      "ctssCode" -> number,
+  //    )(RBMemory.apply)(RBMemory.unapply)
+  //
+  //  val remoteBaseForm: Form[RemoteBase] = Form[RemoteBase](
+  //    mapping(
+  //      "radio" -> of[Radio],
+  //      "yaesu" -> of[Yaesu],
+  //      "prefix" -> text,
+  //      "memories" -> seq(rbMemory),
+  //    )(RemoteBase.apply)(RemoteBase.unapply)
+  //  )
 
-  val remoteBaseForm: Form[RemoteBase] = Form[RemoteBase](
-    mapping(
-      "radio" -> of[Radio],
-      "yaesu" -> of[Yaesu],
-      "prefix" -> text,
-      "memories" -> seq(rbMemory),
-    )(RemoteBase.apply)(RemoteBase.unapply)
-  )
+  def index: Action[AnyContent] = Action { implicit request =>
+    throw new NotImplementedError() //todo
 
-  def index: Action[AnyContent] = Action.async { implicit request =>
-    actor.ask(AllForKeyKind(KeyKind.remoteBaseKey, _)).map { (fields: Seq[FieldEntry]) =>
-      val remoteBase: RemoteBase = fields.head.value.asInstanceOf[RemoteBase]
-      val filledInForm = remoteBaseForm.fill(remoteBase)
-      Ok(views.html.rermoteBase(filledInForm))
-    }
+//    actor.ask(AllForKeyKind(KeyKind.remoteBaseKey, _)).map { (fields: Seq[FieldEntry]) =>
+//      //      val remoteBase: RemoteBase = fields.head.value.asInstanceOf[RemoteBase]
+//      //      Ok(views.html.rermoteBase(remoteBase))
+//      Ok
+//    }
   }
 
   def save(): Action[AnyContent] = Action.async { implicit request =>
 
-    remoteBaseForm.bindFromRequest().fold(
-      formWithErrors => {
-        // binding failure, you retrieve the form containing errors:
-        Future(BadRequest(views.html.rermoteBase(formWithErrors)))
-      },
-      (remoteBase: RemoteBase) => {
-        /* binding success, you get the actual value. */
-        val updateCandidate = UpdateCandidate(remoteBase.fieldKey, Right(remoteBase))
-
-        actor.ask[String](DataStoreActor.UpdateData(Seq(updateCandidate), Seq.empty,
-          who(request), _)).map { _ =>
-          Redirect(routes.RemoteBaseController.index)
-        }
-      }
-    )
+    throw new NotImplementedError() //todo
+    //    remoteBaseForm.bindFromRequest().fold(
+    //      formWithErrors => {
+    //        // binding failure, you retrieve the form containing errors:
+    //        Future(BadRequest(views.html.rermoteBase(formWithErrors)))
+    //      },
+    //      (remoteBase: RemoteBase) => {
+    //        /* binding success, you get the actual value. */
+    //        val updateCandidate = UpdateCandidate(remoteBase.fieldKey, Right(remoteBase))
+    //
+    //        actor.ask[String](DataStoreActor.UpdateData(Seq(updateCandidate), Seq.empty,
+    //          who(request), _)).map { _ =>
+    //          Redirect(routes.RemoteBaseController.index)
+    //        }
+    //      }
+    //    )
   }
 
 }

@@ -29,6 +29,8 @@ import net.wa9nnn.rc210.security.authentication.RcSession.playSessionName
 import net.wa9nnn.rc210.security.authentication.SessionManagerActor.Lookup
 import net.wa9nnn.rc210.security.authentication.{RcSession, SessionManagerActor, User}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
+import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
+
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.stream.Materializer
 import org.apache.pekko.util.Timeout
@@ -88,7 +90,7 @@ object AuthFilter extends LazyLogging {
   //    requestHeader.attrs(sessionKey)
   //  }
 
-  def who(implicit request: Request[_]): User =
+  def user(implicit request: Request[_]): User =
     request.attrs(sessionKey).user
 
 

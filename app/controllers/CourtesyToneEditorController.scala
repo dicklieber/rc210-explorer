@@ -25,7 +25,7 @@ import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.key.{CourtesyToneKey, KeyKind}
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
 import play.api.mvc.*
@@ -86,7 +86,7 @@ class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Mess
           ctBuilder += UpdateCandidate(courtesyTone)
         }
 
-      actor.ask[String](DataStoreActor.UpdateData(ctBuilder.result(), namedKeyBuilder.result(), user = who(request), _)).map { _ =>
+      actor.ask[String](DataStoreActor.UpdateData(ctBuilder.result(), namedKeyBuilder.result(), user = user(request), _)).map { _ =>
         Redirect(routes.CourtesyToneEditorController.index())
       }
   }

@@ -16,6 +16,7 @@
  */
 
 package controllers
+
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.util.Timeout
@@ -29,7 +30,7 @@ import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.data.schedules.Schedule
 import net.wa9nnn.rc210.key.KeyKind
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import org.apache.pekko.actor.typed.ActorRef
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import play.api.mvc.*
@@ -44,28 +45,29 @@ class ScheduleController @Inject()(actor: ActorRef[DataStoreActor.Message])
                                   (implicit scheduler: Scheduler, ec: ExecutionContext) extends MessagesInjectedController with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 
-  def index(): Action[AnyContent] = Action.async {
+  def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
 
-      actor.ask(AllForKeyKind(KeyKind.scheduleKey, _)).map { fields =>
-        val rows: Seq[Row] = fields.map { fieldEntry =>
-          val value: Schedule = fieldEntry.value
-          value.toRow
-        }
-        val header = Header(s"Timers (${rows.length} values)", "Timer", "Seconds", "Macro To Run")
-        val table = Table(Schedule.header, rows)
-          .withCssClass("table table-borderedtable-sm w-auto")
-        Ok(views.html.schedules(table))
-      }
+      ImATeapot
+    //      actor.ask(AllForKeyKind(KeyKind.scheduleKey, _)).map { (fields: Seq[FieldEntry]) =>
+    //        val rows: Seq[Row] = fields.map { fieldEntry =>
+    //          val value: Schedule = fieldEntry.value
+    //          value.toRow
+    //        }
+    //        val header = Header(s"Timers (${rows.length} values)", "Timer", "Seconds", "Macro To Run")
+    //        val table = Table(Schedule.header, rows)
+    //          .withCssClass("table table-borderedtable-sm w-auto")
+    //        Ok(views.html.schedules(table))
+    //      }
   }
 
-  def save(): Action[AnyContent] = Action.async { implicit request =>
-
-    val valuesMap: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
+  def save(): Action[AnyContent] = Action { implicit request =>
+    ImATeapot
+/*    val valuesMap: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
     val namedKeys = Seq.newBuilder[NamedKey]
     val r: Seq[UpdateCandidate] = valuesMap.map { case (sKey, values: Seq[String]) =>
-      sKey -> values.headOption.getOrElse("No value")
-    }.filter(_._1 != "save")
+        sKey -> values.headOption.getOrElse("No value")
+      }.filter(_._1 != "save")
       .toSeq
       .map { case (name, value: String) =>
         val fk = FieldKey.fromParam(name)
@@ -91,9 +93,9 @@ class ScheduleController @Inject()(actor: ActorRef[DataStoreActor.Message])
       }.toSeq.sortBy(_.fieldKey.key)
 
     actor.ask[String](DataStoreActor.UpdateData(r, namedKeys.result(),
-      who(request), _)).map{_ =>
+      who(request), _)).map { _ =>
       Redirect(routes.ScheduleController.index())
     }
-
+*/
   }
 }

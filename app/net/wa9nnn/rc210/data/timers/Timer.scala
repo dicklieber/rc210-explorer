@@ -40,12 +40,14 @@ case class Timer(key: TimerKey, seconds: Int, macroKey: MacroKey) extends Comple
       s"1*2092$timeNumber$macroNumber"
     )
   }
-    override def toJsonValue: JsValue = Json.toJson(this)
-  }
 
-  object Timer {
+  override def toJsonValue: JsValue = Json.toJson(this)
+}
 
-    import net.wa9nnn.rc210.key.KeyFormats._
+object Timer {
+  def unapply(u: Timer): Option[(String, Timer)] = Some(unapply(u))
 
-    implicit val fmtTimer: OFormat[Timer] = Json.format[Timer]
-  }
+  import net.wa9nnn.rc210.key.KeyFormats._
+
+  implicit val fmtTimer: OFormat[Timer] = Json.format[Timer]
+}

@@ -69,7 +69,7 @@ case class SimpleField(offset: Int,
   }
 
   def fieldKey(number: Int): FieldKey = {
-    new FieldKey(fieldName, KeyFactory.key(kind, number).get)
+    new FieldKey(fieldName, KeyFactory.apply(kind, number).get)
   }
 
   def units(u: String): SimpleField = copy(units = u)

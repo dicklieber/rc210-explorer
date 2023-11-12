@@ -22,7 +22,7 @@ import com.wa9nnn.util.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.key.KeyKind
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import net.wa9nnn.rc210.ui.{CandidateAndNames, FormParser}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
@@ -78,7 +78,7 @@ class CommonEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
     implicit request: Request[AnyContent] =>
       val updateData: CandidateAndNames = FormParser(AnyContentAsFormUrlEncoded(request.body.asFormUrlEncoded.get))
 
-      actor.ask[String](DataStoreActor.UpdateData(updateData, who, _)).map { _ =>
+      actor.ask[String](DataStoreActor.UpdateData(updateData, user, _)).map { _ =>
         Redirect(routes.CommonEditorController.index())
       }
   }

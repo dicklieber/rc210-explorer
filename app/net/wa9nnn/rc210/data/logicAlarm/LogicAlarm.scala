@@ -49,8 +49,8 @@ object LogicAlarm extends ComplexExtractor[LogicAlarmKey] {
    */
   override def extract(memory: Memory): Seq[FieldEntry] = {
     val enables = memory.sub8(169, 5).map(_ != 0)
-    val lowMacros: Seq[MacroKey] = memory.sub8(174, 5).map(n => KeyFactory.key[MacroKey](KeyKind.macroKey, n + 1))
-    val highMacros: Seq[MacroKey] = memory.sub8(179, 5).map(n => KeyFactory.key[MacroKey](macroKey, n + 1))
+    val lowMacros: Seq[MacroKey] = memory.sub8(174, 5).map(n => KeyFactory.apply[MacroKey](KeyKind.macroKey, n + 1))
+    val highMacros: Seq[MacroKey] = memory.sub8(179, 5).map(n => KeyFactory.apply[MacroKey](macroKey, n + 1))
     //    SimpleField(169, "Enable", logicAlarmKey, "1n91b", FieldBoolean)
     //    SimpleField(174, "Macro Low", logicAlarmKey, "1*2101nv", MacroSelectField)
     //    SimpleField(179, "Macro High", logicAlarmKey, "1*2102nv", MacroSelectField)
@@ -58,7 +58,7 @@ object LogicAlarm extends ComplexExtractor[LogicAlarmKey] {
     for {
       i <- 0 until KeyKind.logicAlarmKey.maxN
     } yield {
-      val logicAlarmKey = KeyFactory.key(KeyKind.logicAlarmKey, i + 1)
+      val logicAlarmKey = KeyFactory.apply(KeyKind.logicAlarmKey, i + 1)
       val fieldValue: LogicAlarm = new LogicAlarm(logicAlarmKey, enables(i), lowMacros(i), highMacros(i))
       FieldEntry(this, fieldValue)
     }

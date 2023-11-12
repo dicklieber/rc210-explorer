@@ -41,7 +41,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
 import net.wa9nnn.rc210.data.field.Formatters.*
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 
 @Singleton
 class LogicAlarmEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
@@ -94,7 +94,7 @@ class LogicAlarmEditorController @Inject()(actor: ActorRef[DataStoreActor.Messag
         )
 
       //      val candidateAndNames: CandidateAndNames = FormParser(encoded)
-      actor.ask[String](UpdateData(candidateAndNames, user = who, _)).map { _ =>
+      actor.ask[String](UpdateData(candidateAndNames, user = user, _)).map { _ =>
         Redirect(routes.LogicAlarmEditorController.index())
       }
   }

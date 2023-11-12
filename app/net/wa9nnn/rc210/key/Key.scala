@@ -22,6 +22,8 @@ import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.named.NamedKeySource
 import net.wa9nnn.rc210.key.KeyKind.*
 import net.wa9nnn.rc210.util.SelectItem
+import play.api.data.FormError
+import play.api.data.format.Formatter
 import play.twirl.api.Html
 sealed abstract class Key(val number: Int, val keyKind: KeyKind) extends Ordered[Key] with CellProvider with NamedKeySource {
 
@@ -74,6 +76,8 @@ sealed abstract class Key(val number: Int, val keyKind: KeyKind) extends Ordered
 
   def nameForKey(key: Key): String =
     _namedSource.map(_.nameForKey(key)).getOrElse("")
+
+
 
 }
 

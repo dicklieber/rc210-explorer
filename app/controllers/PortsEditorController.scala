@@ -25,7 +25,7 @@ import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, UpdateData}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind, PortKey}
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import net.wa9nnn.rc210.ui.{CandidateAndNames, FormParser}
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
@@ -49,11 +49,11 @@ class PortsEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
       val cells: Seq[Cell] = for
         number <- 1 to KeyKind.portKey.maxN
       yield
-        key2EntryMap(FieldKey(fieldName, KeyFactory.key(KeyKind.portKey, number))).toCell
+        key2EntryMap(FieldKey(fieldName, KeyFactory.apply(KeyKind.portKey, number))).toCell
       Row(fieldName, cells: _*)
     }
 
-    val colHeaders: Seq[Cell] = KeyFactory.key[PortKey](KeyKind.portKey).map(_.namedCell())
+    val colHeaders: Seq[Cell] = KeyFactory.apply[PortKey](KeyKind.portKey).map(_.namedCell())
     val namesRow = Row(colHeaders.prepended(Cell("Ports:").withCssClass("cornerCell")))
 
     val table = Table(Seq.empty, rows.prepended(namesRow))
@@ -72,7 +72,7 @@ class PortsEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
     implicit request: Request[AnyContent] =>
       val candidateAndNames: CandidateAndNames = FormParser(AnyContentAsFormUrlEncoded(request.body.asFormUrlEncoded.get))
 
-      actor.ask[String](ref => UpdateData(candidateAndNames, user = who(request), replyTo = ref)).map { _ =>
+      actor.ask[String](ref => UpdateData(candidateAndNames, user = user(request), replyTo = ref)).map { _ =>
         Redirect(routes.PortsEditorController.index())
       }
   }

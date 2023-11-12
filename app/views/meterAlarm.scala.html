@@ -3,7 +3,7 @@
 @import net.wa9nnn.rc210.ui.Tabs
 @import net.wa9nnn.rc210.util.{MacroSelect, MeterSelect}
 @import views.html.helper._
-@(meterAlarmKey: MeterAlarmKey, alarmForm: Form[MeterAlarm])(implicit messages: MessagesProvider)
+@(meterAlarmKey: MeterAlarmKey, meterAlarm: MeterAlarm)(implicit messages: MessagesProvider)
     @implicitField = @{
         FieldConstructor(views.html.rc2input.f)
     }

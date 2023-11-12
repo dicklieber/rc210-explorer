@@ -83,7 +83,7 @@ class ClockController @Inject()(actor: ActorRef[DataStoreActor.Message])
         /* binding success, you get the actual value. */
         val updateCandidate: UpdateCandidate = UpdateCandidate(Clock.fieldKey(clock.key), Right(clock))
 
-        actor.ask[String](UpdateData(Seq(updateCandidate), Seq.empty, who, _)).map { _ =>
+        actor.ask[String](UpdateData(Seq(updateCandidate), Seq.empty, user, _)).map { _ =>
           Redirect(routes.ClockController.index)
         }
       }

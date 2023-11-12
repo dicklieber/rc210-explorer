@@ -54,7 +54,7 @@ object TimerExtractor extends ComplexExtractor[TimerKey] with LazyLogging {
     } yield {
       val key: TimerKey = KeyFactory(KeyKind.timerKey, index + 1)
       val fieldKey = FieldKey("Timer", key)
-      FieldEntry(this, fieldKey, Timer(key, seconds.next(), KeyFactory.key(macroKey, macroInts.next() + 1)))
+      FieldEntry(this, fieldKey, Timer(key, seconds.next(), KeyFactory.apply(macroKey, macroInts.next() + 1)))
     })
     r
   }

@@ -26,7 +26,7 @@ import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.data.{Dtmf, FieldKey}
 import net.wa9nnn.rc210.key.{FunctionKey, KeyFactory, KeyKind, MacroKey}
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
 import play.api.mvc.*
@@ -69,7 +69,7 @@ class MacroEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
     val formData: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
 
     val sKey: String = formData("key").head
-    val key: MacroKey = KeyFactory.key(sKey)
+    val key: MacroKey = KeyFactory.apply(sKey)
     val dtmf: Option[Dtmf] = formData("dtmf").map(Dtmf(_)).headOption
 
     val functions: Seq[FunctionKey] = formData("functionIds")
@@ -77,7 +77,7 @@ class MacroEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
       .split(",").toIndexedSeq
       .flatMap { sfunction =>
         Try {
-          val f: FunctionKey = KeyFactory.key(sfunction)
+          val f: FunctionKey = KeyFactory.apply(sfunction)
           f
         }.toOption
       }
@@ -87,7 +87,7 @@ class MacroEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
 
     val keyNames = Seq(NamedKey(key, formData("name").head))
     actor.ask[String](DataStoreActor.UpdateData(Seq(UpdateCandidate(macroNode)), keyNames,
-      who(request), _)).map { _ =>
+      user(request), _)).map { _ =>
       Redirect(routes.MacroEditorController.index())
     }
   }

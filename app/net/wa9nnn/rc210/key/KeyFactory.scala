@@ -25,29 +25,29 @@ import play.twirl.api.Html
 
 object KeyFactory:
 
-  def key[K <: Key](keyKind: KeyKind, number: Int): K =
+  def apply[K <: Key](keyKind: KeyKind, number: Int): K =
     assert(number != 0, "Keys cannot have number 0!")
 
     val r: Option[Key] = _keys.find(k => k.number == number && k.keyKind == keyKind)
     r.get.asInstanceOf[K]
 
-  def key[K <: Key](keyKind: KeyKind): Seq[K] =
+  def apply[K <: Key](keyKind: KeyKind): Seq[K] =
     _keys
       .filter(_.keyKind.eq(keyKind))
       .map(_.asInstanceOf[K])
 
   private val r = """(\D+)(\d*)""".r
 
-  def key[K <: Key](sKey: String): K =
+  def apply[K <: Key](sKey: String): K =
     sKey match
       case r(sKeyKind, number) =>
         val kk = KeyKind.valueOf(sKeyKind)
-        key(kk, number.toInt)
+        apply(kk, number.toInt)
       case r(sKeyKind, _) =>
         val kk = KeyKind.valueOf(sKeyKind)
-        key[K](kk, 0)
+        apply[K](kk, 0)
 
-  lazy val defaultMacroKey: MacroKey = key[MacroKey](KeyKind.macroKey, 1)
+  lazy val defaultMacroKey: MacroKey = apply[MacroKey](KeyKind.macroKey, 1)
 private val _keys: Seq[Key] = {
   {
     for {

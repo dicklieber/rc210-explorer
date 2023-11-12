@@ -23,7 +23,7 @@ object DtmfMacroExtractor {
 
       (for {
         chunk <- chunks
-        macroKey: MacroKey = KeyFactory.key(KeyKind.macroKey, mai.getAndIncrement())
+        macroKey: MacroKey = KeyFactory.apply(KeyKind.macroKey, mai.getAndIncrement())
         dtmf <- Dtmf(chunk.ints)
       } yield {
         macroKey -> dtmf
