@@ -29,7 +29,7 @@ case class Radio(value: Int, display: String) extends SelectItemNumber
 case class Yaesu(value: Int, display: String) extends SelectItemNumber
 
 
-object Radio extends Selectable[Radio] {
+object Radios extends Selectable[Radio] {
   //  def apply(number: Int): Radio =
   //    lookup(number)
   //
@@ -53,7 +53,7 @@ object Radio extends Selectable[Radio] {
 }
 
 
-object Yaesu extends Selectable[Yaesu] {
+object Yaesus extends Selectable[Yaesu] {
   val choices: Seq[Yaesu] = Seq(
     Yaesu(1, "FT-100D"),
     Yaesu(2, "FT817, FT-857, FT-897"),
@@ -64,31 +64,18 @@ object Yaesu extends Selectable[Yaesu] {
 
 case class Offset(value: Int, display: String) extends SelectItemNumber
 
-object Offset extends Selectable[Offset] {
+object Offsets extends Selectable[Offset] {
   val choices: Seq[Offset] = Seq(
     Offset(1, "Minus"),
     Offset(2, "Simplex"),
     Offset(3, "Plus"),
   )
   implicit val fmtOffset: Format[Offset] = Json.format[Offset]
-
-  import play.api.data.format.Formats._
-  import play.api.data.format.Formatter
-
-  implicit object offsetFormatter extends Formatter[Offset] {
-    override val format: Option[(String, Seq[Any])] = Some(("format.offset", Nil))
-
-    override def bind(key: String, data: Map[String, String]) = parsing(Offset., "error.url", Nil)(key, data)
-
-    override def unbind(key: String, value: Offset) = Map(key -> value.toString)
-  }
-
-
 }
 
 case class Mode(value: Int, display: String) extends SelectItemNumber
 
-object Mode extends Selectable[Mode] {
+object Modes extends Selectable[Mode] {
   val choices: Seq[Mode] = Seq(
     Mode(1, " LSB"),
     Mode(2, " USB"),
@@ -101,7 +88,7 @@ object Mode extends Selectable[Mode] {
 
 case class CtcssMode(value: Int, display: String) extends SelectItemNumber
 
-object CtcssMode extends Selectable[CtcssMode] {
+object CtcssModes extends Selectable[CtcssMode] {
   val choices: Seq[CtcssMode] = Seq(
     CtcssMode(0, "None"),
     CtcssMode(1, "Encode Only"),
@@ -113,7 +100,7 @@ object CtcssMode extends Selectable[CtcssMode] {
 
 case class CtcssTone(value: Int, display: String) extends SelectItemNumber
 
-object CtcssTone extends Selectable[CtcssMode] {
+object CtcssTones extends Selectable[CtcssMode] {
   val choices: Seq[CtcssTone] = Seq.empty
   implicit val fmtCtcssTone: Format[CtcssTone] = Json.format[CtcssTone]
 }

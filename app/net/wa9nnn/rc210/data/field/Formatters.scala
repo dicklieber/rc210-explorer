@@ -157,12 +157,3 @@ object Formatters {
 }
 
 
- class SelectItemNumberFormatter[T <: SelectItemNumber] extends Formatter[T] {
-  override val format: Option[(String, Nil.type)] = Some(("format.Offset", Nil))
-
-  override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], T] =
-    parsing(formValue => , "error.offset", Nil)(key, data)
-
-  override def unbind(key: String, value: Mode): Map[String, String] = Map(key -> value.toString)
-}
-

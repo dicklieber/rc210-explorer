@@ -29,7 +29,7 @@ object MacroSelect extends Selectable[SelectItem] {
     }
   }
 }
-object MeterSelect extends Selectable[SelectItem] {
+object sMeterSelects extends Selectable[SelectItem] {
   val choices: Seq[SelectItem] = Seq.empty // only options need  be used.
 
 

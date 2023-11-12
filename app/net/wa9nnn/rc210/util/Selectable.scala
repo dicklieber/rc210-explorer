@@ -18,13 +18,15 @@
 package net.wa9nnn.rc210.util
 
 import com.wa9nnn.util.tableui.Cell
+import net.wa9nnn.rc210.data.remotebase.Mode
+import net.wa9nnn.rc210.key.KeyFactory
 import play.api.data.FormError
 import play.api.data.format.Formats.parsing
 import play.api.data.format.Formatter
 
 import scala.reflect.ClassTag
 
-abstract class Selectable[T <: SelectItem : ClassTag] {
+abstract class Selectable[T <: SelectItem : ClassTag] extends Formatter[T] {
   val choices: Seq[SelectItem]
 
   def options: Seq[(String, String)] = choices.map(_.item)
@@ -46,18 +48,11 @@ abstract class Selectable[T <: SelectItem : ClassTag] {
     t
   }
 
-  implicit object formatter extends Formatter[T] {
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], T] = {
-      val r: Either[scala.Seq[FormError], T] = parsing(s => lookup(s), s"Bad value for : $key", Nil)(key, data)
-      r
-    }
-    //      parsing(Offset(_), "error.url", Nil)(ØΩkey, data)
 
+  override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], T] =
+    parsing(formValue => lookup(formValue), "error.offset", Nil)(key, data)
 
-    override def unbind(key: String, t: T): Map[String, String] = {
-      Map(key -> t.display)
-    }
-  }
+  override def unbind(key: String, value: T): Map[String, String] = Map(key -> value.toString)
 }
 
 /**

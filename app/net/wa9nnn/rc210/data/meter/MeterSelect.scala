@@ -22,7 +22,7 @@ import play.api.libs.json.{Format, Json}
 
 case class MeterFaceName(value: Int, display: String) extends SelectItemNumber
 
-object MeterFaceName extends Selectable[MeterFaceName] {
+object MeterFaceNames extends Selectable[MeterFaceName] {
   val choices: Seq[MeterFaceName] = Seq(
     MeterFaceName(0, "Meter OFF"),
     MeterFaceName(1, "Volts"),
@@ -36,13 +36,15 @@ object MeterFaceName extends Selectable[MeterFaceName] {
   implicit val fmtOffset: Format[MeterFaceName] = Json.format[MeterFaceName]
 }
 
-case class AlarmType(value: Int, display: String) extends SelectItemNumber
-
-object AlarmType extends Selectable[AlarmType] {
-  val choices: Seq[AlarmType] = Seq(
-    AlarmType(1, "Low Alarm"),
-    AlarmType(2, "High Alarm"),
-  )
-
-  implicit val fmtOffset: Format[AlarmType] = Json.format[AlarmType]
-}
+//case class AlarmType(value: Int, display: String) extends SelectItemNumber
+//
+//object AlarmTypes extends Selectable[AlarmType] {
+//  val choices: Seq[AlarmType] = Seq(
+//    AlarmType(1, "Low Alarm"),
+//    AlarmType(2, "High Alarm"),
+//  )
+//
+//  implicit val fmtOffset: Format[AlarmType] = Json.format[AlarmType]
+//}
+enum AlarmType
+  case
