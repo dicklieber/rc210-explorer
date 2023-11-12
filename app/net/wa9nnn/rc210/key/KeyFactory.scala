@@ -28,19 +28,19 @@ object KeyFactory:
   def key[K <: Key](keyKind: KeyKind, number: Int): K =
     assert(number != 0, "Keys cannot have number 0!")
 
-    val t: Seq[Key] = key(keyKind)
+    val t: Seq[Key] = _keys(keyKind)
     val r: Option[Key] = t.find(_.number == number)
     r.get.asInstanceOf[K]
 
 
   def key[K <: Key](keyKind: KeyKind): Seq[K] =
-    keys
+    _keys
       .filter(_.keyKind.eq(keyKind))
       .map(_.asInstanceOf[K])
 
   private val r = """(\D+)(\d*)""".r
 
-  def key[K <: Key](sKey: String): Option[K] =
+  def key[K <: Key](sKey: String): K =
     sKey match
       case r(sKeyKind, number) =>
         val kk = KeyKind.valueOf(sKeyKind)
@@ -49,8 +49,8 @@ object KeyFactory:
         val kk = KeyKind.valueOf(sKeyKind)
         key[K](kk, 0)
 
-
-private val keys: Seq[Key] = {
+lazy val defaultMacroKey: MacroKey = apply(KeyKind.macroKey, 1)
+private val _keys: Seq[Key] = {
   {
     for {
       keyKind <- KeyKind.values.toIndexedSeq

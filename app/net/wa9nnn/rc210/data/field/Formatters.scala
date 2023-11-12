@@ -21,7 +21,8 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.Dtmf
 import net.wa9nnn.rc210.data.clock.Occurrence
 import net.wa9nnn.rc210.data.named.NamedKey
-import net.wa9nnn.rc210.key._
+import net.wa9nnn.rc210.key.*
+import org.graalvm.compiler.debug.TimerKey
 import play.api.data.FormError
 import play.api.libs.json.{Format, Json, OFormat}
 /**
@@ -39,7 +40,7 @@ object Formatters {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], MacroKey] = {
       parsing(s => {
         try {
-          KeyFactory.key[MacroKey](s)
+          KeyFactory.keyOpt[MacroKey](s)
         } catch {
           case e:Exception =>
             logger.error(s"Parsing $s to MacroKey!")
@@ -70,14 +71,14 @@ object Formatters {
   implicit object MeterFormatter extends Formatter[MeterKey] {
     override val format: Option[(String, Nil.type)] = Some(("format.dtmf", Nil))
 
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], MeterKey] = parsing(KeyFactory.key(_).asInstanceOf[MeterKey], "error.url", Nil)(key, data)
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], MeterKey] = parsing(KeyFactory.keyOpt(_).asInstanceOf[MeterKey], "error.url", Nil)(key, data)
 
     override def unbind(key: String, value: MeterKey): Map[String, String] = Map(key -> value.toString)
   }
   implicit object MeterAlarmFormatter extends Formatter[MeterAlarmKey] {
     override val format: Option[(String, Nil.type)] = Some(("format.dtmf", Nil))
 
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], MeterAlarmKey] = parsing(KeyFactory.key[MeterAlarmKey], "error.url", Nil)(key, data)
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], MeterAlarmKey] = parsing(KeyFactory.keyOpt[MeterAlarmKey], "error.url", Nil)(key, data)
 
     override def unbind(key: String, value: MeterAlarmKey): Map[String, String] = Map(key -> value.toString)
   }
@@ -115,17 +116,17 @@ object Formatters {
   }
 
   implicit val fmtMacroKey: OFormat[MacroKey] = Json.format[MacroKey]
-  implicit val fmtRemoteBaseKey: Format[RemoteBaseKey] = Json.format[RemoteBaseKey]
+  implicit val fmtRemoteBaseKey: OFormat[RemoteBaseKey.type] = Json.format[RemoteBaseKey.type ]
   implicit val fmtLogicAlarmKey: OFormat[LogicAlarmKey] = Json.format[LogicAlarmKey]
   implicit val fmtMeterKey: OFormat[MeterKey] = Json.format[MeterKey]
   implicit val fmtMeterAlarmKey: OFormat[MeterAlarmKey] = Json.format[MeterAlarmKey]
   implicit val fmtScheduleKey: OFormat[ScheduleKey] = Json.format[ScheduleKey]
-  implicit val fmtCommonKey: OFormat[CommonKey] = Json.format[CommonKey]
+  implicit val fmtCommonKey: OFormat[CommonKey.type] = Json.format[CommonKey.type ]
   implicit val fmtFunctionKey: OFormat[FunctionKey] = Json.format[FunctionKey]
   implicit val fmtMessageMacroKey: OFormat[MessageKey] = Json.format[MessageKey]
   implicit val fmtCourtesyToneKey: OFormat[CourtesyToneKey] = Json.format[CourtesyToneKey]
   implicit val fmtPortKey: OFormat[PortKey] = Json.format[PortKey]
-  implicit val fmtClockKey: OFormat[ClockKey] = Json.format[ClockKey]
+  implicit val fmtClockKey: OFormat[ClockKey.type ] = Json.format[ClockKey.type ]
   implicit val fmtDtmfMacroKey: OFormat[DtmfMacroKey] = Json.format[DtmfMacroKey]
   implicit val fmKey: OFormat[Key] = Json.format[Key]
   implicit val fmtNamedKey: OFormat[NamedKey] = Json.format[NamedKey]

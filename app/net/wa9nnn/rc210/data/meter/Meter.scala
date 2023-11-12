@@ -20,7 +20,7 @@ package net.wa9nnn.rc210.data.meter
 import com.wa9nnn.util.tableui.{Cell, Row}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.key.KeyFormats.*
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind, MeterKey}
+import net.wa9nnn.rc210.key.{KeyFactory, KeyKind, MacroKey, MeterAlarmKey, MeterKey}
 import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.{Format, JsValue, Json}
 
@@ -62,6 +62,7 @@ case class Meter(key: MeterKey, meterKind: MeterFaceName, low: VoltToReading, hi
 }
 
 object Meter extends ComplexExtractor[MeterKey] {
+  def unapply(u: Meter): Option[(MeterKey, MeterFaceName, VoltToReading, VoltToReading)] = Some(unapply(u))
 
   /**
    *
@@ -126,3 +127,8 @@ case class VoltToReading(hundredthVolt: Int, reading: Int) {
     Cell(reading)
   )
 }
+
+object VoltToReading:
+  def unapply(voltToReading: VoltToReading): Option[(Int, Int)] = Option(unapply(voltToReading))
+
+end VoltToReading

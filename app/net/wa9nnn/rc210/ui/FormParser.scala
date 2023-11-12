@@ -36,7 +36,7 @@ object FormParser {
   def apply[K <: Key, T <: ComplexFieldValue[K]](content: AnyContentAsFormUrlEncoded, f: Map[String, String] => ComplexFieldValue[K]): CandidateAndNames = {
     val data: Map[String, String] = content.data.map(t => t._1 -> t._2.head)
     val sKey: String = data.getOrElse("key", throw new IllegalArgumentException("No key in form data!"))
-    val key: K = KeyFactory.key(sKey)
+    val key: K = KeyFactory.keyOpt(sKey)
 
     val fieldValue: ComplexFieldValue[K] = f(data)
 

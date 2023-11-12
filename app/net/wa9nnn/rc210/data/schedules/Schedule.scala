@@ -110,7 +110,7 @@ case class Schedule(override val key: ScheduleKey,
   override def canRunMacro(candidate: KeyFactory.MacroKey): Boolean = macroKey == candidate
 }
 
-object Schedule extends LazyLogging with ComplexExtractor[ScheduleKey] {
+object Schedule extends LazyLogging with ComplexExtractor[ScheduleKey.type ] {
 
   def s02(n: Int): String = f"$n%02d"
 

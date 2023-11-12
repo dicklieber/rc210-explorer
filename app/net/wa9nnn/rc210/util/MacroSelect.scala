@@ -34,7 +34,7 @@ object MeterSelect extends Selectable[SelectItem] {
 
 
   override def options: Seq[(String, String)] = {
-    KeyFactory.key[MeterKey](KeyKind.meterKey).map { meterKey => meterKey.toString -> meterKey.keyWithName
+    KeyFactory.keys[MeterKey](KeyKind.meterKey).map { meterKey => meterKey.toString -> meterKey.keyWithName
     }
   }
 }

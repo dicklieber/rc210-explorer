@@ -18,9 +18,9 @@
 package net.wa9nnn.rc210.data.clock
 
 import com.wa9nnn.util.JsonFormatUtils.javaEnumFormat
-import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.key._
-import net.wa9nnn.rc210.key.KeyKind._
+import net.wa9nnn.rc210.data.field.*
+import net.wa9nnn.rc210.key.{Key, *}
+import net.wa9nnn.rc210.key.KeyKind.*
 import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.{Format, JsValue, Json}
 
@@ -31,8 +31,8 @@ case class Clock(
                   startDST: DSTPoint = DSTPoint(MonthOfYearDST.March, Occurrence.First),
                   endDST: DSTPoint = DSTPoint(MonthOfYearDST.November, Occurrence.Second),
                   say24Hours: Boolean = false,
-                ) extends ComplexFieldValue[ClockKey] {
-  override val key: ClockKey = KeyFactory.clockKey
+                ) extends ComplexFieldValue[ClockKey.type ] {
+  override val key: ClockKey.type =  ClockKey
   override val fieldName: String = "clock"
 
 
@@ -79,7 +79,7 @@ case class Clock(
 }
 
 
-object Clock extends ComplexExtractor[ClockKey] {
+object Clock extends ComplexExtractor[ClockKey.type ] {
   def unapply(c: Clock): Option[(Boolean, Int, DSTPoint, DSTPoint, Boolean)] = Some(c.enableDST, c.hourDST, c.startDST, c.endDST, c.say24Hours)
 
   /**
@@ -97,7 +97,7 @@ object Clock extends ComplexExtractor[ClockKey] {
 
     val clock = new Clock(enableDST, startHour, startDST, endDST, say24Hours)
     Seq(
-      FieldEntry(this, fieldKey(Key.clockKey), clock)
+      FieldEntry(this, fieldKey(ClockKey), clock)
     )
   }
 

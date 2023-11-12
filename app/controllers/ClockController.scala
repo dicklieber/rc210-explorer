@@ -24,7 +24,7 @@ import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.Formatters.{MonthOfYearDSTFormatter, OccurrenceFormatter}
 import net.wa9nnn.rc210.data.field.{FieldEntry, MonthOfYearDST}
 import net.wa9nnn.rc210.key._
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
+import net.wa9nnn.rc210.security.authorzation.AuthFilter._
 import net.wa9nnn.rc210.ui.EnumSelect
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
@@ -83,7 +83,7 @@ class ClockController @Inject()(actor: ActorRef[DataStoreActor.Message])
         /* binding success, you get the actual value. */
         val updateCandidate: UpdateCandidate = UpdateCandidate(Clock.fieldKey(clock.key), Right(clock))
 
-        actor.ask[String](UpdateData(Seq(updateCandidate), Seq.empty, who(request), _)).map { _ =>
+        actor.ask[String](UpdateData(Seq(updateCandidate), Seq.empty, who, _)).map { _ =>
           Redirect(routes.ClockController.index)
         }
       }

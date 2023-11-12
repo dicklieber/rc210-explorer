@@ -21,9 +21,10 @@ package net.wa9nnn.rc210.security.authorzation
 //import akka.actor.typed.{ActorRef, Scheduler}
 //import akka.stream.Materializer
 //import akka.util.Timeout
+
 import com.typesafe.scalalogging.LazyLogging
 import controllers.routes
-import net.wa9nnn.rc210.security.authentication
+import net.wa9nnn.rc210.security.{Who, authentication}
 import net.wa9nnn.rc210.security.authentication.RcSession.playSessionName
 import net.wa9nnn.rc210.security.authentication.SessionManagerActor.Lookup
 import net.wa9nnn.rc210.security.authentication.{RcSession, SessionManagerActor, User}
@@ -61,7 +62,7 @@ class AuthFilter @Inject()(implicit val mat: Materializer,
       val playSession = requestHeader.session
       (for {
         sessionId <- playSession.get(playSessionName)
-        session <-  Await.result[Option[authentication.RcSession]](actor.ask(ref => Lookup(sessionId, ref)), 3 seconds)
+        session <- Await.result[Option[authentication.RcSession]](actor.ask(ref => Lookup(sessionId, ref)), 3 seconds)
       } yield {
         logger.trace("Got valid session from cookie")
         val requestHeaderWithSession: RequestHeader = requestHeader.addAttr(sessionKey, session)
@@ -87,9 +88,9 @@ object AuthFilter extends LazyLogging {
   //    requestHeader.attrs(sessionKey)
   //  }
 
-  implicit def who(implicit request: Request[_]): User = {
+  def who(implicit request: Request[_]): User =
     request.attrs(sessionKey).user
-  }
+
 
   //  implicit def h2w(requestHeader: Request[AnyContent]): Who = {
   //    requestHeader.attrs(sessionKey).user.who

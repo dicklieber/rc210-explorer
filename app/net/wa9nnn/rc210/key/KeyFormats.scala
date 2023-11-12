@@ -146,9 +146,9 @@ object KeyFormats {
       JsString(key.toString)
     }
   }
-  implicit val fmtClockKey: Format[ClockKey] = new Format[ClockKey] {
+  implicit val fmtClockKey: Format[ClockKey.type] = new Format[ClockKey.type ] {
     override def reads(json: JsValue) = JsResult.fromTry(Try {
-      KeyFactory[ClockKey](json.as[String])
+      KeyFactory[ClockKey.type ](json.as[String])
     })
 
 

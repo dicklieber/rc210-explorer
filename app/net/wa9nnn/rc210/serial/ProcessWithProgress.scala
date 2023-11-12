@@ -19,7 +19,8 @@ package net.wa9nnn.rc210.serial
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.TimeConverters.durationToString
-import org.apache.pekko.stream.scaladsl.Source
+import org.apache.pekko.Done
+import org.apache.pekko.stream.scaladsl.{Sink, Source}
 import org.apache.pekko.stream.{Materializer, OverflowStrategy}
 import play.api.mvc.{RequestHeader, WebSocket}
 
@@ -109,7 +110,7 @@ object ProcessWithProgress extends LazyLogging {
       sendProgress()
     }
 
-    lazy val webSocket: WebSocket = WebSocket.accept[String, Progress] { request: RequestHeader =>
+    lazy val webSocket: WebSocket = WebSocket.accept[String, Progress] { (request: RequestHeader) =>
       Flow.fromSinkAndSource(sink, source)
     }
     /**

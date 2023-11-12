@@ -17,9 +17,9 @@
 
 package net.wa9nnn.rc210.util
 
-import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
-import akka.actor.typed.{Behavior, Signal, SupervisorStrategy}
 import com.typesafe.scalalogging.LazyLogging
+import org.apache.pekko.actor.typed.{Behavior, Signal, SupervisorStrategy}
+import org.apache.pekko.actor.typed.scaladsl.{ActorContext, Behaviors}
 import play.api.libs.concurrent.ActorModule
 
 /**
@@ -32,7 +32,7 @@ abstract class RcActor extends ActorModule with LazyLogging {
 
   def behavior[M](onMessage: M => Unit): Behavior[M] = {
     Behaviors.supervise[M] {
-      Behaviors.receiveMessage[M] { message: M =>
+      Behaviors.receiveMessage[M] { (message: M) =>
         onMessage(message)
         Behaviors.same
       }

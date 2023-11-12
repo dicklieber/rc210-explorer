@@ -74,6 +74,7 @@ case class MeterAlarm(val key: MeterAlarmKey, meter: MeterKey, alarmType: AlarmT
 object MeterAlarm extends ComplexExtractor[MeterKey] {
   private val nMeters = 8
 
+  def unapply(meterAlarm: MeterAlarm):Option[(MeterAlarmKey, MeterKey, AlarmType, Int, MacroKey)] = Option(unapply(meterAlarm))
   /**
    *
    * @param memory    source of RC-210 data.

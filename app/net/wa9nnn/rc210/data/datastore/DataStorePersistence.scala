@@ -34,7 +34,7 @@ import net.wa9nnn.rc210.util.Configs
  * Parses JSON saved from [[DataStore]]
  */
 
-class DataStorePersistence @Inject()( config: Config) extends LazyLogging {
+class DataStorePersistence @Inject()( implicit config: Config) extends LazyLogging {
   def save(dataTransferJson: DataTransferJson): Unit = {
     Files.writeString(path,
       toJson(dataTransferJson))
@@ -46,7 +46,7 @@ class DataStorePersistence @Inject()( config: Config) extends LazyLogging {
     )
   }
 
-  private val path: Path = Configs.path("vizRc210.dataStoreFile", config)
+  private val path: Path = Configs.path("vizRc210.dataStoreFile")
 
   def load(): Try[DataTransferJson] = {
     Using(Files.newInputStream(path)) { inputStream =>

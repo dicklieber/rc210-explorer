@@ -22,6 +22,7 @@ import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.serial.comm.RcEventBased
+import net.wa9nnn.rc210.util.Configs
 import org.apache.pekko.actor.typed.ActorRef
 
 import java.io.PrintWriter
@@ -35,10 +36,10 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class DataCollector @Inject()(config: Config, rc210: Rc210, dataStoreActor: ActorRef[DataStoreActor.Message]) extends LazyLogging {
 
-  val memoryFile: Path = config.get[Path]("vizRc210.memoryFile").value
+  val memoryFile: Path = Configs.path("vizRc210.memoryFile")
   val tempFile: Path = memoryFile.resolveSibling(memoryFile.toFile.toString + ".temp")
-  val expectedLines: Int = config.get[Int]("vizRc210.expectedRcLines").value
-  val progreMod: Int = config.get[Int]("vizRc210.showProgressEvery").value
+  val expectedLines: Int = config.getInt("vizRc210.expectedRcLines")
+  val progreMod: Int = config.getInt()("vizRc210.showProgressEvery")
 
   /**
    *

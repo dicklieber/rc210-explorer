@@ -78,7 +78,7 @@ class CommonEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
     implicit request: Request[AnyContent] =>
       val updateData: CandidateAndNames = FormParser(AnyContentAsFormUrlEncoded(request.body.asFormUrlEncoded.get))
 
-      actor.ask[String](DataStoreActor.UpdateData(updateData, who(request), _)).map { _ =>
+      actor.ask[String](DataStoreActor.UpdateData(updateData, who, _)).map { _ =>
         Redirect(routes.CommonEditorController.index())
       }
   }

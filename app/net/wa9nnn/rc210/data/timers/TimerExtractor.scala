@@ -20,6 +20,7 @@ package net.wa9nnn.rc210.data.timers
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldEntry, FieldOffset, FieldValue}
+import net.wa9nnn.rc210.key.KeyKind.macroKey
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind, TimerKey}
 import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.{Format, JsValue, Json}
@@ -53,7 +54,7 @@ object TimerExtractor extends ComplexExtractor[TimerKey] with LazyLogging {
     } yield {
       val key: TimerKey = KeyFactory(KeyKind.timerKey, index + 1)
       val fieldKey = FieldKey("Timer", key)
-      FieldEntry(this, fieldKey, Timer(key, seconds.next(), Key.macroKey(macroInts.next() + 1)))
+      FieldEntry(this, fieldKey, Timer(key, seconds.next(), KeyFactory.key(macroKey, macroInts.next() + 1)))
     })
     r
   }

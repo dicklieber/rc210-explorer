@@ -26,7 +26,7 @@ import net.wa9nnn.rc210.data.datastore.DataStoreActor.AllForKeyKind
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
 import net.wa9nnn.rc210.key.*
-import net.wa9nnn.rc210.ui.CandidateAndNames
+import net.wa9nnn.rc210.ui.{CandidateAndNames, FormParser}
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.util.Timeout
@@ -35,11 +35,13 @@ import play.api.data.Forms.*
 import play.api.data.Forms.text.key
 import play.api.mvc.*
 import play.api.i18n.*
-
+import net.wa9nnn.rc210.data.datastore.DataStoreActor.UpdateData
 import javax.inject.*
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
+import net.wa9nnn.rc210.data.field.Formatters.*
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
 
 @Singleton
 class LogicAlarmEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
@@ -92,7 +94,7 @@ class LogicAlarmEditorController @Inject()(actor: ActorRef[DataStoreActor.Messag
         )
 
       //      val candidateAndNames: CandidateAndNames = FormParser(encoded)
-      actor.ask[String](UpdateData(candidateAndNames, user = who(request), _)).map { _ =>
+      actor.ask[String](UpdateData(candidateAndNames, user = who, _)).map { _ =>
         Redirect(routes.LogicAlarmEditorController.index())
       }
   }

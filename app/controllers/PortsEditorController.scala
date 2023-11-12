@@ -16,16 +16,15 @@
  */
 
 package controllers
-import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 
+import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Row, Table}
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, UpdateData}
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.key.KeyFactory.PortKey
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.key.{KeyFactory, KeyKind, PortKey}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
 import net.wa9nnn.rc210.ui.{CandidateAndNames, FormParser}
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
@@ -33,7 +32,7 @@ import org.apache.pekko.util.Timeout
 import play.api.mvc.*
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
 
@@ -41,45 +40,39 @@ class PortsEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
                                      (implicit scheduler: Scheduler, ec: ExecutionContext) extends MessagesInjectedController with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 
+  def buildresult(portEntries: Seq[FieldEntry]): Result =
+    val key2EntryMap: Map[FieldKey, FieldEntry] = portEntries.map(fieldEntry => fieldEntry.fieldKey -> fieldEntry).toMap
+
+    val fieldNames: Seq[String] = key2EntryMap.values.map(_.fieldKey.fieldName).toSeq.sorted
+
+    val rows: Seq[Row] = fieldNames.map { fieldName =>
+      val cells: Seq[Cell] = for
+        number <- 1 to KeyKind.portKey.maxN
+      yield
+        key2EntryMap(FieldKey(fieldName, KeyFactory.key(KeyKind.portKey, number))).toCell
+      Row(fieldName, cells: _*)
+    }
+
+    val colHeaders: Seq[Cell] = KeyFactory.key[PortKey](KeyKind.portKey).map(_.namedCell())
+    val namesRow = Row(colHeaders.prepended(Cell("Ports:").withCssClass("cornerCell")))
+
+    val table = Table(Seq.empty, rows.prepended(namesRow))
+    Ok(views.html.ports(table))
+
   def index(): Action[AnyContent] = Action.async {
-    implicit request: Request[AnyContent] =>
-      actor ? (AllForKeyKind(KeyKind.portKey, _)).map { portEntries =>
-        val map: Map[FieldKey, FieldEntry] = portEntries
-          .map(fieldEntry => fieldEntry.fieldKey -> fieldEntry).toMap
-        val fieldNames: Seq[String] = portEntries.foldLeft(Set.empty[String]) { case (set: Set[String], fieldEntry) =>
-          set + fieldEntry.fieldKey.fieldName
-        }.toSeq.sorted
-
-        val rows: Seq[Row] = for {
-          fieldName <- fieldNames
-        } yield {
-          val cells: Seq[Cell] = for {
-            number <- 1 to KeyKind.portKey.maxN()
-          } yield {
-            map(FieldKey(fieldName, KeyFactory(KeyKind.portKey, number))).toCell
-          }
-
-          Row(fieldName, cells: _*)
-        }
-
-        val colHeaders: Seq[Cell] = for {
-          portKey <- KeyFactory[PortKey](KeyKind.portKey)
-        } yield {
-          portKey.namedCell()
-        }
-        val namesRow = Row(colHeaders.prepended(Cell("Ports:").withCssClass("cornerCell")))
-
-        val table = Table(Seq.empty, rows.prepended(namesRow))
-
-        Ok(views.html.ports(table))
+    implicit request: MessagesRequest[AnyContent] => {
+      val future: Future[Seq[FieldEntry]] = actor.ask(AllForKeyKind(KeyKind.portKey, _))
+      future.map { (portEntries: Seq[FieldEntry]) =>
+        buildresult(portEntries)
       }
+    }
   }
 
   def save(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
       val candidateAndNames: CandidateAndNames = FormParser(AnyContentAsFormUrlEncoded(request.body.asFormUrlEncoded.get))
 
-      actor.ask[String]((ref) => UpdateData(candidateAndNames, user=who(request), replyTo = ref)).map { _ =>
+      actor.ask[String](ref => UpdateData(candidateAndNames, user = who(request), replyTo = ref)).map { _ =>
         Redirect(routes.PortsEditorController.index())
       }
   }

@@ -34,7 +34,7 @@ import views.html.macroNodes
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
 import scala.util.Try
@@ -47,8 +47,10 @@ class MacroEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
   implicit val timeout: Timeout = 3 seconds
 
   def index(): Action[AnyContent] = Action.async { implicit request =>
-    actor.ask(AllForKeyKind(KeyKind.macroKey, _)).map { fe =>
-      Ok(macroNodes(fe.map((_.value.asInstanceOf[MacroNode]))))
+    val future: Future[Seq[FieldEntry]] = actor.ask(AllForKeyKind(KeyKind.macroKey, _))
+    future.map { (fe: Seq[FieldEntry]) =>
+      val nodes: Seq[MacroNode] = fe.map(_.value)
+      Ok(macroNodes(nodes))
     }
   }
 
@@ -66,8 +68,8 @@ class MacroEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
   def save(): Action[AnyContent] = Action.async { implicit request =>
     val formData: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
 
-    val sKey = formData("key").head
-    val key: MacroKey = KeyFactory(sKey)
+    val sKey: String = formData("key").head
+    val key: MacroKey = KeyFactory.key(sKey)
     val dtmf: Option[Dtmf] = formData("dtmf").map(Dtmf(_)).headOption
 
     val functions: Seq[FunctionKey] = formData("functionIds")
@@ -75,7 +77,7 @@ class MacroEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
       .split(",").toIndexedSeq
       .flatMap { sfunction =>
         Try {
-          val f: FunctionKey = KeyFactory(sfunction)
+          val f: FunctionKey = KeyFactory.key(sfunction)
           f
         }.toOption
       }

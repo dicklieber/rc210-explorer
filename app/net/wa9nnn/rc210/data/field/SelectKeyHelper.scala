@@ -32,7 +32,7 @@ object SelectKeyHelper {
    */
   def apply(current: Key, param: String): String = {
 
-    val keys: Seq[Key] = KeyFactory.key(current.kind)
+    val keys: Seq[Key] = KeyFactory.keys(current.kind)
 
     val options = keys.map { k =>
       val opt: SelectOption = SelectOption(k.number, k.toString)

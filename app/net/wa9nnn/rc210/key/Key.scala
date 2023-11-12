@@ -101,14 +101,11 @@ case class DtmfMacroKey(number: Int) extends Key(number, KeyKind.dtmfMacroKey)
 
 case class CourtesyToneKey(number: Int) extends Key(number, KeyKind.courtesyToneKey)
 
-/**
- * There can be any number of [[CommonKey]] but they don't index into a map by themselves. MaxN just indicates how many to extract for a given rc2input name.
- */
-case class CommonKey() extends SingleKey(KeyKind.commonKey)
+case class TimerKey(number: Int) extends Key(number, KeyKind.timerKey)
 
-case class TimerKey() extends SingleKey(KeyKind.timerKey)
+case object CommonKey extends SingleKey(KeyKind.commonKey)
 
-case class ClockKey() extends SingleKey(KeyKind.clockKey)
+case object ClockKey extends SingleKey(KeyKind.clockKey)
 
-case class RemoteBaseKey() extends SingleKey(KeyKind.remoteBaseKey)
+case object RemoteBaseKey extends SingleKey(KeyKind.remoteBaseKey)
 

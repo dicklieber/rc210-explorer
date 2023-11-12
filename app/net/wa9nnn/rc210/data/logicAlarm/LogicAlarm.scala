@@ -40,6 +40,8 @@ case class LogicAlarm(key: LogicAlarmKey, enable: Boolean, lowMacro: MacroKey, h
 }
 
 object LogicAlarm extends ComplexExtractor[LogicAlarmKey] {
+  def unapply(u: LogicAlarm): Option[(LogicAlarmKey, Boolean, MacroKey, MacroKey)] = Some(unapply(u))
+
   /**
    *
    * @param memory    source of RC-210 data.

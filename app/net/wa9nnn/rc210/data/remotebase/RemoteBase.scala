@@ -25,7 +25,7 @@ import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.util.Chunk
 import play.api.libs.json.{Format, JsValue, Json}
 
-case class RemoteBase(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[RBMemory] = Seq.empty) extends ComplexFieldValue[RemoteBaseKey] {
+case class RemoteBase(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[RBMemory] = Seq.empty) extends ComplexFieldValue[RemoteBaseKey.type ] {
   override val key: RemoteBaseKey = KeyFactory.remoteBaseKey
   override val fieldName: String = "RemoteBase"
 
@@ -43,7 +43,7 @@ case class RemoteBase(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[
   override def toJsonValue: JsValue = Json.toJson(this)
 }
 
-object RemoteBase extends ComplexExtractor[RemoteBaseKey] {
+object RemoteBase extends ComplexExtractor[RemoteBaseKey.type ] {
   /**
    *
    * @param memory    source of RC-210 data.

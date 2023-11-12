@@ -19,7 +19,6 @@ package controllers
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.util.Timeout
-
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.Table
 import net.wa9nnn.rc210.data.FieldKey
@@ -28,10 +27,10 @@ import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.message.Message
 import net.wa9nnn.rc210.data.named.NamedKey
-import net.wa9nnn.rc210.key.KeyFactory._
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.key.KeyFactory.*
+import net.wa9nnn.rc210.key.{KeyFactory, KeyKind, MessageKey}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.who
-import play.api.mvc._
+import play.api.mvc.*
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -72,7 +71,7 @@ class MessageController @Inject()(actor: ActorRef[DataStoreActor.Message])
       .data
       .map(t => t._1 -> t._2.headOption.getOrElse(""))
 
-    val messageKey: MessageKey = KeyFactory(kv("key"))
+    val messageKey: MessageKey = KeyFactory.key(kv("key"))
     val message = Message(messageKey, kv)
     val candidate = UpdateCandidate(message)
     val name: String = kv("name")
