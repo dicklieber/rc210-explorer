@@ -24,7 +24,7 @@ object ScheduleBuilder extends LazyLogging {
     for {
       n <- 0 until KeyKind.scheduleKey.maxN
     } yield {
-      val scheduleKey = KeyFactory.scheduleKey(n + 1)
+      val scheduleKey = KeyFactory(KeyKind.scheduleKey, n + 1)
 
       val sDow = chunks(DOW)(n).toString
       val (week: Week, dow: DayOfWeek) = {

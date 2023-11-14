@@ -22,7 +22,8 @@ import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.{Format, JsValue, Json}
 import net.wa9nnn.rc210.key.KeyFormats.*
 import net.wa9nnn.rc210.key.*
-import net.wa9nnn.rc210.key.KeyKind.macroKey
+import net.wa9nnn.rc210.key.KeyKind.{logicAlarmKey, macroKey}
+import net.wa9nnn.rc210.ui.FormParser
 
 case class LogicAlarm(key: LogicAlarmKey, enable: Boolean, lowMacro: MacroKey, highMacro: MacroKey) extends ComplexFieldValue[LogicAlarmKey] {
   override val fieldName: String = LogicAlarm.name
@@ -39,8 +40,7 @@ case class LogicAlarm(key: LogicAlarmKey, enable: Boolean, lowMacro: MacroKey, h
   override def toJsonValue: JsValue = Json.toJson(this)
 }
 
-object LogicAlarm extends ComplexExtractor[LogicAlarmKey] {
-  def unapply(u: LogicAlarm): Option[(LogicAlarmKey, Boolean, MacroKey, MacroKey)] = Some(unapply(u))
+object LogicAlarm extends ComplexExtractor[LogicAlarmKey] with FieldFormParseable[LogicAlarmKey, LogicAlarm] {
 
   /**
    *
@@ -80,13 +80,13 @@ object LogicAlarm extends ComplexExtractor[LogicAlarmKey] {
 
   )
 
+  def apply(fp: FormParser):LogicAlarm=
+    new LogicAlarm(fp.key)
+
 
   implicit val fmtLogicAlarm: Format[LogicAlarm] = Json.format[LogicAlarm]
 
 
-  override def parseFormFields[T <: ComplexFieldValue[LogicAlarmKey]](valuesMap: Map[String, String]): ComplexFieldValue[LogicAlarmKey] = {
-    throw new NotImplementedError() //todo
-  }
 
 
 }

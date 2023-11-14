@@ -67,6 +67,11 @@ sealed abstract class Key(val number: Int, val keyKind: KeyKind) extends Ordered
   }
 
 
+
+
+}
+
+object Key:
   def setNamedSource(namedsource: NamedKeySource): Unit = {
     if (_namedSource.isDefined) throw new IllegalStateException("NamedSource already set.")
     _namedSource = Option(namedsource)
@@ -77,9 +82,6 @@ sealed abstract class Key(val number: Int, val keyKind: KeyKind) extends Ordered
   def nameForKey(key: Key): String =
     _namedSource.map(_.nameForKey(key)).getOrElse("")
 
-
-
-}
 
 abstract class SingleKey(keyKind: KeyKind) extends Key(0, keyKind):
   override def toString: String = keyKind.toString

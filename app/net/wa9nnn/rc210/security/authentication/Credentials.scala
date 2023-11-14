@@ -18,7 +18,6 @@
 package net.wa9nnn.rc210.security.authentication
 
 import net.wa9nnn.rc210.security.Who.Callsign
-import net.wa9nnn.rc210.security.authentication.Credentials.unapply
 
 /**
  *
@@ -27,6 +26,4 @@ import net.wa9nnn.rc210.security.authentication.Credentials.unapply
  */
 case class Credentials(callsign: Callsign = "", password: String = "")
 
-object Credentials:
-  def unapply(credentials: Credentials): Option[(Callsign, String)] = Option(unapply(credentials))
-end Credentials
+

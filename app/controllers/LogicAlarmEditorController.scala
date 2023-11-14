@@ -16,6 +16,7 @@
  */
 
 package controllers
+
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.util.Timeout
@@ -30,9 +31,6 @@ import net.wa9nnn.rc210.ui.{CandidateAndNames, FormParser}
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.util.Timeout
-import play.api.data.{Form, FormError}
-import play.api.data.Forms.*
-import play.api.data.Forms.text.key
 import play.api.mvc.*
 import play.api.i18n.*
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.UpdateData
@@ -50,14 +48,14 @@ class LogicAlarmEditorController @Inject()(actor: ActorRef[DataStoreActor.Messag
   implicit val timeout: Timeout = 3 seconds
 
 
-  private val logicForm: Form[LogicAlarm] = Form(
-    mapping(
-      "key" -> of[LogicAlarmKey],
-      "enable" -> boolean,
-      "lowMacro" -> of[MacroKey],
-      "highMacro" -> of[MacroKey]
-    )(LogicAlarm.apply)(LogicAlarm.unapply)
-  )
+  //  private val logicForm: Form[LogicAlarm] = Form(
+  //    mapping(
+  //      "key" -> of[LogicAlarmKey],
+  //      "enable" -> boolean,
+  //      "lowMacro" -> of[MacroKey],
+  //      "highMacro" -> of[MacroKey]
+  //    )(LogicAlarm.apply)(LogicAlarm.unapply)
+  //  )
 
   def index(): Action[AnyContent] = Action.async {
     implicit request =>
@@ -73,8 +71,8 @@ class LogicAlarmEditorController @Inject()(actor: ActorRef[DataStoreActor.Messag
       actor.ask[Option[FieldEntry]](DataStoreActor.ForFieldKey(fieldKey, _)).map {
         {
           case Some(fieldEntry) =>
-            val filledIn = logicForm.fill(fieldEntry.value)
-            Ok(views.html.logicEditor(filledIn, logicAlarmKey))
+            val logicAlarm: LogicAlarm = fieldEntry.value
+            Ok(views.html.logicEditor(logicAlarm))
 
           case None =>
             NotFound(s"No key: $logicAlarmKey")
@@ -88,8 +86,7 @@ class LogicAlarmEditorController @Inject()(actor: ActorRef[DataStoreActor.Messag
       val encoded = AnyContentAsFormUrlEncoded(request.body.asFormUrlEncoded.get)
       val candidateAndNames: CandidateAndNames =
         FormParser(encoded, (valuesMap: Map[String, String]) => {
-          val value: Form[LogicAlarm] = logicForm.bind(valuesMap)
-          value.get
+          LogicAlarm(valuesMap)
         }
         )
 

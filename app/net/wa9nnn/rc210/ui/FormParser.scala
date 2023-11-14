@@ -22,66 +22,63 @@ import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.ComplexFieldValue
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.key.{Key, KeyFactory}
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc._
 
-object FormParser {
-  /**
-   * Parses [[ComplexFieldValue]]s from <form> data.
-   *
-   * @param f       (K,  Map[String, String]) )      function to instantiate a [[ComplexFieldValue[K]]] from a K  and map of named form values for the key.
-   * @param content whose body contains the HTML form data.
-   * @tparam K Key type.
-   * @return data to send to the DataStore
-   */
-  def apply[K <: Key, T <: ComplexFieldValue[K]](content: AnyContentAsFormUrlEncoded, f: Map[String, String] => ComplexFieldValue[K]): CandidateAndNames = {
-    val data: Map[String, String] = content.data.map(t => t._1 -> t._2.head)
-    val sKey: String = data.getOrElse("key", throw new IllegalArgumentException("No key in form data!"))
-    val key: K = KeyFactory.keyOpt(sKey)
+/**
+ * Parses [[ComplexFieldValue]]s from <form> data.
+ *
+ * @param request from Browser
+ * @return data to send to the DataStore
+ */
+class FormParser[K <: Key, T <: ComplexFieldValue[K]](request: Request[AnyContent], f: FormParser[K, T] => T) {
+  val data: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
 
-    val fieldValue: ComplexFieldValue[K] = f(data)
+  def key: K = KeyFactory(data.getOrElse("key", throw new IllegalArgumentException("No key in form data!")))
 
-    val namedKeys: Seq[NamedKey] = data.get("name").map(name => NamedKey(key, name)).toSeq
+  val fieldValue: ComplexFieldValue[K] = f(this)
 
-    //    val candidates: Seq[UpdateCandidate] = content.data
-    //      .map { t => FieldKey.fromParam(t._1) -> t._2.head } // convert form input name to FieldKey
-    //      .groupBy(_._1.key)
-    //      // build map of name to values for each Key
-    //      .map { case (key: Key, values: Map[FieldKey, String]) =>
-    //        val valueMap: Map[String, String] = values.map { case (fk, value) =>
-    //          fk.fieldName -> value
-    //        }
-    //        valueMap.get("name").foreach {
-    //          namedKeyBuilder += NamedKey(key, _)
-    //        }
-    //        val complexValue = f(valueMap)
-    //        UpdateCandidate(complexValue.fieldKey, Right(complexValue))
-    //      }.toSeq
-    CandidateAndNames(Seq(UpdateCandidate(fieldValue)), namedKeys)
-  }
+  val namedKeys: Seq[NamedKey] = data.get("name").map(name => NamedKey(key, name)).toSeq
 
-  /**
-   * Parses [[net.wa9nnn.rc210.data.field.SimpleFieldValue]]s from <form> data
-   *
-   * @param content whose body contains the HTML form data.
-   * @return data to send to the DataStore.
-   */
-  def apply(content: AnyContentAsFormUrlEncoded): CandidateAndNames = {
-    val namedKeyBuilder = Seq.newBuilder[NamedKey]
-    val candidateBuilder = Seq.newBuilder[UpdateCandidate]
-    content
-      .data
-      .filter(_._1 != "save")
-      .map { t => FieldKey.fromParam(t._1) -> t._2.head } // convert form <input> name to FieldKey and only get 1st string for each <form> item.
-      .foreach { case (fieldKey: FieldKey, value: String) =>
-        fieldKey match {
-          case FieldKey("name", _) =>
-            namedKeyBuilder += NamedKey(fieldKey.key, value)
-          case _ =>
-            candidateBuilder += UpdateCandidate(fieldKey, Left(value)) // this string will get parsed within the FieldValues in the [[DataStore]].
-        }
+  val candidates: Seq[UpdateCandidate] = content.data
+    .map { t => FieldKey.fromParam(t._1) -> t._2.head } // convert form input name to FieldKey
+    .groupBy(_._1.key)
+    // build map of name to values for each Key
+    .map { case (key: Key, values: Map[FieldKey, String]) =>
+      val valueMap: Map[String, String] = values.map { case (fk, value) =>
+        fk.fieldName -> value
       }
-    CandidateAndNames(candidateBuilder.result(), namedKeyBuilder.result())
-  }
+      valueMap.get("name").foreach {
+        namedKeyBuilder += NamedKey(key, _)
+      }
+      val complexValue = f(valueMap)
+      UpdateCandidate(complexValue.fieldKey, Right(complexValue))
+    }.toSeq
+  CandidateAndNames(Seq(UpdateCandidate(fieldValue)), namedKeys)
 }
+
+//  /**
+//   * Parses [[net.wa9nnn.rc210.data.field.SimpleFieldValue]]s from <form> data
+//   *
+//   * @param content whose body contains the HTML form data.
+//   * @return data to send to the DataStore.
+//   */
+//  def apply(content: AnyContentAsFormUrlEncoded): CandidateAndNames = {
+//    val namedKeyBuilder = Seq.newBuilder[NamedKey]
+//    val candidateBuilder = Seq.newBuilder[UpdateCandidate]
+//    content
+//      .data
+//      .filter(_._1 != "save")
+//      .map { t => FieldKey.fromParam(t._1) -> t._2.head } // convert form <input> name to FieldKey and only get 1st string for each <form> item.
+//      .foreach { case (fieldKey: FieldKey, value: String) =>
+//        fieldKey match {
+//          case FieldKey("name", _) =>
+//            namedKeyBuilder += NamedKey(fieldKey.key, value)
+//          case _ =>
+//            candidateBuilder += UpdateCandidate(fieldKey, Left(value)) // this string will get parsed within the FieldValues in the [[DataStore]].
+//        }
+//      }
+//    CandidateAndNames(candidateBuilder.result(), namedKeyBuilder.result())
+//  }
+//  }
 
 case class CandidateAndNames(candidates: Seq[UpdateCandidate], namedKeys: Seq[NamedKey] = Seq.empty)

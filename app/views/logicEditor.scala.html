@@ -3,21 +3,21 @@
 @import net.wa9nnn.rc210.util.MacroSelect
 @import views.html.helper._
 @import net.wa9nnn.rc210.key.LogicAlarmKey
-@(logicForm: Form[LogicAlarm], logicAlarmKey: LogicAlarmKey)(implicit messages: MessagesProvider)
-    @implicitField = @{
-        FieldConstructor(views.html.rc2input.f)
-    }
+@(logicAlarm: LogicAlarm)(implicit messages: MessagesProvider)
+@*    @implicitField = @{*@
+@*        FieldConstructor(views.html.rc2input.f)*@
+@*    }*@
 
     @tabbedmain(Tabs.logicAlarmTab) {
         <div class="container">
         @form(action = routes.LogicAlarmEditorController.save()) {
-            <input type="hidden" name="key" value="@logicAlarmKey">
+            <input type="hidden" name="key" value="@logicAlarm.key">
             <table>
                 <tr>
                     <td>
                         Enable
                     </td>
-                    <td>@helper.checkbox(logicForm("enable"))
+                    <td>@input.checkBox("enable", logicAlarm.enable)
                     </td>
 
                 </tr>

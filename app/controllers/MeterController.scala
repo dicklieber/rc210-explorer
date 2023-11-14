@@ -106,7 +106,7 @@ class MeterController @Inject()(actor: ActorRef[DataStoreActor.Message])
       actor.ask(ForFieldKey(fieldKey, _)).map {
         case Some(fieldEntry: FieldEntry) =>
           val meterAlarm: MeterAlarm = fieldEntry.value
-          Ok(html.meterAlarm(meterAlarm.key, meterAlarm))
+          Ok(html.meterAlarm(meterAlarm))
         case None =>
           NotFound(s"Not meterKey: $fieldKey")
 

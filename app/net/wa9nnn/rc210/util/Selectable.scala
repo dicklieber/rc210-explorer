@@ -32,7 +32,7 @@ import scala.reflect.ClassTag
  * @param choices possible choices.
  * @tparam T
  */
-abstract class Selectable[T <: SelectItem](choices: T*) {
+abstract class Selectable[T <: SelectItem](val choices: T*) {
   def options: Seq[(String, String)] = choices.map(_.item)
 
   /**
@@ -75,7 +75,7 @@ trait SelectItem {
   def isSelected(number: Int): Boolean
 
   def item: (String, String)
-
+  def html:String = s""""<option value="$display">$display</option>"""
 }
 
 /**
@@ -105,6 +105,7 @@ trait SelectItemNumber extends SelectItem {
   override def isSelected(number: Int): Boolean = number == value
 
   def toCell: Cell = Cell(display)
+
 }
 
 

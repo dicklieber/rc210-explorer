@@ -21,13 +21,13 @@ object DtmfMacroExtractor {
     def dtmfMap(offset: Int, nDtmfs: Int): Seq[(MacroKey, Dtmf)] = {
       val chunks: Seq[Chunk] = memory.chunks(offset, 5, nDtmfs)
 
-      (for {
+      for {
         chunk <- chunks
         macroKey: MacroKey = KeyFactory.apply(KeyKind.macroKey, mai.getAndIncrement())
         dtmf <- Dtmf(chunk.ints)
       } yield {
         macroKey -> dtmf
-      })
+      }
     }
 
     val longMacroDtmf: Seq[(MacroKey, Dtmf)] = dtmfMap(2625, 40) //SlicePos("//MacroRecallCode - 2625-2824"))
@@ -38,9 +38,9 @@ object DtmfMacroExtractor {
 
 case class DtmfMacros(a: Seq[(MacroKey, Dtmf)]) {
   private val map: Map[MacroKey, Dtmf] = a.toMap
-  val ordered: Seq[MacroKey] = map.keys.toSeq.sortBy { k =>
-    (k.kind, k.number)
-  }
+//  val ordered: Seq[MacroKey] = map.keys.toSeq.sortBy { k =>
+//    (k.keyKind, k.number)
+//  }
 
   def apply(macroKey: MacroKey): Option[Dtmf] = {
     map.get(macroKey)

@@ -46,7 +46,7 @@ object Formatters {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], MacroKey] = {
       parsing(s => {
         try {
-          KeyFactory.keyOpt[MacroKey](s)
+          KeyFactory(s)
         } catch {
           case e: Exception =>
             logger.error(s"Parsing $s to MacroKey!")
@@ -78,7 +78,7 @@ object Formatters {
   implicit object MeterFormatter extends Formatter[MeterKey] {
     override val format: Option[(String, Nil.type)] = Some(("format.dtmf", Nil))
 
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], MeterKey] = parsing(KeyFactory.keyOpt(_).asInstanceOf[MeterKey], "error.url", Nil)(key, data)
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], MeterKey] = parsing(KeyFactory[MeterKey], "error.url", Nil)(key, data)
 
     override def unbind(key: String, value: MeterKey): Map[String, String] = Map(key -> value.toString)
   }
@@ -86,7 +86,7 @@ object Formatters {
   implicit object MeterAlarmFormatter extends Formatter[MeterAlarmKey] {
     override val format: Option[(String, Nil.type)] = Some(("format.dtmf", Nil))
 
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], MeterAlarmKey] = parsing(KeyFactory.keyOpt[MeterAlarmKey], "error.url", Nil)(key, data)
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], MeterAlarmKey] = parsing(KeyFactory[MeterAlarmKey], "error.url", Nil)(key, data)
 
     override def unbind(key: String, value: MeterAlarmKey): Map[String, String] = Map(key -> value.toString)
   }
@@ -109,32 +109,32 @@ object Formatters {
     override def unbind(key: String, value: MonthOfYearDST): Map[String, String] = Map(key -> value.toString)
   }
 
-  implicit object TimerKeyFormatter extends Formatter[TimerKey] {
-    override val format: Option[(String, Nil.type)] = Some(("format.TimerKey", Nil))
+//  implicit object TimerKeyFormatter extends Formatter[TimerKey] {
+//    override val format: Option[(String, Nil.type)] = Some(("format.TimerKey", Nil))
+//
+//    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], TimerKey] =
+//      parsing(formValue => KeyFactory[TimerKey](formValue), "error.url", Nil)(key, data)
+//
+//    override def unbind(key: String, value: TimerKey): Map[String, String] = Map(key -> value.toString)
+//  }
 
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], TimerKey] =
-      parsing(formValue => KeyFactory[TimerKey](formValue), "error.url", Nil)(key, data)
+//  implicit object LogicAlarmKeyFormatter extends Formatter[LogicAlarmKey] {
+//    override val format: Option[(String, Nil.type)] = Some(("format.LogicAlarmKey", Nil))
+//
+//    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], LogicAlarmKey] =
+//      parsing(formValue => KeyFactory[LogicAlarmKey](formValue), "error.url", Nil)(key, data)
+//
+//    override def unbind(key: String, value: LogicAlarmKey): Map[String, String] = Map(key -> value.toString)
+//  }
 
-    override def unbind(key: String, value: TimerKey): Map[String, String] = Map(key -> value.toString)
-  }
-
-  implicit object LogicAlarmKeyFormatter extends Formatter[LogicAlarmKey] {
-    override val format: Option[(String, Nil.type)] = Some(("format.LogicAlarmKey", Nil))
-
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], LogicAlarmKey] =
-      parsing(formValue => KeyFactory[LogicAlarmKey](formValue), "error.url", Nil)(key, data)
-
-    override def unbind(key: String, value: LogicAlarmKey): Map[String, String] = Map(key -> value.toString)
-  }
-
-  implicit object ModeFormatter extends Formatter[Mode] {
-    override val format: Option[(String, Nil.type)] = Some(("format.Offset", Nil))
-
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Mode] =
-      parsing(formValue => KeyFactory[Mode](formValue), "error.offset", Nil)(key, data)
-
-    override def unbind(key: String, value: Mode): Map[String, String] = Map(key -> value.toString)
-  }
+//  implicit object ModeFormatter extends Formatter[Mode] {
+//    override val format: Option[(String, Nil.type)] = Some(("format.Offset", Nil))
+//
+//    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Mode] =
+//      parsing(formValue => KeyFactory[Mode](formValue), "error.offset", Nil)(key, data)
+//
+//    override def unbind(key: String, value: Mode): Map[String, String] = Map(key -> value.toString)
+//  }
 
 
 

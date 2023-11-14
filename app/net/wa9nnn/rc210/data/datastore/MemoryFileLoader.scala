@@ -28,6 +28,7 @@ import java.net.URL
 import java.nio.file.Path
 import javax.inject.{Inject, Singleton}
 import scala.util.{Failure, Try}
+import net.wa9nnn.rc210.util.Configs.path
 
 /**
  * Holds [[Memory]]
@@ -36,7 +37,7 @@ import scala.util.{Failure, Try}
  * @param datFile
  */
 @Singleton
-class MemoryFileLoader @Inject()(fieldDefinitions: FieldDefinitions, config: Config) extends LazyLogging {
+class MemoryFileLoader @Inject()(implicit fieldDefinitions: FieldDefinitions, config: Config) extends LazyLogging {
 
   private var tryMemory: Try[Memory] = Failure(notInitialized)
 
@@ -48,7 +49,7 @@ class MemoryFileLoader @Inject()(fieldDefinitions: FieldDefinitions, config: Con
    * @return [[Memory]] or the reason why.
    */
   private def loadMemory(): Unit = {
-    val memoryFilePath: Path = Configs.path("vizRc210.memoryFile", config)
+    val memoryFilePath: Path = path("vizRc210.memoryFile")
     val memoryFile: URL = memoryFilePath.toUri.toURL
     tryMemory = Memory.load(memoryFile)
   }

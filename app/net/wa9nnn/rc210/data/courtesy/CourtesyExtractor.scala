@@ -26,7 +26,7 @@ import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.JsValue
 
 object CourtesyExtractor extends ComplexExtractor[CourtesyToneKey] with LazyLogging {
-  private val nCourtesyTones = KeyKind.courtesyToneKey.maxN()
+  private val nCourtesyTones = KeyKind.courtesyToneKey.maxN
 
   override def positions: Seq[FieldOffset] = Seq(
     FieldOffset(856, this),

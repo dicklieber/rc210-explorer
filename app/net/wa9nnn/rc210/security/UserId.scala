@@ -14,8 +14,6 @@ import java.util.{Base64, UUID}
  * A permanent User ID that can survice Callsign and name changes.
  */
 object UserId {
-  def unapply(u: UserId): Option[(String, UserId)] = Some(u)
-
   private val encoder: Base64.Encoder = Base64.getEncoder
 
   /**

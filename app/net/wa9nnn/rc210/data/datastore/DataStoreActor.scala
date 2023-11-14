@@ -27,8 +27,8 @@ import net.wa9nnn.rc210.key.{Key, KeyKind}
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.security.authentication.User
 import net.wa9nnn.rc210.ui.CandidateAndNames
-import org.apache.pekko.actor.typed.scaladsl.Behaviors
-import org.apache.pekko.actor.typed.{ActorRef, Behavior, SupervisorStrategy}
+import org.apache.pekko.actor.typed.scaladsl.{ActorContext, Behaviors}
+import org.apache.pekko.actor.typed.{ActorRef, Behavior, Signal, SupervisorStrategy}
 import play.api.libs.concurrent.ActorModule
 import play.api.libs.json
 
@@ -113,7 +113,7 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
 
     Behaviors.setup { context =>
       Behaviors.supervise[DataStoreMessage] {
-        Behaviors.receiveMessage[DataStoreMessage] { message: DataStoreMessage =>
+        Behaviors.receiveMessage[DataStoreMessage] { (message: DataStoreMessage) =>
             message match {
 
               case ReplaceEntries(entries: Seq[FieldEntry]) =>
@@ -125,7 +125,7 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
                   .filter(_.fieldKey.key == key)
                   .sortBy(_.fieldKey.fieldName)
               case AllForKeyKind(keyKind: KeyKind, replyTo: ActorRef[Seq[FieldEntry]]) =>
-                replyTo ! all.filter(_.fieldKey.key.kind == keyKind).sortBy(_.fieldKey)
+                replyTo ! all.filter(_.fieldKey.key.keyKind == keyKind).sortBy(_.fieldKey)
               case ForFieldKey(fieldKey: FieldKey, replyTo: ActorRef[Option[FieldEntry]]) =>
                 replyTo ! all.find(_.fieldKey == fieldKey)
               case Candidates(replyTo: ActorRef[Seq[FieldEntry]]) =>
@@ -134,7 +134,7 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
                 val triggerNodes: Seq[TriggerNode] = all.filter { fe => fe.isInstanceOf[TriggerNode] }.map(_.asInstanceOf[TriggerNode])
                 replyTo !
                   (for {
-                    fieldEntry <- all.filter(_.fieldKey.key.kind == KeyKind.macroKey).sorted
+                    fieldEntry <- all.filter(_.fieldKey.key.keyKind == KeyKind.macroKey).sorted
                     macroNode: MacroNode = fieldEntry.fieldValue.asInstanceOf[MacroNode]
                   } yield {
                     val triggers: Seq[TriggerNode] = triggerNodes.filter(_.canRunMacro(macroNode.key))

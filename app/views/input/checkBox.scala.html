@@ -1,0 +1,2 @@
+@(name: String, value: Boolean, tooltip: String = "")
+<input type="checkbox" name="name @if(value){ checked } @if(tooltip.nonEmpty){ title="@tooltip"}>

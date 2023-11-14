@@ -139,7 +139,7 @@ object Binders {
       }
 
     override def unbind(key: String, monthOfYearDST: MonthOfYearDST): String =
-      monthOfYearDST.name()
+      monthOfYearDST.toString
   }
   implicit def occurrenceBinder: PathBindable[Occurrence] = new PathBindable[Occurrence] {
     override def bind(key: String, value: String): Either[String, Occurrence] =

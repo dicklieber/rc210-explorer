@@ -45,7 +45,6 @@ case class Timer(key: TimerKey, seconds: Int, macroKey: MacroKey) extends Comple
 }
 
 object Timer {
-  def unapply(u: Timer): Option[(String, Timer)] = Some(unapply(u))
 
   import net.wa9nnn.rc210.key.KeyFormats._
 

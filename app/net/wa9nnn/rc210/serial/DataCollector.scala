@@ -34,12 +34,12 @@ import javax.inject.{Inject, Singleton}
  * Reads eeprom from RC210 using the "1SendEram" command
  */
 @Singleton
-class DataCollector @Inject()(config: Config, rc210: Rc210, dataStoreActor: ActorRef[DataStoreActor.Message]) extends LazyLogging {
+class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStoreActor: ActorRef[DataStoreActor.Message]) extends LazyLogging {
 
   val memoryFile: Path = Configs.path("vizRc210.memoryFile")
   val tempFile: Path = memoryFile.resolveSibling(memoryFile.toFile.toString + ".temp")
   val expectedLines: Int = config.getInt("vizRc210.expectedRcLines")
-  val progreMod: Int = config.getInt()("vizRc210.showProgressEvery")
+  val progreMod: Int = config.getInt("vizRc210.showProgressEvery")
 
   /**
    *

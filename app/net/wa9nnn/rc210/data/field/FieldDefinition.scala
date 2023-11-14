@@ -69,7 +69,7 @@ case class SimpleField(offset: Int,
   }
 
   def fieldKey(number: Int): FieldKey = {
-    new FieldKey(fieldName, KeyFactory.apply(kind, number).get)
+    new FieldKey(fieldName,  KeyFactory(kind, number))
   }
 
   def units(u: String): SimpleField = copy(units = u)
@@ -87,6 +87,16 @@ case class SimpleField(offset: Int,
   override def positions: Seq[FieldOffset] = Seq(FieldOffset(offset, this))
 }
 
+trait FieldFormParseable[K <: Key, T <: ComplexFieldValue[K]]:
+  def parseFormFields[T <: ComplexFieldValue[K]](using valuesMap: Map[String, String]): T
+
+  def int(name:String):Int = {
+    val x: x.type = summon[Map[String, String]]
+    x
+  }
+  }
+
+
 trait ComplexExtractor[K <: Key] extends FieldExtractor with FieldDefinition {
 
   def fieldKey(key: K): FieldKey = FieldKey(fieldName, key)
@@ -98,9 +108,6 @@ trait ComplexExtractor[K <: Key] extends FieldExtractor with FieldDefinition {
    */
   def extract(memory: Memory): Seq[FieldEntry]
 
-  def parseFormFields[T <: ComplexFieldValue[K]](valuesMap: Map[String, String]): ComplexFieldValue[K] = {
-    throw new NotImplementedError() //todo
-  }
 
   //   lazy val fieldDefinition: FieldDefinition = {
   //    new FieldDefinition {
