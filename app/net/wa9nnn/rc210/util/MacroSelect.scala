@@ -17,23 +17,20 @@
 
 package net.wa9nnn.rc210.util
 
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
-import net.wa9nnn.rc210.key.{MacroKey, MeterKey}
+import net.wa9nnn.rc210.{Key, KeyKind}
 
-object MacroSelect extends Selectable[MacroKey]() {
-  override def options: Seq[(String, String)] = {
-    KeyFactory.apply[MacroKey](KeyKind.macroKey).map { macroKey => macroKey.toString -> macroKey.toString
-    }
-  }
+
+object MacroSelect  extends BaseSelectable [Key]{
+   def options: Seq[Key] = for{
+     number <- 1 to KeyKind.macroKey.maxN
+   }yield {
+     Key(KeyKind.macroKey, number)
+   }
+     
+
 }
 
 
-object MeterSelects extends Selectable[MeterKey]() {
 
-  override def options: Seq[(String, String)] = {
-    KeyFactory.apply[MeterKey](KeyKind.meterKey).map { meterKey => meterKey.toString -> meterKey.keyWithName
-    }
-  }
-}
 
 

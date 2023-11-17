@@ -17,12 +17,12 @@
 
 package net.wa9nnn.rc210.data.courtesy
 
+import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.field.RenderMetadata
-import net.wa9nnn.rc210.key.{CourtesyToneKey, KeyFactory}
 
 import scala.util.matching.Regex
 
- class CtSegmentKey(val ctKey: CourtesyToneKey, val segment: Int, val name:String, override val units:String = "Hz") extends RenderMetadata {
+ class CtSegmentKey(val ctKey: Key, val segment: Int, val name:String, override val units:String = "Hz") extends RenderMetadata {
   override def param: String = s"$name.$segment.${ctKey.toString}"
 }
 

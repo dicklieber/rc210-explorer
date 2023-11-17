@@ -18,15 +18,14 @@
 package net.wa9nnn.rc210.util
 
 import com.wa9nnn.util.tableui.Row
+import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{FieldValue, RenderMetadata, SimpleExtractor, SimpleField}
-import net.wa9nnn.rc210.key.{Key, MacroKey}
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.model.TriggerNode
-import play.api.libs.json._
+import play.api.libs.json.*
 
 /**
  */
-case class MacroSelectField(value: MacroKey = KeyFactory.apply(KeyKind.macroKey, 1)) extends FieldSelect[MacroKey] with TriggerNode {
+case class MacroSelectField(value: Key = Key(KeyKind.macroKey, 1)) extends FieldSelect[Key] with TriggerNode {
 
   override val key: Key = value
 
@@ -34,9 +33,9 @@ case class MacroSelectField(value: MacroKey = KeyFactory.apply(KeyKind.macroKey,
     Row(headerCell = value.toCell)
   }
 
-  override def selectOptions: Seq[SelectOption] = KeyFactory.apply[MacroKey](KeyKind.macroKey).map { macroKey =>
-    SelectOption(macroKey.toString, macroKey.keyWithName)
-  }
+//  override def selectOptions: Seq[SelectOption] = Key[MacroKey](KeyKind.macroKey).map { macroKey =>
+//    SelectOption(macroKey.toString, macroKey.keyWithName)
+//  }
 
   override val name: String = MacroSelectField.name
 
@@ -57,16 +56,14 @@ case class MacroSelectField(value: MacroKey = KeyFactory.apply(KeyKind.macroKey,
    * @return a new [[MacroSelectField]].
    */
   override def update(paramValue: String): MacroSelectField = {
-    new MacroSelectField(KeyFactory.apply(paramValue))
+    new MacroSelectField(Key(paramValue))
   }
 
-  def fromParam(param: String): MacroKey =
-    KeyFactory.apply(KeyKind.macroKey, param.toInt)
 
-  override def canRunMacro(macroKey: MacroKey): Boolean = value == macroKey
+  override def canRunMacro(macroKey: Key): Boolean = value == macroKey
 }
 
-object MacroSelectField extends SimpleExtractor[MacroKey] {
+object MacroSelectField extends SimpleExtractor {
   val name: String = "Macro"
 
   /**

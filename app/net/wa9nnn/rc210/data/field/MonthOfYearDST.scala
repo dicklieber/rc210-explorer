@@ -1,39 +1,34 @@
 package net.wa9nnn.rc210.data.field
 
+import net.wa9nnn.rc210.util.{SelectItemNumber, Selectable}
 import play.api.data.FormError
 import play.api.data.format.Formats.parsing
 import play.api.data.format.Formatter
 
-enum MonthOfYearDST {
-  case January,
-  February,
-  March,
-  April,
-  May,
-  June,
-  July,
-  August,
-  September,
-  October,
-  November,
-  December
+sealed trait MonthOfYearDST(val rc210Value: Int, val display: String) extends SelectItemNumber
 
-  def number: Int = {
-    ordinal + 1
-  }
+object MonthOfYearDST extends Selectable[MonthOfYearDST]
 
-  import play.api.data.format.Formats._
-  import play.api.data.format.Formatter
+case object January extends MonthOfYearDST(1, "January")
 
+case object February extends MonthOfYearDST(2, "February")
 
+case object March extends MonthOfYearDST(3, "March")
 
-}
+case object April extends MonthOfYearDST(4, "April")
 
-implicit object MonthOfYearDSTFormatter extends Formatter[MonthOfYearDST] {
-  
-  override val format: Option[(String, Seq[Any])] = Some(("format.moyDst", Nil))
+case object May extends MonthOfYearDST(5, "May")
 
-  override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], MonthOfYearDST] = parsing(MonthOfYearDST.valueOf, "error.moy", Nil)(key, data)
+case object June extends MonthOfYearDST(6, "June")
 
-  override def unbind(key: String, value: MonthOfYearDST): Map[String, String] = Map(key -> value.toString)
-}
+case object July extends MonthOfYearDST(7, "July")
+
+case object August extends MonthOfYearDST(8, "August")
+
+case object September extends MonthOfYearDST(9, "September")
+
+case object October extends MonthOfYearDST(10, "October")
+
+case object November extends MonthOfYearDST(11, "November")
+
+case object December extends MonthOfYearDST(12, "December")

@@ -15,23 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.key
+package net.wa9nnn.rc210.util.select
 
-import play.api.mvc.PathBindable
+import scala.quoted.*
 
+inline def enumValues[E]: Array[E] = ${enumValuesImpl[E]}
 
-/**
- * Codec to allow non-string types i routes.conf definitions.
- */
-object KeyKindBinder {
-
-  implicit def keyKindPathBinder: PathBindable[KeyKind] = new PathBindable[KeyKind] {
-    override def bind(key: String, value: String): Either[String, KeyKind] = {
-      Right(KeyKind.valueOf(value))
-    }
-
-    override def unbind(key: String, macroKey: KeyKind): String = {
-      macroKey.toString
-    }
-  }
-}
+def enumValuesImpl[E: Type](using Quotes): Expr[Array[E]] =
+  import quotes.reflect.*
+  val companion = Ref(TypeTree.of[E].symbol.companionModule)
+  Select.unique(companion, "values").asExprOf[Array[E]]

@@ -17,8 +17,8 @@
 
 package net.wa9nnn.rc210.data.field
 
+import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.key.KeyFactory
-import net.wa9nnn.rc210.key.Key
 import play.api.libs.json._
 import views.html.fieldString
 
@@ -54,7 +54,7 @@ case class FieldString(value: String) extends SimpleFieldValue {
 
 }
 
-object FieldString extends SimpleExtractor[String] {
+object FieldString extends SimpleExtractor {
   override def fromForm(name: String)(implicit kv: Map[String, String], key: Key): String = {
     formValue(name)
   }

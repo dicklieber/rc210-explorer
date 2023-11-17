@@ -82,13 +82,13 @@ libraryDependencies ++= Seq(
   //  "com.github.kxbmap" %% "configs" % "0.6.1",
   "org.mindrot" % "jbcrypt" % "0.4",
   "com.github.andyglow" %% "typesafe-config-scala" % "2.0.0" % Compile,
-
+//  "com.beachape" %% "enumeratum" % "1.7.3",
 )
 
 
 routesImport += "net.wa9nnn.rc210.Binders._"
 routesImport += "net.wa9nnn.rc210.data.FieldKey"
-routesImport += "net.wa9nnn.rc210.key.KeyFactory._"
-routesImport += "net.wa9nnn.rc210.key.KeyKind"
-routesImport += "net.wa9nnn.rc210.key.Key"
+//routesImport += "net.wa9nnn.rc210.key.KeyFactory._"
+//routesImport += "net.wa9nnn.rc210.key.KeyKind"
+routesImport += "net.wa9nnn.rc210.Key"
 routesImport += "net.wa9nnn.rc210.serial.ComPort"

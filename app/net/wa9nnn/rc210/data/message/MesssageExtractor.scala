@@ -28,7 +28,7 @@ import play.api.libs.json.JsValue
 
 import java.util.concurrent.atomic.AtomicInteger
 
-object MesssageExtractor extends ComplexExtractor[MessageKey] with LazyLogging {
+object MesssageExtractor extends ComplexExtractor with LazyLogging {
   override def positions: Seq[FieldOffset] = {
     Seq(
       FieldOffset(1576, this)

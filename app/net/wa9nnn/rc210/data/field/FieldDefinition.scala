@@ -1,10 +1,10 @@
 package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.key.Key
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.ui.FormParseable
 import play.api.libs.json.JsValue
 
 import java.text.FieldPosition
@@ -41,7 +41,7 @@ case class SimpleField(offset: Int,
                        fieldName: String,
                        kind: KeyKind,
                        override val template: String,
-                       fieldExtractor: SimpleExtractor[_],
+                       fieldExtractor: SimpleExtractor,
                        override val tooltip: String = "",
                        override val units: String = "",
                        min: Int = 1,
@@ -69,7 +69,7 @@ case class SimpleField(offset: Int,
   }
 
   def fieldKey(number: Int): FieldKey = {
-    new FieldKey(fieldName,  KeyFactory(kind, number))
+    new FieldKey(fieldName,  Key(kind, number))
   }
 
   def units(u: String): SimpleField = copy(units = u)
@@ -87,19 +87,19 @@ case class SimpleField(offset: Int,
   override def positions: Seq[FieldOffset] = Seq(FieldOffset(offset, this))
 }
 
-trait FieldFormParseable[K <: Key, T <: ComplexFieldValue[K]]:
-  def parseFormFields[T <: ComplexFieldValue[K]](using valuesMap: Map[String, String]): T
+//trait FieldFormParseable[K <: Key, T <: ComplexFieldValue[K]]:
+//  def parseFormFields[T <: ComplexFieldValue[K]](using valuesMap: Map[String, String]): T
+//
+//  def int(name:String):Int = {
+//    val x: x.type = summon[Map[String, String]]
+//    x
+//  }
+  
 
-  def int(name:String):Int = {
-    val x: x.type = summon[Map[String, String]]
-    x
-  }
-  }
 
+trait ComplexExtractor extends FieldExtractor with FieldDefinition with FormParseable {
 
-trait ComplexExtractor[K <: Key] extends FieldExtractor with FieldDefinition {
-
-  def fieldKey(key: K): FieldKey = FieldKey(fieldName, key)
+  def fieldKey(key: Key): FieldKey = FieldKey(fieldName, key)
 
   /**
    *
@@ -107,7 +107,7 @@ trait ComplexExtractor[K <: Key] extends FieldExtractor with FieldDefinition {
    * @return what we extracted.
    */
   def extract(memory: Memory): Seq[FieldEntry]
-
+  
 
   //   lazy val fieldDefinition: FieldDefinition = {
   //    new FieldDefinition {
@@ -120,15 +120,9 @@ trait ComplexExtractor[K <: Key] extends FieldExtractor with FieldDefinition {
 
 }
 
-abstract class SimpleExtractor[T] extends FieldExtractor {
+abstract class SimpleExtractor extends FieldExtractor {
   def extractFromInts(iterator: Iterator[Int], fieldDefinition: SimpleField): FieldValue
 
-  def fromForm(name: String)(implicit kv: Map[String, String], key: Key): T =
-    throw new NotImplementedError() //todo
-
-  def formValue(name: String)(implicit kv: Map[String, String], key: Key): String = {
-    kv(FieldKey(name, key).param)
-  }
 }
 
 trait FieldExtractor {
@@ -142,6 +136,12 @@ trait FieldExtractor {
 
 }
 
+/**
+ * where in the memory image
+ * @param offset
+ * @param fieldDefinition
+ * @param field
+ */
 case class FieldOffset(offset: Int, fieldDefinition: FieldDefinition, field: Option[String] = None)
 
 object FieldOffset {

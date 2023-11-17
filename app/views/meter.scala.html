@@ -2,18 +2,18 @@
 @import net.wa9nnn.rc210.ui.Tabs
 @import views.html.helper._
 @import net.wa9nnn.rc210.key.MeterKey
-@(meterKey: MeterKey, meter:Meter)(implicit messages: MessagesProvider)
+@(meter:Meter)(implicit messages: MessagesProvider)
     @implicitField = @{
         FieldConstructor(views.html.rc2input.f)
     }
     @tabbedmain(Tabs.metersTab) {
         @form(action = routes.MeterController.saveMeter()) {
-            <input type="hidden" name="key" value="@meterKey.toString">
+            <input type="hidden" name="key" value="@meter.key">
             <div class="col-">
                 <table class="table table-bordered table-sm  w-auto rc210-table">
                     <thead>
                         <tr>
-                            <th colspan="2">Meter @meterKey.number</th>
+                            <th colspan="2">Meter @meter.key.number</th>
                         </tr>
                         <tr>
                             <th>Field</th>

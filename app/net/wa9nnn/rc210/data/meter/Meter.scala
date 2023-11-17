@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data.meter
 
 import com.wa9nnn.util.tableui.{Cell, Row}
+import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.key.KeyFormats.*
 import net.wa9nnn.rc210.key.{KeyFactory, KeyKind, MacroKey, MeterAlarmKey, MeterKey}
@@ -33,7 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * @param low       calibrate for high.
  * @param high      calibrate for low.
  */
-case class Meter(key: MeterKey, meterKind: MeterFaceName, low: VoltToReading, high: VoltToReading) extends ComplexFieldValue[MeterKey] {
+case class Meter(key: Key, meterKind: MeterFaceName, low: VoltToReading, high: VoltToReading) extends ComplexFieldValue {
   override val fieldName: String = "Meter"
 
   override def display: String = toString
@@ -43,7 +44,7 @@ case class Meter(key: MeterKey, meterKind: MeterFaceName, low: VoltToReading, hi
    */
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
     val c = key.number.toString
-    val m = meterKind.value
+    val m = meterKind.number
     val x1 = low.hundredthVolt
     val y1 = low.reading
     val x2 = high.hundredthVolt
@@ -61,7 +62,7 @@ case class Meter(key: MeterKey, meterKind: MeterFaceName, low: VoltToReading, hi
   override def toJsonValue: JsValue = Json.toJson(this)
 }
 
-object Meter extends ComplexExtractor[MeterKey] {
+object Meter extends ComplexExtractor {
   /**
    *
    * @param memory    source of RC-210 data.
@@ -73,7 +74,7 @@ object Meter extends ComplexExtractor[MeterKey] {
     val mai = new AtomicInteger()
     val nMeters = KeyKind.meterKey.maxN
     val faceInts = memory.sub8(186, nMeters)
-    val faceNames: Seq[MeterFaceName] = faceInts.map(MeterFaceNames.lookup.lookup(_))
+    val faceNames: Seq[MeterFaceName] = faceInts.map(MeterFaceName.lookup.lookup(_))
     val lowX: Seq[Int] = memory.iterator16At(202).take(nMeters).toSeq
     val lowY: Seq[Int] = memory.iterator16At(218).take(nMeters).toSeq
     val highX: Seq[Int] = memory.iterator16At(234).take(nMeters).toSeq

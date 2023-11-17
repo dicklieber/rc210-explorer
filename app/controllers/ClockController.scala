@@ -16,16 +16,17 @@
  */
 
 package controllers
+
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.KeyKind.clockKey
 import net.wa9nnn.rc210.data.clock.{Clock, DSTPoint, Occurrence}
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.UpdateData
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
-import net.wa9nnn.rc210.data.field.Formatters.{MonthOfYearDSTFormatter, OccurrenceFormatter}
 import net.wa9nnn.rc210.data.field.{FieldEntry, MonthOfYearDST}
-import net.wa9nnn.rc210.key._
-import net.wa9nnn.rc210.security.authorzation.AuthFilter._
-import net.wa9nnn.rc210.ui.EnumSelect
+import net.wa9nnn.rc210.key.*
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.*
+import net.wa9nnn.rc210.ui.{EnumSelect, FormParser}
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
 import play.api.data.*
@@ -37,7 +38,6 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
-import net.wa9nnn.rc210.data.field.MonthOfYearDSTFormatter._
 
 @Singleton()
 class ClockController @Inject()(actor: ActorRef[DataStoreActor.Message])
@@ -45,57 +45,28 @@ class ClockController @Inject()(actor: ActorRef[DataStoreActor.Message])
   extends MessagesInjectedController with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 
-
-  private val dstPointForm: Mapping[DSTPoint] =
-    mapping(
-      "month" -> of[MonthOfYearDST],
-      "occurrence" -> of[Occurrence]
-    )(DSTPoint.apply)(DSTPoint.unapply)
-
-  private val clockForm = Form[Clock](
-    mapping(
-      "enableDST" -> boolean,
-      "hourDST" -> number(min = 0, max = 23),
-      "startDST" -> dstPointForm,
-      "endDST" -> dstPointForm,
-      "say24Hours" -> boolean
-    )(Clock.apply)(Clock.unapply))
-
   def index: Action[AnyContent] = Action.async {
     implicit request =>
-    actor.ask[Seq[FieldEntry]](DataStoreActor.AllForKeyKind(KeyKind.clockKey, _)).map { fieldEntries =>
-      val fieldEntry: FieldEntry = fieldEntries.head
-      val clock: Clock = fieldEntry.value.asInstanceOf[Clock]
-      val filledInForm = clockForm.fill(clock)
-      Ok(views.html.clock(filledInForm))
-    }
+      actor.ask[Seq[FieldEntry]](DataStoreActor.AllForKeyKind(clockKey, _)).map { fieldEntries =>
+        val fieldEntry: FieldEntry = fieldEntries.head
+        val clock: Clock = fieldEntry.value.asInstanceOf[Clock]
+        Ok(views.html.clock(clock))
+      }
   }
 
   def save(): Action[AnyContent] = Action.async { implicit request =>
-    val formUrlEncoded: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
+    val formParser = FormParser()
+    val clock = Clock(formParser)
+    val updateCandidate: UpdateCandidate = UpdateCandidate(Clock.fieldKey(clock.key), Right(clock))
 
-    clockForm.bindFromRequest().fold(
-      formWithErrors => {
-        // binding failure, you retrieve the form containing errors:
-        Future(BadRequest(views.html.clock(formWithErrors)))
-      },
-      (clock: Clock) => {
-        /* binding success, you get the actual value. */
-        val updateCandidate: UpdateCandidate = UpdateCandidate(Clock.fieldKey(clock.key), Right(clock))
-
-        actor.ask[String](UpdateData(Seq(updateCandidate), Seq.empty, user, _)).map { _ =>
-          Redirect(routes.ClockController.index)
-        }
-      }
-    )
+    actor.ask[String](UpdateData(Seq(updateCandidate), Seq.empty, user, _)).map { _ =>
+      Redirect(routes.ClockController.index)
+    }
   }
 
 }
 
-object ClockController {
-  implicit val ocurrenceSelect: EnumSelect[Occurrence] = new EnumSelect[Occurrence]("occurrence")
-  implicit val monthOfYearDSTSelect: EnumSelect[MonthOfYearDST] = new EnumSelect[MonthOfYearDST]("month")
-}
+
 
 
 

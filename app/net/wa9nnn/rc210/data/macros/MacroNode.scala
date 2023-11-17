@@ -1,6 +1,7 @@
 package net.wa9nnn.rc210.data.macros
 
 import com.wa9nnn.util.tableui.{Header, Row}
+import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.Dtmf
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.key.*
@@ -18,11 +19,11 @@ import scala.annotation.tailrec
  * @param functions that this macro invokes.
  * @param dtmf      that can invoke this macro.
  */
-case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dtmf: Option[Dtmf] = None) extends ComplexFieldValue[MacroKey] with TriggerNode {
+case class MacroNode(override val key: Key , functions: Seq[Key], dtmf: Option[Dtmf] = None) extends ComplexFieldValue("Macro") with TriggerNode {
 
   def enabled: Boolean = functions.nonEmpty
 
-  override def canRunMacro(macroKey: MacroKey): Boolean = false //todo look for FunctionNode with destination that has the macro of interest.
+  override def canRunMacro(macroKey: Key): Boolean = false //todo look for FunctionNode with destination that has the macro of interest.
 
   //  override val commandStringValue: String = "*4002 10 * 162 * 187 * 122 * 347" // todo
 
@@ -64,7 +65,7 @@ case class MacroNode(override val key: MacroKey, functions: Seq[FunctionKey], dt
 
 }
 
-object MacroNode extends ComplexExtractor[MacroKey] {
+object MacroNode extends ComplexExtractor {
   def header(count: Int): Header = Header(s"Macros ($count)", "Key", "Functions")
 
   override def positions: Seq[FieldOffset] = Seq(
@@ -80,13 +81,13 @@ object MacroNode extends ComplexExtractor[MacroKey] {
     def macroBuilder(offset: Int, chunkLength: Int, nChunks: Int) = {
       memory.chunks(offset, chunkLength, nChunks)
         .map { chunk =>
-          val key: MacroKey = KeyFactory.apply(KeyKind.macroKey, mai.getAndIncrement()).asInstanceOf[MacroKey]
+          val key: Key = Key(KeyKind.macroKey, mai.getAndIncrement())
           val sChunk = chunk.ints
             .map(_.toString)
             .mkString(", ")
 
 
-          val functions: Seq[FunctionKey] = try {
+          val functions: Seq[Key] = try {
             parseChunk(chunk.iterator)
           } catch {
             case e: NoSuchElementException =>

@@ -2,9 +2,8 @@ package net.wa9nnn.rc210.data.functions
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
-import net.wa9nnn.rc210.key.{FunctionKey, Key, MacroKey, MessageKey}
-import net.wa9nnn.rc210.key.KeyFormats._
-import play.api.libs.json._
+import net.wa9nnn.rc210.{Key, KeyKind}
+import play.api.libs.json.*
 
 import java.io.InputStream
 import javax.inject.Singleton
@@ -32,17 +31,17 @@ class FunctionsProvider extends LazyLogging {
    * @param fkey of interest.
    * @return the [[FunctionNode]]
    */
-  def apply(fkey: FunctionKey): Option[FunctionNode] = map.get(fkey)
+  def apply(fkey: Key): Option[FunctionNode] = map.get(fkey)
 
   def size: Int = functions.length
 
 
-  lazy val invokedMacros: Seq[MacroKey] = for {
+  lazy val invokedMacros: Seq[Key] = for {
     function <- functions
     destKey <- function.destination
-    if destKey.isInstanceOf[MacroKey]
+    if destKey.isInstanceOf[Key]
   } yield {
-    destKey.asInstanceOf[MacroKey]
+    destKey.asInstanceOf[Key]
   }
 
 }
@@ -51,11 +50,11 @@ class FunctionsProvider extends LazyLogging {
  *
  * @param key         of the function.
  * @param description human readable.
- * @param destination MacroKey or MessageKey
+ * @param destination Key or MessageKey
  */
-case class FunctionNode(key: FunctionKey, description: String, destination: Option[Key]) extends Ordered[FunctionNode] with RowSource {
+case class FunctionNode(key: Key, description: String, destination: Option[Key]) extends Ordered[FunctionNode] with RowSource {
   destination foreach (destKey =>
-    assert(destKey.isInstanceOf[MacroKey] || destKey.isInstanceOf[MessageKey], s"destination must be MacroKey or MessageKey! But got: $key")
+    assert(destKey.keyKind == KeyKind.functionKey || KeyKind.messageKey, s"destination must be Key or MessageKey! But got: $key")
     )
 
   override def compare(that: FunctionNode): Int = description compareTo that.description
@@ -67,9 +66,32 @@ case class FunctionNode(key: FunctionKey, description: String, destination: Opti
   override def toString: String = s"$description (${key.number})"
 }
 
-
 object FunctionNode {
+  implicit val fmtFunctionNode: Format[FunctionNode] = Json.format[FunctionNode]
   def header(count: Int): Header = Header(s"Functions ($count)", "Key", "Description")
+
+  implicit val fmtFunction: Format[FunctionNode] = new Format[FunctionNode] {
+    override def reads(json: JsValue): JsResult[FunctionNode] = {
+
+      try {
+        val key: Key = (json \ "key").as[Key]
+
+        val sdesc: String = (json \ "description").as[String]
+        val dest: Option[Key] = (json \ "destination").asOpt[Key]
+
+        val f = FunctionNode(key, sdesc, dest)
+        JsSuccess(f)
+      }
+      catch {
+        case e: IllegalArgumentException => JsError(e.getMessage)
+      }
+    }
+
+    override def writes(key: FunctionNode): JsValue = {
+      JsString(key.toString)
+    }
+  }
+
 }
 
 

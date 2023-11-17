@@ -15,17 +15,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.key
+package net.wa9nnn.rc210
 
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
-import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.data.field.FieldKey
 import net.wa9nnn.rc210.data.named.NamedKeySource
-import net.wa9nnn.rc210.key.KeyKind.*
-import net.wa9nnn.rc210.util.SelectItem
+import net.wa9nnn.rc210.util.{SelectItem, SelectItemNumber}
 import play.api.data.FormError
 import play.api.data.format.Formatter
+import play.api.mvc.PathBindable
 import play.twirl.api.Html
-sealed abstract class Key(val number: Int, val keyKind: KeyKind) extends Ordered[Key] with CellProvider with NamedKeySource {
+import net.wa9nnn.rc210.KeyKind
+//import scala.reflect.ClassTag
+
+/**
+ *
+ * @param keyKind of the Key
+ * @param number  0 is a magic number used for things like [[KeyKind.commonKey]]
+ */
+case class Key(keyKind: KeyKind, number: Int = 0) extends Ordered[Key] with CellProvider with NamedKeySource with SelectItemNumber {
+  def check(target: KeyKind): Unit = if (target != keyKind) throw new WrongKeyType(this, target)
+
+      assert(number <= keyKind.maxN, s"Max number for ${keyKind.name} is ${keyKind.maxN}")
 
   override def toString: String = s"$keyKind$number"
 
@@ -37,15 +48,11 @@ sealed abstract class Key(val number: Int, val keyKind: KeyKind) extends Ordered
 
   def fieldKey(fieldName: String): FieldKey = FieldKey(fieldName, this)
 
-  def namedCell(param: String = fieldKey("name").param): Cell = {
+  def namedCell(param: String = fieldKey("name").param): Cell =
     val html: Html = views.html.fieldNamedKey(this, nameForKey(this), param)
     Cell.rawHtml(html.toString())
-  }
 
-  def keyWithName: String = {
-    s"$number ${nameForKey(this)}"
-  }
-
+  def keyWithName: String = s"$number ${nameForKey(this)}"
 
   override def toCell: Cell = {
     val name = nameForKey(this)
@@ -57,7 +64,7 @@ sealed abstract class Key(val number: Int, val keyKind: KeyKind) extends Ordered
   }
 
   /**
-   * Replace's 'n' in the template with the number (usually a port number).
+   * Replaces 'n' in the template with the number (usually a port number).
    *
    * @param template in
    * @return with 'n' replaced by the port number.
@@ -66,52 +73,41 @@ sealed abstract class Key(val number: Int, val keyKind: KeyKind) extends Ordered
     template.replaceAll("n", number.toString)
   }
 
-
-
-
+  override def nameForKey(key: Key): String = ???
 }
 
 object Key:
-  def setNamedSource(namedsource: NamedKeySource): Unit = {
+  private val kparser = """(\D+)(\d*)""".r
+
+  def apply(sKey: String): Key =
+    sKey match
+      case kparser(sKind, sNumber) =>
+        val keyKind = KeyKind.valueOf(sKind)
+        new Key(keyKind, sNumber.toInt)
+
+  def setNamedSource(namedSource: NamedKeySource): Unit = {
     if (_namedSource.isDefined) throw new IllegalStateException("NamedSource already set.")
-    _namedSource = Option(namedsource)
+    _namedSource = Option(namedSource)
   }
 
-  var _namedSource: Option[NamedKeySource] = None
+  private var _namedSource: Option[NamedKeySource] = None
 
   def nameForKey(key: Key): String =
     _namedSource.map(_.nameForKey(key)).getOrElse("")
 
+  /**
+   * Codec to allow non-string types i routes.conf definitions.
+   */
 
-abstract class SingleKey(keyKind: KeyKind) extends Key(0, keyKind):
-  override def toString: String = keyKind.toString
+  implicit def keyKindPathBinder: PathBindable[KeyKind] = new PathBindable[KeyKind] {
+    override def bind(key: String, value: String): Either[String, KeyKind] = {
+      Right(KeyKind.valueOf(value))
+    }
 
+    override def unbind(key: String, macroKey: KeyKind): String = {
+      macroKey.toString
+    }
+  }
 
-case class MacroKey(number: Int) extends Key(number, KeyKind.macroKey) with SelectItem
-
-case class PortKey(number: Int) extends Key(number, KeyKind.portKey)
-
-case class LogicAlarmKey(number: Int) extends Key(number, KeyKind.logicAlarmKey)
-
-case class MeterKey(number: Int) extends Key(number, KeyKind.meterKey) with SelectItem
-
-case class MeterAlarmKey(number: Int) extends Key(number, KeyKind.meterAlarmKey)
-
-case class MessageKey(number: Int) extends Key(number, KeyKind.messageKey)
-
-case class FunctionKey(number: Int) extends Key(number, KeyKind.functionKey)
-
-case class ScheduleKey(number: Int) extends Key(number, KeyKind.scheduleKey)
-
-case class DtmfMacroKey(number: Int) extends Key(number, KeyKind.dtmfMacroKey)
-
-case class CourtesyToneKey(number: Int) extends Key(number, KeyKind.courtesyToneKey)
-
-case class TimerKey(number: Int) extends Key(number, KeyKind.timerKey)
-
-case object CommonKey extends SingleKey(KeyKind.commonKey)
-
-case object ClockKey extends SingleKey(KeyKind.clockKey)
-
-case object RemoteBaseKey extends SingleKey(KeyKind.remoteBaseKey)
+case class WrongKeyType(key: Key, expected: KeyKind) extends IllegalArgumentException(s"Expecting Key of type ${expected.name}, but got $key}")
 

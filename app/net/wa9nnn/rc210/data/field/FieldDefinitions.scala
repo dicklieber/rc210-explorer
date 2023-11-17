@@ -26,9 +26,8 @@ import net.wa9nnn.rc210.data.meter.{Meter, MeterAlarm}
 import net.wa9nnn.rc210.data.remotebase.RemoteBase
 import net.wa9nnn.rc210.data.schedules.Schedule
 import net.wa9nnn.rc210.data.timers.TimerExtractor
-import net.wa9nnn.rc210.key.KeyKind._
 import net.wa9nnn.rc210.util.MacroSelectField
-
+import net.wa9nnn.rc210.KeyKind._
 import javax.inject.{Inject, Singleton}
 @Singleton
 class FieldDefinitions @Inject()() {
@@ -131,7 +130,7 @@ class FieldDefinitions @Inject()() {
     //todo finish
   )
 
-  val complexFd: Seq[ComplexExtractor[_]] = Seq(
+  val complexFd: Seq[ComplexExtractor] = Seq(
     Schedule,
     MacroNode,
     CourtesyExtractor,

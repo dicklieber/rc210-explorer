@@ -18,15 +18,13 @@
 package net.wa9nnn.rc210.data.timers
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldEntry, FieldOffset, FieldValue}
-import net.wa9nnn.rc210.key.KeyKind.macroKey
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind, TimerKey}
+import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldEntry, FieldKey, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.{Format, JsValue, Json}
 
 //noinspection ZeroIndexToHead
-object TimerExtractor extends ComplexExtractor[TimerKey] with LazyLogging {
+object TimerExtractor extends ComplexExtractor with LazyLogging {
   private val nTimers = KeyKind.timerKey.maxN
   //  Memory Layout
   //  seconds for each timer 6 2-byte ints
@@ -52,14 +50,13 @@ object TimerExtractor extends ComplexExtractor[TimerKey] with LazyLogging {
     val r: Seq[FieldEntry] = (for {
       index <- 0 until KeyKind.timerKey.maxN
     } yield {
-      val key: TimerKey = KeyFactory(KeyKind.timerKey, index + 1)
+      val key: Key = Key(KeyKind.timerKey, index + 1)
       val fieldKey = FieldKey("Timer", key)
-      FieldEntry(this, fieldKey, Timer(key, seconds.next(), KeyFactory.apply(macroKey, macroInts.next() + 1)))
+      FieldEntry(this, fieldKey, Timer(key, seconds.next(), Key(KeyKind.macroKey, macroInts.next() + 1)))
     })
     r
   }
   import net.wa9nnn.rc210.key.KeyFormats._
-  implicit val fmtTimer: Format[Timer] = Json.format[Timer]
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[Timer]
 

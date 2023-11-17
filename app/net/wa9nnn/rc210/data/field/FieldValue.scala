@@ -19,9 +19,8 @@ package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Row, RowSource}
-import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.named.NamedKeySource
-import net.wa9nnn.rc210.key.Key
 import play.api.libs.json.JsValue
 
 /**
@@ -48,8 +47,6 @@ sealed trait FieldValue extends LazyLogging {
   def toHtmlField(renderMetadata: RenderMetadata): String
 
   def toJsonValue: JsValue
-
-
 }
 
 
@@ -68,19 +65,12 @@ trait SimpleFieldValue extends FieldValue {
    * @return None if value has not changed, otherwise a new [[FieldValue]].
    */
   def update(paramValue: String): SimpleFieldValue
-
 }
 
-/**
- * Renders itself as a [[Row]]
- *
- * @tparam K
- */
-trait ComplexFieldValue[K <: Key] extends FieldValue  with LazyLogging{
-  val key: K
-  val fieldName: String
-  lazy val fieldKey: FieldKey = FieldKey(fieldName, key)
+class ComplexFieldValue( val fieldName: String) extends FieldValue  with LazyLogging{
+  val key: Key
 
+  lazy val fieldKey: FieldKey = FieldKey(fieldName, key)
   /**
    * Render as HTML. Either a single rc2input of an entire HTML Form.
    *

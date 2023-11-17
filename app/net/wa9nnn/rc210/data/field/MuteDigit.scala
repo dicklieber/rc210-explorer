@@ -17,48 +17,11 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.data.field.MuteDigit.selectOptions
-import net.wa9nnn.rc210.key.KeyFactory.Key
-import net.wa9nnn.rc210.util.{FieldSelect, SelectOption}
-import play.api.libs.json.JsValue
+import net.wa9nnn.rc210.util.SelectItemNumber
 
-/**
- * An enumeration with behaviour.
- *
- * @param value    one of the display values in DayOfWeek.options.
- */
-case class MuteDigit(value: String = selectOptions.head.display) extends FieldSelect[String] {
-  override val selectOptions: Seq[SelectOption] = MuteDigit.selectOptions
-  override val name: String = "Mute Digit"
+sealed trait MuteDigit(val rc210Value: Int, val display: String) extends SelectItemNumber
 
-  override def update(paramValue: String): MuteDigit = {
-    MuteDigit(paramValue)
-  }
+case object firstDigit extends MuteDigit(1, "1st digit")
 
-}
+case object secpondtDigit extends MuteDigit(2, "2nd digit")
 
-object MuteDigit extends SimpleExtractor[String] {
-
-  def apply(id: Int): MuteDigit = {
-    val maybeOption = selectOptions.find(_.id == id.toString)
-    new MuteDigit(maybeOption.get.display)
-  }
-
-  val selectOptions: Seq[SelectOption] =
-    Seq(
-      "1st digit" -> 1,
-      "2nd digit" -> 2
-    ).map { t => SelectOption(t._2, t._1) }
-
-  override def extractFromInts(itr: Iterator[Int], field: SimpleField): MuteDigit = {
-    val id = itr.next()
-    apply(id)
-  }
-
-  override def parse(jsValue: JsValue): FieldValue = new  MuteDigit(jsValue.as[String])
-
-  override val name: String = "MuteDigit"
-
-  override def fromForm(name: String)(implicit kv: Map[String, String],key: Key): String =
-    formValue(name)
-}

@@ -18,9 +18,8 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui.*
-import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.datastore.FieldEntryJson
-import net.wa9nnn.rc210.key.{KeyKind, MacroKey}
 import net.wa9nnn.rc210.model.TriggerNode
 
 /**
@@ -41,7 +40,7 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
    * @param newFieldValue already parsed to a [[FieldValue]]
    * @return updated [[FieldEntry]].
    */
-  def setCandidate(newFieldValue: ComplexFieldValue[_]): FieldEntry = {
+  def setCandidate(newFieldValue: ComplexFieldValue): FieldEntry = {
     if (fieldValue == newFieldValue)
       copy(candidate = None)
     else
@@ -87,14 +86,14 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
    * @param macroKey of interest.
    * @return FieldEntry that invokes the macroKey.
    */
-  def canTriggerMacro(macroKey: MacroKey): Boolean = {
+  def canTriggerMacro(macroKey: Key): Boolean =
+    macroKey.check(KeyKind.macroKey)
     fieldValue match {
       case tn: TriggerNode =>
         tn.canRunMacro(macroKey)
       case _ =>
         false
     }
-  }
 
 
   override def toString: String = {
@@ -132,7 +131,7 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
 
 object FieldEntry {
 
-  def apply(complexExtractor: ComplexExtractor[_], complexFieldValue: ComplexFieldValue[_]): FieldEntry = {
+  def apply(complexExtractor: ComplexExtractor, complexFieldValue: ComplexFieldValue): FieldEntry = {
 
     new FieldEntry(complexExtractor, complexFieldValue.fieldKey, complexFieldValue)
   }

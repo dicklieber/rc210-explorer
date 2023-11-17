@@ -17,12 +17,11 @@
 
 package net.wa9nnn.rc210.data.datastore
 
-import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry}
+import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldKey}
 import net.wa9nnn.rc210.data.named.NamedKey
-import net.wa9nnn.rc210.key.Key
 import play.api.libs.json.{Format, JsValue, Json}
-import net.wa9nnn.rc210.key.KeyFormats._
+import net.wa9nnn.rc210.key.KeyFormats.*
 
 
 /**
@@ -64,10 +63,10 @@ object FieldEntryJson {
  * @param fieldKey   id of value.
  * @param candidate  contents of value. To set as candidate.
  */
-case class UpdateCandidate(fieldKey: FieldKey, candidate: Either[String, ComplexFieldValue[_]])
+case class UpdateCandidate(fieldKey: FieldKey, candidate: Either[String, ComplexFieldValue])
 
 object UpdateCandidate {
-  def apply(complexFieldValue: ComplexFieldValue[_]): UpdateCandidate = {
+  def apply(complexFieldValue: ComplexFieldValue): UpdateCandidate = {
     new UpdateCandidate(complexFieldValue.fieldKey, Right(complexFieldValue))
   }
 }

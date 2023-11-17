@@ -17,11 +17,12 @@
 
 package net.wa9nnn.rc210.key
 
+import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.KeyKind
 import net.wa9nnn.rc210.data.functions.FunctionNode
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.named.NamedKey
-import net.wa9nnn.rc210.key.KeyFactory._
-import play.api.libs.json._
+import play.api.libs.json.*
 import play.api.mvc.PathBindable
 
 import scala.language.postfixOps
@@ -30,130 +31,8 @@ import scala.util.matching.Regex
 
 object KeyFormats {
 
-  implicit val fmtFunction: Format[FunctionNode] = new Format[FunctionNode] {
-    override def reads(json: JsValue): JsResult[FunctionNode] = {
-
-      try {
-        val jsKey: FunctionKey = (json \ "key").as[Key].asInstanceOf[FunctionKey]
-
-        val sdesc: String = (json \ "description").as[String]
-        val dest: Option[Key] = (json \ "destination").asOpt[Key]
-
-        val f = FunctionNode(jsKey, sdesc, dest)
-        JsSuccess(f)
-      }
-      catch {
-        case e: IllegalArgumentException => JsError(e.getMessage)
-      }
-    }
-
-    override def writes(key: FunctionNode): JsValue = {
-      JsString(key.toString)
-    }
-  }
 
   val r: Regex = """([a-zA-Z]+)(\d+)?""".r
-
-
-  implicit val fmtCourtesyToneKey: Format[CourtesyToneKey] = new Format[CourtesyToneKey] {
-    def writes(key: CourtesyToneKey): JsValue = {
-      JsString(key.toString)
-    }
-
-    override def reads(json: JsValue): JsResult[CourtesyToneKey] = {
-      JsSuccess(KeyFactory.apply(json.as[String]))
-    }
-  }
-
-  implicit val fmtTimerKey: Format[TimerKey] = new Format[TimerKey] {
-    def writes(key: TimerKey): JsValue = {
-      JsString(key.toString)
-    }
-
-    override def reads(json: JsValue): JsResult[TimerKey] = {
-      JsSuccess(KeyFactory.apply(json.as[String]))
-    }
-  }
-
-
-  implicit val fmtMacroKey: Format[MacroKey] = new Format[MacroKey] {
-    def writes(key: MacroKey): JsValue = {
-      JsString(key.toString)
-    }
-
-    override def reads(json: JsValue): JsResult[MacroKey] = {
-      JsSuccess(KeyFactory.apply(json.as[String]))
-    }
-  }
-
-  implicit val fmtFunctionKey: Format[FunctionKey] = new Format[FunctionKey] {
-    def writes(key: FunctionKey): JsValue = {
-      JsString(key.toString)
-    }
-
-    override def reads(json: JsValue): JsResult[FunctionKey] = {
-      JsSuccess(KeyFactory.apply(json.as[String]))
-    }
-  }
-
-
-  implicit val fmtScheduleKey: Format[ScheduleKey] = new Format[ScheduleKey] {
-    def writes(key: ScheduleKey): JsValue = {
-      JsString(key.toString)
-    }
-
-    override def reads(json: JsValue): JsResult[ScheduleKey] = {
-      JsSuccess(KeyFactory.apply(json.as[String]))
-    }
-  }
-
-  implicit val fmtMessageKey: Format[MessageKey] = new Format[MessageKey] {
-    def writes(key: MessageKey): JsValue = {
-      JsString(key.toString)
-    }
-
-    override def reads(json: JsValue): JsResult[MessageKey] = {
-      JsSuccess(KeyFactory.apply(json.as[String]))
-    }
-  }
-  implicit val fmtMeterKey: Format[MeterKey] = new Format[MeterKey] {
-    def writes(key: MeterKey): JsValue = {
-      JsString(key.toString)
-    }
-
-    override def reads(json: JsValue): JsResult[MeterKey] = {
-      JsSuccess(KeyFactory.apply(json.as[String]))
-    }
-  }
-  implicit val fmtMeterAlarmKey: Format[MeterAlarmKey] = new Format[MeterAlarmKey] {
-    def writes(key: MeterAlarmKey): JsValue = {
-      JsString(key.toString)
-    }
-
-    override def reads(json: JsValue): JsResult[MeterAlarmKey] = {
-      JsSuccess(KeyFactory.apply(json.as[String]))
-    }
-  }
-
-  implicit val fmtKey: Format[Key] = new Format[Key] {
-    override def reads(json: JsValue): JsResult[Key] = {
-      JsResult.fromTry(Try {
-        KeyFactory[Key](json.as[String])
-      })
-    }
-
-    override def writes(key: Key): JsValue = {
-      JsString(key.toString)
-    }
-  }
-  implicit val fmtClockKey: Format[ClockKey.type] = new Format[ClockKey.type ] {
-    override def reads(json: JsValue) = JsResult.fromTry(Try {
-      KeyFactory[ClockKey.type ](json.as[String])
-    })
-
-
-    override def writes(o: ClockKey) =    JsString(o.toString)
-  }
 
   implicit def keyKindPathBinder(implicit intBinder: PathBindable[KeyKind]): PathBindable[KeyKind] = new PathBindable[KeyKind] {
     override def bind(key: String, fromPath: String): Either[String, KeyKind] = {
@@ -173,7 +52,5 @@ object KeyFormats {
   implicit val fmtNamed: OFormat[NamedKey] = Json.format[NamedKey]
 
 
-  implicit val fmtMacro: OFormat[MacroNode] = Json.format[MacroNode]
-  implicit val fmtLogicAlarmKey: Format[LogicAlarmKey] = Json.format[LogicAlarmKey]
 
 }

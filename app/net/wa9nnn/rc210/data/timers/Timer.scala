@@ -17,14 +17,11 @@
 
 package net.wa9nnn.rc210.data.timers
 
+import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntryBase}
-import net.wa9nnn.rc210.key.{MacroKey, TimerKey}
 import play.api.libs.json.{JsValue, Json, OFormat}
 
-case class Timer(key: TimerKey, seconds: Int, macroKey: MacroKey) extends ComplexFieldValue[TimerKey] {
-  override val fieldName: String = "Timer"
-  implicit val k: TimerKey = key
-
+case class Timer(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValue("Timer") {
 
   override def display: String = s"$seconds => ${macroKey.keyWithName}"
 

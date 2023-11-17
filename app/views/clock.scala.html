@@ -3,7 +3,8 @@
 @import net.wa9nnn.rc210.ui.EnumSelect.e2o
 @import net.wa9nnn.rc210.ui.Tabs
 @import views.html.helper.{FieldConstructor, form, input}
-@(clockForm: Form[Clock])(implicit messages: MessagesProvider)
+@import views.html.input.checkBox
+@(clock: Clock)(implicit messages: MessagesProvider)
     @implicitField = @{
         FieldConstructor(views.html.rc2input.f)
     }
@@ -15,13 +16,13 @@
                 <tr>
                     <td class="text-end">Say 24 Hour</td>
                     <td>
-                    @helper.checkbox(clockForm("say24Hours"))
+                    @checkBox("say24Hours", clock.say24Hours)
                     </td>
                 </tr>
                 <tr>
                     <td class="text-end">Enable DST</td>
                     <td>
-                        @helper.checkbox(clockForm("enableDST"))
+                        @checkBox("enableDST", clock.enableDST)
                     </td>
                 </tr>
                 <tr>

@@ -18,8 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui.Cell
-import net.wa9nnn.rc210.key.KeyFactory
-import net.wa9nnn.rc210.key.Key
+import net.wa9nnn.rc210.Key
 import play.api.libs.json._
 import views.html.fieldString
 
@@ -55,7 +54,7 @@ case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue {
 
 }
 
-object Field2Numbers extends SimpleExtractor[Seq[Int]] {
+object Field2Numbers extends SimpleExtractor {
   implicit val fmtField2Numbers: Format[Field2Numbers] = new Format[Field2Numbers] {
     override def writes(o: Field2Numbers) = JsString(o.value.mkString(" "))
 
@@ -80,11 +79,5 @@ object Field2Numbers extends SimpleExtractor[Seq[Int]] {
   override def parse(json: JsValue): FieldValue =
     json.as[Field2Numbers]
 
-  override def fromForm(name: String)(implicit kv: Map[String, String], key: Key): Seq[Int] = {
-    formValue(name)
-      .split(" ")
-      .map(_.toInt)
-      .toIndexedSeq
-  }
 }
 

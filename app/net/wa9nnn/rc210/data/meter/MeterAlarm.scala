@@ -17,20 +17,22 @@
 
 package net.wa9nnn.rc210.data.meter
 
-import net.wa9nnn.rc210.data.field._
-import net.wa9nnn.rc210.key.{MacroKey, MeterAlarmKey, MeterKey}
-import net.wa9nnn.rc210.key.KeyFormats._
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.KeyKind._
+import net.wa9nnn.rc210.data.field.*
+import net.wa9nnn.rc210.key.KeyFormats.*
 import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.{Format, JsValue, Json}
 
 import java.util.concurrent.atomic.AtomicInteger
 
 
-case class MeterAlarm(val key: MeterAlarmKey, meter: MeterKey, alarmType: AlarmType, tripPoint: Int, macroKey: MacroKey) extends ComplexFieldValue[MeterAlarmKey] {
-  override val fieldName: String = "MeterAlarm"
+case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint: Int, macroKey: Key) extends ComplexFieldValue("MeterAlarm") {
+  key.check(meterAlarmKey)
+  meter.check(meterKey)
+  macroKey.check(KeyKind.macroKey)
 
-  override def display: String = toString
+  override def display: String = toString //todo this cant be right!
 
   /**
    * Render this value as an RD-210 command string.
@@ -44,7 +46,7 @@ case class MeterAlarm(val key: MeterAlarmKey, meter: MeterKey, alarmType: AlarmT
      */
     val aNumber = key.number
     val mNumber = meter.number
-    val at = alarmType.value
+    val at = alarmType.number
     val trip = tripPoint
     val macNumber = macroKey.number
     Seq(
@@ -71,10 +73,9 @@ case class MeterAlarm(val key: MeterAlarmKey, meter: MeterKey, alarmType: AlarmT
 * */
 
 
-object MeterAlarm extends ComplexExtractor[MeterKey] {
+object MeterAlarm extends ComplexExtractor {
   private val nMeters = 8
 
-  def unapply(meterAlarm: MeterAlarm):Option[(MeterAlarmKey, MeterKey, AlarmType, Int, MacroKey)] = Option(unapply(meterAlarm))
   /**
    *
    * @param memory    source of RC-210 data.
@@ -83,7 +84,7 @@ object MeterAlarm extends ComplexExtractor[MeterKey] {
   override def extract(memory: Memory): Seq[FieldEntry] = {
     val mai = new AtomicInteger()
     val alarmType: Seq[AlarmType] = memory.sub8(274, nMeters).map(AlarmType.lookup)
-    val macroKeys: Seq[MacroKey] = memory.sub8(314, nMeters).map(KeyFactory.macroKey)
+    val macroKeys: Seq[Key] = memory.sub8(314, nMeters).map(Key(macroKey, _))
     val setPoint: Seq[String] = memory.chunks(282, 4, nMeters).map { chunk =>
       val array = chunk.ints
       //      new String(array.map(_.toChar))
@@ -91,17 +92,17 @@ object MeterAlarm extends ComplexExtractor[MeterKey] {
     }
     val meters = memory.sub8(266, nMeters).map { number =>
       try {
-        val r: MeterKey = KeyFactory.meterKey(number + 1)
+        val r: Key = Key(KeyKind.meterKey, number + 1)
         r
       } catch {
-        case e:Exception =>
+        case e: Exception =>
           logger.error(s"Bad meter number got: $number , expecting 1 to $nMeters. Will use Meter 1")
-          KeyFactory.meterKey(1)
+          Key(KeyKind.meterKey, 1)
       }
     }
     for {i <- 0 until nMeters}
       yield {
-        val key: MeterAlarmKey = KeyFactory.apply(KeyKind.meterAlarmKey, mai.incrementAndGet())
+        val key: Key = Key(KeyKind.meterAlarmKey, mai.incrementAndGet())
         val meterAlarm = MeterAlarm(key, meters(i), alarmType(i), setPoint(i).toInt, macroKeys(i))
         new FieldEntry(this, meterAlarm.fieldKey, meterAlarm)
       }
@@ -132,6 +133,6 @@ object MeterAlarm extends ComplexExtractor[MeterKey] {
 
 /**
  *
- * @param hundredthVolt input voltaqge
+ * @param hundredthVolt input voltage
  * @param reding        what "shows" on the4 meter face.
  */

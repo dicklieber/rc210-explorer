@@ -17,87 +17,30 @@
 
 package net.wa9nnn.rc210
 
+import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.KeyKind
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.clock.Occurrence
-import net.wa9nnn.rc210.data.field.MonthOfYearDST
-import net.wa9nnn.rc210.key.{LogicAlarmKey, MacroKey, MessageKey, MeterAlarmKey, MeterKey, TimerKey}
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.data.field.{FieldKey, MonthOfYearDST}
 import net.wa9nnn.rc210.security.UserId.UserId
 import net.wa9nnn.rc210.serial.ComPort
 import play.api.mvc.PathBindable
 
 object Binders {
   implicit def keyKindPathBinder: PathBindable[KeyKind] = new PathBindable[KeyKind] {
-    override def bind(key: String, value: String): Either[String, KeyKind] = {
+    override def bind(key: String, value: String): Either[String, KeyKind] = Right(KeyKind.valueOf(value))
 
-      Right(KeyKind.valueOf(value))
+    override def unbind(key: String, macroKey: KeyKind): String = macroKey.toString
+  }
+
+  implicit def pathBinderMacro: PathBindable[Key] = new PathBindable[Key] {
+    override def bind(key: String, value: String): Either[String, Key] = {
+
+      Right(Key((value)))
     }
 
-    override def unbind(key: String, macroKey: KeyKind): String = {
+    override def unbind(key: String, macroKey: Key): String = {
       macroKey.toString
-    }
-  }
-
-  implicit def pathBinderMacro: PathBindable[MacroKey] = new PathBindable[MacroKey] {
-    override def bind(key: String, value: String): Either[String, MacroKey] = {
-
-      Right(KeyFactory(value))
-    }
-
-    override def unbind(key: String, macroKey: MacroKey): String = {
-      macroKey.toString
-    }
-  }
-  implicit def pathBinderTimerKey: PathBindable[TimerKey] = new PathBindable[TimerKey] {
-    override def bind(key: String, value: String): Either[String, TimerKey] = {
-
-      Right(KeyFactory(value))
-    }
-
-    override def unbind(key: String, timerKey: TimerKey): String = {
-      timerKey.toString
-    }
-  }
-
-  implicit def pathBinderMeter: PathBindable[MeterKey] = new PathBindable[MeterKey] {
-    override def bind(key: String, value: String): Either[String, MeterKey] = {
-
-      Right(KeyFactory(value))
-    }
-
-    override def unbind(key: String, meterKey: MeterKey): String = {
-      meterKey.toString
-    }
-  }
-  implicit def pathBinderMeterAlarm: PathBindable[MeterAlarmKey] = new PathBindable[MeterAlarmKey] {
-    override def bind(key: String, value: String): Either[String, MeterAlarmKey] = {
-
-      Right(KeyFactory(value))
-    }
-
-    override def unbind(key: String, meterAlarmKey: MeterAlarmKey): String = {
-      meterAlarmKey.toString
-    }
-  }
-  implicit def pathBinderLogicAlarmKey: PathBindable[LogicAlarmKey] = new PathBindable[LogicAlarmKey] {
-    override def bind(key: String, value: String): Either[String, LogicAlarmKey] = {
-
-      Right(KeyFactory(value))
-    }
-
-    override def unbind(key: String, logicAlarmKey: LogicAlarmKey): String = {
-      logicAlarmKey.toString
-    }
-  }
-
-  implicit def messageKeyBinder: PathBindable[MessageKey] = new PathBindable[MessageKey] {
-    override def bind(key: String, value: String): Either[String, MessageKey] = {
-
-      Right(KeyFactory(value))
-    }
-
-    override def unbind(key: String, messageKey: MessageKey): String = {
-      messageKey.toString
     }
   }
 
@@ -114,6 +57,7 @@ object Binders {
     override def unbind(key: String, fieldKey: FieldKey): String =
       fieldKey.param
   }
+
   implicit def userIdBinder: PathBindable[UserId] = new PathBindable[UserId] {
     override def bind(key: String, value: String): Either[String, UserId] =
 
@@ -141,6 +85,7 @@ object Binders {
     override def unbind(key: String, monthOfYearDST: MonthOfYearDST): String =
       monthOfYearDST.toString
   }
+
   implicit def occurrenceBinder: PathBindable[Occurrence] = new PathBindable[Occurrence] {
     override def bind(key: String, value: String): Either[String, Occurrence] =
       try {
@@ -153,6 +98,7 @@ object Binders {
     override def unbind(key: String, occurrence: Occurrence): String =
       occurrence.toString
   }
+
   implicit def comportBinder: PathBindable[ComPort] = new PathBindable[ComPort] {
     override def bind(key: String, value: String): Either[String, ComPort] =
       try {

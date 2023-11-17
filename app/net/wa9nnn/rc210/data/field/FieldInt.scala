@@ -17,8 +17,7 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.key.KeyFactory
-import net.wa9nnn.rc210.key.Key
+import net.wa9nnn.rc210.Key
 import play.api.libs.json._
 import views.html.fieldNumber
 
@@ -54,11 +53,7 @@ case class FieldInt(value: Int) extends SimpleFieldValue {
 
 }
 
-object FieldInt extends SimpleExtractor [Int]{
-  override def fromForm(name: String)(implicit kv: Map[String, String],key: Key): Int ={
-    formValue(name).toInt
-  }
-
+object FieldInt extends SimpleExtractor {
 
   override def extractFromInts(itr: Iterator[Int], field: SimpleField): FieldInt = {
     new FieldInt(if (field.max > 256)

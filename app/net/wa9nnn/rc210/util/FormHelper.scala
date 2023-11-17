@@ -17,7 +17,8 @@
 
 package net.wa9nnn.rc210.util
 
-import net.wa9nnn.rc210.key.{Key, KeyFactory}
+import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.key.KeyFactory
 import net.wa9nnn.rc210.security.authentication.User
 import net.wa9nnn.rc210.security.authorzation.AuthFilter
 import play.api.mvc.*
@@ -35,7 +36,7 @@ class FormHelper(implicit request: Request[AnyContent]) {
   val user: User = AuthFilter.user
 
 
-  def key[K <: Key](name: String): K = KeyFactory(apply(name))
+  def key(): Key = Key((apply("key")))
 
   def apply(name: String): String = opt(name).getOrElse("")
 

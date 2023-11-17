@@ -20,9 +20,9 @@ package net.wa9nnn.rc210.data.message
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row}
 import controllers.routes
+import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldEntryBase}
 import net.wa9nnn.rc210.data.vocabulary.{Word, Words}
-import net.wa9nnn.rc210.key.{Key, MessageKey}
 import net.wa9nnn.rc210.ui.EditButton
 import play.api.libs.json.{Format, JsValue, Json}
 
@@ -30,13 +30,13 @@ import scala.collection.immutable.Seq
 
 
 /**
- * These are called "Message Macros in the RC-210 docs, callled "Phases" in the PHP
+ * These are called "Message Macros in the RC-210 docs, called "Phrases" in the PHP
  * MessageMacro is a bit long, so we use "Message" in the application.
  *
  * @param key   Message key
  * @param words word numbers. Each 0 to 255. These are not [[net.wa9nnn.rc210.key.KeyFactory.Key]]s as they are 0 to 255 instead of 1 to N.
  */
-case class Message(key: MessageKey, words: Seq[Int]) extends ComplexFieldValue[MessageKey] {
+case class Message(key: Key, words: Seq[Int]) extends ComplexFieldValue {
 
   override val fieldName: String = "Message"
 

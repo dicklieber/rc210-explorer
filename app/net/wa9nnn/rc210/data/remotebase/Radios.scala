@@ -24,9 +24,9 @@ import play.api.data.format.Formatter
 import play.api.libs.json.{Format, Json}
 
 
-case class Radio(value: Int, display: String) extends SelectItemNumber
+case class Radio(number: Int, display: String) extends SelectItemNumber
 
-case class Yaesu(value: Int, display: String) extends SelectItemNumber
+case class Yaesu(number: Int, display: String) extends SelectItemNumber
 
 
 object Radios extends Selectable[Radio](
@@ -48,7 +48,7 @@ object Yaesus extends Selectable[Yaesu](
 )
 
 
-case class Offset(value: Int, display: String) extends SelectItemNumber
+case class Offset(number: Int, display: String) extends SelectItemNumber
 
 object Offsets extends Selectable[Offset](
   Offset(1, "Minus"),
@@ -56,7 +56,7 @@ object Offsets extends Selectable[Offset](
   Offset(3, "Plus"),
 )
 
-case class Mode(value: Int, display: String) extends SelectItemNumber
+case class Mode(number: Int, display: String) extends SelectItemNumber
 
 object Modes extends Selectable[Mode](
   Mode(1, " LSB"),
@@ -66,7 +66,7 @@ object Modes extends Selectable[Mode](
   Mode(5, " AM"),
 )
 
-case class CtcssMode(value: Int, display: String) extends SelectItemNumber
+case class CtcssMode(number: Int, display: String) extends SelectItemNumber
 
 object CtcssModes extends Selectable[CtcssMode](
   CtcssMode(0, "None"),
@@ -75,7 +75,7 @@ object CtcssModes extends Selectable[CtcssMode](
 )
 
 
-case class CtcssTone(value: Int, display: String) extends SelectItemNumber
+case class CtcssTone(number: Int, display: String) extends SelectItemNumber
 
 object CtcssTones extends Selectable[CtcssTone]() //todo add options 
 

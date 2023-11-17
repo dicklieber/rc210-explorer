@@ -20,21 +20,23 @@ package net.wa9nnn.rc210.data.meter
 import net.wa9nnn.rc210.util.{SelectItemNumber, Selectable}
 import play.api.libs.json.{Format, Json}
 
-case class MeterFaceName(value: Int, display: String) extends SelectItemNumber
+sealed trait MeterFaceName(val rc210Value: Int, val display: String) extends SelectItemNumber
 
-object MeterFaceNames extends Selectable[MeterFaceName](
-  MeterFaceName(0, "Meter OFF"),
-  MeterFaceName(1, "Volts"),
-  MeterFaceName(2, "Amps"),
-  MeterFaceName(3, "Watts"),
-  MeterFaceName(4, "Degrees"),
-  MeterFaceName(5, "MPH"),
-  MeterFaceName(6, "Percent"),
-)
+object MeterFaceName extends Selectable[MeterFaceName]
 
-case class AlarmType(value: Int, display: String) extends SelectItemNumber
+//sealed trait MeterFaceNames extends Selectable[MeterFaceName](
+case object Off extends MeterFaceName(0, "Meter OFF")
 
-object AlarmType extends Selectable[AlarmType](
-  AlarmType(1, "Low Alarm"),
-  AlarmType(2, "High Alarm"),
-)
+case object Volts extends MeterFaceName(1, "Volts")
+
+case object Amps extends MeterFaceName(2, "Amps")
+
+case object Watts extends MeterFaceName(3, "Watts")
+
+case object Degrees extends MeterFaceName(4, "Degrees")
+
+case object MPH extends MeterFaceName(5, "MPH")
+
+case object Percent extends MeterFaceName(6, "Percent")
+
+

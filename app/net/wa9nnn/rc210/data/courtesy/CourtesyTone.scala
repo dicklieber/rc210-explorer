@@ -19,9 +19,9 @@ package net.wa9nnn.rc210.data.courtesy
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Row}
+import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.courtesy.CourtesyTone.{cell, cellSpan3}
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntryBase, FieldInt}
-import net.wa9nnn.rc210.key.CourtesyToneKey
 import net.wa9nnn.rc210.key.KeyFormats.*
 import play.api.libs.json.{JsValue, Json, OFormat}
 
@@ -29,8 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import scala.xml.Atom
 
 //noinspection ZeroIndexToHead
-case class CourtesyTone(override val key: CourtesyToneKey, segments: Seq[Segment]) extends ComplexFieldValue[CourtesyToneKey] {
-  implicit val k: CourtesyToneKey = key
+case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends ComplexFieldValue("CourtesyTone") {
 
   override def display: String = s"$key"
 
@@ -43,8 +42,6 @@ case class CourtesyTone(override val key: CourtesyToneKey, segments: Seq[Segment
       segment.toCommand(key.number, segN.getAndIncrement())
     }
   }
-
-  override val fieldName: String = "CourtesyTone"
 
 
   def rows(): Seq[Row] = {

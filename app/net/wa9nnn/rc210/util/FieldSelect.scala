@@ -17,8 +17,8 @@
 
 package net.wa9nnn.rc210.util
 
+import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldEntryBase, RenderMetadata, SimpleFieldValue}
-import net.wa9nnn.rc210.key.{Key, KeyFactory, MacroKey}
 import play.api.libs.json.{JsString, JsValue}
 
 /**
@@ -32,7 +32,7 @@ trait FieldSelect[T] extends SimpleFieldValue {
   override def display: String = value.toString
 
   /**
-   * Render this value as an RD-210 command string.
+   * Render this value as an RC-210 command string.
    */
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
     val fieldKey = fieldEntry.fieldKey
@@ -42,7 +42,7 @@ trait FieldSelect[T] extends SimpleFieldValue {
       value match {
         case s: String =>
           selectOptions.find(_.display == s).get.id
-        case m: MacroKey =>
+        case m: Key =>
           m.number
       }
     } catch {

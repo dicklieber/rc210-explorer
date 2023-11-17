@@ -18,47 +18,56 @@
 package net.wa9nnn.rc210.util
 
 import com.wa9nnn.util.tableui.Cell
-import net.wa9nnn.rc210.data.remotebase.Mode
-import net.wa9nnn.rc210.key.KeyFactory
 import play.api.data.FormError
 import play.api.data.format.Formats.parsing
 import play.api.data.format.Formatter
 
 import scala.reflect.ClassTag
+import net.wa9nnn.rc210.util.select.SelectHelper._
 
 /**
  * A collection of [[SelectItem]]s that can be used in a <select> tag.
  *
- * @param choices possible choices.
- * @tparam T
+ * @tparam T a sealed trait of [[SelectItemNumber]]
  */
-abstract class Selectable[T <: SelectItem](val choices: T*) {
-  def options: Seq[(String, String)] = choices.map(_.item)
+trait Selectable[T <: SelectItemNumber] extends BaseSelectable[T] {
+  val value: Set[T] = values[T]
+  val options: Seq[T] = value.toSeq.sorted
+
+}
+
+trait BaseSelectable[T <: SelectItemNumber] {
+  val options: Seq[T]
 
   /**
    *
    * @param number RC-210 number for this item.
    */
-  def lookup(number: Int): SelectItem = {
-    choices.find(_.isSelected(number)).getOrElse(choices.head)
-  }
+  def lookup(number: Int): T =
+    options.find(candidate => candidate.number == number).getOrElse(options.head)
 
   /**
    *
    * @param display user display. Typically from a <form>
    */
-  def lookup(display: String): SelectItem = {
-    choices.find(_.isSelected(display)).getOrElse(choices.head)
-  }
+  def lookup(display: String): T = options.find(candidate => candidate.display == display).getOrElse(options.head)
+
 }
 
 /**
+ * An item that that can be
+ *  - Stored in a case class.
+ *  - Displayed in HTML in a select option
+ *  - Used in [p;ay json as [[play.api.libs.json.Format]]
+ *  - Play [[play.api.mvc.PathBindable]]
  *
+ *  Usually managed in a [[Selectable]]
  */
-trait SelectItem {
-  val display: String
-
-  override def toString: String = display
+trait SelectItem:
+  /**
+   * Shown in select / option html.
+   */
+  val display: String = toString
 
   /**
    *
@@ -67,25 +76,28 @@ trait SelectItem {
    */
   def isSelected(formValue: String): Boolean
 
-  /**
-   *
-   * @param number from RC-210 data
-   * @return
-   */
-  def isSelected(number: Int): Boolean
+  //
+  //  /**
+  //   *
+  //   * @param number from RC-210 data
+  //   * @return
+  //   */
+  //  def isSelected(number: Int): Boolean
+  //
+  //  def item: (String, String)
+  def html: String = s""""<option value="$display">$display</option>""" //todo handle selected.
 
-  def item: (String, String)
-  def html:String = s""""<option value="$display">$display</option>"""
-}
 
 /**
  * A selectable item that has a number that goes into an RC-210 command.
  */
-trait SelectItemNumber extends SelectItem {
+trait SelectItemNumber extends SelectItem with Ordered[SelectItemNumber] {
+  override def compare(that: SelectItem): Int = number compareTo that.number
+
   /**
    * as passed to/from RC-210
    */
-  val value: Int
+  val number: Int
   /**
    * What is shown to user.
    */
@@ -93,16 +105,14 @@ trait SelectItemNumber extends SelectItem {
 
   override def item: (String, String) = display -> display
 
-  override def isSelected(formValue: String): Boolean = {
-    display == formValue
-  }
+  override def isSelected(formValue: String): Boolean = display == formValue
 
   /**
    *
    * @param number from RC-210 data
    * @return
    */
-  override def isSelected(number: Int): Boolean = number == value
+  override def isSelected(number: Int): Boolean = number == this.number
 
   def toCell: Cell = Cell(display)
 

@@ -17,8 +17,8 @@
 
 package net.wa9nnn.rc210.data.field
 
+import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.key.KeyFactory
-import net.wa9nnn.rc210.key.Key
 import net.wa9nnn.rc210.util.SelectOption
 
 

@@ -15,23 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.named
+package net.wa9nnn.rc210.data.meter
 
-import net.wa9nnn.rc210.Key
-import play.api.libs.json.{Format, Json}
-import net.wa9nnn.rc210.key.KeyFormats._
+import net.wa9nnn.rc210.util.SelectItemNumber
+import net.wa9nnn.rc210.util.Selectable
+sealed trait AlarmType(val rc210Value: Int, val display: String) extends SelectItemNumber 
 
-case class NamedKey(key: Key, name: String) extends Ordered[NamedKey] {
-  override def compare(that: NamedKey): Int = key compareTo that.key
-}
+object AlarmType extends Selectable[AlarmType]
 
-object NamedKey {
-  implicit val fmtNamedKey: Format[NamedKey] = Json.format[NamedKey]
-}
+case object LowAlarm extends AlarmType(1, "Low Alarm")
 
-
-trait NamedKeySource {
-  def nameForKey(key: Key): String
-}
-
-
+case object HighAlarm extends AlarmType(2, "High Alarm")
