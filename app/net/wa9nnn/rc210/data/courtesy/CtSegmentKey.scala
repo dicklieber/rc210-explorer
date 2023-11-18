@@ -22,19 +22,19 @@ import net.wa9nnn.rc210.data.field.RenderMetadata
 
 import scala.util.matching.Regex
 
- class CtSegmentKey(val ctKey: Key, val segment: Int, val name:String, override val units:String = "Hz") extends RenderMetadata {
+  case class CtSegmentKey(val ctKey: Key, val segment: Int, val name:String, override val units:String = "Hz") extends RenderMetadata {
   override def param: String = s"$name.$segment.${ctKey.toString}"
 }
 
 object CtSegmentKey {
 
-  def apply(name:String, segment: Int, units:String = "Hz")(implicit  ctSegmentKey: CourtesyToneKey) : CtSegmentKey = {
-    new CtSegmentKey(ctSegmentKey, segment, name, units)
-  }
+//  def apply(name:String, segment: Int, units:String = "Hz")(implicit  ctSegmentKey: Key) : CtSegmentKey = {
+//    new CtSegmentKey(ctSegmentKey, segment, name, units)
+//  }
 
   val r: Regex = """(.+)\.(\d+)\.(.+)""".r
   def apply(s:String):CtSegmentKey = {
     val r(name, sSegment, sKey) = s
-    new CtSegmentKey(KeyFactory(sKey),sSegment.toInt , name)
+    new CtSegmentKey(Key(sKey),sSegment.toInt , name)
   }
 }

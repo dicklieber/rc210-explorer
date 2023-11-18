@@ -24,7 +24,7 @@ class MacroSelectSpec extends RcSpec {
 
   "MacroSelect" should {
     "choices" in {
-      val options: Seq[(String, String)] = MacroSelect.options
+      val options: Seq[(String, String)] = MacroSelect.values
       options should have length (KeyKind.macroKey.maxN())
     }
   }

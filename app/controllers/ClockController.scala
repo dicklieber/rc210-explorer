@@ -17,21 +17,20 @@
 
 package controllers
 
-import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.KeyKind.clockKey
 import net.wa9nnn.rc210.data.clock.{Clock, DSTPoint, Occurrence}
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.UpdateData
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
-import net.wa9nnn.rc210.data.field.{FieldEntry, MonthOfYearDST}
+import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.key.*
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.*
-import net.wa9nnn.rc210.ui.{EnumSelect, FormParser}
+import net.wa9nnn.rc210.ui.{CandidateAndNames, FormParser}
+import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
 import play.api.data.*
 import play.api.data.Forms.*
-import play.api.mvc.MessagesInjectedController
 import play.api.mvc.*
 
 import javax.inject.{Inject, Singleton}
@@ -55,15 +54,11 @@ class ClockController @Inject()(actor: ActorRef[DataStoreActor.Message])
   }
 
   def save(): Action[AnyContent] = Action.async { implicit request =>
-    val formParser = FormParser()
-    val clock = Clock(formParser)
-    val updateCandidate: UpdateCandidate = UpdateCandidate(Clock.fieldKey(clock.key), Right(clock))
-
-    actor.ask[String](UpdateData(Seq(updateCandidate), Seq.empty, user, _)).map { _ =>
+    val candidateAndNames: CandidateAndNames = FormParser(Clock)
+    actor.ask[String](UpdateData(candidateAndNames, user, _)).map { _ =>
       Redirect(routes.ClockController.index)
     }
   }
-
 }
 
 

@@ -1,8 +1,9 @@
 package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.field.{DayOfWeek, MonthOfYearSchedule, Week}
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
+import net.wa9nnn.rc210.data.field.schedule.DayOfWeek
+import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.data.field.{MonthOfYearSchedule, Week}
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.util.Chunk
 
@@ -24,7 +25,7 @@ object ScheduleBuilder extends LazyLogging {
     for {
       n <- 0 until KeyKind.scheduleKey.maxN
     } yield {
-      val scheduleKey = KeyFactory(KeyKind.scheduleKey, n + 1)
+      val scheduleKey = Key(KeyKind.scheduleKey, n + 1)
 
       val sDow = chunks(DOW)(n).toString
       val (week: Week, dow: DayOfWeek) = {
@@ -48,7 +49,7 @@ object ScheduleBuilder extends LazyLogging {
       val monthOfYear = MonthOfYearSchedule.values()(chunks(MOY)(n))
       val hour = chunks(HOUR)(n)
       val minute = chunks(MINUTE)(n)
-      val macr0 = KeyFactory.macroKey(chunks(MACR0)(n) + 1)
+      val macr0 = Key(KeyKind.macroKey, (chunks(MACR0)(n) + 1))
       val enable = chunks(ENABLE)(n) > 0
       Schedule(key = scheduleKey,
         dow = dow,

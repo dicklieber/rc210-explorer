@@ -18,10 +18,8 @@
 package net.wa9nnn.rc210.data.message
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldEntry, FieldOffset, FieldValue}
-import net.wa9nnn.rc210.key.MessageKey
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.util.Chunk
 import play.api.libs.json.JsValue
@@ -46,7 +44,7 @@ object MesssageExtractor extends ComplexExtractor with LazyLogging {
     val mai = new AtomicInteger(1)
     for {
       chunk: Chunk <- memory.chunks(1576, 10, 40)
-      key: MessageKey = KeyFactory.apply[MessageKey](KeyKind.messageKey, mai.getAndIncrement())
+      key: Key = Key(KeyKind.messageKey, mai.getAndIncrement())
     } yield {
       val message: Message = Message(key, chunk.ints
         .takeWhile(_ != 0)

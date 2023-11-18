@@ -118,7 +118,7 @@ object MacroNode extends ComplexExtractor {
    * @return
    */
   @tailrec
-  def parseChunk(iterator: Iterator[Int], soFar: Seq[FunctionKey] = Seq.empty): Seq[FunctionKey] = {
+  def parseChunk(iterator: Iterator[Int], soFar: Seq[Key] = Seq.empty): Seq[Key] = {
     parseFunction(iterator) match {
       case Some(functionKey) =>
         parseChunk(iterator, soFar :+ functionKey)
@@ -134,14 +134,14 @@ object MacroNode extends ComplexExtractor {
    * @return
    */
   @tailrec
-  def parseFunction(iterator: Iterator[Int], soFar: Int = 0): Option[FunctionKey] = {
+  def parseFunction(iterator: Iterator[Int], soFar: Int = 0): Option[Key] = {
     val int = iterator.next()
     int match {
       case 0 =>
         None // Done. function numbers don't allow 255,512,767.
       case x: Int if x < 255 =>
         val number = soFar + x
-        Some(KeyFactory.apply[FunctionKey](functionKey, number))
+        Some(Key(functionKey, number))
       case 255 =>
         parseFunction(iterator, soFar + int) // add next int, which will always be 255.
     }

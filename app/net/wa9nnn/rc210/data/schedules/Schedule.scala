@@ -3,14 +3,14 @@ package net.wa9nnn.rc210.data.schedules
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.JsonFormatUtils.*
 import com.wa9nnn.util.tableui.{Cell, Header, Row}
-import net.wa9nnn.rc210.KeyKind.macroKey
 import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.KeyKind.macroKey
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.*
+import net.wa9nnn.rc210.data.field.schedule.{DayOfWeek, DowBase}
 import net.wa9nnn.rc210.data.schedules.Schedule.{dowSelect, moySelect, s02, weekSelect}
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.EnumSelect
 import net.wa9nnn.rc210.util.MacroSelectField
 import play.api.libs.json.{Format, JsValue, Json}
 
@@ -33,7 +33,7 @@ case class Schedule(override val key: Key,
                     hour: Int = 0,
                     minute: Int = 0,
                     macroKey: Key = Key(macroKey, 1),
-                    enabled: Boolean = false) extends ComplexFieldValue with TriggerNode with RenderMetadata {
+                    enabled: Boolean = false) extends ComplexFieldValue("Schedule") with TriggerNode with RenderMetadata {
 
   val description: String = {
     //    val week = s" Week: $weekInMonth"
@@ -147,7 +147,7 @@ object Schedule extends LazyLogging with ComplexExtractor {
     val week: Week = weekSelect.fromForm(kv("week"))
     val dow: DayOfWeek = dowSelect.fromForm(kv("dow"))
     val moy: MonthOfYearSchedule = moySelect.fromForm(kv("moy"))
-    val macroKey: MacroKey = {
+    val macroKey: Key = {
       val sMacroKey: String = kv("macro")
       Key(sMacroKey)
     }

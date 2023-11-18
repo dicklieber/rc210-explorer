@@ -22,7 +22,6 @@ import com.wa9nnn.util.tableui.{Cell, Row}
 import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.courtesy.CourtesyTone.{cell, cellSpan3}
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntryBase, FieldInt}
-import net.wa9nnn.rc210.key.KeyFormats.*
 import play.api.libs.json.{JsValue, Json, OFormat}
 
 import java.util.concurrent.atomic.AtomicInteger
@@ -43,40 +42,39 @@ case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends C
     }
   }
 
-
   def rows(): Seq[Row] = {
-    val nameCell: Cell = key.namedCell(CtSegmentKey("name", 99).param)
+    val nameCell: Cell = key.namedCell(CtSegmentKey(key, 99, "name").param)
       .withRowSpan(3)
 
     Seq(
       Row(nameCell,
         //top row with delay/duration that span 3 rows.
-        cellSpan3(segments(0).delayMs, CtSegmentKey("Delay", 0, "ms")),
-        cell(segments(0).durationMs, CtSegmentKey("Duration", 0, "ms")),
-        cellSpan3(segments(1).delayMs, CtSegmentKey("Delay", 1, "ms")),
-        cell(segments(1).durationMs, CtSegmentKey("Duration", 1, "ms")),
+        cellSpan3(segments(0).delayMs, CtSegmentKey(key, 0, "Delay")),
+        cell(segments(0).durationMs, CtSegmentKey(key, 0, "Duration")),
+        cellSpan3(segments(1).delayMs, CtSegmentKey(key, 1, "Delay")),
+        cell(segments(1).durationMs, CtSegmentKey(key, 1, "Duration")),
 
-        cellSpan3(segments(2).delayMs, CtSegmentKey("Delay", 2, units = "ms")),
-        cell(segments(2).durationMs, CtSegmentKey("Duration", 2, units = "ms")),
+        cellSpan3(segments(2).delayMs, CtSegmentKey(key, 2, "Delay")),
+        cell(segments(2).durationMs, CtSegmentKey(key, 2, "Duration")),
 
-        cellSpan3(segments(3).delayMs, CtSegmentKey("Delay", 3, units = "ms")),
-        cell(segments(3).durationMs, CtSegmentKey("Duration", 3, units = "ms")),
+        cellSpan3(segments(3).delayMs, CtSegmentKey(key, 3, "Delay")),
+        cell(segments(3).durationMs, CtSegmentKey(key, 3, "Duration")),
       )
       ,
       // tone1 row
       Row(
-        cell(segments(0).tone1Hz, CtSegmentKey("Tone1", 0)),
-        cell(segments(1).tone1Hz, CtSegmentKey("Tone1", 1)),
-        cell(segments(2).tone1Hz, CtSegmentKey("Tone1", 2)),
-        cell(segments(3).tone1Hz, CtSegmentKey("Tone1", 3)),
+        cell(segments(0).tone1Hz, CtSegmentKey(key, 0, "Tone1")),
+        cell(segments(1).tone1Hz, CtSegmentKey(key, 1, "Tone1")),
+        cell(segments(2).tone1Hz, CtSegmentKey(key, 2, "Tone1")),
+        cell(segments(3).tone1Hz, CtSegmentKey(key, 3, "Tone1")),
       )
       ,
       // tone2 row
       Row(
-        cell(segments(0).tone2Hz, CtSegmentKey("Tone2", 0)),
-        cell(segments(1).tone2Hz, CtSegmentKey("Tone2", 1)),
-        cell(segments(2).tone2Hz, CtSegmentKey("Tone2", 2)),
-        cell(segments(3).tone2Hz, CtSegmentKey("Tone2", 3)),
+        cell(segments(0).tone2Hz, CtSegmentKey(key, 0, "Tone2")),
+        cell(segments(1).tone2Hz, CtSegmentKey(key, 1, "Tone2")),
+        cell(segments(2).tone2Hz, CtSegmentKey(key, 2, "Tone2")),
+        cell(segments(3).tone2Hz, CtSegmentKey(key, 3, "Tone2")),
       )
     )
   }

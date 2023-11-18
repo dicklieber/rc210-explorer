@@ -17,7 +17,6 @@
 
 package net.wa9nnn.rc210.data.clock
 
-import net.wa9nnn.rc210.data.field.MonthOfYearDST
 
 case class DSTPoint(monthOfYearDST: MonthOfYearDST, occurance: Occurrence) {
   def commandPiece: String = f"${monthOfYearDST.number}%02d${occurance.number}"

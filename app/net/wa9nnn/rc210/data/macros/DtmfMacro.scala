@@ -1,8 +1,7 @@
 package net.wa9nnn.rc210.data.macros
 
+import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.Dtmf
-import net.wa9nnn.rc210.key.MacroKey
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.util.Chunk
 
@@ -18,31 +17,28 @@ object DtmfMacroExtractor {
     val mai = new AtomicInteger(1) // cause macro numbers start at 1
 
 
-    def dtmfMap(offset: Int, nDtmfs: Int): Seq[(MacroKey, Dtmf)] = {
+    def dtmfMap(offset: Int, nDtmfs: Int): Seq[(Key, Dtmf)] = {
       val chunks: Seq[Chunk] = memory.chunks(offset, 5, nDtmfs)
 
       for {
         chunk <- chunks
-        macroKey: MacroKey = KeyFactory.apply(KeyKind.macroKey, mai.getAndIncrement())
+        macroKey: Key = Key(KeyKind.macroKey, mai.getAndIncrement())
         dtmf <- Dtmf(chunk.ints)
       } yield {
         macroKey -> dtmf
       }
     }
 
-    val longMacroDtmf: Seq[(MacroKey, Dtmf)] = dtmfMap(2625, 40) //SlicePos("//MacroRecallCode - 2625-2824"))
-    val shortMacroDtmf: Seq[(MacroKey, Dtmf)] = dtmfMap(3175, 50) //SlicePos("//ShortMacroRecallCode - 3175-3424"))
+    val longMacroDtmf: Seq[(Key, Dtmf)] = dtmfMap(2625, 40) //SlicePos("//MacroRecallCode - 2625-2824"))
+    val shortMacroDtmf: Seq[(Key, Dtmf)] = dtmfMap(3175, 50) //SlicePos("//ShortMacroRecallCode - 3175-3424"))
     DtmfMacros(longMacroDtmf.concat(shortMacroDtmf))
   }
 }
 
-case class DtmfMacros(a: Seq[(MacroKey, Dtmf)]) {
-  private val map: Map[MacroKey, Dtmf] = a.toMap
-//  val ordered: Seq[MacroKey] = map.keys.toSeq.sortBy { k =>
-//    (k.keyKind, k.number)
-//  }
+case class DtmfMacros(a: Seq[(Key, Dtmf)]) {
+  private val map: Map[Key, Dtmf] = a.toMap
 
-  def apply(macroKey: MacroKey): Option[Dtmf] = {
+  def apply(macroKey: Key): Option[Dtmf] = {
     map.get(macroKey)
   }
 }

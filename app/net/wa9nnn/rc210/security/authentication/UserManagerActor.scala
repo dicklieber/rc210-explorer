@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.security.authentication
 
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
-import org.apache.pekko.actor.typed.{ActorRef, Behavior, Scheduler, SupervisorStrategy}
+import org.apache.pekko.actor.typed.{ActorRef, Behavior, Scheduler, Signal, SupervisorStrategy}
 import com.google.inject.{Provides, Singleton}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
@@ -85,6 +85,6 @@ object UserManagerActor extends ActorModule with LazyLogging {
           }
 
       }
-    }.onFailure[Exception](SupervisorStrategy.restart())
+    }.onFailure[Exception](SupervisorStrategy.restart)
   }
 }

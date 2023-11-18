@@ -18,10 +18,10 @@
 package net.wa9nnn.rc210.data.courtesy
 
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.KeyKind.courtesyToneKey
 import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldDefinition, FieldEntry, FieldOffset, FieldValue}
-import net.wa9nnn.rc210.key.CourtesyToneKey
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.JsValue
 
@@ -49,7 +49,7 @@ object CourtesyExtractor extends ComplexExtractor with LazyLogging {
     }
 
     val courtesyTones: Seq[CourtesyTone] = for (ct <- 0 until 10) yield {
-      val key: CourtesyToneKey = KeyFactory(KeyKind.courtesyToneKey, ct + 1)
+      val key: Key = Key(courtesyToneKey, ct + 1)
       CourtesyTone(key,
         Seq(
           Segment(array(ct)(8), array(ct)(12), array(ct)(0), array(ct)(1)),

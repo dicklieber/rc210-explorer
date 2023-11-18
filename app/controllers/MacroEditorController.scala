@@ -18,24 +18,24 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.data.Dtmf
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, ForFieldKey}
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
-import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.named.NamedKey
-import net.wa9nnn.rc210.data.{Dtmf, FieldKey}
-import net.wa9nnn.rc210.key.{FunctionKey, KeyFactory, KeyKind, MacroKey}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
+import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
 import play.api.mvc.*
 import views.html.macroNodes
-import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
+import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 import scala.util.Try
 import scala.util.matching.Regex
@@ -54,7 +54,7 @@ class MacroEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
     }
   }
 
-  def edit(key: MacroKey): Action[AnyContent] = Action.async { implicit request =>
+  def edit(key: Key): Action[AnyContent] = Action.async { implicit request =>
 
     val fieldKey = FieldKey("Macro", key)
     actor.ask(ForFieldKey(fieldKey, _)).map {
@@ -69,15 +69,15 @@ class MacroEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
     val formData: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
 
     val sKey: String = formData("key").head
-    val key: MacroKey = KeyFactory.apply(sKey)
+    val key: Key = Key.apply(sKey)
     val dtmf: Option[Dtmf] = formData("dtmf").map(Dtmf(_)).headOption
 
-    val functions: Seq[FunctionKey] = formData("functionIds")
+    val functions: Seq[Key] = formData("functionIds")
       .head
       .split(",").toIndexedSeq
       .flatMap { sfunction =>
         Try {
-          val f: FunctionKey = KeyFactory.apply(sfunction)
+          val f: Key = Key(sfunction)
           f
         }.toOption
       }

@@ -22,6 +22,7 @@ import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.serial.comm.{Rc210Version, RcEventBased, RcSerialPort, RcStreamBased}
+import net.wa9nnn.rc210.util.Configs
 
 import java.nio.file.{Files, Path}
 import javax.inject.{Inject, Singleton}
@@ -30,13 +31,13 @@ import scala.util.{Try, Using}
 
 
 @Singleton
-class Rc210 @Inject()(config: Config) extends LazyLogging {
+class Rc210 @Inject()(imlicit config: Config) extends LazyLogging {
   def comPort: ComPort = maybeRcSerialPort.map(_.comPort).get
 
 
   private val serialPortsSource = new SerialPortsSource()
 
-  private val file: Path = config.get[Path]("vizRc210.serialPortsFile").value
+  private val file: Path = Configs.path("vizRc210.serialPortsFile")
 
   Files.createDirectories(file.getParent)
   private var maybeRcSerialPort: Option[RcSerialPort] = None

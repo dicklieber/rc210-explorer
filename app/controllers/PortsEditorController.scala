@@ -20,14 +20,14 @@ package controllers
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Row, Table}
-import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.KeyKind
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, UpdateData}
-import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind, PortKey}
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import net.wa9nnn.rc210.ui.{CandidateAndNames, FormParser}
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
+import org.apache.pekko.http.scaladsl.model.ResponsePromise.Key
 import org.apache.pekko.util.Timeout
 import play.api.mvc.*
 
@@ -43,17 +43,17 @@ class PortsEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
   def buildresult(portEntries: Seq[FieldEntry]): Result =
     val key2EntryMap: Map[FieldKey, FieldEntry] = portEntries.map(fieldEntry => fieldEntry.fieldKey -> fieldEntry).toMap
 
-    val fieldNames: Seq[String] = key2EntryMap.values.map(_.fieldKey.fieldName).toSeq.sorted
+    val fieldNames: Seq[String] = key2EntryMap.values.map(_.fieldKey.fieldName).toSeq // todo sorted
 
     val rows: Seq[Row] = fieldNames.map { fieldName =>
       val cells: Seq[Cell] = for
         number <- 1 to KeyKind.portKey.maxN
       yield
-        key2EntryMap(FieldKey(fieldName, KeyFactory.apply(KeyKind.portKey, number))).toCell
+        key2EntryMap(FieldKey(fieldName, Key(KeyKind.portKey, number))).toCell
       Row(fieldName, cells: _*)
     }
 
-    val colHeaders: Seq[Cell] = KeyFactory.apply[PortKey](KeyKind.portKey).map(_.namedCell())
+    val colHeaders: Seq[Cell] = Key(KeyKind.portKey).map(_.namedCell())
     val namesRow = Row(colHeaders.prepended(Cell("Ports:").withCssClass("cornerCell")))
 
     val table = Table(Seq.empty, rows.prepended(namesRow))

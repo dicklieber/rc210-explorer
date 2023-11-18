@@ -82,8 +82,9 @@ object FieldKey {
 
   def fromParam(param: String): FieldKey = {
     val spacesBack = param.replaceAll("~", " ")
-    val r(fieldName, sKey) = spacesBack
-    FieldKey(fieldName, Key(sKey))
+    spacesBack match
+      case r(fieldName, sKey) =>
+       FieldKey(fieldName, Key(sKey))
   }
 
   private val r = """(.+)\:(.*)""".r

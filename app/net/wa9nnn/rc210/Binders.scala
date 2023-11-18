@@ -17,11 +17,9 @@
 
 package net.wa9nnn.rc210
 
-import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.KeyKind
-import net.wa9nnn.rc210.data.FieldKey
-import net.wa9nnn.rc210.data.clock.Occurrence
-import net.wa9nnn.rc210.data.field.{FieldKey, MonthOfYearDST}
+import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.data.clock.{MonthOfYearDST, Occurrence}
+import net.wa9nnn.rc210.data.field.FieldKey
 import net.wa9nnn.rc210.security.UserId.UserId
 import net.wa9nnn.rc210.serial.ComPort
 import play.api.mvc.PathBindable
@@ -76,7 +74,7 @@ object Binders {
   implicit def monthOfYearDSTBinder: PathBindable[MonthOfYearDST] = new PathBindable[MonthOfYearDST] {
     override def bind(key: String, value: String): Either[String, MonthOfYearDST] =
       try {
-        Right(MonthOfYearDST.valueOf(value))
+        Right(MonthOfYearDST.lookup(value))
       } catch {
         case e: Exception =>
           Left(e.getMessage)
@@ -89,7 +87,7 @@ object Binders {
   implicit def occurrenceBinder: PathBindable[Occurrence] = new PathBindable[Occurrence] {
     override def bind(key: String, value: String): Either[String, Occurrence] =
       try {
-        Right(Occurrence.valueOf(value))
+        Right(Occurrence.lookup(value))
       } catch {
         case e: Exception =>
           Left(e.getMessage)

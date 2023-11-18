@@ -33,7 +33,7 @@ import net.wa9nnn.rc210.KeyKind
  * @param keyKind of the Key
  * @param number  0 is a magic number used for things like [[KeyKind.commonKey]]
  */
-case class Key(keyKind: KeyKind, number: Int = 0) extends Ordered[Key] with CellProvider with NamedKeySource with SelectItemNumber {
+case class Key(keyKind: KeyKind, number: Int = 0) extends  CellProvider with NamedKeySource with SelectItemNumber {
   def check(target: KeyKind): Unit = if (target != keyKind) throw new WrongKeyType(this, target)
 
       assert(number <= keyKind.maxN, s"Max number for ${keyKind.name} is ${keyKind.maxN}")

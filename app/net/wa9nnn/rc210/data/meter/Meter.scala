@@ -21,7 +21,6 @@ import com.wa9nnn.util.tableui.{Cell, Row}
 import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.key.KeyFormats.*
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind, MacroKey, MeterAlarmKey, MeterKey}
 import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.{Format, JsValue, Json}
 
@@ -34,8 +33,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * @param low       calibrate for high.
  * @param high      calibrate for low.
  */
-case class Meter(key: Key, meterKind: MeterFaceName, low: VoltToReading, high: VoltToReading) extends ComplexFieldValue {
-  override val fieldName: String = "Meter"
+case class Meter(key: Key, meterKind: MeterFaceName, low: VoltToReading, high: VoltToReading) extends ComplexFieldValue("Meter") {
 
   override def display: String = toString
 
@@ -74,7 +72,7 @@ object Meter extends ComplexExtractor {
     val mai = new AtomicInteger()
     val nMeters = KeyKind.meterKey.maxN
     val faceInts = memory.sub8(186, nMeters)
-    val faceNames: Seq[MeterFaceName] = faceInts.map(MeterFaceName.lookup.lookup(_))
+    val faceNames: Seq[MeterFaceName] = faceInts.map(MeterFaceName.lookup)
     val lowX: Seq[Int] = memory.iterator16At(202).take(nMeters).toSeq
     val lowY: Seq[Int] = memory.iterator16At(218).take(nMeters).toSeq
     val highX: Seq[Int] = memory.iterator16At(234).take(nMeters).toSeq

@@ -19,7 +19,6 @@ package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.key.KeyFactory
 import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue, Json}
 import views.html.fieldDtmf
 
@@ -41,7 +40,6 @@ case class FieldDtmf(value: String) extends SimpleFieldValue with LazyLogging {
     )
   }
 
-
   override def display: String = value
 
   override def update(paramValue: String): FieldDtmf = {
@@ -49,7 +47,6 @@ case class FieldDtmf(value: String) extends SimpleFieldValue with LazyLogging {
   }
 
   override def toJsonValue: JsValue = Json.toJson(value)
-
 }
 
 object FieldDtmf extends SimpleExtractor {
@@ -78,7 +75,4 @@ object FieldDtmf extends SimpleExtractor {
 
   override val name: String = "FieldDtmf"
 
-  override def fromForm(name: String)(implicit kv: Map[String, String], key: Key): String = {
-    formValue(name)
-  }
 }

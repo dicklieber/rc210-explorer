@@ -26,4 +26,8 @@ import net.wa9nnn.rc210.security.Who.Callsign
  */
 case class Credentials(callsign: Callsign = "", password: String = "")
 
+object Credentials:
+  def unapply(u: Credentials): Option[(Callsign, String)] = Some(u.callsign, u.password)
+end Credentials
+
 

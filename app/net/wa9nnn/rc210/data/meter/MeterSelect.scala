@@ -17,12 +17,12 @@
 
 package net.wa9nnn.rc210.data.meter
 
-import net.wa9nnn.rc210.util.{SelectItemNumber, Selectable}
+import net.wa9nnn.rc210.util.{SelectItemNumber, SelectableNumber}
 import play.api.libs.json.{Format, Json}
 
 sealed trait MeterFaceName(val rc210Value: Int, val display: String) extends SelectItemNumber
 
-object MeterFaceName extends Selectable[MeterFaceName]
+object MeterFaceName extends SelectableNumber[MeterFaceName]
 
 //sealed trait MeterFaceNames extends Selectable[MeterFaceName](
 case object Off extends MeterFaceName(0, "Meter OFF")

@@ -15,9 +15,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.clock;
+package net.wa9nnn.rc210.data.clock
 
-enum Occurrence {
-  case First, Second, Third, Forth, Fifth
-  def number: Int = ordinal + 1
+import net.wa9nnn.rc210.util.{SelectItemNumber, SelectableNumber}
+
+
+sealed trait Occurrence(val rc210Value: Int, val display: String) extends SelectItemNumber
+
+object Occurrence extends SelectableNumber[Occurrence] {
+
+  case object First extends Occurrence(1, "First")
+
+  case object Second extends Occurrence(2, "Second")
+
+  case object Third extends Occurrence(3, "Third")
+
+  case object Forth extends Occurrence(4, "Forth")
+
+  case object Fifth extends Occurrence(5, "Fifth")
 }

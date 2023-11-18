@@ -20,7 +20,7 @@ package controllers
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.Row
-import net.wa9nnn.rc210.KeyKind
+import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.courtesy.{CourtesyTone, CtSegmentKey, Segment}
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.FieldEntry
@@ -73,7 +73,7 @@ class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Mess
         .filterNot(_._1 startsWith "name")
         .map { case (sKey, value) => CtSegmentKey(sKey) -> value } // convert from string name to CtSegmentKeys
         .groupBy(_._1.ctKey)
-        .map { case (ctKey: CourtesyToneKey, values: Map[CtSegmentKey, String]) =>
+        .map { case (ctKey: Key, values: Map[CtSegmentKey, String]) =>
           val segments = values
             .groupBy(_._1.segment).map { case (seg, values) =>
               val valuesForSegment: Map[String, String] = values.map { case (crSKey: CtSegmentKey, value: String) =>

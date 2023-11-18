@@ -15,15 +15,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.meter
+package net.wa9nnn.rc210.data.field.schedule
 
 import net.wa9nnn.rc210.util.{SelectItemNumber, SelectableNumber}
 
-sealed trait AlarmType(val rc210Value: Int, val display: String) extends SelectItemNumber
 
-object AlarmType extends SelectableNumber[AlarmType] {
+sealed trait DayOfWeek(val rc210Value: Int, val display: String) extends SelectItemNumber
 
-  case object LowAlarm extends AlarmType(1, "Low Alarm")
+object DayOfWeek extends SelectableNumber[DayOfWeek] {
 
-  case object HighAlarm extends AlarmType(2, "High Alarm")
+  case object EveryDay extends DayOfWeek(1, "EveryDay")
+
+  case object Monday extends DayOfWeek(2, "Monday")
+
+  case object Tuesday extends DayOfWeek(3, "Tuesday")
+
+  case object Wednesday extends DayOfWeek(4, "Wednesday")
+
+  case object Thursday extends DayOfWeek(5, "Thursday")
+
+  case object Friday extends DayOfWeek(6, "Friday")
+
+  case object Saturday extends DayOfWeek(7, "Saturday")
+
+  case object Sunday extends DayOfWeek(8, "Sunday")
+
+  case object Weekdays extends DayOfWeek(9, "Weekdays")
+
+  case object Weekends extends DayOfWeek(10, "Weekends")
 }

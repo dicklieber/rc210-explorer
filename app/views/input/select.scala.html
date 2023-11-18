@@ -1,5 +1,6 @@
-@import net.wa9nnn.rc210.util.Selectable
-@(name: String, selectable: Selectable[_], tooltip: String = "")
+@import net.wa9nnn.rc210.util.SelectItemNumber
+@import net.wa9nnn.rc210.util.SelectableNumber
+@(name: String, selectable: SelectableNumber[_], tooltip: String = "")
 <select name="@name" @if(tooltip.nonEmpty) {
     title="@tooltip"}>
 @for(option <- selectable.choices) {

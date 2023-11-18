@@ -30,10 +30,8 @@ import net.wa9nnn.rc210.util.select.SelectHelper._
  *
  * @tparam T a sealed trait of [[SelectItemNumber]]
  */
-trait Selectable[T <: SelectItemNumber] extends BaseSelectable[T] {
-  val value: Set[T] = values[T]
-  val options: Seq[T] = value.toSeq.sorted
-
+trait SelectableNumber[T <: SelectItemNumber] extends BaseSelectable[T] {
+  val options: Seq[T] = values.toSeq.sorted
 }
 
 trait BaseSelectable[T <: SelectItemNumber] {
@@ -44,13 +42,13 @@ trait BaseSelectable[T <: SelectItemNumber] {
    * @param number RC-210 number for this item.
    */
   def lookup(number: Int): T =
-    options.find(candidate => candidate.number == number).getOrElse(options.head)
+    options.find(candidate => candidate.number == number).getOrElse(values.head)
 
   /**
    *
    * @param display user display. Typically from a <form>
    */
-  def lookup(display: String): T = options.find(candidate => candidate.display == display).getOrElse(options.head)
+  def lookup(display: String): T = options.find(candidate => candidate.display == display).getOrElse(values.head)
 
 }
 
@@ -61,7 +59,7 @@ trait BaseSelectable[T <: SelectItemNumber] {
  *  - Used in [p;ay json as [[play.api.libs.json.Format]]
  *  - Play [[play.api.mvc.PathBindable]]
  *
- *  Usually managed in a [[Selectable]]
+ *  Usually managed in a [[SelectItemNumber]]
  */
 trait SelectItem:
   /**
@@ -92,7 +90,7 @@ trait SelectItem:
  * A selectable item that has a number that goes into an RC-210 command.
  */
 trait SelectItemNumber extends SelectItem with Ordered[SelectItemNumber] {
-  override def compare(that: SelectItem): Int = number compareTo that.number
+  override def compare(that: SelectItemNumber): Int = number compareTo that.number
 
   /**
    * as passed to/from RC-210

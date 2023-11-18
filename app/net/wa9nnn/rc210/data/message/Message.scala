@@ -36,9 +36,8 @@ import scala.collection.immutable.Seq
  * @param key   Message key
  * @param words word numbers. Each 0 to 255. These are not [[net.wa9nnn.rc210.key.KeyFactory.Key]]s as they are 0 to 255 instead of 1 to N.
  */
-case class Message(key: Key, words: Seq[Int]) extends ComplexFieldValue {
+case class Message(key: Key, words: Seq[Int]) extends ComplexFieldValue("Message") {
 
-  override val fieldName: String = "Message"
 
   def toWords: Seq[Word] = words.map(Word(_))
 
@@ -76,7 +75,7 @@ object Message extends LazyLogging {
 
     val csv: String = kv("words")
     val wordIds: Array[Int] = csv.split(",").filter(_.nonEmpty).map(_.toInt)
-    new Message(key.asInstanceOf[MessageKey], wordIds)
+    new Message(key, wordIds)
   }
 }
 

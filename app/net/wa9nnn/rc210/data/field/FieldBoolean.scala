@@ -19,9 +19,8 @@ package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui.Cell
 import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.key.KeyFactory
-import play.api.libs.json._
-import views.html.fieldCheckbox
+import play.api.libs.json.*
+import views.html.input.fieldCheckbox
 
 case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue {
 

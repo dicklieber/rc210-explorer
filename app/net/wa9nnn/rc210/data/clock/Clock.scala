@@ -20,17 +20,18 @@ package net.wa9nnn.rc210.data.clock
 import com.wa9nnn.util.JsonFormatUtils.javaEnumFormat
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.*
+import net.wa9nnn.rc210.data.clock.MonthOfYearDST._
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.{FormFields, FormParser}
 import play.api.libs.json.{Format, JsValue, Json}
-
+import net.wa9nnn.rc210.data.clock.Occurrence.*
 
 case class Clock(key:Key,
-                  enableDST: Boolean = true,
-                  hourDST: Int = 2,
-                  startDST: DSTPoint = DSTPoint(MonthOfYearDST.March, Occurrence.First),
-                  endDST: DSTPoint = DSTPoint(MonthOfYearDST.November, Occurrence.Second),
-                  say24Hours: Boolean = false,
+                 enableDST: Boolean = true,
+                 hourDST: Int = 2,
+                 startDST: DSTPoint = DSTPoint(March, First),
+                 endDST: DSTPoint = DSTPoint(November, Second),
+                 say24Hours: Boolean = false,
                 ) extends ComplexFieldValue("Clock") {
 
   override def display: String = "todo"
@@ -94,9 +95,10 @@ object Clock extends ComplexExtractor  {
     //    SimpleField(1186, "Clock 24 Hours", commonKey, "n*5103b", FieldBoolean),
     val say24Hours: Boolean = memory.bool(1186)
 
-    val clock = new Clock(enableDST, startHour, startDST, endDST, say24Hours)
+    val key = Key(KeyKind.clockKey)
+    val clock = new Clock(key,  enableDST, startHour, startDST, endDST, say24Hours)
     Seq(
-      FieldEntry(this, fieldKey(Key(KeyKind.clockKey)), clock)
+      FieldEntry(this, fieldKey(key), clock)
     )
   }
 
@@ -105,7 +107,7 @@ object Clock extends ComplexExtractor  {
    */
   override val name: String = "Clock"
 
-  override def parse(jsValue: JsValue): FieldValue = Clock()
+  override def parse(jsValue: JsValue): FieldValue = jsValue.as[Clock]
 
   override val fieldName: String = name
   override val kind: KeyKind = KeyKind.clockKey

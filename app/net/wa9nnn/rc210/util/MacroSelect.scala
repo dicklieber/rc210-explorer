@@ -21,7 +21,7 @@ import net.wa9nnn.rc210.{Key, KeyKind}
 
 
 object MacroSelect  extends BaseSelectable [Key]{
-   def options: Seq[Key] = for{
+   def values: Seq[Key] = for{
      number <- 1 to KeyKind.macroKey.maxN
    }yield {
      Key(KeyKind.macroKey, number)
