@@ -2,7 +2,6 @@ package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.data.FieldKey
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.FormParseable
 import play.api.libs.json.JsValue
@@ -10,9 +9,8 @@ import play.api.libs.json.JsValue
 import java.text.FieldPosition
 import scala.util.Try
 
-trait FieldDefinition extends LazyLogging {
+trait FieldDefinition extends LazyLogging:
   def parse(jsValue: JsValue): FieldValue
-
 
   def tooltip: String = ""
 
@@ -22,7 +20,7 @@ trait FieldDefinition extends LazyLogging {
   val units: String = ""
 
   def positions: Seq[FieldOffset]
-}
+
 
 /**
  * A [[SimpleField]] produces one RC-210 command as opposed to a complex rc2input like [[net.wa9nnn.rc210.data.schedules.Schedule]] that may produce multiple commands.
@@ -30,7 +28,7 @@ trait FieldDefinition extends LazyLogging {
  *
  * @param offset         where in [[Memory]] this comes from.
  * @param fieldName      as shown to users.
- * @param kind           e.g. [[net.wa9nnn.rc210.key.KeyFactory.MacroKey]] or [[net.wa9nnn.rc210.key.KeyFactory.LogicAlarmKey]]
+ * @param kind           
  * @param template       used to generate the rc-210 command.
  * @param fieldExtractor that knows how to get this from the [[net.wa9nnn.rc210.serial.Memory]]
  * @param tooltip        for this rc2input.
@@ -69,7 +67,7 @@ case class SimpleField(offset: Int,
   }
 
   def fieldKey(number: Int): FieldKey = {
-    new FieldKey(fieldName,  Key(kind, number))
+    new FieldKey(fieldName, Key(kind, number))
   }
 
   def units(u: String): SimpleField = copy(units = u)
@@ -94,7 +92,6 @@ case class SimpleField(offset: Int,
 //    val x: x.type = summon[Map[String, String]]
 //    x
 //  }
-  
 
 
 trait ComplexExtractor extends FieldExtractor with FieldDefinition with FormParseable {
@@ -107,7 +104,7 @@ trait ComplexExtractor extends FieldExtractor with FieldDefinition with FormPars
    * @return what we extracted.
    */
   def extract(memory: Memory): Seq[FieldEntry]
-  
+
 
   //   lazy val fieldDefinition: FieldDefinition = {
   //    new FieldDefinition {
@@ -138,6 +135,7 @@ trait FieldExtractor {
 
 /**
  * where in the memory image
+ *
  * @param offset
  * @param fieldDefinition
  * @param field

@@ -17,11 +17,17 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.util.SelectItemNumber
+import net.wa9nnn.rc210.util.{SelectItemNumber, SelectableNumber}
+import play.api.libs.json.JsValue
 
 sealed trait MuteDigit(val rc210Value: Int, val display: String) extends SelectItemNumber
 
-case object firstDigit extends MuteDigit(1, "1st digit")
+object MuteDigit extends SimpleExtractor with SelectableNumber[MuteDigit] {
 
-case object secpondtDigit extends MuteDigit(2, "2nd digit")
+  case object firstDigit extends MuteDigit(1, "1st digit")
 
+  case object secpondtDigit extends MuteDigit(2, "2nd digit")
+
+  override def parse(jsValue: _root_.play.api.libs.json.JsValue): _root_.net.wa9nnn.rc210.data.field.FieldValue =
+    throw new NotImplementedError() //todo
+}

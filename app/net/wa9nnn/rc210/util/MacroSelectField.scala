@@ -73,17 +73,17 @@ object MacroSelectField extends SimpleExtractor {
    */
   def apply()(implicit valueMap: Map[String, String]): MacroSelectField = {
     val str = valueMap(name)
-    val macroKey: MacroKey = KeyFactory(str)
+    val macroKey: Key = Key(str)
     new MacroSelectField(macroKey)
   }
 
   def apply(number: Int): MacroSelectField = {
-    new MacroSelectField(KeyFactory(KeyKind.macroKey, number))
+    new MacroSelectField(Key(KeyKind.macroKey, number))
   }
 
   implicit val fmtMacroSelect: Format[MacroSelectField] = new Format[MacroSelectField] {
     override def reads(json: JsValue): JsResult[MacroSelectField] = {
-      val macrokey: MacroKey = KeyFactory(json.as[String])
+      val macrokey: Key = Key(json.as[String])
       JsSuccess(MacroSelectField(macrokey))
     }
 
@@ -96,8 +96,9 @@ object MacroSelectField extends SimpleExtractor {
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[MacroSelectField]
 
-  override def fromForm(name: String)(implicit kv: Map[String, String], key: Key): MacroKey = {
-    KeyFactory(formValue(name))
+  override def fromForm(name: String)(implicit kv: Map[String, String], key: Key): Key = {
+//    KeyFactory(formValue(name))
+    throw new NotImplementedError() //todo
   }
 }
 

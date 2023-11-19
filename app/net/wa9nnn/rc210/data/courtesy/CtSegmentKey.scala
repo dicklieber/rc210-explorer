@@ -34,7 +34,8 @@ object CtSegmentKey {
 
   val r: Regex = """(.+)\.(\d+)\.(.+)""".r
   def apply(s:String):CtSegmentKey = {
-    val r(name, sSegment, sKey) = s
-    new CtSegmentKey(Key(sKey),sSegment.toInt , name)
+    s match
+      case r(name, sSegment, sKey) =>
+        new CtSegmentKey(Key(sKey),sSegment.toInt , name)
   }
 }

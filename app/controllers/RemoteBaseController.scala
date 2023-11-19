@@ -24,7 +24,7 @@ import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.remotebase.*
 import net.wa9nnn.rc210.data.remotebase.Mode.*
 import net.wa9nnn.rc210.data.remotebase.RBMemory.*
-import net.wa9nnn.rc210.key.KeyKind
+import net.wa9nnn.rc210.KeyKind
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}

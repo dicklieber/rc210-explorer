@@ -74,12 +74,13 @@ class CommonEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
     //        Ok(views.html.common(table))
   }
 
-  def save(): Action[AnyContent] = Action.async {
+  def save(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      val updateData: CandidateAndNames = FormParser(AnyContentAsFormUrlEncoded(request.body.asFormUrlEncoded.get))
-
-      actor.ask[String](DataStoreActor.UpdateData(updateData, user, _)).map { _ =>
-        Redirect(routes.CommonEditorController.index())
-      }
+                ImATeapot
+//      val updateData: CandidateAndNames = FormParser(AnyContentAsFormUrlEncoded(request.body.asFormUrlEncoded.get))
+//
+//      actor.ask[String](DataStoreActor.UpdateData(updateData, user, _)).map { _ =>
+//        Redirect(routes.CommonEditorController.index())
+//      }
   }
 }

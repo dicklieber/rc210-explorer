@@ -21,7 +21,6 @@ import com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBas
 import com.wa9nnn.util.tableui.Cell
 import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.field
-import net.wa9nnn.rc210.key.KeyFactory
 import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue, Json}
 
 import java.time.LocalTime
@@ -79,7 +78,7 @@ object FieldTime extends SimpleExtractor {
 
   override val name: String = "FieldTime"
 
-  override def fromForm(name: String)(implicit kv: Map[String, String],key: Key): LocalTime = {
-    LocalTime.parse(formValue(name))
-  }
+//  override def fromForm(name: String)(implicit kv: Map[String, String],key: Key): LocalTime = {
+//    LocalTime.parse(formValue(name))
+//  }
 }

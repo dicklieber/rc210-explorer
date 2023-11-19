@@ -17,8 +17,7 @@
 
 package net.wa9nnn.rc210.data.schedules
 
-import net.wa9nnn.rc210.data.field.Week
-import net.wa9nnn.rc210.data.field.schedule.DayOfWeek
+import net.wa9nnn.rc210.data.field.schedule.{DayOfWeek, Week}
 import net.wa9nnn.rc210.fixtures.WithMemory
 import net.wa9nnn.rc210.key.KeyFactory
 

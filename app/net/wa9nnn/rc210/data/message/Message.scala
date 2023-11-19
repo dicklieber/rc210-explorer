@@ -34,7 +34,7 @@ import scala.collection.immutable.Seq
  * MessageMacro is a bit long, so we use "Message" in the application.
  *
  * @param key   Message key
- * @param words word numbers. Each 0 to 255. These are not [[net.wa9nnn.rc210.key.KeyFactory.Key]]s as they are 0 to 255 instead of 1 to N.
+ * @param words word numbers. Each 0 to 255. 
  */
 case class Message(key: Key, words: Seq[Int]) extends ComplexFieldValue("Message") {
 

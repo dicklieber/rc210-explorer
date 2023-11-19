@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.ui
 
 import com.wa9nnn.util.tableui.Cell
 import net.wa9nnn.RcSpec
-import net.wa9nnn.rc210.data.field.Week
+import net.wa9nnn.rc210.data.field.schedule.Week
 import net.wa9nnn.rc210.key.KeyFactory
 
 class EnumSelectSpec extends RcSpec {

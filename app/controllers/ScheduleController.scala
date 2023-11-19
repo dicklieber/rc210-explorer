@@ -23,13 +23,13 @@ import org.apache.pekko.util.Timeout
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, Table}
-import net.wa9nnn.rc210.data.FieldKey
+
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.AllForKeyKind
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.data.schedules.Schedule
-import net.wa9nnn.rc210.key.KeyKind
+import net.wa9nnn.rc210.KeyKind
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import org.apache.pekko.actor.typed.ActorRef
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable

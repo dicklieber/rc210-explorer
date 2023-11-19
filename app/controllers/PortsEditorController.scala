@@ -21,13 +21,13 @@ import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Row, Table}
 import net.wa9nnn.rc210.KeyKind
+import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, UpdateData}
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import net.wa9nnn.rc210.ui.{CandidateAndNames, FormParser}
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
-import org.apache.pekko.http.scaladsl.model.ResponsePromise.Key
 import org.apache.pekko.util.Timeout
 import play.api.mvc.*
 
@@ -53,14 +53,14 @@ class PortsEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
       Row(fieldName, cells: _*)
     }
 
-    val colHeaders: Seq[Cell] = Key(KeyKind.portKey).map(_.namedCell())
+    val colHeaders: Seq[Cell] = Key.portKeys.map(_.namedCell())
     val namesRow = Row(colHeaders.prepended(Cell("Ports:").withCssClass("cornerCell")))
 
     val table = Table(Seq.empty, rows.prepended(namesRow))
     Ok(views.html.ports(table))
 
   def index(): Action[AnyContent] = Action.async {
-    implicit request: MessagesRequest[AnyContent] => {
+    implicit rquest: MessagesRequest[AnyContent] => {
       val future: Future[Seq[FieldEntry]] = actor.ask(AllForKeyKind(KeyKind.portKey, _))
       future.map { (portEntries: Seq[FieldEntry]) =>
         buildresult(portEntries)
@@ -68,12 +68,13 @@ class PortsEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
     }
   }
 
-  def save(): Action[AnyContent] = Action.async {
+  def save(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      val candidateAndNames: CandidateAndNames = FormParser(AnyContentAsFormUrlEncoded(request.body.asFormUrlEncoded.get))
-
-      actor.ask[String](ref => UpdateData(candidateAndNames, user = user(request), replyTo = ref)).map { _ =>
-        Redirect(routes.PortsEditorController.index())
-      }
+      ImATeapot
+    //      val candidateAndNames: CandidateAndNames = FormParser()
+    //
+    //      actor.ask[String](ref => UpdateData(candidateAndNames, user = user(request), replyTo = ref)).map { _ =>
+    //        Redirect(routes.PortsEditorController.index())
+    //      }
   }
 }

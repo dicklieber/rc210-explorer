@@ -3,12 +3,13 @@ package net.wa9nnn.rc210.data.functions
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
 import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.KeyKind._
 import play.api.libs.json.*
 
 import java.io.InputStream
 import javax.inject.Singleton
 import scala.util.{Failure, Success, Using}
-
+import net.wa9nnn.rc210.KeyKind.messageKey
 @Singleton
 class FunctionsProvider extends LazyLogging {
 
@@ -54,7 +55,7 @@ class FunctionsProvider extends LazyLogging {
  */
 case class FunctionNode(key: Key, description: String, destination: Option[Key]) extends Ordered[FunctionNode] with RowSource {
   destination foreach (destKey =>
-    assert(destKey.keyKind == KeyKind.functionKey || KeyKind.messageKey, s"destination must be Key or MessageKey! But got: $key")
+    assert(destKey.keyKind == KeyKind.functionKey || destKey.keyKind == KeyKind.messageKey, s"destination must be Key or MessageKey! But got: $key")
     )
 
   override def compare(that: FunctionNode): Int = description compareTo that.description
@@ -67,7 +68,6 @@ case class FunctionNode(key: Key, description: String, destination: Option[Key])
 }
 
 object FunctionNode {
-  implicit val fmtFunctionNode: Format[FunctionNode] = Json.format[FunctionNode]
   def header(count: Int): Header = Header(s"Functions ($count)", "Key", "Description")
 
   implicit val fmtFunction: Format[FunctionNode] = new Format[FunctionNode] {

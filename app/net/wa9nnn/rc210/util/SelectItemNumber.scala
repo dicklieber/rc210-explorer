@@ -23,7 +23,7 @@ import play.api.data.format.Formats.parsing
 import play.api.data.format.Formatter
 
 import scala.reflect.ClassTag
-import net.wa9nnn.rc210.util.select.SelectHelper._
+//import net.wa9nnn.rc210.util.select.SelectHelper._
 
 /**
  * A collection of [[SelectItem]]s that can be used in a <select> tag.
@@ -31,8 +31,25 @@ import net.wa9nnn.rc210.util.select.SelectHelper._
  * @tparam T a sealed trait of [[SelectItemNumber]]
  */
 trait SelectableNumber[T <: SelectItemNumber] extends BaseSelectable[T] {
-  val options: Seq[T] = values.toSeq.sorted
+  val options: Seq[T] = throw new NotImplementedError() //todo values[T].toSeq.sorted
+
+  inline def findSubclassModulesOfSealedTrait[T](using
+                                                 m: scala.deriving.Mirror.SumOf[T]
+                                                ): List[ClassTag[_ <: T]] =
+    allInstances[m.MirroredElemTypes, m.MirroredType]
+
+  inline def allInstances[ET <: Tuple, T]: List[ClassTag[_ <: T]] =
+    import scala.compiletime.*
+
+    inline erasedValue[ET] match
+      case _: EmptyTuple => Nil
+      case _: (t *: ts) => summonInline[ClassTag[t]].asInstanceOf[ClassTag[_ <: T]] :: allInstances[ts, T]
+
+
+  val r: Seq[ClassTag[_ <: T]] = findSubclassModulesOfSealedTrait[T]
+
 }
+
 
 trait BaseSelectable[T <: SelectItemNumber] {
   val options: Seq[T]
@@ -90,6 +107,9 @@ trait SelectItem:
  * A selectable item that has a number that goes into an RC-210 command.
  */
 trait SelectItemNumber extends SelectItem with Ordered[SelectItemNumber] {
+
+
+
   override def compare(that: SelectItemNumber): Int = number compareTo that.number
 
   /**

@@ -18,15 +18,13 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.FieldKey
+import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, UpdateData}
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
-import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
 import net.wa9nnn.rc210.data.field.Formatters.*
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.data.timers.Timer
-import net.wa9nnn.rc210.key.{MacroKey, TimerKey}
-import net.wa9nnn.rc210.key.{KeyFactory, KeyKind}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
@@ -64,7 +62,7 @@ class TimerEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
     //        Ok(views.html.timers(timers))
   }
 
-  def edit(timerKey: TimerKey): Action[AnyContent] = Action.async {
+  def edit(timerKey: Key): Action[AnyContent] = Action.async {
     implicit request: MessagesRequest[AnyContent] =>
       val fieldKey = FieldKey("Timer", timerKey)
       actor.ask(DataStoreActor.ForFieldKey(fieldKey, _)).map {

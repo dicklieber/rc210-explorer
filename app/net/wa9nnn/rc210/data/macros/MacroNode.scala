@@ -38,7 +38,7 @@ case class MacroNode(override val key: Key , functions: Seq[Key], dtmf: Option[D
     val mCmd = if (functions.isEmpty)
       s"1*4003$macroNumber" // erase macro
     else
-      s"1*4002${macroNumber}*$numbers"
+      s"1*4002$macroNumber*$numbers"
 
     //    1*4002 11 * 118 * 391 ok
     //    1*400211 * 118 * 391 ok
@@ -141,7 +141,7 @@ object MacroNode extends ComplexExtractor {
         None // Done. function numbers don't allow 255,512,767.
       case x: Int if x < 255 =>
         val number = soFar + x
-        Some(Key(functionKey, number))
+        Some(Key(KeyKind.functionKey, number))
       case 255 =>
         parseFunction(iterator, soFar + int) // add next int, which will always be 255.
     }

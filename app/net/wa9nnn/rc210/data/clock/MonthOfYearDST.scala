@@ -24,27 +24,27 @@ sealed trait MonthOfYearDST(val rc210Value: Int, val display: String) extends Se
 object MonthOfYearDST extends SelectableNumber[MonthOfYearDST] {
   case object January extends MonthOfYearDST(0, "January")
 
-  case object February extends MonthOfYearDST(0, "February")
+  case object February extends MonthOfYearDST(1, "February")
 
-  case object March extends MonthOfYearDST(0, "March")
+  case object March extends MonthOfYearDST(2, "March")
 
-  case object April extends MonthOfYearDST(0, "April")
+  case object April extends MonthOfYearDST(3, "April")
 
-  case object May extends MonthOfYearDST(0, "May")
+  case object May extends MonthOfYearDST(4, "May")
 
-  case object June extends MonthOfYearDST(0, "June")
+  case object June extends MonthOfYearDST(5, "June")
 
-  case object July extends MonthOfYearDST(0, "July")
+  case object July extends MonthOfYearDST(6, "July")
 
-  case object August extends MonthOfYearDST(0, "August")
+  case object August extends MonthOfYearDST(7, "August")
 
-  case object September extends MonthOfYearDST(0, "September")
+  case object September extends MonthOfYearDST(8, "September")
 
-  case object October extends MonthOfYearDST(0, "October")
+  case object October extends MonthOfYearDST(9, "October")
 
-  case object November extends MonthOfYearDST(0, "November")
+  case object November extends MonthOfYearDST(10, "November")
 
-  case object December extends MonthOfYearDST(0, "December")
+  case object December extends MonthOfYearDST(11, "December")
 
 }
 

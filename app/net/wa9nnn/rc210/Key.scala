@@ -25,18 +25,18 @@ import play.api.data.FormError
 import play.api.data.format.Formatter
 import play.api.mvc.PathBindable
 import play.twirl.api.Html
-import net.wa9nnn.rc210.KeyKind
-//import scala.reflect.ClassTag
+import net.wa9nnn.rc210.KeyKind._
+import play.api.libs.json._
 
 /**
  *
  * @param keyKind of the Key
  * @param number  0 is a magic number used for things like [[KeyKind.commonKey]]
  */
-case class Key(keyKind: KeyKind, number: Int = 0) extends  CellProvider with NamedKeySource with SelectItemNumber {
+case class Key(keyKind: KeyKind, number: Int = 0) extends CellProvider with NamedKeySource with SelectItemNumber {
   def check(target: KeyKind): Unit = if (target != keyKind) throw new WrongKeyType(this, target)
 
-      assert(number <= keyKind.maxN, s"Max number for ${keyKind.name} is ${keyKind.maxN}")
+  assert(number <= keyKind.maxN, s"Max number for ${keyKind.name} is ${keyKind.maxN}")
 
   override def toString: String = s"$keyKind$number"
 
@@ -49,7 +49,8 @@ case class Key(keyKind: KeyKind, number: Int = 0) extends  CellProvider with Nam
   def fieldKey(fieldName: String): FieldKey = FieldKey(fieldName, this)
 
   def namedCell(param: String = fieldKey("name").param): Cell =
-    val html: Html = views.html.fieldNamedKey(this, nameForKey(this), param)
+    val str = nameForKey(this)
+    val html: Html = views.html.fieldNamedKey(this, str, param)
     Cell.rawHtml(html.toString())
 
   def keyWithName: String = s"$number ${nameForKey(this)}"
@@ -95,10 +96,19 @@ object Key:
   def nameForKey(key: Key): String =
     _namedSource.map(_.nameForKey(key)).getOrElse("")
 
+  private def keys(keyKind: KeyKind): Seq[Key] =
+    for {
+      number <- 1 to KeyKind.portKey.maxN
+    } yield {
+      Key(KeyKind.portKey, number)
+    }
+
+  lazy val portKeys: Seq[Key] = keys(portKey)
+  lazy val macroKeys: Seq[Key] = keys(macroKey)
+
   /**
    * Codec to allow non-string types i routes.conf definitions.
    */
-
   implicit def keyKindPathBinder: PathBindable[KeyKind] = new PathBindable[KeyKind] {
     override def bind(key: String, value: String): Either[String, KeyKind] = {
       Right(KeyKind.valueOf(value))
@@ -108,6 +118,8 @@ object Key:
       macroKey.toString
     }
   }
+
+  implicit val fmtKey: Format[Key] = Json.format[Key]
 
 case class WrongKeyType(key: Key, expected: KeyKind) extends IllegalArgumentException(s"Expecting Key of type ${expected.name}, but got $key}")
 

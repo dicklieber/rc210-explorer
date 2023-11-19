@@ -31,7 +31,7 @@ import scala.util.{Try, Using}
 
 
 @Singleton
-class Rc210 @Inject()(imlicit config: Config) extends LazyLogging {
+class Rc210 @Inject()(implicit config: Config) extends LazyLogging {
   def comPort: ComPort = maybeRcSerialPort.map(_.comPort).get
 
 
