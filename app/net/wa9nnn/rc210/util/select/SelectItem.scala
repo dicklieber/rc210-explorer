@@ -15,24 +15,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-package net.wa9nnn.rc210.data.field.schedule
+package net.wa9nnn.rc210.util.select
 
-import net.wa9nnn.rc210.util.select.{SelectItemNumber, SelectableNumber}
 
-sealed trait Week(val rc210Value: Int, val display: String) extends SelectItemNumber
+/**
+ * An item that that can be
+ *  - Stored in a case class.
+ *  - Displayed in HTML in a selectOptions option
+ *  - Used in [p;ay json as [[play.api.libs.json.Format]]
+ *  - Play [[play.api.mvc.PathBindable]]
+ *
+ * Usually managed in a [[SelectItemNumber]]
+ */
+trait SelectItem:
+  /**
+   * Shown in selectOptions / option html.
+   */
+  val display: String = toString
 
-object Week extends SelectableNumber[Week] {
+  /**
+   *
+   * @param formValue as selected by user in form.
+   * @return
+   */
+  def isSelected(formValue: String): Boolean
 
-  case object Every extends Week(1, "Every")
-
-  case object first extends Week(2, "first")
-
-  case object second extends Week(3, "second")
-
-  case object third extends Week(4, "third")
-
-  case object forth extends Week(5, "forth")
-
-  case object fifth extends Week(6, "fifth")
-}
-
+  //
+  //  /**
+  //   *
+  //   * @param number from RC-210 data
+  //   * @return
+  //   */
+  //  def isSelected(number: Int): Boolean
+  //
+  //  def item: (String, String)
+  def html: String = s""""<option value="$display">$display</option>"""

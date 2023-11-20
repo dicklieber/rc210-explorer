@@ -15,24 +15,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-package net.wa9nnn.rc210.data.field.schedule
+package net.wa9nnn.rc210.util.select
 
-import net.wa9nnn.rc210.util.select.{SelectItemNumber, SelectableNumber}
+import com.wa9nnn.util.tableui.Cell
+import enumeratum.{EnumEntry, PlayEnum, PlayFormFieldEnum}
+import net.wa9nnn.rc210.util.select.*
 
-sealed trait Week(val rc210Value: Int, val display: String) extends SelectItemNumber
+trait SelectItemNumber extends SelectItem with EnumEntry with PlayEnum[SelectItemNumber]:
+  /**
+   * as passed to/from RC-210
+   */
+  val number: Int
+  /**
+   * What is shown to user.
+   */
+  val display: String
 
-object Week extends SelectableNumber[Week] {
+  //  override def item: (String, String) = display -> display
+  //
+  //  override def isSelected(formValue: String): Boolean = display == formValue
+  //
+  //  /**
+  //   *
+  //   * @param number from RC-210 data
+  //   * @return
+  //   */
+  //  override def isSelected(number: Int): Boolean = number == this.number
 
-  case object Every extends Week(1, "Every")
-
-  case object first extends Week(2, "first")
-
-  case object second extends Week(3, "second")
-
-  case object third extends Week(4, "third")
-
-  case object forth extends Week(5, "forth")
-
-  case object fifth extends Week(6, "fifth")
-}
-
+  def toCell: Cell = Cell(display)

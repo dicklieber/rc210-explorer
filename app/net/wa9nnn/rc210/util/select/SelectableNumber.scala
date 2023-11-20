@@ -15,24 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-package net.wa9nnn.rc210.data.field.schedule
+package net.wa9nnn.rc210.util.select
 
-import net.wa9nnn.rc210.util.select.{SelectItemNumber, SelectableNumber}
-
-sealed trait Week(val rc210Value: Int, val display: String) extends SelectItemNumber
-
-object Week extends SelectableNumber[Week] {
-
-  case object Every extends Week(1, "Every")
-
-  case object first extends Week(2, "first")
-
-  case object second extends Week(3, "second")
-
-  case object third extends Week(4, "third")
-
-  case object forth extends Week(5, "forth")
-
-  case object fifth extends Week(6, "fifth")
-}
-
+/**
+ * A collection of [[SelectItem]]s that can be used in a <selectOptions> tag.
+ *
+ * @tparam T a sealed trait of [[SelectItemNumber]]
+ */
+trait SelectableNumber[T <: SelectItemNumber]:
+  val options: Seq[T] = throw new NotImplementedError() //todo values[T].toSeq.sorted

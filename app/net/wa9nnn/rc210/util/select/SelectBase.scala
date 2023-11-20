@@ -15,19 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.data.field
+package net.wa9nnn.rc210.util.select
 
-import net.wa9nnn.rc210.util.select.{SelectItemNumber, SelectableNumber}
-import play.api.libs.json.JsValue
+import enumeratum.{Enum, PlayEnum}
+import net.wa9nnn.rc210.data.clock.Occurrence
+import net.wa9nnn.rc210.util.select.SelectItemNumber
 
-sealed trait MuteDigit(val rc210Value: Int, val display: String) extends SelectItemNumber
-
-object MuteDigit extends SimpleExtractor with SelectableNumber[MuteDigit] {
-
-  case object firstDigit extends MuteDigit(1, "1st digit")
-
-  case object secpondtDigit extends MuteDigit(2, "2nd digit")
-
-  override def parse(jsValue: _root_.play.api.libs.json.JsValue): _root_.net.wa9nnn.rc210.data.field.FieldValue =
-    throw new NotImplementedError() //todo
+/**
+ * Base trait for various application-specific enumerated types
+ * Most of the functionality is procided by the enumeratum library via [[Enum]] and [[PlayEnum]]
+ * @tparam T
+ */
+trait SelectBase[T <: SelectItemNumber] extends Enum[T] with PlayEnum[T] {
+  def find(number: Int): T = values.find(_.number == number).get
 }

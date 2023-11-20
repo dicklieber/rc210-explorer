@@ -15,22 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-package net.wa9nnn.rc210.util.select
+package net.wa9nnn.rc210.data.remotebase
 
-import net.wa9nnn.rc210.util.SelectItem
+import net.wa9nnn.rc210.util.select.{SelectBase, SelectItemNumber}
 
-import scala.language.reflectiveCalls
+sealed trait Yaesu(val rc210Value: Int, val display: String) extends SelectItemNumber
 
-object SelectHelper {
+object Yaesu extends SelectBase[Yaesu]:
+  case object FT100D extends Yaesu(1, "FT-100D")
 
-  inline def values[T <: SelectItem](using m: scala.deriving.Mirror.SumOf[T]): Set[T] =
-    allInstances[m.MirroredElemTypes, m.MirroredType].toSet
+  case object FT817_857_897 extends Yaesu(2, "FT817, FT-857, FT-897")
 
-  inline def allInstances[ET <: Tuple, T]: List[T] =
-    import scala.compiletime.*
+  case object FT847 extends Yaesu(3, "FT847")
 
-    inline erasedValue[ET] match
-      case _: EmptyTuple => Nil
-      case _: (t *: ts) => summonInline[ValueOf[t]].value.asInstanceOf[T] :: allInstances[ts, T]
-
-}

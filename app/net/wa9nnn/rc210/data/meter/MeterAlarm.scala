@@ -83,7 +83,7 @@ object MeterAlarm extends ComplexExtractor {
    */
   override def extract(memory: Memory): Seq[FieldEntry] = {
     val mai = new AtomicInteger()
-    val alarmType: Seq[AlarmType] = memory.sub8(274, nMeters).map(AlarmType.lookup)
+    val alarmType: Seq[AlarmType] = memory.sub8(274, nMeters).map(AlarmType.find)
     val macroKeys: Seq[Key] = memory.sub8(314, nMeters).map(Key(macroKey, _))
     val setPoint: Seq[String] = memory.chunks(282, 4, nMeters).map { chunk =>
       val array = chunk.ints

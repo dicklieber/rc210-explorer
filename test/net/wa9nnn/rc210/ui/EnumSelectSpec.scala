@@ -29,7 +29,7 @@ class EnumSelectSpec extends RcSpec {
     "apply no selected" in {
       val cell = enumSelect.toCell()
       val html = cell.value
-      html.trim startsWith """<select name="theWeek" class="form-select" aria-label="Default select example">"""
+      html.trim startsWith """<selectOptions name="theWeek" class="form-selectOptions" aria-label="Default selectOptions example">"""
 
     }
     "apply with selected" in {

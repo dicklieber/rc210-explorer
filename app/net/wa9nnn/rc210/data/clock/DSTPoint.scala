@@ -28,11 +28,11 @@ object DSTPoint:
   def apply(s: String): DSTPoint =
     val month: MonthOfYearDST = {
       val i: Int = s.take(2).toInt
-      MonthOfYearDST.options(i)
+      MonthOfYearDST.find(i)
     }
     val occurance: Occurrence = {
       val i = s.takeRight(1).toInt - 1
-      Occurrence.options(i)
+      Occurrence.values(i)
     }
     new DSTPoint(month, occurance)
 

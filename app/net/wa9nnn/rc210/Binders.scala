@@ -69,44 +69,5 @@ object Binders {
     override def unbind(key: String, userId: UserId): String =
       userId
   }
-
-
-  implicit def monthOfYearDSTBinder: PathBindable[MonthOfYearDST] = new PathBindable[MonthOfYearDST] {
-    override def bind(key: String, value: String): Either[String, MonthOfYearDST] =
-      try {
-        Right(MonthOfYearDST.lookup(value))
-      } catch {
-        case e: Exception =>
-          Left(e.getMessage)
-      }
-
-    override def unbind(key: String, monthOfYearDST: MonthOfYearDST): String =
-      monthOfYearDST.toString
-  }
-
-  implicit def occurrenceBinder: PathBindable[Occurrence] = new PathBindable[Occurrence] {
-    override def bind(key: String, value: String): Either[String, Occurrence] =
-      try {
-        Right(Occurrence.lookup(value))
-      } catch {
-        case e: Exception =>
-          Left(e.getMessage)
-      }
-
-    override def unbind(key: String, occurrence: Occurrence): String =
-      occurrence.toString
-  }
-
-  implicit def comportBinder: PathBindable[ComPort] = new PathBindable[ComPort] {
-    override def bind(key: String, value: String): Either[String, ComPort] =
-      try {
-        Right(ComPort(value))
-      } catch {
-        case e: Exception =>
-          Left(e.getMessage)
-      }
-
-    override def unbind(key: String, comPort: ComPort): String =
-      comPort.toString()
-  }
+  
 }

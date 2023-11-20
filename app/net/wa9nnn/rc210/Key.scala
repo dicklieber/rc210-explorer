@@ -20,12 +20,12 @@ package net.wa9nnn.rc210
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
 import net.wa9nnn.rc210.data.field.FieldKey
 import net.wa9nnn.rc210.data.named.NamedKeySource
-import net.wa9nnn.rc210.util.{SelectItem, SelectItemNumber}
 import play.api.data.FormError
 import play.api.data.format.Formatter
 import play.api.mvc.PathBindable
 import play.twirl.api.Html
 import net.wa9nnn.rc210.KeyKind._
+import net.wa9nnn.rc210.util.select.{SelectItem, SelectItemNumber}
 import play.api.libs.json._
 
 /**
@@ -33,7 +33,8 @@ import play.api.libs.json._
  * @param keyKind of the Key
  * @param number  0 is a magic number used for things like [[KeyKind.commonKey]]
  */
-case class Key(keyKind: KeyKind, number: Int = 0) extends CellProvider with NamedKeySource with SelectItemNumber {
+case class Key(keyKind: KeyKind, number: Int = 0) extends CellProvider
+  with NamedKeySource with SelectItemNumber with Ordered[Key] {
   def check(target: KeyKind): Unit = if (target != keyKind) throw new WrongKeyType(this, target)
 
   assert(number <= keyKind.maxN, s"Max number for ${keyKind.name} is ${keyKind.maxN}")

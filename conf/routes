@@ -4,18 +4,18 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-GET         /timer/edit/:timerKey                      controllers.TimerEditorController.edit(timerKey:TimerKey)
+GET         /timer/edit/:timerKey                      controllers.TimerEditorController.edit(timerKey:Key)
 POST        /timer/save                                controllers.TimerEditorController.save()
 GET         /timers                                    controllers.TimerEditorController.index
 POST        /courtesytones/save                        controllers.CourtesyToneEditorController.save()
 GET         /courtesytones                             controllers.CourtesyToneEditorController.index()
-GET         /meter/editMeter/:meterKey                 controllers.MeterController.editMeter(meterKey:MeterKey)
-GET         /meter/editAlarm/:meterAlarmKey            controllers.MeterController.editAlarm(meterAlarmKey:MeterAlarmKey)
+GET         /meter/editMeter/:meterKey                 controllers.MeterController.editMeter(meterKey:Key)
+GET         /meter/editAlarm/:meterAlarmKey            controllers.MeterController.editAlarm(meterAlarmKey:Key)
 GET         /meter                                     controllers.MeterController.index
 POST        /meter/saveMeter                           controllers.MeterController.saveMeter()
 POST        /meter/saveAlarm                           controllers.MeterController.saveAlarm()
 POST        /logic/save                                controllers.LogicAlarmEditorController.save()
-GET         /logic/edit/:logicAlarmKey                 controllers.LogicAlarmEditorController.edit(logicAlarmKey:LogicAlarmKey)
+GET         /logic/edit/:logicAlarmKey                 controllers.LogicAlarmEditorController.edit(logicAlarmKey:Key)
 GET         /logic                                     controllers.LogicAlarmEditorController.index()
 POST        /common/save                               controllers.CommonEditorController.save()
 GET         /common                                    controllers.CommonEditorController.index()

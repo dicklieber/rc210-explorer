@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.util
 
 /**
  *
- * @param id       this is used in the application logic not HTML <select><option>
+ * @param id       this is used in the application logic not HTML <selectOptions><option>
  * @param display  what to show users = <option>s
  * @param selected true if this is currently selected.
  */

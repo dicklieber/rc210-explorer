@@ -1,7 +1,7 @@
 
 @(param: String, current: String, options: Seq[String])
 
-<select name="@param" id="@param" class="" style="width-auto" aria-label="Default select example">
+<selectOptions name="@param" id="@param" class="" style="width-auto" aria-label="Default selectOptions example">
 @for(option <- options) {
     @if(current == option) {
         <option value="@option" selected>@option</option>
@@ -9,4 +9,4 @@
         <option value="@option">@option</option>
     }
 }
-</select>
+</selectOptions>

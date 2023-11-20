@@ -19,7 +19,7 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.KeyKind.clockKey
-import net.wa9nnn.rc210.data.clock.{Clock, DSTPoint, Occurrence}
+import net.wa9nnn.rc210.data.clock.{Clock, DSTPoint, MonthOfYearDST, Occurrence}
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.UpdateData
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.FieldEntry
@@ -43,6 +43,22 @@ class ClockController @Inject()(actor: ActorRef[DataStoreActor.Message])
                                (implicit scheduler: Scheduler, ec: ExecutionContext)
   extends MessagesInjectedController with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
+
+
+//  private val dstPointForm: Mapping[DSTPoint] =
+//    mapping(
+//      "month" -> MonthOfYearDST.playForm,
+//      "occurrence" -> of[Occurrence]
+//    )(DSTPoint.apply)(DSTPoint.unapply)
+//
+//  private val clockForm = Form[Clock](
+//    mapping(
+//      "enableDST" -> boolean,
+//      "hourDST" -> number(min = 0, max = 23),
+//      "startDST" -> dstPointForm,
+//      "endDST" -> dstPointForm,
+//      "say24Hours" -> boolean
+//    )(Clock.apply)(Clock.unapply))
 
   def index: Action[AnyContent] = Action.async {
     implicit request =>

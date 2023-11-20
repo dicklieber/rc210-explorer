@@ -17,11 +17,11 @@
 
 package net.wa9nnn.rc210.data.meter
 
-import net.wa9nnn.rc210.util.{SelectItemNumber, SelectableNumber}
+import net.wa9nnn.rc210.util.select.{SelectBase, SelectItemNumber, SelectableNumber}
 
 sealed trait AlarmType(val rc210Value: Int, val display: String) extends SelectItemNumber
 
-object AlarmType extends SelectableNumber[AlarmType] {
+object AlarmType extends SelectBase[AlarmType] {
 
   case object LowAlarm extends AlarmType(1, "Low Alarm")
 

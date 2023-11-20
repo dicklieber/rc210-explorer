@@ -72,7 +72,7 @@ object Meter extends ComplexExtractor {
     val mai = new AtomicInteger()
     val nMeters = KeyKind.meterKey.maxN
     val faceInts = memory.sub8(186, nMeters)
-    val faceNames: Seq[MeterFaceName] = faceInts.map(MeterFaceName.lookup)
+    val faceNames: Seq[MeterFaceName] = faceInts.map(i => MeterFaceName find i)
     val lowX: Seq[Int] = memory.iterator16At(202).take(nMeters).toSeq
     val lowY: Seq[Int] = memory.iterator16At(218).take(nMeters).toSeq
     val highX: Seq[Int] = memory.iterator16At(234).take(nMeters).toSeq

@@ -55,20 +55,20 @@ object RemoteBase extends ComplexExtractor {
     ////FreqString - 3562-3641	remote base stuff
     ////InactivityMacro - 1545-1550
 
-    val radio: Radio = Radio.lookup(memory(1176))
-    val yaesu: Yaesu = Yaesu.lookup(memory(1177))
+    val radio: Radio = Radio.find(memory(1176))
+    val yaesu: Yaesu = Yaesu.find(memory(1177))
     val prefix = memory.stringAt(3525)
 
     val freqs: Seq[String] = memory.chunks(3562, 8, 10).map((chunk: Chunk) => chunk.toString)
 //    val offsets: Seq[Offset] = memory.sub8(3562, 10).map { Offset(_)}
     val ctcsss: Seq[Int] = memory.sub8(3642, 10)
-    val ctcsssModes: Seq[CtcssMode] = memory.sub8(3652, 10).map(CtcssMode.lookup)
-    val modes: Seq[Mode] = memory.sub8(1535, 10).map(Mode.lookup)
+    val ctcsssModes: Seq[CtcssMode] = memory.sub8(3652, 10).map(CtcssMode.find)
+    val modes: Seq[Mode] = memory.sub8(1535, 10).map(Mode.find)
     val memories: IndexedSeq[RBMemory] = for {
       i <- 0 until 10
     } yield {
       val freqOffset: String = freqs(i)
-      val offset = Offset.lookup(freqOffset.last)
+      val offset = Offset.find(freqOffset.last)
       val freq = freqOffset.dropRight(1)
       RBMemory(
         frequency = freq,

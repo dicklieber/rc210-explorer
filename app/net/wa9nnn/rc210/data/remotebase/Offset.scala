@@ -15,24 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-package net.wa9nnn.rc210.data.field.schedule
+package net.wa9nnn.rc210.data.remotebase
 
-import net.wa9nnn.rc210.util.select.{SelectItemNumber, SelectableNumber}
+import net.wa9nnn.rc210.util.select.{SelectBase, SelectItemNumber}
 
-sealed trait Week(val rc210Value: Int, val display: String) extends SelectItemNumber
+sealed trait Offset(val rc210Value: Int, val display: String) extends SelectItemNumber
 
-object Week extends SelectableNumber[Week] {
+object Offset extends SelectBase[Offset]:
+  case object FT100D extends Offset(1, "Minus")
 
-  case object Every extends Week(1, "Every")
+  case object FT817_857_897 extends Offset(2, "Simplex")
 
-  case object first extends Week(2, "first")
+  case object FT847 extends Offset(3, "Plus")
 
-  case object second extends Week(3, "second")
-
-  case object third extends Week(4, "third")
-
-  case object forth extends Week(5, "forth")
-
-  case object fifth extends Week(6, "fifth")
-}
 

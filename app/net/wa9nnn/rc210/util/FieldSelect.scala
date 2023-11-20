@@ -71,9 +71,9 @@ trait FieldSelect[T] extends SimpleFieldValue {
     val param: String = renderMetadata.param
 
     s"""
-    <select name="$param" class="form-select" aria-label="Default select example">
+    <selectOptions name="$param" class="form-selectOptions" aria-label="Default selectOptions example">
     $optionsHtml
-    </select>
+    </selectOptions>
     """.stripMargin
   }
 

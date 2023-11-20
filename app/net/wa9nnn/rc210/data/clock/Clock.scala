@@ -46,7 +46,7 @@ case class Clock(key:Key,
     For example, in the United States, Daylight Savings time begins the 2nd Sunday in March and ends the 1st Sunday in November: *2131 1 03 2 <----Program START month for March, the 2nd Sunday
     *2131 0 11 1 <----Program END month for November, the 1st Sunday
     Setting the Start and Ending Hour
-    You may individually select the hour at which the DST change starts and ends are made. *2132 x yy where x = 1 for Start Hour and 2 for End Hour and yy = 00 - 23
+    You may individually selectOptions the hour at which the DST change starts and ends are made. *2132 x yy where x = 1 for Start Hour and 2 for End Hour and yy = 00 - 23
     For example, in the United States, the Start and End Hours are both 2 AM
     *2132 1 02 <-----Program DST Start Hour to 2 AM
     *2132 1 02 <-----Program DST End Hour to 2 AM

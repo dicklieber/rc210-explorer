@@ -17,10 +17,11 @@
 
 package net.wa9nnn.rc210.util
 
+import net.wa9nnn.rc210.util.select.SelectBase
 import net.wa9nnn.rc210.{Key, KeyKind}
 
 
-object MacroSelect  extends BaseSelectable [Key]{
+object MacroSelect  extends SelectBase [Key]{
    def values: Seq[Key] = for{
      number <- 1 to KeyKind.macroKey.maxN
    }yield {

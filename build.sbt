@@ -31,7 +31,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
 
     scalacOptions ++= Seq(
       "-feature",
-//      "-deprecation",
+      //      "-deprecation",
       //      "-Xfatal-warnings",
       //      "-Ymacro-annotations",
     )
@@ -46,12 +46,6 @@ resolvers += ("Reposilite" at "http://194.113.64.105:8080/releases").withAllowIn
 
 
 val logbackVersion = "1.4.11"
-//val specs2Version = "4.20.0"
-//libraryDependencies += specs2 % Test
-
-//val akkaVersion = "2.8.5"
-//libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
-
 libraryDependencies ++= Seq(
   guice,
 
@@ -64,10 +58,6 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.2.16" % "test",
   //  "org.scalatest" %% "scalatest-wordspec" % "3.2.16" % "test",
   "org.scalatestplus" %% "mockito-4-6" % "3.2.15.0" % Test,
-  //  "org.scalatestplus" %% "mockito-4-6" % " 3.2.16" % "test",
-  //  "org.specs2" %% "specs2-core" % specs2Version % Test,
-  //  "org.specs2" %% "specs2-matcher-extra" % specs2Version % Test,
-  //  "org.specs2" % "specs2-scalaz" % specs2Version % "test",
   "net.wa9nnn" %% "util" % "0.1.15-SNAPSHOT",
 
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
@@ -82,7 +72,8 @@ libraryDependencies ++= Seq(
   //  "com.github.kxbmap" %% "configs" % "0.6.1",
   "org.mindrot" % "jbcrypt" % "0.4",
   "com.github.andyglow" %% "typesafe-config-scala" % "2.0.0" % Compile,
-//  "com.beachape" %% "enumeratum" % "1.7.3",
+  "com.beachape" %% "enumeratum" % "1.7.3",
+  "com.beachape" %% "enumeratum-play" % "1.8.0",
 )
 
 

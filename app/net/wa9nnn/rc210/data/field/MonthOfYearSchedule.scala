@@ -1,6 +1,6 @@
 package net.wa9nnn.rc210.data.field;
 
-import net.wa9nnn.rc210.util.{SelectItemNumber, SelectableNumber}
+import net.wa9nnn.rc210.util.select.{SelectItemNumber, SelectableNumber}
 
 sealed trait MonthOfYearSchedule(val rc210Value: Int, val display: String) extends SelectItemNumber
 

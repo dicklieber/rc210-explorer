@@ -15,13 +15,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.util.select
+package net.wa9nnn.rc210.data.meter
 
-import scala.quoted.*
+import enumeratum.*
+import net.wa9nnn.rc210.util.select.{SelectBase, SelectItemNumber}
 
-inline def enumValues[E]: Array[E] = ${enumValuesImpl[E]}
+sealed trait MeterFaceName(val rc210Value: Int, val display: String) extends SelectItemNumber
 
-def enumValuesImpl[E: Type](using Quotes): Expr[Array[E]] =
-  import quotes.reflect.*
-  val companion = Ref(TypeTree.of[E].symbol.companionModule)
-  Select.unique(companion, "values").asExprOf[Array[E]]
+object MeterFaceName extends Enum[MeterFaceName] with SelectBase[MeterFaceName] {
+
+  case object Off extends MeterFaceName(0, "Meter OFF")
+
+  case object Volts extends MeterFaceName(1, "Volts")
+
+  case object Amps extends MeterFaceName(2, "Amps")
+
+  case object Watts extends MeterFaceName(3, "Watts")
+
+  case object Degrees extends MeterFaceName(4, "Degrees")
+
+  case object MPH extends MeterFaceName(5, "MPH")
+
+  case object Percent extends MeterFaceName(6, "Percent")
+}
+
