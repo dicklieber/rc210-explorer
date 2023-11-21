@@ -17,10 +17,10 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.util.select.{SelectItemNumber, SelectableNumber}
+import net.wa9nnn.rc210.util.select.{Rc210Item, SelectableNumber}
 import play.api.libs.json.JsValue
 
-sealed trait MuteDigit(val rc210Value: Int, val display: String) extends SelectItemNumber
+sealed trait MuteDigit(val rc210Value: Int, val display: String) extends Rc210Item
 
 object MuteDigit extends SimpleExtractor with SelectableNumber[MuteDigit] {
 

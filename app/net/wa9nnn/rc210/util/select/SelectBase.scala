@@ -18,14 +18,18 @@
 package net.wa9nnn.rc210.util.select
 
 import enumeratum.{Enum, PlayEnum}
-import net.wa9nnn.rc210.data.clock.Occurrence
-import net.wa9nnn.rc210.util.select.SelectItemNumber
+import net.wa9nnn.rc210.util.select._
 
 /**
  * Base trait for various application-specific enumerated types
  * Most of the functionality is procided by the enumeratum library via [[Enum]] and [[PlayEnum]]
  * @tparam T
  */
-trait SelectBase[T <: SelectItemNumber] extends Enum[T] with PlayEnum[T] {
+trait SelectBase[T <: Rc210Item] extends Enum[T] with PlayEnum[T] with SelectItemProvider:
   def find(number: Int): T = values.find(_.number == number).get
-}
+
+  override def items: Seq[Rc210Item] = values
+
+
+trait SelectItemProvider:
+  def items:Seq[Rc210Item]

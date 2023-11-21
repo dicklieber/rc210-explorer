@@ -20,7 +20,7 @@ package net.wa9nnn.rc210.util.select
 /**
  * A collection of [[SelectItem]]s that can be used in a <selectOptions> tag.
  *
- * @tparam T a sealed trait of [[SelectItemNumber]]
+ * @tparam T a sealed trait of [[Rc210Item]]
  */
-trait SelectableNumber[T <: SelectItemNumber]:
+trait SelectableNumber[T <: Rc210Item]:
   val options: Seq[T] = throw new NotImplementedError() //todo values[T].toSeq.sorted

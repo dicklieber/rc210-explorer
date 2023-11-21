@@ -1,9 +1,8 @@
-@import net.wa9nnn.rc210.util.select.SelectBase
-@import net.wa9nnn.rc210.util.select.SelectItemNumber
-@(name: String, selectItemNumber: SelectItemNumber,  options: Seq[SelectItemNumber], tooltip: String = "")
-<selectOptions name="@name" @if(tooltip.nonEmpty) {
-    title="@tooltip"}>
-@for(option <- options) {
-    @option.html
+@import net.wa9nnn.rc210.util.select.Rc210Item
+@import net.wa9nnn.rc210.util.select.SelectItemProvider
+@(name: String, selectedItem: Rc210Item,  selectItemProvider: SelectItemProvider, tooltip: String = "")
+<selectOptions name="@name" @if(tooltip.nonEmpty) {title="@tooltip"}>
+@for(option <- selectItemProvider.items) {
+    <option value="@option.toString">@option.toString</option>
 }
 </selectOptions>

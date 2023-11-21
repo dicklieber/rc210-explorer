@@ -44,8 +44,6 @@ sealed trait FieldValue extends LazyLogging {
    * @return html
    */
 
-  def toHtmlField(renderMetadata: RenderMetadata): String
-
   def toJsonValue: JsValue
 }
 
@@ -54,10 +52,10 @@ sealed trait FieldValue extends LazyLogging {
  * Renders itself as a [[[Cell]]
  */
 trait SimpleFieldValue extends FieldValue {
-  def toCell(renderMetadata: RenderMetadata): Cell = {
-    val html: String = toHtmlField(renderMetadata)
-    Cell.rawHtml(html)
-  }
+//  def toCell(renderMetadata: RenderMetadata): Cell = {
+//    val html: String = toHtmlField(renderMetadata)
+//    Cell.rawHtml(html)
+//  }
 
   /**
    *

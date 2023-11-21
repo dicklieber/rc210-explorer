@@ -17,14 +17,14 @@
 
 package net.wa9nnn.rc210.data.remotebase
 
-import net.wa9nnn.rc210.util.select.{SelectBase, SelectItemNumber}
+import net.wa9nnn.rc210.util.select.{SelectBase, Rc210Item}
 import play.api.data.FormError
 import play.api.data.format.Formats.*
 import play.api.data.format.Formatter
 import play.api.libs.json.{Format, Json}
 
 
-sealed trait Radio(val rc210Value: Int, val display: String) extends SelectItemNumber
+sealed trait Radio(val rc210Value: Int, val display: String) extends Rc210Item
 
 object Radio extends SelectBase[Radio]:
   case object Kenwood extends Radio(1, "Kenwood")

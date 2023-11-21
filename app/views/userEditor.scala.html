@@ -1,37 +1,32 @@
 @import net.wa9nnn.rc210.ui.Tabs
-@import views.html.helper.FieldConstructor
 @import net.wa9nnn.rc210.security.authentication.User
 @(userEditDTO: UserEditDTO)(implicit messages: MessagesProvider)
     @import views.html.helper.form
 
-    @implicitField = @{
-        FieldConstructor(views.html.rc2input.f)
-    }
-
     @tabbedmain(Tabs.security) {
         @form(routes.UsersController.saveUser()) {
-            <input type="hidden" value="@user.id" name="id">
+            <input type="hidden" value="@userEditDTO.id" name="id">
             <table class="table table-bordered table-sm w-auto ">
                 <tbody>
                     <tr>
                         <td class="text-end">Callsign:</td>
-                        <td>@helper.inputText(user.callsign, Symbol("class") -> "callsign")</td>
+                        <td><input name="callsign" value="@userEditDTO.callsign" class="callsign"></td>
                     </tr>
                     <tr>
                         <td class="text-end">Name:</td>
-                        <td>@helper.inputText(user.name)</td>
+                        <td><input name="name" value="@userEditDTO.name" ></td>
                     </tr>
                     <tr>
                         <td class="text-end">eMail:</td>
-                        <td>@helper.inputText(user.email)</td>
+                        <td><input name="email" value="@userEditDTO.email" ></td>
                     </tr>
                     <tr>
                         <td class="text-end">Password:</td>
-                        <td>@helper.inputPassword("_")</td>
+                        <td><input type="password" name="password" value="_"></td>
                     </tr>
                     <tr>
                         <td class="text-end">Password Again:</td>
-                        <td>@helper.inputPassword("_")</td>
+                        <td><input type="password" name="passwor2d" value="_"></td>
                     </tr>
                 </tbody>
             </table>

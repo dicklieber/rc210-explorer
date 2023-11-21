@@ -3,52 +3,47 @@
 @import net.wa9nnn.rc210.ui.Tabs
 @import views.html.helper._
 @import net.wa9nnn.rc210.data.timers.Timer
-@import net.wa9nnn.rc210.key.TimerKey
 @import net.wa9nnn.rc210.util.MacroSelect
 @import net.wa9nnn.rc210.data.field.FieldEntry
-@(fieldEntry: FieldEntry)(implicit messagesProvider: MessagesProvider)
-    @implicitField = @{
-        FieldConstructor(views.html.rc2input.f)
-    }
+@import views.html.input.selectOptions
+@(timer: Timer)(implicit messagesProvider: MessagesProvider)
 
-    @form(action = routes.TimerEditorController.save()) {
-        @tabbedmain(Tabs.timersTab) {
-            <input type="hidden" name="timerKey" value="@fieldEntry.fieldKey.key">
-            @defining(fieldEntry.value) { (timer: Timer) =>
-                <div>Hello @fullName</div>
+    @tabbedmain(Tabs.timersTab) {
+        <form action = @routes.TimerEditorController.save()>
+            <input type="hidden" name="key" value="@timer.key">
+@*            <input type="hidden" name="timerKey" value="@fieldEntry.fieldKey.key">*@
 
-                <table>
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Timer</th>
-                            <th>Seconds</th>
-                            <th>Macro To Run</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Timer</td>
-                            <td>
-                            @Html(fieldEntry.fieldKey.key.namedHtml)
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Seconds</td>
-                            <td>
-                            @helper.inputText(timer.seconds)
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Macro</td>
-                            <td>
-                            @select(timerForm("macroKey"), MacroSelect.values)
-                            </td>
-                        </tr>
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Timer</th>
+                        <th>Seconds</th>
+                        <th>Macro To Run</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Timer</td>
+                        <td>
+                        @timer.key.keyWithName
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input name="seconds" value="@timer.seconds">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Macro</td>
+                        <td>
+                        @selectOptions("macroKey", timer.macroKey, MacroSelect)
+                        </td>
+                    </tr>
 
-                    </tbody>
-                </table>
-            }
+                </tbody>
+            </table>
+
             @submitButton()
-        }
+        </form>
     }

@@ -18,8 +18,8 @@
             <input type="hidden" name="functionIds" id="functionIds">
             <div class="row">
                 <div class="col col-md-auto border border-primary">
-                    <h2>@macroNode.key</h2>
-                    @Html(macroNode.key.namedHtml)
+                    <h2>@fieldNamedKey(macroNode.key)</h2>
+//                    @Html(macroNode.key.keyWithName)
                     <div><label for="dtmf">DTMF: </label>
                         <input id="dtmf" name="dtmf" value="@macroNode.dtmf">
                     </div>

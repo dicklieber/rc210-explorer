@@ -17,36 +17,13 @@
 
 package net.wa9nnn.rc210.util.select
 
+import com.wa9nnn.util.tableui.Cell
+import enumeratum.{EnumEntry, PlayEnum}
 
-/**
- * An item that that can be
- *  - Stored in a case class.
- *  - Displayed in HTML in a selectOptions option
- *  - Used in [p;ay json as [[play.api.libs.json.Format]]
- *  - Play [[play.api.mvc.PathBindable]]
- *
- * Usually managed in a [[SelectItemNumber]]
- */
-trait SelectItem:
+trait Rc210Item extends  EnumEntry with PlayEnum[Rc210Item]:
   /**
-   * Shown in selectOptions / option html.
+   * as passed to/from RC-210
    */
-  val display: String = toString
-
-  /**
-   *
-   * @param formValue as selected by user in form.
-   * @return
-   */
-  def isSelected(formValue: String): Boolean
-
-  //
-  //  /**
-  //   *
-  //   * @param number from RC-210 data
-  //   * @return
-  //   */
-  //  def isSelected(number: Int): Boolean
-  //
-  //  def item: (String, String)
-  def html: String = s""""<option value="$display">$display</option>"""
+  val number: Int
+  val display:String
+  def toCell: Cell = Cell(toString)

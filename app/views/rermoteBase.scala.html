@@ -7,53 +7,49 @@
 @import net.wa9nnn.rc210.data.remotebase.CtcssMode
 @import views.html.helper._
 @import net.wa9nnn.rc210.ui.Tabs
+@import views.html.input.selectOptions
 @(remoteBase: RemoteBase)(implicit messages: MessagesProvider)
-@implicitField = @{
-    FieldConstructor(views.html.rc2input.f)
-}
-@tabbedmain(Tabs.remoteBase) {
 
-    @form(action = routes.RemoteBaseController.save()) {
-        <table>
-            <tr>
-                <td>Radio:</td>
-                <td>@select(remoteBaseForm("radio"), Radio.options)</td>
-            </tr>
-            <tr>
-                <td>Yaesu:</td>
-                <td>@select(remoteBaseForm("yaesu"), Yaesu.options)</td>
-            </tr>
-            <tr>
-                <td>Prefix:</td>
-                <td>@inputText(remoteBaseForm("prefix"))</td>
-            </tr>
-        </table>
-
-        <table>
-            <thead>
+    @tabbedmain(Tabs.remoteBase) {
+        <form action="@routes.RemoteBaseController.save()">
+            <table>
                 <tr>
-                    <th>Number</th>
-                    <th>Frequency</th>
-                    <th>Offset</th>
-                    <th>Mode</th>
-                    <th>CTCSS Mode</th>
-                    <th>CTCSS Code</th>
+                    <td>Radio:</td>
+                    <td>@selectOptions("radio", remoteBase.radio, Radio)</td>
                 </tr>
-            </thead>
-            @repeatWithIndex(remoteBaseForm("memories"), min = 1) { (memory, index) =>
                 <tr>
-                    <td>@{
-                        index + 1
-                    }</td>
-                    <td>@inputText(memory("frequency"))</td>
-                    <td>@select(memory("offset"), Offset.options)</td>
-                    <td>@select(memory("mode"), Mode.options)</td>
-                    <td>@select(memory("ctcssMode"), CtcssMode.options)</td>
-                    <td>@inputText(memory("ctssCode"))</td>
+                    <td>Yaesu:</td>
+                    <td>@selectOptions("yaesu", remoteBase.yaesu, Yaesu)</td>
                 </tr>
-            }
-        </table>
-        @submitButton()
+                <tr>
+                    <td>Prefix:</td>
+                    <td><input name="prefix" value="@remoteBase.prefix"></td>
+                </tr>
+            </table>
 
+            <table>
+                <thead>
+                    <tr>
+                        <th>Number</th>
+                        <th>Frequency</th>
+                        <th>Offset</th>
+                        <th>Mode</th>
+                        <th>CTCSS Mode</th>
+                        <th>CTCSS Code</th>
+                    </tr>
+                </thead>
+                @for((memory, index) <- remoteBase.memories.zipWithIndex) {
+                    <tr>
+                        <td>@{index + 1}</td>
+@*                        <td>@inputText(memory("frequency"))</td>*@
+@*                        <td>@select(memory("offset"), Offset.options)</td>*@
+@*                        <td>@select(memory("mode"), Mode.options)</td>*@
+@*                        <td>@select(memory("ctcssMode"), CtcssMode.options)</td>*@
+@*                        <td>@inputText(memory("ctssCode"))</td>*@
+                    </tr>
+                }
+            </table>
+            @submitButton()
+
+        </form>
     }
-}

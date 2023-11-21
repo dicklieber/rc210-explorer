@@ -47,6 +47,14 @@ class LogicAlarmEditorController @Inject()(actor: ActorRef[DataStoreActor.Messag
                                           (implicit scheduler: Scheduler, ec: ExecutionContext)
   extends MessagesInjectedController with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
+//  private val logicForm: Form[LogicAlarm] = Form(
+//    mapping(
+//      "key" -> of[Key],
+//      "enable" -> boolean,
+//      "lowMacro" -> of[Key],
+//      "highMacro" -> of[Key]
+//    )(LogicAlarm.apply)(LogicAlarm.unapply)
+//  )
 
 
   def index(): Action[AnyContent] = Action.async {

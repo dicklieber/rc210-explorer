@@ -27,9 +27,9 @@
                     <table>
                         <tr>
                             <td>Starts on the </td>
-                            <td>@selectOptions("startDST.occurrence", clock.startDST.occurrence, Occurrence.values)</td>
+                            <td>@selectOptions("startDST.occurrence", clock.startDST.occurrence, Occurrence)</td>
                             <td rowspan="2">  Sunday of</td>
-                            <td>@selectOptions("startDST.month", clock.startDST.monthOfYearDST, MonthOfYearDST.values)</td>
+                            <td>@selectOptions("startDST.month", clock.startDST.monthOfYearDST, MonthOfYearDST)</td>
                             <td rowspan="2">
                                 at
                             </td>
@@ -42,8 +42,8 @@
                         </tr>
                         <tr>
                             <td>Ends on the </td>
-                            <td>@selectOptions("endDST.occurrence", clock.endDST.occurrence, Occurrence.values)</td>
-                            <td>@selectOptions("end.month", clock.endDST.monthOfYearDST, MonthOfYearDST.values)</td>
+                            <td>@selectOptions("endDST.occurrence", clock.endDST.occurrence, Occurrence)</td>
+                            <td>@selectOptions("end.month", clock.endDST.monthOfYearDST, MonthOfYearDST)</td>
                         </tr>
                     </table>
 

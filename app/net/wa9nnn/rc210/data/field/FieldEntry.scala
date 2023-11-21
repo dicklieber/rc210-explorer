@@ -72,14 +72,10 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
       .getOrElse(throw new IllegalStateException(s"No candidate for: $fieldKey!"))
       .toCommands(this)
   }
-
-  def toHtml: String = {
-    value.toHtmlField(this)
-  }
-
-  def toCell: Cell = {
-    Cell.rawHtml(s"$toHtml")
-  }
+  
+//  def toCell: Cell = {
+//    Cell.rawHtml(s"$toHtml")
+//  }
 
   /**
    *

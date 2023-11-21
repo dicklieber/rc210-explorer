@@ -1,7 +1,7 @@
 @import net.wa9nnn.rc210.Key
-@(value: Key, name: String, param: String)
+@(key: Key)
 
 <div class="keyName">
-    <label for="@param">@value.number: </label>
-    <input name="@param" id="@param" value="@name" title="User-supplied name.">
+    <label for="@key">@key.number: </label>
+    <input name="key" id="@key"  value="@key.number" title="User-supplied name.">
 </div>

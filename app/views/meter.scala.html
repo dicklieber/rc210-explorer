@@ -1,11 +1,11 @@
 @import net.wa9nnn.rc210.data.meter.{Meter, MeterFaceName}
 @import net.wa9nnn.rc210.ui.Tabs
 @import views.html.helper._
-@import net.wa9nnn.rc210.key.MeterKey
-@(meter:Meter)(implicit messages: MessagesProvider)
-    @implicitField = @{
-        FieldConstructor(views.html.rc2input.f)
-    }
+@import views.html.input.selectOptions
+@(meter: Meter)(implicit messages: MessagesProvider)
+    @* @implicitField = @{*@
+    @* FieldConstructor(views.html.rc2input.f)*@
+    @* }*@
     @tabbedmain(Tabs.metersTab) {
         @form(action = routes.MeterController.saveMeter()) {
             <input type="hidden" name="key" value="@meter.key">
@@ -23,27 +23,32 @@
                     <tbody>
                         <tr>
                             <td>Name</td>
-                            <td><input name="name" value="@meterKey.userDefinedName"></td>
+                            <td><input name="name" value="@meter.key"></td>
                         </tr>
                         <tr>
                             <td>Face</td>
-                            <td>@select(meterForm("faceName"), MeterFaceName.values) </td>
+                            <td>@selectOptions("faceName", meter.meterFaceName, MeterFaceName)</td>
                         </tr>
                         <tr>
                             <td >Low Voltage</td>
-                            <td>@inputText(meterForm("low.hundredthVolt"))</td>
+                            <td><input value="@meter.low.hundredthVolt"></td>
+@*                            <td>@inputText(meterForm("low.hundredthVolt"))</td>*@
                         </tr>
                         <tr>
                             <td >Low Reading</td>
-                            <td>@inputText(meterForm("low.reading"))</td>
+                            <td><input value="@meter.low.reading"></td>
+@*                            <td>@inputText(meterForm("low.reading"))</td>*@
                         </tr>
                         <tr>
                             <td >High Voltage</td>
-                            <td>@inputText(meterForm("high.hundredthVolt"))</td>
+                            <td><input value="@meter.low.hundredthVolt"></td>
+@*                            <td>@inputText(meterForm("high.hundredthVolt"))</td>*@
                         </tr>
                         <tr>
                             <td >High Reading</td>
-                            <td>@inputText(meterForm("high.reading"))</td>
+                            <td><input value="@meter.high.reading"></td>
+@*                            <td>@inputText(meterForm("high.reading"))</td>*@
+
                         </tr>
                     </tbody>
                 </table>

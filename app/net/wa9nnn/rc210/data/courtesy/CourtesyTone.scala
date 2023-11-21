@@ -83,20 +83,19 @@ case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends C
 }
 
 
-object CourtesyTone {
+object CourtesyTone:
   implicit val fmtSegment: OFormat[Segment] = Json.format[Segment]
   implicit val fmtCourtesyTone: OFormat[CourtesyTone] = Json.format[CourtesyTone]
 
   def cell(value: Int, CtSegmentKey: CtSegmentKey): Cell =
-    FieldInt(value).toCell(CtSegmentKey)
-
+//    FieldInt(value).toCell(CtSegmentKey)
+    throw new NotImplementedError() //todo
 
   def cellSpan3(int: Int, CtSegmentKey: CtSegmentKey): Cell = {
     val r = cell(int, CtSegmentKey)
       .withRowSpan(3)
     r
   }
-}
 
 case class Segment(delayMs: Int, durationMs: Int, tone1Hz: Int, tone2Hz: Int) {
   def toCommand(number: Int, segN: Int): String = {

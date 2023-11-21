@@ -1,8 +1,8 @@
 package net.wa9nnn.rc210.data.field;
 
-import net.wa9nnn.rc210.util.select.{SelectItemNumber, SelectableNumber}
+import net.wa9nnn.rc210.util.select.{Rc210Item, SelectableNumber}
 
-sealed trait MonthOfYearSchedule(val rc210Value: Int, val display: String) extends SelectItemNumber
+sealed trait MonthOfYearSchedule(val rc210Value: Int, val display: String) extends Rc210Item
 
 object MonthOfYearSchedule extends SelectableNumber[MonthOfYearSchedule] {
   case object Every extends MonthOfYearSchedule(0, "Every")

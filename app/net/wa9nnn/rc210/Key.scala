@@ -24,18 +24,17 @@ import play.api.data.FormError
 import play.api.data.format.Formatter
 import play.api.mvc.PathBindable
 import play.twirl.api.Html
-import net.wa9nnn.rc210.KeyKind._
-import net.wa9nnn.rc210.util.select.{SelectItem, SelectItemNumber}
-import play.api.libs.json._
+import net.wa9nnn.rc210.KeyKind.*
+import net.wa9nnn.rc210.util.select.{Rc210Item, SelectItemProvider}
+import play.api.libs.json.*
 
 /**
  *
  * @param keyKind of the Key
  * @param number  0 is a magic number used for things like [[KeyKind.commonKey]]
  */
-case class Key(keyKind: KeyKind, number: Int = 0) extends CellProvider
-  with NamedKeySource with SelectItemNumber with Ordered[Key] {
-  def check(target: KeyKind): Unit = if (target != keyKind) throw new WrongKeyType(this, target)
+case class Key(keyKind: KeyKind, number: Int = 0) extends CellProvider with Rc210Item with Ordered[Key] {
+  def check(target: KeyKind): Unit = if (target != keyKind) throw WrongKeyType(this, target)
 
   assert(number <= keyKind.maxN, s"Max number for ${keyKind.name} is ${keyKind.maxN}")
 
@@ -51,7 +50,7 @@ case class Key(keyKind: KeyKind, number: Int = 0) extends CellProvider
 
   def namedCell(param: String = fieldKey("name").param): Cell =
     val str = nameForKey(this)
-    val html: Html = views.html.fieldNamedKey(this, str, param)
+    val html: Html = views.html.fieldNamedKey(this)
     Cell.rawHtml(html.toString())
 
   def keyWithName: String = s"$number ${nameForKey(this)}"
@@ -105,7 +104,10 @@ object Key:
     }
 
   lazy val portKeys: Seq[Key] = keys(portKey)
-  lazy val macroKeys: Seq[Key] = keys(macroKey)
+  lazy val portChoices: Keys = Keys(portKey)
+  lazy val macroKeys: Keys = Keys(macroKey)
+  lazy val meterKeys: Keys = Keys(meterKey)
+  lazy val meterAlarmKeys: Keys = Keys(meterAlarmKey)
 
   /**
    * Codec to allow non-string types i routes.conf definitions.
@@ -120,7 +122,9 @@ object Key:
     }
   }
 
-  implicit val fmtKey: Format[Key] = Json.format[Key]
+  case class Keys(keyKind: KeyKind) extends SelectItemProvider {
+    override val items: Seq[Rc210Item] = keys(keyKind)
+  }
 
 case class WrongKeyType(key: Key, expected: KeyKind) extends IllegalArgumentException(s"Expecting Key of type ${expected.name}, but got $key}")
 

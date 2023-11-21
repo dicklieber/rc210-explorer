@@ -42,7 +42,6 @@ case class Schedule(override val key: Key,
   override def toRow: Row = {
     implicit val k: Key = key
     val name: Cell = k.namedCell()
-    val enableCell: Cell = FieldBoolean.toCell(enabled, "enabled")
     val dowCell: Cell = dow.toCell
     val weekCell = week.toCell
     val moyCell = monthOfYear
@@ -55,18 +54,16 @@ case class Schedule(override val key: Key,
       val html = views.html.fieldTime(localTime1, RMD(name = "time")).toString()
       Cell.rawHtml(html)
     }
-    val macroToRun: Cell = {
-      MacroSelectField(macroKey).toCell(RMD(name = "macro"))
-    }
+   
 
     Row(
       name,
-      enableCell,
+      enabled,
       dowCell,
       moyCell,
       weekCell,
       localTime,
-      macroToRun
+      macroKey.toCell
     )
   }
 
@@ -174,18 +171,7 @@ object Schedule extends LazyLogging with ComplexExtractor {
   def apply(setPoint: Int): Schedule = new Schedule(Key(KeyKind.scheduleKey, setPoint))
 
   import net.wa9nnn.rc210.key.KeyFormats._
-
-  implicit val fmtWeek: Format[Week] = javaEnumFormat[Week]
-  implicit val fmtDayOfWeek: Format[DayOfWeek] = javaEnumFormat[DayOfWeek]
-  implicit val fmtMonthOfYear: Format[MonthOfYearSchedule] = javaEnumFormat[MonthOfYearSchedule]
-  implicit val fmtDaoBase: Format[DowBase] = new Format[DowBase] {
-    override def writes(o: DowBase) = {
-      throw new NotImplementedError() //todo
-    }
-
-    override def reads(json: JsValue) = ???
-  }
-
+  
 
   implicit val fmtSchedule: Format[Schedule] = Json.format[Schedule]
 

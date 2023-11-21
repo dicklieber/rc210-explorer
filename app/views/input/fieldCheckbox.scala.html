@@ -1,8 +1,0 @@
-@import net.wa9nnn.rc210.data.field.RenderMetadata
-@(value: Boolean, renderMetadata: RenderMetadata)
-    <input type="hidden" name="@renderMetadata.param" id="@renderMetadata.param" value="@value.toString">
-    <div class="fieldCheckbox valueCell">
-        <input type="checkbox" onchange="handleClick(this, '@renderMetadata.param')" title="@renderMetadata.prompt"
-        @if(value) { checked }
-        >
-    </div>

@@ -20,13 +20,8 @@ package net.wa9nnn.rc210.data.field
 import com.wa9nnn.util.tableui.Cell
 import net.wa9nnn.rc210.Key
 import play.api.libs.json.*
-import views.html.input.fieldCheckbox
 
 case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue {
-
-  override def toHtmlField(renderMetadata: RenderMetadata): String = {
-    fieldCheckbox(value, renderMetadata).toString()
-  }
 
   /**
    * Render this value as an RD-210 command string.
@@ -40,12 +35,11 @@ case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue {
     )
   }
 
-
   override def display: String = value.toString
 
-  override def toCell(renderMetadata: RenderMetadata): Cell = {
-    super.toCell(renderMetadata)
-  }
+//  override def toCell(renderMetadata: RenderMetadata): Cell = {
+//    super.toCell(renderMetadata)
+//  }
 
   override def update(paramValue: String): FieldBoolean = {
     FieldBoolean(paramValue == "true")
@@ -56,9 +50,6 @@ case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue {
 }
 
 object FieldBoolean extends SimpleExtractor:
-  def toCell(value: Boolean, name: String)(implicit key: Key): Cell = {
-    FieldBoolean(value).toCell(RMD(name = name))
-  }
 
   override def extractFromInts(itr: Iterator[Int], fieldDefinition: SimpleField): FieldValue = FieldBoolean(itr.next() > 0)
 

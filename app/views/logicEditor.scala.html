@@ -1,7 +1,9 @@
 @import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
 @import net.wa9nnn.rc210.ui.Tabs
 @import net.wa9nnn.rc210.util.MacroSelect
-@import views.html.helper._
+@import views.html.input._
+@import views.html.helper.form
+
 @(logicAlarm: LogicAlarm)(implicit messages: MessagesProvider)
 @*    @implicitField = @{*@
 @*        FieldConstructor(views.html.rc2input.f)*@
@@ -24,14 +26,14 @@
                     <td>
                         Low Macro
                     </td>
-                    <td>@helper.select(logicForm("lowMacro"), MacroSelect.values)
+                    <td>@selectOptions("lowMacro", logicAlarm.lowMacro, MacroSelect)
                     </td>
                 </tr>
                 <tr>
                     <td>
                         High Macro
                     </td>
-                    <td>@helper.select(logicForm("highMacro"), MacroSelect.values)
+                    <td>@selectOptions("highMacro", logicAlarm.highMacro, MacroSelect)
                     </td>
                 </tr>
 

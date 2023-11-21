@@ -53,7 +53,7 @@ class PortsEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
       Row(fieldName, cells: _*)
     }
 
-    val colHeaders: Seq[Cell] = Key.portKeys.map(_.namedCell())
+    val colHeaders: Seq[Cell] = Key.portKeys.map(key =>Cell(key.keyWithName))
     val namesRow = Row(colHeaders.prepended(Cell("Ports:").withCssClass("cornerCell")))
 
     val table = Table(Seq.empty, rows.prepended(namesRow))

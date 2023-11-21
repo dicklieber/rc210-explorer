@@ -18,9 +18,9 @@
 package net.wa9nnn.rc210.data.meter
 
 import enumeratum.*
-import net.wa9nnn.rc210.util.select.{SelectBase, SelectItemNumber}
+import net.wa9nnn.rc210.util.select.{SelectBase, Rc210Item}
 
-sealed trait MeterFaceName(val rc210Value: Int, val display: String) extends SelectItemNumber
+sealed trait MeterFaceName(val rc210Value: Int, val display: String) extends Rc210Item
 
 object MeterFaceName extends Enum[MeterFaceName] with SelectBase[MeterFaceName] {
 

@@ -67,7 +67,7 @@ class TimerEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
       val fieldKey = FieldKey("Timer", timerKey)
       actor.ask(DataStoreActor.ForFieldKey(fieldKey, _)).map {
         case Some(fieldEntry: FieldEntry) =>
-          Ok(views.html.timerEditor(fieldEntry))
+          Ok(views.html.timerEditor(fieldEntry.value))
         case None =>
           NotFound(s"No timer: $timerKey")
       }

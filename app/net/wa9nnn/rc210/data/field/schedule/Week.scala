@@ -17,9 +17,9 @@
 
 package net.wa9nnn.rc210.data.field.schedule
 
-import net.wa9nnn.rc210.util.select.{SelectItemNumber, SelectableNumber}
+import net.wa9nnn.rc210.util.select.{Rc210Item, SelectableNumber}
 
-sealed trait Week(val rc210Value: Int, val display: String) extends SelectItemNumber
+sealed trait Week(val rc210Value: Int, val display: String) extends Rc210Item
 
 object Week extends SelectableNumber[Week] {
 

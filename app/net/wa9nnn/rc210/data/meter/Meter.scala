@@ -29,11 +29,11 @@ import java.util.concurrent.atomic.AtomicInteger
 /**
  * Obe of the 6 Meter channels.
  *
- * @param meterKind face name.
+ * @param meterFaceName face name.
  * @param low       calibrate for high.
  * @param high      calibrate for low.
  */
-case class Meter(key: Key, meterKind: MeterFaceName, low: VoltToReading, high: VoltToReading) extends ComplexFieldValue("Meter") {
+case class Meter(key: Key, meterFaceName: MeterFaceName, low: VoltToReading, high: VoltToReading) extends ComplexFieldValue("Meter") {
 
   override def display: String = toString
 
@@ -42,7 +42,7 @@ case class Meter(key: Key, meterKind: MeterFaceName, low: VoltToReading, high: V
    */
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
     val c = key.number.toString
-    val m = meterKind.number
+    val m = meterFaceName.number
     val x1 = low.hundredthVolt
     val y1 = low.reading
     val x2 = high.hundredthVolt

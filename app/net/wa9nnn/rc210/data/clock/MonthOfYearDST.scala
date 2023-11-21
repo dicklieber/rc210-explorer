@@ -17,9 +17,9 @@
 
 package net.wa9nnn.rc210.data.clock
 
-import net.wa9nnn.rc210.util.select.{SelectBase, SelectItemNumber, SelectableNumber}
+import net.wa9nnn.rc210.util.select.{SelectBase, Rc210Item, SelectableNumber}
 
-sealed trait MonthOfYearDST(val rc210Value: Int, val display: String) extends SelectItemNumber
+sealed trait MonthOfYearDST(val rc210Value: Int, val display: String) extends Rc210Item
 
 object MonthOfYearDST extends SelectBase[MonthOfYearDST] {
   case object January extends MonthOfYearDST(0, "January")

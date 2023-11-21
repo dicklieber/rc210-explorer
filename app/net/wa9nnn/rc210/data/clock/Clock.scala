@@ -120,8 +120,6 @@ object Clock extends ComplexExtractor  {
     FieldOffset(4050, this, "hour"),
   )
 
-  implicit val fmtOccurrence: Format[Occurrence] = javaEnumFormat[Occurrence]
-  implicit val fmtMonthOfYearDST: Format[MonthOfYearDST] = javaEnumFormat[MonthOfYearDST]
   implicit val fmtDSTPoint: Format[DSTPoint] = Json.format[DSTPoint]
   implicit val fmtClock: Format[Clock] = Json.format[Clock]
 }

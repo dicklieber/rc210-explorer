@@ -18,10 +18,10 @@
 package net.wa9nnn.rc210.data.clock
 
 import enumeratum.*
-import net.wa9nnn.rc210.util.select.{SelectBase, SelectItemNumber, SelectableNumber}
+import net.wa9nnn.rc210.util.select.{SelectBase, Rc210Item, SelectableNumber}
 
 
-sealed trait Occurrence(val rc210Value: Int, val display: String) extends  SelectItemNumber
+sealed trait Occurrence(val rc210Value: Int, val display: String) extends  Rc210Item
 
 object Occurrence extends SelectBase[Occurrence] {
 

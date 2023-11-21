@@ -18,7 +18,7 @@
             <div class="col col-md-auto border border-primary">
                 <p class="sectionHeader">@message.key</p>
                 <div><label for="name">Name: </label>
-                    @Html(message.key.namedHtml)
+                    @message.key.keyWithName
                 </div>
                 <input class="btn btn-primary" type="submit" value="Save">
                 <p class="text-break help">Double click Available Words append to Current Words.<br/>
