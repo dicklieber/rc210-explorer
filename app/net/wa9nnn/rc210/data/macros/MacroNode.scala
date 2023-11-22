@@ -7,6 +7,7 @@ import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.key.*
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.ui.FormFields
 import net.wa9nnn.rc210.util.Chunk
 import play.api.libs.json.{Format, JsValue, Json}
 
@@ -32,8 +33,8 @@ case class MacroNode(override val key: Key , functions: Seq[Key], dtmf: Option[D
    * Render this value as an RD-210 command string.
    */
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
-    val numbers: String = functions.map(_.number).mkString("*")
-    val macroNumber: String = f"${key.number}%03d"
+    val numbers: String = functions.map(_.rc210Value).mkString("*")
+    val macroNumber: String = f"${key.rc210Value}%03d"
     val dtmfPart: String = dtmf.map(_.value).getOrElse("")
     val mCmd = if (functions.isEmpty)
       s"1*4003$macroNumber" // erase macro
@@ -56,9 +57,7 @@ case class MacroNode(override val key: Key , functions: Seq[Key], dtmf: Option[D
     throw new NotImplementedError() //todo
   }
 
-  override val fieldName: String = "Macro"
-
-  override def display: String = functions.map(_.number).mkString(" ")
+  override def display: String = functions.map(_.rc210Value).mkString(" ")
 
   override def toJsonValue: JsValue = Json.toJson(this)
 
@@ -158,6 +157,8 @@ object MacroNode extends ComplexExtractor {
   override val name: String = "MacroNode"
   override val fieldName: String = name
   override val kind: KeyKind = KeyKind.macroKey
+
+  override def parseForm(formFields: FormFields): ComplexFieldValue = ???
 }
 
 

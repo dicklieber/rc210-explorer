@@ -22,6 +22,7 @@ import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.key.KeyFormats.*
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.ui.FormFields
 import play.api.libs.json.{Format, JsValue, Json}
 
 import java.util.concurrent.atomic.AtomicInteger
@@ -30,8 +31,8 @@ import java.util.concurrent.atomic.AtomicInteger
  * Obe of the 6 Meter channels.
  *
  * @param meterFaceName face name.
- * @param low       calibrate for high.
- * @param high      calibrate for low.
+ * @param low           calibrate for high.
+ * @param high          calibrate for low.
  */
 case class Meter(key: Key, meterFaceName: MeterFaceName, low: VoltToReading, high: VoltToReading) extends ComplexFieldValue("Meter") {
 
@@ -41,8 +42,8 @@ case class Meter(key: Key, meterFaceName: MeterFaceName, low: VoltToReading, hig
    * Render this value as an RD-210 command string.
    */
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
-    val c = key.number.toString
-    val m = meterFaceName.number
+    val c = key.rc210Value.toString
+    val m = meterFaceName.toString
     val x1 = low.hundredthVolt
     val y1 = low.reading
     val x2 = high.hundredthVolt
@@ -72,7 +73,7 @@ object Meter extends ComplexExtractor {
     val mai = new AtomicInteger()
     val nMeters = KeyKind.meterKey.maxN
     val faceInts = memory.sub8(186, nMeters)
-    val faceNames: Seq[MeterFaceName] = faceInts.map(i => MeterFaceName find i)
+    val faceNames: Seq[MeterFaceName] = faceInts.map(i => MeterFaceName.find(i))
     val lowX: Seq[Int] = memory.iterator16At(202).take(nMeters).toSeq
     val lowY: Seq[Int] = memory.iterator16At(218).take(nMeters).toSeq
     val highX: Seq[Int] = memory.iterator16At(234).take(nMeters).toSeq
@@ -81,7 +82,7 @@ object Meter extends ComplexExtractor {
     val meters: Seq[FieldEntry] = for {
       i <- 0 until nMeters
     } yield {
-      val meterKey: Key = Key(KeyKind.meterKey, (mai.incrementAndGet()))
+      val meterKey: Key = Key(KeyKind.meterKey, mai.incrementAndGet())
       val low = VoltToReading(lowX(i), lowY(i))
       val high = VoltToReading(highX(i), highY(i))
       val meter: Meter = Meter(meterKey, faceNames(i), low, high)
@@ -110,6 +111,8 @@ object Meter extends ComplexExtractor {
 
   implicit val fmtVoltToReading: Format[VoltToReading] = Json.format[VoltToReading]
   implicit val fmtMeter: Format[Meter] = Json.format[Meter]
+
+  override def parseForm(formFields: FormFields): Meter = ???
 }
 
 

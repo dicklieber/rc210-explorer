@@ -15,17 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.util
+package net.wa9nnn
 
-import net.wa9nnn.RcSpec
-import net.wa9nnn.rc210.key.KeyKind
+import net.wa9nnn.rc210.security.Who
+import org.scalatest._
+import org.scalatest.matchers._
+import org.scalatest.wordspec.{AnyWordSpec, AsyncWordSpec}
 
-class MacroSelectSpec extends RcSpec {
+abstract class RcSpec extends AnyWordSpec with should.Matchers with OptionValues with Inside with Inspectors {
+  val who: Who = Who("testCs")
 
-  "MacroSelect" should {
-    "choices" in {
-      val options: Seq[(String, String)] = MacroSelect.values
-      options should have length (KeyKind.macroKey.maxN())
-    }
-  }
 }
+
+//abstract class RAsyncSpec extends AsyncWordSpec with should.Matchers with
+//  OptionValues with Inside with Inspectors

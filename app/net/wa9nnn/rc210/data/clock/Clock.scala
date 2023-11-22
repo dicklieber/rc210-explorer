@@ -78,9 +78,7 @@ case class Clock(key:Key,
 
 
 object Clock extends ComplexExtractor  {
-  def apply(formParser: FormFields):Clock =
-    throw new NotImplementedError() //todo
-    
+
 
   /**
    *
@@ -122,4 +120,13 @@ object Clock extends ComplexExtractor  {
 
   implicit val fmtDSTPoint: Format[DSTPoint] = Json.format[DSTPoint]
   implicit val fmtClock: Format[Clock] = Json.format[Clock]
-}
+
+  override def parseForm(formFields: FormFields): ComplexFieldValue =
+    throw new NotImplementedError() //todo
+/*    new Clock(
+      key = formFields.key,
+      enableDST =  formFields.boolean("enableDST"),
+      hourDST = formFields.int("hourDST"),
+
+    )
+*/}

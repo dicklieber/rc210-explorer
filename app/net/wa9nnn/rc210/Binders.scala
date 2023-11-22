@@ -25,11 +25,6 @@ import net.wa9nnn.rc210.serial.ComPort
 import play.api.mvc.PathBindable
 
 object Binders {
-  implicit def keyKindPathBinder: PathBindable[KeyKind] = new PathBindable[KeyKind] {
-    override def bind(key: String, value: String): Either[String, KeyKind] = Right(KeyKind.valueOf(value))
-
-    override def unbind(key: String, macroKey: KeyKind): String = macroKey.toString
-  }
 
   implicit def pathBinderMacro: PathBindable[Key] = new PathBindable[Key] {
     override def bind(key: String, value: String): Either[String, Key] = {

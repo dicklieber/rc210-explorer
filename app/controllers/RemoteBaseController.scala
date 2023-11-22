@@ -22,7 +22,6 @@ import net.wa9nnn.rc210.data.datastore.DataStoreActor.AllForKeyKind
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.remotebase.*
-import net.wa9nnn.rc210.data.remotebase.Mode.*
 import net.wa9nnn.rc210.data.remotebase.RBMemory.*
 import net.wa9nnn.rc210.KeyKind
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user

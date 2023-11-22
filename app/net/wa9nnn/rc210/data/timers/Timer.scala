@@ -29,9 +29,9 @@ case class Timer(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValu
    * Render this value as an RD-210 command string.
    */
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
-    val timeNumber: Int = key.number
+    val timeNumber: Int = key.rc210Value
     val secs: Int = seconds
-    val macroNumber = macroKey.number
+    val macroNumber = macroKey.rc210Value
     Seq(
       s"1*1017$timeNumber$secs",
       s"1*2092$timeNumber$macroNumber"

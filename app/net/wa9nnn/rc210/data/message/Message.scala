@@ -56,7 +56,7 @@ case class Message(key: Key, words: Seq[Int]) extends ComplexFieldValue("Message
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
     val value: Seq[String] = words.map(word => f"$word%03d")
     val word3s: String = value.mkString
-    Seq(f"1*2103${key.number}%02d$word3s")
+    Seq(f"1*2103${key.rc210Value}%02d$word3s")
   }
 
 
@@ -74,7 +74,10 @@ object Message extends LazyLogging {
   def apply(key: Key, kv: Map[String, String]): Message = {
 
     val csv: String = kv("words")
-    val wordIds: Array[Int] = csv.split(",").filter(_.nonEmpty).map(_.toInt)
+    val wordIds: Seq[Int] = csv
+      .split(",")
+      .toIndexedSeq
+      .filter(_.nonEmpty).map(_.toInt)
     new Message(key, wordIds)
   }
 }

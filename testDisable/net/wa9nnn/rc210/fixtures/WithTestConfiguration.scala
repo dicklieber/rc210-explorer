@@ -1,9 +1,9 @@
 package net.wa9nnn.rc210.fixtures
 
 import com.typesafe.config.{Config, ConfigFactory}
-import configs.syntax._
 import net.wa9nnn.RcSpec
 import org.apache.commons.io.FileUtils
+import net.wa9nnn.rc210.util.Configs
 
 import java.io.File
 import java.nio.file.Files

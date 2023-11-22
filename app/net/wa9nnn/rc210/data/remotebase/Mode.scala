@@ -17,14 +17,17 @@
 
 package net.wa9nnn.rc210.data.remotebase
 
-import net.wa9nnn.rc210.util.select.{SelectBase, Rc210Item}
+import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
 
-sealed trait Mode(val rc210Value: Int, val display: String) extends Rc210Item
+sealed trait Mode(val rc210Value: Int) extends EnumEntryValue
 
-object Mode extends SelectBase[Mode]:
-  case object LSB extends Mode(1, "LSB")
+object Mode extends EnumValue[Mode] {
 
-  case object USB extends Mode(2, "USB")
+  override val values: IndexedSeq[Mode] = findValues
 
-  case object CW extends Mode(3, "CW")
+  case object LSB extends Mode(1)
 
+  case object USB extends Mode(2)
+
+  case object CW extends Mode(3)
+}

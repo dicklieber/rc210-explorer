@@ -19,8 +19,9 @@ package net.wa9nnn.rc210.data.message
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldEntry, FieldKey, FieldOffset, FieldValue}
+import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldKey, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.ui.FormFields
 import net.wa9nnn.rc210.util.Chunk
 import play.api.libs.json.JsValue
 
@@ -63,4 +64,6 @@ object MesssageExtractor extends ComplexExtractor with LazyLogging {
 
   override val fieldName: String = name
   override val kind: KeyKind = KeyKind.messageKey
+
+  override def parseForm(formFields: FormFields): ComplexFieldValue = ???
 }

@@ -17,16 +17,14 @@
 
 package net.wa9nnn.rc210.data.remotebase
 
-import net.wa9nnn.rc210.util.select.{SelectBase, Rc210Item}
-import play.api.data.FormError
-import play.api.data.format.Formats.*
-import play.api.data.format.Formatter
-import play.api.libs.json.{Format, Json}
+import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
 
+sealed trait Radio(val rc210Value: Int, val display: String) extends EnumEntryValue
 
-sealed trait Radio(val rc210Value: Int, val display: String) extends Rc210Item
+object Radio extends EnumValue[Radio]:
 
-object Radio extends SelectBase[Radio]:
+  override val values: IndexedSeq[Radio] = findValues
+
   case object Kenwood extends Radio(1, "Kenwood")
 
   case object Icom extends Radio(2, "Icom")

@@ -34,12 +34,7 @@ case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue {
       .replaceAll("v", value.map(int => f"$int%03d").mkString(""))
     )
   }
-
-  override def toHtmlField(renderMetadata: RenderMetadata): String = {
-    fieldString(display, renderMetadata).toString()
-  }
-
-  def toCell(fieldEntry: FieldEntry): Cell = Cell.rawHtml(toHtmlField(fieldEntry))
+  
 
   override def display: String = value.map(_.toString).mkString(" ")
 

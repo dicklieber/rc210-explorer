@@ -38,12 +38,13 @@ case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends C
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
     val segN = new AtomicInteger(1)
     segments.map { segment =>
-      segment.toCommand(key.number, segN.getAndIncrement())
+      segment.toCommand(key.rc210Value, segN.getAndIncrement())
     }
   }
 
   def rows(): Seq[Row] = {
-    val nameCell: Cell = key.namedCell(CtSegmentKey(key, 99, "name").param)
+    val nameCell: Cell = key.toCell
+//    val nameCell: Cell = key.toCell(CtSegmentKey(key, 99, "name").param)
       .withRowSpan(3)
 
     Seq(

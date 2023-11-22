@@ -17,17 +17,18 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.util.select.{Rc210Item, SelectableNumber}
-import play.api.libs.json.JsValue
+import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
 
-sealed trait MuteDigit(val rc210Value: Int, val display: String) extends Rc210Item
 
-object MuteDigit extends SimpleExtractor with SelectableNumber[MuteDigit] {
+sealed trait MuteDigit(val rc210Value: Int) extends EnumEntryValue
 
-  case object firstDigit extends MuteDigit(1, "1st digit")
+object MuteDigit extends EnumValue[MuteDigit] {
 
-  case object secpondtDigit extends MuteDigit(2, "2nd digit")
 
-  override def parse(jsValue: _root_.play.api.libs.json.JsValue): _root_.net.wa9nnn.rc210.data.field.FieldValue =
-    throw new NotImplementedError() //todo
+  override val values: IndexedSeq[MuteDigit] = findValues
+
+  case object firstDigit extends MuteDigit(1)
+
+  case object secondDigit extends MuteDigit(2)
+
 }

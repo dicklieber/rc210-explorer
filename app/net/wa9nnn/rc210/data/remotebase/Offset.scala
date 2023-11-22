@@ -17,15 +17,20 @@
 
 package net.wa9nnn.rc210.data.remotebase
 
-import net.wa9nnn.rc210.util.select.{SelectBase, Rc210Item}
+import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
 
-sealed trait Offset(val rc210Value: Int, val display: String) extends Rc210Item
 
-object Offset extends SelectBase[Offset]:
-  case object FT100D extends Offset(1, "Minus")
+sealed trait Offset(val rc210Value: Int) extends EnumEntryValue
 
-  case object FT817_857_897 extends Offset(2, "Simplex")
+object Offset extends EnumValue[Offset]:
 
-  case object FT847 extends Offset(3, "Plus")
+  override val values: IndexedSeq[Offset] = findValues
+
+  case object FT100D extends Offset(1)
+
+  case object FT817_857_897 extends Offset(2)
+
+
+  case object FT847 extends Offset(3)
 
 

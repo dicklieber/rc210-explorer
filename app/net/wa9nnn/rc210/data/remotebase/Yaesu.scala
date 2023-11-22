@@ -17,14 +17,19 @@
 
 package net.wa9nnn.rc210.data.remotebase
 
-import net.wa9nnn.rc210.util.select.{SelectBase, Rc210Item}
+import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
 
-sealed trait Yaesu(val rc210Value: Int, val display: String) extends Rc210Item
+sealed trait Yaesu(val rc210Value: Int) extends EnumEntryValue
 
-object Yaesu extends SelectBase[Yaesu]:
-  case object FT100D extends Yaesu(1, "FT-100D")
+object Yaesu extends EnumValue[Yaesu]:
 
-  case object FT817_857_897 extends Yaesu(2, "FT817, FT-857, FT-897")
+  override val values: IndexedSeq[Yaesu] = findValues
 
-  case object FT847 extends Yaesu(3, "FT847")
+  case object FT100D extends Yaesu(1)
+
+  case object FT817_857_897 extends Yaesu(2)
+
+
+  case object FT847 extends Yaesu(3)
+
 

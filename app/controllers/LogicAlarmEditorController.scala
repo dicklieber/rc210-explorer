@@ -39,7 +39,6 @@ import javax.inject.*
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
-import net.wa9nnn.rc210.data.field.Formatters.*
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 
 @Singleton

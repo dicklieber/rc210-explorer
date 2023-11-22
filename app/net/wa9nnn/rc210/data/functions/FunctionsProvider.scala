@@ -64,7 +64,7 @@ case class FunctionNode(key: Key, description: String, destination: Option[Key])
     Row(key.toCell, description, destination)
   }
 
-  override def toString: String = s"$description (${key.number})"
+  override def toString: String = s"$description (${key.rc210Value})"
 }
 
 object FunctionNode {

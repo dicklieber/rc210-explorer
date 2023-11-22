@@ -10,46 +10,50 @@
 @import views.html.input.selectOptions
 @(remoteBase: RemoteBase)(implicit messages: MessagesProvider)
 
-    @tabbedmain(Tabs.remoteBase) {
-        <form action="@routes.RemoteBaseController.save()">
-            <table>
-                <tr>
-                    <td>Radio:</td>
-                    <td>@selectOptions("radio", remoteBase.radio, Radio)</td>
-                </tr>
-                <tr>
-                    <td>Yaesu:</td>
-                    <td>@selectOptions("yaesu", remoteBase.yaesu, Yaesu)</td>
-                </tr>
-                <tr>
-                    <td>Prefix:</td>
-                    <td><input name="prefix" value="@remoteBase.prefix"></td>
-                </tr>
-            </table>
+@tabbedmain(Tabs.remoteBase) {
+    <form action="@routes.RemoteBaseController.save()">
+        <table>
+            <tr>
+                <td>Radio:</td>
+                <td>@selectOptions("radio", remoteBase.radio, Radio)</td>
+            </tr>
+            <tr>
+                <td>Yaesu:</td>
+                <td>@selectOptions("yaesu", remoteBase.yaesu, Yaesu)</td>
+            </tr>
+            <tr>
+                <td>Prefix:</td>
+                <td><input name="prefix" value="@remoteBase.prefix"></td>
+            </tr>
+        </table>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Number</th>
-                        <th>Frequency</th>
-                        <th>Offset</th>
-                        <th>Mode</th>
-                        <th>CTCSS Mode</th>
-                        <th>CTCSS Code</th>
-                    </tr>
-                </thead>
-                @for((memory, index) <- remoteBase.memories.zipWithIndex) {
-                    <tr>
-                        <td>@{index + 1}</td>
-@*                        <td>@inputText(memory("frequency"))</td>*@
-@*                        <td>@select(memory("offset"), Offset.options)</td>*@
-@*                        <td>@select(memory("mode"), Mode.options)</td>*@
-@*                        <td>@select(memory("ctcssMode"), CtcssMode.options)</td>*@
-@*                        <td>@inputText(memory("ctssCode"))</td>*@
-                    </tr>
-                }
-            </table>
-            @submitButton()
+        <table>
+            <thead>
+                <tr>
+                    <th>Number</th>
+                    <th>Frequency</th>
+                    <th>Offset</th>
+                    <th>Mode</th>
+                    <th>CTCSS Mode</th>
+                    <th>CTCSS Code</th>
+                </tr>
+            </thead>
+            @for((memory, index) <- remoteBase.memories.zipWithIndex) {
+                <tr>
+                @defining(remoteBase.memories(index)) { rbMemory =>
+                    <td>@{
+                        index + 1
+                    }</td>
+                    <td><input name="frequency" value="@{rbMemory.frequency}"></td>
+                    <td>@selectOptions("offset", rbMemory.offset, Offset) </td>
+                    <td>@selectOptions("mode", rbMemory.mode, Mode) </td>
+                    <td>@selectOptions("ctcssMode", rbMemory.ctcssMode, CtcssMode) </td>
+                    <td><input name="ctssCode" value="@{rbMemory.ctssCode}"></td>
+                </tr>
+            }
+            }
+        </table>
+        @submitButton()
 
-        </form>
-    }
+    </form>
+}

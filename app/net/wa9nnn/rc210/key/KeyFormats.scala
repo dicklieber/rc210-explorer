@@ -37,7 +37,7 @@ object KeyFormats {
   implicit def keyKindPathBinder(implicit intBinder: PathBindable[KeyKind]): PathBindable[KeyKind] = new PathBindable[KeyKind] {
     override def bind(key: String, fromPath: String): Either[String, KeyKind] = {
       try {
-        Right(KeyKind.valueOf(fromPath))
+        Right(KeyKind.withName(fromPath))
       } catch {
         case e: Exception =>
           Left(e.getMessage)

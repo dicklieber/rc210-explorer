@@ -17,13 +17,15 @@
 
 package net.wa9nnn.rc210.data.meter
 
-import net.wa9nnn.rc210.util.select.{SelectBase, Rc210Item, SelectableNumber}
+import enumeratum.values.*
+import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
 
-sealed trait AlarmType(val rc210Value: Int, val display: String) extends Rc210Item
+sealed abstract class AlarmType(val rc210Value: Int) extends EnumEntryValue
 
-object AlarmType extends SelectBase[AlarmType] {
+case object AlarmType extends EnumValue[AlarmType] {
+  override val values: IndexedSeq[AlarmType] = findValues
 
-  case object LowAlarm extends AlarmType(1, "Low Alarm")
+  case object LowAlarm extends AlarmType(1)
 
-  case object HighAlarm extends AlarmType(2, "High Alarm")
+  case object HighAlarm extends AlarmType(2)
 }

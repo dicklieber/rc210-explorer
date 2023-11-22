@@ -23,23 +23,27 @@ import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.util.Chunk
+import net.wa9nnn.rc210.data.remotebase.Mode
+import net.wa9nnn.rc210.ui.FormFields
 import play.api.libs.json.{Format, JsValue, Json}
 
 case class RemoteBase(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[RBMemory] = Seq.empty) extends ComplexFieldValue("RemoteBase") {
   override val key: Key = Key(remoteBaseKey)
 
-//  override def display: String = fieldName
+  //  override def display: String = fieldName
 
   /**
    * Render this value as an RD-210 command string.
    */
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = Seq(
-    s"1*2083${radio.number}",
-    s"1*2084${yaesu.number}",
+    s"1*2083${radio.rc210Value}",
+    s"1*2084${yaesu.rc210Value}",
     s"1*2060$prefix"
   )
 
   override def toJsonValue: JsValue = Json.toJson(this)
+
+  override def display: String = toString
 }
 
 object RemoteBase extends ComplexExtractor {
@@ -60,10 +64,12 @@ object RemoteBase extends ComplexExtractor {
     val prefix = memory.stringAt(3525)
 
     val freqs: Seq[String] = memory.chunks(3562, 8, 10).map((chunk: Chunk) => chunk.toString)
-//    val offsets: Seq[Offset] = memory.sub8(3562, 10).map { Offset(_)}
+    //    val offsets: Seq[Offset] = memory.sub8(3562, 10).map { Offset(_)}
     val ctcsss: Seq[Int] = memory.sub8(3642, 10)
     val ctcsssModes: Seq[CtcssMode] = memory.sub8(3652, 10).map(CtcssMode.find)
-    val modes: Seq[Mode] = memory.sub8(1535, 10).map(Mode.find)
+    val modes: Seq[Mode] = memory.sub8(1535, 10).map { (n: Int) =>
+      Mode.find(n)
+    }
     val memories: IndexedSeq[RBMemory] = for {
       i <- 0 until 10
     } yield {
@@ -104,6 +110,8 @@ object RemoteBase extends ComplexExtractor {
 
   implicit val fmtRBMemory: Format[RBMemory] = Json.format[RBMemory]
   implicit val fmtRemoteBase: Format[RemoteBase] = Json.format[RemoteBase]
+
+  override def parseForm(formFields: FormFields): ComplexFieldValue = ???
 }
 
 /**

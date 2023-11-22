@@ -17,13 +17,56 @@
 
 package net.wa9nnn.rc210.util.select
 
-import com.wa9nnn.util.tableui.Cell
-import enumeratum.{EnumEntry, PlayEnum}
+import enumeratum.{EnumEntry, PlayEnum, *}
+import net.wa9nnn.rc210.KeyKind._
+import net.wa9nnn.rc210.{Key, KeyKind}
 
-trait Rc210Item extends  EnumEntry with PlayEnum[Rc210Item]:
+/**
+ * for example:
+ * {{{
+ *  object Occurrence extends EnumValue[Occurrence]
+ * }}}
+ *
+ * @tparam T
+ */
+trait EnumValue[T <: EnumEntryValue] extends PlayEnum[T] with Selections:
+  val values: IndexedSeq[T]
+
+  override def options: Seq[EnumEntryValue] = values
+
   /**
-   * as passed to/from RC-210
+   * @param target find the Enum with this rc210Value.
+   * @return
    */
-  val number: Int
-  val display:String
-  def toCell: Cell = Cell(toString)
+  def find(target: Int): T =
+    values.find {
+      _.rc210Value == target
+    }.get
+
+trait Selections:
+  def options: Seq[EnumEntryValue]
+
+/**
+ * for example:
+ * {{{
+ *   sealed trait Occurrence(val rc210Value: Int) extends EnumEntryValue
+ * }}}
+ *
+ * Most uses of this are toString and rc210Value
+ */
+trait EnumEntryValue extends EnumEntry:
+  val rc210Value: Int
+
+object MacroSelect extends KeySelect(macroKey)
+
+object MeterSelect extends KeySelect(meterKey)
+
+abstract class KeySelect(keyKind: KeyKind) extends Selections:
+  val options: Seq[Key] = for {
+    number <- 1 to keyKind.maxN
+  } yield {
+    Key(keyKind, number)
+  }
+
+  
+  

@@ -17,30 +17,32 @@
 
 package net.wa9nnn.rc210.data.field.schedule
 
-import net.wa9nnn.rc210.util.select.{Rc210Item, SelectableNumber}
+import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
 
 
-sealed trait DayOfWeek(val rc210Value: Int, val display: String) extends Rc210Item
+sealed trait DayOfWeek(val rc210Value: Int) extends  EnumEntryValue
 
-object DayOfWeek extends SelectableNumber[DayOfWeek] {
+object DayOfWeek extends EnumValue[DayOfWeek] {
 
-  case object EveryDay extends DayOfWeek(1, "EveryDay")
+  override val values: IndexedSeq[DayOfWeek] = findValues
 
-  case object Monday extends DayOfWeek(2, "Monday")
+  case object EveryDay extends DayOfWeek(1)
 
-  case object Tuesday extends DayOfWeek(3, "Tuesday")
+  case object Monday extends DayOfWeek(2)
 
-  case object Wednesday extends DayOfWeek(4, "Wednesday")
+  case object Tuesday extends DayOfWeek(3)
 
-  case object Thursday extends DayOfWeek(5, "Thursday")
+  case object Wednesday extends DayOfWeek(4)
 
-  case object Friday extends DayOfWeek(6, "Friday")
+  case object Thursday extends DayOfWeek(5)
 
-  case object Saturday extends DayOfWeek(7, "Saturday")
+  case object Friday extends DayOfWeek(6)
 
-  case object Sunday extends DayOfWeek(8, "Sunday")
+  case object Saturday extends DayOfWeek(7)
 
-  case object Weekdays extends DayOfWeek(9, "Weekdays")
+  case object Sunday extends DayOfWeek(8)
 
-  case object Weekends extends DayOfWeek(10, "Weekends")
+  case object Weekdays extends DayOfWeek(9)
+
+  case object Weekends extends DayOfWeek(10)
 }

@@ -9,7 +9,7 @@ import net.wa9nnn.rc210.data.field.schedule.{DayOfWeek, DowBase, Week}
 import net.wa9nnn.rc210.data.schedules.Schedule.s02
 import net.wa9nnn.rc210.model.TriggerNode
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.util.MacroSelectField
+import net.wa9nnn.rc210.ui.FormFields
 import play.api.libs.json.{Format, JsValue, Json}
 
 import java.time.LocalTime
@@ -41,10 +41,7 @@ case class Schedule(override val key: Key,
 
   override def toRow: Row = {
     implicit val k: Key = key
-    val name: Cell = k.namedCell()
-    val dowCell: Cell = dow.toCell
-    val weekCell = week.toCell
-    val moyCell = monthOfYear
+    val name: Cell = k.toCell
 
     val localTime: Cell = {
       val h = if (hour > 24) // RC-210 use > 24 as disabled.
@@ -59,9 +56,9 @@ case class Schedule(override val key: Key,
     Row(
       name,
       enabled,
-      dowCell,
-      moyCell,
-      weekCell,
+      dow,
+      monthOfYear,
+      week,
       localTime,
       macroKey.toCell
     )
@@ -71,18 +68,18 @@ case class Schedule(override val key: Key,
    * Render this value as an RD-210 command string.
    */
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
-    val setPoint: String = key.number.toString
-    val sDow: String = dow.number.toString
+    val setPoint: String = key.rc210Value.toString
+    val sDow: String = dow.rc210Value.toString
     val sWeek: String = week match {
       case Week.Every =>
         ""
       case d: Week =>
-        d.number.toString
+        d.rc210Value.toString
     }
-    val moy: String = s02(monthOfYear.number)
+    val moy: String = s02(monthOfYear.rc210Value)
     val hours: String = s02(hour)
     val minutes: String = s02(minute)
-    val sMacro = s02(macroKey.number)
+    val sMacro = s02(macroKey.rc210Value)
 
     val command = s"1*4001$setPoint*$sWeek$sDow*${moy}*$hours*$minutes*$sMacro"
     Seq(command)
@@ -171,7 +168,7 @@ object Schedule extends LazyLogging with ComplexExtractor {
   def apply(setPoint: Int): Schedule = new Schedule(Key(KeyKind.scheduleKey, setPoint))
 
   import net.wa9nnn.rc210.key.KeyFormats._
-  
+
 
   implicit val fmtSchedule: Format[Schedule] = Json.format[Schedule]
 
@@ -181,6 +178,9 @@ object Schedule extends LazyLogging with ComplexExtractor {
   override val name: String = "Schedule"
   override val fieldName: String = name
   override val kind: KeyKind = KeyKind.scheduleKey
+
+  override def parseForm(formFields: FormFields): ComplexFieldValue =
+    throw new NotImplementedError() //todo
 }
 
 

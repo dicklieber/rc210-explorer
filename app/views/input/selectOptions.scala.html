@@ -1,8 +1,10 @@
-@import net.wa9nnn.rc210.util.select.Rc210Item
-@import net.wa9nnn.rc210.util.select.SelectItemProvider
-@(name: String, selectedItem: Rc210Item,  selectItemProvider: SelectItemProvider, tooltip: String = "")
-<selectOptions name="@name" @if(tooltip.nonEmpty) {title="@tooltip"}>
-@for(option <- selectItemProvider.items) {
-    <option value="@option.toString">@option.toString</option>
+@import net.wa9nnn.rc210.util.select.EnumEntryValue
+@import net.wa9nnn.rc210.util.select.EnumValue
+@import net.wa9nnn.rc210.util.select.Selections
+@(name: String, selectedItem: EnumEntryValue, selections: Selections, tooltip: String = "")
+<select name="@name" @if(tooltip.nonEmpty) {
+    title="@tooltip"}>
+@for(option <- selections.options) {
+    <option value="@option.rc210Value">@option.toString</option>
 }
-</selectOptions>
+</select>

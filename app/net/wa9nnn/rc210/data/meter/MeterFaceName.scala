@@ -18,24 +18,28 @@
 package net.wa9nnn.rc210.data.meter
 
 import enumeratum.*
-import net.wa9nnn.rc210.util.select.{SelectBase, Rc210Item}
+//import enumeratum.values.*
+import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
 
-sealed trait MeterFaceName(val rc210Value: Int, val display: String) extends Rc210Item
+sealed abstract class MeterFaceName(val rc210Value: Int) extends EnumEntryValue
 
-object MeterFaceName extends Enum[MeterFaceName] with SelectBase[MeterFaceName] {
+object MeterFaceName extends EnumValue[MeterFaceName] {
+  override val values: IndexedSeq[MeterFaceName] = findValues
 
-  case object Off extends MeterFaceName(0, "Meter OFF")
+  case object Off extends MeterFaceName(0)
 
-  case object Volts extends MeterFaceName(1, "Volts")
+  case object Volts extends MeterFaceName(1)
 
-  case object Amps extends MeterFaceName(2, "Amps")
+  case object Amps extends MeterFaceName(2)
 
-  case object Watts extends MeterFaceName(3, "Watts")
+  case object Watts extends MeterFaceName(3)
 
-  case object Degrees extends MeterFaceName(4, "Degrees")
+  case object Degrees extends MeterFaceName(4)
 
-  case object MPH extends MeterFaceName(5, "MPH")
+  case object MPH extends MeterFaceName(5)
 
-  case object Percent extends MeterFaceName(6, "Percent")
+  case object Percent extends MeterFaceName(6)
+
+
 }
 

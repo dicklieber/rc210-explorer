@@ -17,15 +17,19 @@
 
 package net.wa9nnn.rc210.data.remotebase
 
-import net.wa9nnn.rc210.util.select.{SelectBase, Rc210Item}
+import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
 
-sealed trait CtcssMode(val rc210Value: Int, val display: String) extends Rc210Item
+sealed trait CtcssMode(val rc210Value: Int) extends EnumEntryValue
 
-object CtcssMode extends SelectBase[CtcssMode]:
+object CtcssMode extends EnumValue[CtcssMode]:
 
-  case object None extends CtcssMode(0, "None")
+  override val values: IndexedSeq[CtcssMode] = findValues
 
-  case object EncodeOnly extends CtcssMode(1, "Encode Only")
+  case object None extends CtcssMode(0)
 
-  case object EncodeDecode extends CtcssMode(2, "Encode/Decode")
+  case object EncodeOnly extends CtcssMode(1)
+
+  case object EncodeDecode extends CtcssMode(2)
+
+
 

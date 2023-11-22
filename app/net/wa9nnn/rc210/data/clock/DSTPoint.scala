@@ -21,14 +21,14 @@ import net.wa9nnn.rc210.data.clock.MonthOfYearDST
 import net.wa9nnn.rc210.data.clock.Occurrence
 
 case class DSTPoint(monthOfYearDST: MonthOfYearDST, occurrence: Occurrence) {
-  def commandPiece: String = f"${monthOfYearDST.number}%02d${occurrence.number}"
+  def commandPiece: String = f"${monthOfYearDST.rc210Value}%02d${occurrence.rc210Value}"
 }
 
 object DSTPoint:
   def apply(s: String): DSTPoint =
     val month: MonthOfYearDST = {
       val i: Int = s.take(2).toInt
-      MonthOfYearDST.find(i)
+      MonthOfYearDST.values(i)
     }
     val occurance: Occurrence = {
       val i = s.takeRight(1).toInt - 1

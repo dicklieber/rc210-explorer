@@ -17,8 +17,9 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.Key
-import play.api.libs.json._
+import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.{Key, KeyKind}
+import play.api.libs.json.*
 import views.html.fieldString
 
 case class FieldString(value: String) extends SimpleFieldValue {
@@ -54,11 +55,6 @@ case class FieldString(value: String) extends SimpleFieldValue {
 }
 
 object FieldString extends SimpleExtractor {
-  override def fromForm(name: String)(implicit kv: Map[String, String], key: Key): String = {
-//    formValue(name)
- throw new NotImplementedError() //todo
-  }
-
 
   override def extractFromInts(itr: Iterator[Int], field: SimpleField): FieldString = {
     new FieldString(new String(
@@ -77,3 +73,5 @@ object FieldString extends SimpleExtractor {
 
   override val name: String = "FieldInt"
 }
+
+

@@ -24,45 +24,39 @@ import play.api.data.FormError
 import play.api.data.format.Formatter
 import play.api.mvc.PathBindable
 import play.twirl.api.Html
+import net.wa9nnn.rc210.KeyKind
 import net.wa9nnn.rc210.KeyKind.*
-import net.wa9nnn.rc210.util.select.{Rc210Item, SelectItemProvider}
+import net.wa9nnn.rc210.util.select.EnumEntryValue
 import play.api.libs.json.*
 
 /**
  *
- * @param keyKind of the Key
- * @param number  0 is a magic number used for things like [[KeyKind.commonKey]]
+ * @param keyKind     of the Key
+ * @param rc210Value  0 is a magic number used for things like [[KeyKind.commonKey]]
  */
-case class Key(keyKind: KeyKind, number: Int = 0) extends CellProvider with Rc210Item with Ordered[Key] {
-  def check(target: KeyKind): Unit = if (target != keyKind) throw WrongKeyType(this, target)
+case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends CellProvider with Ordered[Key] with EnumEntryValue{
+  def check(expected: KeyKind): Unit = if (expected != keyKind) throw IllegalArgumentException(s"Expecting Key of type $expected, but got $this}")
 
-  assert(number <= keyKind.maxN, s"Max number for ${keyKind.name} is ${keyKind.maxN}")
+  assert(rc210Value <= keyKind.maxN, s"Max number for $keyKind is ${keyKind.maxN}")
 
-  override def toString: String = s"$keyKind$number"
+  override def toString: String = s"$keyKind$rc210Value"
 
   override def compare(that: Key): Int =
-    var ret = keyKind compareTo that.keyKind
+    var ret = keyKind.toString compare that.keyKind.toString
     if (ret == 0)
-      ret = number compareTo that.number
+      ret = rc210Value compareTo that.rc210Value
     ret
 
   def fieldKey(fieldName: String): FieldKey = FieldKey(fieldName, this)
 
-  def namedCell(param: String = fieldKey("name").param): Cell =
-    val str = nameForKey(this)
-    val html: Html = views.html.fieldNamedKey(this)
-    Cell.rawHtml(html.toString())
 
-  def keyWithName: String = s"$number ${nameForKey(this)}"
+  def keyWithName: String =
+    val name = Key.nameForKey(this)
+    s"$rc210Value: $name"
 
-  override def toCell: Cell = {
-    val name = nameForKey(this)
-    val c = if (name.isEmpty)
-      Cell(number)
-    else
-      Cell(s"$number: $name")
-    c.withCssClass(keyKind.toString)
-  }
+  override def toCell: Cell =
+    Cell(keyWithName)
+      .withCssClass(keyKind.toString)
 
   /**
    * Replaces 'n' in the template with the number (usually a port number).
@@ -71,10 +65,10 @@ case class Key(keyKind: KeyKind, number: Int = 0) extends CellProvider with Rc21
    * @return with 'n' replaced by the port number.
    */
   def replaceN(template: String): String = {
-    template.replaceAll("n", number.toString)
+    template.replaceAll("n", rc210Value.toString)
   }
 
-  override def nameForKey(key: Key): String = ???
+  //  override def nameForKey(key: Key): String = ???
 }
 
 object Key:
@@ -83,7 +77,7 @@ object Key:
   def apply(sKey: String): Key =
     sKey match
       case kparser(sKind, sNumber) =>
-        val keyKind = KeyKind.valueOf(sKind)
+        val keyKind = KeyKind.withName(sKind)
         new Key(keyKind, sNumber.toInt)
 
   def setNamedSource(namedSource: NamedKeySource): Unit = {
@@ -91,6 +85,7 @@ object Key:
     _namedSource = Option(namedSource)
   }
 
+  implicit val fmtKey: Format[Key] = Json.format[Key]
   private var _namedSource: Option[NamedKeySource] = None
 
   def nameForKey(key: Key): String =
@@ -104,17 +99,14 @@ object Key:
     }
 
   lazy val portKeys: Seq[Key] = keys(portKey)
-  lazy val portChoices: Keys = Keys(portKey)
-  lazy val macroKeys: Keys = Keys(macroKey)
-  lazy val meterKeys: Keys = Keys(meterKey)
-  lazy val meterAlarmKeys: Keys = Keys(meterAlarmKey)
+  lazy val macroKeys: Seq[Key] = keys(macroKey)
 
   /**
    * Codec to allow non-string types i routes.conf definitions.
    */
   implicit def keyKindPathBinder: PathBindable[KeyKind] = new PathBindable[KeyKind] {
     override def bind(key: String, value: String): Either[String, KeyKind] = {
-      Right(KeyKind.valueOf(value))
+      Right(KeyKind.withName(value))
     }
 
     override def unbind(key: String, macroKey: KeyKind): String = {
@@ -122,9 +114,5 @@ object Key:
     }
   }
 
-  case class Keys(keyKind: KeyKind) extends SelectItemProvider {
-    override val items: Seq[Rc210Item] = keys(keyKind)
-  }
 
-case class WrongKeyType(key: Key, expected: KeyKind) extends IllegalArgumentException(s"Expecting Key of type ${expected.name}, but got $key}")
 

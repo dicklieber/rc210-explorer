@@ -165,9 +165,6 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
 
                     case Right(value: ComplexFieldValue) =>
                       currentEntry.setCandidate(value)
-                    case x =>
-                      logger.error(s"Neither right nor left.  $x")
-                      throw new NotImplementedError() //todo
                   }
                   valuesMap.put(fieldKey, newEntry)
                 }

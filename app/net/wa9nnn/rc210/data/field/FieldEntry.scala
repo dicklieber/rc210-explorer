@@ -73,9 +73,8 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
       .toCommands(this)
   }
   
-//  def toCell: Cell = {
-//    Cell.rawHtml(s"$toHtml")
-//  }
+  def toCell: Cell =
+    throw new NotImplementedError() //todo
 
   /**
    *
@@ -122,6 +121,7 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
   override def compare(that: FieldEntry): Int = fieldKey compare that.fieldKey
 
   override val template: String = fieldDefinition.template
+
 }
 
 

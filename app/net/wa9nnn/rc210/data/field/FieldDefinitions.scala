@@ -26,7 +26,6 @@ import net.wa9nnn.rc210.data.meter.{Meter, MeterAlarm}
 import net.wa9nnn.rc210.data.remotebase.RemoteBase
 import net.wa9nnn.rc210.data.schedules.Schedule
 import net.wa9nnn.rc210.data.timers.TimerExtractor
-import net.wa9nnn.rc210.util.MacroSelectField
 import net.wa9nnn.rc210.KeyKind._
 import javax.inject.{Inject, Singleton}
 @Singleton
@@ -48,7 +47,7 @@ class FieldDefinitions @Inject()() {
     SimpleField(32, "DTMF Mute Timer", portKey, "n*1006v", FieldInt) max 999 units "100 ms",
     SimpleField(38, "Kerchunk", portKey, "nn15b", FieldBoolean),
     SimpleField(41, "Kerchunk Timer", portKey, "nn1018b", FieldInt) max 6000 units "ms",
-    SimpleField(47, "Mute Digit Select", commonKey, "n*2090v", MuteDigit),
+//    SimpleField(47, "Mute Digit Select", commonKey, "n*2090v", MuteDigit), //todo
     SimpleField(48, "CTCSS During ID", portKey, "n*2089b", FieldBoolean),
     SimpleField(54, "Timeout Ports", commonKey, "1*2051b", FieldBoolean),
     SimpleField(55, "Speech Delay", commonKey, "1*1019v", FieldInt) max 600 units "Seconds",
@@ -78,8 +77,8 @@ class FieldDefinitions @Inject()() {
     //MeterFaceName - 186-201
     //    *2064 C * M* X1* Y1* X2* Y2* C= Channel 1 to 8 M=Meter Type 0 to 6 X1, Y1, X2, Y2 represent two calibration points. There must be 6 parameters entered to define a meter face, each value ending with *.
 
-    SimpleField(322, "Rx Rcv Macro Active", portKey, "n*2113 1 v", MacroSelectField),
-    SimpleField(325, "Rx Rcv Macro Low", portKey, "n*2113  v", MacroSelectField),
+    SimpleField(322, "Rx Rcv Macro Active", portKey, "n*2113 1 v", MacroKeyExtractor),
+    SimpleField(325, "Rx Rcv Macro Low", portKey, "n*2113  v", MacroKeyExtractor),
     //P1, P2, P3CWDI1 - 328-357
     //P1, P2, P3CWD2 - 358-402
     //P1, P2, P3INITIALID1 - 403-483
@@ -111,9 +110,9 @@ class FieldDefinitions @Inject()() {
     SimpleField(3536, "Terminator", commonKey, "1*9020v", FieldDtmf) max 1,
     //ClockCorrection - 3538-3539 Humm, only two bytes but doc shows:  Docs shows this as *5105! Not *5101! In any event needs some special handling.
     SimpleField(3540, "Say Year", commonKey, "n*5102b", FieldBoolean),
-    SimpleField(3541, "P1 Tail Message", portKey, "n*21101v", MacroSelectField),
-    SimpleField(3544, "P2 Tail Message", portKey, "n*21102v", MacroSelectField),
-    SimpleField(3547, "P3 Tail Message", portKey, "n*21103v", MacroSelectField),
+    SimpleField(3541, "P1 Tail Message", portKey, "n*21101v", MacroKeyExtractor),
+    SimpleField(3544, "P2 Tail Message", portKey, "n*21102v", MacroKeyExtractor),
+    SimpleField(3547, "P3 Tail Message", portKey, "n*21103v", MacroKeyExtractor),
     SimpleField(3550, "Tail Message Number", portKey, "n*2111v", FieldInt),
     SimpleField(3553, "Tail Timer", portKey, "n*1020v", FieldInt) max 999 units "tails" tooltip "0 disables",
     SimpleField(3559, "Tail Counter", portKey, "n*2112v", FieldInt) max 999 units "tails" tooltip "0 disables",

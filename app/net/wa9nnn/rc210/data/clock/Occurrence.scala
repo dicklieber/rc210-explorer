@@ -18,20 +18,22 @@
 package net.wa9nnn.rc210.data.clock
 
 import enumeratum.*
-import net.wa9nnn.rc210.util.select.{SelectBase, Rc210Item, SelectableNumber}
+import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
 
 
-sealed trait Occurrence(val rc210Value: Int, val display: String) extends  Rc210Item
+sealed trait Occurrence(val rc210Value: Int) extends EnumEntryValue
 
-object Occurrence extends SelectBase[Occurrence] {
+case object Occurrence extends EnumValue[Occurrence] {
 
-  case object First extends Occurrence(1, "First")
+  override val values: IndexedSeq[Occurrence] = findValues
 
-  case object Second extends Occurrence(2, "Second")
+  case object First extends Occurrence(1)
 
-  case object Third extends Occurrence(3, "Third")
+  case object Second extends Occurrence(2)
 
-  case object Forth extends Occurrence(4, "Forth")
+  case object Third extends Occurrence(3)
 
-  case object Fifth extends Occurrence(5, "Fifth")
+  case object Forth extends Occurrence(4)
+
+  case object Fifth extends Occurrence(5)
 }

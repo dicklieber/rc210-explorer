@@ -33,9 +33,9 @@ object ScheduleBuilder extends LazyLogging {
         try {
           ints match {
             case Array(dow: Int) =>
-              Week.Every -> DayOfWeek.options(dow)
+              Week.Every -> DayOfWeek.find(dow)
             case Array(wInMo, dow) =>
-              Week.options(wInMo) -> DayOfWeek.options(dow)
+              Week.find(wInMo) -> DayOfWeek.find(dow)
             case _ =>
               logger.error(s"DOW must be 1 or 2 chars, got $sDow")
               Week.Every -> DayOfWeek.EveryDay
@@ -46,7 +46,7 @@ object ScheduleBuilder extends LazyLogging {
             Week.Every -> DayOfWeek.EveryDay
         }
       }
-      val monthOfYear = MonthOfYearSchedule.options(chunks(MOY)(n))
+      val monthOfYear = MonthOfYearSchedule.find(chunks(MOY)(n))
       val hour = chunks(HOUR)(n)
       val minute = chunks(MINUTE)(n)
       val macr0 = Key(KeyKind.macroKey, (chunks(MACR0)(n) + 1))

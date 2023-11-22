@@ -43,7 +43,7 @@ trait FieldSelect[T] extends SimpleFieldValue {
         case s: String =>
           selectOptions.find(_.display == s).get.id
         case m: Key =>
-          m.number
+          m.rc210Value
       }
     } catch {
       case e:Exception =>
@@ -57,25 +57,25 @@ trait FieldSelect[T] extends SimpleFieldValue {
 
   override def toJsonValue: JsValue = JsString(display)
 
-  /**
-   *
-   * Render as HTML. Either a single rc2input of an entire HTML Form.
-   *
-   */
-  override def toHtmlField(renderMetadata: RenderMetadata): String = {
-
-    val optionsHtml: String = selectOptions.map { selectOption =>
-      val bool = selectOption.display == value.toString
-      selectOption.copy(selected = bool).html
-    }.mkString("\n")
-    val param: String = renderMetadata.param
-
-    s"""
-    <selectOptions name="$param" class="form-selectOptions" aria-label="Default selectOptions example">
-    $optionsHtml
-    </selectOptions>
-    """.stripMargin
-  }
+//  /**
+//   *
+//   * Render as HTML. Either a single rc2input of an entire HTML Form.
+//   *
+//   */
+//  override def toHtmlField(renderMetadata: RenderMetadata): String = {
+//
+//    val optionsHtml: String = selectOptions.map { selectOption =>
+//      val bool = selectOption.display == value.toString
+//      selectOption.copy(selected = bool).html
+//    }.mkString("\n")
+//    val param: String = renderMetadata.param
+//
+//    s"""
+//    <selectOptions name="$param" class="form-selectOptions" aria-label="Default selectOptions example">
+//    $optionsHtml
+//    </selectOptions>
+//    """.stripMargin
+//  }
 
   override def toString: String = display
 }

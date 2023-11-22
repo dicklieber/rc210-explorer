@@ -36,7 +36,7 @@ object FormParser:
     val x = new InternalFormParser(formParseable, request)
     x.result
 
-  class InternalFormParser(formParseable: FormParseable,  request: Request[AnyContent]) extends FormFields {
+  class InternalFormParser(formParseable: FormParseable, request: Request[AnyContent]) extends FormFields {
     // A map of all the form values from an HTML form.
     // Note checkboxes send no value if unchecked; you have to know what you're looking for.
     val data: Map[String, String] = request.body.asFormUrlEncoded.get.flatMap { (name, values: Seq[String]) =>
@@ -57,10 +57,15 @@ trait FormFields:
 
   def key(keyName: String): Key = Key(data.getOrElse(keyName, throw new IllegalArgumentException("No key in form data!")))
 
+  def int(name: String): Int =
+    string(name).toInt
+
+  def string(name: String): String =
+    data(name)
+
   def boolean(name: String): Boolean = {
     data.contains(name)
   }
-
 
 trait FormParseable:
   def parseForm(formFields: FormFields): ComplexFieldValue

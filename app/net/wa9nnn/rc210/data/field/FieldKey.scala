@@ -39,9 +39,9 @@ case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey] with 
   val param: String = s"$fieldName:$key".replaceAll(" ", "~")
 
   override def compare(that: FieldKey): Int = {
-    var ret = key.keyKind compareTo that.key.keyKind
+    var ret = key.keyKind.toString compareTo that.key.keyKind.toString
     if (ret == 0)
-      ret = key.number.compareTo(that.key.number)
+      ret = key.rc210Value.compareTo(that.key.rc210Value)
     if (ret == 0)
       ret = fieldName.compareTo(that.fieldName)
     ret

@@ -17,11 +17,15 @@
 
 package net.wa9nnn.rc210.data.field.schedule
 
-import net.wa9nnn.rc210.util.select.{Rc210Item, SelectableNumber}
+import enumeratum.{EnumEntry, PlayEnum}
+import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
 
-sealed trait Week(val rc210Value: Int, val display: String) extends Rc210Item
 
-object Week extends SelectableNumber[Week] {
+sealed trait Week(val rc210Value: Int, val display: String) extends EnumEntryValue
+
+object Week extends EnumValue[Week] {
+
+  override val values: IndexedSeq[Week] = findValues
 
   case object Every extends Week(1, "Every")
 

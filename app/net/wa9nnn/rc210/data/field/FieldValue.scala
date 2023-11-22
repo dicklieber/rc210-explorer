@@ -63,19 +63,13 @@ trait SimpleFieldValue extends FieldValue {
    * @return None if value has not changed, otherwise a new [[FieldValue]].
    */
   def update(paramValue: String): SimpleFieldValue
+  
 }
 
-class ComplexFieldValue( val fieldName: String) extends FieldValue  with LazyLogging{
+abstract class ComplexFieldValue( val fieldName: String) extends FieldValue  with LazyLogging{
   val key: Key
 
   lazy val fieldKey: FieldKey = FieldKey(fieldName, key)
-  /**
-   * Render as HTML. Either a single rc2input of an entire HTML Form.
-   *
-   * @param fieldEntry all the metadata.
-   * @return html
-   */
-  override def toHtmlField(renderMetadata: RenderMetadata): String = "//todo"
 
 }
 

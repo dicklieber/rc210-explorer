@@ -2,7 +2,6 @@ package net.wa9nnn.rc210.model
 
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
 import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.util.MacroSelectField
 
 trait Node extends RowSource {
   val key: Key
