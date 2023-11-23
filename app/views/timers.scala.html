@@ -1,7 +1,9 @@
 @import com.wa9nnn.util.tableui.Table
 @import com.wa9nnn.util.tableui.html.renderTable
-@@import views.html.helper._
-@@(timers: Seq[Timer])
+@import views.html.helper._
+@import net.wa9nnn.rc210.ui.Tabs
+@import net.wa9nnn.rc210.data.timers.Timer
+@(timers: Seq[Timer])
 
 @tabbedmain(Tabs.timersTab) {
     <table class="table table-bordered table-sm  w-auto rc210-table">

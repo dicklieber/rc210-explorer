@@ -19,6 +19,7 @@ package net.wa9nnn.rc210.data.field
 
 import com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase
 import com.wa9nnn.util.tableui.Cell
+import net.wa9nnn.rc210.Key
 import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue, Json}
 
 import java.time.LocalTime
@@ -61,7 +62,7 @@ object FieldTime extends SimpleExtractor {
   def apply()(implicit nameToValue: Map[String, String]): FieldTime = {
     val sTime = nameToValue(time)
     val localTime = LocalTime.parse(sTime)
-    new field.FieldTime(localTime)
+    new FieldTime(localTime)
   }
 
   override def extractFromInts(itr: Iterator[Int], field: SimpleField): FieldValue = throw new IllegalStateException("Can't exrtract as rc2input!")

@@ -18,10 +18,15 @@
 package net.wa9nnn.rc210.data.remotebase
 
 import com.wa9nnn.util.tableui.Row
+import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
+import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.ui.FormFields
+import net.wa9nnn.rc210.util.Chunk
 import play.api.libs.json.{Format, JsValue, Json}
 
 case class RemoteBase(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[RBMemory] = Seq.empty) extends ComplexFieldValue("RemoteBase") {
-  override val key: Key = Key(remoteBaseKey)
+  override val key: Key = Key(KeyKind.remoteBaseKey)
 
   //  override def display: String = fieldName
 

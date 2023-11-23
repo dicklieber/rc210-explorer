@@ -15,17 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-package net.wa9nnn.rc210.fixtures
+package net.wa9nnn.rc210.data
 
-import java.net.URL
-import scala.util.{Failure, Success}
+import com.wa9nnn.util.tableui.{Header, Row, RowSource}
+import net.wa9nnn.rc210.Key
 
-class WithMemory extends RcSpec {
-  private val url: URL = getClass.getResource("/data/MemExample.txt")
-  val memory: Memory = Memory.load(url) match {
-    case Failure(exception) =>
-      throw exception
-    case Success(memory: Memory) =>
-      memory
-  }
+trait Node extends RowSource {
+  val key: Key
 }
+
+/**
+ * A [[Node]] that can invoke a Macro
+ */
+trait TriggerNode extends Node with RowSource:
+  def canRunMacro(macroKey: Key):Boolean
+  def nodeEnabled:Boolean = true
+
+
+//case class TriggerDetail(key:Key, macroToRun: MacroKey, description:String)
+object TriggerNode {
+  def header(count:Int):Header= Header(s"Trigger ($count)", "Key", "Description")
+}
+

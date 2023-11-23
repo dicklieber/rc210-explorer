@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui.Cell
+import net.wa9nnn.rc210.Key
 import play.api.libs.json.*
 
 case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue {

@@ -1,6 +1,9 @@
-@@@@import views.html.helper.form
+@import views.html.helper.form
+@import net.wa9nnn.rc210.ui.Tabs
 
 @import scala.util.Random
+@import net.wa9nnn.rc210.data.macros.MacroNode
+@import net.wa9nnn.rc210.data.functions.FunctionsProvider
 @(macroNode: MacroNode)(implicit functionsProvider: FunctionsProvider, messagesProvider: MessagesProvider)
 
     @tabbedmain(Tabs.macrosTab) {

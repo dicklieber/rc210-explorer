@@ -1,4 +1,8 @@
-@@@@import views.html.helper._
+@import views.html.helper._
+@import net.wa9nnn.rc210.data.macros.MacroNode
+@import net.wa9nnn.rc210.ui.Tabs
+
+@import net.wa9nnn.rc210.data.functions.FunctionsProvider
 @(macroNodes: Seq[MacroNode])(implicit functionsProvider: FunctionsProvider)
 
 @tabbedmain(Tabs.macrosTab) {

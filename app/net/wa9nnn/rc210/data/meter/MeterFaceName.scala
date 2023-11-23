@@ -16,9 +16,9 @@
  */
 
 package net.wa9nnn.rc210.data.meter
+import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
 
-import enumeratum.*
-//import enumeratum.values.*
+
 
 sealed abstract class MeterFaceName(val rc210Value: Int) extends EnumEntryValue
 

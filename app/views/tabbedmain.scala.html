@@ -1,4 +1,7 @@
-@@@@import java.time.Instant
+@import net.wa9nnn.rc210.ui.Tabs
+@import net.wa9nnn.rc210.ui.Tab
+@import net.wa9nnn.rc210explorer.BuildInfo
+@import java.time.Instant
 @import java.time.LocalTime
 @import java.time.LocalDate
 @import java.time.ZoneId
@@ -63,7 +66,7 @@
         </div>
         <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
 
-         © @LocalDate.ofInstant(Instant.ofEpochMilli(BuildInfo.builtAtMillis), ZoneId.systemDefault()).getYear() Dick Lieber <a class="text-dark" href="https://www.qrz.com/db/wa9nnn">WA9NNN</a>
+         @LocalDate.ofInstant(Instant.ofEpochMilli(BuildInfo.builtAtMillis), ZoneId.systemDefault()).getYear() Dick Lieber <a class="text-dark" href="https://www.qrz.com/db/wa9nnn">WA9NNN</a>
             <a class="text-dark" href="https://github.com/dicklieber/rc210-explorer">Version: @BuildInfo.version</a>
         </div>
 

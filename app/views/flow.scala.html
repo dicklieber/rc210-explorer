@@ -1,6 +1,8 @@
 @import com.wa9nnn.util.tableui.Table
 @import com.wa9nnn.util.tableui.html.renderTable
-@@@(table: Table)(implicit functionsProvider: FunctionsProvider)
+@import net.wa9nnn.rc210.ui.Tabs
+@import net.wa9nnn.rc210.data.functions.FunctionsProvider
+@(table: Table)(implicit functionsProvider: FunctionsProvider)
 
 @tabbedmain(Tabs.flowTab) {
     @renderTable(table)

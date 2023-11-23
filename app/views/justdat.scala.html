@@ -1,6 +1,8 @@
 @import com.wa9nnn.util.tableui.Table
 @import com.wa9nnn.util.tableui.html.renderTable
-@@(tables: Seq[Table])
+@import net.wa9nnn.rc210.ui.Tabs
+
+@(tables: Seq[Table])
 @tabbedmain(Tabs.noTab) {
     @for(table <- tables) {
         @renderTable(table

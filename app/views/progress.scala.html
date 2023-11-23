@@ -1,7 +1,9 @@
 @import com.wa9nnn.util.tableui.Table
 @import com.wa9nnn.util.tableui.html.renderTable
-@@import play.filters.csrf.CSRF
+@import play.filters.csrf.CSRF
 @import java.net.URL
+@import net.wa9nnn.rc210.ui.Tabs
+
 
 @(url: String, table: Option[Table] = None)(implicit request: RequestHeader)
 @tabbedmain(Tabs.rc210Tab) {

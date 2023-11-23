@@ -1,6 +1,8 @@
 @import com.wa9nnn.util.tableui.Table
 @import com.wa9nnn.util.tableui.html.renderTable
-@@import play.filters.csrf.CSRF
+@import play.filters.csrf.CSRF
+@import net.wa9nnn.rc210.ui.Tabs
+
 @()(implicit request: RequestHeader)
     @tabbedmain(Tabs.rc210Tab) {
         <script>

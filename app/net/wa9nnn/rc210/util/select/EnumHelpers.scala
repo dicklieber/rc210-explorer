@@ -62,16 +62,6 @@ trait Selections:
 trait EnumEntryValue extends EnumEntry:
   val rc210Value: Int
 
-object MacroSelect extends KeySelect(macroKey)
-
-object MeterSelect extends KeySelect(meterKey)
-
-abstract class KeySelect(keyKind: KeyKind) extends Selections:
-  val options: Seq[Key] = for {
-    number <- 1 to keyKind.maxN
-  } yield {
-    Key(keyKind, number)
-  }
 
   
   

@@ -1,6 +1,11 @@
-@@@import views.html.helper.{FieldConstructor, form, input}
+@import views.html.helper.{FieldConstructor, form, input}
 @import views.html.input._
-@@(clock: Clock)(implicit messages: MessagesProvider)
+@import net.wa9nnn.rc210.data.clock.Clock
+@import net.wa9nnn.rc210.ui.Tabs
+
+@import net.wa9nnn.rc210.data.clock.Occurrence
+@import net.wa9nnn.rc210.data.clock.MonthOfYearDST
+@(clock: Clock)(implicit messages: MessagesProvider)
 
 @tabbedmain(Tabs.clockTab) {
     <div class="container">

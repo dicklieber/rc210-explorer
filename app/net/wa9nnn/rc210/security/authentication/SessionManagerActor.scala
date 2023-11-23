@@ -20,6 +20,8 @@ package net.wa9nnn.rc210.security.authentication
 import com.google.inject.{Provides, Singleton}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.security.authentication.RcSession.SessionId
+import net.wa9nnn.rc210.util.Configs
 import org.apache.pekko.actor.typed.scaladsl.{Behaviors, TimerScheduler}
 import org.apache.pekko.actor.typed.{ActorRef, Behavior, Signal, SupervisorStrategy}
 import play.api.libs.concurrent.ActorModule
@@ -54,7 +56,7 @@ object SessionManagerActor extends ActorModule with LazyLogging {
       Behaviors
         .supervise[Message] {
           Behaviors.setup[SessionManagerMessage] { actorContext =>
-            val sessionManager = new SessionManager(path("vizRc210.sessionFile"))
+            val sessionManager = new SessionManager(Configs.path("vizRc210.sessionFile"))
 
             Behaviors.receiveMessage[SessionManagerMessage] { message =>
               message match {

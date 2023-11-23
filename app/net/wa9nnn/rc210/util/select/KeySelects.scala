@@ -15,12 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210
+package net.wa9nnn.rc210.util.select
 
-class KeyTest extends WithMemory {
-  "Happy" in {
-    val key1 = Key(KeyKind.macroKey, 3)
-    key1.toString shouldBe("macroKey3")
+import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.KeyKind.{macroKey, meterKey}
+
+object MacroSelect extends KeySelect(macroKey)
+
+object MeterSelect extends KeySelect(meterKey)
+
+abstract class KeySelect(keyKind: KeyKind) extends Selections:
+  val options: Seq[Key] = for {
+    number <- 1 to keyKind.maxN
+  } yield {
+    Key(keyKind, number)
   }
-
-}

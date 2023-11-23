@@ -2,6 +2,7 @@ package net.wa9nnn.rc210.data.functions
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
+import net.wa9nnn.rc210.{Key, KeyKind}
 import play.api.libs.json.*
 
 import java.io.InputStream

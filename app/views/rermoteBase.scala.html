@@ -1,6 +1,8 @@
-@@import views.html.helper.{FieldConstructor, form}
-@@@@@@import views.html.helper._
-@@import views.html.input.selectOptions
+@import views.html.helper.{FieldConstructor, form}
+@import views.html.helper._
+@import views.html.input.selectOptions
+@import net.wa9nnn.rc210.ui.Tabs
+@import net.wa9nnn.rc210.data.remotebase._
 @(remoteBase: RemoteBase)(implicit messages: MessagesProvider)
 
 @tabbedmain(Tabs.remoteBase) {
@@ -49,4 +51,4 @@
         @submitButton()
 
     </form>
-}
+}@import net.wa9nnn.rc210.data.remotebase.RemoteBase

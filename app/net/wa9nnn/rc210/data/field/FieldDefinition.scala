@@ -1,6 +1,9 @@
 package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.ui.{FormFields, FormParseable}
 import play.api.libs.json.JsValue
 
 import java.text.FieldPosition

@@ -1,6 +1,11 @@
 package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.data.field.MonthOfYearSchedule
+import net.wa9nnn.rc210.data.field.schedule.{DayOfWeek, Week}
+import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.util.Chunk
 
 object ScheduleBuilder extends LazyLogging {
   // indices into a [[Chunk]]

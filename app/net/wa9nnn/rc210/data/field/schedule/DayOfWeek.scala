@@ -17,6 +17,8 @@
 
 package net.wa9nnn.rc210.data.field.schedule
 
+import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
+
 
 sealed trait DayOfWeek(val rc210Value: Int) extends  EnumEntryValue
 

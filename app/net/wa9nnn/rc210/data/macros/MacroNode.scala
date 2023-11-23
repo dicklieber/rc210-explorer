@@ -1,6 +1,11 @@
 package net.wa9nnn.rc210.data.macros
 
 import com.wa9nnn.util.tableui.{Header, Row}
+import net.wa9nnn.rc210.data.{Dtmf, TriggerNode}
+import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
+import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.ui.FormFields
 import play.api.libs.json.{Format, JsValue, Json}
 
 import java.util.concurrent.atomic.AtomicInteger

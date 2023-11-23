@@ -1,47 +1,52 @@
-@@@@import views.html.input.selectOptions
-@@@(meterAlarm: MeterAlarm)(implicit messages: MessagesProvider)
-    @tabbedmain(Tabs.metersTab) {
-        <form action="@routes.MeterController.saveAlarm()">
-            <input type="hidden" name="key" value="@meterAlarm.key">
-            <div class="col-">
-                <table class="table table-bordered table-sm  w-auto rc210-table">
-                    <thead>
-                        <tr>
-                            <th colspan="2">Meter Alarm @meterAlarm.key.rc210Value</th>
-                        </tr>
-                        <tr>
-                            <th>Field</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Name</td>
-                            <td> <input name="name" value="@meterAlarm.key.keyWithName"></td>
-                        </tr>
-                        <tr>
-                            <td>Meter</td>
-                            <td>@selectOptions("meter", meterAlarm.meter, MeterSelect) </td>
-                            @* <td>@select(alarmForm("meter"), MeterSelect.options) </td>*@
-                        </tr>
-                        <tr>
-                            <td >Alarm Type</td>
-                            <td>@selectOptions("alarmType", meterAlarm.alarmType, AlarmType)</td>
-@*                            <td>@select(alarmForm("alarmType"), AlarmType.values)</td>*@
-                        </tr>
-                        <tr>
-                            <td >trip Point</td>
-                            <td><input name="tripPoint" value="@meterAlarm.tripPoint"></td>
-@*                            <td>@inputText(alarmForm("tripPoint"))</td>*@
-                        </tr>
-                        <tr>
-                            <td >Macro</td>
-                            <td>@selectOptions("macroKey", meterAlarm.macroKey, MacroSelect)</td>
-@*                            <td>@select(alarmForm("macroKey"), MacroSelect.values)</td>*@
-                        </tr>
-                    </tbody>
-                </table>
-                @submitButton()
-            </div>
-        </form>
-    }
+@import views.html.input.selectOptions
+@import net.wa9nnn.rc210.util.select.MeterSelect
+@import net.wa9nnn.rc210.data.meter.AlarmType
+@import net.wa9nnn.rc210.util.select.MacroSelect
+@import net.wa9nnn.rc210.ui.Tabs
+@import net.wa9nnn.rc210.data.meter.MeterAlarm
+@(meterAlarm: MeterAlarm)(implicit messages: MessagesProvider)
+@tabbedmain(Tabs.metersTab) {
+    <form action="@routes.MeterController.saveAlarm()">
+        <input type="hidden" name="key" value="@meterAlarm.key">
+        <div class="col-">
+            <table class="table table-bordered table-sm  w-auto rc210-table">
+                <thead>
+                    <tr>
+                        <th colspan="2">Meter Alarm @meterAlarm.key.rc210Value</th>
+                    </tr>
+                    <tr>
+                        <th>Field</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Name</td>
+                        <td> <input name="name" value="@meterAlarm.key.keyWithName"></td>
+                    </tr>
+                    <tr>
+                        <td>Meter</td>
+                        <td>@selectOptions("meter", meterAlarm.meter, MeterSelect) </td>
+                        @* <td>@select(alarmForm("meter"), MeterSelect.options) </td>*@
+                    </tr>
+                    <tr>
+                        <td >Alarm Type</td>
+                        <td>@selectOptions("alarmType", meterAlarm.alarmType, AlarmType)</td>
+                        @* <td>@select(alarmForm("alarmType"), AlarmType.values)</td>*@
+                    </tr>
+                    <tr>
+                        <td >trip Point</td>
+                        <td><input name="tripPoint" value="@meterAlarm.tripPoint"></td>
+                        @* <td>@inputText(alarmForm("tripPoint"))</td>*@
+                    </tr>
+                    <tr>
+                        <td >Macro</td>
+                        <td>@selectOptions("macroKey", meterAlarm.macroKey, MacroSelect)</td>
+                        @* <td>@select(alarmForm("macroKey"), MacroSelect.values)</td>*@
+                    </tr>
+                </tbody>
+            </table>
+            @submitButton()
+        </div>
+    </form>
+}

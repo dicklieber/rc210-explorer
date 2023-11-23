@@ -1,5 +1,3 @@
-package net.wa9nnn.rc210
-
 /*
  * Copyright (C) 2023  Dick Lieber, WA9NNN                               
  *                                                                       
@@ -17,15 +15,30 @@ package net.wa9nnn.rc210
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-import net.wa9nnn.rc210.security.Who
-import org.scalatest.*
-import org.scalatest.matchers.*
-import org.scalatest.wordspec.{AnyWordSpec, AsyncWordSpec}
+package net.wa9nnn.rc210
 
-abstract class RcSpec extends AnyWordSpec with should.Matchers with OptionValues with Inside with Inspectors {
-  val who: Who = Who("testCs")
+import net.wa9nnn.rc210.util.Chunk
 
+class MemorySpec extends WithMemory {
+  "8bit ints" in {
+    val value1: Iterator[Int] = memory.iterator8At(0)
+    value1.next() should equal(65)
+    value1.next() should equal(66)
+    value1.next() should equal(67)
+  }
+  "16bit ints" in {
+    val int16s: Iterator[Int] = memory.iterator16At(1553) // 1553 is timer seconds.
+    val i0 = int16s.next()
+    val i1 = int16s.next()
+    int16s.next() should equal(4)
+  }
+
+  "chunks" in {
+
+    val chunks: Seq[Chunk] = memory.chunks(76, 9, 1)
+    chunks should have length(1)
+    val head: Chunk = chunks.head
+    head.size should equal(9)
+    head.toString should equal ("72726")
+  }
 }
-
-//abstract class RAsyncSpec extends AsyncWordSpec with should.Matchers with
-//  OptionValues with Inside with Inspectors

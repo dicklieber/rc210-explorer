@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210
 
 import enumeratum._
+import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
 
 sealed trait KeyKind(val maxN: Int, val display: Boolean = false) extends EnumEntry
 

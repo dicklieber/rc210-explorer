@@ -1,4 +1,5 @@
-@@@@(name: String, selectedItem: EnumEntryValue, selections: Selections, tooltip: String = "")
+@import net.wa9nnn.rc210.util.select._
+@(name: String, selectedItem: EnumEntryValue, selections: Selections, tooltip: String = "")
 <select name="@name" @if(tooltip.nonEmpty) {
     title="@tooltip"}>
 @for(option <- selections.options) {

@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.ui
 
 import controllers.routes
+import net.wa9nnn.rc210.ui.Tabs.TabName
 
 object Tabs {
 

@@ -17,6 +17,11 @@
 
 package net.wa9nnn.rc210.data.logicAlarm
 
+import net.wa9nnn.rc210.KeyKind._
+import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
+import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.ui.FormFields
 import play.api.libs.json.{Format, JsValue, Json}
 
 case class LogicAlarm(key: Key, enable: Boolean, lowMacro: Key, highMacro: Key) extends ComplexFieldValue(LogicAlarm.name) {

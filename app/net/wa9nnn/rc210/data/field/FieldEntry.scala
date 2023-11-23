@@ -18,6 +18,9 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui.*
+import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.data.TriggerNode
+import net.wa9nnn.rc210.data.datastore.FieldEntryJson
 
 /**
  *
@@ -129,7 +132,7 @@ object FieldEntry {
     new FieldEntry(complexExtractor, complexFieldValue.fieldKey, complexFieldValue)
   }
 
-  def header(keyKind: KeyKind): Header = Header(s"${keyKind}", "Number", "Field",
+  def header(keyKind: KeyKind): Header = Header(s"$keyKind", "Number", "Field",
     Cell("Value")
       .withToolTip("Either the candidate or current value."),
     Cell("Change")

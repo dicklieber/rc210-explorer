@@ -18,6 +18,9 @@
 package net.wa9nnn.rc210
 
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
+import net.wa9nnn.rc210.KeyKind.{macroKey, portKey}
+import net.wa9nnn.rc210.KeyKind
+import net.wa9nnn.rc210.data.named.NamedKeySource
 import net.wa9nnn.rc210.util.select.EnumEntryValue
 import play.api.data.FormError
 import play.api.data.format.Formatter
@@ -43,7 +46,7 @@ case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends CellP
       ret = rc210Value compareTo that.rc210Value
     ret
 
-  def fieldKey(fieldName: String): FieldKey = FieldKey(fieldName, this)
+//  def fieldKey(fieldName: String): FieldKey = FieldKey(fieldName, this)
 
 
   def keyWithName: String =

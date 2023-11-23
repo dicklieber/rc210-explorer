@@ -1,44 +1,46 @@
-@@@(userRecords: UserRecords)
-    @tabbedmain(Tabs.security) {
+@import net.wa9nnn.rc210.data.timers.Timer
+@import net.wa9nnn.rc210.security.authentication.UserRecords
+@import net.wa9nnn.rc210.ui.Tabs
 
-        <table class="table table-bordered table-sm w-auto">
-            <thead>
-                <tr>
-                    <th colspan="4">Users (@userRecords.size)</th>
-                </tr>
-                <tr>
-                    <th></th>
-                    <th>Callsign</th>
-                    <th>Name</th>
-                    <th>eMail</th>
-                </tr>
-            </thead>
-            <tbody>
-            @for(user <- userRecords.users.sorted) {
-                <tr>
-                    <td>
-                        @editButton( routes.UsersController.editUser(user.id).url)
-                    </td>
-                    <td>
-                        @user.callsign
-                    </td>
-                    <td>
-                        @user.name
-                    </td>
-                    <td>
-                        @user.email
-                    </td>
-                </tr>
-            }
-            </tbody>
-        </table>
+@(userRecords: UserRecords)
+@tabbedmain(Tabs.security) {
+
+    <table class="table table-bordered table-sm w-auto">
+        <thead>
+            <tr>
+                <th colspan="4">Users (@userRecords.size)</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th>Callsign</th>
+                <th>Name</th>
+                <th>eMail</th>
+            </tr>
+        </thead>
+        <tbody>
+        @for(user <- userRecords.users.sorted) {
+            <tr>
+                <td>
+                @editButton(routes.UsersController.editUser(user.id).url)
+                </td>
+                <td>
+                @user.callsign
+                </td>
+                <td>
+                @user.name
+                </td>
+                <td>
+                @user.email
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
 
 
-        <button type="submit" class="btn btn-primary" value="Add" onclick="window.location.href = '@routes.UsersController.addUser()'">
-            <i class="bi bi-person-add"></i> Add
-        </button>
-
-@*        <button type="button" class="bi bi-person-add"  title="Add user"*@
-@*        onclick="window.location.href = '@routes.AuthenticatationController.addUser()'">*@
-
-    }
+    <button type="submit" class="btn btn-primary" value="Add" onclick="window.location.href = '@routes.UsersController.addUser()'">
+        <i class="bi bi-person-add"></i> Add
+    </button>
+    @* <button type="button" class="bi bi-person-add" title="Add user"*@
+    @* onclick="window.location.href = '@routes.AuthenticatationController.addUser()'">*@
+}

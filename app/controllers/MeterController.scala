@@ -19,6 +19,11 @@ package controllers
 
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, ForFieldKey, Message}
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldInt, FieldKey}
+import net.wa9nnn.rc210.data.meter.{Meter, MeterAlarm}
+import net.wa9nnn.rc210.ui.FormParser
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
 import play.api.data.Forms.*
@@ -31,7 +36,7 @@ import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
-class MeterController @Inject()(actor: ActorRef[DataStoreActor.Message])
+class MeterController @Inject()(actor: ActorRef[Message])
                                (implicit scheduler: Scheduler, ec: ExecutionContext)
   extends MessagesInjectedController with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
@@ -74,7 +79,8 @@ class MeterController @Inject()(actor: ActorRef[DataStoreActor.Message])
         val vRef: Int = maybeVref.map(_.value.asInstanceOf[FieldInt].value).getOrElse(0)
         val meters: Seq[Meter] = metersEntries.map { fe => fe.value.asInstanceOf[Meter] }
         val meterAlarms: Seq[MeterAlarm] = meterAlarmsEntries.map { (fe: FieldEntry) => fe.value.asInstanceOf[MeterAlarm] }
-        Ok(html.meters(MeterStuff(vRef, meters, meterAlarms)))
+        val meterStuff = MeterStuff(vRef, meters, meterAlarms)
+        Ok(html.meters(meterStuff))
 
   }
 

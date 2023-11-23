@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.data.named
 
+import net.wa9nnn.rc210.Key
 import play.api.libs.json.{Format, Json}
 
 case class NamedKey(key: Key, name: String) extends Ordered[NamedKey] {

@@ -18,7 +18,8 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui.Cell
-import play.api.libs.json._
+import net.wa9nnn.rc210.Key
+import play.api.libs.json.*
 import views.html.fieldString
 
 case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue {

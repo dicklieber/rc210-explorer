@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.serial
 
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.util.Chunk
 
 import java.io.PrintWriter
 import java.net.URL

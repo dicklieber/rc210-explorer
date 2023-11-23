@@ -17,6 +17,8 @@
 
 package net.wa9nnn.rc210.data.field
 
+import net.wa9nnn.rc210.Key
+
 /**
  * Needed to render a [[FieldValue]] in a [[com.wa9nnn.util.tableui.Cell]] or an html string.
  */

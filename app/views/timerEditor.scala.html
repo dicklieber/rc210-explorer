@@ -1,8 +1,11 @@
 @import com.wa9nnn.util.tableui.Table
 @import com.wa9nnn.util.tableui.html.renderTable
-@@import views.html.helper._
-@@@import views.html.input.selectOptions
-@@(timer: Timer)(implicit messagesProvider: MessagesProvider)
+@import views.html.helper._
+@import views.html.input.selectOptions
+@import net.wa9nnn.rc210.data.timers.Timer
+@import net.wa9nnn.rc210.ui.Tabs
+@import net.wa9nnn.rc210.util.select.MacroSelect
+@(timer: Timer)(implicit messagesProvider: MessagesProvider)
 
     @tabbedmain(Tabs.timersTab) {
         <form action = @routes.TimerEditorController.save()>

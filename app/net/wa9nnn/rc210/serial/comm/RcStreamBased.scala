@@ -19,6 +19,8 @@ package net.wa9nnn.rc210.serial.comm
 
 import com.fazecast.jSerialComm.SerialPort
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.serial.comm.RcStreamBased.isTerminal
+import net.wa9nnn.rc210.serial.{BatchOperationsResult, RcOperationResult}
 
 import scala.io.BufferedSource
 import scala.util.Try

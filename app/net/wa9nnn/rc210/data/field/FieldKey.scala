@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
+import net.wa9nnn.rc210.Key
 import play.api.libs.json.*
 import play.api.mvc.PathBindable
 

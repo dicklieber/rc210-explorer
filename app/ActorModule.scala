@@ -17,6 +17,8 @@
 import com.google.inject.{AbstractModule, Provides}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.data.datastore.DataStoreActor
+import net.wa9nnn.rc210.security.authentication.{SessionManagerActor, UserManagerActor}
 import org.apache.pekko.actor.typed.scaladsl.Behaviors
 import org.apache.pekko.actor.typed.{ActorRef, Terminated}
 import play.api.libs.concurrent.{ActorModule, PekkoGuiceSupport}

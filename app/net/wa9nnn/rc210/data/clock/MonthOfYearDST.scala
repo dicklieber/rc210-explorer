@@ -16,13 +16,15 @@
  */
 
 package net.wa9nnn.rc210.data.clock
-import enumeratum.PlayEnum
-import enumeratum.values.*
+
+import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
+
 
 sealed abstract class  MonthOfYearDST(val rc210Value: Int, val display: String) extends EnumEntryValue
 
 object MonthOfYearDST extends EnumValue[MonthOfYearDST] {
-  val values = findValues
+
+  override val values: IndexedSeq[MonthOfYearDST] = findValues
 
   case object January extends MonthOfYearDST(0, "January")
 

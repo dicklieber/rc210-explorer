@@ -17,6 +17,17 @@
 
 package net.wa9nnn.rc210.data.field
 
+import net.wa9nnn.rc210.KeyKind.*
+import net.wa9nnn.rc210.data.clock.Clock
+import net.wa9nnn.rc210.data.courtesy.CourtesyExtractor
+import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
+import net.wa9nnn.rc210.data.macros.MacroNode
+import net.wa9nnn.rc210.data.message.MesssageExtractor
+import net.wa9nnn.rc210.data.meter.{Meter, MeterAlarm}
+import net.wa9nnn.rc210.data.remotebase.RemoteBase
+import net.wa9nnn.rc210.data.schedules.Schedule
+import net.wa9nnn.rc210.data.timers.TimerExtractor
+
 import javax.inject.{Inject, Singleton}
 @Singleton
 class FieldDefinitions @Inject()() {

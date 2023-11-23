@@ -23,6 +23,7 @@ import com.google.inject.{Provides, Singleton}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import controllers.UserEditDTO
+import net.wa9nnn.rc210.security.UserId.UserId
 import org.apache.pekko.actor.typed.scaladsl.Behaviors
 import play.api.libs.concurrent.ActorModule
 

@@ -17,6 +17,8 @@
 
 package net.wa9nnn.rc210.serial.comm
 
+import net.wa9nnn.rc210.serial.comm.RcStreamBased.isOk
+
 case class RcResponse(lines: Seq[String]) {
   def head:String = lines.head
   def isError: Boolean = isOk(lines.last)

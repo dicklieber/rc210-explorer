@@ -24,8 +24,11 @@ package net.wa9nnn.rc210.security.authorzation
 
 import com.typesafe.scalalogging.LazyLogging
 import controllers.routes
+import net.wa9nnn.rc210.security.authentication.RcSession.playSessionName
+import net.wa9nnn.rc210.security.authentication.SessionManagerActor.Lookup
+import net.wa9nnn.rc210.security.authentication.{RcSession, SessionManagerActor, User}
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
-
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.stream.Materializer
 import org.apache.pekko.util.Timeout
@@ -39,7 +42,7 @@ import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.language.{implicitConversions, postfixOps}
 
 /**
- * A Play filter that puts the current [[RcSession]] in to the Request or redirects to the Login Page.
+ * A Play filter that puts the current [[RcSession]] in to the Request or, if no Session, redirects to the Login Page.
  */
 class AuthFilter @Inject()(implicit val mat: Materializer,
                            actor: ActorRef[SessionManagerActor.SessionManagerMessage],
@@ -59,7 +62,7 @@ class AuthFilter @Inject()(implicit val mat: Materializer,
       val playSession = requestHeader.session
       (for {
         sessionId <- playSession.get(playSessionName)
-        session <- Await.result[Option[authentication.RcSession]](actor.ask(ref => Lookup(sessionId, ref)), 3 seconds)
+        session <- Await.result[Option[RcSession]](actor.ask(ref => Lookup(sessionId, ref)), 3 seconds)
       } yield {
         logger.trace("Got valid session from cookie")
         val requestHeaderWithSession: RequestHeader = requestHeader.addAttr(sessionKey, session)

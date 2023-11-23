@@ -15,9 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-package net.wa9nnn.rc210.fixtures
+package net.wa9nnn.rc210
 
 import com.typesafe.config.{Config, ConfigFactory}
+import net.wa9nnn.rc210.util.Configs
 import org.apache.commons.io.FileUtils
 
 import java.io.File
@@ -38,8 +39,8 @@ class WithTestConfiguration extends RcSpec {
   }
 
   def cleanDirectory(): Unit = {
-    val datadir = config.get[File]("vizRc210.dataDir").value
-    if (Files.exists(datadir.toPath))
-      FileUtils.cleanDirectory(datadir)
+    val datadir = Configs.path("vizRc210.dataDir")
+    if (Files.exists(datadir))
+      FileUtils.cleanDirectory(datadir.toFile)
   }
 }

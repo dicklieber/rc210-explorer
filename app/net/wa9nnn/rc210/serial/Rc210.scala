@@ -21,6 +21,8 @@ import com.fazecast.jSerialComm.{SerialPort, SerialPortDataListener}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, Table}
+import net.wa9nnn.rc210.serial.comm.{Rc210Version, RcEventBased, RcSerialPort, RcStreamBased}
+import net.wa9nnn.rc210.util.Configs
 
 import java.nio.file.{Files, Path}
 import javax.inject.{Inject, Singleton}

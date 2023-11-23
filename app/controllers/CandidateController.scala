@@ -20,6 +20,11 @@ package controllers
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, Table}
+import net.wa9nnn.rc210.data.datastore.DataStoreActor
+import net.wa9nnn.rc210.data.datastore.DataStoreActor.{All, Candidates, ForFieldKey}
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey, FieldValue}
+import net.wa9nnn.rc210.serial.comm.RcStreamBased
+import net.wa9nnn.rc210.serial.{BatchOperationsResult, ProcessWithProgress, ProgressApi, Rc210, RcOperationResult}
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.stream.Materializer
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
@@ -35,6 +40,7 @@ import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.language.postfixOps
 import org.apache.pekko.util.Timeout
+import net.wa9nnn.rc210.util.Configs.path
 
 import javax.inject.Inject
 
@@ -63,7 +69,7 @@ class CandidateController @Inject()(dataStoreActor: ActorRef[DataStoreActor.Mess
           val candidate = fieldEntry.candidate.get
           Row(fieldEntry.fieldKey.key.toCell, fieldEntry.fieldKey.fieldName, fieldEntry.fieldValue.display, candidate.display, fieldEntry.toCommands)
         }
-      val table = Table(Header(s"Candidates (${candidates.length})", "Key", "Field", "Was", "New", "Command"), rows)
+      val table: Table = Table(Header(s"Candidates (${candidates.length})", "Key", "Field", "Was", "New", "Command"), rows)
 
       Ok(views.html.candidates(table))
     }
@@ -157,7 +163,8 @@ class CandidateController @Inject()(dataStoreActor: ActorRef[DataStoreActor.Mess
         val table = Table(RcOperationResult.header(rows.length), rows)
         Ok(views.html.lastSendAll(table, Option(lastSendAll)))
       case None =>
-        Ok(views.html.lastSendAll(Table(Seq.empty, Seq.empty), None))
+        val table = Table(Seq.empty, Seq.empty)
+        Ok(views.html.lastSendAll(table, None))
     }
   }
 }

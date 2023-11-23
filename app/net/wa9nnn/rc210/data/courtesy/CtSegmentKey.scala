@@ -17,6 +17,9 @@
 
 package net.wa9nnn.rc210.data.courtesy
 
+import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.data.field.RenderMetadata
+
 import scala.util.matching.Regex
 
   case class CtSegmentKey(val ctKey: Key, val segment: Int, val name:String, override val units:String = "Hz") extends RenderMetadata {

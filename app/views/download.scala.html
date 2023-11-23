@@ -1,4 +1,6 @@
-@@@import views.html.helper.form
+@import views.html.helper.form
+@import net.wa9nnn.rc210.ui.Tabs
+@import net.wa9nnn.rc210.serial.ComPort
 @(comPort: ComPort)
     @tabbedmain(Tabs.rc210Tab) {
         @form(action = routes.DownloadController.startDownload()) {
