@@ -17,8 +17,6 @@
 
 package net.wa9nnn.rc210.security.authentication
 
-import net.wa9nnn.rc210.security.Who.Callsign
-
 /**
  *
  * @param callsign    who.

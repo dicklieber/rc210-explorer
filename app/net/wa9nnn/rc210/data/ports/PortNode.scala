@@ -18,8 +18,6 @@
 package net.wa9nnn.rc210.data.ports
 
 import com.wa9nnn.util.tableui.Row
-import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.model.Node
 
 case class PortNode(key: Key,
                     hangTimes: Seq[Int], //HangTime1 - 11-13 //HangTime2 - 14-16 //HangTime3 - 17-19

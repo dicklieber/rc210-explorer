@@ -19,16 +19,11 @@ package net.wa9nnn.rc210.data.datastore
 
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.datastore.MemoryFileLoader.notInitialized
-import net.wa9nnn.rc210.data.field.{FieldDefinitions, FieldEntry}
-import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.util.Configs
 
 import java.net.URL
 import java.nio.file.Path
 import javax.inject.{Inject, Singleton}
 import scala.util.{Failure, Try}
-import net.wa9nnn.rc210.util.Configs.path
 
 /**
  * Holds [[Memory]]

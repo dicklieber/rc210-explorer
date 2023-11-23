@@ -18,14 +18,6 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.KeyKind.clockKey
-import net.wa9nnn.rc210.data.clock.{Clock, DSTPoint, MonthOfYearDST, Occurrence}
-import net.wa9nnn.rc210.data.datastore.DataStoreActor.UpdateData
-import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
-import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.key.*
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.*
-import net.wa9nnn.rc210.ui.{CandidateAndNames, FormParser}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout

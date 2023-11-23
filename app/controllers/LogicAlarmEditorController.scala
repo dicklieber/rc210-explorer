@@ -21,25 +21,16 @@ import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.data.datastore.DataStoreActor
-import net.wa9nnn.rc210.data.datastore.DataStoreActor.AllForKeyKind
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
-import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
-import net.wa9nnn.rc210.key.*
-import net.wa9nnn.rc210.ui.{CandidateAndNames, FormFields, FormParser}
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.util.Timeout
 import play.api.mvc.*
 import play.api.i18n.*
-import net.wa9nnn.rc210.data.datastore.DataStoreActor.UpdateData
 
 import javax.inject.*
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 
 @Singleton
 class LogicAlarmEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])

@@ -2,9 +2,6 @@ package net.wa9nnn.rc210.security.authentication
 
 import com.typesafe.scalalogging.LazyLogging
 import controllers.UserEditDTO
-import net.wa9nnn.rc210.security.UserId.UserId
-import net.wa9nnn.rc210.security.Who
-import net.wa9nnn.rc210.util.JsonIoWithBackup
 import play.api.libs.json.Json
 
 import java.nio.file.Path

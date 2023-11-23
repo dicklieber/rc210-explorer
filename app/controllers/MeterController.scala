@@ -19,11 +19,6 @@ package controllers
 
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, ForFieldKey}
-import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldInt, FieldKey}
-import net.wa9nnn.rc210.data.meter.{Meter, MeterAlarm, MeterFaceName, VoltToReading}
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
 import play.api.data.Forms.*
@@ -35,9 +30,6 @@ import javax.inject.*
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
-import net.wa9nnn.rc210.data.named.NamedKey
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
-import net.wa9nnn.rc210.ui.FormParser
 
 class MeterController @Inject()(actor: ActorRef[DataStoreActor.Message])
                                (implicit scheduler: Scheduler, ec: ExecutionContext)

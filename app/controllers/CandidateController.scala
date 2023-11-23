@@ -20,11 +20,6 @@ package controllers
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, Table}
-import net.wa9nnn.rc210.data.datastore.DataStoreActor
-import net.wa9nnn.rc210.data.datastore.DataStoreActor.*
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey, FieldValue}
-import net.wa9nnn.rc210.serial.comm.*
-import net.wa9nnn.rc210.serial.*
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.stream.Materializer
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
@@ -40,7 +35,6 @@ import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.language.postfixOps
 import org.apache.pekko.util.Timeout
-import net.wa9nnn.rc210.util.Configs.path
 
 import javax.inject.Inject
 

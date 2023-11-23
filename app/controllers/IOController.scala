@@ -18,7 +18,6 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.serial.Rc210
 import org.apache.pekko.util.Timeout
 import play.api.mvc.*
 

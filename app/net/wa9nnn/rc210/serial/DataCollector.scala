@@ -20,9 +20,6 @@ package net.wa9nnn.rc210.serial
 import com.fazecast.jSerialComm.{SerialPort, SerialPortEvent, SerialPortMessageListenerWithExceptions}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.datastore.DataStoreActor
-import net.wa9nnn.rc210.serial.comm.RcEventBased
-import net.wa9nnn.rc210.util.Configs
 import org.apache.pekko.actor.typed.ActorRef
 
 import java.io.PrintWriter

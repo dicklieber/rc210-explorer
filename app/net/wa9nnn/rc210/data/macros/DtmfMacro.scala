@@ -1,10 +1,5 @@
 package net.wa9nnn.rc210.data.macros
 
-import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.data.Dtmf
-import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.util.Chunk
-
 import java.util.concurrent.atomic.AtomicInteger
 
 /**

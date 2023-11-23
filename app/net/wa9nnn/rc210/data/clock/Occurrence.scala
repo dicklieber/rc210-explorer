@@ -18,7 +18,6 @@
 package net.wa9nnn.rc210.data.clock
 
 import enumeratum.*
-import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
 
 
 sealed trait Occurrence(val rc210Value: Int) extends EnumEntryValue

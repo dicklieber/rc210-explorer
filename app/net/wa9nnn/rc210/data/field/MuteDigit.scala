@@ -17,8 +17,6 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
-
 
 sealed trait MuteDigit(val rc210Value: Int) extends EnumEntryValue
 

@@ -18,9 +18,6 @@
 package controllers
 
 import com.wa9nnn.util.tableui.{Cell, Header, Row, Table}
-import net.wa9nnn.rc210.data.datastore.MemoryFileLoader
-import net.wa9nnn.rc210.data.field.{FieldDefinition, FieldDefinitions, FieldOffset}
-import net.wa9nnn.rc210.serial.Memory
 import play.api.mvc._
 
 import javax.inject.Inject

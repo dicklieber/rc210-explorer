@@ -18,11 +18,6 @@
 package net.wa9nnn.rc210.data.courtesy
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.KeyKind.courtesyToneKey
-import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldDefinition, FieldEntry, FieldKey, FieldOffset, FieldValue}
-import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.FormFields
 import play.api.libs.json.JsValue
 
 object CourtesyExtractor extends ComplexExtractor with LazyLogging {

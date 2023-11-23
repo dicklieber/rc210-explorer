@@ -18,13 +18,7 @@
 package net.wa9nnn.rc210.data.clock
 
 import com.wa9nnn.util.JsonFormatUtils.javaEnumFormat
-import net.wa9nnn.rc210.data.field.*
-import net.wa9nnn.rc210.*
-import net.wa9nnn.rc210.data.clock.MonthOfYearDST._
-import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.{FormFields, FormParser}
 import play.api.libs.json.{Format, JsValue, Json}
-import net.wa9nnn.rc210.data.clock.Occurrence.*
 
 case class Clock(key:Key,
                  enableDST: Boolean = true,

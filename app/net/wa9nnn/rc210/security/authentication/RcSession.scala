@@ -2,10 +2,6 @@ package net.wa9nnn.rc210.security.authentication
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
-import net.wa9nnn.rc210.StaticConfigs.maxSessionCookieAge
-import net.wa9nnn.rc210.security.Who.Callsign
-import net.wa9nnn.rc210.security.authentication.RcSession.SessionId
-import net.wa9nnn.rc210.security.authentication.SessionManager.playSessionName
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.Cookie
 

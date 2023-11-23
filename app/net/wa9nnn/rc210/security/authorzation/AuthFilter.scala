@@ -24,11 +24,6 @@ package net.wa9nnn.rc210.security.authorzation
 
 import com.typesafe.scalalogging.LazyLogging
 import controllers.routes
-import net.wa9nnn.rc210.security.{Who, authentication}
-import net.wa9nnn.rc210.security.authentication.RcSession.playSessionName
-import net.wa9nnn.rc210.security.authentication.SessionManagerActor.Lookup
-import net.wa9nnn.rc210.security.authentication.{RcSession, SessionManagerActor, User}
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}

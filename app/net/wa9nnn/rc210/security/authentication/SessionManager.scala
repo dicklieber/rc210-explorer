@@ -4,8 +4,6 @@ import com.fasterxml.jackson.module.scala.deser.overrides.TrieMap
 import com.typesafe.config.Config
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.security.authentication.RcSession.SessionId
-import net.wa9nnn.rc210.util.JsonIoWithBackup
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.Cookie
 

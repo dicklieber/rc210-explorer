@@ -2,9 +2,6 @@ package net.wa9nnn.rc210.security.authentication
 
 import com.typesafe.scalalogging.LazyLogging
 import controllers.UserEditDTO
-import net.wa9nnn.rc210.security.UserId.UserId
-import net.wa9nnn.rc210.security.Who.Callsign
-import net.wa9nnn.rc210.security.{UserId, Who}
 import org.mindrot.jbcrypt.BCrypt
 import play.api.libs.json.{Format, Json}
 

@@ -17,8 +17,6 @@
 
 package net.wa9nnn.rc210.data.remotebase
 
-import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
-
 sealed trait Yaesu(val rc210Value: Int) extends EnumEntryValue
 
 object Yaesu extends EnumValue[Yaesu]:

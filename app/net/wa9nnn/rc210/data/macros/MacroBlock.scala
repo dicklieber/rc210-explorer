@@ -18,10 +18,6 @@
 package net.wa9nnn.rc210.data.macros
 
 import com.wa9nnn.util.tableui._
-import net.wa9nnn.rc210.data.datastore.{DataStoreActor, MacroWithTriggers}
-import net.wa9nnn.rc210.data.field.FieldValue
-import net.wa9nnn.rc210.data.functions.{FunctionNode, FunctionsProvider}
-import net.wa9nnn.rc210.security.authentication.SessionManagerActor
 
 /**
  * Build function rows for a [[MacroNode]]

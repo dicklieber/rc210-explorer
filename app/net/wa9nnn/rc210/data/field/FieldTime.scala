@@ -19,8 +19,6 @@ package net.wa9nnn.rc210.data.field
 
 import com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase
 import com.wa9nnn.util.tableui.Cell
-import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.data.field
 import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue, Json}
 
 import java.time.LocalTime

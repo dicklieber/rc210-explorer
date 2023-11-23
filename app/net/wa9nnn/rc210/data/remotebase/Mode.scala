@@ -17,8 +17,6 @@
 
 package net.wa9nnn.rc210.data.remotebase
 
-import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
-
 sealed trait Mode(val rc210Value: Int) extends EnumEntryValue
 
 object Mode extends EnumValue[Mode] {

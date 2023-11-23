@@ -1,14 +1,6 @@
 package net.wa9nnn.rc210.data.macros
 
 import com.wa9nnn.util.tableui.{Header, Row}
-import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.data.Dtmf
-import net.wa9nnn.rc210.data.field.*
-import net.wa9nnn.rc210.key.*
-import net.wa9nnn.rc210.model.TriggerNode
-import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.FormFields
-import net.wa9nnn.rc210.util.Chunk
 import play.api.libs.json.{Format, JsValue, Json}
 
 import java.util.concurrent.atomic.AtomicInteger
@@ -145,8 +137,6 @@ object MacroNode extends ComplexExtractor {
         parseFunction(iterator, soFar + int) // add next int, which will always be 255.
     }
   }
-
-  import net.wa9nnn.rc210.key.KeyFormats.*
 
   implicit val fmtMacroNode: Format[MacroNode] = Json.format[MacroNode]
 

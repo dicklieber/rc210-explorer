@@ -18,9 +18,7 @@
 package net.wa9nnn.rc210.util.select
 
 import com.typesafe.scalalogging.LazyLogging
-import enumeratum.{EnumEntry, PlayEnum, *}
-import net.wa9nnn.rc210.KeyKind.*
-import net.wa9nnn.rc210.{Key, KeyKind}
+import enumeratum.*
 
 /**
  * for example:

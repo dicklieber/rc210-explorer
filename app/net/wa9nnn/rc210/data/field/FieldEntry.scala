@@ -18,9 +18,6 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui.*
-import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.data.datastore.FieldEntryJson
-import net.wa9nnn.rc210.model.TriggerNode
 
 /**
  *

@@ -20,10 +20,6 @@ package net.wa9nnn.rc210.data.message
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Header, Row}
 import controllers.routes
-import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldEntryBase}
-import net.wa9nnn.rc210.data.vocabulary.{Word, Words}
-import net.wa9nnn.rc210.ui.EditButton
 import play.api.libs.json.{Format, JsValue, Json}
 
 import scala.collection.immutable.Seq
@@ -64,8 +60,6 @@ case class Message(key: Key, words: Seq[Int]) extends ComplexFieldValue("Message
 }
 
 object Message extends LazyLogging {
-
-  import net.wa9nnn.rc210.key.KeyFormats._
 
   def header(count: Int): Header = Header(s"Messages Macros ($count)", "Edit", "Key", "Words")
 

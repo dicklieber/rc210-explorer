@@ -2,14 +2,12 @@ package net.wa9nnn.rc210.data.functions
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
-import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.KeyKind._
 import play.api.libs.json.*
 
 import java.io.InputStream
 import javax.inject.Singleton
 import scala.util.{Failure, Success, Using}
-import net.wa9nnn.rc210.KeyKind.messageKey
+
 @Singleton
 class FunctionsProvider extends LazyLogging {
 

@@ -18,15 +18,11 @@
 package net.wa9nnn.rc210
 
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
-import net.wa9nnn.rc210.data.field.FieldKey
-import net.wa9nnn.rc210.data.named.NamedKeySource
+import net.wa9nnn.rc210.util.select.EnumEntryValue
 import play.api.data.FormError
 import play.api.data.format.Formatter
 import play.api.mvc.PathBindable
 import play.twirl.api.Html
-import net.wa9nnn.rc210.KeyKind
-import net.wa9nnn.rc210.KeyKind.*
-import net.wa9nnn.rc210.util.select.EnumEntryValue
 import play.api.libs.json.*
 
 /**

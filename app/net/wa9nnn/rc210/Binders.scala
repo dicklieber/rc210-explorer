@@ -17,11 +17,6 @@
 
 package net.wa9nnn.rc210
 
-import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.data.clock.{MonthOfYearDST, Occurrence}
-import net.wa9nnn.rc210.data.field.FieldKey
-import net.wa9nnn.rc210.security.UserId.UserId
-import net.wa9nnn.rc210.serial.ComPort
 import play.api.mvc.PathBindable
 
 object Binders {

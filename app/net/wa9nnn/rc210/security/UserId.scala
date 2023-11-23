@@ -1,7 +1,6 @@
 package net.wa9nnn.rc210.security
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.remotebase.RemoteBase
 import org.apache.commons.lang3.Conversion
 import play.api.data.FormError
 import play.api.data.format.Formats.parsing

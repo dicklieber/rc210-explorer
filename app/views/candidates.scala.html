@@ -1,7 +1,6 @@
 @import com.wa9nnn.util.tableui.Table
 @import com.wa9nnn.util.tableui.html.renderTable
-@import net.wa9nnn.rc210.ui.Tabs
-@(table: Table)
+@@(table: Table)
 
 @tabbedmain(Tabs.changes) {
     @renderTable(table.withCssClass("tablesorter"))

@@ -3,13 +3,9 @@ package controllers
 
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.security.authentication.SessionManager.playSessionName
-import net.wa9nnn.rc210.security.authentication.SessionManagerActor.Create
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 
 import scala.concurrent.duration.*
-import net.wa9nnn.rc210.security.authentication.*
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
 import play.api.data.Forms.{mapping, text}

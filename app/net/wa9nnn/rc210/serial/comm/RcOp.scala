@@ -19,7 +19,6 @@ package net.wa9nnn.rc210.serial.comm
 
 import com.fazecast.jSerialComm.SerialPort
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.serial.ComPort
 
 import java.io.PrintWriter
 

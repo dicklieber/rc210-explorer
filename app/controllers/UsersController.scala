@@ -20,11 +20,6 @@ package controllers
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.security.UserId.UserId
-import net.wa9nnn.rc210.security.authentication.{User, UserManagerActor}
-import net.wa9nnn.rc210.security.authentication.UserManagerActor.{Get, Put, Remove}
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
-import net.wa9nnn.rc210.util.FormHelper
 import org.apache.pekko.util.Timeout
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional, text}

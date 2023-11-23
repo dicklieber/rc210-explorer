@@ -3,13 +3,6 @@ package net.wa9nnn.rc210.data.schedules
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.JsonFormatUtils.*
 import com.wa9nnn.util.tableui.{Cell, Header, Row}
-import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldBoolean, FieldEntry, FieldEntryBase, FieldKey, FieldOffset, FieldValue, MonthOfYearSchedule, RMD, RenderMetadata}
-import net.wa9nnn.rc210.data.field.schedule.{DayOfWeek, DowBase, Week}
-import net.wa9nnn.rc210.data.schedules.Schedule.s02
-import net.wa9nnn.rc210.model.TriggerNode
-import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.FormFields
 import play.api.libs.json.{Format, JsValue, Json}
 
 import java.time.LocalTime
@@ -166,8 +159,6 @@ object Schedule extends LazyLogging with ComplexExtractor {
 //  val moySelect = new EnumSelect[MonthOfYearSchedule]("moy")
 
   def apply(setPoint: Int): Schedule = new Schedule(Key(KeyKind.scheduleKey, setPoint))
-
-  import net.wa9nnn.rc210.key.KeyFormats._
 
 
   implicit val fmtSchedule: Format[Schedule] = Json.format[Schedule]

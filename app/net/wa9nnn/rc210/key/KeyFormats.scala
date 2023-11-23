@@ -17,11 +17,6 @@
 
 package net.wa9nnn.rc210.key
 
-import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.KeyKind
-import net.wa9nnn.rc210.data.functions.FunctionNode
-import net.wa9nnn.rc210.data.macros.MacroNode
-import net.wa9nnn.rc210.data.named.NamedKey
 import play.api.libs.json.*
 import play.api.mvc.PathBindable
 

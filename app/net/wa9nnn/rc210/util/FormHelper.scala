@@ -17,9 +17,6 @@
 
 package net.wa9nnn.rc210.util
 
-import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.security.authentication.User
-import net.wa9nnn.rc210.security.authorzation.AuthFilter
 import play.api.mvc.*
 import play.api.mvc.Security.AuthenticatedRequest
 

@@ -20,7 +20,6 @@ package net.wa9nnn.rc210.security.authentication
 import com.google.inject.{Provides, Singleton}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.security.authentication.RcSession.SessionId
 import org.apache.pekko.actor.typed.scaladsl.{Behaviors, TimerScheduler}
 import org.apache.pekko.actor.typed.{ActorRef, Behavior, Signal, SupervisorStrategy}
 import play.api.libs.concurrent.ActorModule
@@ -30,7 +29,6 @@ import javax.inject.Named
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
-import net.wa9nnn.rc210.util.Configs.path
 
 @Singleton()
 object SessionManagerActor extends ActorModule with LazyLogging {
