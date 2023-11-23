@@ -46,8 +46,9 @@ trait EnumValue[T <: EnumEntryValue] extends PlayEnum[T] with Selections with La
       case Some(value) => value
       case None =>
         val sValues = values.map(t => s"${t.rc210Value}: ${t.toString}").mkString(",")
-        throw new IllegalArgumentException(s"No $target in $sValues!")
-        
+        val head = values.head
+        logger.error(s"No $target in $sValues! Using $head")
+        head
 
 trait Selections:
   def options: Seq[EnumEntryValue]
