@@ -1,7 +1,7 @@
 
 import com.google.inject.{AbstractModule, Binder}
-import net.codingwell.scalaguice.ScalaModule
 import play.api.{Configuration, Environment}
+import com.typesafe.scalalogging.LazyLogging
 
 /**
  * This class is a Guice module that tells Guice how to bind several
@@ -15,11 +15,11 @@ import play.api.{Configuration, Environment}
  *
  * This uses scala-guice. https://github.com/codingwell/scala-guice for details.
  */
-class MainModule(environment: Environment, configuration: Configuration) extends AbstractModule {
+class Module(environment: Environment, configuration: Configuration) extends AbstractModule with LazyLogging{
+  logger.info("MainModule")
   override def configure(): Unit = {
-    val configModule: ConfigModule = new ConfigModule(configuration)
-    install(configModule)
     install(RcActorsModule)
   }
 }
+
 

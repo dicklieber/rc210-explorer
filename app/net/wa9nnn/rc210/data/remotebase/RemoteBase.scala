@@ -74,7 +74,7 @@ object RemoteBase extends ComplexExtractor {
       i <- 0 until 10
     } yield {
       val freqOffset: String = freqs(i)
-      val offset = Offset.find(freqOffset.last)
+      val offset = Offset.find(freqOffset.last.asDigit)
       val freq = freqOffset.dropRight(1)
       RBMemory(
         frequency = freq,

@@ -26,23 +26,23 @@ object DayOfWeek extends EnumValue[DayOfWeek] {
 
   override val values: IndexedSeq[DayOfWeek] = findValues
 
-  case object EveryDay extends DayOfWeek(1)
+  case object EveryDay extends DayOfWeek(0)
 
-  case object Monday extends DayOfWeek(2)
+  case object Monday extends DayOfWeek(1)
 
-  case object Tuesday extends DayOfWeek(3)
+  case object Tuesday extends DayOfWeek(2)
 
-  case object Wednesday extends DayOfWeek(4)
+  case object Wednesday extends DayOfWeek(3)
 
-  case object Thursday extends DayOfWeek(5)
+  case object Thursday extends DayOfWeek(4)
 
-  case object Friday extends DayOfWeek(6)
+  case object Friday extends DayOfWeek(5)
 
-  case object Saturday extends DayOfWeek(7)
+  case object Saturday extends DayOfWeek(6)
 
-  case object Sunday extends DayOfWeek(8)
+  case object Sunday extends DayOfWeek(7)
 
-  case object Weekdays extends DayOfWeek(9)
+  case object Weekdays extends DayOfWeek(8)
 
-  case object Weekends extends DayOfWeek(10)
+  case object Weekends extends DayOfWeek(9)
 }

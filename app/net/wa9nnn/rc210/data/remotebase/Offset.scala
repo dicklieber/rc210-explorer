@@ -26,11 +26,10 @@ object Offset extends EnumValue[Offset]:
 
   override val values: IndexedSeq[Offset] = findValues
 
-  case object FT100D extends Offset(1)
+  case object minus extends Offset(1)
 
-  case object FT817_857_897 extends Offset(2)
+  case object simplex extends Offset(2)
 
-
-  case object FT847 extends Offset(3)
+  case object plus extends Offset(3)
 
 

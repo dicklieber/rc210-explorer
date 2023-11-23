@@ -30,7 +30,7 @@ import javax.inject.Named
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
-
+import net.wa9nnn.rc210.util.Configs.path
 
 @Singleton()
 object SessionManagerActor extends ActorModule with LazyLogging {
@@ -48,8 +48,7 @@ object SessionManagerActor extends ActorModule with LazyLogging {
 
   case object Tick extends SessionManagerMessage
 
-  @Provides def apply (@Named("vizRc210.sessionFile") sSessionFile:String)
-                     (implicit ec: ExecutionContext): Behavior[SessionManagerMessage] =
+  @Provides def apply (implicit config:Config, ec: ExecutionContext): Behavior[SessionManagerMessage] =
 
     Behaviors.withTimers[SessionManagerMessage] { timerScheduler =>
       timerScheduler.startTimerWithFixedDelay(Tick, 5 seconds, 10 seconds)
@@ -57,7 +56,7 @@ object SessionManagerActor extends ActorModule with LazyLogging {
       Behaviors
         .supervise[Message] {
           Behaviors.setup[SessionManagerMessage] { actorContext =>
-            val sessionManager = new SessionManager(Paths.get(sSessionFile))
+            val sessionManager = new SessionManager(path("vizRc210.sessionFile"))
 
             Behaviors.receiveMessage[SessionManagerMessage] { message =>
               message match {

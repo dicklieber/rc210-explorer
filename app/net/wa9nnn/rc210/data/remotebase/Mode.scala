@@ -30,4 +30,6 @@ object Mode extends EnumValue[Mode] {
   case object USB extends Mode(2)
 
   case object CW extends Mode(3)
+  case object FM extends Mode(4)
+  case object AM extends Mode(5)
 }

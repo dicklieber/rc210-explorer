@@ -17,8 +17,9 @@
 
 package net.wa9nnn.rc210.util.select
 
+import com.typesafe.scalalogging.LazyLogging
 import enumeratum.{EnumEntry, PlayEnum, *}
-import net.wa9nnn.rc210.KeyKind._
+import net.wa9nnn.rc210.KeyKind.*
 import net.wa9nnn.rc210.{Key, KeyKind}
 
 /**
@@ -29,7 +30,7 @@ import net.wa9nnn.rc210.{Key, KeyKind}
  *
  * @tparam T
  */
-trait EnumValue[T <: EnumEntryValue] extends PlayEnum[T] with Selections:
+trait EnumValue[T <: EnumEntryValue] extends PlayEnum[T] with Selections with LazyLogging:
   val values: IndexedSeq[T]
 
   override def options: Seq[EnumEntryValue] = values
@@ -41,7 +42,12 @@ trait EnumValue[T <: EnumEntryValue] extends PlayEnum[T] with Selections:
   def find(target: Int): T =
     values.find {
       _.rc210Value == target
-    }.get
+    } match
+      case Some(value) => value
+      case None =>
+        val sValues = values.map(t => s"${t.rc210Value}: ${t.toString}").mkString(",")
+        throw new IllegalArgumentException(s"No $target in $sValues!")
+        
 
 trait Selections:
   def options: Seq[EnumEntryValue]
