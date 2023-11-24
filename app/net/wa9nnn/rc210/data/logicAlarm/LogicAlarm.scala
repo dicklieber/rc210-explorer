@@ -38,7 +38,7 @@ case class LogicAlarm(key: Key, enable: Boolean, lowMacro: Key, highMacro: Key) 
     "todo"
   }
 
-  override def toJsonValue: JsValue = Json.toJson(this)
+  override def toJsValue: JsValue = Json.toJson(this)
 }
 
 object LogicAlarm extends ComplexExtractor {

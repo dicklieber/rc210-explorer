@@ -94,10 +94,7 @@ case class Schedule(override val key: Key,
 
   override def units: String = ""
 
-
-  override val fieldName: String = "Schedule"
-
-  override def toJsonValue: JsValue = Json.toJson(this)
+  override def toJsValue: JsValue = Json.toJson(this)
 
   override def canRunMacro(candidate: Key): Boolean = macroKey == candidate
 }

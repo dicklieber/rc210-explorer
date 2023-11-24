@@ -39,7 +39,7 @@ case class RemoteBase(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[
     s"1*2060$prefix"
   )
 
-  override def toJsonValue: JsValue = Json.toJson(this)
+  override def toJsValue: JsValue = Json.toJson(this)
 
   override def display: String = toString
 }

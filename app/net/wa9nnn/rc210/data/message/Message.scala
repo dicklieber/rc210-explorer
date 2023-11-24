@@ -60,7 +60,7 @@ case class Message(key: Key, words: Seq[Int]) extends ComplexFieldValue("Message
   }
 
 
-  override def toJsonValue: JsValue = Json.toJson(this)
+  override def toJsValue: JsValue = Json.toJson(this)
 }
 
 object Message extends LazyLogging {

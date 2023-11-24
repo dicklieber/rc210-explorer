@@ -47,7 +47,7 @@ case class FormValue(sFieldKey: String, sFormValue: String) {
 object FieldEntryJson {
   def apply(fieldEntry: FieldEntry): FieldEntryJson = {
     val fieldKey = fieldEntry.fieldKey
-    new FieldEntryJson(fieldKey, fieldEntry.fieldValue.toJsonValue, fieldEntry.candidate.map(_.toJsonValue))
+    new FieldEntryJson(fieldKey, fieldEntry.fieldValue.toJsValue, fieldEntry.candidate.map(_.toJsValue))
   }
 
 

@@ -54,7 +54,7 @@ case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint:
     )
   }
 
-  override def toJsonValue: JsValue = Json.toJson(this)
+  override def toJsValue: JsValue = Json.toJson(this)
 }
 
 /*

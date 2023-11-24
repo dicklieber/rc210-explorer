@@ -45,7 +45,7 @@ case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue {
     FieldBoolean(paramValue == "true")
   }
 
-  override def toJsonValue: JsValue = Json.toJson(this)
+  override def toJsValue: JsValue = Json.toJson(this)
 
 }
 

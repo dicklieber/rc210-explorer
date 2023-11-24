@@ -73,7 +73,7 @@ case class Clock(key:Key,
     )
   }
 
-  override def toJsonValue: JsValue = Json.toJson(this)
+  override def toJsValue: JsValue = Json.toJson(this)
 }
 
 

@@ -27,9 +27,10 @@ import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 class LoginController @Inject()(implicit config: Config,
                                 val sessionActor: ActorRef[SessionManagerActor.Message],
                                 val userActor: ActorRef[UserManagerActor.Message],
-                                scheduler: Scheduler, ec: ExecutionContext
+                                scheduler: Scheduler, ec: ExecutionContext,
+                                cc: MessagesControllerComponents
                                ) extends MessagesInjectedController with LazyLogging {
-
+setControllerComponents(cc) //todo should not need to do this!
   val loginForm: Form[Credentials] = Form {
     mapping(
       "callsign" -> text,

@@ -38,10 +38,9 @@ case class Timer(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValu
     )
   }
 
-  override def toJsonValue: JsValue = Json.toJson(this)
+  override def toJsValue: JsValue = Json.toJson(this)
 }
 
 object Timer {
-
   implicit val fmtTimer: OFormat[Timer] = Json.format[Timer]
 }

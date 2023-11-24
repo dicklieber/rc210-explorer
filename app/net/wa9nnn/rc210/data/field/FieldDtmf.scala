@@ -46,7 +46,7 @@ case class FieldDtmf(value: String) extends SimpleFieldValue with LazyLogging {
     FieldDtmf(paramValue)
   }
 
-  override def toJsonValue: JsValue = Json.toJson(value)
+  override def toJsValue: JsValue = Json.toJson(value)
 }
 
 object FieldDtmf extends SimpleExtractor {

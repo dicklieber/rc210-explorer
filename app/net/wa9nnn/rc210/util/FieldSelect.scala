@@ -55,7 +55,7 @@ trait FieldSelect[T] extends SimpleFieldValue {
   }
 
 
-  override def toJsonValue: JsValue = JsString(display)
+  override def toJsValue: JsValue = JsString(display)
 
 //  /**
 //   *

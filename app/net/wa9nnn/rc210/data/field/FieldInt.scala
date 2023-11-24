@@ -47,7 +47,7 @@ case class FieldInt(value: Int) extends SimpleFieldValue {
     FieldInt(paramValue.toInt)
   }
 
-  override def toJsonValue: JsValue = Json.toJson(this)
+  override def toJsValue: JsValue = Json.toJson(this)
 
 }
 

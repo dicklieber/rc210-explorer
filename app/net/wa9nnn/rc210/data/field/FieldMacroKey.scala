@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.{Key, KeyKind}
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{Format, JsResult, JsSuccess, JsValue, Json}
 
 case class FieldMacroKey(macroKey: Key) extends SimpleFieldValue {
   def update(paramValue: String): SimpleFieldValue =
@@ -29,7 +29,8 @@ case class FieldMacroKey(macroKey: Key) extends SimpleFieldValue {
   def display: String = macroKey.toString
 
   def toCommands(fieldEntry: FieldEntryBase): Seq[String] = Seq.empty //todo
-  def toJsonValue: JsValue = Json.toJson(macroKey)
+
+  def toJsValue: JsValue = Json.toJson(macroKey)
 
 }
 
@@ -42,4 +43,13 @@ object MacroKeyExtractor extends SimpleExtractor:
 
   val name: String = "MacroKey"
 
-  override def parse(jsValue: JsValue): FieldValue = ???
+  implicit val fmtFieldMacroKey: Format[FieldMacroKey] = new Format[FieldMacroKey] {
+    override def reads(json: JsValue): JsResult[FieldMacroKey] = {
+      val key = json.as[Key]
+      JsSuccess(FieldMacroKey(key))
+    }
+
+    override def writes(o: FieldMacroKey): JsValue = Json.toJson(o.macroKey)
+  }
+
+  override def parse(jsValue: JsValue): FieldValue = jsValue.as[FieldMacroKey]

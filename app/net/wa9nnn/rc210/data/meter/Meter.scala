@@ -57,7 +57,7 @@ case class Meter(key: Key, meterFaceName: MeterFaceName, low: VoltToReading, hig
     )
   }
 
-  override def toJsonValue: JsValue = Json.toJson(this)
+  override def toJsValue: JsValue = Json.toJson(this)
 }
 
 object Meter extends ComplexExtractor {

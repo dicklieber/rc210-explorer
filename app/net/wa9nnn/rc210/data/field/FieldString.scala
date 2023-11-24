@@ -50,7 +50,7 @@ case class FieldString(value: String) extends SimpleFieldValue {
     FieldString(paramValue)
   }
 
-  override def toJsonValue: JsValue = JsString(value)
+  override def toJsValue: JsValue = JsString(value)
 
 }
 

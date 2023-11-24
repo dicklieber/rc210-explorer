@@ -31,18 +31,20 @@ class FunctionsProvider extends LazyLogging {
    * @param fkey of interest.
    * @return the [[FunctionNode]]
    */
-  def apply(fkey: Key): Option[FunctionNode] = map.get(fkey)
+  def apply(fkey: Key): Option[FunctionNode] =
+    fkey.check(KeyKind.functionKey)
+    map.get(fkey)
 
   def size: Int = functions.length
 
 
-  lazy val invokedMacros: Seq[Key] = for {
-    function <- functions
-    destKey <- function.destination
-    if destKey.isInstanceOf[Key]
-  } yield {
-    destKey.asInstanceOf[Key]
-  }
+//  lazy val invokedMacros: Seq[Key] = for {
+//    function <- functions
+//    destKey <- function.destination
+//    if destKey.isInstanceOf[Key]
+//  } yield {
+//    destKey.asInstanceOf[Key]
+//  }
 
 }
 
@@ -54,7 +56,7 @@ class FunctionsProvider extends LazyLogging {
  */
 case class FunctionNode(key: Key, description: String, destination: Option[Key]) extends Ordered[FunctionNode] with RowSource {
   destination foreach (destKey =>
-    assert(destKey.keyKind == KeyKind.functionKey || destKey.keyKind == KeyKind.messageKey, s"destination must be Key or MessageKey! But got: $key")
+    assert(destKey.keyKind == KeyKind.macroKey || destKey.keyKind == KeyKind.messageKey, s"destination must be Key or MessageKey! But got: $key")
     )
 
   override def compare(that: FunctionNode): Int = description compareTo that.description

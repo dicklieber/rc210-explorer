@@ -56,7 +56,7 @@ case class MacroNode(override val key: Key , functions: Seq[Key], dtmf: Option[D
 
   override def display: String = functions.map(_.rc210Value).mkString(" ")
 
-  override def toJsonValue: JsValue = Json.toJson(this)
+  override def toJsValue: JsValue = Json.toJson(this)
 
 
 }

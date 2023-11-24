@@ -48,20 +48,13 @@ resolvers += ("Reposilite" at "http://194.113.64.105:8080/releases").withAllowIn
 val logbackVersion = "1.4.11"
 libraryDependencies ++= Seq(
   guice,
-
+  "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.0" % Test,
   //  "org.apache.pekko" %% "akka-actor-testkit-typed" % akkaVersion % Test,
 
-  //  "org.scalactic" %% "scalactic" % "3.2.16",
-  //  "org.scalatest" %% "scalatest" % "3.2.16" % "test",
-  //  "org.scalatest" %% "scalatest-flatspec" % "3.2.16" % "test",
   "com.vladsch.flexmark" % "flexmark-all" % "0.64.8" % Test,
-  "org.scalatest" %% "scalatest" % "3.2.16" % "test",
-  //  "org.scalatest" %% "scalatest-wordspec" % "3.2.16" % "test",
-  "org.scalatestplus" %% "mockito-4-6" % "3.2.15.0" % Test,
   "net.wa9nnn" %% "util" % "0.1.15-SNAPSHOT",
 
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
-//  "net.codingwell" %% "scala-guice" % "7.0.0",
   "ch.qos.logback" % "logback-classic" % logbackVersion,
   "ch.qos.logback" % "logback-core" % logbackVersion,
   "commons-io" % "commons-io" % "2.11.0",

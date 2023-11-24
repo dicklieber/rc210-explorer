@@ -80,7 +80,7 @@ case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends C
     )
   }
 
-  override def toJsonValue: JsValue = Json.toJson(this)
+  override def toJsValue: JsValue = Json.toJson(this)
 }
 
 

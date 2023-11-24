@@ -52,7 +52,7 @@ case class FieldTime(value: LocalTime = LocalTime.MIN) extends SimpleFieldValue 
     copy(value = candidate)
   }
 
-  override def toJsonValue: JsValue = Json.toJson(this)
+  override def toJsValue: JsValue = Json.toJson(this)
 
 }
 

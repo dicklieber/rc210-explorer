@@ -28,7 +28,9 @@ import play.api.libs.json.JsValue
  * Has enough metadata needed yo render
  */
 sealed trait FieldValue extends LazyLogging {
-
+  /**
+   * This will be written to JSON and used to discriminate to the top level object.
+   */
   def display: String
 
   /**
@@ -36,14 +38,8 @@ sealed trait FieldValue extends LazyLogging {
    */
   def toCommands(fieldEntry: FieldEntryBase): Seq[String]
 
-  /**
-   * Render as HTML. Either a single rc2input of an entire HTML Form.
-   *
-   * @param fieldEntry all the metadata.
-   * @return html
-   */
 
-  def toJsonValue: JsValue
+  def toJsValue: JsValue
 }
 
 

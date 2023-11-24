@@ -17,10 +17,8 @@
 
 package net.wa9nnn.rc210.data.field
 
-import com.wa9nnn.util.tableui.Cell
 import net.wa9nnn.rc210.Key
 import play.api.libs.json.*
-import views.html.fieldString
 
 case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue {
 
@@ -34,7 +32,7 @@ case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue {
       .replaceAll("v", value.map(int => f"$int%03d").mkString(""))
     )
   }
-  
+
 
   override def display: String = value.map(_.toString).mkString(" ")
 
@@ -45,23 +43,37 @@ case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue {
     copy(value = candidate)
   }
 
-  override def toJsonValue: JsValue = Json.toJson(this)
+  override def toJsValue: JsValue = Json.toJson(this)
 
 }
 
 object Field2Numbers extends SimpleExtractor {
-  implicit val fmtField2Numbers: Format[Field2Numbers] = new Format[Field2Numbers] {
-    override def writes(o: Field2Numbers) = JsString(o.value.mkString(" "))
+//  implicit val fmtField2Numbers: Format[Field2Numbers] = new Format[Field2Numbers] {
+//    override def writes(o: Field2Numbers) = JsString(o.value.mkString(" "))
+//
+//    override def reads(json: JsValue): JsResult[Field2Numbers] =
+//
+//      JsSuccess(Field2Numbers(json.as[String]
+//        .split(" ")
+//        .toIndexedSeq
+//        .map(_.toInt)
+//      )
+//      )
+//  }
+  implicit val fmtField2Numbers: Format[Field2Numbers] = Json.format[Field2Numbers]
+  //  implicit def fmtField2Numbers(implicit fmt: Reads[Field2Numbers]): Reads[Field2Numbers] = new Reads[Field2Numbers] {
+  //    override def reads(json: JsValue): JsResult[Field2Numbers] =
+  //
+  //      JsSuccess(Field2Numbers(json.as[String]
+  //        .split(" ")
+  //        .toIndexedSeq
+  //        .map(_.toInt)
+  //      )
+  //      )
+  //  }
+  //    override def writes(o: Field2Numbers): JsString = JsString(o.value.mkString(" "))
+  //
 
-    override def reads(json: JsValue): JsResult[Field2Numbers] =
-
-      JsSuccess(Field2Numbers(json.as[String]
-        .split(" ")
-        .toIndexedSeq
-        .map(_.toInt)
-      )
-      )
-  }
 
   //  override def jsonToField(jsValue: JsValue): FieldValue = jsValue.as[Field2Numbers]
 
@@ -75,4 +87,18 @@ object Field2Numbers extends SimpleExtractor {
     json.as[Field2Numbers]
 
 }
+
+import play.api.libs.json.Json.*
+
+//implicit val cfg = JsonConfiguration(
+//  // Each JSON objects is marked with the admTpe, ...
+//  discriminator = "admTpe",
+//  // ... indicating the lower-cased name of sub-type
+//  typeNaming = JsonNaming { fullName =>
+//    fullName.drop(39 /* remove pkg */ ).toLowerCase
+//  }
+//)
+
+
+
 
