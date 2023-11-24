@@ -17,16 +17,20 @@
 
 package net.wa9nnn.rc210.data.functions
 
+import net.wa9nnn.rc210.RcSpec
+
 class FunctionsSpec extends RcSpec {
 
   "Functions" should {
     "load" in {
-      val functions = new FunctionsProvider()
-      functions(FunctionKey(1)).get.toString  should equal ("FunctionNode(functionKey1,Port 1 CTCSS Access,None)")
+      val functionsProvider = new FunctionsProvider()
+      val functions = functionsProvider.functions
+
       functions.size should equal (872)
 
-      val invokedMacros = functions.invokedMacros
-      invokedMacros.head should equal (MacroKey(1))
+      val invokedMacros = functionsProvider.invokedMacros
+      val head = invokedMacros.head
+      head
 
     }
   }

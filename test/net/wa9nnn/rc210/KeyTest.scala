@@ -17,10 +17,39 @@
 
 package net.wa9nnn.rc210
 
-class KeyTest extends WithMemory {
-  "Happy" in {
-    val key1 = Key(KeyKind.macroKey, 3)
-    key1.toString shouldBe("macroKey3")
-  }
+import play.api.libs.json.{Format, Json}
 
+class KeyTest extends WithMemory {
+  val macroKey3 = Key(KeyKind.macroKey, 3)
+  "Happy" in {
+    macroKey3.toString shouldBe ("macroKey3")
+  }
+  "round trip toString apply" in {
+    val string = macroKey3.toString
+    val backAgain = Key(string)
+    backAgain shouldBe (macroKey3)
+  }
+  "round trip JSON" in {
+    val container = KeyContainer(macroKey3)
+    val sJson = Json.prettyPrint(Json.toJson(container))
+    sJson shouldBe ("""{
+                      |  "key" : "macroKey3",
+                      |  "other" : 42
+                      |}""".stripMargin)
+    val backAgain = Json.parse(sJson).as[KeyContainer]
+    backAgain shouldBe (container)
+  }
+  "throw if too big a number" in {
+    assertThrows[AssertionError] { // Result type: Assertion
+      Key(KeyKind.meterKey, 42)
+    }
+  }
+  "macroKeys" in {
+    val keys = Key.macroKeys
+    keys should have length (KeyKind.macroKey.maxN)
+  }
 }
+
+case class KeyContainer(key: Key, other: Int = 42)
+
+implicit val fmtKeyContainer: Format[KeyContainer] = Json.format[KeyContainer]

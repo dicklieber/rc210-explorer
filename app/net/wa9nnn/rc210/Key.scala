@@ -19,21 +19,17 @@ package net.wa9nnn.rc210
 
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
 import net.wa9nnn.rc210.KeyKind.{macroKey, portKey}
-import net.wa9nnn.rc210.KeyKind
 import net.wa9nnn.rc210.data.named.NamedKeySource
 import net.wa9nnn.rc210.util.select.EnumEntryValue
-import play.api.data.FormError
-import play.api.data.format.Formatter
-import play.api.mvc.PathBindable
-import play.twirl.api.Html
 import play.api.libs.json.*
+import play.api.mvc.PathBindable
 
 /**
- *
+ *  Identifies various RC210 objects.
  * @param keyKind     of the Key
  * @param rc210Value  0 is a magic number used for things like [[KeyKind.commonKey]]
  */
-case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends CellProvider with Ordered[Key] with EnumEntryValue{
+case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends CellProvider with Ordered[Key] with EnumEntryValue {
   def check(expected: KeyKind): Unit = if (expected != keyKind) throw IllegalArgumentException(s"Expecting Key of type $expected, but got $this}")
 
   assert(rc210Value <= keyKind.maxN, s"Max number for $keyKind is ${keyKind.maxN}")
@@ -45,8 +41,6 @@ case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends CellP
     if (ret == 0)
       ret = rc210Value compareTo that.rc210Value
     ret
-
-//  def fieldKey(fieldName: String): FieldKey = FieldKey(fieldName, this)
 
 
   def keyWithName: String =
@@ -66,8 +60,6 @@ case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends CellP
   def replaceN(template: String): String = {
     template.replaceAll("n", rc210Value.toString)
   }
-
-  //  override def nameForKey(key: Key): String = ???
 }
 
 object Key:
@@ -84,7 +76,28 @@ object Key:
     _namedSource = Option(namedSource)
   }
 
-  implicit val fmtKey: Format[Key] = Json.format[Key]
+
+  /**
+   * Persists an ISO format.
+   */
+  implicit val fmtKey: Format[Key] = new Format[Key] {
+    override def reads(json: JsValue): JsResult[Key] = {
+      val sKey = json.as[String]
+      try {
+        JsSuccess(apply(sKey))
+      }
+      catch {
+        case e: IllegalArgumentException ⇒ JsError(e.getMessage)
+      }
+    }
+
+    override def writes(sak: Key): JsValue = {
+      JsString(sak.toString)
+    }
+
+  }
+
+
   private var _namedSource: Option[NamedKeySource] = None
 
   def nameForKey(key: Key): String =
@@ -92,9 +105,9 @@ object Key:
 
   private def keys(keyKind: KeyKind): Seq[Key] =
     for {
-      number <- 1 to KeyKind.portKey.maxN
+      number <- 1 to keyKind.maxN
     } yield {
-      Key(KeyKind.portKey, number)
+      Key(keyKind, number)
     }
 
   lazy val portKeys: Seq[Key] = keys(portKey)
