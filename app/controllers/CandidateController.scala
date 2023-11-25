@@ -45,12 +45,11 @@ import net.wa9nnn.rc210.util.Configs.path
 import javax.inject.Inject
 
 
-
 @Singleton()
 class CandidateController @Inject()(dataStoreActor: ActorRef[DataStoreActor.Message],
                                     rc210: Rc210)
-                                   (implicit config: Config, scheduler: Scheduler, ec: ExecutionContext, mat: Materializer)
-  extends MessagesInjectedController with LazyLogging {
+                                   (implicit config: Config, scheduler: Scheduler, ec: ExecutionContext, mat: Materializer, cc: MessagesControllerComponents)
+  extends AbstractController(cc) with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
   private val sendLogFile: Path = path("vizRc210.sendLog")
   private val stopOnError: Boolean = config.getBoolean("vizRc210.stopSendOnError")
@@ -128,7 +127,7 @@ class CandidateController @Inject()(dataStoreActor: ActorRef[DataStoreActor.Mess
 
   var maybeLastSendAll: Option[LastSendAll] = None
 
-//  import play.api.mvc._
+  //  import play.api.mvc._
 
   def ws(expected: Int): WebSocket = {
     val start = Instant.now()

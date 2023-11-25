@@ -4,7 +4,7 @@
 @import net.wa9nnn.rc210.util.select.MacroSelect
 @import net.wa9nnn.rc210.ui.Tabs
 @import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
-@(logicAlarm: LogicAlarm)(implicit messages: MessagesProvider)
+@(logicAlarm: LogicAlarm)
 @tabbedmain(Tabs.logicAlarmTab) {
     <div class="container">
     @form(action = routes.LogicAlarmEditorController.save()) {

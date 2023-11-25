@@ -38,10 +38,9 @@ import scala.language.postfixOps
 
 @Singleton()
 class ClockController @Inject()(implicit actor: ActorRef[DataStoreActor.Message], scheduler: Scheduler, ec: ExecutionContext, cc: MessagesControllerComponents)
-  extends MessagesInjectedController with LazyLogging {
+  extends AbstractController(cc) with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 
-  setControllerComponents(cc) //todo should not need to do this!
 
 //  private val dstPointForm: Mapping[DSTPoint] =
 //    mapping(

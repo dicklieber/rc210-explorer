@@ -5,7 +5,7 @@
 @import net.wa9nnn.rc210.data.timers.Timer
 @import net.wa9nnn.rc210.ui.Tabs
 @import net.wa9nnn.rc210.util.select.MacroSelect
-@(timer: Timer)(implicit messagesProvider: MessagesProvider)
+@(timer: Timer)
 
     @tabbedmain(Tabs.timersTab) {
         <form action = @routes.TimerEditorController.save()>

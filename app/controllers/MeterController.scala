@@ -37,8 +37,8 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
 class MeterController @Inject()(actor: ActorRef[Message])
-                               (implicit scheduler: Scheduler, ec: ExecutionContext)
-  extends MessagesInjectedController with LazyLogging {
+                               (implicit scheduler: Scheduler, ec: ExecutionContext, cc: MessagesControllerComponents)
+  extends AbstractController(cc) with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 
   //  private val alarmForm: Form[MeterAlarm] = Form(
@@ -67,7 +67,7 @@ class MeterController @Inject()(actor: ActorRef[Message])
   //  )
 
   def index: Action[AnyContent] = Action.async {
-    implicit request: MessagesRequest[AnyContent] =>
+    implicit request =>
       val eventualMaybeEntry: Future[Option[FieldEntry]] = actor.ask(ForFieldKey(FieldKey("vRef", Key(KeyKind.commonKey)), _))
       val eventualMeters: Future[Seq[FieldEntry]] = actor.ask(AllForKeyKind(KeyKind.meterKey, _))
       val eventualAlarmEntries: Future[Seq[FieldEntry]] = actor.ask(AllForKeyKind(KeyKind.meterAlarmKey, _))
@@ -81,11 +81,10 @@ class MeterController @Inject()(actor: ActorRef[Message])
         val meterAlarms: Seq[MeterAlarm] = meterAlarmsEntries.map { (fe: FieldEntry) => fe.value.asInstanceOf[MeterAlarm] }
         val meterStuff = MeterStuff(vRef, meters, meterAlarms)
         Ok(html.meters(meterStuff))
-
   }
 
   def editMeter(meterKey: Key): Action[AnyContent] = Action.async {
-    implicit request: MessagesRequest[AnyContent] =>
+    implicit request =>
       val fieldKey = FieldKey("Meter", meterKey)
       actor.ask(ForFieldKey(fieldKey, _)).map {
         case Some(fieldEntry: FieldEntry) =>
@@ -97,7 +96,7 @@ class MeterController @Inject()(actor: ActorRef[Message])
   }
 
   def editAlarm(alarmKey: Key): Action[AnyContent] = Action.async {
-    implicit request: MessagesRequest[AnyContent] =>
+    implicit request =>
       val fieldKey = FieldKey("MeterAlarm", alarmKey)
       actor.ask(ForFieldKey(fieldKey, _)).map {
         case Some(fieldEntry: FieldEntry) =>

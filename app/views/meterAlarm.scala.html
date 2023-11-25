@@ -4,7 +4,7 @@
 @import net.wa9nnn.rc210.util.select.MacroSelect
 @import net.wa9nnn.rc210.ui.Tabs
 @import net.wa9nnn.rc210.data.meter.MeterAlarm
-@(meterAlarm: MeterAlarm)(implicit messages: MessagesProvider)
+@(meterAlarm: MeterAlarm)
 @tabbedmain(Tabs.metersTab) {
     <form action="@routes.MeterController.saveAlarm()">
         <input type="hidden" name="key" value="@meterAlarm.key">
