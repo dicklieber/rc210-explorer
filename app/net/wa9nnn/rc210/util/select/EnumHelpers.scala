@@ -33,6 +33,13 @@ trait EnumValue[T <: EnumEntryValue] extends PlayEnum[T] with Selections with La
 
   override def options: Seq[EnumEntryValue] = values
 
+  override def equals(obj: Any): Boolean =
+    obj match
+      case other:EnumValue[?] =>
+        other.equals(this)
+      case _ =>
+        false
+
   /**
    * @param target find the Enum with this rc210Value.
    * @return
@@ -64,7 +71,7 @@ trait EnumEntryValue extends EnumEntry:
   /**
    * This allow get all the values from any [[EnumEntryValue]]. Enables typed-based html form fields.
    */
-  val values: IndexedSeq[?]
+  def values: IndexedSeq[?]
 
 
   

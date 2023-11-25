@@ -15,9 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.ui
+package net.wa9nnn.rc210.data.clock
 
-object MyHelpers {
-  import views.html.helper.FieldConstructor
-  implicit val myFields: FieldConstructor = FieldConstructor(views.html.rc2input.f)
+import net.wa9nnn.rc210.RcSpec
+import net.wa9nnn.rc210.util.select.EnumEntryValue
+
+class MonthOfYearDSTTest extends RcSpec {
+
+  "MonthOfYearDSTTest" should {
+    "keyWrites" in {
+      val values1 = MonthOfYearDST.values
+      values1
+      val july = MonthOfYearDST.July
+      val values: IndexedSeq[_] = july.values
+      values
+      println(values)
+    }
+  }
 }

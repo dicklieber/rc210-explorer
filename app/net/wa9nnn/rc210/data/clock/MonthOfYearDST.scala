@@ -20,36 +20,36 @@ package net.wa9nnn.rc210.data.clock
 import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
 
 
-sealed abstract class  MonthOfYearDST(val rc210Value: Int, val display: String) extends EnumEntryValue:
-  override val values: IndexedSeq[_] = MonthOfYearDST.values
+sealed abstract class  MonthOfYearDST(val rc210Value: Int) extends EnumEntryValue:
+  override def values: IndexedSeq[_] = MonthOfYearDST.values
 
 object MonthOfYearDST extends EnumValue[MonthOfYearDST] {
 
   override val values: IndexedSeq[MonthOfYearDST] = findValues
 
-  case object January extends MonthOfYearDST(0, "January")
+  case object January extends MonthOfYearDST(0)
 
-  case object February extends MonthOfYearDST(1, "February")
+  case object February extends MonthOfYearDST(1)
 
-  case object March extends MonthOfYearDST(2, "March")
+  case object March extends MonthOfYearDST(2)
 
-  case object April extends MonthOfYearDST(3, "April")
+  case object April extends MonthOfYearDST(3)
 
-  case object May extends MonthOfYearDST(4, "May")
+  case object May extends MonthOfYearDST(4)
 
-  case object June extends MonthOfYearDST(5, "June")
+  case object June extends MonthOfYearDST(5)
 
-  case object July extends MonthOfYearDST(6, "July")
+  case object July extends MonthOfYearDST(6)
 
-  case object August extends MonthOfYearDST(7, "August")
+  case object August extends MonthOfYearDST(7)
 
-  case object September extends MonthOfYearDST(8, "September")
+  case object September extends MonthOfYearDST(8)
 
-  case object October extends MonthOfYearDST(9, "October")
+  case object October extends MonthOfYearDST(9)
 
-  case object November extends MonthOfYearDST(10, "November")
+  case object November extends MonthOfYearDST(10)
 
-  case object December extends MonthOfYearDST(11, "December")
+  case object December extends MonthOfYearDST(11)
 
 }
 
