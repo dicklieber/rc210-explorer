@@ -29,7 +29,6 @@ import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
 import play.api.data.*
-import play.api.data.Forms.*
 import play.api.mvc.*
 
 import javax.inject.{Inject, Singleton}
@@ -38,11 +37,11 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
 @Singleton()
-class ClockController @Inject()(actor: ActorRef[DataStoreActor.Message])
-                               (implicit scheduler: Scheduler, ec: ExecutionContext)
+class ClockController @Inject()(implicit actor: ActorRef[DataStoreActor.Message], scheduler: Scheduler, ec: ExecutionContext, cc: MessagesControllerComponents)
   extends MessagesInjectedController with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 
+  setControllerComponents(cc) //todo should not need to do this!
 
 //  private val dstPointForm: Mapping[DSTPoint] =
 //    mapping(

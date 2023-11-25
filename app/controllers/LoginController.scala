@@ -31,6 +31,7 @@ class LoginController @Inject()(implicit config: Config,
                                 cc: MessagesControllerComponents
                                ) extends MessagesInjectedController with LazyLogging {
 setControllerComponents(cc) //todo should not need to do this!
+
   val loginForm: Form[Credentials] = Form {
     mapping(
       "callsign" -> text,
