@@ -18,9 +18,12 @@
 package net.wa9nnn.rc210.data.datastore
 
 import net.wa9nnn.rc210.RcSpec
+
 class DataStoreLogicTest extends RcSpec {
 
-
+  "Happy" in {
+//    new DataStoreLogic()
+  }
 
 
 }

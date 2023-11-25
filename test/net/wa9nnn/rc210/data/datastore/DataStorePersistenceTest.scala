@@ -17,25 +17,23 @@
 
 package net.wa9nnn.rc210.data.datastore
 
-import net.wa9nnn.rc210.RcSpec
+import net.wa9nnn.rc210.{RcSpec, WithTestConfiguration}
 
-class DataStorePersistenceTest extends RcSpec {
-
+class DataStorePersistenceTest extends WithTestConfiguration {
+  private val dataStorePersistence = new DataStorePersistence()
   "DataStorePersistenceTest" should {
-    "generics" in {
-
+    "roundtrip" in {
+      val triedJson = dataStorePersistence.load()
+      triedJson
     }
 
     "save" in {
 
     }
 
-    "toJson" in {
+    "DataTransferJson" in {
 
     }
 
-    "load" in {
-
-    }
   }
 }
