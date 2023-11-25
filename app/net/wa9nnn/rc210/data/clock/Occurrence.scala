@@ -21,7 +21,8 @@ import enumeratum.*
 import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
 
 
-sealed trait Occurrence(val rc210Value: Int) extends EnumEntryValue
+sealed trait Occurrence(val rc210Value: Int) extends EnumEntryValue:
+  override val values: IndexedSeq[_] = Occurrence.values
 
 case object Occurrence extends EnumValue[Occurrence] {
 

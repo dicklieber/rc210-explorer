@@ -32,6 +32,7 @@ import play.api.mvc.PathBindable
 case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends CellProvider with Ordered[Key] with EnumEntryValue {
   def check(expected: KeyKind): Unit = if (expected != keyKind) throw IllegalArgumentException(s"Expecting Key of type $expected, but got $this}")
 
+  override val values: IndexedSeq[_] = IndexedSeq.empty //handled in
   assert(rc210Value <= keyKind.maxN, s"Max number for $keyKind is ${keyKind.maxN}")
 
   override def toString: String = s"$keyKind$rc210Value"
@@ -60,6 +61,7 @@ case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends CellP
   def replaceN(template: String): String = {
     template.replaceAll("n", rc210Value.toString)
   }
+
 }
 
 object Key:
@@ -87,7 +89,7 @@ object Key:
         JsSuccess(apply(sKey))
       }
       catch {
-        case e: IllegalArgumentException ⇒ JsError(e.getMessage)
+        case e: IllegalArgumentException => JsError(e.getMessage)
       }
     }
 

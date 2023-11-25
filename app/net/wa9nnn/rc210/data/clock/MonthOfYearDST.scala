@@ -20,7 +20,8 @@ package net.wa9nnn.rc210.data.clock
 import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
 
 
-sealed abstract class  MonthOfYearDST(val rc210Value: Int, val display: String) extends EnumEntryValue
+sealed abstract class  MonthOfYearDST(val rc210Value: Int, val display: String) extends EnumEntryValue:
+  override val values: IndexedSeq[_] = MonthOfYearDST.values
 
 object MonthOfYearDST extends EnumValue[MonthOfYearDST] {
 

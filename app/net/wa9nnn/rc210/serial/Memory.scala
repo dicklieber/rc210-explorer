@@ -87,7 +87,7 @@ class Memory(val data: Array[Int] = Array.empty) {
     val size = chunkLength * nChunks
     data.slice(offset, offset + size)
       .grouped(chunkLength)
-      .map(Chunk(_)).toIndexedSeq
+      .map(a => Chunk(a.toIndexedSeq)).toIndexedSeq
 
   }
 

@@ -61,6 +61,10 @@ trait Selections:
  */
 trait EnumEntryValue extends EnumEntry:
   val rc210Value: Int
+  /**
+   * This allow get all the values from any [[EnumEntryValue]]. Enables typed-based html form fields.
+   */
+  val values: IndexedSeq[?]
 
 
   

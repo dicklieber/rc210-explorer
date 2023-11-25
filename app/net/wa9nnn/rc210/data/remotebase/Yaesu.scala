@@ -18,7 +18,8 @@
 package net.wa9nnn.rc210.data.remotebase
 import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
 
-sealed trait Yaesu(val rc210Value: Int) extends EnumEntryValue
+sealed trait Yaesu(val rc210Value: Int) extends EnumEntryValue:
+  override val values: IndexedSeq[_] = Yaesu.values
 
 object Yaesu extends EnumValue[Yaesu]:
 

@@ -71,8 +71,8 @@ object UserManagerActor extends ActorModule with LazyLogging {
               case Remove(userId: UserId, user: User, replyTo: ActorRef[String]) =>
                 userManager.remove(userId, user.who)
                 replyTo ! "Removed"
-              case x =>
-                logger.error(s"Unexpected message: $x!")
+//              case x =>
+//                logger.error(s"Unexpected message: $x!")
             }
             Behaviors.same
           }
