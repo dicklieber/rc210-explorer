@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.data.field
 
+import net.wa9nnn.rc210.ui.FormField
 import net.wa9nnn.rc210.{Key, KeyKind}
 import play.api.libs.json.{Format, JsResult, JsSuccess, JsValue, Json}
 
@@ -32,6 +33,7 @@ case class FieldMacroKey(macroKey: Key) extends SimpleFieldValue {
 
   def toJsValue: JsValue = Json.toJson(macroKey)
 
+  override def toHtmlField(fieldKey: FieldKey): String = FormField(fieldKey, macroKey)
 }
 
 object MacroKeyExtractor extends SimpleExtractor:

@@ -17,17 +17,21 @@
 
 package net.wa9nnn.rc210.ui
 
+import net.wa9nnn.rc210.data.field.FieldKey
 import net.wa9nnn.rc210.util.select.EnumEntryValue
 
+import java.time.LocalTime
 import scala.xml.*
 
 /**
  * Generates  html elements for any value type.
  * [[https://github.com/scala/scala-xml Scala-xml]]
  */
-object FormField {
-  def apply(name: String, value: Any): String = {
+object FormField:
+  def apply(fieldKey: FieldKey, value: Any): String =
+    apply(fieldKey.toString, value)
 
+  def apply(name: String, value: Any): String =
     ((value match {
       case enumValue: EnumEntryValue =>
         <select>
@@ -46,8 +50,14 @@ object FormField {
         else
           elem
 
+      case int: Int =>
+        <input type="number" value={int.toString}></input>
+
       case s: String =>
         <input type="text" value={s}></input>
+
+      case localTime: LocalTime =>
+        <input type="time" class="timepicker" value={localTime.toString}></input>
 
       case x =>
         <span>
@@ -58,5 +68,4 @@ object FormField {
       % Attribute(None, "id", Text(name), Null)
       % Attribute(None, "name", Text(name), Null))
       .toString
-  }
-}
+

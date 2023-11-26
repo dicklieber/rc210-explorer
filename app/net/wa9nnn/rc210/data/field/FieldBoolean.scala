@@ -17,8 +17,8 @@
 
 package net.wa9nnn.rc210.data.field
 
-import com.wa9nnn.util.tableui.Cell
 import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.*
 
 case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue {
@@ -41,13 +41,13 @@ case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue {
 //    super.toCell(renderMetadata)
 //  }
 
-  override def update(paramValue: String): FieldBoolean = {
-    FieldBoolean(paramValue == "true")
-  }
+  override def update(paramValue: String): FieldBoolean = FieldBoolean(paramValue == "on")
 
   override def toJsValue: JsValue = Json.toJson(this)
 
+  override def toHtmlField(fieldKey: FieldKey): String = FormField(fieldKey, value)
 }
+
 
 object FieldBoolean extends SimpleExtractor:
 

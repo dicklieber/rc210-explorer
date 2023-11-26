@@ -32,14 +32,7 @@ trait RenderMetadata {
 
 }
 
-/**
- * Helper to quickly create a [[RenderMetdata]]
- */
-object RenderMetadata {
-  def apply(name: String, prompt: String = "", units: String = "")(implicit key: Key): RenderMetadata = {
-    new RMD(name, prompt, units)
-  }
-}
+
 
 case class RMD(name: String, override val prompt: String = "", override val units: String = "")(implicit key: Key) extends RenderMetadata {
   override def param: String = FieldKey(name, key).param

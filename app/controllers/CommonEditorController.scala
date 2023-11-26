@@ -20,8 +20,10 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.KeyKind
-import net.wa9nnn.rc210.data.datastore.DataStoreActor
-import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
+import net.wa9nnn.rc210.ui.{CandidateAndNames, FormExtractor, FormParser}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
@@ -36,12 +38,16 @@ class CommonEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
                                       (implicit scheduler: Scheduler, ec: ExecutionContext, cc: MessagesControllerComponents)
   extends AbstractController(cc) with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
+  private var fieldKeys: Seq[FieldKey] = Seq.empty
 
   def index(): Action[AnyContent] = Action.async {
     implicit request =>
       val eventualFieldEntries: Future[Seq[FieldEntry]] = actor.ask(DataStoreActor.AllForKeyKind(KeyKind.commonKey, _))
 
       eventualFieldEntries.map { fieldEntries =>
+        if (fieldKeys.isEmpty)
+          fieldKeys = fieldEntries.map(_.fieldKey)
+
         val rows: Seq[Row] = fieldEntries.map { fieldEntry =>
           //          // Can't use fieldEntry's toRow because we just want the rc2input name not key, as they are all commonKey1
           Row(
@@ -72,13 +78,23 @@ class CommonEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
     //        Ok(views.html.common(table))
   }
 
-  def save(): Action[AnyContent] = Action {
+  def save(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
-                ImATeapot
-//      val updateData: CandidateAndNames = FormParser(AnyContentAsFormUrlEncoded(request.body.asFormUrlEncoded.get))
-//
-//      actor.ask[String](DataStoreActor.UpdateData(updateData, user, _)).map { _ =>
-//        Redirect(routes.CommonEditorController.index())
-//      }
+
+      val data = new FormExtractor(request)
+
+      val uc: Seq[UpdateCandidate] = fieldKeys.map(fieldKey =>
+        val str: String = data.stringOpt(fieldKey.toString).getOrElse("")
+        UpdateCandidate(fieldKey, Left(str)) //todo how does this work with bool
+      )
+      logger.whenTraceEnabled {
+        uc.foreach { uc =>
+          logger.trace(uc.toString)
+        }
+      }
+
+      actor.ask[String](DataStoreActor.UpdateData(uc, Seq.empty, user, _)).map { _ =>
+        Redirect(routes.CommonEditorController.index())
+      }
   }
 }

@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.*
 
 case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue {
@@ -44,7 +45,8 @@ case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue {
   }
 
   override def toJsValue: JsValue = Json.toJson(this)
-
+  
+  override def toHtmlField(fieldKey: FieldKey): String = FormField(fieldKey, value)
 }
 
 object Field2Numbers extends SimpleExtractor {

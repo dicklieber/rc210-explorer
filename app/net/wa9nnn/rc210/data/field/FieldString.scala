@@ -19,6 +19,7 @@ package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.*
 import views.html.fieldString
 
@@ -30,10 +31,9 @@ case class FieldString(value: String) extends SimpleFieldValue {
    *
    * @return
    */
-  def toHtmlField(renderMetadata: RenderMetadata): String = {
-    fieldString(value, renderMetadata).toString()
-  }
 
+  override def toHtmlField(fieldKey: FieldKey): String =
+    FormField(fieldKey, value)
 
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
     val fieldKey = fieldEntry.fieldKey

@@ -17,21 +17,12 @@
 
 package net.wa9nnn.rc210.data.field
 
+import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.*
 import views.html.fieldNumber
 
 case class FieldInt(value: Int) extends SimpleFieldValue {
-
-  /**
-   * Render as HTML for this rc2input.
-   * For complex fields like [[net.wa9nnn.rc210.data.schedules.Schedule]] it's an entire HTML form.
-   *
-   * @return
-   */
-  def toHtmlField(renderMetadata: RenderMetadata): String = {
-    fieldNumber(value, renderMetadata).toString()
-  }
-
+  override def toHtmlField(fieldKey: FieldKey): String = FormField(fieldKey, value)
 
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
     val fieldKey = fieldEntry.fieldKey

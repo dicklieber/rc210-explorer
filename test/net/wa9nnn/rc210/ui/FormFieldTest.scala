@@ -37,6 +37,10 @@ class FormFieldTest extends RcSpec {
         val html: String = FormField("text", "Hello")
         assert(html == """<input name="text" id="text" type="text" value="Hello"></input>""")
       }
+      "int" in {
+        val html: String = FormField("anInt", 42)
+        assert(html == """<input name="anInt" id="anInt" type="number" value="42"></input>""")
+      }
     }
     "select" should {
       "string" in {

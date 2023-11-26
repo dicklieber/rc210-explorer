@@ -17,45 +17,42 @@
 
 package net.wa9nnn.rc210.data.field
 
+import net.wa9nnn.rc210.ui.FormField
 import net.wa9nnn.rc210.util.{FieldSelect, SelectOption}
-import play.api.libs.json.JsValue
+import play.api.libs.json.{JsValue, Json}
 
 /**
  * An enumeration with behaviour.
  *
  * @param value    one of the display values in DayOfWeek.options.
  */
-case class TimeoutTimerResetPoint(value: String = selectOptions.head.display) extends FieldSelect[String] {
-  override val selectOptions: Seq[SelectOption] = TimeoutTimerResetPoint.selectOptions
-  override val name: String = TimeoutTimerResetPoint.name
+case class TimeoutTimerResetPoint(value: TotReset = TotReset.values.head) extends SimpleFieldValue {
+  def display: String = "TotResetPoint"
+  def toCommands(fieldEntry: FieldEntryBase): Seq[String] =
+    Seq(s"*2122${value.rc210Value}")
 
   override def update(paramValue: String): TimeoutTimerResetPoint = {
-    TimeoutTimerResetPoint(paramValue)
+    TimeoutTimerResetPoint(TotReset.withName(paramValue))
   }
+
+  override def toHtmlField(fieldKey: FieldKey): String = FormField(fieldKey, value)
+
+  override def toJsValue: JsValue = Json.toJson(value)
 }
 
 object TimeoutTimerResetPoint extends SimpleExtractor {
 
   def apply(id: Int): TimeoutTimerResetPoint = {
-    val maybeOption = selectOptions.find(_.id == id.toString)
-    new TimeoutTimerResetPoint(maybeOption.get.display)
+    new TimeoutTimerResetPoint(TotReset.find(id))
   }
 
-  val selectOptions: Seq[SelectOption] =
-    Seq(
-      "After COS" -> 0,
-      "After CT Segment 1" -> 1,
-      "After CT Segment 2" -> 2,
-      "After CT Segment 3" -> 3,
-      "After CT Segment 4" -> 4
-    ).map { t => SelectOption(t._2, t._1) }
 
   override def extractFromInts(itr: Iterator[Int], field: SimpleField): TimeoutTimerResetPoint = {
     val id = itr.next()
     apply(id)
   }
 
-  override def parse(jsValue: JsValue): FieldValue = new TimeoutTimerResetPoint(jsValue.as[String])
+  override def parse(jsValue: JsValue): FieldValue = new TimeoutTimerResetPoint(jsValue.as[TotReset])
 
   override val name: String = "TOT Reset Point"
 

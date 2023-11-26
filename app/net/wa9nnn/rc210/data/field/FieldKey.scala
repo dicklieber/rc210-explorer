@@ -35,6 +35,7 @@ case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey] with 
   assert(!fieldName.contains('~'), "Field Name can't contain '~'!")
   /**
    * can identify this in a HTTP param or as a JSON name.
+   * @deprecated used toString.
    */
   val param: String = s"$fieldName:$key".replaceAll(" ", "~")
 

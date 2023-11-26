@@ -74,7 +74,13 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
   }
   
   def toCell: Cell =
-    throw new NotImplementedError() //todo
+    val f: FieldValue = value
+    f match
+      case sf:SimpleFieldValue =>
+        val html = sf.toHtmlField(fieldKey)
+        Cell.rawHtml(html)
+      case cf:ComplexFieldValue =>
+        throw new NotImplementedError() //todo
 
   /**
    *

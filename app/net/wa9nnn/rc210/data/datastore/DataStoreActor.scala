@@ -155,28 +155,32 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
                 valuesMap.put(fieldKey, valuesMap(fieldKey).acceptCandidate())
                 save(user)
               case ud: UpdateData =>
-                ud.candidates.foreach { candidate =>
-                  val fieldKey = candidate.fieldKey
+                try
+                  ud.candidates.foreach { candidate =>
+                    val fieldKey = candidate.fieldKey
 
-                  val currentEntry = valuesMap(candidate.fieldKey)
-                  val newEntry: FieldEntry = candidate.candidate match {
-                    case Left(formValue: String) =>
-                      currentEntry.setCandidate(formValue)
+                    val currentEntry = valuesMap(candidate.fieldKey)
+                    val newEntry: FieldEntry = candidate.candidate match {
+                      case Left(formValue: String) =>
+                        currentEntry.setCandidate(formValue)
 
-                    case Right(value: ComplexFieldValue) =>
-                      currentEntry.setCandidate(value)
+                      case Right(value: ComplexFieldValue) =>
+                        currentEntry.setCandidate(value)
+                    }
+                    valuesMap.put(fieldKey, newEntry)
                   }
-                  valuesMap.put(fieldKey, newEntry)
-                }
-                ud.namedKeys.foreach { namedKey =>
-                  val key = namedKey.key
-                  val name = namedKey.name
-                  if (name.isBlank)
-                    keyNamesMap.remove(key)
-                  else
-                    keyNamesMap.put(key, name)
-                }
-                save(ud.user)
+                  ud.namedKeys.foreach { namedKey =>
+                    val key = namedKey.key
+                    val name = namedKey.name
+                    if (name.isBlank)
+                      keyNamesMap.remove(key)
+                    else
+                      keyNamesMap.put(key, name)
+                  }
+                  save(ud.user)
+                catch
+                  case e:Exception =>
+                    logger.error(ud.toString, e)
                 ud.replyTo ! "Done"
               case UpdateFields(fieldEntries: Seq[FieldEntry], names: Seq[NamedKey], user: User) =>
                 fieldEntries.foreach { fieldEntry =>

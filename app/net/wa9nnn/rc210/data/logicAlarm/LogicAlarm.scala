@@ -44,10 +44,10 @@ case class LogicAlarm(key: Key, enable: Boolean, lowMacro: Key, highMacro: Key) 
 object LogicAlarm extends ComplexExtractor {
   override def parseForm(formParser: FormFields): ComplexFieldValue =
     new LogicAlarm(
-      key = formParser.key,
+      key = formParser.key.get,
       enable = formParser.boolean("enabled"),
-      lowMacro = formParser.key("lowMacro"),
-      highMacro = formParser.key("highMacro")
+      lowMacro = formParser.key("lowMacro").get,
+      highMacro = formParser.key("highMacro").get
     )
 
   /**

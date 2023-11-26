@@ -35,29 +35,48 @@ object FormParser:
     val x = new InternalFormParser(formParseable, request)
     x.result
 
-  class InternalFormParser(formParseable: FormParseable, request: Request[AnyContent]) extends FormFields {
-    // A map of all the form values from an HTML form.
-    // Note checkboxes send no value if unchecked; you have to know what you're looking for.
-    val data: Map[String, String] = request.body.asFormUrlEncoded.get.flatMap { (name, values: Seq[String]) =>
-      values.headOption.map(name -> _)
-    }
+  private class InternalFormParser(formParseable: FormParseable, request: Request[AnyContent]) {
 
-    val fieldValue: ComplexFieldValue = formParseable.parseForm(this)
-    val namedKeys: Seq[NamedKey] = data.get("name").map(name => NamedKey(key, name)).toSeq
+    //    // A map of all the form values from an HTML form.
+    //    // Note checkboxes send no value if unchecked; you have to know what you're looking for.
+    //    val data: Map[String, String] = request.body.asFormUrlEncoded.get.flatMap { (name, values: Seq[String]) =>
+    //      values.headOption.map(name -> _)
+    //    }
+    private val formFields: FormFields = FormExtractor(request)
+
+    private val fieldValue: ComplexFieldValue = formParseable.parseForm(formFields)
+    private val namedKeys: Seq[NamedKey] = (for {
+      name: String <- formFields.stringOpt("name")
+      key: Key <- formFields.key
+    } yield {
+      NamedKey(key, name)
+    }).iterator.toSeq
 
     def result: CandidateAndNames =
       CandidateAndNames(Seq(UpdateCandidate(fieldValue)), namedKeys)
   }
 
+class FormExtractor(request: Request[AnyContent]) extends FormFields:
+  // A map of all the form values from an HTML form.
+  // Note checkboxes send no value if unchecked; you have to know what you're looking for.
+  val data: Map[String, String] = request.body.asFormUrlEncoded.get.flatMap { (name, values: Seq[String]) =>
+    values.headOption.map(name -> _)
+  }
+
+
 trait FormFields:
   val data: Map[String, String]
 
-  def key: Key = key("key")
+  def key: Option[Key] = key("key")
 
-  def key(keyName: String): Key = Key(data.getOrElse(keyName, throw new IllegalArgumentException("No key in form data!")))
+
+  def key(keyName: String): Option[Key] = data.get(keyName).map(Key(_))
 
   def int(name: String): Int =
     string(name).toInt
+
+  def stringOpt(name: String): Option[String] =
+    data.get(name)
 
   def string(name: String): String =
     data(name)

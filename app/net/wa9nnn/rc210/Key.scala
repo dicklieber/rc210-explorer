@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210
 
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
-import net.wa9nnn.rc210.KeyKind.{macroKey, portKey}
+import net.wa9nnn.rc210.KeyKind.{commonKey, macroKey, portKey}
 import net.wa9nnn.rc210.data.named.NamedKeySource
 import net.wa9nnn.rc210.util.select.EnumEntryValue
 import play.api.libs.json.*
