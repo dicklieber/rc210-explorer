@@ -1,11 +1,11 @@
-@import com.wa9nnn.util.tableui.html.renderTableBodyRows
-@import views.html.helper._
-@import com.wa9nnn.util.tableui.Row
 @import net.wa9nnn.rc210.ui.Tabs
-
+@import com.wa9nnn.util.tableui.Row
+@import views.html.helper._
+@import com.wa9nnn.util.tableui.html.renderTableBodyRows
 @(rows: Seq[Row])
 
 @tabbedmain(Tabs.ctTab) {
+    <form action="@routes.CourtesyToneEditorController.save()">
     @form(action = routes.CourtesyToneEditorController.save()) {
         @submitButton()
         <table class="headeredTable">
@@ -32,9 +32,11 @@
                         <th>Duration/Tones</th>
                     </tr>
                 </thead>
+
             }
             @renderTableBodyRows(rows)
         </table>
         @submitButton()
-    }
+    </form>
+}
 }

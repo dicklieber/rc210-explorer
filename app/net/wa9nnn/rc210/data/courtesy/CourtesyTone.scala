@@ -17,15 +17,16 @@
 
 package net.wa9nnn.rc210.data.courtesy
 
+import com.google.common.base.Ascii
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Row}
 import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.courtesy.CourtesyTone.{cell, cellSpan3}
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntryBase}
+import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.{JsValue, Json, OFormat}
 
 import java.util.concurrent.atomic.AtomicInteger
-import scala.xml.Atom
 
 //noinspection ZeroIndexToHead
 case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends ComplexFieldValue("CourtesyTone") {
@@ -42,10 +43,9 @@ case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends C
     }
   }
 
-  def rows(): Seq[Row] = {
-    val nameCell: Cell = key.toCell
-//    val nameCell: Cell = key.toCell(CtSegmentKey(key, 99, "name").param)
-      .withRowSpan(3)
+  def rows: Seq[Row] = {
+        val nameCell: Cell = key.toCell.withRowSpan(3)
+    //    val nameCell: Cell = key.toCell(CtSegmentKey(key, 99, "name").param)
 
     Seq(
       Row(nameCell,
@@ -88,9 +88,8 @@ object CourtesyTone:
   implicit val fmtSegment: OFormat[Segment] = Json.format[Segment]
   implicit val fmtCourtesyTone: OFormat[CourtesyTone] = Json.format[CourtesyTone]
 
-  def cell(value: Int, CtSegmentKey: CtSegmentKey): Cell =
-//    FieldInt(value).toCell(CtSegmentKey)
-    throw new NotImplementedError() //todo
+  def cell(value: Int, ctSegmentKey: CtSegmentKey): Cell =
+    Cell.rawHtml(FormField(ctSegmentKey.toString, value))
 
   def cellSpan3(int: Int, CtSegmentKey: CtSegmentKey): Cell = {
     val r = cell(int, CtSegmentKey)

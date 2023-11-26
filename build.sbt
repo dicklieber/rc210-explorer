@@ -28,6 +28,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
     //    docusaurDir := (ThisBuild / baseDirectory).value / "website",
     //    docusaurBuildDir := docusaurDir.value / "build",
 
+    routesGenerator := InjectedRoutesGenerator,
 
     scalacOptions ++= Seq(
       "-feature",

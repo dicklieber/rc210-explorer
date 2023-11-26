@@ -23,6 +23,7 @@ import com.wa9nnn.util.tableui.Row
 import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.courtesy.{CourtesyTone, CtSegmentKey, Segment}
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
+import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
@@ -35,20 +36,20 @@ import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
 
 class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
-                                            (implicit scheduler: Scheduler, ec: ExecutionContext)
-  extends MessagesInjectedController with LazyLogging {
+                                            (implicit scheduler: Scheduler, ec: ExecutionContext, cc: ControllerComponents)
+  extends AbstractController(cc) with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 
   def index(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
 
-      actor.ask(DataStoreActor.AllForKeyKind(KeyKind.courtesyToneKey, _)).map { entries =>
-        //        val rows: Seq[Row] = entries.map { fe =>
-        //          val ct: CourtesyTone = fe.value
-        //          ct.rows()
-        //        }
-        //        Ok(views.html.courtesyTones(rows))
-        Ok("todo")
+      val future: Future[Seq[FieldEntry]] = actor.ask(DataStoreActor.AllForKeyKind(KeyKind.courtesyToneKey, _))
+      future.map { (entries: Seq[FieldEntry]) =>
+        val rows: Seq[Row] = entries.flatMap { (fe: FieldEntry) =>
+          val ct: CourtesyTone = fe.value.asInstanceOf[CourtesyTone]
+          ct.rows
+        }
+        Ok(views.html.courtesyTones(rows))
       }
   }
 
