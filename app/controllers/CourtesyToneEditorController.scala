@@ -21,7 +21,7 @@ import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.Row
 import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.data.courtesy.{CourtesyTone, CtSegmentKey, Segment}
+import net.wa9nnn.rc210.data.courtesy.{CourtesyTone, CtSegmentKey, CtTd, Segment}
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.named.NamedKey
@@ -45,13 +45,26 @@ class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Mess
 
       val future: Future[Seq[FieldEntry]] = actor.ask(DataStoreActor.AllForKeyKind(KeyKind.courtesyToneKey, _))
       future.map { (entries: Seq[FieldEntry]) =>
-        val rows: Seq[Row] = entries.flatMap { (fe: FieldEntry) =>
-          val ct: CourtesyTone = fe.value.asInstanceOf[CourtesyTone]
-          ct.rows
+        val rows: Seq[Seq[CtTd]] = entries.flatMap { fieldEntry =>
+          val courtesyTone = fieldEntry.value.asInstanceOf[CourtesyTone]
+          courtesyTone.rows
         }
+
         Ok(views.html.courtesyTones(rows))
       }
   }
+  //  def index(): Action[AnyContent] = Action.async {
+  //    implicit request: Request[AnyContent] =>
+  //
+  //      val future: Future[Seq[FieldEntry]] = actor.ask(DataStoreActor.AllForKeyKind(KeyKind.courtesyToneKey, _))
+  //      future.map { (entries: Seq[FieldEntry]) =>
+  //        val rows: Seq[Row] = entries.flatMap { (fe: FieldEntry) =>
+  //          val ct: CourtesyTone = fe.value.asInstanceOf[CourtesyTone]
+  //          ct.rows
+  //        }
+  //        Ok(views.html.courtesyTones(rows))
+  //      }
+  //  }
 
   def save(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>

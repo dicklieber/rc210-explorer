@@ -1,12 +1,8 @@
 @import net.wa9nnn.rc210.ui.Tabs
-@import com.wa9nnn.util.tableui.Row
-@import views.html.helper._
-@import com.wa9nnn.util.tableui.html.renderTableBodyRows
-@(rows: Seq[Row])
+@(rows: Seq[Seq[net.wa9nnn.rc210.data.courtesy.CtTd]])
 
 @tabbedmain(Tabs.ctTab) {
-    <form action="@routes.CourtesyToneEditorController.save()">
-    @form(action = routes.CourtesyToneEditorController.save()) {
+    <div><form action="@routes.CourtesyToneEditorController.save()">
         @submitButton()
         <table class="headeredTable">
             @defining("<th>Duration<br>Tone1<br>Tone2</th>") { DTT =>
@@ -34,9 +30,15 @@
                 </thead>
 
             }
-            @renderTableBodyRows(rows)
+            @for(row <- rows) {
+                <tr>
+                @for(cell <- row) {
+                    <td rowspan="@cell.rowSpan">@Html(cell.body)</td>
+                }
+                </tr>
+            }
         </table>
         @submitButton()
-    </form>
-}
+    </form></div>
+
 }

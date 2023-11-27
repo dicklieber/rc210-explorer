@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.courtesy
 
 import com.google.common.base.Ascii
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.{Cell, Row}
+//import com.wa9nnn.util.tableui.{Cell, Row}
 import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.courtesy.CourtesyTone.{cell, cellSpan3}
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntryBase}
@@ -43,12 +43,11 @@ case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends C
     }
   }
 
-  def rows: Seq[Row] = {
-        val nameCell: Cell = key.toCell.withRowSpan(3)
-    //    val nameCell: Cell = key.toCell(CtSegmentKey(key, 99, "name").param)
+  def rows: Seq[Seq[CtTd]] = {
+    val nameCell: CtTd = CtTd(key.rc210Value,CtSegmentKey(key, 99, "name"), 3)
 
     Seq(
-      Row(nameCell,
+      Seq(nameCell,
         //top row with delay/duration that span 3 rows.
         cellSpan3(segments(0).delayMs, CtSegmentKey(key, 0, "Delay")),
         cell(segments(0).durationMs, CtSegmentKey(key, 0, "Duration")),
@@ -63,7 +62,7 @@ case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends C
       )
       ,
       // tone1 row
-      Row(
+      Seq(
         cell(segments(0).tone1Hz, CtSegmentKey(key, 0, "Tone1")),
         cell(segments(1).tone1Hz, CtSegmentKey(key, 1, "Tone1")),
         cell(segments(2).tone1Hz, CtSegmentKey(key, 2, "Tone1")),
@@ -71,7 +70,7 @@ case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends C
       )
       ,
       // tone2 row
-      Row(
+      Seq(
         cell(segments(0).tone2Hz, CtSegmentKey(key, 0, "Tone2")),
         cell(segments(1).tone2Hz, CtSegmentKey(key, 1, "Tone2")),
         cell(segments(2).tone2Hz, CtSegmentKey(key, 2, "Tone2")),
@@ -88,13 +87,11 @@ object CourtesyTone:
   implicit val fmtSegment: OFormat[Segment] = Json.format[Segment]
   implicit val fmtCourtesyTone: OFormat[CourtesyTone] = Json.format[CourtesyTone]
 
-  def cell(value: Int, ctSegmentKey: CtSegmentKey): Cell =
-    Cell.rawHtml(FormField(ctSegmentKey.toString, value))
+  def cell(value: Int, ctSegmentKey: CtSegmentKey): CtTd =
+    CtTd(value, ctSegmentKey)
 
-  def cellSpan3(int: Int, CtSegmentKey: CtSegmentKey): Cell = {
-    val r = cell(int, CtSegmentKey)
-      .withRowSpan(3)
-    r
+  def cellSpan3(int: Int, ctSegmentKey: CtSegmentKey): CtTd = {
+    CtTd(int, ctSegmentKey, 3)
   }
 
 case class Segment(delayMs: Int, durationMs: Int, tone1Hz: Int, tone2Hz: Int) {
