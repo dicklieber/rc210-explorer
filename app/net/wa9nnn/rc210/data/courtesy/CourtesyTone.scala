@@ -33,6 +33,9 @@ case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends C
 
   override def display: String = s"$key"
 
+  implicit val k: Key = key
+  implicit val s: Seq[Segment] = segments
+
   /**
    * Render this value as an RD-210 command string.
    */
@@ -43,38 +46,34 @@ case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends C
     }
   }
 
-  def rows: Seq[Seq[CtTd]] = {
-    val nameCell: CtTd = CtTd(key.rc210Value,CtSegmentKey(key, 99, "name"), 3)
+  def rows: Seq[Seq[CtField]] = {
 
-    Seq(
-      Seq(nameCell,
+    Seq( // <tr>
+      Seq( // <td>
+        Name(),
         //top row with delay/duration that span 3 rows.
-        cellSpan3(segments(0).delayMs, CtSegmentKey(key, 0, "Delay")),
-        cell(segments(0).durationMs, CtSegmentKey(key, 0, "Duration")),
-        cellSpan3(segments(1).delayMs, CtSegmentKey(key, 1, "Delay")),
-        cell(segments(1).durationMs, CtSegmentKey(key, 1, "Duration")),
+        Delay(0),
+        Duration(0),
+        Delay(1),
+        Duration(1),
+        Delay(2),
+        Duration(2),
+        Delay(3),
+        Duration(3)
+      ),
 
-        cellSpan3(segments(2).delayMs, CtSegmentKey(key, 2, "Delay")),
-        cell(segments(2).durationMs, CtSegmentKey(key, 2, "Duration")),
-
-        cellSpan3(segments(3).delayMs, CtSegmentKey(key, 3, "Delay")),
-        cell(segments(3).durationMs, CtSegmentKey(key, 3, "Duration")),
-      )
-      ,
-      // tone1 row
       Seq(
-        cell(segments(0).tone1Hz, CtSegmentKey(key, 0, "Tone1")),
-        cell(segments(1).tone1Hz, CtSegmentKey(key, 1, "Tone1")),
-        cell(segments(2).tone1Hz, CtSegmentKey(key, 2, "Tone1")),
-        cell(segments(3).tone1Hz, CtSegmentKey(key, 3, "Tone1")),
-      )
-      ,
+        Tone(0, 1),
+        Tone(1, 1),
+        Tone(2, 1),
+        Tone(3, 1),
+      ),
       // tone2 row
       Seq(
-        cell(segments(0).tone2Hz, CtSegmentKey(key, 0, "Tone2")),
-        cell(segments(1).tone2Hz, CtSegmentKey(key, 1, "Tone2")),
-        cell(segments(2).tone2Hz, CtSegmentKey(key, 2, "Tone2")),
-        cell(segments(3).tone2Hz, CtSegmentKey(key, 3, "Tone2")),
+        Tone(0, 2),
+        Tone(1, 2),
+        Tone(2, 2),
+        Tone(3, 2),
       )
     )
   }
@@ -87,37 +86,9 @@ object CourtesyTone:
   implicit val fmtSegment: OFormat[Segment] = Json.format[Segment]
   implicit val fmtCourtesyTone: OFormat[CourtesyTone] = Json.format[CourtesyTone]
 
-  def cell(value: Int, ctSegmentKey: CtSegmentKey): CtTd =
+  def cell(value: Int, ctSegmentKey: CtField): CtTd =
     CtTd(value, ctSegmentKey)
 
-  def cellSpan3(int: Int, ctSegmentKey: CtSegmentKey): CtTd = {
+  def cellSpan3(int: Int, ctSegmentKey: CtField): CtTd = {
     CtTd(int, ctSegmentKey, 3)
   }
-
-case class Segment(delayMs: Int, durationMs: Int, tone1Hz: Int, tone2Hz: Int) {
-  def toCommand(number: Int, segN: Int): String = {
-    //1*31011200*100*6
-    val sNumber = f"$number%02d"
-
-    val spaced = s"1*3$segN$sNumber $delayMs * $durationMs * $tone1Hz * $tone2Hz*"
-    spaced.replace(" ", "")
-  }
-}
-
-object Segment extends LazyLogging {
-  def apply(m: Map[String, String]): Segment = {
-    logger.trace(s"m: $m")
-    try {
-      val delay = m("Delay").toInt
-      val duration = m("Duration").toInt
-      val tone1 = m("Tone1").toInt
-      val tone2 = m("Tone2").toInt
-
-      new Segment(delay, duration, tone1, tone2)
-    } catch {
-      case e: Exception =>
-        logger.error("Creating a Segment", e)
-        throw e
-    }
-  }
-}

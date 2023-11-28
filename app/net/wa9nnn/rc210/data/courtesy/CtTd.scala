@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.courtesy
 
 import net.wa9nnn.rc210.ui.FormField
 
-case class CtTd(value: Int, ctSegmentKey: CtSegmentKey, rowSpan: Int = 1) {
+case class CtTd(value: Int, ctSegmentKey: CtField, rowSpan: Int = 1) {
 //  def toHtml: String =
     //    <td rowspan={rowSpan.toString}> xyzzy </td>.toString
     val body: String = FormField(ctSegmentKey.param, value)

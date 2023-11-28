@@ -200,6 +200,9 @@ body {
 .schedule {
     background-color: lightgrey;
 }
+.ctCell {
+    vertical-align: top;
+}
 
 .messageMacro {
     background-color: lightgreen;

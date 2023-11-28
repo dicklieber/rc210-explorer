@@ -31,8 +31,8 @@ object FormField:
   def apply(fieldKey: FieldKey, value: Any): String =
     apply(fieldKey.toString, value)
 
-  def apply(name: String, value: Any): String =
-    ((value match {
+  def apply(name: String, value: Any, max: Option[Int] = None): String =
+    val elem: Elem = value match {
       case enumValue: EnumEntryValue =>
         <select>
           {enumValue.values map { choice =>
@@ -63,9 +63,21 @@ object FormField:
         <span>
           {x.toString}
         </span>
-    })
-      // These get added to any generated html.
+    }
+    // These get added to any generated html.
+
+    val r: Elem = elem
       % Attribute(None, "id", Text(name), Null)
-      % Attribute(None, "name", Text(name), Null))
-      .toString
+      % Attribute(None, "name", Text(name), Null)
+
+    val rr = max.map { max =>
+      r % Attribute(None, "max", Text(max.toString), Null)
+        % Attribute(None, "style", Text("width: 5em"), Null)
+
+    }.getOrElse(elem)
+
+    rr.toString
+
+
+
 

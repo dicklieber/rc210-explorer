@@ -17,18 +17,34 @@
 
 package net.wa9nnn.rc210.data.courtesy
 
-class CtSegmentKeySpec extends RcSpec {
+import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.data.courtesy.Segment.logger
 
-  "CtSegmentKey" should {
-    val csk =  CtField("groucho", 2)(CourtesyToneKey(3))
-    "rount trip" in {
-      val param = csk.param
-      param should equal ("groucho.2.courtesyToneKey3")
 
-      val backAgain = CtField(param)
-      backAgain.segment should equal (2)
-      backAgain.name should equal ("groucho")
-      backAgain.ctKey.toString should equal ("courtesyToneKey3")
+case class Segment(delayMs: Int, durationMs: Int, tone1Hz: Int, tone2Hz: Int) {
+  def toCommand(number: Int, segN: Int): String = {
+    //1*31011200*100*6
+    val sNumber = f"$number%02d"
+
+    val spaced = s"1*3$segN$sNumber $delayMs * $durationMs * $tone1Hz * $tone2Hz*"
+    spaced.replace(" ", "")
+  }
+}
+
+object Segment extends LazyLogging {
+  def apply(m: Map[String, String]): Segment = {
+    logger.trace(s"m: $m")
+    try {
+      val delay = m("Delay").toInt
+      val duration = m("Duration").toInt
+      val tone1 = m("Tone1").toInt
+      val tone2 = m("Tone2").toInt
+
+      new Segment(delay, duration, tone1, tone2)
+    } catch {
+      case e: Exception =>
+        logger.error("Creating a Segment", e)
+        throw e
     }
   }
 }

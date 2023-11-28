@@ -1,5 +1,6 @@
 @import net.wa9nnn.rc210.ui.Tabs
-@(rows: Seq[Seq[net.wa9nnn.rc210.data.courtesy.CtTd]])
+@import net.wa9nnn.rc210.data.courtesy.CtField
+@(rows: Seq[Seq[CtField]])
 
 @tabbedmain(Tabs.ctTab) {
     <div><form action="@routes.CourtesyToneEditorController.save()">
@@ -33,7 +34,7 @@
             @for(row <- rows) {
                 <tr>
                 @for(cell <- row) {
-                    <td rowspan="@cell.rowSpan">@Html(cell.body)</td>
+                    <td class ="@cell.cssClass" rowspan="@cell.rowSpan">@Html(cell.body)</td>
                 }
                 </tr>
             }

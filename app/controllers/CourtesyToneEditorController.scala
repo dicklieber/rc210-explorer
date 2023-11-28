@@ -21,7 +21,7 @@ import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.Row
 import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.data.courtesy.{CourtesyTone, CtSegmentKey, CtTd, Segment}
+import net.wa9nnn.rc210.data.courtesy.{CourtesyTone, CtField, CtTd, Segment}
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.named.NamedKey
@@ -45,7 +45,7 @@ class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Mess
 
       val future: Future[Seq[FieldEntry]] = actor.ask(DataStoreActor.AllForKeyKind(KeyKind.courtesyToneKey, _))
       future.map { (entries: Seq[FieldEntry]) =>
-        val rows: Seq[Seq[CtTd]] = entries.flatMap { fieldEntry =>
+        val rows: Seq[Seq[CtField]] = entries.flatMap { fieldEntry =>
           val courtesyTone = fieldEntry.value.asInstanceOf[CourtesyTone]
           courtesyTone.rows
         }
@@ -66,9 +66,10 @@ class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Mess
   //      }
   //  }
 
-  def save(): Action[AnyContent] = Action.async {
+  def save(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      val namedKeyBuilder = Seq.newBuilder[NamedKey]
+        ImATeapot
+/*      val namedKeyBuilder = Seq.newBuilder[NamedKey]
       val ctBuilder = Seq.newBuilder[UpdateCandidate]
 
 
@@ -102,5 +103,5 @@ class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Mess
       actor.ask[String](DataStoreActor.UpdateData(ctBuilder.result(), namedKeyBuilder.result(), user = user(request), _)).map { _ =>
         Redirect(routes.CourtesyToneEditorController.index())
       }
-  }
+*/  }
 }
