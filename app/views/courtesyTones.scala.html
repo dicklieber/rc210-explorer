@@ -2,44 +2,49 @@
 @import net.wa9nnn.rc210.data.courtesy.CtField
 @(rows: Seq[Seq[CtField]])
 
-@tabbedmain(Tabs.ctTab) {
-    <div><form action="@routes.CourtesyToneEditorController.save()">
-        @submitButton()
-        <table class="headeredTable">
-            @defining("<th>Duration<br>Tone1<br>Tone2</th>") { DTT =>
-                <thead>
-                    <tr>
-                        <th colspan="9">Coutrtesy Tones</th>
-                    </tr>
-                    <tr>
-                        <th rowspan="2">Name</th>
-                        <th colspan="2">Segment 1</th>
-                        <th colspan="2">Segment 2</th>
-                        <th colspan="2">Segment 3</th>
-                        <th colspan="2">Segment 4</th>
-                    </tr>
-                    <tr>
-                        <th title="From loss of COS.">Delay</th>
-                        @Html(DTT)
-                        <th title="to Segment 2">Delay</th>
-                        @Html(DTT)
-                        <th title="to Segment 3">Delay</th>
-                        @Html(DTT)
-                        <th title="to Segment 4">Delay</th>
-                        <th>Duration/Tones</th>
-                    </tr>
-                </thead>
+    @tabbedmain(Tabs.ctTab) {
+        <div><form action="@routes.CourtesyToneEditorController.save()">
+            @submitButton()
+            <table class="headeredTable">
+                @defining("<th>Duration<br>Tone1<br>Tone2</th>") { DTT =>
+                    <thead>
+                        <tr>
+                            <th colspan="10">Coutrtesy Tones</th>
+                        </tr>
+                        <tr>
+                            <th rowspan="2">Edit</th>
+                            <th rowspan="2">Name</th>
+                            <th colspan="2">Segment 1</th>
+                            <th colspan="2">Segment 2</th>
+                            <th colspan="2">Segment 3</th>
+                            <th colspan="2">Segment 4</th>
+                        </tr>
+                        <tr>
+                            <th title="From loss of COS.">Delay</th>
+                            @Html(DTT)
+                            <th title="to Segment 2">Delay</th>
+                            @Html(DTT)
+                            <th title="to Segment 3">Delay</th>
+                            @Html(DTT)
+                            <th title="to Segment 4">Delay</th>
+                            <th>Duration/Tones</th>
+                        </tr>
+                    </thead>
 
-            }
-            @for(row <- rows) {
-                <tr>
-                @for(cell <- row) {
-                    <td class ="@cell.cssClass" rowspan="@cell.rowSpan">@Html(cell.body)</td>
                 }
-                </tr>
-            }
-        </table>
-        @submitButton()
-    </form></div>
+                @for(row <- rows) {
+                    <tr>
+                        @if(row.head.name == "name") {
+                            <td rowspan="3">@editButton(routes.CourtesyToneEditorController.edit(row.head.key).toString)</td>
+                        }
+                        @for(cell <- row) {
+                            <td class ="@cell.cssClass" rowspan="@cell.rowSpan">@Html(cell.value.toString)</td>
+                            @* <td class ="@cell.cssClass" rowspan="@cell.rowSpan">@Html(cell.body)</td>*@
+                        }
+                    </tr>
+                }
+            </table>
+            @submitButton()
+        </form></div>
 
-}
+    }

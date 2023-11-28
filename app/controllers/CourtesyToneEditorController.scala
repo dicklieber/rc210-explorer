@@ -53,55 +53,50 @@ class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Mess
         Ok(views.html.courtesyTones(rows))
       }
   }
-  //  def index(): Action[AnyContent] = Action.async {
-  //    implicit request: Request[AnyContent] =>
-  //
-  //      val future: Future[Seq[FieldEntry]] = actor.ask(DataStoreActor.AllForKeyKind(KeyKind.courtesyToneKey, _))
-  //      future.map { (entries: Seq[FieldEntry]) =>
-  //        val rows: Seq[Row] = entries.flatMap { (fe: FieldEntry) =>
-  //          val ct: CourtesyTone = fe.value.asInstanceOf[CourtesyTone]
-  //          ct.rows
-  //        }
-  //        Ok(views.html.courtesyTones(rows))
-  //      }
-  //  }
+
+  def edit(key: Key): Action[AnyContent] = Action {
+    implicit request: Request[AnyContent] =>
+      ImATeapot
+  }
 
   def save(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-        ImATeapot
-/*      val namedKeyBuilder = Seq.newBuilder[NamedKey]
-      val ctBuilder = Seq.newBuilder[UpdateCandidate]
 
-
-      val form = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }
-
-      form.filter(_._1 startsWith "name")
-        .foreach { case (sKey, value) =>
-          val ctKey = CtSegmentKey(sKey)
-          namedKeyBuilder += NamedKey(ctKey.ctKey, value)
-        }
-
-
-      form
-        .filterNot(_._1 == "save")
-        .filterNot(_._1 startsWith "name")
-        .map { case (sKey, value) => CtSegmentKey(sKey) -> value } // convert from string name to CtSegmentKeys
-        .groupBy(_._1.ctKey)
-        .map { case (ctKey: Key, values: Map[CtSegmentKey, String]) =>
-          val segments = values
-            .groupBy(_._1.segment).map { case (seg, values) =>
-              val valuesForSegment: Map[String, String] = values.map { case (crSKey: CtSegmentKey, value: String) =>
-                crSKey.name -> value
-              }
-              // we now have a map of names to values
-              Segment(valuesForSegment)
+      ImATeapot
+    /*      val namedKeyBuilder = Seq.newBuilder[NamedKey]
+          val ctBuilder = Seq.newBuilder[UpdateCandidate]
+    
+    
+          val form = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }
+    
+          form.filter(_._1 startsWith "name")
+            .foreach { case (sKey, value) =>
+              val ctKey = CtSegmentKey(sKey)
+              namedKeyBuilder += NamedKey(ctKey.ctKey, value)
             }
-          val courtesyTone = CourtesyTone(ctKey, segments.toSeq)
-          ctBuilder += UpdateCandidate(courtesyTone)
-        }
-
-      actor.ask[String](DataStoreActor.UpdateData(ctBuilder.result(), namedKeyBuilder.result(), user = user(request), _)).map { _ =>
-        Redirect(routes.CourtesyToneEditorController.index())
-      }
-*/  }
+    
+    
+          form
+            .filterNot(_._1 == "save")
+            .filterNot(_._1 startsWith "name")
+            .map { case (sKey, value) => CtSegmentKey(sKey) -> value } // convert from string name to CtSegmentKeys
+            .groupBy(_._1.ctKey)
+            .map { case (ctKey: Key, values: Map[CtSegmentKey, String]) =>
+              val segments = values
+                .groupBy(_._1.segment).map { case (seg, values) =>
+                  val valuesForSegment: Map[String, String] = values.map { case (crSKey: CtSegmentKey, value: String) =>
+                    crSKey.name -> value
+                  }
+                  // we now have a map of names to values
+                  Segment(valuesForSegment)
+                }
+              val courtesyTone = CourtesyTone(ctKey, segments.toSeq)
+              ctBuilder += UpdateCandidate(courtesyTone)
+            }
+    
+          actor.ask[String](DataStoreActor.UpdateData(ctBuilder.result(), namedKeyBuilder.result(), user = user(request), _)).map { _ =>
+            Redirect(routes.CourtesyToneEditorController.index())
+          }
+    */
+  }
 }
