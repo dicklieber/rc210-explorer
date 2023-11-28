@@ -17,22 +17,21 @@
 
 package controllers
 
-import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.Row
-import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.data.courtesy.{CourtesyTone, CtField, CtTd, Segment}
-import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
+import net.wa9nnn.rc210.data.courtesy.{CourtesyTone, CtField}
+import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
+import net.wa9nnn.rc210.ui.{CandidateAndNames, FormExtractor, FormParser}
+import net.wa9nnn.rc210.{Key, KeyKind}
+import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
 import play.api.mvc.*
 
 import javax.inject.*
-import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
+import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
 class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
@@ -54,28 +53,41 @@ class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Mess
       }
   }
 
-  def edit(key: Key): Action[AnyContent] = Action {
+  def edit(key: Key): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
-      ImATeapot
+      key.check(KeyKind.courtesyToneKey)
+      val future: Future[Seq[FieldEntry]] = actor.ask(DataStoreActor.AllForKey(key, _))
+      future.map { (entries: Seq[FieldEntry]) =>
+        val courtesyToneEntry: FieldEntry = entries.head
+        val value: CourtesyTone = courtesyToneEntry.value
+        val rows: Seq[Seq[CtField]] = value.rows
+        Ok(views.html.courtesyToneEdit(rows, key))
+      }
+
   }
 
-  def save(): Action[AnyContent] = Action {
+  def save(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
 
-      ImATeapot
+      val ex = FormExtractor(request)
+      val candidateAndNames: CandidateAndNames = FormParser(CourtesyTone)
+      actor.ask[String](DataStoreActor.UpdateData(candidateAndNames, user, _)).map { _ =>
+        Redirect(routes.CourtesyToneEditorController.index())
+      }
+
     /*      val namedKeyBuilder = Seq.newBuilder[NamedKey]
           val ctBuilder = Seq.newBuilder[UpdateCandidate]
-    
-    
+
+
           val form = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }
-    
+
           form.filter(_._1 startsWith "name")
             .foreach { case (sKey, value) =>
               val ctKey = CtSegmentKey(sKey)
               namedKeyBuilder += NamedKey(ctKey.ctKey, value)
             }
-    
-    
+
+
           form
             .filterNot(_._1 == "save")
             .filterNot(_._1 startsWith "name")
@@ -93,7 +105,7 @@ class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Mess
               val courtesyTone = CourtesyTone(ctKey, segments.toSeq)
               ctBuilder += UpdateCandidate(courtesyTone)
             }
-    
+
           actor.ask[String](DataStoreActor.UpdateData(ctBuilder.result(), namedKeyBuilder.result(), user = user(request), _)).map { _ =>
             Redirect(routes.CourtesyToneEditorController.index())
           }

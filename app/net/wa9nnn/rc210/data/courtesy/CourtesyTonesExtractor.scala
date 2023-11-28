@@ -20,12 +20,17 @@ package net.wa9nnn.rc210.data.courtesy
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.KeyKind.courtesyToneKey
+import net.wa9nnn.rc210.data.courtesy.CourtesyTonesExtractor.logger
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldKey, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.FormFields
-import play.api.libs.json.JsValue
+import play.api.libs.json.{Format, JsValue, Json}
 
-object CourtesyExtractor extends ComplexExtractor with LazyLogging {
+/**
+ * [[CourtesyTone]] data are spreead out in the [[Memory]] image.
+ * This gaters all the data and produces all the [[CourtesyTone]]s.
+ */
+object CourtesyTonesExtractor extends ComplexExtractor with LazyLogging {
   private val nCourtesyTones = KeyKind.courtesyToneKey.maxN
 
   override def positions: Seq[FieldOffset] = Seq(
@@ -38,6 +43,7 @@ object CourtesyExtractor extends ComplexExtractor with LazyLogging {
    * @return what we extracted.
    */
   override def extract(memory: Memory): Seq[FieldEntry] = {
+    logger.debug("Extract CourtesyTone")
     val iterator = memory.iterator16At(856)
 
     val array = Array.ofDim[Int](10, 16)
@@ -50,16 +56,16 @@ object CourtesyExtractor extends ComplexExtractor with LazyLogging {
 
     val courtesyTones: Seq[CourtesyTone] = for (ct <- 0 until 10) yield {
       val key: Key = Key(courtesyToneKey, ct + 1)
-      CourtesyTone(key,
-        Seq(
-          Segment(array(ct)(8), array(ct)(12), array(ct)(0), array(ct)(1)),
-          Segment(array(ct)(9), array(ct)(13), array(ct)(2), array(ct)(3)),
-          Segment(array(ct)(10), array(ct)(14), array(ct)(4), array(ct)(5)),
-          Segment(array(ct)(11), array(ct)(15), array(ct)(6), array(ct)(7)),
-        ))
+      val segments = Seq(
+        Segment(array(ct)(8), array(ct)(12), array(ct)(0), array(ct)(1)),
+        Segment(array(ct)(9), array(ct)(13), array(ct)(2), array(ct)(3)),
+        Segment(array(ct)(10), array(ct)(14), array(ct)(4), array(ct)(5)),
+        Segment(array(ct)(11), array(ct)(15), array(ct)(6), array(ct)(7)),
+      )
+      CourtesyTone(key, segments)
     }
     courtesyTones.map { ct =>
-      FieldEntry(this, FieldKey("CourtesyTone", ct.key), ct)
+      FieldEntry(this, FieldKey(fieldName, ct.key), ct)
     }
   }
 
@@ -68,8 +74,14 @@ object CourtesyExtractor extends ComplexExtractor with LazyLogging {
 
 
   override val name: String = "CourtesyExtractor"
-  override val fieldName: String = name
+  //  override val fieldName: String = name
   override val kind: KeyKind = KeyKind.courtesyToneKey
 
-  override def parseForm(formFields: FormFields): ComplexFieldValue = ???
+  override def parseForm(formFields: FormFields): ComplexFieldValue =
+    val segments = Seq.empty
+    new CourtesyTone(formFields.key.get, segments)
+
+
+  implicit val fmtCourtesyTone: Format[CourtesyTone] = Json.format[CourtesyTone]
+  override val fieldName: String = "CourtesyTone"
 }

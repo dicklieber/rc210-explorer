@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.KeyKind.*
 import net.wa9nnn.rc210.data.clock.Clock
-import net.wa9nnn.rc210.data.courtesy.CourtesyExtractor
+import net.wa9nnn.rc210.data.courtesy.{CourtesyTone, CourtesyTonesExtractor}
 import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.message.MesssageExtractor
@@ -99,7 +99,7 @@ class FieldDefinitions @Inject()() {
     //DVRRowsUsed - 1494-1533
     SimpleField(1534, "Allow Terminator Speech", commonKey, "n*2091b", FieldBoolean),
     //RemoteRadioMode - 1535-1544
-    SimpleField(1571, "Program Prefix", commonKey, "n*2109v", FieldDtmf) max 4 min(1),
+    SimpleField(1571, "Program Prefix", commonKey, "n*2109v", FieldDtmf) max 4 min 1,
     //Phrase - 1576-1975 Handled as MessageMacros.
     //IDExtras - 1976-1984 needs special handling
     //MacroPortLimit - 3425-3514 needs special handling probably should be a part of MacroNode
@@ -133,7 +133,7 @@ class FieldDefinitions @Inject()() {
   val complexFd: Seq[ComplexExtractor] = Seq(
     Schedule,
     MacroNode,
-    CourtesyExtractor,
+    CourtesyTonesExtractor,
     TimerExtractor,
     MesssageExtractor,
     Clock,

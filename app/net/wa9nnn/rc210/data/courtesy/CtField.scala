@@ -21,8 +21,6 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.ui.FormField
 
-import scala.util.matching.Regex
-
 case class Name()(implicit val key: Key, val segments: Seq[Segment]) extends CtField:
   val value: Int = key.rc210Value
   val name = "name"
@@ -55,11 +53,11 @@ case class Tone(segment: Int, toneNo: Int)(implicit val key: Key, val segments: 
   val max = 3500
   val units = "Hz"
 
-abstract class CtField extends LazyLogging{
+abstract class CtField extends LazyLogging {
   def body: String =
-    FormField(name, value, Option(max))
+    FormField(param, value, Option(max))
 
-  val cssClass:String = "ctCell"
+  val cssClass: String = "ctCell"
   val value: Int
 
   val name: String
@@ -69,21 +67,8 @@ abstract class CtField extends LazyLogging{
   val units: String
   val rowSpan: Int = 1
 
-  def param: String = s"$name.$segment.${key.toString}"
-
+  def param: String = s"$name.$segment"
 }
 
-object CtField {
 
-  //  def apply(name:String, segment: Int, units:String = "Hz")(implicit  ctSegmentKey: Key) : CtSegmentKey = {
-  //    new CtSegmentKey(ctSegmentKey, segment, name, units)
-  //  }
 
-  val r: Regex = """(.+)\.(\d+)\.(.+)""".r
-
-  //  def apply(s: String): CtSegmentKey = {
-  //    s match
-  //      case r(name, sSegment, sKey) =>
-  //        new CtSegmentKey(Key(sKey), sSegment.toInt, name, rowSpan =)
-  //  }
-}

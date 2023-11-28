@@ -18,10 +18,10 @@
 package net.wa9nnn.rc210.data.courtesy
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.courtesy.Segment.logger
+import play.api.libs.json.{Format, Json}
 
 
-case class Segment(delayMs: Int, durationMs: Int, tone1Hz: Int, tone2Hz: Int) {
+case class Segment(delayMs: Int, durationMs: Int, tone1Hz: Int, tone2Hz: Int):
   def toCommand(number: Int, segN: Int): String = {
     //1*31011200*100*6
     val sNumber = f"$number%02d"
@@ -29,22 +29,22 @@ case class Segment(delayMs: Int, durationMs: Int, tone1Hz: Int, tone2Hz: Int) {
     val spaced = s"1*3$segN$sNumber $delayMs * $durationMs * $tone1Hz * $tone2Hz*"
     spaced.replace(" ", "")
   }
-}
 
-object Segment extends LazyLogging {
-  def apply(m: Map[String, String]): Segment = {
-    logger.trace(s"m: $m")
-    try {
-      val delay = m("Delay").toInt
-      val duration = m("Duration").toInt
-      val tone1 = m("Tone1").toInt
-      val tone2 = m("Tone2").toInt
+object Segment extends LazyLogging:
+  //  def apply(m: Map[String, String]): Segment = {
+  //    logger.trace(s"m: $m")
+  //    try {
+  //      val delay = m("Delay").toInt
+  //      val duration = m("Duration").toInt
+  //      val tone1 = m("Tone1").toInt
+  //      val tone2 = m("Tone2").toInt
+  //
+  //      new Segment(delay, duration, tone1, tone2)
+  //    } catch {
+  //      case e: Exception =>
+  //        logger.error("Creating a Segment", e)
+  //        throw e
+  //    }
+  //  }
 
-      new Segment(delay, duration, tone1, tone2)
-    } catch {
-      case e: Exception =>
-        logger.error("Creating a Segment", e)
-        throw e
-    }
-  }
-}
+  implicit val fmtSegment: Format[Segment] = Json.format[Segment]
