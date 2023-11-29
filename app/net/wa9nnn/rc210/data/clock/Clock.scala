@@ -122,11 +122,14 @@ object Clock extends ComplexExtractor  {
   implicit val fmtClock: Format[Clock] = Json.format[Clock]
 
   override def parseForm(formFields: FormFields): ComplexFieldValue =
-    throw new NotImplementedError() //todo
-/*    new Clock(
-      key = formFields.key,
+    new Clock(
+      key = formFields.key.get,
       enableDST =  formFields.boolean("enableDST"),
       hourDST = formFields.int("hourDST"),
+      startDST = DSTPoint(formFields, "startDST"),
+      endDST = DSTPoint(formFields, "endDst"),
+      say24Hours = formFields.boolean("say24Hours")
 
     )
-*/}
+}
+

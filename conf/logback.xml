@@ -53,6 +53,7 @@
     <logger name="net.wa9nnn.rc210.serial.DataCollector" level="INFO"/>
     <logger name="net.wa9nnn.rc210.serial.Rc210.RcOperationImpl" level="INFO"/>
     <logger name="controllers.CommonEditorController" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.ui.FormExtractor" level="DEBUG"/>
 
     <logger name="actors" level="INFO" />
     <logger name="akka" level="INFO" />

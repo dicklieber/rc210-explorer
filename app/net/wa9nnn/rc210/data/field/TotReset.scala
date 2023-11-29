@@ -21,7 +21,7 @@ import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
 
 
 sealed trait TotReset(val rc210Value: Int) extends EnumEntryValue:
-  override val values: IndexedSeq[_] = TotReset.values
+  override def values: IndexedSeq[_] = TotReset.values
 
 object TotReset extends EnumValue[TotReset] {
 

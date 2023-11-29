@@ -21,7 +21,7 @@ import net.wa9nnn.rc210.util.select.{ EnumEntryValue, EnumValue}
 
 
 sealed trait DayOfWeek(val rc210Value: Int) extends  EnumEntryValue:
-  override val values: IndexedSeq[_] = DayOfWeek.values
+  override def values: IndexedSeq[_] = DayOfWeek.values
 
 
 object DayOfWeek extends EnumValue[DayOfWeek] {

@@ -21,7 +21,7 @@ import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
 
 
 sealed trait MuteDigit(val rc210Value: Int) extends EnumEntryValue:
-  override val values: IndexedSeq[_] = MuteDigit.values
+  override def values: IndexedSeq[_] = MuteDigit.values
 
 object MuteDigit extends EnumValue[MuteDigit] {
 

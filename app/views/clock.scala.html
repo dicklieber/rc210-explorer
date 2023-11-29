@@ -1,5 +1,4 @@
 @import views.html.helper.{FieldConstructor, form, input}
-@import views.html.input._
 @import net.wa9nnn.rc210.data.clock.Clock
 @import net.wa9nnn.rc210.ui.Tabs
 
@@ -9,57 +8,59 @@
 
 @tabbedmain(Tabs.clockTab) {
     <div class="container">
-    @form(action = routes.ClockController.save()) {
+        <form action = "@routes.ClockController.save().toString" method="post">
+            <input type="hidden" name="key" value="@clock.key">
         <table class="table table-bordered table-sm">
-            <tr>
-                <td class="text-end">Say 24 Hour</td>
-                <td>
-                @checkBox("say24Hours", clock.say24Hours)
-                </td>
-            </tr>
-            <tr>
-                <td class="text-end">Enable DST</td>
-                <td>
-                @checkBox("enableDST", clock.enableDST)
-                </td>
-            </tr>
-            <tr>
-                <td class="text-end">DST Schedule</td>
-                <td>
-                    <table>
-                        <tr>
-                            <td>Starts on the </td>
-                            <td>@selectOptions("startDST.occurrence", clock.startDST.occurrence, Occurrence)</td>
-                            <td rowspan="2">  Sunday of</td>
-                            <td>@selectOptions("startDST.month", clock.startDST.monthOfYearDST, MonthOfYearDST)</td>
-                            <td rowspan="2">
-                                at
-                            </td>
-                            <td rowspan="2">
-                                <input type="number" name="hourDST" min="0" max="23" class="form-control" value="@clock.hourDST" >
-                            </td>
-                            <td rowspan="2">
-                                Hours
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Ends on the </td>
-                            <td>@selectOptions("endDST.occurrence", clock.endDST.occurrence, Occurrence)</td>
-                            <td>@selectOptions("end.month", clock.endDST.monthOfYearDST, MonthOfYearDST)</td>
-                        </tr>
-                    </table>
+        <tr>
+            <td class="text-end">Say 24 Hour</td>
+            <td>
+            @formField("say24Hours", clock.say24Hours)
+            </td>
+        </tr>
+        <tr>
+            <td class="text-end">Enable DST</td>
+            <td>
+            @formField("enableDST", clock.enableDST)
+            </td>
+        </tr>
+        <tr>
+            <td class="text-end">DST Schedule</td>
+            <td>
+                <table>
+                    <tr>
+                        <td>Starts on the </td>
+                        <td>@formField("startDST.occurrence", clock.startDST.occurrence)</td>
+                        <td rowspan="2">  Sunday of</td>
+                        <td>@formField("startDST.month", clock.startDST.monthOfYearDST)</td>
+                        <td rowspan="2">
+                            at
+                        </td>
+                        <td rowspan="2">
+                            @formField("hourDST",clock.hourDST, Option( 0 to 23) )
+@*                            <input type="number" name="hourDST" min="0" max="23" class="form-co*@@**@@*ntrol" value="@clock.hourDST" >*@
+                        </td>
+                        <td rowspan="2">
+                            Hours
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Ends on the </td>
+                        <td>@formField("endDST.occurrence", clock.endDST.occurrence)</td>
+                        <td>@formField("endDST.month", clock.endDST.monthOfYearDST)</td>
+                    </tr>
+                </table>
 
-                </td>
-            </tr>
-            <tr>
-                <td>&nbsp;</td>
-                <td>
-                @submitButton()
-                </td>
-            </tr>
+            </td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>
+            @submitButton()
+            </td>
+        </tr>
         </table>
 
+        </form>
     </div>
-}
 
 }

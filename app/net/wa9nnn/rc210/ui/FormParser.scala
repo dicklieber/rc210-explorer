@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.ui
 
+import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.ComplexFieldValue
@@ -56,11 +57,16 @@ object FormParser:
       CandidateAndNames(Seq(UpdateCandidate(fieldValue)), namedKeys)
   }
 
-class FormExtractor(request: Request[AnyContent]) extends FormFields:
+class FormExtractor(request: Request[AnyContent]) extends FormFields with LazyLogging:
   // A map of all the form values from an HTML form.
   // Note checkboxes send no value if unchecked; you have to know what you're looking for.
   val data: Map[String, String] = request.body.asFormUrlEncoded.get.flatMap { (name, values: Seq[String]) =>
     values.headOption.map(name -> _)
+  }
+  logger.whenDebugEnabled {
+    data.foreach { t2 =>
+      logger.debug(t2.toString())
+    }
   }
 
 

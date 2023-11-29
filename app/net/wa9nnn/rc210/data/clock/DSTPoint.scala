@@ -17,11 +17,21 @@
 
 package net.wa9nnn.rc210.data.clock
 
+import net.wa9nnn.rc210.ui.FormFields
+
 case class DSTPoint(monthOfYearDST: MonthOfYearDST, occurrence: Occurrence) {
   def commandPiece: String = f"${monthOfYearDST.rc210Value}%02d${occurrence.rc210Value}"
 }
 
 object DSTPoint:
+  def apply(formFields: FormFields, prefix: String): DSTPoint =
+    val occurrenceKey = prefix + ".occurrence"
+    val occurrence: Occurrence = Occurrence.withName(formFields.string(occurrenceKey))
+    val monthKey = prefix + ".month"
+    val month: MonthOfYearDST = MonthOfYearDST.withName(formFields.string(monthKey))
+    DSTPoint(month, occurrence)
+
+
   def apply(s: String): DSTPoint =
     val month: MonthOfYearDST = {
       val i: Int = s.take(2).toInt

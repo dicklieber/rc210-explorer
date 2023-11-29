@@ -31,10 +31,10 @@ object FormField:
   def apply(fieldKey: FieldKey, value: Any): String =
     apply(fieldKey.toString, value)
 
-  def apply(name: String, value: Any, max: Option[Int] = None): String =
+  def apply(name: String, value: Any, range: Option[Range] = None): String =
     val elem: Elem = value match {
       case enumValue: EnumEntryValue =>
-        <select>
+        <select name ={name}>
           {enumValue.values map { choice =>
           val opt = <option value={choice.toString} selected={if (enumValue == choice) "selected" else null}>
             {choice.toString}
@@ -70,8 +70,9 @@ object FormField:
       % Attribute(None, "id", Text(name), Null)
       % Attribute(None, "name", Text(name), Null)
 
-    val rr = max.map { max =>
-      r % Attribute(None, "max", Text(max.toString), Null)
+    val rr = range.map { range =>
+      r % Attribute(None, "min", Text(range.min.toString), Null)
+        % Attribute(None, "max", Text(range.max.toString), Null)
         % Attribute(None, "style", Text("width: 5em"), Null)
 
     }.getOrElse(elem)

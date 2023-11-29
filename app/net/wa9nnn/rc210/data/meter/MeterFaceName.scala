@@ -21,7 +21,7 @@ import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
 
 
 sealed abstract class MeterFaceName(val rc210Value: Int) extends EnumEntryValue:
-  override val values: IndexedSeq[_] = MeterFaceName.values
+  override def values: IndexedSeq[_] = MeterFaceName.values
 
 object MeterFaceName extends EnumValue[MeterFaceName] {
   override val values: IndexedSeq[MeterFaceName] = findValues
