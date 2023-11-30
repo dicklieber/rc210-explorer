@@ -18,7 +18,6 @@
 package net.wa9nnn.rc210.ui
 
 import net.wa9nnn.rc210.data.field.FieldKey
-import net.wa9nnn.rc210.util.select.EnumEntryValue
 
 import java.time.LocalTime
 import scala.xml.*
@@ -27,6 +26,10 @@ import scala.xml.*
  * Generates  html elements for any value type.
  * [[https://github.com/scala/scala-xml Scala-xml]]
  */
+
+/**
+ * @deprecated use play form stuff.
+ */
 object FormField:
   def apply(fieldKey: FieldKey, value: Any): String =
     apply(fieldKey.toString, value)
@@ -34,14 +37,15 @@ object FormField:
   def apply(name: String, value: Any, range: Option[Range] = None): String =
     val elem: Elem = value match {
       case enumValue: EnumEntryValue =>
-        <select name ={name}>
-          {enumValue.values map { choice =>
-          val opt = <option value={choice.toString} selected={if (enumValue == choice) "selected" else null}>
-            {choice.toString}
-          </option>
-          opt
-        }}
-        </select>
+        throw new NotImplementedError() //todo
+//        <select name ={name}>
+//          {enumValue.values map { choice =>
+//          val opt = <option value={choice.toString} selected={if (enumValue == choice) "selected" else null}>
+//            {choice.toString}
+//          </option>
+//          opt
+//        }}
+//        </select>
 
       case b: Boolean =>
         val elem = <input type="checkbox"></input>

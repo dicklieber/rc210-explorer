@@ -9,7 +9,6 @@ import net.wa9nnn.rc210.data.field.schedule.{DayOfWeek, Week}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldKey, FieldOffset, FieldValue, MonthOfYearSchedule, RMD, RenderMetadata}
 import net.wa9nnn.rc210.data.schedules.Schedule.s02
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.FormFields
 import play.api.libs.json.{Format, JsValue, Json}
 
 import java.time.LocalTime
@@ -133,34 +132,6 @@ object Schedule extends LazyLogging with ComplexExtractor {
     }
   }
 
-//  def fromForm(key: Key, kv: Map[String, String]): Schedule = {
-//    val enabled: Boolean = kv("enabled") == "true"
-//    val week: Week = weekSelect.fromForm(kv("week"))
-//    val dow: DayOfWeek = dowSelect.fromForm(kv("dow"))
-//    val moy: MonthOfYearSchedule = moySelect.fromForm(kv("moy"))
-//    val macroKey: Key = {
-//      val sMacroKey: String = kv("macro")
-//      Key(sMacroKey)
-//    }
-//    val localTime = LocalTime.parse(kv("time"))
-//    val hour = localTime.getHour
-//    val minute = localTime.getMinute
-//    new Schedule(
-//      key = key,
-//      dow = dow,
-//      week = week,
-//      monthOfYear = moy,
-//      hour = hour,
-//      minute = minute,
-//      enabled = enabled,
-//      macroKey = macroKey
-//    )
-//  }
-
-
-//  val dowSelect = new EnumSelect[DayOfWeek]("dow")
-//  val weekSelect = new EnumSelect[Week]("week")
-//  val moySelect = new EnumSelect[MonthOfYearSchedule]("moy")
 
   def apply(setPoint: Int): Schedule = new Schedule(Key(KeyKind.scheduleKey, setPoint))
 
@@ -174,8 +145,6 @@ object Schedule extends LazyLogging with ComplexExtractor {
   override val fieldName: String = name
   override val kind: KeyKind = KeyKind.scheduleKey
 
-  override def parseForm(formFields: FormFields): ComplexFieldValue =
-    throw new NotImplementedError() //todo
 }
 
 

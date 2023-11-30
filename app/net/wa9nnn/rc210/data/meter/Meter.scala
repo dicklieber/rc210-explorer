@@ -21,7 +21,6 @@ import com.wa9nnn.util.tableui.{Cell, Row}
 import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.FormFields
 import play.api.libs.json.{Format, JsValue, Json}
 
 import java.util.concurrent.atomic.AtomicInteger
@@ -61,6 +60,8 @@ case class Meter(key: Key, meterFaceName: MeterFaceName, low: VoltToReading, hig
 }
 
 object Meter extends ComplexExtractor {
+  def unapply(u: Meter): Option[(Key, MeterFaceName, VoltToReading, VoltToReading)] = Some((u.key, u.meterFaceName, u.low, u.high))
+
   /**
    *
    * @param memory    source of RC-210 data.
@@ -111,7 +112,6 @@ object Meter extends ComplexExtractor {
   implicit val fmtVoltToReading: Format[VoltToReading] = Json.format[VoltToReading]
   implicit val fmtMeter: Format[Meter] = Json.format[Meter]
 
-  override def parseForm(formFields: FormFields): Meter = ???
 }
 
 
@@ -126,4 +126,9 @@ case class VoltToReading(hundredthVolt: Int, reading: Int) {
     Cell(reading)
   )
 }
+
+object VoltToReading:
+  def unapply(u: VoltToReading): Option[(Int, Int)] = Some((u.hundredthVolt, u.reading))
+
+end VoltToReading
 

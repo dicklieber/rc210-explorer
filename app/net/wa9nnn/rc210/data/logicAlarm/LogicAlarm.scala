@@ -17,11 +17,11 @@
 
 package net.wa9nnn.rc210.data.logicAlarm
 
-import net.wa9nnn.rc210.KeyKind._
+import net.wa9nnn.rc210.KeyKind.*
+import net.wa9nnn.rc210.data.courtesy.Segment
 import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.FormFields
 import play.api.libs.json.{Format, JsValue, Json}
 
 case class LogicAlarm(key: Key, enable: Boolean, lowMacro: Key, highMacro: Key) extends ComplexFieldValue(LogicAlarm.name) {
@@ -42,13 +42,7 @@ case class LogicAlarm(key: Key, enable: Boolean, lowMacro: Key, highMacro: Key) 
 }
 
 object LogicAlarm extends ComplexExtractor {
-  override def parseForm(formParser: FormFields): ComplexFieldValue =
-    new LogicAlarm(
-      key = formParser.key.get,
-      enable = formParser.boolean("enabled"),
-      lowMacro = formParser.key("lowMacro").get,
-      highMacro = formParser.key("highMacro").get
-    )
+  def unapply(u: LogicAlarm): Option[(Key, Boolean, Key, Key)] = Some((u.key, u.enable, u.lowMacro, u.highMacro))
 
   /**
    *

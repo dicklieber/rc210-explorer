@@ -19,18 +19,15 @@ package net.wa9nnn.rc210.data.courtesy
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.KeyKind
-import net.wa9nnn.rc210.ui.{FormFields, FormParseable}
 import play.api.libs.json.Format
 
 import scala.collection.MapView
-//import com.wa9nnn.util.tableui.{Cell, Row}
 import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntryBase}
 import play.api.libs.json.{JsValue, Json, OFormat}
 
 import java.util.concurrent.atomic.AtomicInteger
 
-//noinspection ZeroIndexToHead
 case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends ComplexFieldValue("CourtesyTone") {
   assert(segments.length == 4, s"Must have four segemnts but only have: $segments")
 
@@ -85,50 +82,9 @@ case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends C
 }
 
 
-object CourtesyTone extends LazyLogging with FormParseable {
-  //  override def parse(jsValue: JsValue): FieldValue = jsValue.as[CourtesyTone]
-  //
-  //
-  //  //  override val fieldName: String = name
-  //  override val kind: KeyKind = KeyKind.courtesyToneKey
-  case class Parsed(segment: Int, name: String)
-
-  object Parsed:
-    def apply(string: String): Seq[Parsed] =
-      val tokens: Array[String] = string.split('.')
-      if (tokens.length == 2)
-        Option(new Parsed(tokens(1).toInt, tokens.head)).toSeq
-      else
-        Seq.empty
-
-
-  override def parseForm(formFields: FormFields): ComplexFieldValue =
-    val segMap: Map[Parsed, Int] = formFields.data.flatMap{(key, value) =>
-      Parsed(key).map(parsed => parsed -> value.toInt)
-    }
-
-    def segFields(segment: Int): Map[String, Int] = {
-      val value1: Map[Parsed, Int] = segMap.filter((p, _) => p.segment == segment)
-      val value2: Map[String, Int] = value1.map { (p, value) => p.name -> value }
-      value2
-    }
-
-    val segments: Seq[Segment] = for {
-      segment <- 0 to 3
-    } yield {
-      val segf = segFields(segment)
-      val delay: Int = segf("Delay")
-      val duration: Int = segf("Duration")
-      val tone1: Int = segf("Tone1")
-      val tone2: Int = segf("Tone2")
-      Segment(delay, duration, tone1, tone2)
-    }
-    CourtesyTone(formFields.key.get, segments)
-
-
-    new CourtesyTone(formFields.key.get, segments)
-
+object CourtesyTone extends LazyLogging:
+  def unapply(u: CourtesyTone): Option[(Key, Seq[Segment])] = Some((u.key, u.segments))
 
   implicit val fmtCourtesyTone: Format[CourtesyTone] = Json.format[CourtesyTone]
-}
+
 

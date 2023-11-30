@@ -1,20 +1,20 @@
-@import views.html.input._
-@import views.html.helper.form //todo 
-
-@import net.wa9nnn.rc210.util.select.MacroSelect
+@import views.html.helper._
+@import play.api.mvc.RequestHeader
 @import net.wa9nnn.rc210.ui.Tabs
 @import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
-@(logicAlarm: LogicAlarm)
+@import net.wa9nnn.rc210.ui.MacroSelect
+@import views.html.helper.checkbox
+@(logicAlarmForm: Form[LogicAlarm])( implicit request: RequestHeader, messagesProvider: MessagesProvider)
 @tabbedmain(Tabs.logicAlarmTab) {
     <div class="container">
-    @form(action = routes.LogicAlarmEditorController.save()) {
-        <input type="hidden" name="key" value="@logicAlarm.key">
+    @form(routes.LogicAlarmEditorController.save()) {
+        <input type="hidden" name="key" value="@logicAlarmForm("key").value">
         <table>
             <tr>
                 <td>
                     Enable
                 </td>
-                <td>@input.checkBox("enable", logicAlarm.enable)
+                <td>@checkbox(logicAlarmForm("enable"))
                 </td>
 
             </tr>
@@ -22,15 +22,18 @@
                 <td>
                     Low Macro
                 </td>
-                <td>@selectOptions("lowMacro", logicAlarm.lowMacro, MacroSelect)
+                <td>
+                @select(logicAlarmForm("lowMacro"), MacroSelect.options)
                 </td>
             </tr>
             <tr>
                 <td>
                     High Macro
                 </td>
-                <td>@selectOptions("highMacro", logicAlarm.highMacro, MacroSelect)
-                </td>
+                <td>
+            <td>
+                @select(logicAlarmForm("highMacro"), MacroSelect.options)
+            </td>
             </tr>
 
 
@@ -39,5 +42,5 @@
 
     </div>
 }
-}
+} @import views.html.helper.select
 

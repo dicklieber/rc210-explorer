@@ -23,15 +23,15 @@ import net.wa9nnn.rc210.KeyKind
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
-import net.wa9nnn.rc210.ui.{CandidateAndNames, FormExtractor, FormParser}
+import net.wa9nnn.rc210.ui.{CandidateAndNames}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
 import play.api.mvc.*
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
+import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
 class CommonEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
@@ -79,7 +79,8 @@ class CommonEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
   }
 
   def save(): Action[AnyContent] = Action.async {
-    implicit request: Request[AnyContent] =>
+    Future(ImATeapot("todo"))
+/*    implicit request: Request[AnyContent] =>
 
       val data = new FormExtractor(request)
 
@@ -96,5 +97,5 @@ class CommonEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
       actor.ask[String](DataStoreActor.UpdateData(uc, Seq.empty, user, _)).map { _ =>
         Redirect(routes.CommonEditorController.index())
       }
-  }
+*/  }
 }

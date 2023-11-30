@@ -21,7 +21,6 @@ import com.wa9nnn.util.tableui.Row
 import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.FormFields
 import net.wa9nnn.rc210.util.Chunk
 import play.api.libs.json.{Format, JsValue, Json}
 
@@ -109,7 +108,6 @@ object RemoteBase extends ComplexExtractor {
   implicit val fmtRBMemory: Format[RBMemory] = Json.format[RBMemory]
   implicit val fmtRemoteBase: Format[RemoteBase] = Json.format[RemoteBase]
 
-  override def parseForm(formFields: FormFields): ComplexFieldValue = ???
 }
 
 /**

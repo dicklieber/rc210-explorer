@@ -17,12 +17,10 @@
 
 package net.wa9nnn.rc210.data.field.schedule
 
-import net.wa9nnn.rc210.util.select.{ EnumEntryValue, EnumValue}
+import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
 
 
-sealed trait DayOfWeek(val rc210Value: Int) extends  EnumEntryValue:
-  override def values: IndexedSeq[_] = DayOfWeek.values
-
+sealed trait DayOfWeek(val rc210Value: Int) extends  EnumEntryValue
 
 object DayOfWeek extends EnumValue[DayOfWeek] {
 

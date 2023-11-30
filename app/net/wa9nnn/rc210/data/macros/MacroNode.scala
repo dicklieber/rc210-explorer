@@ -5,7 +5,6 @@ import net.wa9nnn.rc210.data.{Dtmf, TriggerNode}
 import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.FormFields
 import play.api.libs.json.{Format, JsValue, Json}
 
 import java.util.concurrent.atomic.AtomicInteger
@@ -153,7 +152,6 @@ object MacroNode extends ComplexExtractor {
   override val fieldName: String = name
   override val kind: KeyKind = KeyKind.macroKey
 
-  override def parseForm(formFields: FormFields): ComplexFieldValue = ???
 }
 
 

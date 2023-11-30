@@ -21,7 +21,6 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldKey, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.FormFields
 import play.api.libs.json.{Format, JsValue, Json}
 
 //noinspection ZeroIndexToHead
@@ -64,6 +63,4 @@ object TimerExtractor extends ComplexExtractor with LazyLogging {
   override val fieldName: String = name
   override val kind: KeyKind = KeyKind.timerKey
 
-  override def parseForm(formFields: FormFields): ComplexFieldValue =
-    throw new NotImplementedError() //todo
 }

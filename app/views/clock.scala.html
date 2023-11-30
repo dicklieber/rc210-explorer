@@ -1,66 +1,64 @@
-@import views.html.helper.{FieldConstructor, form, input}
+@import views.html.helper._
 @import net.wa9nnn.rc210.data.clock.Clock
 @import net.wa9nnn.rc210.ui.Tabs
 
 @import net.wa9nnn.rc210.data.clock.Occurrence
 @import net.wa9nnn.rc210.data.clock.MonthOfYearDST
-@(clock: Clock)
+@(clockForm: Form[Clock])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
-@tabbedmain(Tabs.clockTab) {
-    <div class="container">
-        <form action = "@routes.ClockController.save().toString" method="post">
-            <input type="hidden" name="key" value="@clock.key">
-        <table class="table table-bordered table-sm">
-        <tr>
-            <td class="text-end">Say 24 Hour</td>
-            <td>
-            @formField("say24Hours", clock.say24Hours)
-            </td>
-        </tr>
-        <tr>
-            <td class="text-end">Enable DST</td>
-            <td>
-            @formField("enableDST", clock.enableDST)
-            </td>
-        </tr>
-        <tr>
-            <td class="text-end">DST Schedule</td>
-            <td>
-                <table>
-                    <tr>
-                        <td>Starts on the </td>
-                        <td>@formField("startDST.occurrence", clock.startDST.occurrence)</td>
-                        <td rowspan="2">  Sunday of</td>
-                        <td>@formField("startDST.month", clock.startDST.monthOfYearDST)</td>
-                        <td rowspan="2">
-                            at
-                        </td>
-                        <td rowspan="2">
-                            @formField("hourDST",clock.hourDST, Option( 0 to 23) )
-@*                            <input type="number" name="hourDST" min="0" max="23" class="form-co*@@**@@*ntrol" value="@clock.hourDST" >*@
-                        </td>
-                        <td rowspan="2">
-                            Hours
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Ends on the </td>
-                        <td>@formField("endDST.occurrence", clock.endDST.occurrence)</td>
-                        <td>@formField("endDST.month", clock.endDST.monthOfYearDST)</td>
-                    </tr>
-                </table>
+    @tabbedmain(Tabs.clockTab) {
+        <div class="container">
+        @form(routes.ClockController.save()) {
+            <input type="hidden" name="key" value="@clockForm("key").value>
+            <table class="table table-bordered table-sm">
+                <tr>
+                    <td class="text-end">Say 24 Hour</td>
+                    <td>
+                    @checkbox(clockForm("say24Hours"))
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-end">Enable DST</td>
+                    <td>
+                    @checkbox(clockForm("enableDST"))
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-end">DST Schedule</td>
+                    <td>
+                        <table>
+                            <tr>
+                                <td>Starts on the </td>
+                                <td>@select(clockForm("startDST.occurrence"), Occurrence.options)</td>
+                                <td rowspan="2">  Sunday of</td>
+                                <td>@select(clockForm("startDST.month"), MonthOfYearDST.options)</td>
+                                <td rowspan="2">
+                                    at
+                                </td>
+                                <td rowspan="2">
+                                @inputText(clockForm("hourDST"), Symbol("type") -> "number",  Symbol("max") -> 23)
+                                </td>
+                                <td rowspan="2">
+                                    Hours
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Ends on the </td>
+                                <td>@select(clockForm("endDST.occurrence"), Occurrence.options)</td>
+                                <td>@select(clockForm("endDST.month"), MonthOfYearDST.options)</td>
+                            </tr>
+                        </table>
 
-            </td>
-        </tr>
-        <tr>
-            <td>&nbsp;</td>
-            <td>
-            @submitButton()
-            </td>
-        </tr>
-        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>
+                    @submitButton()
+                    </td>
+                </tr>
+            </table>
+        }
+        </div>
 
-        </form>
-    </div>
-
-}
+    }

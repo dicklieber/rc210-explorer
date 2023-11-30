@@ -27,10 +27,12 @@ import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, UpdateData
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
 import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
-import net.wa9nnn.rc210.ui.{CandidateAndNames, FormParser}
+import net.wa9nnn.rc210.ui.{CandidateAndNames, ProcessResult}
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.util.Timeout
+import play.api.data.Form
+import play.api.data.Forms.*
 import play.api.mvc.*
 import play.api.i18n.*
 
@@ -38,20 +40,21 @@ import javax.inject.*
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
+import Key.keyFormatter
 
 @Singleton
 class LogicAlarmEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
-                                          (implicit scheduler: Scheduler, ec: ExecutionContext)
-  extends MessagesInjectedController with LazyLogging {
+                                          (implicit scheduler: Scheduler, ec: ExecutionContext, components: MessagesControllerComponents)
+  extends MessagesAbstractController(components) with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
-//  private val logicForm: Form[LogicAlarm] = Form(
-//    mapping(
-//      "key" -> of[Key],
-//      "enable" -> boolean,
-//      "lowMacro" -> of[Key],
-//      "highMacro" -> of[Key]
-//    )(LogicAlarm.apply)(LogicAlarm.unapply)
-//  )
+  private val logicForm: Form[LogicAlarm] = Form(
+    mapping(
+      "key" -> of[Key],
+      "enable" -> boolean,
+      "lowMacro" -> of[Key],
+      "highMacro" -> of[Key]
+    )(LogicAlarm.apply)(LogicAlarm.unapply)
+  )
 
 
   def index(): Action[AnyContent] = Action.async {
@@ -62,28 +65,34 @@ class LogicAlarmEditorController @Inject()(actor: ActorRef[DataStoreActor.Messag
       }
   }
 
-  def edit(logicAlarmKey: Key) = Action.async {
+  def edit(logicAlarmKey: Key): Action[AnyContent] = Action.async {
     implicit request: MessagesRequest[AnyContent] =>
       val fieldKey = FieldKey("LogicAlarm", logicAlarmKey)
       actor.ask[Option[FieldEntry]](DataStoreActor.ForFieldKey(fieldKey, _)).map {
         {
           case Some(fieldEntry) =>
             val logicAlarm: LogicAlarm = fieldEntry.value
-            Ok(views.html.logicEditor(logicAlarm))
-
+            val form: Form[LogicAlarm] = logicForm.fill(logicAlarm)
+            Ok(views.html.logicEditor(form))
           case None =>
             NotFound(s"No key: $logicAlarmKey")
         }
       }
   }
 
-  def save(): Action[AnyContent] = Action.async {
-    implicit request: MessagesRequest[AnyContent] =>
-
-      val candidateAndNames: CandidateAndNames = FormParser(LogicAlarm)
-
-      actor.ask[String](UpdateData(candidateAndNames, user = user, _)).map { _ =>
-        Redirect(routes.LogicAlarmEditorController.index())
-      }
+  def save(): Action[AnyContent] = Action.async { implicit request =>
+    logicForm
+      .bindFromRequest()
+      .fold(
+        (formWithErrors: Form[LogicAlarm]) => {
+          Future(BadRequest(views.html.logicEditor(formWithErrors)))
+        },
+        (logicAlarm: LogicAlarm) => {
+          val candidateAndNames = ProcessResult(logicAlarm)
+          actor.ask[String](UpdateData(candidateAndNames, user, _)).map { _ =>
+            Redirect(routes.LogicAlarmEditorController.index())
+          }
+        }
+      )
   }
 }

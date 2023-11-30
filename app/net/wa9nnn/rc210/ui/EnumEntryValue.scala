@@ -15,48 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-package net.wa9nnn.rc210.util.select
+package net.wa9nnn.rc210.ui
 
-import com.typesafe.scalalogging.LazyLogging
-import enumeratum.*
-
-/**
- * for example:
- * {{{
- *  object Occurrence extends EnumValue[Occurrence]
- * }}}
- *
- * @tparam T
- */
-trait EnumValue[T <: EnumEntryValue] extends PlayEnum[T] with Selections with LazyLogging:
-  val values: IndexedSeq[T]
-
-  override def options: Seq[EnumEntryValue] = values
-
-  override def equals(obj: Any): Boolean =
-    obj match
-      case other:EnumValue[?] =>
-        other.equals(this)
-      case _ =>
-        false
-
-  /**
-   * @param target find the Enum with this rc210Value.
-   * @return
-   */
-  def find(target: Int): T =
-    values.find {
-      _.rc210Value == target
-    } match
-      case Some(value) => value
-      case None =>
-        val sValues = values.map(t => s"${t.rc210Value}: ${t.toString}").mkString(",")
-        val head = values.head
-        logger.error(s"No $target in $sValues! Using $head")
-        head
-
-trait Selections:
-  def options: Seq[EnumEntryValue]
+import enumeratum.EnumEntry
 
 /**
  * for example:
@@ -68,11 +29,3 @@ trait Selections:
  */
 trait EnumEntryValue extends EnumEntry:
   val rc210Value: Int
-  /**
-   * This allow get all the values from any [[EnumEntryValue]]. Enables typed-based html form fields.
-   */
-  def values: IndexedSeq[?]
-
-
-  
-  

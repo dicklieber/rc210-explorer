@@ -17,20 +17,25 @@
 
 package net.wa9nnn.rc210.data.clock
 
-import net.wa9nnn.rc210.ui.FormFields
+import play.api.mvc.*
+import play.api.data.{Form, Mapping}
+import play.api.data.Forms.*
+import enumeratum.values.*
+import play.api.libs.json.{Format, Json}
 
 case class DSTPoint(monthOfYearDST: MonthOfYearDST, occurrence: Occurrence) {
   def commandPiece: String = f"${monthOfYearDST.rc210Value}%02d${occurrence.rc210Value}"
 }
 
 object DSTPoint:
-  def apply(formFields: FormFields, prefix: String): DSTPoint =
-    val occurrenceKey = prefix + ".occurrence"
-    val occurrence: Occurrence = Occurrence.withName(formFields.string(occurrenceKey))
-    val monthKey = prefix + ".month"
-    val month: MonthOfYearDST = MonthOfYearDST.withName(formFields.string(monthKey))
-    DSTPoint(month, occurrence)
+  val dstPointForm: Mapping[DSTPoint] =
+    mapping(
+      "month" -> MonthOfYearDST.formField,
+      "occurrence" -> Occurrence.formField,
+    )(DSTPoint.apply)(DSTPoint.unapply)
 
+  def unapply(u: DSTPoint): Option[(MonthOfYearDST, Occurrence)] = Some((u.monthOfYearDST, u.occurrence))
+  implicit val fmtDSTPoint: Format[DSTPoint] = Json.format[DSTPoint]
 
   def apply(s: String): DSTPoint =
     val month: MonthOfYearDST = {

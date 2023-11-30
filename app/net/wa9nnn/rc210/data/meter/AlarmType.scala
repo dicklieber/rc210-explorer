@@ -18,10 +18,9 @@
 package net.wa9nnn.rc210.data.meter
 
 import enumeratum.values.*
-import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
+import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
 
-sealed abstract class AlarmType(val rc210Value: Int) extends EnumEntryValue:
-  override def values: IndexedSeq[_] = AlarmType.values
+sealed abstract class AlarmType(val rc210Value: Int) extends EnumEntryValue
 
 case object AlarmType extends EnumValue[AlarmType] {
   override val values: IndexedSeq[AlarmType] = findValues

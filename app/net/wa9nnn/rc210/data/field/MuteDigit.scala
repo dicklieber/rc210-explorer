@@ -17,11 +17,10 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
+import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
 
 
-sealed trait MuteDigit(val rc210Value: Int) extends EnumEntryValue:
-  override def values: IndexedSeq[_] = MuteDigit.values
+sealed trait MuteDigit(val rc210Value: Int) extends EnumEntryValue
 
 object MuteDigit extends EnumValue[MuteDigit] {
 

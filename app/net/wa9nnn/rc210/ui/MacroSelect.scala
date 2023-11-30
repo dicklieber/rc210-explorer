@@ -15,24 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-package net.wa9nnn.rc210.data.courtesy
+package net.wa9nnn.rc210.ui
 
-import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.data.clock.{Clock, DSTPoint}
-import play.api.libs.json.{Format, Json}
+import net.wa9nnn.rc210.KeyKind.macroKey
 
-
-case class Segment(delayMs: Int, durationMs: Int, tone1Hz: Int, tone2Hz: Int):
-  def toCommand(number: Int, segN: Int): String = {
-    //1*31011200*100*6
-    val sNumber = f"$number%02d"
-
-    val spaced = s"1*3$segN$sNumber $delayMs * $durationMs * $tone1Hz * $tone2Hz*"
-    spaced.replace(" ", "")
-  }
-
-object Segment extends LazyLogging:
-  def unapply(u: Segment): Option[(Int, Int, Int, Int)] = Some((u.delayMs, u.durationMs,u.tone1Hz,  u.tone2Hz))
-
-  implicit val fmtSegment: Format[Segment] = Json.format[Segment]
+object MacroSelect extends KeySelect(macroKey)

@@ -18,10 +18,10 @@
 package net.wa9nnn.rc210.data.meter
 
 import net.wa9nnn.rc210.KeyKind.{macroKey, meterAlarmKey, meterKey}
+import net.wa9nnn.rc210.data.courtesy.Segment
 import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.FormFields
 import play.api.libs.json.{Format, JsValue, Json}
 
 import java.util.concurrent.atomic.AtomicInteger
@@ -74,6 +74,8 @@ case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint:
 
 
 object MeterAlarm extends ComplexExtractor {
+  def unapply(u: MeterAlarm): Option[(Key, Key, AlarmType, Int, Key)] = Some((u.key, u.meter,u.alarmType,  u.tripPoint, u.macroKey))
+
   private val nMeters = 8
 
   /**
@@ -129,7 +131,5 @@ object MeterAlarm extends ComplexExtractor {
 
   implicit val fmtMeterAlarm: Format[MeterAlarm] = Json.format[MeterAlarm]
 
-  override def parseForm(formFields: FormFields): ComplexFieldValue =
-    throw new NotImplementedError() //todo
 }
 

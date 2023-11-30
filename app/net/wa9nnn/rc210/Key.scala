@@ -20,7 +20,10 @@ package net.wa9nnn.rc210
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
 import net.wa9nnn.rc210.KeyKind.{commonKey, macroKey, portKey}
 import net.wa9nnn.rc210.data.named.NamedKeySource
-import net.wa9nnn.rc210.util.select.EnumEntryValue
+import net.wa9nnn.rc210.security.UserId.UserId
+import net.wa9nnn.rc210.ui.EnumEntryValue
+import play.api.data.FormError
+import play.api.data.format.Formatter
 import play.api.libs.json.*
 import play.api.mvc.PathBindable
 
@@ -32,7 +35,7 @@ import play.api.mvc.PathBindable
 case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends CellProvider with Ordered[Key] with EnumEntryValue {
   def check(expected: KeyKind): Unit = if (expected != keyKind) throw IllegalArgumentException(s"Expecting Key of type $expected, but got $this}")
 
-  override val values: IndexedSeq[_] = IndexedSeq.empty //handled in
+//  override val values: IndexedSeq[_] = IndexedSeq.empty //handled in
   assert(rc210Value <= keyKind.maxN, s"Max number for $keyKind is ${keyKind.maxN}")
 
   override def toString: String = s"$keyKind$rc210Value"
@@ -127,6 +130,15 @@ object Key:
       macroKey.toString
     }
   }
+  import play.api.data.format.Formats._
+  implicit val keyFormatter: Formatter[Key] = new Formatter[Key]:
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Key] =
+      parsing(Key(_), "BadKey", Nil)(key, data)
+
+
+    override def unbind(key: String, value: Key): Map[String, String] = Map(key -> value.toString)
+
+
 
 
 

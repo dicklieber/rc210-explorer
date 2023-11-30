@@ -22,8 +22,7 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, ForFieldKey, Message}
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldInt, FieldKey}
-import net.wa9nnn.rc210.data.meter.{Meter, MeterAlarm}
-import net.wa9nnn.rc210.ui.FormParser
+import net.wa9nnn.rc210.data.meter._
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
 import play.api.data.Forms.*
@@ -37,34 +36,34 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
 class MeterController @Inject()(actor: ActorRef[Message])
-                               (implicit scheduler: Scheduler, ec: ExecutionContext, cc: MessagesControllerComponents)
-  extends AbstractController(cc) with LazyLogging {
+                               (implicit scheduler: Scheduler, ec: ExecutionContext, components: MessagesControllerComponents)
+  extends MessagesAbstractController(components) with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 
-  //  private val alarmForm: Form[MeterAlarm] = Form(
-  //    mapping(
-  //      "key" -> of[MeterAlarmKey],
-  //      "meter" -> of[MeterKey],
-  //      "alarmType" -> of[AlarmType],
-  //      "tripPoint" -> default(number, 0),
-  //      "macroKey" -> of[MacroKey]
-  //    )(MeterAlarm.apply)(MeterAlarm.unapply)
-  //  )
-  //
-  //  private val voltToReadingMapping: Mapping[VoltToReading] =
-  //    mapping(
-  //      "hundredthVolt" -> number,
-  //      "reading" -> number,
-  //    )(VoltToReading.apply)(VoltToReading.unapply)
-  //
-  //  val meterForm: Form[Meter] = Form(
-  //    mapping(
-  //      "key" -> of[MeterKey],
-  //      "faceName" -> of[MeterFaceName],
-  //      "low" -> voltToReadingMapping,
-  //      "high" -> voltToReadingMapping,
-  //    )(Meter.apply)(Meter.unapply)
-  //  )
+    private val alarmForm: Form[MeterAlarm] = Form(
+      mapping(
+        "key" -> of[Key],
+        "meter" -> of[Key],
+        "alarmType" -> AlarmType.formField,
+        "tripPoint" -> default(number, 0),
+        "macroKey" -> of[Key]
+      )(MeterAlarm.apply)(MeterAlarm.unapply)
+    )
+
+    private val voltToReadingMapping: Mapping[VoltToReading] =
+      mapping(
+        "hundredthVolt" -> number,
+        "reading" -> number,
+      )(VoltToReading.apply)(VoltToReading.unapply)
+
+    val meterForm: Form[Meter] = Form(
+      mapping(
+        "key" -> of[Key],
+        "faceName" -> MeterFaceName.formField,
+        "low" -> voltToReadingMapping,
+        "high" -> voltToReadingMapping,
+      )(Meter.apply)(Meter.unapply)
+    )
 
   def index: Action[AnyContent] = Action.async {
     implicit request =>
@@ -97,7 +96,8 @@ class MeterController @Inject()(actor: ActorRef[Message])
 
   def editAlarm(alarmKey: Key): Action[AnyContent] = Action.async {
     implicit request =>
-      val fieldKey = FieldKey("MeterAlarm", alarmKey)
+        Future(ImATeapot)
+/*      val fieldKey = FieldKey("MeterAlarm", alarmKey)
       actor.ask(ForFieldKey(fieldKey, _)).map {
         case Some(fieldEntry: FieldEntry) =>
           val meterAlarm: MeterAlarm = fieldEntry.value
@@ -106,7 +106,7 @@ class MeterController @Inject()(actor: ActorRef[Message])
           NotFound(s"Not meterKey: $fieldKey")
 
       }
-  }
+*/  }
 
   def saveMeter(): Action[AnyContent] = Action.async {
     implicit request =>
@@ -120,8 +120,7 @@ class MeterController @Inject()(actor: ActorRef[Message])
 
   def saveAlarm(): Action[AnyContent] = Action.async {
     implicit request =>
-      val names = FormParser(Meter)
-      throw new NotImplementedError()
+      Future(ImATeapot)
   }
 }
 

@@ -1,8 +1,9 @@
-@import net.wa9nnn.rc210.util.select._
+@import net.wa9nnn.rc210.ui.Selections
+@import net.wa9nnn.rc210.ui.EnumEntryValue
 @(name: String, selectedItem: EnumEntryValue, selections: Selections, tooltip: String = "")
 <select name="@name" @if(tooltip.nonEmpty) {
     title="@tooltip"}>
 @for(option <- selections.options) {
-    <option value="@option.rc210Value">@option.toString</option>
+    <option value="@option._1">@option._2</option>
 }
 </select>

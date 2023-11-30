@@ -18,16 +18,18 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.data.clock.Clock
+import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
+import net.wa9nnn.rc210.data.datastore.DataStoreActor.AllForKeyKind
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
 import net.wa9nnn.rc210.data.timers.Timer
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.util.Timeout
+import play.api.mvc.*
 import play.api.data.Form
 import play.api.data.Forms.*
-import play.api.mvc.*
 
 import javax.inject.*
 import scala.concurrent.duration.DurationInt
@@ -35,27 +37,38 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
 class TimerEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
-                                     (implicit scheduler: Scheduler, ec: ExecutionContext)
-  extends MessagesInjectedController with LazyLogging {
+                                     (implicit scheduler: Scheduler, ec: ExecutionContext, components: MessagesControllerComponents)
+  extends MessagesAbstractController(components) with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 
-  //  private val timerForm: Form[Timer] = Form[Timer](
-  //    mapping(
-  //      "timerKey" -> of[TimerKey],
-  //      "seconds" -> number,
-  //      "macroKey" -> of[MacroKey],
-  //    )(Timer.apply)(Timer.unapply)
-  //  )
+  private val timerForm: Form[Timer] = Form[Timer](
+    mapping(
+      "timerKey" -> of[Key],
+      "seconds" -> number,
+      "macroKey" -> of[Key],
+    )(Timer.apply)(Timer.unapply)
+  )
 
-  def index: Action[AnyContent] = Action {
-    //    implicit request: Request[AnyContent] =>
+//  def indexC: Action[AnyContent] = Action.async {
+//    implicit request =>
+//      actor.ask[Seq[FieldEntry]](DataStoreActor.AllForKeyKind(KeyKind.clockKey, _)).map { fieldEntries =>
+//        val fieldEntry: FieldEntry = fieldEntries.head
+//        val clock: Clock = fieldEntry.value.asInstanceOf[Clock]
+//
+//        Ok(views.html.clock(clockForm.fill(clock)))
+//        Ok(views.html.clock(clockForm.fill(clock)))
+//      }
+//  }
 
-    //      actor.ask(AllForKeyKind(KeyKind.timerKey, _)).map { (timerFields: Seq[FieldEntry]) =>
-    //        val timers: Seq[Timer] = timerFields.map {
-    //          _.value
-    //        }
-    ImATeapot
-    //        Ok(views.html.timers(timers))
+  def index: Action[AnyContent] = Action.async {
+    implicit request =>
+
+      val future: Future[Seq[FieldEntry]] = actor.ask(DataStoreActor.AllForKeyKind(KeyKind.timerKey, _))
+      future.map { (fieldEntries: Seq[FieldEntry]) =>
+        val timers: Seq[Timer] = fieldEntries.map(fe => fe.value.asInstanceOf[Timer])
+        Ok("todo")
+//        Ok(views.html.timers(timers))
+      }
   }
 
   def edit(timerKey: Key): Action[AnyContent] = Action.async {
@@ -63,34 +76,15 @@ class TimerEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
       val fieldKey = FieldKey("Timer", timerKey)
       actor.ask(DataStoreActor.ForFieldKey(fieldKey, _)).map {
         case Some(fieldEntry: FieldEntry) =>
-          Ok(views.html.timerEditor(fieldEntry.value))
+          val form = timerForm.fill(fieldEntry.value)
+          Ok(views.html.timerEditor(form))
         case None =>
           NotFound(s"No timer: $timerKey")
       }
   }
 
-  def save(): Action[AnyContent] = Action {
+  def save(): Action[AnyContent] = Action.async {
     implicit request: MessagesRequest[AnyContent] =>
-
-      ImATeapot
-    //      val fields: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
-    //      val name: String = fields("name").head
-    //      val timerKey: TimerKey = KeyFactory.apply(fields("timerKey").head)
-    //
-    //      timerForm.bindFromRequest().fold(
-    //        formWithErrors => {
-    //          Future(BadRequest(views.html.timerEditor(formWithErrors, timerKey)))
-    //        },
-    //        (timer: Timer) => {
-    //          val updateCandidate: UpdateCandidate = UpdateCandidate(timer.fieldKey, Right(timer))
-    //          actor.ask[String](UpdateData(Seq(updateCandidate), Seq(NamedKey(timerKey, name)), who(request), _)).map { _ =>
-    //            Redirect(routes.TimerEditorController.index)
-    //          }
-    //        }
-    //      )
-
-    //  }
+      Future(ImATeapot)
   }
 }
-
-case class Timers(timers: Seq[Timer])

@@ -23,7 +23,6 @@ import net.wa9nnn.rc210.KeyKind.courtesyToneKey
 import net.wa9nnn.rc210.data.courtesy.CourtesyTonesExtractor.logger
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldKey, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.FormFields
 import play.api.libs.json.{Format, JsValue, Json}
 
 /**
@@ -76,11 +75,6 @@ object CourtesyTonesExtractor extends ComplexExtractor with LazyLogging {
   override val name: String = "CourtesyExtractor"
   //  override val fieldName: String = name
   override val kind: KeyKind = KeyKind.courtesyToneKey
-
-  override def parseForm(formFields: FormFields): ComplexFieldValue =
-    val segments = Seq.empty
-    new CourtesyTone(formFields.key.get, segments)
-
 
   implicit val fmtCourtesyTone: Format[CourtesyTone] = Json.format[CourtesyTone]
   override val fieldName: String = "CourtesyTone"

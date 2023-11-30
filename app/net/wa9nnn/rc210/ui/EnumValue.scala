@@ -15,24 +15,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-package net.wa9nnn.rc210.data.courtesy
+package net.wa9nnn.rc210.ui
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.data.clock.{Clock, DSTPoint}
-import play.api.libs.json.{Format, Json}
+import enumeratum.PlayEnum
 
+/**
+ * for example:
+ * {{{
+ *  object Occurrence extends EnumValue[Occurrence]
+ * }}}
+ *
+ * @tparam T
+ */
+trait EnumValue[T <: EnumEntryValue] extends PlayEnum[T] with Selections with LazyLogging:
+  val values: IndexedSeq[T]
 
-case class Segment(delayMs: Int, durationMs: Int, tone1Hz: Int, tone2Hz: Int):
-  def toCommand(number: Int, segN: Int): String = {
-    //1*31011200*100*6
-    val sNumber = f"$number%02d"
+  override def options: Seq[(String, String)] = values.map((v: T) => v.toString -> v.toString)
 
-    val spaced = s"1*3$segN$sNumber $delayMs * $durationMs * $tone1Hz * $tone2Hz*"
-    spaced.replace(" ", "")
-  }
+  override def equals(obj: Any): Boolean =
+    obj match
+      case other: EnumValue[?] =>
+        other.equals(this)
+      case _ =>
+        false
 
-object Segment extends LazyLogging:
-  def unapply(u: Segment): Option[(Int, Int, Int, Int)] = Some((u.delayMs, u.durationMs,u.tone1Hz,  u.tone2Hz))
-
-  implicit val fmtSegment: Format[Segment] = Json.format[Segment]
+  /**
+   * @param target find the Enum with this rc210Value.
+   * @return
+   */
+  def find(target: Int): T =
+    values.find {
+      _.rc210Value == target
+    } match
+      case Some(value) => value
+      case None =>
+        val sValues = values.map(t => s"${t.rc210Value}: ${t.toString}").mkString(",")
+        val head = values.head
+        logger.error(s"No $target in $sValues! Using $head")
+        head

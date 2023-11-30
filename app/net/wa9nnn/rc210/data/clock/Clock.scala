@@ -19,14 +19,13 @@ package net.wa9nnn.rc210.data.clock
 
 import com.wa9nnn.util.JsonFormatUtils.javaEnumFormat
 import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.data.clock.MonthOfYearDST.*
-import net.wa9nnn.rc210.data.clock.Occurrence.*
+import net.wa9nnn.rc210.data.clock.MonthOfYearDST._
+import net.wa9nnn.rc210.data.clock.Occurrence._
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.FormFields
 import play.api.libs.json.{Format, JsValue, Json}
 
-case class Clock(key:Key,
+case class Clock(key: Key,
                  enableDST: Boolean = true,
                  hourDST: Int = 2,
                  startDST: DSTPoint = DSTPoint(March, First),
@@ -77,7 +76,8 @@ case class Clock(key:Key,
 }
 
 
-object Clock extends ComplexExtractor  {
+object Clock extends ComplexExtractor {
+  def unapply(u: Clock): Option[(Key, Boolean, Int, DSTPoint, DSTPoint, Boolean)] = Some((u.key, u.enableDST, u.hourDST, u.startDST, u.endDST, u.say24Hours))
 
 
   /**
@@ -94,7 +94,7 @@ object Clock extends ComplexExtractor  {
     val say24Hours: Boolean = memory.bool(1186)
 
     val key = Key(KeyKind.clockKey)
-    val clock = new Clock(key,  enableDST, startHour, startDST, endDST, say24Hours)
+    val clock = new Clock(key, enableDST, startHour, startDST, endDST, say24Hours)
     Seq(
       FieldEntry(this, fieldKey(key), clock)
     )
@@ -118,18 +118,7 @@ object Clock extends ComplexExtractor  {
     FieldOffset(4050, this, "hour"),
   )
 
-  implicit val fmtDSTPoint: Format[DSTPoint] = Json.format[DSTPoint]
   implicit val fmtClock: Format[Clock] = Json.format[Clock]
 
-  override def parseForm(formFields: FormFields): ComplexFieldValue =
-    new Clock(
-      key = formFields.key.get,
-      enableDST =  formFields.boolean("enableDST"),
-      hourDST = formFields.int("hourDST"),
-      startDST = DSTPoint(formFields, "startDST"),
-      endDST = DSTPoint(formFields, "endDst"),
-      say24Hours = formFields.boolean("say24Hours")
-
-    )
 }
 

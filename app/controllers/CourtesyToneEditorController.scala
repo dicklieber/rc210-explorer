@@ -22,7 +22,7 @@ import net.wa9nnn.rc210.data.courtesy.{CourtesyTone, CtField}
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
-import net.wa9nnn.rc210.ui.{CandidateAndNames, FormExtractor, FormParser}
+import net.wa9nnn.rc210.ui.CandidateAndNames
 import net.wa9nnn.rc210.{Key, KeyKind}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
@@ -68,12 +68,12 @@ class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Mess
 
   def save(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
-
-      val ex = FormExtractor(request)
-      val candidateAndNames: CandidateAndNames = FormParser(CourtesyTone)
-      actor.ask[String](DataStoreActor.UpdateData(candidateAndNames, user, _)).map { _ =>
-        Redirect(routes.CourtesyToneEditorController.index())
-      }
+      Future(ImATeapot)
+    //      val ex = FormExtractor(request)
+    //      val candidateAndNames: CandidateAndNames = FormParser(CourtesyTone)
+    //      actor.ask[String](DataStoreActor.UpdateData(candidateAndNames, user, _)).map { _ =>
+    //        Redirect(routes.CourtesyToneEditorController.index())
+    //      }
 
     /*      val namedKeyBuilder = Seq.newBuilder[NamedKey]
           val ctBuilder = Seq.newBuilder[UpdateCandidate]

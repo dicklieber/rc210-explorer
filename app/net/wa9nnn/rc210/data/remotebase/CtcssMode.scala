@@ -16,10 +16,10 @@
  */
 
 package net.wa9nnn.rc210.data.remotebase
-import net.wa9nnn.rc210.util.select.{EnumEntryValue, EnumValue}
 
-sealed trait CtcssMode(val rc210Value: Int) extends EnumEntryValue:
-  override def values: IndexedSeq[_] = CtcssMode.values
+import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
+
+sealed trait CtcssMode(val rc210Value: Int) extends EnumEntryValue
 
 object CtcssMode extends EnumValue[CtcssMode]:
 

@@ -42,5 +42,7 @@ case class Timer(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValu
 }
 
 object Timer {
+  def unapply(u: Timer): Option[(Key, Int, Key)] = Some((u.key, u.seconds, u.macroKey))
+
   implicit val fmtTimer: OFormat[Timer] = Json.format[Timer]
 }
