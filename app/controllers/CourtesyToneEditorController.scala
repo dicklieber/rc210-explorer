@@ -61,13 +61,28 @@ class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Mess
         val courtesyToneEntry: FieldEntry = entries.head
         val value: CourtesyTone = courtesyToneEntry.value
         val rows: Seq[Seq[CtField]] = value.rows
-        Ok(views.html.courtesyToneEdit(rows, key))
+        Ok(views.html.courtesyToneEdit(rows, key.namedKey))
       }
 
   }
 
+//  def save: Action[AnyContent] = Action { implicit request =>
+//    contactForm
+//      .bindFromRequest()
+//      .fold(
+//        formWithErrors => {
+//          BadRequest(views.html.contact.form(formWithErrors))
+//        },
+//        contact => {
+//          val contactId = Contact.save(contact)
+//          Redirect(routes.Application.showContact(contactId)).flashing("success" -> "Contact saved!")
+//        }
+//      )
+//  }
+
   def save(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
+
       Future(ImATeapot)
     //      val ex = FormExtractor(request)
     //      val candidateAndNames: CandidateAndNames = FormParser(CourtesyTone)

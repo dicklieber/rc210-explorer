@@ -1,12 +1,16 @@
 @import net.wa9nnn.rc210.ui.Tabs
 @import net.wa9nnn.rc210.data.courtesy.CtField
 @import net.wa9nnn.rc210.Key
-@(rows: Seq[Seq[CtField]], key:Key)
+@import net.wa9nnn.rc210.data.named.NamedKey
+@import views.html.helper._
+
+@(rows: Seq[Seq[CtField]], namedKey: NamedKey)
 
 @tabbedmain(Tabs.ctTab) {
     <div>
         <form action="@routes.CourtesyToneEditorController.save()" method="post">
-            <input type="hidden" name="key" value="@key"><input>
+            <input type="hidden" name="key" value="@namedKey.key"><input>
+
             <table class="headeredTable">
                 @defining("<th>Duration<br>Tone1<br>Tone2</th>") { DTT =>
                     <thead>

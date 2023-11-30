@@ -18,8 +18,9 @@
 package net.wa9nnn.rc210
 
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
+import net.wa9nnn.rc210.Key.{_namedSource, nameForKey}
 import net.wa9nnn.rc210.KeyKind.{commonKey, macroKey, portKey}
-import net.wa9nnn.rc210.data.named.NamedKeySource
+import net.wa9nnn.rc210.data.named.{NamedKey, NamedKeySource}
 import net.wa9nnn.rc210.security.UserId.UserId
 import net.wa9nnn.rc210.ui.EnumEntryValue
 import play.api.data.FormError
@@ -28,14 +29,15 @@ import play.api.libs.json.*
 import play.api.mvc.PathBindable
 
 /**
- *  Identifies various RC210 objects.
+ * Identifies various RC210 objects.
+ *
  * @param keyKind     of the Key
  * @param rc210Value  0 is a magic number used for things like [[KeyKind.commonKey]]
  */
 case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends CellProvider with Ordered[Key] with EnumEntryValue {
   def check(expected: KeyKind): Unit = if (expected != keyKind) throw IllegalArgumentException(s"Expecting Key of type $expected, but got $this}")
 
-//  override val values: IndexedSeq[_] = IndexedSeq.empty //handled in
+  //  override val values: IndexedSeq[_] = IndexedSeq.empty //handled in
   assert(rc210Value <= keyKind.maxN, s"Max number for $keyKind is ${keyKind.maxN}")
 
   override def toString: String = s"$keyKind$rc210Value"
@@ -45,6 +47,8 @@ case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends CellP
     if (ret == 0)
       ret = rc210Value compareTo that.rc210Value
     ret
+
+  def namedKey: NamedKey = NamedKey(this, nameForKey(this))
 
 
   def keyWithName: String =
@@ -130,7 +134,9 @@ object Key:
       macroKey.toString
     }
   }
+
   import play.api.data.format.Formats._
+
   implicit val keyFormatter: Formatter[Key] = new Formatter[Key]:
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Key] =
       parsing(Key(_), "BadKey", Nil)(key, data)
