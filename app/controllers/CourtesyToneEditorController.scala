@@ -50,12 +50,10 @@ class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Mess
 
       val future: Future[Seq[FieldEntry]] = actor.ask(DataStoreActor.AllForKeyKind(KeyKind.courtesyToneKey, _))
       future.map { (entries: Seq[FieldEntry]) =>
-        val rows: Seq[Seq[CtField]] = entries.flatMap { fieldEntry =>
-          val courtesyTone = fieldEntry.value.asInstanceOf[CourtesyTone]
-          courtesyTone.rows
-        }
 
-        Ok(views.html.courtesyTones(rows))
+        val courtesyTones: Seq[CourtesyTone] = entries.map(_.value.asInstanceOf[CourtesyTone])
+
+        Ok(views.html.courtesyTones(courtesyTones))
       }
   }
 
@@ -76,7 +74,6 @@ class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Mess
         }
         Ok(views.html.courtesyToneEdit(key.namedKey))
       }
-
   }
 
 
@@ -94,7 +91,6 @@ class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Mess
             actor.ask[String](UpdateData(candidateAndNames, user, _)).map { _ =>
               Redirect(routes.CourtesyToneEditorController.index())
             }
-
           }
         )
   }

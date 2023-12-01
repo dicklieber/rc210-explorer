@@ -20,13 +20,17 @@ package net.wa9nnn.rc210.data.courtesy
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntryBase}
-import play.api.data._
+import play.api.data.*
 import play.api.data.Forms.*
-import play.api.data.{Form, Mapping}
 import play.api.libs.json.{Format, JsValue, Json, OFormat}
 
 import java.util.concurrent.atomic.AtomicInteger
 
+/**
+ * 
+ * @param key id
+ * @param segments the four segment that mke up a courtesy tone.
+ */
 case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends ComplexFieldValue("CourtesyTone") {
   assert(segments.length == 4, s"Must have four segemnts but only have: $segments")
 
@@ -43,38 +47,6 @@ case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends C
     segments.map { segment =>
       segment.toCommand(key.rc210Value, segN.getAndIncrement())
     }
-  }
-
-  def rows: Seq[Seq[CtField]] = {
-
-    Seq( // <tr>
-      Seq( // <td>
-        Name(),
-        //top row with delay/duration that span 3 rows.
-        Delay(0),
-        Duration(0),
-        Delay(1),
-        Duration(1),
-        Delay(2),
-        Duration(2),
-        Delay(3),
-        Duration(3)
-      ),
-
-      Seq(
-        Tone(0, 1),
-        Tone(1, 1),
-        Tone(2, 1),
-        Tone(3, 1),
-      ),
-      // tone2 row
-      Seq(
-        Tone(0, 2),
-        Tone(1, 2),
-        Tone(2, 2),
-        Tone(3, 2),
-      )
-    )
   }
 
   override def toJsValue: JsValue = Json.toJson(this)

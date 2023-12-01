@@ -22,7 +22,14 @@ import play.api.data.Forms.*
 import play.api.data.Mapping
 import play.api.libs.json.{Format, Json}
 
-
+/**
+ * One piece of a [[CourtesyTone]].
+ *
+ * @param delayMs until this segment starts.
+ * @param durationMs how long.
+ * @param tone1Hz base tone.
+ * @param tone2Hz mixed with [[tone1Hz]].,
+ */
 case class Segment(delayMs: Int, durationMs: Int, tone1Hz: Int, tone2Hz: Int):
   def toCommand(number: Int, segN: Int): String = {
     //1*31011200*100*6
@@ -31,6 +38,10 @@ case class Segment(delayMs: Int, durationMs: Int, tone1Hz: Int, tone2Hz: Int):
     val spaced = s"1*3$segN$sNumber $delayMs * $durationMs * $tone1Hz * $tone2Hz*"
     spaced.replace(" ", "")
   }
+
+  def tone(toneNo: Int): Int = toneNo match
+    case 1 => tone1Hz
+    case 2 => tone2Hz
 
 object Segment extends LazyLogging:
   def unapply(u: Segment): Option[(Int, Int, Int, Int)] = Some((u.delayMs, u.durationMs, u.tone1Hz, u.tone2Hz))
