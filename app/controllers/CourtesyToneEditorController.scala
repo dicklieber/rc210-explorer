@@ -20,23 +20,29 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.courtesy.{CourtesyTone, CtField}
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
+import net.wa9nnn.rc210.data.datastore.DataStoreActor.UpdateData
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
-import net.wa9nnn.rc210.ui.CandidateAndNames
+import net.wa9nnn.rc210.ui.{CandidateAndNames, ProcessResult}
 import net.wa9nnn.rc210.{Key, KeyKind}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
 import play.api.mvc.*
+import play.api.data.Form
+import play.api.data.Forms.*
+import play.api.mvc.MessagesControllerComponents
 
 import javax.inject.*
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
+import play.api.i18n.Messages.implicitMessagesProviderToMessages
 
 class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
-                                            (implicit scheduler: Scheduler, ec: ExecutionContext, cc: ControllerComponents)
-  extends AbstractController(cc) with LazyLogging {
+                                            (implicit scheduler: Scheduler, ec: ExecutionContext, components: MessagesControllerComponents)
+  extends MessagesAbstractController(components) with LazyLogging
+    with play.api.i18n.I18nSupport {
   implicit val timeout: Timeout = 3 seconds
 
   def index(): Action[AnyContent] = Action.async {
@@ -53,77 +59,43 @@ class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Mess
       }
   }
 
+
   def edit(key: Key): Action[AnyContent] = Action.async {
-    implicit request: Request[AnyContent] =>
+    implicit request =>
       key.check(KeyKind.courtesyToneKey)
       val future: Future[Seq[FieldEntry]] = actor.ask(DataStoreActor.AllForKey(key, _))
       future.map { (entries: Seq[FieldEntry]) =>
         val courtesyToneEntry: FieldEntry = entries.head
-        val value: CourtesyTone = courtesyToneEntry.value
-        val rows: Seq[Seq[CtField]] = value.rows
-        Ok(views.html.courtesyToneEdit(rows, key.namedKey))
+        val courtesyTone: CourtesyTone = courtesyToneEntry.value
+        implicit val form: Form[CourtesyTone] = CourtesyTone.form.fill(courtesyTone)
+        logger.whenDebugEnabled {
+          val data = form.data
+          data.foreach { (key, value) =>
+            logger.debug("{} => {}", key, value)
+          }
+        }
+        Ok(views.html.courtesyToneEdit(key.namedKey))
       }
 
   }
 
-//  def save: Action[AnyContent] = Action { implicit request =>
-//    contactForm
-//      .bindFromRequest()
-//      .fold(
-//        formWithErrors => {
-//          BadRequest(views.html.contact.form(formWithErrors))
-//        },
-//        contact => {
-//          val contactId = Contact.save(contact)
-//          Redirect(routes.Application.showContact(contactId)).flashing("success" -> "Contact saved!")
-//        }
-//      )
-//  }
 
   def save(): Action[AnyContent] = Action.async {
-    implicit request: Request[AnyContent] =>
-
-      Future(ImATeapot)
-    //      val ex = FormExtractor(request)
-    //      val candidateAndNames: CandidateAndNames = FormParser(CourtesyTone)
-    //      actor.ask[String](DataStoreActor.UpdateData(candidateAndNames, user, _)).map { _ =>
-    //        Redirect(routes.CourtesyToneEditorController.index())
-    //      }
-
-    /*      val namedKeyBuilder = Seq.newBuilder[NamedKey]
-          val ctBuilder = Seq.newBuilder[UpdateCandidate]
-
-
-          val form = request.body.asFormUrlEncoded.get.map { t => t._1 -> t._2.head }
-
-          form.filter(_._1 startsWith "name")
-            .foreach { case (sKey, value) =>
-              val ctKey = CtSegmentKey(sKey)
-              namedKeyBuilder += NamedKey(ctKey.ctKey, value)
+    implicit request: MessagesRequest[AnyContent] =>
+      CourtesyTone.form
+        .bindFromRequest()
+        .fold(
+          (formWithErrors: Form[CourtesyTone]) => {
+            val namedKey = Key(formWithErrors.data("key")).namedKey
+            Future(BadRequest(views.html.courtesyToneEdit(namedKey)(formWithErrors, request, request)))
+          },
+          (courtesyTone: CourtesyTone) => {
+            val candidateAndNames = ProcessResult(courtesyTone)
+            actor.ask[String](UpdateData(candidateAndNames, user, _)).map { _ =>
+              Redirect(routes.CourtesyToneEditorController.index())
             }
 
-
-          form
-            .filterNot(_._1 == "save")
-            .filterNot(_._1 startsWith "name")
-            .map { case (sKey, value) => CtSegmentKey(sKey) -> value } // convert from string name to CtSegmentKeys
-            .groupBy(_._1.ctKey)
-            .map { case (ctKey: Key, values: Map[CtSegmentKey, String]) =>
-              val segments = values
-                .groupBy(_._1.segment).map { case (seg, values) =>
-                  val valuesForSegment: Map[String, String] = values.map { case (crSKey: CtSegmentKey, value: String) =>
-                    crSKey.name -> value
-                  }
-                  // we now have a map of names to values
-                  Segment(valuesForSegment)
-                }
-              val courtesyTone = CourtesyTone(ctKey, segments.toSeq)
-              ctBuilder += UpdateCandidate(courtesyTone)
-            }
-
-          actor.ask[String](DataStoreActor.UpdateData(ctBuilder.result(), namedKeyBuilder.result(), user = user(request), _)).map { _ =>
-            Redirect(routes.CourtesyToneEditorController.index())
           }
-    */
+        )
   }
 }

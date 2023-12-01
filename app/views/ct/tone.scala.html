@@ -1,0 +1,4 @@
+@import net.wa9nnn.rc210.ui.MyHelpers._
+@import net.wa9nnn.rc210.data.courtesy.CourtesyTone
+@(segment:Int, toneNo:Int)(implicit form:Form[CourtesyTone], request: RequestHeader, messagesProvider: MessagesProvider)
+@inputNumber(form(s"segment[$segment].tone${toneNo}Hz"),  0 to 3500,"ctField")

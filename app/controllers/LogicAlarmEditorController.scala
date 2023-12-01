@@ -17,30 +17,26 @@
 
 package controllers
 
-import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
-import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
-import org.apache.pekko.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.Key.keyFormatter
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, UpdateData}
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
 import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
-import net.wa9nnn.rc210.ui.{CandidateAndNames, ProcessResult}
-import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
+import net.wa9nnn.rc210.ui.ProcessResult
+import net.wa9nnn.rc210.{Key, KeyKind}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
+import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
 import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.mvc.*
-import play.api.i18n.*
 
 import javax.inject.*
-import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
+import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
-import Key.keyFormatter
 
 @Singleton
 class LogicAlarmEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])

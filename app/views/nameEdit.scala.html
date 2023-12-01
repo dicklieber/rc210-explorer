@@ -1,0 +1,9 @@
+@import net.wa9nnn.rc210.data.named.NamedKey
+@(namedKey: NamedKey)
+<div class="nameEditor">
+    @namedKey.key.rc210Value:
+    <label>
+        Name:
+        <input name="name" value="@namedKey.name">
+    </label>
+</div>

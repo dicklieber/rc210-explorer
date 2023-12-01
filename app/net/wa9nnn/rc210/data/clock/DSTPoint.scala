@@ -17,10 +17,8 @@
 
 package net.wa9nnn.rc210.data.clock
 
-import play.api.mvc.*
-import play.api.data.{Form, Mapping}
 import play.api.data.Forms.*
-import enumeratum.values.*
+import play.api.data.Mapping
 import play.api.libs.json.{Format, Json}
 
 case class DSTPoint(monthOfYearDST: MonthOfYearDST, occurrence: Occurrence) {

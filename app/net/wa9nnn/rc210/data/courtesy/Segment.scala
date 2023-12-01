@@ -18,8 +18,8 @@
 package net.wa9nnn.rc210.data.courtesy
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.data.clock.{Clock, DSTPoint}
+import play.api.data.Forms.*
+import play.api.data.Mapping
 import play.api.libs.json.{Format, Json}
 
 
@@ -33,6 +33,14 @@ case class Segment(delayMs: Int, durationMs: Int, tone1Hz: Int, tone2Hz: Int):
   }
 
 object Segment extends LazyLogging:
-  def unapply(u: Segment): Option[(Int, Int, Int, Int)] = Some((u.delayMs, u.durationMs,u.tone1Hz,  u.tone2Hz))
+  def unapply(u: Segment): Option[(Int, Int, Int, Int)] = Some((u.delayMs, u.durationMs, u.tone1Hz, u.tone2Hz))
+
+  val form: Mapping[Segment] =
+    mapping(
+      "delayMs" -> number,
+      "durationMs" -> number,
+      "tone1Hz" -> number,
+      "tone2Hz" -> number,
+    )(Segment.apply)(Segment.unapply)
 
   implicit val fmtSegment: Format[Segment] = Json.format[Segment]

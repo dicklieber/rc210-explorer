@@ -18,13 +18,12 @@
 package net.wa9nnn.rc210.data.courtesy
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.KeyKind
-import play.api.libs.json.Format
-
-import scala.collection.MapView
 import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntryBase}
-import play.api.libs.json.{JsValue, Json, OFormat}
+import play.api.data._
+import play.api.data.Forms.*
+import play.api.data.{Form, Mapping}
+import play.api.libs.json.{Format, JsValue, Json, OFormat}
 
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -85,6 +84,12 @@ case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends C
 object CourtesyTone extends LazyLogging:
   def unapply(u: CourtesyTone): Option[(Key, Seq[Segment])] = Some((u.key, u.segments))
 
+  val form: Form[CourtesyTone] = Form(
+    mapping(
+      "key" -> of[Key],
+      "segment" -> seq(Segment.form),
+    )(CourtesyTone.apply)(CourtesyTone.unapply)
+  )
   implicit val fmtCourtesyTone: Format[CourtesyTone] = Json.format[CourtesyTone]
 
 

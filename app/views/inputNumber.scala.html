@@ -1,0 +1,4 @@
+@import net.wa9nnn.rc210.ui.MyHelpers._
+@import views.html.helper.inputText
+@(field: Field, range: Range, cssClass: String)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+    @inputText(field, Symbol("min") -> range.min, Symbol("max") -> range.max, Symbol("class") -> cssClass, Symbol("type") -> "number")

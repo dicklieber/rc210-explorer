@@ -55,7 +55,7 @@ case class Tone(segment: Int, toneNo: Int)(implicit val key: Key, val segments: 
 
 abstract class CtField extends LazyLogging {
   def body: String =
-    FormField(param, value, Option(1 to max))
+    FormField(param, value, Option(0 to max))
 
   val cssClass: String = "ctCell"
   val value: Int
