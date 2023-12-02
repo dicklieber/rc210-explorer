@@ -18,26 +18,24 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.courtesy.{CourtesyTone, CtField}
+import net.wa9nnn.rc210.data.courtesy.CourtesyTone
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.UpdateData
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
-import net.wa9nnn.rc210.ui.{CandidateAndNames, ProcessResult}
+import net.wa9nnn.rc210.ui.ProcessResult
 import net.wa9nnn.rc210.{Key, KeyKind}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
-import play.api.mvc.*
 import play.api.data.Form
 import play.api.data.Forms.*
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.*
 
 import javax.inject.*
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
-import play.api.i18n.Messages.implicitMessagesProviderToMessages
 
 class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
                                             (implicit scheduler: Scheduler, ec: ExecutionContext, components: MessagesControllerComponents)

@@ -79,7 +79,7 @@ object FormField:
         % Attribute(None, "max", Text(range.max.toString), Null)
         % Attribute(None, "style", Text("width: 5em"), Null)
 
-    }.getOrElse(elem)
+    }.getOrElse(r)
 
     rr.toString
 

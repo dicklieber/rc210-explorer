@@ -1,15 +1,31 @@
-@import com.wa9nnn.util.tableui.Table
-@import com.wa9nnn.util.tableui.html.renderTable
 @import views.html.helper._
 @import net.wa9nnn.rc210.ui.Tabs
 
-@(table: Table)
+@import net.wa9nnn.rc210.data.field.FieldEntry
+@import net.wa9nnn.rc210.ui.FormField
+@(fieldEntries: Seq[FieldEntry])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
-@tabbedmain(Tabs.commonTab) {
-
-    @form(action = routes.CommonEditorController.save()) {
-        @submitButton()
-        @renderTable(table.withCssClass("tablesorter"))
-        @submitButton()
+    @tabbedmain(Tabs.commonTab) {
+        @form(action = routes.CommonEditorController.save()) {
+            <table>
+                <thead>
+                    <tr>
+                        <td colspan="2">Common (@fieldEntries.size)</td>
+                    </tr>
+                    <tr>
+                        <td>Field</td>
+                        <td>Value</td>
+                    </tr>
+                </thead>
+                <tbody>
+                @for(fieldEntry <- fieldEntries) {
+                    <tr>
+                        <td>@fieldEntry.fieldKey.fieldName</td>
+                        <td>@Html(fieldEntry.value.toHtmlField(fieldEntry.fieldKey))</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+            @submitButton()
+        }
     }
-}

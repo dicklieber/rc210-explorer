@@ -23,11 +23,10 @@ import net.wa9nnn.rc210.KeyKind
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
-import net.wa9nnn.rc210.ui.{CandidateAndNames}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
-import play.api.mvc.*
+import play.api.mvc.{MessagesControllerComponents, *}
 
 import javax.inject.Inject
 import scala.concurrent.duration.DurationInt
@@ -35,8 +34,10 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
 class CommonEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
-                                      (implicit scheduler: Scheduler, ec: ExecutionContext, cc: MessagesControllerComponents)
-  extends AbstractController(cc) with LazyLogging {
+                                      (implicit scheduler: Scheduler,
+                                       ec: ExecutionContext, components: MessagesControllerComponents)
+  extends MessagesAbstractController(components)
+    with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
   private var fieldKeys: Seq[FieldKey] = Seq.empty
 
@@ -47,47 +48,33 @@ class CommonEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
       eventualFieldEntries.map { fieldEntries =>
         if (fieldKeys.isEmpty)
           fieldKeys = fieldEntries.map(_.fieldKey)
-
-        val rows: Seq[Row] = fieldEntries.map { fieldEntry =>
-          //          // Can't use fieldEntry's toRow because we just want the rc2input name not key, as they are all commonKey1
-          Row(
-            fieldEntry.fieldKey.fieldName,
-            fieldEntry.toCell
-          )
-
-        }
-        val header = Header(s"Common (${rows.length} values)", "Field", "Value")
-        val table = Table(header, rows)
-        Ok(views.html.common(table))
-
-
+        Ok(views.html.common(fieldEntries))
       }
-
-    //        .map { (commonFields: Seq[FieldEntry]) =>
-    //        commonFields.map { fieldEntry =>
-    //          // Can't use fieldEntry's toRow because we just want the rc2input name not key, as they are all commonKey1
-    //          Row(
-    //            fieldEntry.fieldKey.fieldName,
-    //            fieldEntry.toCell
-    //          )
-    //        }
-    //      }
-    //      eventualRows.map { rows =>
-    //        val header = Header(s"Common (${rows.length} values)", "Field", "Value")
-    //        val table = Table(header, rows)
-    //        Ok(views.html.common(table))
   }
 
   def save(): Action[AnyContent] = Action.async {
-    Future(ImATeapot("todo"))
-/*    implicit request: Request[AnyContent] =>
+    implicit request: Request[AnyContent] =>
 
-      val data = new FormExtractor(request)
+      val data: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
+      logger.whenTraceEnabled {
+        data.foreach { entry =>
+          logger.trace(entry.toString())
+        }
+      }
 
-      val uc: Seq[UpdateCandidate] = fieldKeys.map(fieldKey =>
-        val str: String = data.stringOpt(fieldKey.toString).getOrElse("")
-        UpdateCandidate(fieldKey, Left(str)) //todo how does this work with bool
-      )
+      val uc: Seq[UpdateCandidate] = fieldKeys.map { fieldKey =>
+        val v: Option[String] = for {
+          values <- data.get(fieldKey.toString)
+          value <- values.headOption
+        } yield {
+          value
+        }
+        val str: String = v.getOrElse("")
+
+        logger.debug("fieldKey: {} => value: {}", fieldKey.toString, str)
+        UpdateCandidate(fieldKey, Left(str))
+      }
+
       logger.whenTraceEnabled {
         uc.foreach { uc =>
           logger.trace(uc.toString)
@@ -97,5 +84,5 @@ class CommonEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
       actor.ask[String](DataStoreActor.UpdateData(uc, Seq.empty, user, _)).map { _ =>
         Redirect(routes.CommonEditorController.index())
       }
-*/  }
+  }
 }
