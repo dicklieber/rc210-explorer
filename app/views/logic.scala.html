@@ -1,3 +1,4 @@
+@import net.wa9nnn.rc210.ui.MyHelpers._
 @import net.wa9nnn.rc210.ui.Tabs
 @import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
 @(logicAlarms: Seq[LogicAlarm])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
@@ -23,13 +24,20 @@
                     @logicAlarm.key.keyWithName
                     </td>
                     <td>
-                    @logicAlarm.enable
+                    @if(logicAlarm.enable){
+                        <input type="checkbox" checked = "checked" onclick="return false;"></input>
+                    }else{
+                        <input type="checkbox" onclick="return false;"></input>
+                    }
+
+
+
                     </td>
                     <td>
-                    @logicAlarm.lowMacro
+                    @logicAlarm.lowMacro.keyWithName
                     </td>
                     <td>
-                    @logicAlarm.highMacro
+                    @logicAlarm.highMacro.keyWithName
                     </td>
                 </tr>
             }

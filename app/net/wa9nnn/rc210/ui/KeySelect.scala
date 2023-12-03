@@ -26,5 +26,5 @@ abstract class KeySelect(keyKind: KeyKind) extends Selections:
     } yield {
       val key = Key(keyKind, number)
       val string = key.keyWithName
-      string -> string
+      key.toString -> string
     }

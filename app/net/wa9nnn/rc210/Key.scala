@@ -79,6 +79,8 @@ object Key:
       case kparser(sKind, sNumber) =>
         val keyKind = KeyKind.withName(sKind)
         new Key(keyKind, sNumber.toInt)
+      case x =>
+        throw new IllegalArgumentException(s"""Can't parse "$sKey"!""")
 
   def setNamedSource(namedSource: NamedKeySource): Unit = {
     if (_namedSource.isDefined) throw new IllegalStateException("NamedSource already set.")

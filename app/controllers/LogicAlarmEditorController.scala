@@ -24,7 +24,7 @@ import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, UpdateData
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
 import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
-import net.wa9nnn.rc210.ui.ProcessResult
+import net.wa9nnn.rc210.ui.{LogRequest, ProcessResult}
 import net.wa9nnn.rc210.{Key, KeyKind}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
@@ -69,7 +69,7 @@ class LogicAlarmEditorController @Inject()(actor: ActorRef[DataStoreActor.Messag
           case Some(fieldEntry) =>
             val logicAlarm: LogicAlarm = fieldEntry.value
             val form: Form[LogicAlarm] = logicForm.fill(logicAlarm)
-            Ok(views.html.logicEditor(form))
+            Ok(views.html.logicEditor(form, logicAlarmKey.namedKey))
           case None =>
             NotFound(s"No key: $logicAlarmKey")
         }
@@ -77,11 +77,14 @@ class LogicAlarmEditorController @Inject()(actor: ActorRef[DataStoreActor.Messag
   }
 
   def save(): Action[AnyContent] = Action.async { implicit request =>
+    LogRequest(logger)
+
     logicForm
       .bindFromRequest()
       .fold(
         (formWithErrors: Form[LogicAlarm]) => {
-          Future(BadRequest(views.html.logicEditor(formWithErrors)))
+          val namedKey = Key(formWithErrors.data("key")).namedKey
+          Future(BadRequest(views.html.logicEditor(formWithErrors, namedKey)))
         },
         (logicAlarm: LogicAlarm) => {
           val candidateAndNames = ProcessResult(logicAlarm)

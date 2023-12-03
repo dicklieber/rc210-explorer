@@ -1,13 +1,16 @@
+@import net.wa9nnn.rc210.ui.MyHelpers._
 @import views.html.helper._
 @import play.api.mvc.RequestHeader
 @import net.wa9nnn.rc210.ui.Tabs
 @import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
 @import net.wa9nnn.rc210.ui.MacroSelect
 @import views.html.helper.checkbox
-@(logicAlarmForm: Form[LogicAlarm])( implicit request: RequestHeader, messagesProvider: MessagesProvider)
+@import net.wa9nnn.rc210.data.named.NamedKey
+@(logicAlarmForm: Form[LogicAlarm], namedKey:NamedKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 @tabbedmain(Tabs.logicAlarmTab) {
     <div class="container">
     @form(routes.LogicAlarmEditorController.save()) {
+        @nameEdit(namedKey)
         <input type="hidden" name="key" value="@logicAlarmForm("key").value">
         <table>
             <tr>
@@ -16,7 +19,6 @@
                 </td>
                 <td>@checkbox(logicAlarmForm("enable"))
                 </td>
-
             </tr>
             <tr>
                 <td>
