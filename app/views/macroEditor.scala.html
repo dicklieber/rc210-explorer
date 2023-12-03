@@ -2,61 +2,66 @@
 @import net.wa9nnn.rc210.ui.Tabs
 
 @import scala.util.Random
-@import net.wa9nnn.rc210.data.macros.MacroNode
+@import net.wa9nnn.rc210.data.macros.RcMacro
 @import net.wa9nnn.rc210.data.functions.FunctionsProvider
-@(macroNode: MacroNode)(implicit functionsProvider: FunctionsProvider)
+@(macroNode: RcMacro)(implicit functionsProvider: FunctionsProvider)
 
-    @tabbedmain(Tabs.macrosTab) {
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/dualList.css")">
+@tabbedmain(Tabs.macrosTab) {
 
-        <script src="@routes.Assets.versioned("javascripts/macroNode.js")"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/contextmenu.css")">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+    <script src="@routes.Assets.versioned("javascripts/macroNode.js")"></script>
+    <script src="@routes.Assets.versioned("javascripts/contextmenu.js")"></script>
 
 
-        @form(action = routes.MacroEditorController.save(), Symbol("id") -> "macroNodeForm") {
-            <input type="hidden" name="key", value="@macroNode.key">
-            <input type="hidden" name="functionIds" id="functionIds">
-            <div class="row">
-                <div class="col col-md-auto border border-primary">
-                    <h2>@fieldNamedKey(macroNode.key)</h2>
-//                    @Html(macroNode.key.keyWithName)
-                    <div><label for="dtmf">DTMF: </label>
-                        <input id="dtmf" name="dtmf" value="@macroNode.dtmf">
-                    </div>
-
-                    @submitButton()
+    @form(action = routes.MacroEditorController.save(), Symbol("id") -> "macroNodeForm") {
+        <input type="hidden" name="key", value="@macroNode.key">
+        <input type="hidden" name="functionIds" id="functionIds">
+        <div class="row">
+            <div class="col col-md-auto border border-primary">
+                @nameEdit(macroNode.key.namedKey)
+                <div><label for="dtmf">DTMF: </label>
+                    <input id="dtmf" name="dtmf" value="@macroNode.dtmf">
                 </div>
-                <div class="col col-md-auto border border-primary">
-                    <h2>Current</h2>
 
-                        <ul id="currentList" class="border border-primary list-unstyled">
-                    @for(functionkey <- macroNode.functions) {
-                        <li
-                        class="functionSource"
-                        data-function="@functionkey.toString"
-                        onclick="remove(this)">
-                            @functionsProvider.apply(functionkey).get
-                        </li>
-                    }
-                    </ul>
-                </div>
-                <div class="col col-md-auto ">
-                    <h2>Available Functions</h2>
-                    <div id="myDropdown" class="dropdown-content show functionList">
-                        <input type="text" placeholder="Search.." id="filter" onkeyup="filterFunction()">
-                        <div>
-                            <ul id="availableList" class="list-unstyled">
-                            @for(function <- functionsProvider.functions) {
-                                <li class="functionSource"
-                                onclick="remove(this)"
-                                data-function="@function.key.toString">
-                                    @function
-                                </li>
-                            }
-                            </ul>
-                        </div>
+                @submitButton()
+            </div>
+            <div class="col col-md-auto border border-primary">
+                <h2>Current</h2>
+
+                <ul id="currentList" class="border border-primary list-unstyled">
+                @for(functionkey <- macroNode.functions) {
+                    <li
+                    class="functionSource selected"
+                    data-function="@functionkey.toString"
+                    ondblclick=dblClick(this)>
+                    @functionsProvider.apply(functionkey).get
+                    </li>
+                }
+                </ul>
+                <p>Drag function to reorder. Dbl-click to remove.</p>
+            </div>
+            <div class="col col-md-auto ">
+                <h2>Available Functions</h2>
+                <div id="myDropdown" class="dropdown-content show functionList">
+                    <input type="text" placeholder="Search.." id="filter" onkeyup="filterFunction()">
+                    <div>
+                        <ul id="availableList" class="list-unstyled">
+                        @for(function <- functionsProvider.functions) {
+                            <li class="functionSource"
+                            ondblclick="dblClick(this)"
+                            ondblclick="dblClick(this)"
+                            data-function="@function.key.toString">
+                            @function
+                            </li>
+                        }
+                        </ul>
                     </div>
                 </div>
             </div>
-        }
+        </div>
     }
+}

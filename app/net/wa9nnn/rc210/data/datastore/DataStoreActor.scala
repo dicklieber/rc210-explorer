@@ -22,7 +22,7 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldKey, FieldValue}
-import net.wa9nnn.rc210.data.macros.MacroNode
+import net.wa9nnn.rc210.data.macros.RcMacro
 import net.wa9nnn.rc210.data.named.{NamedKey, NamedKeySource}
 import net.wa9nnn.rc210.security.authentication.User
 import net.wa9nnn.rc210.ui.CandidateAndNames
@@ -134,7 +134,7 @@ object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
                 replyTo !
                   (for {
                     fieldEntry <- all.filter(_.fieldKey.key.keyKind == KeyKind.macroKey).sorted
-                    macroNode: MacroNode = fieldEntry.fieldValue.asInstanceOf[MacroNode]
+                    macroNode: RcMacro = fieldEntry.fieldValue.asInstanceOf[RcMacro]
                   } yield {
                     val triggers: Seq[TriggerNode] = triggerNodes.filter(_.canRunMacro(macroNode.key))
                     MacroWithTriggers(macroNode = macroNode, triggers = triggers)

@@ -1,22 +1,28 @@
 package net.wa9nnn.rc210.data.macros
 
 import com.wa9nnn.util.tableui.{Header, Row}
-import net.wa9nnn.rc210.data.{Dtmf, TriggerNode}
-import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.data.Dtmf.Dtmf
+import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.{Key, KeyKind}
+import play.api.data.Forms._
+import play.api.data.{Form, FormError}
 import play.api.libs.json.{Format, JsValue, Json}
+import play.api.mvc.*
 
 import java.util.concurrent.atomic.AtomicInteger
 import scala.annotation.tailrec
 
 /**
+ * This RC-210 Macro
+ * Would like to name this Macro by too many issues with "macro" in scala.
  *
  * @param key       unique id for this macro.
  * @param functions that this macro invokes.
  * @param dtmf      that can invoke this macro.
  */
-case class MacroNode(override val key: Key , functions: Seq[Key], dtmf: Option[Dtmf] = None) extends ComplexFieldValue("Macro") with TriggerNode {
+case class RcMacro(override val key: Key, functions: Seq[Key], dtmf: Option[Dtmf] = None) extends ComplexFieldValue("Macro") with TriggerNode {
 
   def enabled: Boolean = functions.nonEmpty
 
@@ -31,7 +37,6 @@ case class MacroNode(override val key: Key , functions: Seq[Key], dtmf: Option[D
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
     val numbers: String = functions.map(_.rc210Value).mkString("*")
     val macroNumber: String = f"${key.rc210Value}%03d"
-    val dtmfPart: String = dtmf.map(_.value).getOrElse("")
     val mCmd = if (functions.isEmpty)
       s"1*4003$macroNumber" // erase macro
     else
@@ -44,7 +49,7 @@ case class MacroNode(override val key: Key , functions: Seq[Key], dtmf: Option[D
 
     Seq(
       mCmd,
-      s"1*2050$macroNumber$dtmfPart"
+      s"1*2050$macroNumber$dtmf"
     )
   }
 
@@ -56,11 +61,20 @@ case class MacroNode(override val key: Key , functions: Seq[Key], dtmf: Option[D
   override def display: String = functions.map(_.rc210Value).mkString(" ")
 
   override def toJsValue: JsValue = Json.toJson(this)
-
-
 }
 
-object MacroNode extends ComplexExtractor {
+object RcMacro extends ComplexExtractor {
+  def unapply(u: RcMacro): Option[(Key, Seq[Key], Option[Dtmf])] = Some((u.key, u.functions, u.dtmf))
+
+  implicit val fmtMacro: Format[RcMacro] = Json.format[RcMacro]
+
+  val macroForm: Form[RcMacro] = Form[RcMacro](
+    mapping(
+      "key" -> of[Key],
+      "functions" -> seq(of[Key]),
+      "dtmf" -> optional(text)
+    )(RcMacro.apply)(RcMacro.unapply))
+
   def header(count: Int): Header = Header(s"Macros ($count)", "Key", "Functions")
 
   override def positions: Seq[FieldOffset] = Seq(
@@ -88,16 +102,16 @@ object MacroNode extends ComplexExtractor {
             case e: NoSuchElementException =>
               logger.error(s"macroKey: $key Ran out in chunk: $sChunk assuming no functions!")
               Seq.empty
-            case e:Exception =>
+            case e: Exception =>
               logger.error(s"macroKey: $key Error parsing chunk: $sChunk ${e.getMessage}")
               Seq.empty
 
           }
-          MacroNode(key, functions, dtmfMacros(key))
+          RcMacro(key, functions, dtmfMacros(key))
         }
     }
 
-    val macros: Seq[MacroNode] = macroBuilder(1985, 16, 40) //SlicePos("//Macro - 1985-2624"), memory, 16)
+    val macros: Seq[RcMacro] = macroBuilder(1985, 16, 40) //SlicePos("//Macro - 1985-2624"), memory, 16)
       .concat(macroBuilder(2825, 7, 50)) // SlicePos("//ShortMacro - 2825-3174"), memory, 7))
 
     val r: Seq[FieldEntry] = macros.map { m =>
@@ -142,15 +156,16 @@ object MacroNode extends ComplexExtractor {
     }
   }
 
-  implicit val fmtMacroNode: Format[MacroNode] = Json.format[MacroNode]
 
   override def parse(jsValue: JsValue): FieldValue = {
-    jsValue.as[MacroNode]
+    jsValue.as[RcMacro]
   }
 
-  override val name: String = "MacroNode"
+
+  override val name: String = "Macro"
   override val fieldName: String = name
   override val kind: KeyKind = KeyKind.macroKey
+
 
 }
 

@@ -16,6 +16,10 @@
  */
 
 $(function () {
+    $(function () {
+        $("#currentList").sortable();
+    });
+
 
     $('#macroNodeForm').on('submit', function () {
         const $currentList = $("#currentList");
@@ -29,20 +33,6 @@ $(function () {
         const formData = new FormData($('form')[0]);
         formData.append("words", wordIds);
         return true;
-    });
-;
-
-    $(".functionSource").on("dblclick", function () {
-        const li = this;
-        const $currentList = $("#currentList");
-        const size = $currentList.children().size();
-        // if (size >= 9) {
-        //     $("#maxWordsAlert").show()
-        // } else {
-        //     $currentList.append($(li).clone());
-        // }
-
-        $currentList.append($(li).clone());
     });
 
 });
@@ -66,8 +56,36 @@ function filterFunction() {
  * Does nothing if anyplace else. e.g. The #availableList.
  * @param liElement in
  */
+function dblClick(liElement) {
+    const classes = liElement.classList;
+    const b = classes.contains("selected");
+    if (b) {
+        remove(liElement)
+    } else {
+        moveToCurrent(liElement)
+    }
+}
+
 function remove(liElement) {
-    const inCurrentlist = $(liElement).closest("#currentList");
-    const s = inCurrentlist.size();
-    liElement.remove();
+    const data = (liElement.childNodes)[0].data;
+    $.confirm({
+        title: 'Confirm',
+        content: 'Remove ' + data,
+        buttons: {
+            confirm: function () {
+                liElement.remove();
+            },
+            cancel: function () {
+
+            }
+        }
+    });
+}
+
+function moveToCurrent(from) {
+    const li = from;
+    const $currentList = $("#currentList");
+    const clone = $(li).clone();
+    clone.addClass("selected")
+    $currentList.append(clone);
 }

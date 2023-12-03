@@ -18,15 +18,17 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.Dtmf
+import net.wa9nnn.rc210.data.Dtmf.Dtmf
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, ForFieldKey}
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
-import net.wa9nnn.rc210.data.macros.MacroNode
+import net.wa9nnn.rc210.data.macros.RcMacro
+import net.wa9nnn.rc210.data.macros.RcMacro.*
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
+import net.wa9nnn.rc210.{Key, KeyKind}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
@@ -43,13 +45,19 @@ import scala.util.matching.Regex
 @Singleton()
 class MacroEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
                                      (implicit scheduler: Scheduler,
-                                      ec: ExecutionContext, functionsProvider: FunctionsProvider) extends MessagesInjectedController with LazyLogging {
+                                      functionsProvider: FunctionsProvider,
+                                      ec: ExecutionContext, components: MessagesControllerComponents)
+  extends MessagesAbstractController(components)
+    with LazyLogging {
+
+
   implicit val timeout: Timeout = 3 seconds
+
 
   def index(): Action[AnyContent] = Action.async { implicit request =>
     val future: Future[Seq[FieldEntry]] = actor.ask(AllForKeyKind(KeyKind.macroKey, _))
     future.map { (fe: Seq[FieldEntry]) =>
-      val nodes: Seq[MacroNode] = fe.map(_.value)
+      val nodes: Seq[RcMacro] = fe.map(_.value.asInstanceOf[RcMacro])
       Ok(macroNodes(nodes))
     }
   }
@@ -70,8 +78,12 @@ class MacroEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
 
     val sKey: String = formData("key").head
     val key: Key = Key.apply(sKey)
-    val dtmf: Option[Dtmf] = formData("dtmf").map(Dtmf(_)).headOption
-
+    val dtmf = (for {
+      d: Dtmf <- formData("dtmf")
+      if d.nonEmpty
+    } yield {
+      d
+    }).headOption
     val functions: Seq[Key] = formData("functionIds")
       .head
       .split(",").toIndexedSeq
@@ -82,7 +94,7 @@ class MacroEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
         }.toOption
       }
 
-    val macroNode = MacroNode(key, functions, dtmf)
+    val macroNode = RcMacro(key, functions, dtmf)
     val ud = UpdateCandidate(macroNode.fieldKey, Right(macroNode))
 
     val keyNames = Seq(NamedKey(key, formData("name").head))

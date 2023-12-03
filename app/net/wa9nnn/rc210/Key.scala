@@ -86,11 +86,7 @@ object Key:
     if (_namedSource.isDefined) throw new IllegalStateException("NamedSource already set.")
     _namedSource = Option(namedSource)
   }
-
-
-  /**
-   * Persists an ISO format.
-   */
+  
   implicit val fmtKey: Format[Key] = new Format[Key] {
     override def reads(json: JsValue): JsResult[Key] = {
       val sKey = json.as[String]
@@ -101,11 +97,9 @@ object Key:
         case e: IllegalArgumentException => JsError(e.getMessage)
       }
     }
-
     override def writes(sak: Key): JsValue = {
       JsString(sak.toString)
     }
-
   }
 
 
@@ -141,7 +135,7 @@ object Key:
 
   implicit val keyFormatter: Formatter[Key] = new Formatter[Key]:
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Key] =
-      parsing(Key(_), "BadKey", Nil)(key, data)
+      parsing(Key(_), s"BadKey $key", Nil)(key, data)
 
 
     override def unbind(key: String, value: Key): Map[String, String] = Map(key -> value.toString)

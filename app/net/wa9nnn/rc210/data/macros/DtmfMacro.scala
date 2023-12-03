@@ -1,9 +1,10 @@
 package net.wa9nnn.rc210.data.macros
 
-import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.Dtmf
+import net.wa9nnn.rc210.data.Dtmf.Dtmf
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.util.Chunk
+import net.wa9nnn.rc210.{Key, KeyKind}
 
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -23,7 +24,7 @@ object DtmfMacroExtractor {
       for {
         chunk <- chunks
         macroKey: Key = Key(KeyKind.macroKey, mai.getAndIncrement())
-        dtmf <- Dtmf(chunk.ints)
+        dtmf <- Dtmf.fromMemoryInts(chunk.ints)
       } yield {
         macroKey -> dtmf
       }

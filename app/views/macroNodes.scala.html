@@ -1,43 +1,40 @@
-@import views.html.helper._
-@import net.wa9nnn.rc210.data.macros.MacroNode
+@import net.wa9nnn.rc210.data.macros.RcMacro
 @import net.wa9nnn.rc210.ui.Tabs
 
 @import net.wa9nnn.rc210.data.functions.FunctionsProvider
-@(macroNodes: Seq[MacroNode])(implicit functionsProvider: FunctionsProvider)
+@(macroNodes: Seq[RcMacro])(implicit functionsProvider: FunctionsProvider)
 
-@tabbedmain(Tabs.macrosTab) {
-    <div class="container">
-    @form(action = routes.MacroEditorController.save()) {
-        <table class="table table-bordered w-auto table-sm">
-            <thead class="table-primary">
-                <tr>
-                    <td>&nbsp;</td>
-                    <td title="Number or name">Macro</td>
-                    <td title="DTMF that will invoke this macro">DTMF</td>
-                    <td title="Functions that will run when this macro is triggered.">Function</td>
-                </tr>
-            </thead>
-            @for(macroNode <- macroNodes) {
-                <tr>
-                    <td>
-                        <button type="button" class="bi bi-pencil-square btn p-0"
-                        title="Edit macro definition."
-                        onclick="window.location.href = '@routes.MacroEditorController.edit(macroNode.key)"></button>
-                    </td>
-                    <td title="Click edit button to change name.">
-                    @macroNode.key
-                    </td>
-                    <td class="text-end">
-                    @macroNode.dtmf
-                    </td>
-                    <td>
+    @tabbedmain(Tabs.macrosTab) {
+        <div class="container">
+            <table class="table table-bordered w-auto table-sm">
+                <thead class="table-primary">
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td title="Number or name">Macro</td>
+                        <td title="DTMF that will invoke this macro">DTMF</td>
+                        <td title="Functions that will run when this macro is triggered.">Functions</td>
+                    </tr>
+                </thead>
+                @for(macroNode <- macroNodes) {
+                    <tr>
+                        <td>
+                            @editButton(routes.MacroEditorController.edit(macroNode.key).url)
+                        </td>
+                        <td title="Click edit button to change macro details..">
+                        @macroNode.key.keyWithName
+                        </td>
+                        <td class="text-end">
+                        @macroNode.dtmf
+                        </td>
+                        <td>
                             <ul class="list-unstyled">
-                            @for(functionKey <- macroNode.functions) {<li>@functionsProvider(functionKey).map(_.toString).getOrElse("???")</li>}
+                            @for(functionKey <- macroNode.functions) {
+                                <li>@functionsProvider(functionKey).map(_.toString).getOrElse("???")</li>
+                            }
                             </ul>
-                    </td>
-                </tr>
-            }
-        </table>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
     }
-    </div>
-}
