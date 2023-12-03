@@ -16,6 +16,7 @@
  */
 
 package controllers
+
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.Table
@@ -23,7 +24,7 @@ import net.wa9nnn.rc210.security.authentication.SessionManagerActor.Sessions
 import net.wa9nnn.rc210.security.authentication.{RcSession, SessionManagerActor}
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
-import play.api.mvc.{Action, AnyContent, MessagesInjectedController}
+import play.api.mvc.{Action, AnyContent, MessagesAbstractController, MessagesControllerComponents, MessagesInjectedController}
 import views.html.justdat
 
 import javax.inject.{Inject, Singleton}
@@ -36,8 +37,8 @@ import scala.language.postfixOps
  */
 @Singleton
 class SessionController @Inject()(actor: ActorRef[SessionManagerActor.SessionManagerMessage])
-                                 (implicit scheduler: Scheduler, ec: ExecutionContext)
-  extends MessagesInjectedController with LazyLogging {
+                                 (implicit scheduler: Scheduler, ec: ExecutionContext, components: MessagesControllerComponents)
+  extends MessagesAbstractController(components) with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 
   def index: Action[AnyContent] = Action.async {
@@ -45,7 +46,7 @@ class SessionController @Inject()(actor: ActorRef[SessionManagerActor.SessionMan
     val future: Future[Seq[RcSession]] = actor.ask[Seq[RcSession]](ref => Sessions(ref))
     future.map { sessions =>
       val rows = sessions.map(_.toRow)
-      val table = Table(RcSession.header(rows.length), rows)
+      val table: Table = Table(RcSession.header(rows.length), rows)
       Ok(justdat(Seq(table)))
 
     }
