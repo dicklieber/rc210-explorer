@@ -17,9 +17,9 @@
     <script src="@routes.Assets.versioned("javascripts/contextmenu.js")"></script>
 
 
-    @form(action = routes.MacroEditorController.save(), Symbol("id") -> "macroNodeForm") {
+    @form(action = routes.MacroEditorController.save(), Symbol("id") -> "form") {
         <input type="hidden" name="key", value="@macroNode.key">
-        <input type="hidden" name="functionIds" id="functionIds">
+        <input type="hidden" name="ids" id="ids">
         <div class="row">
             <div class="col col-md-auto border border-primary">
                 @nameEdit(macroNode.key.namedKey)
@@ -52,7 +52,6 @@
                         <ul id="availableList" class="list-unstyled">
                         @for(function <- functionsProvider.functions) {
                             <li class="functionSource"
-                            ondblclick="dblClick(this)"
                             ondblclick="dblClick(this)"
                             data-function="@function.key.toString">
                             @function

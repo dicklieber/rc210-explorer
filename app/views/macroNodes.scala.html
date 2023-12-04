@@ -2,20 +2,23 @@
 @import net.wa9nnn.rc210.ui.Tabs
 
 @import net.wa9nnn.rc210.data.functions.FunctionsProvider
-@(macroNodes: Seq[RcMacro])(implicit functionsProvider: FunctionsProvider)
+@(macros: Seq[RcMacro])(implicit functionsProvider: FunctionsProvider)
 
     @tabbedmain(Tabs.macrosTab) {
         <div class="container">
             <table class="table table-bordered w-auto table-sm">
                 <thead class="table-primary">
                     <tr>
-                        <td>&nbsp;</td>
-                        <td title="Number or name">Macro</td>
-                        <td title="DTMF that will invoke this macro">DTMF</td>
-                        <td title="Functions that will run when this macro is triggered.">Functions</td>
+                        <th colspan="4">Macros (@macros.length)</th>
+                    </tr>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th title="Number or name">Macro</th>
+                        <th title="DTMF that will invoke this macro">DTMF</th>
+                        <th title="Functions that will run when this macro is triggered.">Functions</th>
                     </tr>
                 </thead>
-                @for(macroNode <- macroNodes) {
+                @for(macroNode <- macros) {
                     <tr>
                         <td>
                             @editButton(routes.MacroEditorController.edit(macroNode.key).url)

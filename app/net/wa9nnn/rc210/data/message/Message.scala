@@ -38,15 +38,7 @@ import scala.collection.immutable.Seq
  */
 case class Message(key: Key, words: Seq[Int]) extends ComplexFieldValue("Message") {
 
-
   def toWords: Seq[Word] = words.map(Word(_))
-
-  def toRow: Row = {
-    val editButton = EditButton(routes.MessageController.edit(key))
-    val rowHeader = key.toCell
-    val csvWords: Cell = Cell(display)
-    Row(editButton, rowHeader, csvWords)
-  }
 
   override def display: String = words.map(id => Word(id).string).mkString(", ")
 

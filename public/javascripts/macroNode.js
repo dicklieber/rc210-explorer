@@ -21,14 +21,14 @@ $(function () {
     });
 
 
-    $('#macroNodeForm').on('submit', function () {
+    $('#form').on('submit', function () {
         const $currentList = $("#currentList");
         const wordIds = $currentList.children()
             .map(function () {
                 return this.dataset.function;
             }).get();
         const csv = wordIds.join();
-        $("#functionIds").val(csv);
+        $("#ids").val(csv);
 
         const formData = new FormData($('form')[0]);
         formData.append("words", wordIds);

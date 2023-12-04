@@ -6,30 +6,36 @@
 
 @tabbedmain(Tabs.messagesTab) {
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/dualList.css")">
-    dualList.css
-    <script src="@routes.Assets.versioned("javascripts/messageEditor.js")"></script>
+    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/contextmenu.css")">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+    <script src="@routes.Assets.versioned("javascripts/macroNode.js")"></script>
+    <script src="@routes.Assets.versioned("javascripts/contextmenu.js")"></script>
 
 
-    @form(action = routes.MessageController.save(), Symbol("id") -> "messageForm") {
+    @form(action = routes.MessageController.save(), Symbol("id") -> "form") {
         <input type="hidden" name="key" value="@message.key">
-        <input type="hidden" name="words" id="words">
+        <input type="hidden" name="ids" id="ids">
         <div class="row">
             <div class="col col-md-auto border border-primary">
-                <p class="sectionHeader">@message.key</p>
-                <div><label for="name">Name: </label>
-                    @message.key.keyWithName
-                </div>
-                <input class="btn btn-primary" type="submit" value="Save">
-                <p class="text-break help">Double click Available Words append to Current Words.<br/>
-                    Drag within Current Words to re-arrange. Click to remove.</p>
-            </div>
-            <div id="dropZone" class="col col-md-auto border border-primary">
-                <p class="sectionHeader">Current Words</p>
+                @nameEdit(message.key.namedKey)
 
-                <ul id="currentList" class="border border-primary">
-                @for(word <- message.toWords) {
-                    <li data-wordid="@{word.id}" class="text-nowrap" onclick="remove(this)">@{word.string} (@word.id)</li>
+                @submitButton()
+                <p>Drag function to reorder. Dbl-click to remove.</p>
+            </div>
+            <div  class="col col-md-auto border border-primary">
+                <h2>Current</h2>
+
+                <ul id="currentList" class="border border-primary list-unstyled">
+
+                  @for(word <- message.toWords) {
+                    <li
+                    class="functionSource selected"
+                    data-function="@word.toString"
+                    ondblclick=dblClick(this)>
+                    @word.string
+                    </li>
                 }
                 </ul>
                 <div id="maxWordsAlert" class="alert alert-warning" role="alert" style="display: none">
@@ -37,15 +43,20 @@
                 </div>
             </div>
             <div class="col col-md-auto ">
-                <p class="sectionHeader">Available Words</p>
-
-                <div id="myDropdown" class="dropdown-content show ">
+                <h2>Available Words</h2>
+                <div id="myDropdown" class="dropdown-content show functionList">
                     <input type="text" placeholder="Search.." id="filter" onkeyup="filterFunction()">
-                    <ul id="availableList">
-                    @for(word <- Words.words) {
-                        <li data-wordid="@word.id" class="text-nowrap wordSource" onclick="remove(this)">@{word.string} (@{word.id})</li>
-                    }
-                    </ul>
+                    <div>
+                        <ul id="availableList" class="list-unstyled">
+                        @for(word <- Words.words) {
+                            <li class="functionSource"
+                            ondblclick="dblClick(this)"
+                            data-function="@word.id.toString">
+                            @word.string
+                            </li>
+                        }
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

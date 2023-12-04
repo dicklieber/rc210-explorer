@@ -84,7 +84,7 @@ class MacroEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
     } yield {
       d
     }).headOption
-    val functions: Seq[Key] = formData("functionIds")
+    val functions: Seq[Key] = formData("ids")
       .head
       .split(",").toIndexedSeq
       .flatMap { sfunction =>

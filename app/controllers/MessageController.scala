@@ -16,24 +16,24 @@
  */
 
 package controllers
-import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
-import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
-import org.apache.pekko.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.Table
-import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.*
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
 import net.wa9nnn.rc210.data.message.Message
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
+import net.wa9nnn.rc210.{Key, KeyKind}
+import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
+import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
+import org.apache.pekko.util.Timeout
 import play.api.mvc.*
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
+import scala.util.Try
 import scala.util.matching.Regex
 
 @Singleton()
@@ -44,10 +44,9 @@ class MessageController @Inject()(actor: ActorRef[DataStoreActor.Message])
 
   def index(): Action[AnyContent] = Action.async { implicit request =>
     actor.ask[Seq[FieldEntry]](AllForKeyKind(KeyKind.messageKey, _)).map { f =>
-      val rows = f.map{fieldEntry =>
-        fieldEntry.value.asInstanceOf[Message].toRow}
-      val table = Table(Message.header(rows.length), rows)
-      Ok(views.html.messages(table))
+      val messages: Seq[Message] = f.map{ fieldEntry =>
+        fieldEntry.value.asInstanceOf[Message]}
+      Ok(views.html.messages(messages))
     }
   }
 
@@ -65,19 +64,31 @@ class MessageController @Inject()(actor: ActorRef[DataStoreActor.Message])
   }
 
   def save(): Action[AnyContent] = Action.async { implicit request =>
-    
-    
-    val kv: Map[String, String] = AnyContentAsFormUrlEncoded(request.body.asFormUrlEncoded.get)
-      .data
-      .map(t => t._1 -> t._2.headOption.getOrElse(""))
+    val formData: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
 
-    val messageKey: Key = Key(kv("key"))
-    val message = Message(messageKey, kv)
+    val sKey: String = formData("key").head
+    val messageKey: Key = Key.apply(sKey)
+
+    val words: Seq[Int] = formData("ids")
+      .head
+      .split(",").toIndexedSeq
+      .flatMap { sWord =>
+        Try {
+         sWord.toInt
+        }.toOption
+      }
+
+
+    val message = Message(messageKey, words)
     val candidate = UpdateCandidate(message)
-    val name: String = kv("name")
-    val namedKey = NamedKey(messageKey, name)
+    val namedKeys = for{
+      values <- formData.get("name")
+      name <- values.headOption
+    }yield{
+      NamedKey(messageKey, name)
+    }
 
-    actor.ask[String](DataStoreActor.UpdateData(Seq(candidate), Seq(namedKey), user=user(request), _)).map{ _ =>
+    actor.ask[String](DataStoreActor.UpdateData(Seq(candidate), namedKeys.toSeq, user=user(request), _)).map{ _ =>
       Redirect(routes.MessageController.index())
     }
   }

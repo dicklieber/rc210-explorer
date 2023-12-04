@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.data.vocabulary
 
-import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
+import com.wa9nnn.util.tableui.Header
 import play.api.libs.json.{Format, JsValue, Json}
 
 import scala.io.BufferedSource
@@ -56,9 +56,7 @@ object Words {
  * @param id       id.
  * @param string   what shows or would be spoken.
  */
-case class Word(id: Int, string: String) extends RowSource {
-  override def toRow: Row = Row(Cell(id), string)
-
+case class Word(id: Int, string: String)  {
   val json: JsValue = Json.toJson(this)
 }
 

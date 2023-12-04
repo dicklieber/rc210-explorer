@@ -1,39 +1,34 @@
-@import com.wa9nnn.util.tableui.Table
-@import com.wa9nnn.util.tableui.html.renderTable
 @import views.html.helper._
 @import net.wa9nnn.rc210.ui.Tabs
 
-@(table:Table)
+@import net.wa9nnn.rc210.data.message.Message
+@(messages: Seq[Message])
     @tabbedmain(Tabs.messagesTab) {
-        @renderTable(table)
-@*
-        <div class="container">
-            <table class="table table-bordered w-auto">
-                <thead class="table-primary">
-                    <tr>
-                        <th></th>
-                        <th>Message</th>
-                        <th>Words</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @for(message <- messages) {
-                    <tr>
-                        <td>
-                            <button type="button" class="bi bi-pencil-square btn p-0"
-                            onclick="window.location.href = '@routes.MessageController.edit(message.key)'"></button>
-                        </td>
-                        <td title="@message.key.toString">
-                        @namedSource.nameForKey(message.key)
-                        </td>
-                        <td>
+        <table class="table table-bordered w-auto table-sm">
+            <thead class="table-primary">
+                <tr>
+                    <th colspan="3">Message Macros (@messages.length)</th>
+                </tr>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>Name</th>
+                    <th>Words</th>
+                </tr>
+            </thead>
+            <tbody>
+            @for(message <- messages) {
+                <tr>
+                    <td>
+                        @{editButton(routes.MessageController.edit(message.key).url)}
+                    </td >
+                    <td>
+                        @message.key.keyWithName
+                    </td>
+                    <td>
                         @message.display
-                        </td>
-
-                    </tr>
-                }
-                </tbody>
-            </table>
-        </div>
-*@
+                    </td>
+                </tr >
+            }
+            </tbody>
+        </table>
     }
