@@ -18,7 +18,13 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.datastore.DataStoreActor
+import net.wa9nnn.rc210.KeyKind
+import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
+import net.wa9nnn.rc210.data.datastore.DataStoreActor.UpdateData
+import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.remotebase.RemoteBase
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
+import net.wa9nnn.rc210.ui.{CandidateAndNames, ProcessResult}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
@@ -33,56 +39,34 @@ import scala.language.postfixOps
 
 @Singleton()
 class RemoteBaseController @Inject()(actor: ActorRef[DataStoreActor.Message])
-                                    (implicit scheduler: Scheduler, ec: ExecutionContext) extends MessagesInjectedController with LazyLogging {
+                                    (implicit scheduler: Scheduler, ec: ExecutionContext, components: MessagesControllerComponents)
+  extends MessagesAbstractController(components) with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 
-
-  //  private val rbMemory: Mapping[RBMemory] =
-  //    mapping(
-  //      "frequency" -> text,
-  //      "offset" -> of[Offset],
-  //      "mode" -> of[Mode],
-  //      "ctcssMode" -> of[CtcssMode],
-  //      "ctssCode" -> number,
-  //    )(RBMemory.apply)(RBMemory.unapply)
-  //
-  //  val remoteBaseForm: Form[RemoteBase] = Form[RemoteBase](
-  //    mapping(
-  //      "radio" -> of[Radio],
-  //      "yaesu" -> of[Yaesu],
-  //      "prefix" -> text,
-  //      "memories" -> seq(rbMemory),
-  //    )(RemoteBase.apply)(RemoteBase.unapply)
-  //  )
-
-  def index: Action[AnyContent] = Action { implicit request =>
-    throw new NotImplementedError() //todo
-
-//    actor.ask(AllForKeyKind(KeyKind.remoteBaseKey, _)).map { (fields: Seq[FieldEntry]) =>
-//      //      val remoteBase: RemoteBase = fields.head.value.asInstanceOf[RemoteBase]
-//      //      Ok(views.html.rermoteBase(remoteBase))
-//      Ok
-//    }
+  def index: Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
+    actor.ask[Seq[FieldEntry]](DataStoreActor.AllForKeyKind(KeyKind.remoteBaseKey, _)).map { fieldEntries =>
+      val fieldEntry: FieldEntry = fieldEntries.head
+      val remoteBase: RemoteBase = fieldEntry.value.asInstanceOf[RemoteBase]
+      Ok(views.html.remoteBase(RemoteBase.form.fill(remoteBase)))
+    }
   }
 
   def save(): Action[AnyContent] = Action.async { implicit request =>
+    RemoteBase.form
+      .bindFromRequest()
+      .fold(
+        (formWithErrors: Form[RemoteBase]) => {
+          Future(BadRequest(views.html.remoteBase(formWithErrors)))
+        },
+        (remoteBase: RemoteBase) => {
+          val updateCandidate: UpdateCandidate = UpdateCandidate(remoteBase)
+          val candidateAndNames: CandidateAndNames = CandidateAndNames(updateCandidate, None)
+          actor.ask[String](UpdateData(candidateAndNames, user, _)).map { _ =>
+            Redirect(routes.RemoteBaseController.index)
+          }
+        }
+      )
 
-    throw new NotImplementedError() //todo
-    //    remoteBaseForm.bindFromRequest().fold(
-    //      formWithErrors => {
-    //        // binding failure, you retrieve the form containing errors:
-    //        Future(BadRequest(views.html.rermoteBase(formWithErrors)))
-    //      },
-    //      (remoteBase: RemoteBase) => {
-    //        /* binding success, you get the actual value. */
-    //        val updateCandidate = UpdateCandidate(remoteBase.fieldKey, Right(remoteBase))
-    //
-    //        actor.ask[String](DataStoreActor.UpdateData(Seq(updateCandidate), Seq.empty,
-    //          who(request), _)).map { _ =>
-    //          Redirect(routes.RemoteBaseController.index)
-    //        }
-    //      }
-    //    )
   }
 
 }

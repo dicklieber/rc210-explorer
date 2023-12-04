@@ -17,12 +17,14 @@
 
 package net.wa9nnn.rc210.data.remotebase
 
-import com.wa9nnn.util.tableui.Row
-import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
+import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.util.Chunk
+import net.wa9nnn.rc210.{Key, KeyKind}
+import play.api.data.Forms.*
+import play.api.data.{Form, Mapping}
 import play.api.libs.json.{Format, JsValue, Json}
+import play.api.mvc.*
 
 case class RemoteBase(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[RBMemory] = Seq.empty) extends ComplexFieldValue("RemoteBase") {
   override val key: Key = Key(KeyKind.remoteBaseKey)
@@ -44,6 +46,16 @@ case class RemoteBase(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[
 }
 
 object RemoteBase extends ComplexExtractor {
+  def unapply(u: RemoteBase): Option[(Radio, Yaesu, String, Seq[RBMemory])] = Some((u.radio, u.yaesu, u.prefix, u.memories))
+
+  val form: Form[RemoteBase] = Form(
+    mapping(
+      "radio" -> Radio.formField,
+      "yaesu" -> Yaesu.formField,
+      "prefix" -> text,
+      "memories" -> seq(RBMemory.form),
+    )(RemoteBase.apply)(RemoteBase.unapply))
+
   /**
    *
    * @param memory    source of RC-210 data.
@@ -119,3 +131,15 @@ object RemoteBase extends ComplexExtractor {
  * @param ctssCode  See appendix B
  */
 case class RBMemory(frequency: String, offset: Offset, mode: Mode, ctcssMode: CtcssMode, ctssCode: Int)
+
+object RBMemory:
+  def unapply(u: RBMemory): Option[(String, Offset, Mode, CtcssMode, Int)] = Some((u.frequency, u.offset, u.mode, u.ctcssMode, u.ctssCode))
+
+  val form: Mapping[RBMemory] =
+    mapping(
+      "frequency" -> text,
+      "offset" -> Offset.formField,
+      "mode" -> Mode.formField,
+      "ctcssMode" -> CtcssMode.formField,
+      "ctcssCode" -> number,
+    )(RBMemory.apply)(RBMemory.unapply)

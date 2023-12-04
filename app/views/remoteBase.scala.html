@@ -1,0 +1,70 @@
+@import net.wa9nnn.rc210.ui.MyHelpers.*
+@import views.html.helper.{FieldConstructor, form}
+@import views.html.helper._
+@import views.html.input.selectOptions
+@import net.wa9nnn.rc210.ui.Tabs
+@import net.wa9nnn.rc210.data.remotebase._
+@(f: Form[RemoteBase])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+
+@tabbedmain(Tabs.remoteBase) {
+    @form(routes.RemoteBaseController.save()) {
+        <table>
+            <tr>
+                <td>Radio:</td>
+                <td>@select(f("radio"), Radio.options)</td>
+            </tr>
+            <tr>
+                <td>Yaesu:</td>
+                <td>@select(f("yaesu"), Yaesu.options)</td>
+            </tr>
+            <tr>
+                <td>Prefix:</td>
+                <td>@inputText(f("prefix"))</td>
+            </tr>
+        </table>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Number</th>
+                    <th>Frequency</th>
+                    <th>Offset</th>
+                    <th>Mode</th>
+                    <th>CTCSS Mode</th>
+                    <th>CTCSS Code</th>
+                </tr>
+            </thead>
+
+
+            @helper.repeatWithIndex(f("memories"), min = 1) { (rbMemeory, index) =>
+                <tr>
+                    <td>
+                        @{
+                            index + 1
+                        }
+                    </td>
+                    <td>
+                    @inputText(rbMemeory("frequency"))
+                    </td>
+                    <td>
+                    @select(rbMemeory("offset"), Offset.options)
+                    </td>
+                    <td>
+                    @select(rbMemeory("mode"), Mode.options)
+                    </td>
+                    <td>
+                    @select(rbMemeory("ctcssMode"), CtcssMode.options)
+                    </td>
+                    <td>
+                    @inputText(rbMemeory("ctcssCode"),
+                        Symbol("type") -> "number",
+                        Symbol("min") -> 0,
+                        Symbol("max") -> 255)
+                    </td>
+                </tr>
+            }
+        </table>
+        @submitButton()
+
+    }
+}@import net.wa9nnn.rc210.data.remotebase.RemoteBase
