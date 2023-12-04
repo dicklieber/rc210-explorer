@@ -16,7 +16,6 @@ import com.typesafe.scalalogging.LazyLogging
  * This uses scala-guice. https://github.com/codingwell/scala-guice for details.
  */
 class Module(environment: Environment, configuration: Configuration) extends AbstractModule with LazyLogging{
-  logger.info("MainModule")
   override def configure(): Unit = {
     install(RcActorsModule)
   }
