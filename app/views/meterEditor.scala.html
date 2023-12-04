@@ -1,0 +1,67 @@
+@import net.wa9nnn.rc210.data.meter.{Meter, MeterFaceName}
+@import net.wa9nnn.rc210.ui.MyHelpers.*
+@import net.wa9nnn.rc210.ui.Tabs
+@import views.html.helper.*
+@import views.html.input.selectOptions
+
+@import net.wa9nnn.rc210.data.named.NamedKey
+@(f: Form[Meter], namedKey: NamedKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+@tabbedmain(Tabs.metersTab) {
+    @form(action = routes.MeterController.saveMeter()) {
+        @inputText(f("key"), Symbol("type") -> "hidden")
+        <div class="col-">
+            @nameEdit(namedKey)
+            <table class="table table-bordered table-sm  w-auto rc210-table">
+
+                <thead class="table-primary">
+                    <tr>
+                        <th colspan="2">Analog Meter</th>
+                    </tr>
+                    <tr>
+                        <th>Field</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Face</td>
+                        <td>@select(f("faceName"), MeterFaceName.options)</td>
+                    </tr>
+                    <tr>
+                        <td>Low Voltage</td>
+                        <td title="Hundreths of Volts">
+                        @helper.inputText(f("low.hundredthVolt"),
+                            Symbol("type") -> "number",
+                            Symbol("max") -> 32767)
+                        </td >
+                    </tr>
+                    <tr>
+                        <td>Low Reading</td>
+                        <td>
+                        @helper.inputText(f("low.reading"),
+                            Symbol("type") -> "number",
+                            Symbol("max") -> 32767)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>High Voltage</td>
+                        <td  title="Hundreths of Volts">
+                        @helper.inputText(f("high.hundredthVolt"),
+                            Symbol("type") -> "number",
+                            Symbol("max") -> 32767)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>High Reading</td>
+                        <td>
+                        @helper.inputText(f("high.reading"),
+                            Symbol("type") -> "number",
+                            Symbol("max") -> 32767)
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            @submitButton()
+        </div>
+    }
+}

@@ -21,6 +21,9 @@ import com.wa9nnn.util.tableui.{Cell, Row}
 import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
+import play.api.data.{Form, Mapping}
+import play.api.data.Forms.*
+import play.api.mvc.*
 import play.api.libs.json.{Format, JsValue, Json}
 
 import java.util.concurrent.atomic.AtomicInteger
@@ -50,7 +53,7 @@ case class Meter(key: Key, meterFaceName: MeterFaceName, low: VoltToReading, hig
     Seq(
       /*
       *2064 C * M* X1* Y1* X2* Y2* C= Channel 1 to 8 M=Meter Type 0 to 6 X1, Y1, X2, Y2 represent two calibration points.
-      * There must be 6 parameters entered to define a meter face, each value ending with *.
+      * There must be 6 parameters entered to define a meterEditor face, each value ending with *.
        */
       s"1*2064$c*$m*$x1*$y1*$x2*$y2*"
     )
@@ -62,12 +65,13 @@ case class Meter(key: Key, meterFaceName: MeterFaceName, low: VoltToReading, hig
 object Meter extends ComplexExtractor {
   def unapply(u: Meter): Option[(Key, MeterFaceName, VoltToReading, VoltToReading)] = Some((u.key, u.meterFaceName, u.low, u.high))
 
-  /**
-   *
-   * @param memory    source of RC-210 data.
-   * @return what we extracted.
-   */
-
+  val meterForm: Form[Meter] = Form(
+    mapping(
+      "key" -> of[Key],
+      "faceName" -> MeterFaceName.formField,
+      "low" -> VoltToReading.form,
+      "high" -> VoltToReading.form,
+    )(Meter.apply)(Meter.unapply))
 
   def extract(memory: Memory): Seq[FieldEntry] = {
     val mai = new AtomicInteger()
@@ -104,31 +108,29 @@ object Meter extends ComplexExtractor {
   override def positions: Seq[FieldOffset] = Seq(
     FieldOffset(186, this, "meterFace"),
     FieldOffset(202, this, "meterLowVolt"),
-    FieldOffset(218, this, "meterLowrReading"),
+    FieldOffset(218, this, "meterLowReading"),
     FieldOffset(282, this, "alarm Set Point"),
-    FieldOffset(2064, this, "meter"),
+    FieldOffset(2064, this, "meterEditor"),
   )
 
   implicit val fmtVoltToReading: Format[VoltToReading] = Json.format[VoltToReading]
   implicit val fmtMeter: Format[Meter] = Json.format[Meter]
 
 }
-
-
 /**
  *
- * @param hundredthVolt  input voltaqe
- * @param reading        what "shows" on the4 meter face.
+ * @param hundredthVolt  input voltage
+ * @param reading        what "shows" on the4 meterEditor face.
  */
-case class VoltToReading(hundredthVolt: Int, reading: Int) {
-  def cells: Seq[Cell] = Seq(
-    Cell(hundredthVolt),
-    Cell(reading)
-  )
-}
+case class VoltToReading(hundredthVolt: Int, reading: Int)
 
 object VoltToReading:
   def unapply(u: VoltToReading): Option[(Int, Int)] = Some((u.hundredthVolt, u.reading))
 
-end VoltToReading
+  val form: Mapping[VoltToReading] =
+    mapping(
+      "hundredthVolt" -> number,
+      "reading" -> number,
+    )(VoltToReading.apply)(VoltToReading.unapply)
+
 

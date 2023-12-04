@@ -22,6 +22,10 @@ import net.wa9nnn.rc210.data.courtesy.Segment
 import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
+import play.api.data.{Form, Mapping}
+import play.api.data.Forms.*
+import play.api.mvc.*
+
 import play.api.libs.json.{Format, JsValue, Json}
 
 import java.util.concurrent.atomic.AtomicInteger
@@ -39,8 +43,8 @@ case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint:
    */
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
     /**
-     * *2066 alarm number * meter number * alarmtype * trippoint * macro to run *
-     * There are 8 meter alarms, 1 through 8
+     * *2066 alarm number * meterEditor number * alarmtype * trippoint * macro to run *
+     * There are 8 meterEditor alarms, 1 through 8
      * Meter Number is 1 through 8 (for the ADC channels) AlarmType determines the action taken by that alarm:
      * 1 - Low Alarm 2 - High Alarm
      */
@@ -58,23 +62,32 @@ case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint:
 }
 
 /*
-*2064 C * M* X1* Y1* X2* Y2* C= Channel 1 to 8 M=MeterKind Type 0 to 6 X1, Y1, X2, Y2 represent two calibration points. There must be 6 parameters entered to define a meter face, each value ending with *.
-  There are 8 meter faces corresponding to the 8 Analog inputs, with each meter face programmed with 1 of 6 values. The programming command consists the input port, meter face type (name), and 4 values representing:
+*2064 C * M* X1* Y1* X2* Y2* C= Channel 1 to 8 M=MeterKind Type 0 to 6 X1, Y1, X2, Y2 represent two calibration points. There must be 6 parameters entered to define a meterEditor face, each value ending with *.
+  There are 8 meterEditor faces corresponding to the 8 Analog inputs, with each meterEditor face programmed with 1 of 6 values. The programming command consists the input port, meterEditor face type (name), and 4 values representing:
 • The low sensed voltage appearing on an input (X1)
-• The low meter face reading (Y1)
+• The low meterEditor face reading (Y1)
 • The high sensed voltage appearing on an input (X2)
-• The high meter face reading (Y2)
+• The high meterEditor face reading (Y2)
 
-* *2066 alarm number * meter number * alarmtype * trippoint * macro to run *
+* *2066 alarm number * meterEditor number * alarmtype * trippoint * macro to run *
 *
 *
-1600xy where x = 1 to 8 for the meter channel and y = 1 for ON and 0 for OFF
+1600xy where x = 1 to 8 for the meterEditor channel and y = 1 for ON and 0 for OFF
 *
 * */
 
 
 object MeterAlarm extends ComplexExtractor {
   def unapply(u: MeterAlarm): Option[(Key, Key, AlarmType, Int, Key)] = Some((u.key, u.meter,u.alarmType,  u.tripPoint, u.macroKey))
+
+  val form: Form[MeterAlarm] = Form(
+    mapping(
+      "key" -> of[Key],
+      "meter" -> of[Key],
+      "alarmType" -> AlarmType.formField,
+      "tripPoint" -> number,
+      "macroKey" -> of[Key]
+    )(MeterAlarm.apply)(MeterAlarm.unapply))
 
   private val nMeters = 8
 
@@ -98,7 +111,7 @@ object MeterAlarm extends ComplexExtractor {
         r
       } catch {
         case e: Exception =>
-          logger.error(s"Bad meter number got: $number , expecting 1 to $nMeters. Will use Meter 1")
+          logger.error(s"Bad meterEditor number got: $number , expecting 1 to $nMeters. Will use Meter 1")
           Key(KeyKind.meterKey, 1)
       }
     }

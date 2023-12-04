@@ -21,25 +21,22 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.KeyKind.clockKey
 import net.wa9nnn.rc210.data.clock.DSTPoint.dstPointForm
-import net.wa9nnn.rc210.data.clock.{Clock, DSTPoint, MonthOfYearDST, Occurrence}
+import net.wa9nnn.rc210.data.clock.{Clock, DSTPoint}
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.*
 import net.wa9nnn.rc210.data.field.FieldEntry
-import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
-import net.wa9nnn.rc210.ui.{CandidateAndNames, ProcessResult}
+import net.wa9nnn.rc210.ui.ProcessResult
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
-import play.api.mvc.*
 import play.api.data.Form
 import play.api.data.Forms.*
-import play.api.mvc.MessagesControllerComponents
-import play.twirl.api.Html
+import play.api.mvc.*
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
+import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
 
@@ -82,7 +79,8 @@ class ClockController @Inject()(implicit actor: ActorRef[DataStoreActor.Message]
         (clock: Clock) => {
           val candidateAndNames = ProcessResult(clock)
           actor.ask[String](UpdateData(candidateAndNames, user, _)).map { _ =>
-            Redirect(routes.ClockController.index)
+            val index1: Call = routes.ClockController.index
+            Redirect(index1)
           }
 
         }

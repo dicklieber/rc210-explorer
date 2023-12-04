@@ -76,7 +76,7 @@ class FieldDefinitions @Inject()() {
     //###########################################################################################
 
     //MeterFaceName - 186-201
-    //    *2064 C * M* X1* Y1* X2* Y2* C= Channel 1 to 8 M=Meter Type 0 to 6 X1, Y1, X2, Y2 represent two calibration points. There must be 6 parameters entered to define a meter face, each value ending with *.
+    //    *2064 C * M* X1* Y1* X2* Y2* C= Channel 1 to 8 M=Meter Type 0 to 6 X1, Y1, X2, Y2 represent two calibration points. There must be 6 parameters entered to define a meterEditor face, each value ending with *.
 
     SimpleField(322, "Rx Rcv Macro Active", portKey, "n*2113 1 v", MacroKeyExtractor),
     SimpleField(325, "Rx Rcv Macro Low", portKey, "n*2113  v", MacroKeyExtractor),

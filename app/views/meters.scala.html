@@ -2,88 +2,87 @@
 
 @(meterStuff: MeterStuff)
 
-
-@tabbedmain(Tabs.metersTab) {
-    <div class="container">
-        <div class="row">
-            <div class="col-    "><table>
-                <tr>
-
-                    <td>
-                        <button type="button" class="bi bi-pencil-square btn p-0"
-                        title="Edit VRef."
-                        onclick="window.location.href = '@routes.CommonEditorController.index().url'"></button>
-                        Reference Voltage</td>
-                    <td> @meterStuff.vref</td>
-                </tr>
-            </table>
-            </div>
-            <div class="col-"><table class="table table-bordered table-sm  w-auto rc210-table">
-
-                <thead>
-                    <tr class="table-secondary">
-                        <th colspan="7">Meter Channels</th>
-                    </tr>
-                    <tr class="table-secondary">
-                        <th rowspan="2"></th>
-                        <th rowspan="2">Meter</th>
-                        <th rowspan="2">Face</th>
-                        <th colspan="2">Low Calibration</th>
-                        <th colspan="2">High Calibration</th>
-                    </tr>
-                    <tr class="table-secondary">
-                        <th>Hundreths/Volt</th>
-                        <th>Reading</th>
-                        <th>Hundreths/Volt</th>
-                        <th>Reading</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                @for(meter <- meterStuff.meters) {
+    @tabbedmain(Tabs.metersTab) {
+        <div class="container">
+            <div class="row">
+                <div class="col-    "><table>
                     <tr>
-                        <td>@editButton(routes.MeterController.editMeter(meter.key).url)</td>
-                        <td>@meter.key.keyWithName</td>
-                        <td>@meter.meterFaceName</td>
-                        <td>@meter.low.hundredthVolt</td>
-                        <td>@meter.low.reading</td>
-                        <td>@meter.high.hundredthVolt</td>
-                        <td>@meter.high.reading</td>
+
+                        <td>
+                            <button type="button" class="bi bi-pencil-square btn p-0"
+                            title="Edit VRef."
+                            onclick="window.location.href = '@routes.CommonEditorController.index().url'"></button>
+                            Reference Voltage</td>
+                        <td> @meterStuff.vref</td>
                     </tr>
-                }
-                </tbody>
-            </table>
-            </div>
-            <div class="col-">
-                <table class="table table-bordered table-sm  w-auto rc210-table">
-                    <thead>
-                        <tr class="table-secondary">
-                            <th colspan="6">Meter  Alarms</th>
+                </table>
+                </div>
+                <div class="col-"><table class="table table-bordered table-sm  w-auto rc210-table">
+
+                    <thead class="table-primary">
+                        <tr >
+                            <th colspan="7">Meter Channels</th>
                         </tr>
-                        <tr class="table-secondary">
-                            <th></th>
-                            <th>Alarm</th>
-                            <th>Meter</th>
-                            <th>Type</th>
-                            <th>Trip Point</th>
-                            <th>Macro</th>
+                        <tr class="table-primary">
+                            <th rowspan="2"></th>
+                            <th rowspan="2">Meter</th>
+                            <th rowspan="2">Face</th>
+                            <th colspan="2">Low Calibration</th>
+                            <th colspan="2">High Calibration</th>
+                        </tr>
+                        <tr class="table-primary">
+                            <th title="Hundreths of a Volt">.00/V</th>
+                            <th>Reading</th>
+                            <th title="Hundreths of a Volt">.00/V</th>
+                            <th>Reading</th>
                         </tr>
                     </thead>
+
                     <tbody>
-                    @for(alarm <- meterStuff.alarms) {
+                    @for(meter <- meterStuff.meters) {
                         <tr>
-                            <td>@editButton(routes.MeterController.editAlarm(alarm.key).url)</td>
-                            <td>@alarm.key.keyWithName</td>
-                            <td>@alarm.meter.keyWithName</td>
-                            <td>@alarm.alarmType</td>
-                            <td>@alarm.tripPoint</td>
-                            <td>@alarm.macroKey.keyWithName</td>
+                            <td>@editButton(routes.MeterController.editMeter(meter.key).url)</td>
+                            <td>@meter.key.keyWithName</td>
+                            <td>@meter.meterFaceName</td>
+                            <td>@meter.low.hundredthVolt</td>
+                            <td>@meter.low.reading</td>
+                            <td>@meter.high.hundredthVolt</td>
+                            <td>@meter.high.reading</td>
                         </tr>
                     }
                     </tbody>
                 </table>
+                </div>
+                <div class="col-">
+                    <table class="table table-bordered table-sm  w-auto rc210-table">
+                        <thead class="table-primary">
+                            <tr>
+                                <th colspan="6">Meter  Alarms</th>
+                            </tr>
+                            <tr >
+                                <th></th>
+                                <th>Alarm</th>
+                                <th>Meter</th>
+                                <th>Type</th>
+                                <th>Trip Point</th>
+                                <th>Macro</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @for(alarm <- meterStuff.alarms) {
+                            <tr>
+                                <td>@editButton(routes.MeterController.editAlarm(alarm.key).url)</td>
+                                <td>@alarm.key.keyWithName</td>
+                                <td>@alarm.meter.keyWithName</td>
+                                <td>@alarm.alarmType</td>
+                                <td>@alarm.tripPoint</td>
+                                <td>@alarm.macroKey.keyWithName</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
-}
+    }
 
