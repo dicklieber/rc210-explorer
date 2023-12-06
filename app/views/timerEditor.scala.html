@@ -1,38 +1,36 @@
+@import net.wa9nnn.rc210.ui.MyHelpers.*
 @import views.html.helper._
 @import net.wa9nnn.rc210.ui.Tabs
 @import net.wa9nnn.rc210.ui.MacroSelect
 @import net.wa9nnn.rc210.data.timers.Timer
-@(timerForm: Form[Timer])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+@import net.wa9nnn.rc210.data.named.NamedKey
+@(f: Form[Timer], namedKey: NamedKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
 @tabbedmain(Tabs.timersTab) {
-    @form(routes.TimerEditorController.save()) {
-        <input type="hidden" name="key" value="@timerForm("key").value" >
-
+    @form(routes.TimerController.save()) {
+        @inputText(f("key"), Symbol("type")-> "hidden")
+        @nameEdit(namedKey)
         <table>
             <thead>
                 <tr>
-                    <th></th>
-                    <th>Timer</th>
-                    <th>Seconds</th>
-                    <th>Macro To Run</th>
+                    <th>Field</th>
+                    <th>Value</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>Timer</td>
+                    <td>Seconds</td>
                     <td>
-                        @select(timerForm("timerKey"), MacroSelect.options)
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                    @inputText(timerForm("seconds"))
+                    @inputText(f("seconds"),
+                        Symbol("type")-> "number",
+                        Symbol("min")-> 0,
+                        Symbol("max")-> 32767)
                     </td>
                 </tr>
                 <tr>
                     <td>Macro</td>
                     <td>
-                    @select(timerForm("macroKey"), MacroSelect.options)
+                    @select(f("macroKey"), MacroSelect.options)
                     </td>
                 </tr>
 

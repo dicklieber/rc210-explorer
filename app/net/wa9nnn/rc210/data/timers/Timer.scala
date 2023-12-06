@@ -19,6 +19,8 @@ package net.wa9nnn.rc210.data.timers
 
 import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntryBase}
+import play.api.data.Form
+import play.api.data.Forms.{mapping, number, of}
 import play.api.libs.json.{JsValue, Json, OFormat}
 
 case class Timer(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValue("Timer") {
@@ -43,6 +45,14 @@ case class Timer(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValu
 
 object Timer {
   def unapply(u: Timer): Option[(Key, Int, Key)] = Some((u.key, u.seconds, u.macroKey))
+
+   val form : Form[Timer] = Form[Timer](
+    mapping(
+      "key" -> of[Key],
+      "seconds" -> number,
+      "macroKey" -> of[Key],
+    )(Timer.apply)(Timer.unapply)
+  )
 
   implicit val fmtTimer: OFormat[Timer] = Json.format[Timer]
 }

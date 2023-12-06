@@ -1,37 +1,38 @@
-@import com.wa9nnn.util.tableui.Table
-@import com.wa9nnn.util.tableui.html.renderTable
-@import views.html.helper._
-@import net.wa9nnn.rc210.ui.Tabs
 @import net.wa9nnn.rc210.data.timers.Timer
+@import net.wa9nnn.rc210.ui.Tabs
 @(timers: Seq[Timer])
 
-@tabbedmain(Tabs.timersTab) {
-    <table class="table table-bordered table-sm  w-auto rc210-table">
-        <thead>
-            <tr>
-                <th></th>
-                <th>Timer</th>
-                <th>Seconds</th>
-                <th>Macro To Run</th>
-            </tr>
-        </thead>
-        <tbody>
-        @for(timer <- timers) {
-            <tr>
-                <td>
-                @editButton(routes.TimerEditorController.edit(timer.key))
-                </td>
-                <td>
-                @timer.key.keyWithName
-                </td>
-                <td>
-                @timer.seconds
-                </td>
-                <td>
-                @timer.macroKey.keyWithName
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
-}
+    @tabbedmain(Tabs.timersTab) {
+        <table class="table table-bordered table-sm  w-auto rc210-table">
+            <thead class="table-primary">
+                <tr>
+                    <th colspan="9">Timers (@timers.length)</th>
+                </tr>
+
+                <tr>
+                    <th></th>
+                    <th>Timer</th>
+                    <th>Seconds</th>
+                    <th>Macro To Run</th>
+                </tr>
+            </thead>
+            <tbody>
+            @for(timer <- timers) {
+                <tr>
+                    <td>
+                    @editButton(routes.TimerController.edit(timer.key))
+                    </td>
+                    <td>
+                    @timer.key.keyWithName
+                    </td>
+                    <td>
+                    @timer.seconds
+                    </td>
+                    <td>
+                    @timer.macroKey.keyWithName
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }

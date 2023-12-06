@@ -4,9 +4,9 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-GET         /timer/edit/:timerKey                      controllers.TimerEditorController.edit(timerKey:Key)
-POST        /timer/save                                controllers.TimerEditorController.save()
-GET         /timers                                    controllers.TimerEditorController.index
+GET         /timer/edit/:key                           controllers.TimerController.edit(key:Key)
+POST        /timer/save                                controllers.TimerController.save()
+GET         /timers                                    controllers.TimerController.index
 POST        /courtesytones/save                        controllers.CourtesyToneEditorController.save()
 GET         /courtesytones/edit/:key                   controllers.CourtesyToneEditorController.edit(key:Key)
 GET         /courtesytones                             controllers.CourtesyToneEditorController.index()
