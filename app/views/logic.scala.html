@@ -18,7 +18,7 @@
             @for(logicAlarm <- logicAlarms) {
                 <tr>
                     <td>
-                    @editButton(routes.LogicAlarmEditorController.edit(logicAlarm.key).url)
+                    @editButton(routes.LogicAlarmEditorController.edit(logicAlarm.key))
                     </td>
                     <td>
                     @logicAlarm.key.keyWithName

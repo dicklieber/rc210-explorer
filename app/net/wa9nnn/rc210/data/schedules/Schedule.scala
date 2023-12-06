@@ -10,6 +10,9 @@ import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEn
 import net.wa9nnn.rc210.data.schedules.Schedule.s02
 import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.{Format, JsValue, Json}
+import play.api.data.Form
+import play.api.data.Forms.*
+import play.api.mvc.*
 
 import java.time.LocalTime
 
@@ -50,7 +53,7 @@ case class Schedule(override val key: Key,
       val html = views.html.fieldTime(localTime1, RMD(name = "time")).toString()
       Cell.rawHtml(html)
     }
-   
+
 
     Row(
       name,
@@ -99,6 +102,23 @@ case class Schedule(override val key: Key,
 }
 
 object Schedule extends LazyLogging with ComplexExtractor {
+
+  def unapply(schedule: Schedule): Option[(Key, DayOfWeek, Week, MonthOfYearSchedule, Int, Int, Key, Boolean)] =
+    Some(schedule.key, schedule.dow, schedule.week, schedule.monthOfYear, schedule.hour, schedule.minute, schedule.macroKey, schedule.enabled)
+
+  val form: Form[Schedule] = Form[Schedule](
+    mapping(
+      "key" -> of[Key],
+      "dow" -> DayOfWeek.formField,
+      "week" -> Week.formField,
+      "monthOfYear" -> MonthOfYearSchedule.formField,
+      "hour" -> number(0, 23),
+      "minute" -> number(0, 59),
+      "macroKey" -> of[Key],
+      "enabled" -> boolean
+    )(Schedule.apply)(Schedule.unapply)
+  )
+
   /**
    * Format as a 2digit inte.g. 2 become "02"
    */

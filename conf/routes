@@ -20,7 +20,9 @@ GET         /logic/edit/:logicAlarmKey                 controllers.LogicAlarmEdi
 GET         /logic                                     controllers.LogicAlarmEditorController.index()
 POST        /common/save                               controllers.CommonEditorController.save()
 GET         /common                                    controllers.CommonEditorController.index()
-GET         /schedules                                 controllers.ScheduleController.index()
+GET         /schedules                                 controllers.ScheduleController.index
+GET         /schedules/edit/:key                       controllers.ScheduleController.edit(key:Key)
+POST        /schedule/save                             controllers.ScheduleController.save()
 GET         /macros                                    controllers.MacroEditorController.index()
 GET         /macro/edit/:key                           controllers.MacroEditorController.edit(key:Key)
 POST        /macro/save                                controllers.MacroEditorController.save()
@@ -39,7 +41,6 @@ GET         /rc210                                     controllers.IOController.
 GET         /flow                                      controllers.FlowController.flow()
 POST        /ports/save                                controllers.PortsEditorController.save()
 GET         /ports                                     controllers.PortsEditorController.index()
-POST        /schedule/save                             controllers.ScheduleController.save()
 GET         /candidates                                controllers.CandidateController.index()
 GET         /datastore/dump                            controllers.CandidateController.dump()
 GET         /candidates/sendValue/:fieldKey            controllers.CandidateController.sendFieldValue(fieldKey:FieldKey)

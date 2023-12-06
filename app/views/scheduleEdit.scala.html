@@ -1,0 +1,70 @@
+@import net.wa9nnn.rc210.ui.MyHelpers.*
+@import net.wa9nnn.rc210.data.schedules.Schedule
+@import net.wa9nnn.rc210.ui.Tabs
+@import net.wa9nnn.rc210.data.named.NamedKey
+@import views.html.helper.*
+
+@import net.wa9nnn.rc210.data.field.schedule.DayOfWeek
+@import net.wa9nnn.rc210.data.field.schedule.Week
+@import net.wa9nnn.rc210.data.field.MonthOfYearSchedule
+@import net.wa9nnn.rc210.ui.MacroSelect
+@(f: Form[Schedule], namedKey: NamedKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+@tabbedmain(Tabs.clockTab) {
+    @form(action = routes.ScheduleController.save()) {
+        @inputText(f("key"), Symbol("type") -> "hidden")
+        <div class="col-">
+            @nameEdit(namedKey)
+            <table class="table table-bordered table-sm  w-auto rc210-table">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Field</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Enable</td>
+                        <td>@checkbox(f("enabled"))</td>
+                    </tr>
+                    <tr>
+                        <td>DayOfWeek</td>
+                        <td>@select(f("dow"), DayOfWeek.options)</td>
+                    </tr>
+                    <tr>
+                        <td>Week</td>
+                        <td>@select(f("week"), Week.options)</td>
+                    </tr>
+                    <tr>
+                        <td>Month</td>
+                        <td>@select(f("monthOfYear"), MonthOfYearSchedule.options)</td>
+                    </tr>
+                    <tr>
+                        <td>Hour</td>
+                        <td>
+                        @inputText(f("hour"),
+                            Symbol("type") -> "number",
+                            Symbol("min") -> 0,
+                            Symbol("max") -> 23)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Minute</td>
+                        <td>
+                        @inputText(f("minute"),
+                            Symbol("type") -> "number",
+                            Symbol("min") -> 0,
+                            Symbol("max") -> 59)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Macro</td>
+                        <td>
+                        @select(f("macroKey"), MacroSelect.options)
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            @submitButton()
+        </div>
+    }
+}

@@ -21,7 +21,7 @@
         @for(user <- userRecords.users.sorted) {
             <tr>
                 <td>
-                @editButton(routes.UsersController.editUser(user.id).url)
+                @editButton(routes.UsersController.editUser(user.id))
                 </td>
                 <td>
                 @user.callsign

@@ -19,7 +19,7 @@
             @for(message <- messages) {
                 <tr>
                     <td>
-                        @{editButton(routes.MessageController.edit(message.key).url)}
+                        @{editButton(routes.MessageController.edit(message.key))}
                     </td >
                     <td>
                         @message.key.keyWithName

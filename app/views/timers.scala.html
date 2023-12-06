@@ -19,7 +19,7 @@
         @for(timer <- timers) {
             <tr>
                 <td>
-                @editButton(routes.TimerEditorController.edit(timer.key).url)
+                @editButton(routes.TimerEditorController.edit(timer.key))
                 </td>
                 <td>
                 @timer.key.keyWithName

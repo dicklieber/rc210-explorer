@@ -39,7 +39,7 @@ object Tabs {
 
   val portsTab: Tab = Tab("Ports", routes.PortsEditorController.index().url, "Port settings")
 
-  val schedulesTab: Tab = Tab("Schedules", routes.ScheduleController.index().url, "Schedule settings.")
+  val schedulesTab: Tab = Tab("Schedules", routes.ScheduleController.index.url, "Schedule settings.")
   val timersTab: Tab = Tab("Timers", routes.TimerEditorController.index.url, "Timer settings.")
   val rc210Tab: Tab = Tab("RC-210", routes.IOController.listSerialPorts.url, "RC-210 DownloadActor.")
   val fileUpload: Tab = Tab("Upload", routes.DataStoreController.upload.url, "Upload a saved JSON file.")

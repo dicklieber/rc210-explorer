@@ -22,72 +22,65 @@ import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, Table}
+import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
+import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKey, AllForKeyKind, ForFieldKey, UpdateData}
+import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.message.Message
+import net.wa9nnn.rc210.data.schedules.Schedule
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
+import net.wa9nnn.rc210.ui.ProcessResult
 import org.apache.pekko.actor.typed.ActorRef
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
+import play.api.data.Form
+import play.api.data.Forms.*
 import play.api.mvc.*
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
 
 @Singleton()
 class ScheduleController @Inject()(actor: ActorRef[DataStoreActor.Message])
-                                  (implicit scheduler: Scheduler, ec: ExecutionContext) extends MessagesInjectedController with LazyLogging {
+                                  (implicit scheduler: Scheduler, ec: ExecutionContext, components: MessagesControllerComponents)
+  extends MessagesAbstractController(components)
+    with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 
-  def index(): Action[AnyContent] = Action {
-    implicit request: Request[AnyContent] =>
-
-      ImATeapot
-    //      actor.ask(AllForKeyKind(KeyKind.scheduleKey, _)).map { (fields: Seq[FieldEntry]) =>
-    //        val rows: Seq[Row] = fields.map { fieldEntry =>
-    //          val value: Schedule = fieldEntry.value
-    //          value.toRow
-    //        }
-    //        val header = Header(s"Timers (${rows.length} values)", "Timer", "Seconds", "Macro To Run")
-    //        val table = Table(Schedule.header, rows)
-    //          .withCssClass("table table-borderedtable-sm w-auto")
-    //        Ok(views.html.schedules(table))
-    //      }
+  def index: Action[AnyContent] = Action.async { implicit request =>
+    actor.ask[Seq[FieldEntry]](AllForKeyKind(KeyKind.scheduleKey, _)).map { f =>
+      val messages: Seq[Schedule] = f.map { fieldEntry =>
+        fieldEntry.value.asInstanceOf[Schedule]
+      }
+      Ok(views.html.schedules(messages))
+    }
   }
 
-  def save(): Action[AnyContent] = Action { implicit request =>
-    ImATeapot
-/*    val valuesMap: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
-    val namedKeys = Seq.newBuilder[NamedKey]
-    val r: Seq[UpdateCandidate] = valuesMap.map { case (sKey, values: Seq[String]) =>
-        sKey -> values.headOption.getOrElse("No value")
-      }.filter(_._1 != "save")
-      .toSeq
-      .map { case (name, value: String) =>
-        val fk = FieldKey.fromParam(name)
-        logger.trace("name: {} value: {} fieldKey: {}", name, value, fk)
-        fk -> value
-      }
-      .sortBy(_._1.key.number)
-      .groupBy(_._1.key)
-      .map { case (key, items: Seq[(FieldKey, String)]) =>
-        logger.trace(s"==== {} ====", key.toString)
-
-
-        implicit val nameToValue: Map[String, String] = items.map { case (fieldKey, value) =>
-          fieldKey.fieldName -> value
-        }.toMap
-
-        // named keys are separate.
-        val namedKey = NamedKey(key, nameToValue("name"))
-        namedKeys += namedKey
-
-        val schedule = Schedule.fromForm(key.asInstanceOf[ScheduleKey], nameToValue)
-        UpdateCandidate(schedule.fieldKey, Right(schedule))
-      }.toSeq.sortBy(_.fieldKey.key)
-
-    actor.ask[String](DataStoreActor.UpdateData(r, namedKeys.result(),
-      who(request), _)).map { _ =>
-      Redirect(routes.ScheduleController.index())
+  def edit(key: Key): Action[AnyContent] = Action.async { implicit request =>
+    val fieldKey = Schedule.fieldKey(key)
+    actor.ask[Option[FieldEntry]](ForFieldKey(fieldKey, _)).map { (f: Option[FieldEntry]) => {
+      val head: Schedule = f.get.value.asInstanceOf[Schedule]
+      Ok(views.html.scheduleEdit(Schedule.form.fill(head), key.namedKey))
     }
-*/
+    }
+  }
+
+  def save(): Action[AnyContent] = Action.async {
+    implicit request =>
+      Schedule.form
+        .bindFromRequest()
+        .fold(
+          (formWithErrors: Form[Schedule]) => {
+            val namedKey = Key(formWithErrors.data("key")).namedKey
+            Future(BadRequest(views.html.scheduleEdit(formWithErrors, namedKey)))
+          },
+          (schedule: Schedule) => {
+            val candidateAndNames = ProcessResult(schedule)
+            actor.ask[String](UpdateData(candidateAndNames, user, _)).map { _ =>
+              Redirect(routes.ScheduleController.index)
+            }
+          }
+        )
   }
 }
