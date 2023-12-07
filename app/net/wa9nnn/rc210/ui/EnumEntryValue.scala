@@ -29,3 +29,7 @@ import enumeratum.EnumEntry
  */
 trait EnumEntryValue extends EnumEntry:
   val rc210Value: Int
+
+  def values: IndexedSeq[EnumEntryValue]
+
+  def options: Seq[(String, String)] = values.map(env => env.entryName -> env.entryName)

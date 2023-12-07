@@ -37,15 +37,14 @@ object FormField:
   def apply(name: String, value: Any, range: Option[Range] = None): String =
     val elem: Elem = value match {
       case enumValue: EnumEntryValue =>
-        throw new NotImplementedError() //todo
-//        <select name ={name}>
-//          {enumValue.values map { choice =>
-//          val opt = <option value={choice.toString} selected={if (enumValue == choice) "selected" else null}>
-//            {choice.toString}
-//          </option>
-//          opt
-//        }}
-//        </select>
+        <select name ={name}>
+          {enumValue.values map { choice =>
+          val opt = <option value={choice.toString} selected={if (enumValue == choice) "selected" else null}>
+            {choice.toString}
+          </option>
+          opt
+        }}
+        </select>
 
       case b: Boolean =>
         val elem = <input type="checkbox"></input>

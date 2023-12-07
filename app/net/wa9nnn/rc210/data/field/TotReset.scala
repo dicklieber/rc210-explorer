@@ -20,7 +20,8 @@ package net.wa9nnn.rc210.data.field
 import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
 
 
-sealed trait TotReset(val rc210Value: Int) extends EnumEntryValue
+sealed trait TotReset(val rc210Value: Int) extends EnumEntryValue:
+  override def values: IndexedSeq[EnumEntryValue] = TotReset.values
 
 object TotReset extends EnumValue[TotReset] {
 

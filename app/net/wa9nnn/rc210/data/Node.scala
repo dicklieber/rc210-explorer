@@ -17,23 +17,23 @@
 
 package net.wa9nnn.rc210.data
 
-import com.wa9nnn.util.tableui.{Header, Row, RowSource}
 import net.wa9nnn.rc210.Key
 
-trait Node extends RowSource {
+trait Node {
   val key: Key
 }
 
 /**
  * A [[Node]] that can invoke a Macro
  */
-trait TriggerNode extends Node with RowSource:
-  def canRunMacro(macroKey: Key):Boolean
-  def nodeEnabled:Boolean = true
+trait TriggerNode extends Node:
+  def canRunMacro(macroKey: Key): Boolean
+
+  def nodeEnabled: Boolean = true
 
 
 //case class TriggerDetail(key:Key, macroToRun: MacroKey, description:String)
 object TriggerNode {
-  def header(count:Int):Header= Header(s"Trigger ($count)", "Key", "Description")
+//  def header(count: Int): Header = Header(s"Trigger ($count)", "Key", "Description")
 }
 

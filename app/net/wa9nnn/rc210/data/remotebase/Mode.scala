@@ -19,7 +19,8 @@ package net.wa9nnn.rc210.data.remotebase
 
 import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
 
-sealed trait Mode(val rc210Value: Int) extends EnumEntryValue
+sealed trait Mode(val rc210Value: Int) extends EnumEntryValue:
+  override def values: IndexedSeq[EnumEntryValue] = Mode.values
 
 object Mode extends EnumValue[Mode] {
 

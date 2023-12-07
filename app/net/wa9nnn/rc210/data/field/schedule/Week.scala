@@ -20,7 +20,8 @@ package net.wa9nnn.rc210.data.field.schedule
 import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
 
 
-sealed trait Week(val rc210Value: Int, val display: String) extends EnumEntryValue
+sealed trait Week(val rc210Value: Int, val display: String) extends EnumEntryValue:
+  override def values: IndexedSeq[EnumEntryValue] = Week.values
 
 object Week extends EnumValue[Week] {
 

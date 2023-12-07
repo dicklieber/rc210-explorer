@@ -1,6 +1,5 @@
 package net.wa9nnn.rc210.data.macros
 
-import com.wa9nnn.util.tableui.{Header, Row}
 import net.wa9nnn.rc210.data.Dtmf.Dtmf
 import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
@@ -53,11 +52,6 @@ case class RcMacro(override val key: Key, functions: Seq[Key], dtmf: Option[Dtmf
     )
   }
 
-
-  override def toRow: Row = {
-    throw new NotImplementedError() //todo
-  }
-
   override def display: String = functions.map(_.rc210Value).mkString(" ")
 
   override def toJsValue: JsValue = Json.toJson(this)
@@ -75,7 +69,6 @@ object RcMacro extends ComplexExtractor {
       "dtmf" -> optional(text)
     )(RcMacro.apply)(RcMacro.unapply))
 
-  def header(count: Int): Header = Header(s"Macros ($count)", "Key", "Functions")
 
   override def positions: Seq[FieldOffset] = Seq(
     FieldOffset(1985, this),

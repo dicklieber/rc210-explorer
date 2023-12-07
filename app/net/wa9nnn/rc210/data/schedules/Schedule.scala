@@ -40,32 +40,7 @@ case class Schedule(override val key: Key,
     //    s"$monthOfYear$week on $dayOfWeek at $time"
     "" //todo"
   }
-
-  override def toRow: Row = {
-    implicit val k: Key = key
-    val name: Cell = k.toCell
-
-    val localTime: Cell = {
-      val h = if (hour > 24) // RC-210 use > 24 as disabled.
-        0 else hour
-
-      val localTime1 = LocalTime.of(h, minute)
-      val html = views.html.fieldTime(localTime1, RMD(name = "time")).toString()
-      Cell.rawHtml(html)
-    }
-
-
-    Row(
-      name,
-      enabled,
-      dow,
-      monthOfYear,
-      week,
-      localTime,
-      macroKey.toCell
-    )
-  }
-
+  
   /**
    * Render this value as an RD-210 command string.
    */

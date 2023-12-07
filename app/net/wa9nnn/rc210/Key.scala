@@ -18,11 +18,10 @@
 package net.wa9nnn.rc210
 
 import com.wa9nnn.util.tableui.{Cell, CellProvider}
-import net.wa9nnn.rc210.Key.{_namedSource, nameForKey}
-import net.wa9nnn.rc210.KeyKind.{commonKey, macroKey, portKey}
+import net.wa9nnn.rc210.Key.nameForKey
+import net.wa9nnn.rc210.KeyKind._
 import net.wa9nnn.rc210.data.named.{NamedKey, NamedKeySource}
-import net.wa9nnn.rc210.security.UserId.UserId
-import net.wa9nnn.rc210.ui.EnumEntryValue
+import net.wa9nnn.rc210.ui.{EnumEntryValue, KeySelect, MacroSelect}
 import play.api.data.FormError
 import play.api.data.format.Formatter
 import play.api.libs.json.*
@@ -34,7 +33,7 @@ import play.api.mvc.PathBindable
  * @param keyKind     of the Key
  * @param rc210Value  0 is a magic number used for things like [[KeyKind.commonKey]]
  */
-case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends CellProvider with Ordered[Key] with EnumEntryValue {
+case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends Ordered[Key] with EnumEntryValue {
   def check(expected: KeyKind): Unit = if (expected != keyKind) throw IllegalArgumentException(s"Expecting Key of type $expected, but got $this}")
 
   //  override val values: IndexedSeq[_] = IndexedSeq.empty //handled in
@@ -55,10 +54,6 @@ case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends CellP
     val name = Key.nameForKey(this)
     s"$rc210Value: $name"
 
-  override def toCell: Cell =
-    Cell(keyWithName)
-      .withCssClass(keyKind.toString)
-
   /**
    * Replaces 'n' in the template with the number (usually a port number).
    *
@@ -69,6 +64,11 @@ case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends CellP
     template.replaceAll("n", rc210Value.toString)
   }
 
+  override def values: IndexedSeq[EnumEntryValue] =
+    throw new NotImplementedError() //Not needed as we override options
+
+
+  override def options: Seq[(String, String)] = MacroSelect.options
 }
 
 object Key:
@@ -79,14 +79,14 @@ object Key:
       case kparser(sKind, sNumber) =>
         val keyKind = KeyKind.withName(sKind)
         new Key(keyKind, sNumber.toInt)
-      case x =>
+      case _ =>
         throw new IllegalArgumentException(s"""Can't parse "$sKey"!""")
 
   def setNamedSource(namedSource: NamedKeySource): Unit = {
     if (_namedSource.isDefined) throw new IllegalStateException("NamedSource already set.")
     _namedSource = Option(namedSource)
   }
-  
+
   implicit val fmtKey: Format[Key] = new Format[Key] {
     override def reads(json: JsValue): JsResult[Key] = {
       val sKey = json.as[String]
@@ -97,6 +97,7 @@ object Key:
         case e: IllegalArgumentException => JsError(e.getMessage)
       }
     }
+
     override def writes(sak: Key): JsValue = {
       JsString(sak.toString)
     }
@@ -131,7 +132,7 @@ object Key:
     }
   }
 
-  import play.api.data.format.Formats._
+  import play.api.data.format.Formats.*
 
   implicit val keyFormatter: Formatter[Key] = new Formatter[Key]:
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Key] =

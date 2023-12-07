@@ -21,7 +21,8 @@ import enumeratum.*
 import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
 
 
-sealed abstract class Occurrence(val rc210Value: Int) extends EnumEntryValue
+sealed abstract class Occurrence(val rc210Value: Int) extends EnumEntryValue:
+  override def values: IndexedSeq[EnumEntryValue] = Occurrence.values
 
 object Occurrence extends EnumValue[Occurrence] {
   override val values: IndexedSeq[Occurrence] = findValues
