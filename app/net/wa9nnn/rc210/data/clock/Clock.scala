@@ -33,7 +33,7 @@ case class Clock(key: Key,
                  say24Hours: Boolean = false,
                 ) extends ComplexFieldValue("Clock") {
 
-  override def display: String = "todo"
+  override def displayHtml: String = "todo"
 
   /**
    * Render this value as an RD-210 command string.

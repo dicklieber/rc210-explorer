@@ -27,7 +27,7 @@ val fieldTime = FieldTime(LocalTime.of(10, 15))
       val fieldDefinition = SimpleField(17, "Hang Time 3", KeyKind.portKey, "n*40011*8*0*v*02", FieldInt)
       val fieldKey: FieldKey = fieldDefinition.fieldKey(3)
       val fieldEntry = FieldEntry(fieldDefinition, fieldKey, fieldTime, Option(candidate))
-      val command = fieldEntry.toCommands.head
+      val command = fieldEntry.commands.head
       command should equal ("3*40011*8*0*10*25*02")
     }
   }

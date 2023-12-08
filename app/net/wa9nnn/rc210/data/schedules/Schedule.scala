@@ -8,6 +8,7 @@ import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.field.schedule.{DayOfWeek, Week}
 import net.wa9nnn.rc210.data.schedules.Schedule.s02
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.ui.Display
 import net.wa9nnn.rc210.{Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.*
@@ -62,9 +63,54 @@ case class Schedule(override val key: Key,
     Seq(command)
   }
 
+  override def displayHtml: String =
+    <table>
+      <tr>
+        <td>Day Of Week</td>
+        <td>
+          {dow}
+        </td>
+      </tr>
+      <tr>
+        <td>Week</td>
+        <td>
+          {week}
+        </td>
+      </tr>
+      <tr>
+        <td>Month</td>
+        <td>
+          {monthOfYear}
+        </td>
+      </tr>
+      <tr>
+        <td>Hour</td>
+        <td>
+          {hour}
+        </td>
+      </tr>
+      <tr>
+        <td>Minute</td>
+        <td>
+          {minute}
+        </td>
+      </tr>
+      <tr>
+        <td>Macro</td>
+        <td>
+          {macroKey}
+        </td>
+      </tr>
+      <tr>
+        <td>Enabled</td>
+        <td>
+          {Display(enabled)}
+        </td>
+      </tr>
+    </table>
+      .toString
 
-  override def display: String = description
-  
+
   override def toJsValue: JsValue = Json.toJson(this)
 
   override def canRunMacro(candidate: Key): Boolean = macroKey == candidate

@@ -40,7 +40,7 @@ case class Message(key: Key, words: Seq[Int]) extends ComplexFieldValue("Message
 
   def toWords: Seq[Word] = words.map(Word(_))
 
-  override def display: String = words.map(id => Word(id).string).mkString(", ")
+  override def displayHtml: String = words.map(id => Word(id).string).mkString(", ")
 
   /**
    * Render this value as an RD-210 command string.

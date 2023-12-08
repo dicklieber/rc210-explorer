@@ -18,14 +18,11 @@
 package net.wa9nnn.rc210.data.meter
 
 import net.wa9nnn.rc210.KeyKind.{macroKey, meterAlarmKey, meterKey}
-import net.wa9nnn.rc210.data.courtesy.Segment
-import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
+import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
-import play.api.data.{Form, Mapping}
+import net.wa9nnn.rc210.{Key, KeyKind}
+import play.api.data.Form
 import play.api.data.Forms.*
-import play.api.mvc.*
-
 import play.api.libs.json.{Format, JsValue, Json}
 
 import java.util.concurrent.atomic.AtomicInteger
@@ -36,7 +33,26 @@ case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint:
   meter.check(meterKey)
   macroKey.check(KeyKind.macroKey)
 
-  override def display: String = toString //todo this cant be right!
+  override def displayHtml: String =
+    <table>
+      <tr>
+        <td>Meter</td>
+        <td>{meter.namedKey}</td>
+      </tr>
+      <tr>
+        <td>AlarmType</td>
+        <td>{alarmType}</td>
+      </tr>
+      <tr>
+        <td>Trip Point</td>
+        <td>{tripPoint}</td>
+      </tr>
+      <tr>
+        <td>Macro</td>
+        <td>{macroKey}</td>
+      </tr>
+    </table>
+      .toString
 
   /**
    * Render this value as an RD-210 command string.
@@ -78,7 +94,7 @@ case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint:
 
 
 object MeterAlarm extends ComplexExtractor {
-  def unapply(u: MeterAlarm): Option[(Key, Key, AlarmType, Int, Key)] = Some((u.key, u.meter,u.alarmType,  u.tripPoint, u.macroKey))
+  def unapply(u: MeterAlarm): Option[(Key, Key, AlarmType, Int, Key)] = Some((u.key, u.meter, u.alarmType, u.tripPoint, u.macroKey))
 
   val form: Form[MeterAlarm] = Form(
     mapping(

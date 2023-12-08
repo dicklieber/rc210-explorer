@@ -27,7 +27,7 @@ import play.api.libs.json.{JsValue, Json}
  * @param value    one of the display values in DayOfWeek.options.
  */
 case class TimeoutTimerResetPoint(value: TotReset = TotReset.values.head) extends SimpleFieldValue {
-  def display: String = "TotResetPoint"
+  def displayHtml: String = "TotResetPoint"
   def toCommands(fieldEntry: FieldEntryBase): Seq[String] =
     Seq(s"*2122${value.rc210Value}")
 

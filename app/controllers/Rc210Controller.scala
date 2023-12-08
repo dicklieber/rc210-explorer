@@ -25,6 +25,7 @@ import com.wa9nnn.util.tableui.{Header, Table}
 import net.wa9nnn.rc210.serial.{BatchOperationsResult, DataCollector, Rc210}
 import org.apache.pekko.stream.Materializer
 import org.apache.pekko.util.Timeout
+import play.api.mvc.MessagesAbstractController
 //import configs.syntax._
 import play.api.mvc._
 
@@ -34,8 +35,8 @@ import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
 
 @Singleton
-class Rc210Controller @Inject()(rc210: Rc210, dataCollector: DataCollector, config: Config)(implicit mat: Materializer)
-  extends MessagesInjectedController with LazyLogging {
+class Rc210Controller @Inject()(rc210: Rc210, dataCollector: DataCollector, config: Config, cc: MessagesControllerComponents)
+extends MessagesAbstractController(cc) with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 
   //  *21999

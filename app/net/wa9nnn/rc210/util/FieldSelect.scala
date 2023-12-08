@@ -29,7 +29,7 @@ trait FieldSelect[T] extends SimpleFieldValue {
   val name: String
   val value: T
 
-  override def display: String = value.toString
+  override def displayHtml: String = value.toString
 
   /**
    * Render this value as an RC-210 command string.
@@ -55,7 +55,7 @@ trait FieldSelect[T] extends SimpleFieldValue {
   }
 
 
-  override def toJsValue: JsValue = JsString(display)
+  override def toJsValue: JsValue = JsString(displayHtml)
 
 //  /**
 //   *
@@ -77,7 +77,7 @@ trait FieldSelect[T] extends SimpleFieldValue {
 //    """.stripMargin
 //  }
 
-  override def toString: String = display
+  override def toString: String = displayHtml
 }
 
 

@@ -35,7 +35,7 @@ case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue {
     )
   }
 
-  override def display: String = value.toString
+  override def displayHtml: String = value.toString
 
 //  override def toCell(renderMetadata: RenderMetadata): Cell = {
 //    super.toCell(renderMetadata)

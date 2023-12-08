@@ -37,7 +37,7 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 case class Meter(key: Key, meterFaceName: MeterFaceName, low: VoltToReading, high: VoltToReading) extends ComplexFieldValue("Meter") {
 
-  override def display: String = toString
+  override def displayHtml: String = toString
 
   /**
    * Render this value as an RD-210 command string.

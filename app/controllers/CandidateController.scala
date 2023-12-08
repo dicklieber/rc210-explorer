@@ -62,18 +62,10 @@ class CandidateController @Inject()(dataStoreActor: ActorRef[DataStoreActor.Mess
   )
 
   def index(): Action[AnyContent] = Action.async { implicit request =>
-    throw new NotImplementedError() //todo use twirl
-/*    dataStoreActor.ask(Candidates.apply).map { candidates =>
-      val rows: Seq[Row] =
-        candidates.map { fieldEntry =>
-          val candidate = fieldEntry.candidate.get
-          Row(fieldEntry.fieldKey.key.toCell, fieldEntry.fieldKey.fieldName, fieldEntry.fieldValue.display, candidate.display, fieldEntry.toCommands)
-        }
-      val table: Table = Table(Header(s"Candidates (${candidates.length})", "Key", "Field", "Was", "New", "Command"), rows)
-
-      Ok(views.html.candidates(table))
+    dataStoreActor.ask(Candidates.apply).map { candidates =>
+      Ok(views.html.candidates(candidates))
     }
-*/  }
+  }
 
   def dump(): Action[AnyContent] = Action.async {
     dataStoreActor.ask(All.apply).map { entries =>

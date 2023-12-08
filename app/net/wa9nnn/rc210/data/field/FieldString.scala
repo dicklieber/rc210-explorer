@@ -43,7 +43,7 @@ case class FieldString(value: String) extends SimpleFieldValue {
 
   }
 
-  override def display: String = value
+  override def displayHtml: String = value
 
   override def update(paramValue: String): FieldString = {
     FieldString(paramValue)

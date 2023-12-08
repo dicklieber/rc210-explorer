@@ -28,16 +28,22 @@ import play.api.libs.json.JsValue
  * Has enough metadata needed yo render
  */
 sealed trait FieldValue extends LazyLogging {
-  /**
-   * This will be written to JSON and used to discriminate to the top level object.
-   */
-  def display: String
 
   /**
    * Render this value as an RC-210 command string.
    */
   def toCommands(fieldEntry: FieldEntryBase): Seq[String]
 
+  /**
+   * Read only HTML display
+   */
+  def displayHtml: String
+
+  /**
+   * A form input field
+   *
+   * @param fieldKey
+   */
   def toHtmlField(fieldKey: FieldKey): String
 
   def toJsValue: JsValue
@@ -50,9 +56,9 @@ sealed trait FieldValue extends LazyLogging {
 trait SimpleFieldValue extends FieldValue {
 
   //  def toCell(renderMetadata: RenderMetadata): Cell = {
-//    val html: String = toHtmlField(renderMetadata)
-//    Cell.rawHtml(html)
-//  }
+  //    val html: String = toHtmlField(renderMetadata)
+  //    Cell.rawHtml(html)
+  //  }
 
   /**
    *
@@ -60,10 +66,10 @@ trait SimpleFieldValue extends FieldValue {
    * @return None if value has not changed, otherwise a new [[FieldValue]].
    */
   def update(paramValue: String): SimpleFieldValue
-  
+
 }
 
-abstract class ComplexFieldValue( val fieldName: String) extends FieldValue  with LazyLogging{
+abstract class ComplexFieldValue(val fieldName: String) extends FieldValue with LazyLogging {
   val key: Key
 
   lazy val fieldKey: FieldKey = FieldKey(fieldName, key)

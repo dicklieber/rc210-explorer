@@ -35,8 +35,6 @@ case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue {
   }
 
 
-  override def display: String = value.map(_.toString).mkString(" ")
-
   override def update(paramValue: String): Field2Numbers = {
     val candidate: Seq[Int] = if (paramValue.isBlank)
       Seq(0, 0)
@@ -48,6 +46,8 @@ case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue {
   }
 
   override def toJsValue: JsValue = Json.toJson(this)
+
+  override def displayHtml: String = value.map(_.toString).mkString(" ")
 
   override def toHtmlField(fieldKey: FieldKey): String = FormField(fieldKey, value)
 }

@@ -42,7 +42,7 @@ case class RemoteBase(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[
 
   override def toJsValue: JsValue = Json.toJson(this)
 
-  override def display: String = toString
+  override def displayHtml: String = toString
 }
 
 object RemoteBase extends ComplexExtractor {

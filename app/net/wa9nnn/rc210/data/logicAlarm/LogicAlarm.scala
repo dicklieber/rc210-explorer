@@ -22,14 +22,39 @@ import net.wa9nnn.rc210.data.courtesy.Segment
 import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.ui.Display
 import play.api.libs.json.{Format, JsValue, Json}
+import play.api.routing.sird
+import views.html.boolean
 
 case class LogicAlarm(key: Key, enable: Boolean, lowMacro: Key, highMacro: Key) extends ComplexFieldValue(LogicAlarm.name) {
   key.check(logicAlarmKey)
   lowMacro.check(macroKey)
   highMacro.check(macroKey)
 
-  override def display: String = toString
+
+  override def displayHtml: String =
+    <table>
+      <tr>
+        <td>Enabled</td>
+        <td>
+          {Display(enable)}
+        </td>
+      </tr>
+      <tr>
+        <td>Low</td>
+        <td>
+          {lowMacro}
+        </td>
+      </tr>
+      <tr>
+        <td>High</td>
+        <td>
+          {highMacro}
+        </td>
+      </tr>
+    </table>
+      .toString
 
   /**
    * Render this value as an RD-210 command string.

@@ -32,7 +32,7 @@ case class FieldInt(value: Int) extends SimpleFieldValue {
 
   }
 
-  override def display: String = value.toString
+  override def displayHtml: String = value.toString
 
   override def update(paramValue: String): FieldInt = {
     FieldInt(paramValue.toInt)

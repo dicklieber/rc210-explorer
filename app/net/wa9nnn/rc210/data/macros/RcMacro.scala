@@ -52,7 +52,7 @@ case class RcMacro(override val key: Key, functions: Seq[Key], dtmf: Option[Dtmf
     )
   }
 
-  override def display: String = functions.map(_.rc210Value).mkString(" ")
+  override def displayHtml: String = functions.map(_.rc210Value).mkString(" ")
 
   override def toJsValue: JsValue = Json.toJson(this)
 }

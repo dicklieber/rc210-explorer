@@ -1,9 +1,41 @@
-@import com.wa9nnn.util.tableui.Table
-@import com.wa9nnn.util.tableui.html.renderTable
 @import net.wa9nnn.rc210.ui.Tabs
 
-@(table: Table)
+@import net.wa9nnn.rc210.data.field.FieldEntry
+@(candidates: Seq[FieldEntry])
 
 @tabbedmain(Tabs.changes) {
-    @renderTable(table.withCssClass("tablesorter"))
+    <div class="container">
+        <a href="@routes.CandidateController.sendAllFields()" title="Send all to RC-210"><i class="bi bi-send-plus"></i></a>
+        <table class="headeredTable">
+            <thead class="table-primary">
+                <tr>
+                    <th colspan="5">Candidate Changes (@candidates.length)</th>
+                </tr>
+                <tr>
+                    <th>Key</th>
+                    <th>Field</th>
+                    <th>Was</th>
+                    <th>New</th>
+                    <th>Commands</th>
+                </tr>
+            </thead>
+            <tbody>
+            @for(fieldEntry <- candidates) {
+                <tr>
+                    <td>@fieldEntry.fieldKey.key</td>
+                    <td>@fieldEntry.fieldKey.fieldName</td>
+                    <td>@Html(fieldEntry.fieldValue.displayHtml)</td>
+                    <td>@Html(fieldEntry.candidate.get.displayHtml)</td>
+                    <td>
+                        <ul>
+                        @for(command <- fieldEntry.commands) {
+                            <li>@command</li>
+                        }
+                        </ul>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
 }

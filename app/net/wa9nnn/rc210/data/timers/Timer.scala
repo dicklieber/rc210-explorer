@@ -25,7 +25,7 @@ import play.api.libs.json.{JsValue, Json, OFormat}
 
 case class Timer(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValue("Timer") {
 
-  override def display: String = s"$seconds => ${macroKey.keyWithName}"
+  override def displayHtml: String = s"$seconds => ${macroKey.keyWithName}"
 
   /**
    * Render this value as an RD-210 command string.

@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger
 case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends ComplexFieldValue("CourtesyTone") {
   assert(segments.length == 4, s"Must have four segemnts but only have: $segments")
 
-  override def display: String = s"$key"
+  override def displayHtml: String = s"$key"
 
   implicit val k: Key = key
   implicit val s: Seq[Segment] = segments

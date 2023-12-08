@@ -26,7 +26,7 @@ case class FieldMacroKey(macroKey: Key) extends SimpleFieldValue {
     val key = Key(paramValue)
     FieldMacroKey(key)
 
-  def display: String = macroKey.toString
+  def displayHtml: String = macroKey.toString
 
   def toCommands(fieldEntry: FieldEntryBase): Seq[String] = Seq.empty //todo
 

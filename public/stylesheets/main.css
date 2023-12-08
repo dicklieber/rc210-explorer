@@ -36,7 +36,8 @@
 .headeredTable th {
     text-align: center;
     /*font-weight: bold;*/
-    background-color: #bac9e7;
+    background-color: #cfe2ff;
+    border:  #bacbe6;
     white-space: nowrap;
 }
 
@@ -67,7 +68,7 @@
 }
 
 .headeredTable td {
-    border: 1px solid black;
+    border: 1px solid darkgray;
     white-space: nowrap;
 }
 

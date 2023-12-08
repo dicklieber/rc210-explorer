@@ -64,7 +64,7 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
     candidate = None,
     fieldValue = candidate.getOrElse(throw new IllegalStateException(s"No candidate to accept!")))
 
-  def toCommands: Seq[String] = {
+  def commands: Seq[String] = {
     candidate
       .getOrElse(throw new IllegalStateException(s"No candidate for: $fieldKey!"))
       .toCommands(this)
@@ -86,7 +86,7 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
 
 
   override def toString: String = {
-    s"${fieldKey.fieldName}: ${fieldValue.display}"
+    s"${fieldKey.fieldName}: ${fieldValue.displayHtml}"
   }
 
   def toJson: FieldEntryJson = {
