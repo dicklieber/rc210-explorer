@@ -23,8 +23,7 @@ import play.api.libs.json.{Format, JsResult, JsSuccess, JsValue, Json}
 
 case class FieldMacroKey(macroKey: Key) extends SimpleFieldValue {
   def update(paramValue: String): SimpleFieldValue =
-    val int = paramValue.toInt
-    val key = Key(KeyKind.macroKey, int)
+    val key = Key(paramValue)
     FieldMacroKey(key)
 
   def display: String = macroKey.toString

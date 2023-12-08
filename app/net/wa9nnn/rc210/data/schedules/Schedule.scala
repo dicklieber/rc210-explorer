@@ -3,15 +3,15 @@ package net.wa9nnn.rc210.data.schedules
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.JsonFormatUtils.*
 import com.wa9nnn.util.tableui.{Cell, Header, Row}
-import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.TriggerNode
+import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.field.schedule.{DayOfWeek, Week}
-import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldKey, FieldOffset, FieldValue, MonthOfYearSchedule, RMD, RenderMetadata}
 import net.wa9nnn.rc210.data.schedules.Schedule.s02
 import net.wa9nnn.rc210.serial.Memory
-import play.api.libs.json.{Format, JsValue, Json}
+import net.wa9nnn.rc210.{Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.*
+import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.*
 
 import java.time.LocalTime
@@ -33,7 +33,7 @@ case class Schedule(override val key: Key,
                     hour: Int = 0,
                     minute: Int = 0,
                     macroKey: Key = Key(KeyKind.macroKey, 1),
-                    enabled: Boolean = false) extends ComplexFieldValue("Schedule") with TriggerNode with RenderMetadata {
+                    enabled: Boolean = false) extends ComplexFieldValue("Schedule") with TriggerNode  {
 
   val description: String = {
     //    val week = s" Week: $weekInMonth"
@@ -64,13 +64,7 @@ case class Schedule(override val key: Key,
 
 
   override def display: String = description
-
-  override def param: String = FieldKey("Schedule", key).param
-
-  override def prompt: String = "Runs a Macro on a "
-
-  override def units: String = ""
-
+  
   override def toJsValue: JsValue = Json.toJson(this)
 
   override def canRunMacro(candidate: Key): Boolean = macroKey == candidate

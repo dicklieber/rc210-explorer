@@ -41,7 +41,7 @@ case class FieldEntryJson(fieldKey: FieldKey, fieldValue: JsValue, candidate: Op
  * @param sFormValue PUT value from the submitted form.
  */
 case class FormValue(sFieldKey: String, sFormValue: String) {
-  val fieldKey: FieldKey = FieldKey.fromParam(sFieldKey)
+  val fieldKey: FieldKey = FieldKey(sFieldKey)
 }
 
 object FieldEntryJson {

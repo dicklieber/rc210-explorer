@@ -39,8 +39,8 @@ GET         /rc210/select/:portDescriptor              controllers.IOController.
 GET         /rc210/result                              controllers.IOController.downloadResult
 GET         /rc210                                     controllers.IOController.listSerialPorts
 GET         /flow                                      controllers.FlowController.flow()
-POST        /ports/save                                controllers.PortsEditorController.save()
-GET         /ports                                     controllers.PortsEditorController.index()
+POST        /ports/save                                controllers.PortsController.save()
+GET         /ports                                     controllers.PortsController.index()
 GET         /candidates                                controllers.CandidateController.index()
 GET         /datastore/dump                            controllers.CandidateController.dump()
 GET         /candidates/sendValue/:fieldKey            controllers.CandidateController.sendFieldValue(fieldKey:FieldKey)

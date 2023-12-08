@@ -17,23 +17,21 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.{Key, RcSpec}
 
-/**
- * Needed to render a [[FieldValue]] in a [[com.wa9nnn.util.tableui.Cell]] or an html string.
- */
-trait RenderMetadata {
+class FieldKeyTest extends RcSpec {
 
-  def param: String
+  "FieldKey" should {
+    "round trip" in {
+      val key = Key.portKeys.head
+      val fname = "fname"
+      val fieldKey = FieldKey(fname, key)
+      val string = fieldKey.toString
+      string shouldBe "portKey1:fname"
+      val backAgain = FieldKey(string)
+      backAgain.key shouldBe key
+      backAgain.fieldName shouldBe fname
 
-  def prompt: String = ""
-
-  def units: String = ""
-
-}
-
-
-
-case class RMD(name: String, override val prompt: String = "", override val units: String = "")(implicit key: Key) extends RenderMetadata {
-  override def param: String = FieldKey(name, key).param
+    }
+  }
 }

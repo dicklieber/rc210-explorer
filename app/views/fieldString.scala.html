@@ -1,7 +1,0 @@
-@import net.wa9nnn.rc210.data.field.RenderMetadata
-@(value: String, renderMetadata: RenderMetadata)
-    @defining(renderMetadata.param) { paramid =>
-        <div class="fieldNumber valueCell">
-            <input id="@paramid" class="" name="@paramid" value="@value" title="@renderMetadata.prompt">
-        </div>
-    }

@@ -21,7 +21,6 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.*
-import views.html.fieldString
 
 case class FieldString(value: String) extends SimpleFieldValue {
 

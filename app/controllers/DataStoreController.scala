@@ -33,7 +33,7 @@ import scala.language.postfixOps
 @Singleton
 class DataStoreController @Inject()(actor: ActorRef[DataStoreActor.Message])
                                    (implicit scheduler: Scheduler, ec: ExecutionContext, cc: MessagesControllerComponents)
-  extends AbstractController(cc) with LazyLogging {
+  extends MessagesAbstractController(cc) with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 
 

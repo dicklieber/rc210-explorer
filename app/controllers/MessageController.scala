@@ -39,7 +39,7 @@ import scala.util.matching.Regex
 @Singleton()
 class MessageController @Inject()(actor: ActorRef[DataStoreActor.Message])
                                  (implicit scheduler: Scheduler, ec: ExecutionContext, cc: MessagesControllerComponents)
-  extends AbstractController(cc) with LazyLogging {
+  extends MessagesAbstractController(cc) with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 
   def index(): Action[AnyContent] = Action.async { implicit request =>

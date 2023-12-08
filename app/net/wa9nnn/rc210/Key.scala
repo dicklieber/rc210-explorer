@@ -17,11 +17,10 @@
 
 package net.wa9nnn.rc210
 
-import com.wa9nnn.util.tableui.{Cell, CellProvider}
 import net.wa9nnn.rc210.Key.nameForKey
-import net.wa9nnn.rc210.KeyKind._
+import net.wa9nnn.rc210.KeyKind.*
 import net.wa9nnn.rc210.data.named.{NamedKey, NamedKeySource}
-import net.wa9nnn.rc210.ui.{EnumEntryValue, KeySelect, MacroSelect}
+import net.wa9nnn.rc210.ui.{EnumEntryValue, MacroSelect}
 import play.api.data.FormError
 import play.api.data.format.Formatter
 import play.api.libs.json.*
@@ -36,7 +35,6 @@ import play.api.mvc.PathBindable
 case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends Ordered[Key] with EnumEntryValue {
   def check(expected: KeyKind): Unit = if (expected != keyKind) throw IllegalArgumentException(s"Expecting Key of type $expected, but got $this}")
 
-  //  override val values: IndexedSeq[_] = IndexedSeq.empty //handled in
   assert(rc210Value <= keyKind.maxN, s"Max number for $keyKind is ${keyKind.maxN}")
 
   override def toString: String = s"$keyKind$rc210Value"
@@ -48,7 +46,6 @@ case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends Order
     ret
 
   def namedKey: NamedKey = NamedKey(this, nameForKey(this))
-
 
   def keyWithName: String =
     val name = Key.nameForKey(this)

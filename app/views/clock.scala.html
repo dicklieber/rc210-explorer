@@ -12,6 +12,12 @@
         @form(routes.ClockController.save()) {
             <input type="hidden" name="key" value="@clockForm("key").value">
             <table class="table table-bordered table-sm">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Field</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
                 <tr>
                     <td class="text-end">Say 24 Hour</td>
                     <td>
@@ -37,7 +43,7 @@
                                     at
                                 </td>
                                 <td rowspan="2">
-                                @inputText(clockForm("hourDST"), Symbol("type") -> "number",  Symbol("max") -> 23)
+                                @inputText(clockForm("hourDST"), Symbol("type") -> "number", Symbol("max") -> 23)
                                 </td>
                                 <td rowspan="2">
                                     Hours

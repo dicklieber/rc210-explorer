@@ -38,30 +38,33 @@ case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue {
   override def display: String = value.map(_.toString).mkString(" ")
 
   override def update(paramValue: String): Field2Numbers = {
-    val candidate: Seq[Int] = paramValue.split(" ")
-      .map(_.toInt)
-      .toSeq
+    val candidate: Seq[Int] = if (paramValue.isBlank)
+      Seq(0, 0)
+    else
+      paramValue
+        .split(" ")
+        .map(_.toInt)
     copy(value = candidate)
   }
 
   override def toJsValue: JsValue = Json.toJson(this)
-  
+
   override def toHtmlField(fieldKey: FieldKey): String = FormField(fieldKey, value)
 }
 
 object Field2Numbers extends SimpleExtractor {
-//  implicit val fmtField2Numbers: Format[Field2Numbers] = new Format[Field2Numbers] {
-//    override def writes(o: Field2Numbers) = JsString(o.value.mkString(" "))
-//
-//    override def reads(json: JsValue): JsResult[Field2Numbers] =
-//
-//      JsSuccess(Field2Numbers(json.as[String]
-//        .split(" ")
-//        .toIndexedSeq
-//        .map(_.toInt)
-//      )
-//      )
-//  }
+  //  implicit val fmtField2Numbers: Format[Field2Numbers] = new Format[Field2Numbers] {
+  //    override def writes(o: Field2Numbers) = JsString(o.value.mkString(" "))
+  //
+  //    override def reads(json: JsValue): JsResult[Field2Numbers] =
+  //
+  //      JsSuccess(Field2Numbers(json.as[String]
+  //        .split(" ")
+  //        .toIndexedSeq
+  //        .map(_.toInt)
+  //      )
+  //      )
+  //  }
   implicit val fmtField2Numbers: Format[Field2Numbers] = Json.format[Field2Numbers]
   //  implicit def fmtField2Numbers(implicit fmt: Reads[Field2Numbers]): Reads[Field2Numbers] = new Reads[Field2Numbers] {
   //    override def reads(json: JsValue): JsResult[Field2Numbers] =

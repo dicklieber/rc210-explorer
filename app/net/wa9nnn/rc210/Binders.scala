@@ -38,14 +38,14 @@ object Binders {
     override def bind(key: String, value: String): Either[String, FieldKey] =
 
       try {
-        Right(FieldKey.fromParam(value))
+        Right(FieldKey(value))
       } catch {
         case e: Exception =>
           Left(e.getMessage)
       }
 
     override def unbind(key: String, fieldKey: FieldKey): String =
-      fieldKey.param
+      fieldKey.toString
   }
 
   implicit def userIdBinder: PathBindable[UserId] = new PathBindable[UserId] {

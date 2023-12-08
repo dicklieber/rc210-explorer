@@ -1,0 +1,13 @@
+@import net.wa9nnn.rc210.data.named.NamedKey
+@import net.wa9nnn.rc210.Key
+@import net.wa9nnn.rc210.data.field.FieldKey
+@(key: Key)
+@defining(key.namedKey) { namedKey =>
+    <div class="nameEditor">
+        @namedKey.key.rc210Value:
+    <label>
+        Name:
+        <input name="@FieldKey("name", key)" value="@namedKey.name">
+    </label>
+    </div>
+}

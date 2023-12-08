@@ -29,7 +29,7 @@ import net.wa9nnn.rc210.data.datastore.FieldEntryJson
  * @param candidate       the,potential, next value.
  */
 case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fieldValue: FieldValue, candidate: Option[FieldValue] = None)
-  extends Ordered[FieldEntry] with CellProvider with RenderMetadata with FieldEntryBase {
+  extends Ordered[FieldEntry] with FieldEntryBase {
 
   def value[F <: FieldValue]: F = {
     candidate.getOrElse(fieldValue).asInstanceOf[F]
@@ -64,24 +64,12 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
     candidate = None,
     fieldValue = candidate.getOrElse(throw new IllegalStateException(s"No candidate to accept!")))
 
-  val param: String = fieldKey.param
-  override val prompt: String = fieldDefinition.tooltip
-
   def toCommands: Seq[String] = {
     candidate
       .getOrElse(throw new IllegalStateException(s"No candidate for: $fieldKey!"))
       .toCommands(this)
   }
   
-  def toCell: Cell =
-    val f: FieldValue = value
-    f match
-      case sf:SimpleFieldValue =>
-        val html = sf.toHtmlField(fieldKey)
-        Cell.rawHtml(html)
-      case cf:ComplexFieldValue =>
-        throw new NotImplementedError() //todo
-
   /**
    *
    * @param macroKey of interest.
@@ -99,25 +87,6 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
 
   override def toString: String = {
     s"${fieldKey.fieldName}: ${fieldValue.display}"
-  }
-
-  def toRow(maybeRowHeader: Option[Cell] = None): Row = {
-    val change = candidate match {
-      case Some(c) =>
-        Cell(s"${fieldValue.display} => ${c.display}")
-      case None => Cell("")
-    }
-    val row: Row = Row(
-      fieldKey.toCell,
-      value.toString,
-      change
-    )
-    maybeRowHeader match {
-      case Some(header: Cell) =>
-        row.copy(cells = row.cells.prepended(header))
-      case None =>
-        row
-    }
   }
 
   def toJson: FieldEntryJson = {

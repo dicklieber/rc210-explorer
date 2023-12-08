@@ -18,7 +18,6 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.KeyKind
 import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
@@ -26,13 +25,14 @@ import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
-import play.api.mvc.{MessagesControllerComponents, *}
+import play.api.mvc.*
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
+@Singleton
 class CommonEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
                                       (implicit scheduler: Scheduler,
                                        ec: ExecutionContext, components: MessagesControllerComponents)

@@ -37,7 +37,7 @@ object Tabs {
   val macrosTab: Tab = Tab("Macros", routes.MacroEditorController.index().url, "Macro settings.")
   val messagesTab: Tab = Tab("Messages", routes.MessageController.index().url, "Messages.")
 
-  val portsTab: Tab = Tab("Ports", routes.PortsEditorController.index().url, "Port settings")
+  val portsTab: Tab = Tab("Ports", routes.PortsController.index().url, "Port settings")
 
   val schedulesTab: Tab = Tab("Schedules", routes.ScheduleController.index.url, "Schedule settings.")
   val timersTab: Tab = Tab("Timers", routes.TimerController.index.url, "Timer settings.")

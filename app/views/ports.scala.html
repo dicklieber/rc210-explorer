@@ -1,16 +1,36 @@
-@import com.wa9nnn.util.tableui.Table
-@import com.wa9nnn.util.tableui.html.renderTable
+@import net.wa9nnn.rc210.ui.MyHelpers._
 @import views.html.helper._
+@import net.wa9nnn.rc210.Key
 @import net.wa9nnn.rc210.ui.Tabs
+@import net.wa9nnn.rc210.data.named.NamedKey
 
-@(table: Table)
+@import net.wa9nnn.rc210.ui.FormField
+@(rows: Seq[Row])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
 @tabbedmain(Tabs.portsTab) {
-
-    @form(action = routes.PortsEditorController.save()) {
+    @form(action = routes.PortsController.save()) {
         @submitButton()
-        @renderTable(table.withCssClass("tablesorter"))
+        <table class="table table-bordered table-sm  w-auto rc210-table headeredTable   ">
+            <thead class="table-primary">
+                <tr>
+                    <th>Field</th>
+                    @for(key <- Key.portKeys) {
+                        <th>@nameEditKey(key)
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+            @for(row <- rows) {
+                <tr>
+                    <td class ="RowHeader">@row.name</td>
+                    @for(cell <- row.cells) {
+                        <td>@Html(cell)</td>
+                    }
+                </tr>
+            }
+            </tbody>
+        </table>
         @submitButton()
-
     }
 }

@@ -17,7 +17,6 @@
 
 package net.wa9nnn.rc210.data.field
 
-import com.wa9nnn.util.tableui.{Cell, CellProvider}
 import net.wa9nnn.rc210.Key
 import play.api.libs.json.*
 import play.api.mvc.PathBindable
@@ -30,14 +29,8 @@ import scala.util.Try
  * @param fieldName name of rc2input. Shown in UIs
  * @param key       qualifier for the rc2input.
  */
-case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey] with CellProvider {
-  assert(!fieldName.contains('|'), "Field Name can't contain '|'!")
-  assert(!fieldName.contains('~'), "Field Name can't contain '~'!")
-  /**
-   * can identify this in a HTTP param or as a JSON name.
-   * @deprecated used toString.
-   */
-  val param: String = s"$fieldName:$key".replaceAll(" ", "~")
+case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey]  {
+  assert(!fieldName.contains('|'), "Field Name can't contain ':'!")
 
   override def compare(that: FieldKey): Int = {
     var ret = key.keyKind.toString compareTo that.key.keyKind.toString
@@ -49,20 +42,16 @@ case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey] with 
   }
 
   override def toString: String = s"${key.toString}:$fieldName"
-
-  override def toCell: Cell = {
-    Cell(toString).withToolTip(s"key: $key param: $param")
-  }
 }
 
 object FieldKey {
 
   implicit val fmtFieldKey: Format[FieldKey] = new Format[FieldKey] {
-    override def writes(o: FieldKey) = JsString(o.param)
+    override def writes(o: FieldKey) = JsString(o.toString)
 
     override def reads(json: JsValue): JsResult[FieldKey] = {
       JsResult.fromTry(Try {
-        fromParam(json.as[String])
+        FieldKey(json.as[String])
       })
     }
   }
@@ -70,7 +59,7 @@ object FieldKey {
   implicit def fieldKeyPathBinder(implicit intBinder: PathBindable[FieldKey]): PathBindable[FieldKey] = new PathBindable[FieldKey] {
     override def bind(key: String, fromPath: String): Either[String, FieldKey] = {
       try {
-        Right(fromParam(fromPath))
+        Right(FieldKey(fromPath))
       } catch {
         case e: Exception =>
           Left(e.getMessage)
@@ -78,15 +67,17 @@ object FieldKey {
     }
 
     override def unbind(key: String, fieldKey: FieldKey): String =
-      fieldKey.param
+      fieldKey.toString
   }
 
-  def fromParam(param: String): FieldKey = {
-    val spacesBack = param.replaceAll("~", " ")
-    spacesBack match
-      case r(fieldName, sKey) =>
-       FieldKey(fieldName, Key(sKey))
+  def apply(param: String): FieldKey = {
+    param match
+      case r( sKey, fieldName) =>
+        val key = Key(sKey)
+        FieldKey(fieldName, key)
+      case s: String =>
+        throw new IllegalArgumentException(s"$s is not a valid param name for a FieldKey!")
   }
 
-  private val r = """(.+)\:(.*)""".r
+  private val r = """(.+):(.*)""".r
 }

@@ -38,11 +38,11 @@ object FormField:
     val elem: Elem = value match {
       case enumValue: EnumEntryValue =>
         <select name ={name}>
-          {enumValue.values map { choice =>
-          val opt = <option value={choice.toString} selected={if (enumValue == choice) "selected" else null}>
-            {choice.toString}
+          {enumValue.options map { choice =>
+          <option value={choice._1} selected={if (enumValue.entryName == choice._1) "selected" else null}>
+            {choice._2}
           </option>
-          opt
+
         }}
         </select>
 
