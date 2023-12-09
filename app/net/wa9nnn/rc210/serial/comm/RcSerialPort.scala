@@ -53,14 +53,7 @@ case class RcSerialPort(private[comm] val serialPort: SerialPort, maybeVersion: 
 
   val comPort: ComPort = ComPort(serialPort)
   serialPort.setBaudRate(19200)
-
-  /**
-   *
-   */
-  def openStreamBased: RcStreamBased = {
-    new RcStreamBased(this)
-  }
-
+  
   def openEventBased(): RcEventBased =
     new RcEventBased(this)
 

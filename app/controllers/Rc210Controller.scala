@@ -45,16 +45,17 @@ extends MessagesAbstractController(cc) with LazyLogging {
 
 
   def lastResult: Action[AnyContent] = Action { implicit request =>
-    val table = lastResults match {
-      case Some(opResult: BatchOperationsResult) =>
-        Table(Header(), opResult.toRows)
-      case None =>
-        Table(Seq.empty, Seq.empty)
-    }
-
-    lastResults = None // just shown once.
-
-    Ok(views.html.lastResults(table))
+//    val table = lastResults match {
+//      case Some(opResult: BatchOperationsResult) =>
+//        Table(Header(), opResult.toRows)
+//      case None =>
+//        Table(Seq.empty, Seq.empty)
+//    }
+//
+//    lastResults = None // just shown once.
+//
+//    Ok(views.html.lastResults(table))
+    Ok("todo")
   }
 
   def setClock(): Action[AnyContent] = Action { implicit request =>

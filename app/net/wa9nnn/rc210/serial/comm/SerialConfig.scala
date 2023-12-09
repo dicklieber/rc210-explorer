@@ -15,25 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.wa9nnn.rc210.serial
+package net.wa9nnn.rc210.serial.comm
 
-import com.wa9nnn.util.tableui.{Cell, Row}
+import com.typesafe.config.Config
+
+import java.time
 
 /**
- * Result for a named batch of RC210 operations under
- * @param name often a [[net.wa9nnn.rc210.data.FieldKey]]
- * @param results for each operation.
+ * Non-UI controlled serial port stuff.
+ *
+ * @param readTimeoutMs how long to wait for a response from the RC-210.
  */
-case class BatchOperationsResult(name: String, results: Seq[RcOperationResult]) {
-//  def toRows: Seq[Row] = {
-//    val topRow: Row = results.head.toRow
-//    val withNameColl: Row = topRow.copy(cells =
-//      topRow.cells.prepended(
-//        Cell(name)
-//          .withRowSpan(results.size)))
-//    val moreRows: Seq[Row] = results.tail.map(_.toRow)
-//
-//    val rows: Seq[Row] = withNameColl +: moreRows
-//    rows
-//  }
-}
+case class SerialConfig(readTimeoutMs: Int)
+
+object SerialConfig:
+
+  def apply(config: Config): SerialConfig =
+    new SerialConfig(config.getDuration("vizRc210.serialReadTimeout").toMillis.toInt)
+

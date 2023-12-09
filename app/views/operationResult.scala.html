@@ -1,0 +1,34 @@
+@import net.wa9nnn.rc210.serial.RcOperationResult
+@*************************************
+* Produce an HTML table for this [[RcOperationResult]] *
+* *
+* @param rcOperationResult The message to display *
+*************************************@
+@(rcOperationResult: RcOperationResult)
+<table class="headeredTable">
+    <tr>
+        <td>
+            @if(!rcOperationResult.isFailure) {
+                <img src='@routes.Assets.versioned("images/good.png")' alt="good">
+            } else {
+                <img src='@routes.Assets.versioned("images/bad.png")' alt="bad">
+                }
+        </td>
+        <td>
+        @rcOperationResult.request
+        </td>
+        <td>
+        @if(rcOperationResult.isFailure) {
+            @rcOperationResult.triedResponse
+        } else {
+            <ul>
+            @for(line <- rcOperationResult.triedResponse.get.lines) {
+                <li>@line</li>
+            }
+            </ul>
+
+        }
+        </td>
+    </tr>
+</table>
+

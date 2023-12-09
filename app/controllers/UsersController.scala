@@ -29,7 +29,7 @@ import org.apache.pekko.util.Timeout
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional, text}
 import play.api.mvc.Security.AuthenticatedRequest
-import play.api.mvc.{Action, AnyContent, MessagesInjectedController, MessagesRequest}
+import play.api.mvc.{Action, AnyContent, MessagesAbstractController, MessagesControllerComponents, MessagesInjectedController, MessagesRequest}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
@@ -44,10 +44,8 @@ import scala.language.{implicitConversions, postfixOps}
  * Handle create/edit/list users/
  */
 @Singleton
-class UsersController @Inject()(val userActor: ActorRef[UserManagerActor.Message])(
-  implicit scheduler: Scheduler
-)
-  extends MessagesInjectedController with LazyLogging {
+class UsersController @Inject()(val userActor: ActorRef[UserManagerActor.Message])(implicit cc: MessagesControllerComponents, scheduler: Scheduler)
+  extends MessagesAbstractController(cc) with LazyLogging {
 
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
   implicit val timeout: Timeout = 3 seconds

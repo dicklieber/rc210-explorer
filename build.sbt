@@ -59,7 +59,7 @@ libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % logbackVersion,
   "ch.qos.logback" % "logback-core" % logbackVersion,
   "commons-io" % "commons-io" % "2.11.0",
-  "com.fazecast" % "jSerialComm" % "2.9.3",
+  "com.fazecast" % "jSerialComm" % "2.10.4",
   //  "io.suzaku" %% "boopickle" % "1.4.0",
   "org.fusesource.jansi" % "jansi" % "2.4.0",
   "org.apache.commons" % "commons-text" % "1.10.0",

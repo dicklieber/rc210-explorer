@@ -30,13 +30,11 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton()
-class DownloadController @Inject()(config: Config,
-                                   dataCollector: DataCollector,
-                                   rc210: Rc210)
-                                  (implicit scheduler: Scheduler, ec: ExecutionContext, mat: Materializer)
-  extends MessagesInjectedController with LazyLogging {
+class DownloadController @Inject()(config: Config, dataCollector: DataCollector, rc210: Rc210)
+                                  (implicit scheduler: Scheduler, ec: ExecutionContext, mat: Materializer, components: MessagesControllerComponents)
+  extends MessagesAbstractController(components) with LazyLogging {
   private val expectedLines: Int = config.getInt("vizRc210.expectedRcLines")
-  private var maybeComment:Option[String] = None
+  private var maybeComment: Option[String] = None
 
 
   def index: Action[AnyContent] = Action {

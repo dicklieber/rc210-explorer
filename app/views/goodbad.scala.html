@@ -1,0 +1,6 @@
+@(value: Boolean)
+@if(value) {
+    <img src="@routes.Assets.versioned("images/good.png")" alt="good">
+} else {
+    <img src="@routes.Assets.versioned("images/bad.png")" alt="bad">
+}

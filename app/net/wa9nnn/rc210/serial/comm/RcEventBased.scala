@@ -19,6 +19,14 @@ package net.wa9nnn.rc210.serial.comm
 
 import com.fazecast.jSerialComm.SerialPortDataListener
 
+import scala.concurrent.duration.Duration
+
+/**
+ * This uses a [[SerialPortDataListener]] to get each message from the RC-210.
+ * This works nicely for doing a Download from the RC-210.
+ *
+ * @param rcSerialPort provides access to the serial port.
+ */
 class RcEventBased(rcSerialPort: RcSerialPort) extends RcOp(rcSerialPort) with AutoCloseable {
   serialPort.flushIOBuffers() // get rid of any left over crap.
 

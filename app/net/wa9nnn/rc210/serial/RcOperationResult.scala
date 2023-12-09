@@ -21,16 +21,20 @@ import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
 import net.wa9nnn.rc210.serial.comm.RcResponse
 
 import scala.util.{Failure, Success, Try}
+import scala.xml.Elem
 
-case class RcOperationResult(request: String, triedResponse: Try[RcResponse]) extends RowSource {
+case class RcOperationResult(request: String, triedResponse: Try[RcResponse]) {
+
   def isSuccess: Boolean = triedResponse.isSuccess
 
   def isFailure: Boolean = triedResponse.isFailure
 
   def head: String = triedResponse match {
-    case Failure(exception) =>
+    case Failure(exception)
+    =>
       exception.getMessage
-    case Success(rcResponse: RcResponse) =>
+    case Success(rcResponse: RcResponse)
+    =>
       rcResponse.head
   }
 
@@ -40,38 +44,9 @@ case class RcOperationResult(request: String, triedResponse: Try[RcResponse]) ex
 
   private def flatten(rcResponse: RcResponse): String = fixUp(rcResponse.lines.mkString(" "))
 
-  override def toRow: Row = {
-    triedResponse match {
-      case Failure(exception) =>
-        Row.ofAny(request, exception.getMessage)
-      case Success(rcResponse: RcResponse) =>
-        Row.ofAny(request, flatten(rcResponse))
-    }
-  }
-
-  def toRow(rowHeader: Any, rowspan: Int): Row = {
-    triedResponse match {
-      case Failure(exception) =>
-        Row.ofAny(request, exception.getMessage)
-      case Success(rcResponse: RcResponse) =>
-        Row(Cell(rowHeader)
-          .withRowSpan(rowspan),
-          request,
-          flatten(rcResponse))
-    }
 
   }
 
-  override def toString: String = {
-    triedResponse match {
-      case Failure(exception) =>
-        s"$request => ${exception.getMessage}"
-      case Success(rcResponse: RcResponse) =>
-        s"$request => $rcResponse"
-    }
+  object RcOperationResult {
+    def header(count: Int): Header = Header(s"RC Operation Results ($count)", "Field", "Command", "Response")
   }
-}
-object RcOperationResult {
-
-  def header(count: Int): Header = Header(s"RC Operation Results ($count)", "Field", "Command", "Response")
-}

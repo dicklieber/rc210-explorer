@@ -1,63 +1,41 @@
-@import com.wa9nnn.util.tableui.Table
-@import com.wa9nnn.util.tableui.html.renderTable
 @import net.wa9nnn.rc210.ui.Tabs
 
 @import com.wa9nnn.util.TimeConverters
-@(table: Table, maybeLastSendAll: Option[LastSendAll])
+@import net.wa9nnn.rc210.serial.BatchOperationsResult
+@(lastSendAll: LastSendAll)
 
     @tabbedmain(Tabs.noTab) {
-        <script>
-                $(function () {
-                    $(".happyCell").hide()
-                    $("#sucessful").on("change", function (event) {
-                        const target = event.target;
-                        const checked = target.checked;
-                        console.log(event);
-                        const $happyCell = $(".happyCell");
-                        if (checked)
-                            $happyCell.show();
-
-                        else
-                            $happyCell.hide()
-                    });
-                });
-        </script>
-
-        @for(lastSendAll <- maybeLastSendAll) {
-            <div class="container">
-                <table class="table table-borderedtable-sm w-auto">
-                    <tr>
-                        <td>When:</td>
-                        <td>@TimeConverters.local(lastSendAll.start)</td>
-                    </tr>
-                    <tr>
-                        <td>Took:</td>
-                        <td>@TimeConverters.durationToString(lastSendAll.duration)</td>
-                    </tr>
-                    <tr>
-                        <td>Commands Sent:</td>
-                        <td>@lastSendAll.operations.length</td>
-                    </tr>
-                    @if(lastSendAll.successCount > 0) {
-                        <tr>
-                            <td>Success:</td>
-                            <td>@lastSendAll.successCount</td>
-                        </tr>
-                    }
-                    @if(lastSendAll.failCount > 0) {
-                        <tr>
-                            <td>Failures:</td>
-                            <td>@lastSendAll.failCount</td>
-                        </tr>
-                    }
-
-                </table>
-            </div>
+        <table class="headeredTable">
+            <tr>
+                <td>Started</td>
+                <td>@lastSendAll.start</td>
+            </tr>
+            <tr>
+                <td>Duration</td>
+                <td>@lastSendAll.duration</td>
+            </tr>
+            <tr >
+                <td>Success</td>
+                <td>@lastSendAll.successCount</td>
+            </tr>
+            <tr >
+                <td>Failure</td>
+                <td>@lastSendAll.failCount</td>
+            </tr>
+        </table>
+        <table class="headeredTable">
+        @for(bor <- lastSendAll.operations) {
+            <tr>
+                <td>@bor.name</td>
+            </tr>
+            <tr>
+                <td>
+                @for(rcOperationResult <- bor.results) {
+                    @operationResult(rcOperationResult)
+                }
+                </td>
+            </tr>
         }
-        <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch" id="sucessful" >
-            <label class="form-check-label" for="flexSwitchCheckChecked">Show sucessful</label>
-        </div>
+        </table>
 
-        @renderTable(table)
     }

@@ -100,10 +100,11 @@ class CandidateController @Inject()(dataStoreActor: ActorRef[DataStoreActor.Mess
             else
               fieldEntry.candidate.get.toCommands(fieldEntry) // throws if no candidate
 
-            val operationsResult: BatchOperationsResult = rc210.sendBatch(fieldKey.toString, commands: _*)
-            val rows = operationsResult.toRows
-            val table = Table(Header("Result", "Field", "Command", "Response"), rows)
-            Ok(views.html.justdat(Seq(table)))
+//            val operationsResult: BatchOperationsResult = rc210.sendBatch(fieldKey.toString, commands: _*)
+//            val rows = operationsResult.toRows
+//            val table = Table(Header("Result", "Field", "Command", "Response"), rows)
+//            Ok(views.html.justdat(Seq(table)))
+            Ok("todo")
           case None =>
             NoContent
       }
@@ -151,12 +152,10 @@ class CandidateController @Inject()(dataStoreActor: ActorRef[DataStoreActor.Mess
   def lastSendAll(): Action[AnyContent] = Action { implicit request =>
     maybeLastSendAll match {
       case Some(lastSendAll: LastSendAll) =>
-        val rows: Seq[Row] = lastSendAll.operations.flatMap(_.toRows)
-        val table = Table(RcOperationResult.header(rows.length), rows)
-        Ok(views.html.lastSendAll(table, Option(lastSendAll)))
+        Ok(views.html.lastSendAll(lastSendAll))
       case None =>
-        val table = Table(Seq.empty, Seq.empty)
-        Ok(views.html.lastSendAll(table, None))
+        NoContent
+
     }
   }
 }

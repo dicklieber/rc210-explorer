@@ -21,10 +21,11 @@ import com.fazecast.jSerialComm.{SerialPort, SerialPortDataListener}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, Table}
-import net.wa9nnn.rc210.serial.comm.{Rc210Version, RcEventBased, RcSerialPort, RcStreamBased}
+import net.wa9nnn.rc210.serial.comm.*
 import net.wa9nnn.rc210.util.Configs
 
 import java.nio.file.{Files, Path}
+import java.time.Duration
 import javax.inject.{Inject, Singleton}
 import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Try, Using}
@@ -32,7 +33,10 @@ import scala.util.{Try, Using}
 
 @Singleton
 class Rc210 @Inject()(implicit config: Config) extends LazyLogging {
+
   def comPort: ComPort = maybeRcSerialPort.map(_.comPort).get
+
+  private val serialConfig = SerialConfig(config)
 
 
   private val serialPortsSource = new SerialPortsSource()
@@ -63,7 +67,7 @@ class Rc210 @Inject()(implicit config: Config) extends LazyLogging {
   }
 
   def openStreamBased: RcStreamBased = {
-    new RcStreamBased(serialPort)
+    new RcStreamBased(serialPort,serialConfig)
   }
 
   def openEventBased(): RcEventBased = {
