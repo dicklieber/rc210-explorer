@@ -19,16 +19,15 @@ package controllers
 
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.data.datastore.DataStoreActor
-import net.wa9nnn.rc210.data.datastore.DataStoreActor.{All, Candidates, ForFieldKey}
+import net.wa9nnn.rc210.data.datastore.DataStoreActor._
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey, FieldValue}
+import net.wa9nnn.rc210.serial.*
 import net.wa9nnn.rc210.serial.comm.RcStreamBased
-import net.wa9nnn.rc210.serial.{BatchOperationsResult, ProcessWithProgress, ProgressApi, Rc210, RcOperationResult}
+import net.wa9nnn.rc210.util.Configs.path
+import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.stream.Materializer
-import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
-import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.util.Timeout
 import play.api.mvc.*
 
@@ -39,16 +38,22 @@ import scala.collection.immutable.Seq
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.language.postfixOps
-import org.apache.pekko.util.Timeout
-import net.wa9nnn.rc210.util.Configs.path
 
-import javax.inject.Inject
-
-
+/**
+ * Sends commands to the RC-210.
+ *
+ * @param dataStoreActor
+ * @param rc210
+ * @param config
+ * @param scheduler
+ * @param ec
+ * @param mat
+ * @param cc
+ */
 @Singleton()
-class CandidateController @Inject()(dataStoreActor: ActorRef[DataStoreActor.Message],
-                                    rc210: Rc210)
-                                   (implicit config: Config, scheduler: Scheduler, ec: ExecutionContext, mat: Materializer, cc: MessagesControllerComponents)
+class CommandsController @Inject()(dataStoreActor: ActorRef[DataStoreActor.Message],
+                                   rc210: Rc210)
+                                  (implicit config: Config, scheduler: Scheduler, ec: ExecutionContext, mat: Materializer, cc: MessagesControllerComponents)
   extends MessagesAbstractController(cc) with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
   private val sendLogFile: Path = path("vizRc210.sendLog")
@@ -111,7 +116,7 @@ class CandidateController @Inject()(dataStoreActor: ActorRef[DataStoreActor.Mess
   }
 
   def sendAllFields(): Action[AnyContent] = Action { implicit request =>
-    val webSocketURL: String = routes.CandidateController.ws(471).webSocketURL() //todo all fields expected.
+    val webSocketURL: String = routes.CommandsController.ws(471).webSocketURL() //todo all fields expected.
     Ok(views.html.progress(webSocketURL))
   }
 
@@ -121,9 +126,9 @@ class CandidateController @Inject()(dataStoreActor: ActorRef[DataStoreActor.Mess
 
   var maybeLastSendAll: Option[LastSendAll] = None
 
-  //  import play.api.mvc._
 
   def ws(expected: Int): WebSocket = {
+    //todo handle authorization See https://www.playframework.com/documentation/3.0.x/ScalaWebSockets
     val start = Instant.now()
     ProcessWithProgress(expected, 7, Option(sendLogFile)) { (progressApi: ProgressApi) =>
       val streamBased: RcStreamBased = rc210.openStreamBased

@@ -20,223 +20,50 @@ package net.wa9nnn.rc210.data.datastore
 import com.google.inject.Provides
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.TriggerNode
-import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.data.datastore.DataStoreActor.Message
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldKey, FieldValue}
 import net.wa9nnn.rc210.data.macros.RcMacro
 import net.wa9nnn.rc210.data.named.{NamedKey, NamedKeySource}
 import net.wa9nnn.rc210.security.authentication.User
-import net.wa9nnn.rc210.ui.CandidateAndNames
-import org.apache.pekko.actor.typed.scaladsl.{ActorContext, Behaviors}
-import org.apache.pekko.actor.typed.{ActorRef, Behavior, Signal, SupervisorStrategy}
+import net.wa9nnn.rc210.{Key, KeyKind}
+import org.apache.pekko.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
+import org.apache.pekko.actor.typed.{ActorRef, Behavior, PostStop, Signal, SupervisorStrategy}
 import play.api.libs.concurrent.ActorModule
 import play.api.libs.json
 
 import scala.collection.concurrent.TrieMap
 import scala.concurrent.ExecutionContext
-import scala.util.{Failure, Success}
-
-object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
-
-  sealed trait DataStoreMessage
-
-  type Message = DataStoreMessage
-
-  // This provides a back-door way to get names. But it's read-only access
-  // and greatly simplifies showing key names in the UIs.
-  private var keyNamesMap = new TrieMap[Key, String]
-
-  override def nameForKey(key: Key): String = keyNamesMap.getOrElse(key, "")
-
-  Key.setNamedSource(this)
-
-  @Provides def apply(implicit persistence: DataStorePersistence, memoryFileLoader: MemoryFileLoader, ec: ExecutionContext): Behavior[DataStoreMessage] = {
-    //    Behaviors.setup[DataStoreMessage] { actorContext =>
-    def loadFromRcMemory(): TrieMap[FieldKey, FieldEntry] = {
-      val map = new TrieMap[FieldKey, FieldEntry]
-      memoryFileLoader.load match {
-        case Failure(exception) =>
-          logger.error(s"No memory: ${exception.getMessage} Need to load from RC-210!")
-        case Success(entries: Seq[FieldEntry]) =>
-          entries.map { fieldEntry =>
-            map.put(fieldEntry.fieldKey, fieldEntry)
-          }
-      }
-      map
-    }
-
-    var valuesMap: TrieMap[FieldKey, FieldEntry] = new TrieMap[FieldKey, FieldEntry]()
-
-    def loadFromJson(): Unit = {
-      // update values from datastore.json
-      persistence.load().foreach { dto =>
-        ingest(dto)
-      }
-    }
-
-    def ingest(dto: DataTransferJson): Unit = {
-      dto.values.foreach { fieldEntryJson =>
-        val fieldKey = fieldEntryJson.fieldKey
-        valuesMap.get(fieldKey).foreach { fieldEntry =>
-          val newFieldValue: FieldValue = fieldEntry.fieldDefinition.parse(fieldEntryJson.fieldValue)
-          val newCandidate: Option[FieldValue] = fieldEntryJson.candidate.map(fieldEntry.fieldDefinition.parse)
-
-          val updated = fieldEntry.copy(fieldValue = newFieldValue, candidate = newCandidate)
-          valuesMap.put(fieldKey, updated)
-        }
-      }
-      // update namedKeys from datastore.json
-      keyNamesMap.clear()
-      keyNamesMap.addAll(dto.namedKeys.map(namedKey => namedKey.key -> namedKey.name))
-
-    }
+import scala.util.{Failure, Success, Try}
 
 
-    def load(): Unit = {
-      valuesMap = loadFromRcMemory()
-      loadFromJson()
-      logger.info("Loaded")
-    }
+class DataStoreActor(context: ActorContext[DataStoreMessage], dataStoreLogic: DataStoreLogic)
+  extends AbstractBehavior[Message](context) with LazyLogging {
+  logger.info("DataStoreActor started")
 
-    load()
-    if (valuesMap.isEmpty)
-      logger.error("No data from RC210. Invoke RC210/Download.")
-
-    def all: Seq[FieldEntry] = valuesMap.values.toSeq
-
-    def save(user: User): Unit = {
-      val dto = DataTransferJson(values = valuesMap.values.map(FieldEntryJson(_)).toSeq,
-        namedKeys = keyNamesMap.map { case (key, name) => NamedKey(key, name) }.toSeq,
-        who = Option(user.who))
-      persistence.save(dto)
-    }
-
-    Behaviors.setup { context =>
-      Behaviors.supervise[DataStoreMessage] {
-        Behaviors.receiveMessage[DataStoreMessage] { (message: DataStoreMessage) =>
-            message match {
-
-              case ReplaceEntries(entries: Seq[FieldEntry]) =>
-
-              case All(replyTo: ActorRef[Seq[FieldEntry]]) =>
-                replyTo ! all.sorted
-              case AllForKey(key: Key, replyTo: ActorRef[Seq[FieldEntry]]) =>
-                replyTo ! all
-                  .filter(_.fieldKey.key == key)
-                  .sortBy(_.fieldKey.fieldName)
-              case AllForKeyKind(keyKind: KeyKind, replyTo: ActorRef[Seq[FieldEntry]]) =>
-                replyTo ! all.filter(_.fieldKey.key.keyKind == keyKind).sortBy(_.fieldKey)
-              case ForFieldKey(fieldKey: FieldKey, replyTo: ActorRef[Option[FieldEntry]]) =>
-                replyTo ! all.find(_.fieldKey == fieldKey)
-              case Candidates(replyTo: ActorRef[Seq[FieldEntry]]) =>
-                replyTo ! all.filter(_.candidate.nonEmpty)
-              case Triggers(replyTo: ActorRef[Seq[MacroWithTriggers]]) =>
-                val triggerNodes: Seq[TriggerNode] = all.filter { fe => fe.isInstanceOf[TriggerNode] }.map(_.asInstanceOf[TriggerNode])
-                replyTo !
-                  (for {
-                    fieldEntry <- all.filter(_.fieldKey.key.keyKind == KeyKind.macroKey).sorted
-                    macroNode: RcMacro = fieldEntry.fieldValue.asInstanceOf[RcMacro]
-                  } yield {
-                    val triggers: Seq[TriggerNode] = triggerNodes.filter(_.canRunMacro(macroNode.key))
-                    MacroWithTriggers(macroNode = macroNode, triggers = triggers)
-                  })
-
-              case IngestJson(sJson, replyTo) =>
-                ingest(json.Json.parse(sJson).as[DataTransferJson])
-                replyTo ! "Done"
-
-              case Reload =>
-                load()
-              case Json(replyTo) =>
-                val dto = DataTransferJson(values = valuesMap.values.map(FieldEntryJson(_)).toSeq,
-                  namedKeys = keyNamesMap.map { case (key, name) => NamedKey(key, name) }.toSeq)
-                replyTo ! persistence.toJson(dto)
-
-              case AcceptCandidate(fieldKey: FieldKey, user: User) =>
-                valuesMap.put(fieldKey, valuesMap(fieldKey).acceptCandidate())
-                save(user)
-              case ud: UpdateData =>
-                try
-                  ud.candidates.foreach { candidate =>
-                    val fieldKey = candidate.fieldKey
-
-                    val currentEntry = valuesMap(candidate.fieldKey)
-                    val newEntry: FieldEntry = candidate.candidate match {
-                      case Left(formValue: String) =>
-                        currentEntry.setCandidate(formValue)
-
-                      case Right(value: ComplexFieldValue) =>
-                        currentEntry.setCandidate(value)
-                    }
-                    valuesMap.put(fieldKey, newEntry)
-                  }
-                  ud.namedKeys.foreach { namedKey =>
-                    val key = namedKey.key
-                    val name = namedKey.name
-                    if (name.isBlank)
-                      keyNamesMap.remove(key)
-                    else
-                      keyNamesMap.put(key, name)
-                  }
-                  save(ud.user)
-                catch
-                  case e:Exception =>
-                    logger.error(ud.toString, e)
-                ud.replyTo ! "Done"
-              case UpdateFields(fieldEntries: Seq[FieldEntry], names: Seq[NamedKey], user: User) =>
-                fieldEntries.foreach { fieldEntry =>
-                  valuesMap.put(fieldEntry.fieldKey, fieldEntry)
-                }
-                save(user)
-            }
-            Behaviors.same
-          }
-
-          .receiveSignal {
-            case (context: ActorContext[DataStoreMessage], signal: Signal) =>
-              logger.error(s"signal: $signal")
-              //              if signal == PreRestart || signal == PostStop =>
-              //          resource.close()
-              Behaviors.same
-          }
-      }.onFailure[Exception](SupervisorStrategy.restart)
-    }
+  override def onMessage(dataStoreMessage: DataStoreMessage): Behavior[DataStoreMessage] = {
+    val result: DataStoreReply = dataStoreLogic(dataStoreMessage.dataStoreRequest)
+    dataStoreMessage.replyTo ! result
+    this
   }
 
-
-  case class ReplaceEntries(entries: Seq[FieldEntry]) extends DataStoreMessage
-
-  case class All(replyTo: ActorRef[Seq[FieldEntry]]) extends DataStoreMessage
-
-  case class AllForKey(key: Key, replyTo: ActorRef[Seq[FieldEntry]]) extends DataStoreMessage
-
-  case class AllForKeyKind(keyKind: KeyKind, replyTo: ActorRef[Seq[FieldEntry]]) extends DataStoreMessage
-
-  case class ForFieldKey(fieldKey: FieldKey, replyTo: ActorRef[Option[FieldEntry]]) extends DataStoreMessage
-
-  case class Json(replyTo: ActorRef[String]) extends DataStoreMessage
-
-  case class IngestJson(sJson: String, replyTo: ActorRef[String]) extends DataStoreMessage
-
-  case class Candidates(replyTo: ActorRef[Seq[FieldEntry]]) extends DataStoreMessage
-
-  case class Triggers(replyTo: ActorRef[Seq[MacroWithTriggers]]) extends DataStoreMessage
-
-  case class AcceptCandidate(fieldKey: FieldKey, user: User) extends DataStoreMessage
-
-
-  case class UpdateData(candidates: Seq[UpdateCandidate], namedKeys: Seq[NamedKey] = Seq.empty, user: User, replyTo: ActorRef[String]) extends DataStoreMessage
-
-  case object Reload extends DataStoreMessage
-
-  object UpdateData {
-    def apply(candidateAndNames: CandidateAndNames, user: User, replyTo: ActorRef[String]): UpdateData = {
-      new UpdateData(candidateAndNames.candidates, candidateAndNames.namedKeys, user, replyTo)
-    }
+  override def onSignal: PartialFunction[Signal, Behavior[DataStoreMessage]] = {
+    case PostStop =>
+      logger.error("DataStoreActor stoped")
+      this
   }
-
-
-  case class UpdateFields(fieldEntries: Seq[FieldEntry], names: Seq[NamedKey] = Seq.empty, user: User) extends DataStoreMessage
-
 }
 
+
+object DataStoreActor extends ActorModule with LazyLogging with NamedKeySource {
+  type Message = DataStoreMessage
+
+
+  @Provides def apply(implicit persistence: DataStorePersistence, ec: ExecutionContext): Behavior[Message] = {
+    val dataStoreLogic = new DataStoreLogic(persistence)
+
+    Behaviors.setup[Message](context =>
+      new DataStoreActor(context, dataStoreLogic)
+    )
+  }
+}
 

@@ -20,12 +20,12 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.KeyKind.clockKey
+import net.wa9nnn.rc210.data.clock.Clock.clockForm
 import net.wa9nnn.rc210.data.clock.DSTPoint.dstPointForm
 import net.wa9nnn.rc210.data.clock.{Clock, DSTPoint}
-import net.wa9nnn.rc210.data.datastore.DataStoreActor
-import net.wa9nnn.rc210.data.datastore.DataStoreActor.*
+import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.{session, user}
 import net.wa9nnn.rc210.ui.ProcessResult
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
@@ -38,10 +38,11 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
+import scala.util.Try
 
 
 @Singleton()
-class ClockController @Inject()(implicit actor: ActorRef[DataStoreActor.Message],
+class ClockController @Inject()(implicit actor: ActorRef[DataStoreMessage],
                                 ec: ExecutionContext,
                                 scheduler: Scheduler,
                                 components: MessagesControllerComponents)
@@ -49,24 +50,16 @@ class ClockController @Inject()(implicit actor: ActorRef[DataStoreActor.Message]
   implicit val timeout: Timeout = 3 seconds
 
 
-  private val clockForm = Form[Clock](
-    mapping(
-      "key" -> of[Key],
-      "enableDST" -> boolean,
-      "hourDST" -> number(min = 0, max = 23),
-      "startDST" -> dstPointForm,
-      "endDST" -> dstPointForm,
-      "say24Hours" -> boolean
-    )(Clock.apply)(Clock.unapply))
-
   def index: Action[AnyContent] = Action.async {
-    implicit request =>
-      actor.ask[Seq[FieldEntry]](DataStoreActor.AllForKeyKind(clockKey, _)).map { fieldEntries =>
-        val fieldEntry: FieldEntry = fieldEntries.head
-        val clock: Clock = fieldEntry.value.asInstanceOf[Clock]
-
-        Ok(views.html.clock(clockForm.fill(clock)))
+    implicit request: MessagesRequest[AnyContent] => {
+      val actorResult: Future[DataStoreReply] = actor.ask(DataStoreMessage(AllForKey(Clock.key), session, _))
+      actorResult.map { (reply: DataStoreReply) => {
+        reply.forHead[Clock] { (_, clock) =>
+          Ok(views.html.clock(clockForm.fill(clock)))
+        }
       }
+      }
+    }
   }
 
   def save(): Action[AnyContent] = Action.async { implicit request =>
@@ -77,17 +70,16 @@ class ClockController @Inject()(implicit actor: ActorRef[DataStoreActor.Message]
           Future(BadRequest(views.html.clock(formWithErrors)))
         },
         (clock: Clock) => {
-          val candidateAndNames = ProcessResult(clock)
-          actor.ask[String](UpdateData(candidateAndNames, user, _)).map { _ =>
-            val index1: Call = routes.ClockController.index
-            Redirect(index1)
+          val candidateAndNames: CandidateAndNames = ProcessResult(clock)
+          val future: Future[DataStoreReply] = actor.ask(DataStoreMessage(candidateAndNames, session, _))
+          future.map { reply =>
+            reply.forHead((_, _) =>
+              Redirect(routes.ClockController.index))
           }
-
         }
       )
   }
 }
-
 
 
 

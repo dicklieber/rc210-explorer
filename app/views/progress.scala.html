@@ -14,7 +14,7 @@
                 console.log("data" + event.data);
                 const progress = JSON.parse(event.data);
                 if (!progress.running)
-                    window.location.href = '@routes.CandidateController.lastSendAll()';
+                    window.location.href = '@routes.CommandsController.lastSendAll()';
                 else {
                     const $progress = $('.progress-bar');
                     $progress.css("width", progress.percent);

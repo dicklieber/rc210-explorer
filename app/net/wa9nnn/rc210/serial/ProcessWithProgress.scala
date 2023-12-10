@@ -46,7 +46,8 @@ object ProcessWithProgress extends LazyLogging {
     new Inner(expected, mod, maybeSendfile, callback).webSocket
   }
 
-  private class Inner(expected: Int, mod: Int, maybeSendfile: Option[Path], callback: ProgressApi => Unit)(implicit mat: Materializer) extends Thread with Runnable with ProgressApi {
+  private class Inner(expected: Int, mod: Int, maybeSendfile: Option[Path], callback: ProgressApi => Unit)(implicit mat: Materializer) 
+    extends Thread with Runnable with ProgressApi {
     private val (queue, source) = Source.queue[Progress](250, OverflowStrategy.dropHead).preMaterialize()
 
     private val began = Instant.now()

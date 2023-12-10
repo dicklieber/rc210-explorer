@@ -22,21 +22,38 @@ import play.api.mvc.WebSocket.MessageFlowTransformer
 
 import java.time.Instant
 
-trait ProgressApi {
+/**
+ * Update progress that will go to the client.
+ */
+trait ProgressApi:
+  /**
+   * We processed one thing.
+   *
+   * @param message
+   */
   def doOne(message: String): Unit
 
+  /**
+   * We're done.
+   *
+   * @param message
+   */
   def finish(message: String): Unit
 
+  /**
+   * Something went wrong. Implies finish.
+   *
+   * @param exception
+   */
   def error(exception: Throwable): Unit
-}
+
 
 /**
  * A DTO that is sent as JSON to client for progress display.
  */
 case class Progress(running: Boolean = true, soFar: Int = 0, percent: String = "", sDuration: String = "", expected: Int, start: Instant, error: String = "")
 
-object Progress {
+object Progress:
   implicit val fmtProgress: Format[Progress] = Json.format[Progress]
   implicit val messageFlowTransformer: MessageFlowTransformer[String, Progress] =
     MessageFlowTransformer.jsonMessageFlowTransformer[String, Progress]
-}

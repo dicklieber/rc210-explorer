@@ -19,11 +19,13 @@ package net.wa9nnn.rc210.data.clock
 
 import com.wa9nnn.util.JsonFormatUtils.javaEnumFormat
 import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.data.clock.MonthOfYearDST._
-import net.wa9nnn.rc210.data.clock.Occurrence._
+import net.wa9nnn.rc210.data.clock.MonthOfYearDST.*
+import net.wa9nnn.rc210.data.clock.Occurrence.*
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.{Format, JsValue, Json}
+import play.api.data._
+import play.api.data.Forms._
 
 case class Clock(key: Key,
                  enableDST: Boolean = true,
@@ -77,8 +79,19 @@ case class Clock(key: Key,
 
 
 object Clock extends ComplexExtractor {
+  val clockForm = Form(
+    mapping(
+      "key" -> of[Key],
+      "enableDST" -> boolean,
+      "hourDST" -> number(min = 0, max = 23),
+      "startDST" -> DSTPoint.dstPointForm,
+      "endDST" -> DSTPoint.dstPointForm,
+      "say24Hours" -> boolean
+    )(Clock.apply)(Clock.unapply))
+
   def unapply(u: Clock): Option[(Key, Boolean, Int, DSTPoint, DSTPoint, Boolean)] = Some((u.key, u.enableDST, u.hourDST, u.startDST, u.endDST, u.say24Hours))
 
+  val key: Key = Key(KeyKind.clockKey) // there's only one
 
   /**
    *
