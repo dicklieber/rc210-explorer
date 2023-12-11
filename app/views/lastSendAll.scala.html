@@ -2,40 +2,42 @@
 
 @import com.wa9nnn.util.TimeConverters
 @import net.wa9nnn.rc210.serial.BatchOperationsResult
-@(lastSendAll: LastSendAll)
+@import net.wa9nnn.rc210.serial.LastSendBatch
+@()
 
     @tabbedmain(Tabs.noTab) {
-        <table class="headeredTable">
-            <tr>
-                <td>Started</td>
-                <td>@lastSendAll.start</td>
-            </tr>
-            <tr>
-                <td>Duration</td>
-                <td>@lastSendAll.duration</td>
-            </tr>
-            <tr >
-                <td>Success</td>
-                <td>@lastSendAll.successCount</td>
-            </tr>
-            <tr >
-                <td>Failure</td>
-                <td>@lastSendAll.failCount</td>
-            </tr>
-        </table>
-        <table class="headeredTable">
-        @for(bor <- lastSendAll.operations) {
-            <tr>
-                <td>@bor.name</td>
-            </tr>
-            <tr>
-                <td>
-                @for(rcOperationResult <- bor.results) {
-                    @operationResult(rcOperationResult)
-                }
-                </td>
-            </tr>
+        @defining(LastSendBatch.maybeLastSendBatch.get) { lastSendBatch =>
+            <table class="headeredTable">
+                <tr>
+                    <td>Started</td>
+                    <td>@lastSendBatch.start</td>
+                </tr>
+                <tr>
+                    <td>Duration</td>
+                    <td>@lastSendBatch.duration</td>
+                </tr>
+                <tr >
+                    <td>Success</td>
+                    <td>@lastSendBatch.successCount</td>
+                </tr>
+                <tr >
+                    <td>Failure</td>
+                    <td>@lastSendBatch.failCount</td>
+                </tr>
+            </table>
+            <table class="headeredTable">
+            @for(bor <- lastSendBatch.operations) {
+                <tr>
+                    <td>@bor.name</td>
+                </tr>
+                <tr>
+                    <td>
+                    @for(rcOperationResult <- bor.results) {
+                        @operationResult(rcOperationResult)
+                    }
+                    </td>
+                </tr>
+            }
+            </table>
         }
-        </table>
-
-    }
+        }

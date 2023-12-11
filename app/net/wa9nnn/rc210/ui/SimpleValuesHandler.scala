@@ -19,15 +19,14 @@ package net.wa9nnn.rc210.ui
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.data.datastore.DataStoreActor.UpdateData
-import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
+import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate, UpdateData}
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import org.apache.pekko.actor.typed.ActorRef
 import play.api.mvc.*
-import scala.concurrent.duration._
 
+import scala.concurrent.duration.*
 import scala.collection.immutable
 import scala.collection.immutable.Seq
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
@@ -55,7 +54,7 @@ class SimpleValuesHandler(fieldEntries: Seq[FieldEntry]) extends LazyLogging:
    * @param request
    * @return data extracted from the [[Request]].
    */
-  def collect(implicit request: Request[AnyContent]): (Seq[UpdateCandidate], Seq[NamedKey]) =
+  def collect(implicit request: Request[AnyContent]): UpdateData =
     val formDataMap: Map[FieldKey, String] = request.body.asFormUrlEncoded
       .get
       .map { (name:String, values:Seq[String]) =>
@@ -85,5 +84,5 @@ class SimpleValuesHandler(fieldEntries: Seq[FieldEntry]) extends LazyLogging:
       NamedKey(key, t._2)
 
     }.toSeq
-    updateCandidates -> namedKeys
+    UpdateData(updateCandidates, namedKeys)
 

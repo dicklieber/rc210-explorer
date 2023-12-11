@@ -54,12 +54,6 @@ sealed trait FieldValue extends LazyLogging {
  * Renders itself as a [[[Cell]]
  */
 trait SimpleFieldValue extends FieldValue {
-
-  //  def toCell(renderMetadata: RenderMetadata): Cell = {
-  //    val html: String = toHtmlField(renderMetadata)
-  //    Cell.rawHtml(html)
-  //  }
-
   /**
    *
    * @param paramValue candidate from form.

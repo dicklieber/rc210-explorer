@@ -19,8 +19,8 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.courtesy.CourtesyTone
-import net.wa9nnn.rc210.data.datastore.DataStoreActor
-import net.wa9nnn.rc210.data.datastore.DataStoreActor.UpdateData
+import net.wa9nnn.rc210.data.datastore
+import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import net.wa9nnn.rc210.ui.ProcessResult
@@ -46,34 +46,24 @@ class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Mess
   def index(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
 
-      val future: Future[Seq[FieldEntry]] = actor.ask(DataStoreActor.AllForKeyKind(KeyKind.courtesyToneKey, _))
-      future.map { (entries: Seq[FieldEntry]) =>
-
-        val courtesyTones: Seq[CourtesyTone] = entries.map(_.value.asInstanceOf[CourtesyTone])
-
-        Ok(views.html.courtesyTones(courtesyTones))
+      val future: Future[DataStoreReply] = actor.ask(DataStoreMessage(AllForKeyKind(KeyKind.courtesyToneKey), _))
+      future.map { dataStoreReply =>
+        dataStoreReply.forAllValues[CourtesyTone](cts =>
+          Ok(views.html.courtesyTones(cts))
+        )
       }
   }
-
 
   def edit(key: Key): Action[AnyContent] = Action.async {
     implicit request =>
       key.check(KeyKind.courtesyToneKey)
-      val future: Future[Seq[FieldEntry]] = actor.ask(DataStoreActor.AllForKey(key, _))
-      future.map { (entries: Seq[FieldEntry]) =>
-        val courtesyToneEntry: FieldEntry = entries.head
-        val courtesyTone: CourtesyTone = courtesyToneEntry.value
-        implicit val form: Form[CourtesyTone] = CourtesyTone.form.fill(courtesyTone)
-        logger.whenDebugEnabled {
-          val data = form.data
-          data.foreach { (key, value) =>
-            logger.debug("{} => {}", key, value)
-          }
+      actor.ask[DataStoreReply](DataStoreMessage(AllForKey(key), _)).map { (dataStoreReply: DataStoreReply) =>
+        dataStoreReply.forHead[CourtesyTone] { (_, courtesyTone) =>
+          implicit val form: Form[CourtesyTone] = CourtesyTone.form.fill(courtesyTone)
+          Ok(views.html.courtesyToneEdit(key.namedKey))
         }
-        Ok(views.html.courtesyToneEdit(key.namedKey))
       }
   }
-
 
   def save(): Action[AnyContent] = Action.async {
     implicit request: MessagesRequest[AnyContent] =>
@@ -86,7 +76,7 @@ class CourtesyToneEditorController @Inject()(actor: ActorRef[DataStoreActor.Mess
           },
           (courtesyTone: CourtesyTone) => {
             val candidateAndNames = ProcessResult(courtesyTone)
-            actor.ask[String](UpdateData(candidateAndNames, user, _)).map { _ =>
+            actor.ask[DataStoreReply](DataStoreMessage(candidateAndNames, _)).map { _ =>
               Redirect(routes.CourtesyToneEditorController.index())
             }
           }

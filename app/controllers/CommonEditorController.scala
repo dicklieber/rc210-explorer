@@ -19,9 +19,10 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.KeyKind
-import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
+import net.wa9nnn.rc210.data.datastore.{AllForKeyKind, DataStoreActor, DataStoreMessage, DataStoreReply, UpdateCandidate, UpdateData}
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey, SimpleFieldValue}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
+import net.wa9nnn.rc210.ui.SimpleValuesHandler
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
@@ -36,53 +37,29 @@ import scala.language.postfixOps
 class CommonEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
                                       (implicit scheduler: Scheduler,
                                        ec: ExecutionContext, components: MessagesControllerComponents)
-  extends MessagesAbstractController(components)
-    with LazyLogging {
+  extends MessagesAbstractController(components) with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
   private var fieldKeys: Seq[FieldKey] = Seq.empty
+  private var simpleValuesHandler: Option[SimpleValuesHandler] = None
 
-  def index(): Action[AnyContent] = Action.async {
-    implicit request =>
-      val eventualFieldEntries: Future[Seq[FieldEntry]] = actor.ask(DataStoreActor.AllForKeyKind(KeyKind.commonKey, _))
-
-      eventualFieldEntries.map { fieldEntries =>
-        if (fieldKeys.isEmpty)
-          fieldKeys = fieldEntries.map(_.fieldKey)
-        Ok(views.html.common(fieldEntries))
+  def index: Action[AnyContent] = Action.async {
+    implicit request: MessagesRequest[AnyContent] => {
+      val actorResult: Future[DataStoreReply] = actor.ask(DataStoreMessage(AllForKeyKind(KeyKind.commonKey), _))
+      actorResult.map { (reply: DataStoreReply) => {
+        reply.forAll { fieldEntries =>
+          simpleValuesHandler = Some(new SimpleValuesHandler(fieldEntries))
+          Ok(views.html.candidates(fieldEntries))
+        }
       }
+      }
+    }
   }
-
   def save(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
-
-      val data: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
-      logger.whenTraceEnabled {
-        data.foreach { entry =>
-          logger.trace(entry.toString())
-        }
-      }
-
-      val uc: Seq[UpdateCandidate] = fieldKeys.map { fieldKey =>
-        val v: Option[String] = for {
-          values <- data.get(fieldKey.toString)
-          value <- values.headOption
-        } yield {
-          value
-        }
-        val str: String = v.getOrElse("")
-
-        logger.debug("fieldKey: {} => value: {}", fieldKey.toString, str)
-        UpdateCandidate(fieldKey, Left(str))
-      }
-
-      logger.whenTraceEnabled {
-        uc.foreach { uc =>
-          logger.trace(uc.toString)
-        }
-      }
-
-      actor.ask[String](DataStoreActor.UpdateData(uc, Seq.empty, user, _)).map { _ =>
+      actor.ask[DataStoreReply](DataStoreMessage(simpleValuesHandler.get.collect, _)
+      ).map { _ =>
         Redirect(routes.CommonEditorController.index())
       }
   }
 }
+

@@ -36,7 +36,7 @@ case class DataStoreReply(tried: Try[Seq[FieldEntry]]) extends LazyLogging {
 
   def all: Seq[FieldEntry] = tried.get
 
-  def forEntry(fieldEntry: FieldEntry => Result): Result = {
+  def forEntry(f: FieldEntry => Result): Result = {
     tried match
       case Failure(exception) =>
         logger.error("DataStoreReply", exception)
@@ -66,6 +66,14 @@ case class DataStoreReply(tried: Try[Seq[FieldEntry]]) extends LazyLogging {
         InternalServerError(exception.getMessage)
       case Success(fieldEntries: Seq[FieldEntry]) =>
         f(fieldEntries)
+  }
+  def forAllValues[T](f: Seq[T] => Result): Result = {
+    tried match
+      case Failure(exception) =>
+        logger.error("DataStoreReply", exception)
+        InternalServerError(exception.getMessage)
+      case Success(fieldEntries: Seq[FieldEntry]) =>
+        f(fieldEntries.map(_.value.asInstanceOf[T]))
   }
 }
 

@@ -20,7 +20,7 @@ package controllers
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
+import net.wa9nnn.rc210.data.datastore.{DataStoreActor, DataStoreMessage, DataStoreReply, UpdateCandidate}
 import net.wa9nnn.rc210.data.datastore.DataStoreActor.AllForKeyKind
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey, FieldValue, SimpleFieldValue}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
@@ -65,11 +65,12 @@ class PortsController @Inject()(implicit actor: ActorRef[DataStoreActor.Message]
 
   def save(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
-      val (updateCandidates, namedKeys) = simpleValuesHandler.get.collect
-      actor.ask[String](DataStoreActor.UpdateData(updateCandidates, namedKeys, user, _)).map { _ =>
+      actor.ask[DataStoreReply](DataStoreMessage(simpleValuesHandler.get.collect, _)
+      ).map { _ =>
         Redirect(routes.PortsController.index())
       }
   }
+
 }
 
 case class Row(name: String, portEntries: Seq[FieldEntry]) {

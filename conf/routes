@@ -45,7 +45,6 @@ GET         /candidates                                controllers.CommandsContr
 GET         /datastore/dump                            controllers.CommandsController.dump()
 GET         /candidates/sendValue/:fieldKey            controllers.CommandsController.sendFieldValue(fieldKey:FieldKey)
 GET         /candidates/send/candidate:fieldKey        controllers.CommandsController.sendFields(fieldKey:FieldKey)
-GET         /candidates/sendAllCandidates              controllers.CommandsController.sendAllCandidates()
 GET         /candidates/lastUpload                     controllers.CommandsController.lastSendAll()
 GET         /candidates/ws/:sendField                  controllers.CommandsController.ws(sendField:net.wa9nnn.rc210.data.datastore.SendField)
 GET         /memory                                    controllers.MemoryController.index

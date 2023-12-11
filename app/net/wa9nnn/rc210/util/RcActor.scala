@@ -1,49 +1,52 @@
-/*
- * Copyright (C) 2023  Dick Lieber, WA9NNN
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+import akka.actor.typed.ActorRef
+import akka.actor.typed.Behavior
+import akka.actor.typed.PostStop
+import akka.actor.typed.Signal
+import akka.actor.typed.scaladsl.AbstractBehavior
+import akka.actor.typed.scaladsl.ActorContext
+import akka.actor.typed.scaladsl.Behaviors
+import akka.actor.typed.scaladsl.LoggerOps
 
-package net.wa9nnn.rc210.util
+object CommandSender {
+  def apply(groupId: String, deviceId: String): Behavior[Command] =
+    Behaviors.setup(context => new CommandSender(context, groupId, deviceId))
 
-import com.typesafe.scalalogging.LazyLogging
-import org.apache.pekko.actor.typed.{Behavior, Signal, SupervisorStrategy}
-import org.apache.pekko.actor.typed.scaladsl.{ActorContext, Behaviors}
-import play.api.libs.concurrent.ActorModule
+  sealed trait Command
 
-/**
- * Common behavior for actors in this application.
- * Subclasses should handle dependencies in an apply method and implement specific message handling within [[behavior()]] callback.
- *
- * @tparam M sealed trait for messages handled by the actor/
- */
-abstract class RcActor extends ActorModule with LazyLogging {
+  final case class ReadTemperature(requestId: Long, replyTo: ActorRef[RespondTemperature]) extends Command
+  final case class RespondTemperature(requestId: Long, value: Option[Double])
 
-  def behavior[M](onMessage: M => Unit): Behavior[M] = {
-    Behaviors.supervise[M] {
-      Behaviors.receiveMessage[M] { (message: M) =>
-        onMessage(message)
-        Behaviors.same
-      }
-        .receiveSignal {
-          case (context: ActorContext[M], signal: Signal) =>
-            logger.error(s"signal: $signal")
-            //              if signal == PreRestart || signal == PostStop =>
-            //          resource.close()
-            Behaviors.same
-        }
+  final case class RecordTemperature(requestId: Long, value: Double, replyTo: ActorRef[TemperatureRecorded])
+    extends Command
+  final case class TemperatureRecorded(requestId: Long)
+}
+
+class CommandSender(context: ActorContext[CommandSender.Command], groupId: String, deviceId: String)
+  extends AbstractBehavior[CommandSender.Command](context) {
+  import CommandSender._
+
+  var lastTemperatureReading: Option[Double] = None
+
+  context.log.info2("Device actor {}-{} started", groupId, deviceId)
+
+  override def onMessage(msg: Command): Behavior[Command] = {
+    msg match {
+      case RecordTemperature(id, value, replyTo) =>
+        context.log.info2("Recorded temperature reading {} with {}", value, id)
+        lastTemperatureReading = Some(value)
+        replyTo ! TemperatureRecorded(id)
+        this
+
+      case ReadTemperature(id, replyTo) =>
+        replyTo ! RespondTemperature(id, lastTemperatureReading)
+        this
     }
-      .onFailure[Exception](SupervisorStrategy.restart)
   }
+
+  override def onSignal: PartialFunction[Signal, Behavior[Command]] = {
+    case PostStop =>
+      context.log.info2("Device actor {}-{} stopped", groupId, deviceId)
+      this
+  }
+
 }

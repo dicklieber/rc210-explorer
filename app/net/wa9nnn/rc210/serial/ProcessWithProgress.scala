@@ -19,8 +19,8 @@ package net.wa9nnn.rc210.serial
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.TimeConverters.durationToString
-import org.apache.pekko.Done
-import org.apache.pekko.stream.scaladsl.{Flow, Sink, Source}
+import org.apache.pekko.{Done, NotUsed}
+import org.apache.pekko.stream.scaladsl.{Flow, Sink, Source, SourceQueueWithComplete}
 import org.apache.pekko.stream.{Materializer, OverflowStrategy}
 import play.api.mvc.{RequestHeader, WebSocket}
 
@@ -30,98 +30,88 @@ import java.time.{Duration, Instant, LocalTime}
 import java.util.concurrent.atomic.AtomicInteger
 import scala.concurrent.Future
 
+/**
+ * Run a long running process that can report it's progress using the [[ProgressApi]]
+ * This runs the process in a new Thread and handles developer logging and send [[Progress]] message to the client.
+ *
+ * @param mod           send progress every.
+ * @param maybeSendfile where to log for dev debugging.
+ * @param callback      what to do to do. With ProgressApi for reporting status.
+ * @param mat           needed to Akka streams use by Play WebSocket.
+ */
+class ProcessWithProgress(mod: Int, maybeSendfile: Option[Path])(callback: ProgressApi => Unit)(implicit mat: Materializer)
+  extends Thread with Runnable with LazyLogging with ProgressApi {
 
-object ProcessWithProgress extends LazyLogging {
+  val (queue, source) = Source.queue[Progress](250, OverflowStrategy.dropHead).preMaterialize()
+
+  private val began = Instant.now()
+  private var running = true
+  private val count = new AtomicInteger()
+  private val sendLogWriter: Option[PrintWriter] = maybeSendfile.map { path => new PrintWriter(Files.newBufferedWriter(path)) }
+  private var expected: Int = 0
+
+  setDaemon(true)
+  setName("RcProcess")
+  start()
+
+  override def run(): Unit = {
+    try {
+      callback(this)
+    } catch {
+      case e: Exception =>
+        logger.error(s"Running RcProcess thread!", e)
+    }
+  }
+
+  def doOne(message: String): Unit = {
+    val soFar = count.incrementAndGet()
+    sendLogWriter.foreach { printWriter =>
+      printWriter.println(s"$soFar\t${LocalTime.now()}\t $message")
+      printWriter.flush()
+    }
+    sendProgress()
+  }
+
+  private def sendProgress(): Unit = {
+    val soFar = count.get()
+    if (!running || soFar % mod == 0) {
+      val double = soFar * 100.0 / expected
+      val progress = new Progress(
+        running = running,
+        soFar = soFar,
+        percent = f"$double%2.1f%%",
+        sDuration = Duration.between(began, Instant.now()),
+        expected = expected,
+        start = began,
+        error = ""
+      )
+      queue.offer(progress)
+    }
+  }
+
+  def finish(message: String): Unit = {
+    assert(running, "Must be running to finish!")
+    running = false
+    sendLogWriter.foreach(writer => writer.close())
+    doOne(message)
+    sendProgress()
+
+  }
+
+  override def error(exception: Throwable): Unit = {
+    finish(exception.getMessage)
+    sendProgress()
+  }
+
+  lazy val webSocket: WebSocket = WebSocket.accept[String, Progress] { (request: RequestHeader) =>
+    Flow.fromSinkAndSource(sink, source)
+  }
   /**
-   * Run a long running process that can report it's progress using the [[ProgressApi]]
-   * This runs the process in a new Thread and handles developer logging and send [[Progress]] message to the client.
-   *
-   * @param expected      for percent complete calculation.
-   * @param mod           send progress every.
-   * @param maybeSendfile where to log for dev debugging.
-   * @param callback      what to do to do. With ProgressApi for reporting status.
-   * @param mat           needed to Akka streams use by Play WebSocket.
+   * Handle message from client. Don't really expect any.
    */
-  def apply( mod: Int, maybeSendfile: Option[Path])(callback: ProgressApi => Unit)(implicit mat: Materializer): WebSocket = {
-    new Inner(expected, mod, maybeSendfile, callback).webSocket
+  val sink: Sink[String, Future[Done]] = Sink.foreach[String] { message =>
+    logger.error(s"message: $message")
   }
 
-  private class Inner( mod: Int, maybeSendfile: Option[Path], callback: ProgressApi => Unit)(implicit mat: Materializer)
-
-    extends Thread with Runnable with ProgressApi {
-    private val (queue, source) = Source.queue[Progress](250, OverflowStrategy.dropHead).preMaterialize()
-
-    private val began = Instant.now()
-    private var running = true
-    private val count = new AtomicInteger()
-    private val sendLogWriter: Option[PrintWriter] = maybeSendfile.map { path => new PrintWriter(Files.newBufferedWriter(path)) }
-    private var expected: Int = 0
-
-    setDaemon(true)
-    setName("RcProcess")
-    start()
-
-
-    override def run(): Unit = {
-      try {
-        callback(this)
-      } catch {
-        case e: Exception =>
-          logger.error(s"Running RcProcess thread!", e)
-      }
-    }
-
-
-    def doOne(message: String): Unit = {
-      val soFar = count.incrementAndGet()
-      sendLogWriter.foreach { printWriter =>
-        printWriter.println(s"$soFar\t${LocalTime.now()}\t $message")
-        printWriter.flush()
-      }
-      sendProgress()
-    }
-
-    private def sendProgress(): Unit = {
-      val soFar = count.get()
-      if (!running || soFar % mod == 0) {
-        val double = soFar * 100.0 / expected
-        val progress = new Progress(
-          running = running,
-          soFar = soFar,
-          percent = f"$double%2.1f%%",
-          sDuration = Duration.between(began, Instant.now()),
-          expected = expected,
-          start = began,
-          error = ""
-        )
-        queue.offer(progress)
-      }
-    }
-
-    def finish(message: String): Unit = {
-      assert(running, "Must be running to finish!")
-      running = false
-      sendLogWriter.foreach(writer => writer.close())
-      doOne(message)
-      sendProgress()
-
-    }
-
-    override def error(exception: Throwable): Unit = {
-      finish(exception.getMessage)
-      sendProgress()
-    }
-
-    lazy val webSocket: WebSocket = WebSocket.accept[String, Progress] { (request: RequestHeader) =>
-      Flow.fromSinkAndSource(sink, source)
-    }
-    /**
-     * Handle message from client. Don't really expect any.
-     */
-    private val sink: Sink[String, Future[Done]] = Sink.foreach[String] { message =>
-      logger.error(s"message: $message")
-    }
-
-    override def expectedCount(count: Int): Unit = expected = count
-  }
+  override def expectedCount(count: Int): Unit = expected = count
 }

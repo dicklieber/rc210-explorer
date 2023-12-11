@@ -23,9 +23,10 @@ import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.Display
+import play.api.data.Form
+import play.api.data.Forms._
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.routing.sird
-import views.html.boolean
 
 case class LogicAlarm(key: Key, enable: Boolean, lowMacro: Key, highMacro: Key) extends ComplexFieldValue(LogicAlarm.name) {
   key.check(logicAlarmKey)
@@ -68,6 +69,14 @@ case class LogicAlarm(key: Key, enable: Boolean, lowMacro: Key, highMacro: Key) 
 
 object LogicAlarm extends ComplexExtractor {
   def unapply(u: LogicAlarm): Option[(Key, Boolean, Key, Key)] = Some((u.key, u.enable, u.lowMacro, u.highMacro))
+   val logicForm: Form[LogicAlarm] = Form(
+    mapping(
+      "key" -> of[Key],
+      "enable" -> boolean,
+      "lowMacro" -> of[Key],
+      "highMacro" -> of[Key]
+    )(LogicAlarm.apply)(LogicAlarm.unapply)
+  )
 
   /**
    *
