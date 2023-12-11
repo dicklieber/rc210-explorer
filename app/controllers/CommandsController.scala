@@ -19,9 +19,10 @@ package controllers
 
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.datastore.DataStoreActor
-import net.wa9nnn.rc210.data.datastore.DataStoreActor._
+import net.wa9nnn.rc210.data.datastore.*
+import net.wa9nnn.rc210.data.datastore.DataStoreActor.*
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey, FieldValue}
+import net.wa9nnn.rc210.security.authorzation.AuthFilter
 import net.wa9nnn.rc210.serial.*
 import net.wa9nnn.rc210.serial.comm.RcStreamBased
 import net.wa9nnn.rc210.util.Configs.path
@@ -30,6 +31,7 @@ import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.stream.Materializer
 import org.apache.pekko.util.Timeout
 import play.api.mvc.*
+import views.html.batchOpResult
 
 import java.nio.file.Path
 import java.time.{Duration, Instant}
@@ -41,14 +43,6 @@ import scala.language.postfixOps
 
 /**
  * Sends commands to the RC-210.
- *
- * @param dataStoreActor
- * @param rc210
- * @param config
- * @param scheduler
- * @param ec
- * @param mat
- * @param cc
  */
 @Singleton()
 class CommandsController @Inject()(dataStoreActor: ActorRef[DataStoreActor.Message],
@@ -66,16 +60,33 @@ class CommandsController @Inject()(dataStoreActor: ActorRef[DataStoreActor.Messa
     "1GetRTCVersion",
   )
 
-  def index(): Action[AnyContent] = Action.async { implicit request =>
-    dataStoreActor.ask(Candidates.apply).map { candidates =>
-      Ok(views.html.candidates(candidates))
+  /*  def index(): Action[AnyContent] = Action.async { implicit request =>
+      dataStoreActor.ask(Candidates.apply).map { candidates =>
+        Ok(views.html.candidates(candidates))
+      }
+    }*/
+
+  def index: Action[AnyContent] = Action.async {
+    implicit request: MessagesRequest[AnyContent] => {
+      val actorResult: Future[DataStoreReply] = dataStoreActor.ask(DataStoreMessage(Candidates, _))
+      actorResult.map { (reply: DataStoreReply) => {
+        reply.forAll { fieldEntries =>
+          Ok(views.html.candidates(fieldEntries))
+        }
+      }
+      }
     }
   }
 
+
   def dump(): Action[AnyContent] = Action.async {
-    dataStoreActor.ask(All.apply).map { entries =>
-      Ok(views.html.dump(entries))
-    }
+    implicit request: MessagesRequest[AnyContent] =>
+      val actorResult: Future[DataStoreReply] = dataStoreActor.ask(DataStoreMessage(All, _))
+      actorResult.map { dataStoreReply =>
+        dataStoreReply.forAll { fieldEntries =>
+          Ok(views.html.dump(fieldEntries))
+        }
+      }
   }
 
   def sendFieldValue(fieldKey: FieldKey): Action[AnyContent] = {
@@ -95,50 +106,43 @@ class CommandsController @Inject()(dataStoreActor: ActorRef[DataStoreActor.Messa
    */
   def send(fieldKey: FieldKey, sendValue: Boolean = false): Action[AnyContent] = Action.async {
     implicit request =>
+      val actorResult: Future[DataStoreReply] = dataStoreActor.ask(DataStoreMessage(ForFieldKey(fieldKey), _))
 
-      val eventualMaybeEntry: Future[Option[FieldEntry]] = dataStoreActor.ask(repTo => ForFieldKey(fieldKey, repTo))
-      eventualMaybeEntry.map { (maybeFieldEntry: Option[FieldEntry]) =>
-        maybeFieldEntry match
-          case Some(fieldEntry) =>
-            val commands: Seq[String] = if (sendValue)
-              fieldEntry.value.toCommands(fieldEntry)
-            else
-              fieldEntry.candidate.get.toCommands(fieldEntry) // throws if no candidate
-
-//            val operationsResult: BatchOperationsResult = rc210.sendBatch(fieldKey.toString, commands: _*)
-//            val rows = operationsResult.toRows
-//            val table = Table(Header("Result", "Field", "Command", "Response"), rows)
-//            Ok(views.html.justdat(Seq(table)))
-            Ok("todo")
-          case None =>
-            NoContent
+      actorResult.map { dataStoreReply =>
+        dataStoreReply.forEntry { fieldEntry =>
+          val commands: Seq[String] = fieldEntry
+            .candidate
+            .get
+            .toCommands(fieldEntry)
+          val batchOperationsResult: BatchOperationsResult = rc210.sendBatch(fieldKey.toString, commands: _*)
+          Ok(batchOpResult(batchOperationsResult))
+        }
       }
   }
 
-  def sendAllFields(): Action[AnyContent] = Action { implicit request =>
-    val webSocketURL: String = routes.CommandsController.ws(471).webSocketURL() //todo all fields expected.
+  def sendFields(sendField: SendField): Action[AnyContent] = Action { implicit request =>
+    val webSocketURL: String = routes.CommandsController.ws(sendField).webSocketURL() //todo all fields expected.
     Ok(views.html.progress(webSocketURL))
-  }
-
-  def sendAllCandidates(): Action[AnyContent] = Action { implicit request =>
-    Ok("todo")
   }
 
   var maybeLastSendAll: Option[LastSendAll] = None
 
 
-  def ws(expected: Int): WebSocket = {
+  def ws(sendField: SendField): WebSocket = {
     //todo handle authorization See https://www.playframework.com/documentation/3.0.x/ScalaWebSockets
+    implicit request:Request[AnyContent] =>
     val start = Instant.now()
-    ProcessWithProgress(expected, 7, Option(sendLogFile)) { (progressApi: ProgressApi) =>
+    ProcessWithProgress(7, Option(sendLogFile)) { (progressApi: ProgressApi) =>
       val streamBased: RcStreamBased = rc210.openStreamBased
       val operations = Seq.newBuilder[BatchOperationsResult]
       operations += streamBased.perform("Wakeup", init)
-      val fieldEntries: Seq[FieldEntry] = Await.result[Seq[FieldEntry]](dataStoreActor.ask(All.apply), 5 seconds)
+      val future: Future[DataStoreReply] = dataStoreActor.ask(DataStoreMessage( sendField.dataStoreRequest, _))
+      val dataStoreReply: DataStoreReply = Await.result(future, 5 seconds)
+      progressApi.expectedCount(dataStoreReply.length)
 
       var errorEncountered = false
       for {
-        fieldEntry <- fieldEntries
+        fieldEntry <- dataStoreReply.all
         fieldValue = fieldEntry.value.asInstanceOf[FieldValue]
         if !(errorEncountered && stopOnError)
       } yield {

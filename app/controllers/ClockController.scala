@@ -25,7 +25,7 @@ import net.wa9nnn.rc210.data.clock.DSTPoint.dstPointForm
 import net.wa9nnn.rc210.data.clock.{Clock, DSTPoint}
 import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.{session, user}
+import net.wa9nnn.rc210.security.authorzation.AuthFilter._
 import net.wa9nnn.rc210.ui.ProcessResult
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
@@ -52,7 +52,7 @@ class ClockController @Inject()(implicit actor: ActorRef[DataStoreMessage],
 
   def index: Action[AnyContent] = Action.async {
     implicit request: MessagesRequest[AnyContent] => {
-      val actorResult: Future[DataStoreReply] = actor.ask(DataStoreMessage(AllForKey(Clock.key), session, _))
+      val actorResult: Future[DataStoreReply] = actor.ask(DataStoreMessage(AllForKey(Clock.key), _))
       actorResult.map { (reply: DataStoreReply) => {
         reply.forHead[Clock] { (_, clock) =>
           Ok(views.html.clock(clockForm.fill(clock)))
@@ -71,7 +71,7 @@ class ClockController @Inject()(implicit actor: ActorRef[DataStoreMessage],
         },
         (clock: Clock) => {
           val candidateAndNames: CandidateAndNames = ProcessResult(clock)
-          val future: Future[DataStoreReply] = actor.ask(DataStoreMessage(candidateAndNames, session, _))
+          val future: Future[DataStoreReply] = actor.ask(DataStoreMessage(candidateAndNames, _))
           future.map { reply =>
             reply.forHead((_, _) =>
               Redirect(routes.ClockController.index))

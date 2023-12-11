@@ -30,6 +30,24 @@ import scala.util.{Failure, Success, Try}
  * @param tried from  [[DataStoreLogic]]
  */
 case class DataStoreReply(tried: Try[Seq[FieldEntry]]) extends LazyLogging {
+  val length: Int = tried match
+    case Failure(exception) => 0
+    case Success(value: Seq[FieldEntry]) => value.length
+
+  def all: Seq[FieldEntry] = tried.get
+
+  def forEntry(fieldEntry: FieldEntry => Result): Result = {
+    tried match
+      case Failure(exception) =>
+        logger.error("DataStoreReply", exception)
+        InternalServerError(exception.getMessage)
+      case Success(fieldEntries: Seq[FieldEntry]) =>
+        fieldEntries.headOption.map { fe =>
+          f(fe)
+        }.getOrElse(throw new IllegalStateException("No FieldEntry returned!"))
+  }
+
+
   def forHead[T <: FieldValue](f: (FieldKey, T) => Result): Result = {
     tried match
       case Failure(exception) =>
@@ -39,6 +57,15 @@ case class DataStoreReply(tried: Try[Seq[FieldEntry]]) extends LazyLogging {
         fieldEntries.headOption.map { fe =>
           f(fe.fieldKey, fe.value.asInstanceOf[T])
         }.getOrElse(throw new IllegalStateException("No FieldEntry returned!"))
+  }
+
+  def forAll(f: Seq[FieldEntry] => Result): Result = {
+    tried match
+      case Failure(exception) =>
+        logger.error("DataStoreReply", exception)
+        InternalServerError(exception.getMessage)
+      case Success(fieldEntries: Seq[FieldEntry]) =>
+        f(fieldEntries)
   }
 }
 

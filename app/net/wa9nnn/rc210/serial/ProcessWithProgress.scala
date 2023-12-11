@@ -42,11 +42,12 @@ object ProcessWithProgress extends LazyLogging {
    * @param callback      what to do to do. With ProgressApi for reporting status.
    * @param mat           needed to Akka streams use by Play WebSocket.
    */
-  def apply(expected: Int, mod: Int, maybeSendfile: Option[Path])(callback: ProgressApi => Unit)(implicit mat: Materializer): WebSocket = {
+  def apply( mod: Int, maybeSendfile: Option[Path])(callback: ProgressApi => Unit)(implicit mat: Materializer): WebSocket = {
     new Inner(expected, mod, maybeSendfile, callback).webSocket
   }
 
-  private class Inner(expected: Int, mod: Int, maybeSendfile: Option[Path], callback: ProgressApi => Unit)(implicit mat: Materializer) 
+  private class Inner( mod: Int, maybeSendfile: Option[Path], callback: ProgressApi => Unit)(implicit mat: Materializer)
+
     extends Thread with Runnable with ProgressApi {
     private val (queue, source) = Source.queue[Progress](250, OverflowStrategy.dropHead).preMaterialize()
 
@@ -54,7 +55,7 @@ object ProcessWithProgress extends LazyLogging {
     private var running = true
     private val count = new AtomicInteger()
     private val sendLogWriter: Option[PrintWriter] = maybeSendfile.map { path => new PrintWriter(Files.newBufferedWriter(path)) }
-
+    private var expected: Int = 0
 
     setDaemon(true)
     setName("RcProcess")
@@ -121,5 +122,6 @@ object ProcessWithProgress extends LazyLogging {
       logger.error(s"message: $message")
     }
 
+    override def expectedCount(count: Int): Unit = expected = count
   }
 }

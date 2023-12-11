@@ -26,6 +26,7 @@ import java.time.Instant
  * Update progress that will go to the client.
  */
 trait ProgressApi:
+  def expectedCount(count:Int):Unit
   /**
    * We processed one thing.
    *

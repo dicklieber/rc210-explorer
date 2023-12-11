@@ -20,62 +20,21 @@ package net.wa9nnn.rc210.data.datastore
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.security.authentication.{RcSession, User}
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.session
 import net.wa9nnn.rc210.{Key, KeyKind}
 import org.apache.pekko.actor.typed.ActorRef
+import play.api.mvc.Request
 
 import scala.collection.concurrent.TrieMap
 import scala.util.{Failure, Success, Try}
 
-/**
- * Message that the Datastore can process.
- */
-sealed trait DataStoreRequest:
-  /**
-   * 
-   * @param data can throw on error
-   * @return
-   */
-  def process(implicit data: TrieMap[FieldKey, FieldEntry]): Seq[FieldEntry] = throw new NotImplementedError() //todo
-end DataStoreRequest
 
-case class ReplaceEntries(entries: Seq[FieldEntry]) extends DataStoreRequest
-
-case object All extends DataStoreRequest {
-  override def process(implicit data: TrieMap[FieldKey, FieldEntry]): Seq[FieldEntry] =
-    data.values.toSeq
-}
-
-case class AllForKey(key: Key) extends DataStoreRequest
-
-case class AllForKeyKind(keyKind: KeyKind) extends DataStoreRequest
-
-case class ForFieldKey(fieldKey: FieldKey) extends DataStoreRequest
-
-case object Json extends DataStoreRequest
-
-case class IngestJson(sJson: String) extends DataStoreRequest
-
-case object Candidates extends DataStoreRequest
-
-case object Triggers extends DataStoreRequest
-
-case class AcceptCandidate(fieldKey: FieldKey, user: User) extends DataStoreRequest
-
-
-case class UpdateData(candidates: Seq[UpdateCandidate], namedKeys: Seq[NamedKey] = Seq.empty) extends DataStoreRequest
-
-case object Reload extends DataStoreRequest
 
 case class DataStoreMessage(dataStoreRequest: DataStoreRequest, rcSession: RcSession, replyTo: ActorRef[DataStoreReply])
 
-case class CandidateAndNames(candidates: Seq[UpdateCandidate], namedKeys: Seq[NamedKey] = Seq.empty) extends DataStoreRequest
-
-//case class UpdateFields(fieldEntries: Seq[FieldEntry], names: Seq[NamedKey] = Seq.empty) extends DataStoreRequest
-
-object CandidateAndNames:
-  def apply(updateCandidate: UpdateCandidate, maybeNamedKey: Option[NamedKey]): CandidateAndNames = {
-    new CandidateAndNames(Seq(updateCandidate), maybeNamedKey.toIndexedSeq)
-  }
-
+object DataStoreMessage:
+  def apply(dataStoreRequest: DataStoreRequest, replyTo: ActorRef[DataStoreReply])(implicit request:Request[_])=
+    new DataStoreMessage(dataStoreRequest, session, replyTo)
+end DataStoreMessage
 
 

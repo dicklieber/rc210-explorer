@@ -44,11 +44,10 @@ GET         /ports                                     controllers.PortsControll
 GET         /candidates                                controllers.CommandsController.index()
 GET         /datastore/dump                            controllers.CommandsController.dump()
 GET         /candidates/sendValue/:fieldKey            controllers.CommandsController.sendFieldValue(fieldKey:FieldKey)
-GET         /candidates/send/candidate:fieldKey        controllers.CommandsController.sendCandidate(fieldKey:FieldKey)
-GET         /candidates/sendAllFields                  controllers.CommandsController.sendAllFields()
+GET         /candidates/send/candidate:fieldKey        controllers.CommandsController.sendFields(fieldKey:FieldKey)
 GET         /candidates/sendAllCandidates              controllers.CommandsController.sendAllCandidates()
 GET         /candidates/lastUpload                     controllers.CommandsController.lastSendAll()
-GET         /candidates/ws/:expected                   controllers.CommandsController.ws(expected:Int)
+GET         /candidates/ws/:sendField                  controllers.CommandsController.ws(sendField:net.wa9nnn.rc210.data.datastore.SendField)
 GET         /memory                                    controllers.MemoryController.index
 POST        /clock/save                                controllers.ClockController.save()
 GET         /clock/set                                 controllers.Rc210Controller.setClock()
