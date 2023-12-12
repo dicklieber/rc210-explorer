@@ -19,20 +19,11 @@ package net.wa9nnn.rc210.ui
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate, UpdateData}
+import net.wa9nnn.rc210.data.datastore.{UpdateCandidate, UpdateData}
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
 import net.wa9nnn.rc210.data.named.NamedKey
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
-import org.apache.pekko.actor.typed.ActorRef
 import play.api.mvc.*
 
-import scala.concurrent.duration.*
-import scala.collection.immutable
-import scala.collection.immutable.Seq
-import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
-import org.apache.pekko.util.Timeout
-
-import scala.concurrent.Future
 
 /**
  * Keeps track of all the [[Key]]s for  a single [[net.wa9nnn.rc210.KeyKind]] e.g. [[net.wa9nnn.rc210.KeyKind.commonKey]] or [[net.wa9nnn.rc210.KeyKind.portKey]]; on index.
@@ -46,7 +37,6 @@ import scala.concurrent.Future
  */
 class SimpleValuesHandler(fieldEntries: Seq[FieldEntry]) extends LazyLogging:
   private val fieldKeys: Seq[FieldKey] = fieldEntries map (_.fieldKey)
-  implicit val timeout: Timeout = 3.seconds
 
   /**
    * Extracts all the values from a [[Request[AnyContent]] also any named keys.
@@ -79,10 +69,10 @@ class SimpleValuesHandler(fieldEntries: Seq[FieldEntry]) extends LazyLogging:
     val justNames: Map[FieldKey, String] = formDataMap.filter { (fieldKey, _) =>
       fieldKey.fieldName == "name"
     }
-    val namedKeys: Seq[NamedKey] = justNames.map[NamedKey] { t =>
+    val namedKeys = justNames.map[NamedKey] { t =>
       val key: Key = t._1.key
       NamedKey(key, t._2)
 
-    }.toSeq
+    }.toIndexedSeq
     UpdateData(updateCandidates, namedKeys)
 

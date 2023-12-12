@@ -17,7 +17,7 @@
 import com.google.inject.{AbstractModule, Provides}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.datastore.DataStoreActor
+import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.security.authentication.{SessionManagerActor, UserManagerActor}
 import org.apache.pekko.actor.typed.scaladsl.Behaviors
 import org.apache.pekko.actor.typed.{ActorRef, Terminated}
@@ -29,7 +29,6 @@ import scala.concurrent.ExecutionContext
 
 object RcActorsModule extends AbstractModule with PekkoGuiceSupport {
   override def configure(): Unit = {
-    bindTypedActor[DataStoreActor.Message](DataStoreActor, "dataStore-actor")
 
     bindTypedActor[Supervisor.Message](Supervisor, "supervisor")
 
@@ -45,11 +44,10 @@ object Supervisor extends ActorModule with LazyLogging {
   override type Message = RcSupervisor
 
   @Provides def apply(config: Config)(implicit ec: ExecutionContext,
-                                      dataStoreActor: ActorRef[DataStoreActor.Message],
+                                      dataStore: DataStore,
                                       sessionActor: ActorRef[SessionManagerActor.Message],
                                       userActor: ActorRef[UserManagerActor.Message])= {
     Behaviors.setup[Message] { actorContext =>
-      actorContext.watch(dataStoreActor)
       actorContext.watch(sessionActor)
       actorContext.watch(userActor)
 

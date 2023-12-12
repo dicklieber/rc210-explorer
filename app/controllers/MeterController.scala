@@ -18,9 +18,10 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, ForFieldKey, Message, UpdateData}
+import net.wa9nnn.rc210.data.datastore.{AllForKeyKind, DataStore, ForFieldKey}
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldInt, FieldKey}
 import net.wa9nnn.rc210.data.meter.*
+import net.wa9nnn.rc210.data.timers.Timer
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import net.wa9nnn.rc210.ui.ProcessResult
 import net.wa9nnn.rc210.{Key, KeyKind}
@@ -31,7 +32,6 @@ import play.api.data.Forms.*
 import play.api.data.{Form, Mapping}
 import play.api.mvc.*
 import play.api.mvc.*
-
 import views.html
 
 import javax.inject.*
@@ -39,51 +39,25 @@ import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
-class MeterController @Inject()(actor: ActorRef[Message])
-                               (implicit scheduler: Scheduler, ec: ExecutionContext, components: MessagesControllerComponents)
+class MeterController @Inject()(dataStore: DataStore, components: MessagesControllerComponents)
   extends MessagesAbstractController(components) with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 
-  private val alarmForm: Form[MeterAlarm] = Form(
-    mapping(
-      "key" -> of[Key],
-      "meterEditor" -> of[Key],
-      "alarmType" -> AlarmType.formField,
-      "tripPoint" -> default(number, 0),
-      "macroKey" -> of[Key]
-    )(MeterAlarm.apply)(MeterAlarm.unapply)
-  )
-
-  private val voltToReadingMapping: Mapping[VoltToReading] =
-    mapping(
-      "hundredthVolt" -> number,
-      "reading" -> number,
-    )(VoltToReading.apply)(VoltToReading.unapply)
-
-  val meterForm: Form[Meter] = Form(
-    mapping(
-      "key" -> of[Key],
-      "faceName" -> MeterFaceName.formField,
-      "low" -> voltToReadingMapping,
-      "high" -> voltToReadingMapping,
-    )(Meter.apply)(Meter.unapply)
-  )
-
-  def index: Action[AnyContent] = Action.async {
+  def index: Action[AnyContent] = Action {
     implicit request =>
-      val eventualMaybeEntry: Future[Option[FieldEntry]] = actor.ask(ForFieldKey(FieldKey("vRef", Key(KeyKind.commonKey)), _))
-      val eventualMeters: Future[Seq[FieldEntry]] = actor.ask(AllForKeyKind(KeyKind.meterKey, _))
-      val eventualAlarmEntries: Future[Seq[FieldEntry]] = actor.ask(AllForKeyKind(KeyKind.meterAlarmKey, _))
-      for
-        maybeVref: Option[FieldEntry] <- eventualMaybeEntry
-        metersEntries: Seq[FieldEntry] <- eventualMeters
-        meterAlarmsEntries: Seq[FieldEntry] <- eventualAlarmEntries
-      yield
-        val vRef: Int = maybeVref.map(_.value.asInstanceOf[FieldInt].value).getOrElse(0)
-        val meters: Seq[Meter] = metersEntries.map { fe => fe.value.asInstanceOf[Meter] }
-        val meterAlarms: Seq[MeterAlarm] = meterAlarmsEntries.map { (fe: FieldEntry) => fe.value.asInstanceOf[MeterAlarm] }
-        val meterStuff = MeterStuff(vRef, meters, meterAlarms)
-        Ok(html.meters(meterStuff))
+      /*      val eventualMaybeEntry: Future[Option[FieldEntry]] = actor.ask(ForFieldKey(FieldKey("vRef", Key(KeyKind.commonKey)), _))
+            val eventualMeters: Future[Seq[FieldEntry]] = actor.ask(AllForKeyKind(KeyKind.meterKey, _))
+            val eventualAlarmEntries: Future[Seq[FieldEntry]] = actor.ask(AllForKeyKind(KeyKind.meterAlarmKey, _))
+            for
+              maybeVref: Option[FieldEntry] <- eventualMaybeEntry
+              metersEntries: Seq[FieldEntry] <- eventualMeters
+              meterAlarmsEntries: Seq[FieldEntry] <- eventualAlarmEntries
+            yield*/
+      val vRef: Int = dataStore(ForFieldKey(FieldKey("vRef", Key(KeyKind.commonKey)))).head[FieldInt].value
+      val meters: Seq[Meter] = metersEntries.map { fe => fe.value.asInstanceOf[Meter] }
+      val meterAlarms: Seq[MeterAlarm] = meterAlarmsEntries.map { (fe: FieldEntry) => fe.value.asInstanceOf[MeterAlarm] }
+      val meterStuff = MeterStuff(vRef, meters, meterAlarms)
+      Ok(html.meters(meterStuff))
   }
 
   def editMeter(meterKey: Key): Action[AnyContent] = Action.async {
@@ -94,7 +68,7 @@ class MeterController @Inject()(actor: ActorRef[Message])
         case Some(fieldEntry: FieldEntry) =>
           val meter: Meter = fieldEntry.value
 
-          Ok(html.meterEditor( Meter.meterForm.fill(meter), meterKey.namedKey))
+          Ok(html.meterEditor(Meter.meterForm.fill(meter), meterKey.namedKey))
         case None =>
           NotFound(s"Not meterKey: $fieldKey")
       }

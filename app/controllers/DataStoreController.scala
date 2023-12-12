@@ -18,7 +18,7 @@
 package controllers
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.datastore.DataStoreActor
+import net.wa9nnn.rc210.data.datastore.{DataStore, DataStoreActor}
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
 import play.api.libs.Files
@@ -30,7 +30,7 @@ import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
 
 @Singleton
-class DataStoreController @Inject()(actor: ActorRef[DataStoreActor.Message])
+class DataStoreController @Inject()(dataStore: DataStore)
                                    (implicit scheduler: Scheduler, ec: ExecutionContext, cc: MessagesControllerComponents)
   extends MessagesAbstractController(cc) with LazyLogging {
   implicit val timeout: Timeout = 3 seconds

@@ -17,11 +17,7 @@
 
 package net.wa9nnn.rc210.serial
 
-
 import java.time.{Duration, Instant}
-
-object LastSendBatch:
-  var maybeLastSendBatch: Option[LastSendBatch] = None
 
 /**
  * About the last [[BatchRc210Sender]] operation.
@@ -44,3 +40,10 @@ case class LastSendBatch(operations: Seq[BatchOperationsResult], start: Instant,
     else
       failCount += 1
   }
+
+  object LastSendBatch:
+    var maybeLastSendBatch: Option[LastSendBatch] = None
+
+    def apply(lastSendBatch: LastSendBatch) = {
+      maybeLastSendBatch = Some(lastSendBatch)
+    }

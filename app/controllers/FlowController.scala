@@ -18,7 +18,7 @@
 package controllers
 
 import com.wa9nnn.util.tableui.{Header, Row, Table}
-import net.wa9nnn.rc210.data.datastore.DataStoreActor
+import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import play.api.mvc.*
@@ -28,8 +28,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
 
-class FlowController @Inject()(implicit actor: ActorRef[DataStoreActor.Message], scheduler:Scheduler,
-                               functionsProvider: FunctionsProvider) extends MessagesInjectedController {
+class FlowController @Inject()( dataStore: DataStore, functionsProvider: FunctionsProvider) extends MessagesInjectedController {
 
   def flow(): Action[AnyContent] = Action {
     Ok("todo")

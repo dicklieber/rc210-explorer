@@ -17,38 +17,32 @@
 
 package controllers
 
-import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.data.datastore.{DataStoreActor, DataStoreMessage, DataStoreReply, UpdateCandidate}
-import net.wa9nnn.rc210.data.datastore.DataStoreActor.AllForKeyKind
+import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey, FieldValue, SimpleFieldValue}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import net.wa9nnn.rc210.ui.SimpleValuesHandler
-import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
-import org.apache.pekko.util.Timeout
+import net.wa9nnn.rc210.{Key, KeyKind}
+import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import play.api.mvc.*
 
 import javax.inject.{Inject, Singleton}
 import scala.collection.mutable
-import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
+import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
 @Singleton
-class PortsController @Inject()(implicit actor: ActorRef[DataStoreActor.Message], scheduler: Scheduler, ec: ExecutionContext, cc: MessagesControllerComponents)
+class PortsController @Inject()(implicit dataStore: DataStore, cc: MessagesControllerComponents)
   extends MessagesAbstractController(cc) with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
   private var simpleValuesHandler: Option[SimpleValuesHandler] = None
 
-
-  def index(): Action[AnyContent] = Action.async {
+  def index(): Action[AnyContent] = Action {
     implicit request => {
-      val future: Future[Seq[FieldEntry]] = actor.ask(AllForKeyKind(KeyKind.portKey, _))
-      future.map { (fieldEntries: Seq[FieldEntry]) =>
+      dataStore(AllForKeyKind(KeyKind.portKey)).forAll(fieldEntries =>
         if (simpleValuesHandler.isEmpty)
           simpleValuesHandler = Some(new SimpleValuesHandler(fieldEntries))
-
 
         val rows: Seq[Row] = fieldEntries
           .groupBy(_.fieldKey.fieldName)
@@ -57,18 +51,15 @@ class PortsController @Inject()(implicit actor: ActorRef[DataStoreActor.Message]
           .map { (name, portEntries) =>
             Row(name, portEntries.sortBy(_.fieldKey.key.rc210Value))
           }
-
-        Ok(views.html.ports(rows))
-      }
+        Ok(views.html.ports(rows)))
     }
   }
 
-  def save(): Action[AnyContent] = Action.async {
+  def save(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      actor.ask[DataStoreReply](DataStoreMessage(simpleValuesHandler.get.collect, _)
-      ).map { _ =>
-        Redirect(routes.PortsController.index())
-      }
+      val collect: UpdateData = simpleValuesHandler.get.collect
+      dataStore(collect)
+      Redirect(routes.PortsController.index())
   }
 
 }

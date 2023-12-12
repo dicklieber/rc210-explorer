@@ -38,6 +38,8 @@ sealed trait DataStoreRequest:
   def process(implicit data: TrieMap[FieldKey, FieldEntry]): Seq[FieldEntry] = throw new NotImplementedError() //todo
 end DataStoreRequest
 
+trait WriteRequst extends DataStoreRequest
+
 case class ReplaceEntries(entries: Seq[FieldEntry]) extends DataStoreRequest
 
 case object All extends DataStoreRequest {
@@ -53,20 +55,20 @@ case class ForFieldKey(fieldKey: FieldKey) extends DataStoreRequest
 
 case object Json extends DataStoreRequest
 
-case class IngestJson(sJson: String) extends DataStoreRequest
+case class IngestJson(sJson: String) extends WriteRequst
 
 case object Candidates extends DataStoreRequest
 
 case object Triggers extends DataStoreRequest
 
-case class AcceptCandidate(fieldKey: FieldKey, user: User) extends DataStoreRequest
+case class AcceptCandidate(fieldKey: FieldKey, user: User) extends WriteRequst
 
 
-case class UpdateData(candidates: Seq[UpdateCandidate], namedKeys: Seq[NamedKey] = Seq.empty) extends DataStoreRequest
+case class UpdateData(candidates: Seq[UpdateCandidate], namedKeys: Seq[NamedKey] = Seq.empty) extends WriteRequst
 
 case object Reload extends DataStoreRequest
 
-case class CandidateAndNames(candidates: Seq[UpdateCandidate], namedKeys: Seq[NamedKey] = Seq.empty) extends DataStoreRequest
+case class CandidateAndNames(candidates: Seq[UpdateCandidate], namedKeys: Seq[NamedKey] = Seq.empty) extends WriteRequst
 
 object CandidateAndNames:
   def apply(updateCandidate: UpdateCandidate, maybeNamedKey: Option[NamedKey]): CandidateAndNames = {

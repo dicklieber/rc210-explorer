@@ -20,21 +20,12 @@ package controllers
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.*
-import net.wa9nnn.rc210.data.datastore.DataStoreActor.*
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey, FieldValue}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter
 import net.wa9nnn.rc210.serial.*
 import net.wa9nnn.rc210.serial.comm.RcStreamBased
 import net.wa9nnn.rc210.util.Configs.path
-import org.apache.pekko.actor
-import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
-import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.stream.Materializer
-import org.apache.pekko.stream.scaladsl.Flow
-//import org.apache.pekko.stream.Materializer
-//import org.apache.pekko.stream.scaladsl._
-import org.apache.pekko.stream.scaladsl.*
-import org.apache.pekko.util.Timeout
 import play.api.libs.streams.ActorFlow
 import play.api.mvc.*
 import views.html.batchOpResult
@@ -42,21 +33,16 @@ import views.html.batchOpResult
 import java.nio.file.Path
 import java.time.{Duration, Instant}
 import javax.inject.{Inject, Singleton}
-import scala.collection.immutable.Seq
-import scala.concurrent.duration.DurationInt
-import scala.concurrent.{Await, ExecutionContext, Future}
-import scala.language.postfixOps
 
 /**
  * Sends commands to the RC-210.
  */
 @Singleton()
-class CommandsController @Inject()(dataStoreActor: ActorRef[DataStoreActor.Message],
+class CommandsController @Inject()(dataStore: DataStore,
                                    batchRc210Sender: BatchRc210Sender,
                                    rc210: Rc210)
-                                  (implicit config: Config, scheduler: Scheduler, ec: ExecutionContext, mat: Materializer, cc: MessagesControllerComponents)
+                                  (implicit config: Config, mat: Materializer, cc: MessagesControllerComponents)
   extends MessagesAbstractController(cc) with LazyLogging {
-  implicit val timeout: Timeout = 3 seconds
   private val sendLogFile: Path = path("vizRc210.sendLog")
   //  private val stopOnError: Boolean = config.getBoolean("vizRc210.stopSendOnError")
 
@@ -66,79 +52,70 @@ class CommandsController @Inject()(dataStoreActor: ActorRef[DataStoreActor.Messa
       }
     }*/
 
-  def index: Action[AnyContent] = Action.async {
+  def index: Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] => {
-      val actorResult: Future[DataStoreReply] = dataStoreActor.ask(DataStoreMessage(Candidates, _))
-      actorResult.map { (reply: DataStoreReply) => {
-        reply.forAll { fieldEntries =>
-          Ok(views.html.candidates(fieldEntries))
-        }
-      }
-      }
+      val fieldEntries = dataStore(Candidates).all
+      Ok(views.html.candidates(fieldEntries))
     }
   }
 
-  def dump(): Action[AnyContent] = Action.async {
+  def dump(): Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] =>
-      val actorResult: Future[DataStoreReply] = dataStoreActor.ask(DataStoreMessage(All, _))
-      actorResult.map { dataStoreReply =>
-        dataStoreReply.forAll { fieldEntries =>
-          Ok(views.html.dump(fieldEntries))
-        }
-      }
+      val fieldEntries = dataStore(Candidates).all
+      Ok(views.html.dump(fieldEntries))
   }
-
+  
   def sendFieldValue(fieldKey: FieldKey): Action[AnyContent] = {
     send(fieldKey, sendValue = true)
   }
-
+  
   def sendCandidate(fieldKey: FieldKey): Action[AnyContent] = {
     send(fieldKey)
   }
 
-  /**
-   * Send command for one [[FieldKey]] to the RC210.
-   *
-   * @param fieldKey  to send
-   * @param sendValue true to send the fieldValue's command. false to send and accept the candidate's.
-   * @return
-   */
-  def send(fieldKey: FieldKey, sendValue: Boolean = false): Action[AnyContent] = Action.async {
-    implicit request =>
-      val actorResult: Future[DataStoreReply] = dataStoreActor.ask(DataStoreMessage(ForFieldKey(fieldKey), _))
+/**
+ * Send command for one [[FieldKey]] to the RC210.
+ *
+ * @param fieldKey  to send
+ * @param sendValue true to send the fieldValue's command. false to send and accept the candidate's.
+ * @return
+ */
+def send(fieldKey: FieldKey, sendValue: Boolean = false): Action[AnyContent] = Action.async {
+  implicit request =>
+    val actorResult: Future[DataStoreReply] = dataStoreActor.ask(DataStoreMessage(ForFieldKey(fieldKey), _))
 
-      actorResult.map { dataStoreReply =>
-        dataStoreReply.forEntry { fieldEntry =>
-          val commands: Seq[String] = fieldEntry
-            .candidate
-            .get
-            .toCommands(fieldEntry)
-          val batchOperationsResult: BatchOperationsResult = rc210.sendBatch(fieldKey.toString, commands: _*)
-          Ok(batchOpResult(batchOperationsResult))
-        }
+    actorResult.map { dataStoreReply =>
+      dataStoreReply.forEntry { fieldEntry =>
+        val commands: Seq[String] = fieldEntry
+          .candidate
+          .get
+          .toCommands(fieldEntry)
+        val batchOperationsResult: BatchOperationsResult = rc210.sendBatch(fieldKey.toString, commands: _*)
+        Ok(batchOpResult(batchOperationsResult))
       }
-  }
-
-  def ws(sendField: SendField): WebSocket = WebSocket.accept[String, Progress] { implicit request =>
-    //todo handle authorization See https://www.playframework.com/documentation/3.0.x/ScalaWebSockets
-    val start = Instant.now()
-    val p: ProcessWithProgress = ProcessWithProgress(7, Option(sendLogFile)) { progressApi =>
-      batchRc210Sender(sendField, progressApi)
     }
-    Flow.fromSinkAndSource(p.sink, p.source)
-  }
+}
 
-  def lastSendAll(): Action[AnyContent] = Action { implicit request =>
-    Ok(views.html.lastSendAll())
+def ws(sendField: SendField): WebSocket = WebSocket.accept[String, Progress] { implicit request =>
+  //todo handle authorization See https://www.playframework.com/documentation/3.0.x/ScalaWebSockets
+  val start = Instant.now()
+  val p: ProcessWithProgress = ProcessWithProgress(7, Option(sendLogFile)) { progressApi =>
+    batchRc210Sender(sendField, progressApi)
   }
+  Flow.fromSinkAndSource(p.sink, p.source)
+}
 
-  def socket: WebSocket = WebSocket.accept[String, String] { request =>
-    // log the message to stdout and send response back to client
-    Flow[String].map { msg =>
-      println(msg)
-      "I received your message: " + msg
-    }
+def lastSendAll(): Action[AnyContent] = Action { implicit request =>
+  Ok(views.html.lastSendAll())
+}
+
+def socket: WebSocket = WebSocket.accept[String, String] { request =>
+  // log the message to stdout and send response back to client
+  Flow[String].map { msg =>
+    println(msg)
+    "I received your message: " + msg
   }
+}
 
 }
 

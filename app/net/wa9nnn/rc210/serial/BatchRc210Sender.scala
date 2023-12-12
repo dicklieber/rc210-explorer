@@ -19,28 +19,24 @@ package net.wa9nnn.rc210.serial
 
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.datastore.{DataStoreActor, DataStoreMessage, DataStoreReply, SendField}
+import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.FieldValue
 import net.wa9nnn.rc210.serial.BatchRc210Sender.init
 import net.wa9nnn.rc210.serial.comm.RcStreamBased
+import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.stream.Materializer
+import org.apache.pekko.stream.scaladsl.*
 import org.apache.pekko.util.Timeout
 import play.api.mvc.{MessagesAbstractController, MessagesControllerComponents}
-import org.apache.pekko.stream.Materializer
-import org.apache.pekko.stream.scaladsl.*
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.language.postfixOps
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
-import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
-import controllers.CommandsController.maybeLastSendAll
-import controllers.LastSendAll
 
 @Singleton
-class BatchRc210Sender @Inject()(dataStoreActor: ActorRef[DataStoreActor.Message], rc210: Rc210)
+class BatchRc210Sender @Inject()(dataStore:DataStore, rc210: Rc210)
                                 (implicit config: Config, scheduler: Scheduler, ec: ExecutionContext, mat: Materializer)
   extends  LazyLogging {
   implicit val timeout: Timeout = 3 seconds
@@ -57,8 +53,7 @@ class BatchRc210Sender @Inject()(dataStoreActor: ActorRef[DataStoreActor.Message
 
     val operations = Seq.newBuilder[BatchOperationsResult]
     operations += streamBased.perform("Wakeup", init)
-    val future: Future[DataStoreActor] = dataStoreActor.ask(DataStoreMessage(sendField.dataStoreRequest, _))
-    val dataStoreReply: DataStoreReply = Await.result[DataStoreReply](future, 5 seconds)
+    val dataStoreReply = dataStore(sendField.dataStoreRequest)
     progressApi.expectedCount(dataStoreReply.length)
 
     var errorEncountered = false
@@ -74,7 +69,7 @@ class BatchRc210Sender @Inject()(dataStoreActor: ActorRef[DataStoreActor.Message
       }
       operations += batchOperationsResult
     }
-    maybeLastSendAll = Option(LastSendBatch(operations.result(), start))
+    LastSendBatch() = Option(LastSendBatch(operations.result(), start))
     progressApi.finish("Done")
   }
 }

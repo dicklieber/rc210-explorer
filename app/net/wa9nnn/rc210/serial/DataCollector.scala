@@ -20,7 +20,7 @@ package net.wa9nnn.rc210.serial
 import com.fazecast.jSerialComm.{SerialPort, SerialPortEvent, SerialPortMessageListenerWithExceptions}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.datastore.DataStoreActor
+import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.serial.comm.RcEventBased
 import net.wa9nnn.rc210.util.Configs
 import org.apache.pekko.actor.typed.ActorRef
@@ -34,7 +34,7 @@ import javax.inject.{Inject, Singleton}
  * Reads eeprom from RC210 using the "1SendEram" command
  */
 @Singleton
-class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStoreActor: ActorRef[DataStoreActor.Message]) extends LazyLogging {
+class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: DataStore) extends LazyLogging {
 
   val memoryFile: Path = Configs.path("vizRc210.memoryFile")
   val tempFile: Path = memoryFile.resolveSibling(memoryFile.toFile.toString + ".temp")
@@ -54,10 +54,10 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStoreAc
     def cleanup(error: String = ""): Unit = {
       fileWriter.close()
       rcOp.close()
-      if (error.isBlank)
-        dataStoreActor ! DataStoreActor.Reload
+      if (error.isBlank) {
+        dataStore.reload()
+      }
     }
-
 
     rcOp.addDataListener(new SerialPortMessageListenerWithExceptions {
 
@@ -107,7 +107,6 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStoreAc
     rcOp.send("1SendEram")
 
   }
-
 
 }
 

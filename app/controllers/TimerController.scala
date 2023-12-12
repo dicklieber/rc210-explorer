@@ -18,14 +18,13 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.datastore.DataStoreActor
-import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, UpdateData}
+import net.wa9nnn.rc210.data.datastore.{AllForKeyKind, DataStore, ForFieldKey}
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
+import net.wa9nnn.rc210.data.schedules.Schedule
 import net.wa9nnn.rc210.data.timers.Timer
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import net.wa9nnn.rc210.ui.ProcessResult
 import net.wa9nnn.rc210.{Key, KeyKind}
-import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
 import play.api.data.Form
@@ -37,49 +36,35 @@ import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
-class TimerController @Inject()(actor: ActorRef[DataStoreActor.Message])
-                               (implicit scheduler: Scheduler, ec: ExecutionContext, components: MessagesControllerComponents)
+class TimerController @Inject()(dataStore: DataStore, components: MessagesControllerComponents)
   extends MessagesAbstractController(components) with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 
-
-  def index: Action[AnyContent] = Action.async {
+  def index: Action[AnyContent] = Action {
     implicit request =>
-
-      val future: Future[Seq[FieldEntry]] = actor.ask(DataStoreActor.AllForKeyKind(KeyKind.timerKey, _))
-      future.map { (fieldEntries: Seq[FieldEntry]) => {
-        val timers: Seq[Timer] = fieldEntries.map(fe => fe.value.asInstanceOf[Timer])
-        Ok(views.html.timers(timers))
-      }
-      }
+      dataStore(AllForKeyKind(KeyKind.timerKey)).forAllValues[Timer](timers =>
+        Ok(views.html.timers(timers)))
   }
 
-  def edit(key: Key): Action[AnyContent] = Action.async {
-    implicit request: MessagesRequest[AnyContent] =>
-      val fieldKey = FieldKey("Timer", key)
-      actor.ask(DataStoreActor.ForFieldKey(fieldKey, _)).map {
-        case Some(fieldEntry: FieldEntry) =>
-          val form: Form[Timer] = Timer.form.fill(fieldEntry.value)
-          Ok(timerEditor(form, key.namedKey))
-        case None =>
-          NotFound(s"No timer: $key")
-      }
+  def edit(key: Key): Action[AnyContent] = Action {
+    val fieldKey = Schedule.fieldKey(key)
+    dataStore(ForFieldKey(fieldKey)).forHead[Timer]((_, timer) =>
+      Ok(views.html.scheduleEdit(Schedule.form.fill(timer), key.namedKey)))
   }
 
-  def save(): Action[AnyContent] = Action.async {
+  def save(): Action[AnyContent] = Action {
     implicit request =>
       Timer.form
         .bindFromRequest()
         .fold(
           (formWithErrors: Form[Timer]) => {
             val namedKey = Key(formWithErrors.data("key")).namedKey
-            Future(BadRequest(timerEditor(formWithErrors, namedKey)))
+            BadRequest(views.html.scheduleEdit(formWithErrors, namedKey))
           },
-          (schedule: Timer) => {
-            val candidateAndNames = ProcessResult(schedule)
-            actor.ask[String](UpdateData(candidateAndNames, user, _)).map { _ =>
-              Redirect(routes.TimerController.index)
-            }
+          (timer: Timer) => {
+            val candidateAndNames = ProcessResult(timer)
+            val reply = dataStore.apply(candidateAndNames)
+            Redirect(routes.TimerController.index)
           }
         )
   }

@@ -19,62 +19,25 @@ package net.wa9nnn.rc210.data.datastore
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey, FieldValue}
-import play.api.mvc.Result
-import play.api.mvc.Results.*
 
 import scala.util.{Failure, Success, Try}
 
 /**
  * What a [[DataStoreRequest]] returns from the [[DataStoreActor]]
  *
- * @param tried from  [[DataStoreLogic]]
+ * @param tried from  [[DataStore]]
  */
 case class DataStoreReply(tried: Try[Seq[FieldEntry]]) extends LazyLogging {
   val length: Int = tried match
     case Failure(exception) => 0
     case Success(value: Seq[FieldEntry]) => value.length
 
+  def head[T]: T = tried.get.head.value.asInstanceOf[T]
+
   def all: Seq[FieldEntry] = tried.get
 
-  def forEntry(f: FieldEntry => Result): Result = {
-    tried match
-      case Failure(exception) =>
-        logger.error("DataStoreReply", exception)
-        InternalServerError(exception.getMessage)
-      case Success(fieldEntries: Seq[FieldEntry]) =>
-        fieldEntries.headOption.map { fe =>
-          f(fe)
-        }.getOrElse(throw new IllegalStateException("No FieldEntry returned!"))
-  }
-
-
-  def forHead[T <: FieldValue](f: (FieldKey, T) => Result): Result = {
-    tried match
-      case Failure(exception) =>
-        logger.error("DataStoreReply", exception)
-        InternalServerError(exception.getMessage)
-      case Success(fieldEntries: Seq[FieldEntry]) =>
-        fieldEntries.headOption.map { fe =>
-          f(fe.fieldKey, fe.value.asInstanceOf[T])
-        }.getOrElse(throw new IllegalStateException("No FieldEntry returned!"))
-  }
-
-  def forAll(f: Seq[FieldEntry] => Result): Result = {
-    tried match
-      case Failure(exception) =>
-        logger.error("DataStoreReply", exception)
-        InternalServerError(exception.getMessage)
-      case Success(fieldEntries: Seq[FieldEntry]) =>
-        f(fieldEntries)
-  }
-  def forAllValues[T](f: Seq[T] => Result): Result = {
-    tried match
-      case Failure(exception) =>
-        logger.error("DataStoreReply", exception)
-        InternalServerError(exception.getMessage)
-      case Success(fieldEntries: Seq[FieldEntry]) =>
-        f(fieldEntries.map(_.value.asInstanceOf[T]))
-  }
+  def allValues[T]: Seq[T] =
+    tried.get.map(_.value.asInstanceOf[T])
 }
 
 
