@@ -19,11 +19,10 @@ package net.wa9nnn.rc210.ui
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.data.datastore.{UpdateCandidate, UpdateData}
+import net.wa9nnn.rc210.data.datastore.{CandidateAndNames, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
 import net.wa9nnn.rc210.data.named.NamedKey
 import play.api.mvc.*
-
 
 /**
  * Keeps track of all the [[Key]]s for  a single [[net.wa9nnn.rc210.KeyKind]] e.g. [[net.wa9nnn.rc210.KeyKind.commonKey]] or [[net.wa9nnn.rc210.KeyKind.portKey]]; on index.
@@ -44,10 +43,10 @@ class SimpleValuesHandler(fieldEntries: Seq[FieldEntry]) extends LazyLogging:
    * @param request
    * @return data extracted from the [[Request]].
    */
-  def collect(implicit request: Request[AnyContent]): UpdateData =
+  def collect(implicit request: Request[AnyContent]): CandidateAndNames =
     val formDataMap: Map[FieldKey, String] = request.body.asFormUrlEncoded
       .get
-      .map { (name:String, values:Seq[String]) =>
+      .map { (name: String, values: Seq[String]) =>
         logger.whenTraceEnabled {
           logger.trace("name: {} values: {}", name, values)
         }
@@ -56,7 +55,7 @@ class SimpleValuesHandler(fieldEntries: Seq[FieldEntry]) extends LazyLogging:
           val fieldKeykey: FieldKey = FieldKey(sKey)
           fieldKeykey -> values.headOption.getOrElse("")
         catch
-          case e:Exception =>
+          case e: Exception =>
             logger.error("Parsing form data", e)
             throw e
       }
@@ -74,5 +73,5 @@ class SimpleValuesHandler(fieldEntries: Seq[FieldEntry]) extends LazyLogging:
       NamedKey(key, t._2)
 
     }.toIndexedSeq
-    UpdateData(updateCandidates, namedKeys)
+    CandidateAndNames(updateCandidates, namedKeys)
 

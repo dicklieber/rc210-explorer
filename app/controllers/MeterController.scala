@@ -18,30 +18,25 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.datastore.{AllForKeyKind, DataStore, ForFieldKey}
+import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldInt, FieldKey}
 import net.wa9nnn.rc210.data.meter.*
+import net.wa9nnn.rc210.data.meter.Meter.meterForm
 import net.wa9nnn.rc210.data.timers.Timer
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import net.wa9nnn.rc210.ui.ProcessResult
 import net.wa9nnn.rc210.{Key, KeyKind}
-import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
-import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
-import org.apache.pekko.util.Timeout
 import play.api.data.Forms.*
 import play.api.data.{Form, Mapping}
-import play.api.mvc.*
 import play.api.mvc.*
 import views.html
 
 import javax.inject.*
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
-import scala.language.postfixOps
 
 class MeterController @Inject()(dataStore: DataStore, components: MessagesControllerComponents)
   extends MessagesAbstractController(components) with LazyLogging {
-  implicit val timeout: Timeout = 3 seconds
 
   def index: Action[AnyContent] = Action {
     implicit request =>
@@ -53,74 +48,55 @@ class MeterController @Inject()(dataStore: DataStore, components: MessagesContro
               metersEntries: Seq[FieldEntry] <- eventualMeters
               meterAlarmsEntries: Seq[FieldEntry] <- eventualAlarmEntries
             yield*/
-      val vRef: Int = dataStore(ForFieldKey(FieldKey("vRef", Key(KeyKind.commonKey)))).head[FieldInt].value
-      val meters: Seq[Meter] = metersEntries.map { fe => fe.value.asInstanceOf[Meter] }
-      val meterAlarms: Seq[MeterAlarm] = meterAlarmsEntries.map { (fe: FieldEntry) => fe.value.asInstanceOf[MeterAlarm] }
+      val vRef: Int = dataStore.editValue[FieldInt](FieldKey("vRef", Key(KeyKind.commonKey))).value
+      val meters: Seq[Meter] = dataStore.indexValues(KeyKind.meterKey)
+      val meterAlarms: Seq[MeterAlarm] = dataStore.indexValues(KeyKind.meterAlarmKey)
       val meterStuff = MeterStuff(vRef, meters, meterAlarms)
       Ok(html.meters(meterStuff))
   }
 
-  def editMeter(meterKey: Key): Action[AnyContent] = Action.async {
+  def editMeter(meterKey: Key): Action[AnyContent] = Action {
     implicit request =>
-
-      val fieldKey = FieldKey("Meter", meterKey)
-      actor.ask(ForFieldKey(fieldKey, _)).map {
-        case Some(fieldEntry: FieldEntry) =>
-          val meter: Meter = fieldEntry.value
-
-          Ok(html.meterEditor(Meter.meterForm.fill(meter), meterKey.namedKey))
-        case None =>
-          NotFound(s"Not meterKey: $fieldKey")
-      }
+      val meter: Meter = dataStore.editValue(Meter.fieldKey(meterKey))
+      Ok(html.meterEditor(Meter.meterForm.fill(meter), meterKey.namedKey))
   }
 
-  def editAlarm(alarmKey: Key): Action[AnyContent] = Action.async {
+  def editAlarm(alarmKey: Key): Action[AnyContent] = Action {
     implicit request =>
-      val fieldKey = FieldKey("MeterAlarm", alarmKey)
-      actor.ask(ForFieldKey(fieldKey, _)).map {
-        case Some(fieldEntry: FieldEntry) =>
-          val meterAlarm: MeterAlarm = fieldEntry.value
-
-          val form = MeterAlarm.form.fill(meterAlarm)
-          Ok(html.meterAlarm(form, alarmKey.namedKey))
-        case None =>
-          NotFound(s"Not meterKey: $fieldKey")
-      }
+      val meterAlarm: MeterAlarm = dataStore.editValue(MeterAlarm.fieldKey(alarmKey))
+      Ok(html.meterAlarm(MeterAlarm.form.fill(meterAlarm), alarmKey.namedKey))
   }
 
-  def saveMeter(): Action[AnyContent] = Action.async {
+  def saveMeter(): Action[AnyContent] = Action {
     implicit request =>
       meterForm
         .bindFromRequest()
         .fold(
           (formWithErrors: Form[Meter]) => {
             val namedKey = Key(formWithErrors.data("key")).namedKey
-            Future(BadRequest(html.meterEditor(formWithErrors, namedKey)))
+            BadRequest(html.meterEditor(formWithErrors, namedKey))
           },
           (meter: Meter) => {
             val candidateAndNames = ProcessResult(meter)
-            actor.ask[String](UpdateData(candidateAndNames, user, _)).map { _ =>
-              val index1: Call = routes.MeterController.index
-              Redirect(index1)
-            }
+            dataStore.update(candidateAndNames)
+            Redirect(routes.MeterController.index)
           }
         )
   }
 
-  def saveAlarm(): Action[AnyContent] = Action.async {
+  def saveAlarm(): Action[AnyContent] = Action {
     implicit request =>
       MeterAlarm.form
         .bindFromRequest()
         .fold(
           (formWithErrors: Form[MeterAlarm]) => {
             val namedKey = Key(formWithErrors.data("key")).namedKey
-            Future(BadRequest(html.meterAlarm(formWithErrors, namedKey)))
+            BadRequest(html.meterAlarm(formWithErrors, namedKey))
           },
           (meterAlarm: MeterAlarm) => {
             val candidateAndNames = ProcessResult(meterAlarm)
-            actor.ask[String](UpdateData(candidateAndNames, user, _)).map { _ =>
-              Redirect(routes.MeterController.index)
-            }
+            dataStore.update(candidateAndNames)
+            Redirect(routes.MeterController.index)
           }
         )
   }

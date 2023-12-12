@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data.datastore
 
 import net.wa9nnn.rc210.data.TriggerNode
+import net.wa9nnn.rc210.data.clock.Clock
 import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldKey, FieldValue}
 import net.wa9nnn.rc210.data.named.{NamedKey, NamedKeySource}
@@ -40,11 +41,23 @@ class DataStore(persistence: DataStorePersistence) extends NamedKeySource {
 
   loadFromJson()
 
-  def forFieldKey[T](fieldKey: FieldKey): T =
+  def values[T <: ComplexFieldValue](keyKind: KeyKind): Seq[T] =
+    apply(keyKind).map(_.value.asInstanceOf[T])
+
+  def editValue[T <: ComplexFieldValue](fieldKey: FieldKey): T =
     all.find(_.fieldKey == fieldKey).get.asInstanceOf[T]
 
-  def all: Seq[FieldEntry] = 
+  def indexValues[T <: ComplexFieldValue](keyKind: KeyKind): Seq[T] =
+    all.filter(_.fieldKey.key.keyKind == keyKind).map(_.value.asInstanceOf[T])
+
+  def all: Seq[FieldEntry] =
     keyFieldMap.values.toIndexedSeq.sorted
+
+  def apply(dataTransferJson: DataTransferJson): Unit =
+    throw new NotImplementedError() //todo
+
+  def apply(fieldKey: FieldKey): FieldEntry =
+    keyFieldMap(fieldKey)
 
   def apply(keyKind: KeyKind): Seq[FieldEntry] =
     all.filter(_.fieldKey.key.keyKind == keyKind).sorted
@@ -84,7 +97,7 @@ class DataStore(persistence: DataStorePersistence) extends NamedKeySource {
   def reload(): Unit =
     throw new NotImplementedError() //todo
 
-  def save(session: RcSession): Unit =
+  private def save(session: RcSession): Unit =
     val dto = toJson.copy(who = Some(session.user.who))
     persistence.save(dto)
 

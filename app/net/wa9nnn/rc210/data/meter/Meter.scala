@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.meter
 
 import com.wa9nnn.util.tableui.{Cell, Row}
 import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
+import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldKey, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
 import play.api.data.{Form, Mapping}
 import play.api.data.Forms.*

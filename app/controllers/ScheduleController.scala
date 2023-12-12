@@ -21,7 +21,6 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.data.datastore._
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.data.message.Message
 import net.wa9nnn.rc210.data.schedules.Schedule
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.{session, user}
 import net.wa9nnn.rc210.ui.ProcessResult
@@ -40,19 +39,17 @@ import scala.language.postfixOps
 
 @Singleton()
 class ScheduleController @Inject()(dataStore: DataStore, components: MessagesControllerComponents)
-  extends MessagesAbstractController(components)
-    with LazyLogging {
-  implicit val timeout: Timeout = 3 seconds
+  extends MessagesAbstractController(components) with LazyLogging {
 
   def index: Action[AnyContent] = Action { implicit request =>
-    dataStore(AllForKeyKind(KeyKind.scheduleKey)).forAllValues[Schedule](schedules =>
-      Ok(views.html.schedules(schedules)))
+    val schedules: Seq[Schedule] = dataStore.indexValues(KeyKind.scheduleKey)
+    Ok(views.html.schedules(schedules))
   }
 
   def edit(key: Key): Action[AnyContent] = Action { implicit request =>
     val fieldKey = Schedule.fieldKey(key)
-    dataStore(ForFieldKey(fieldKey)).forHead[Schedule]((_, schedule) =>
-      Ok(views.html.scheduleEdit(Schedule.form.fill(schedule), key.namedKey)))
+    val schedule: Schedule = dataStore.editValue(fieldKey)
+    Ok(views.html.scheduleEdit(Schedule.form.fill(schedule), key.namedKey))
   }
 
   def save(): Action[AnyContent] = Action {
@@ -66,7 +63,7 @@ class ScheduleController @Inject()(dataStore: DataStore, components: MessagesCon
           },
           (schedule: Schedule) => {
             val candidateAndNames = ProcessResult(schedule)
-            val reply = dataStore.apply(candidateAndNames)
+            dataStore.update(candidateAndNames)
             Redirect(routes.ScheduleController.index)
           }
         )

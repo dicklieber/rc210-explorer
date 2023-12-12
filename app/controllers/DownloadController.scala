@@ -21,7 +21,6 @@ import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.serial.{ComPort, DataCollector, ProcessWithProgress, Rc210}
-import org.apache.pekko.actor.typed.Scheduler
 import org.apache.pekko.stream.Materializer
 import play.api.mvc.*
 
@@ -31,7 +30,7 @@ import scala.concurrent.ExecutionContext
 
 @Singleton()
 class DownloadController @Inject()(config: Config, dataCollector: DataCollector, rc210: Rc210)
-                                  (implicit scheduler: Scheduler, ec: ExecutionContext, mat: Materializer, components: MessagesControllerComponents)
+                                  (implicit  ec: ExecutionContext, mat: Materializer, components: MessagesControllerComponents)
   extends MessagesAbstractController(components) with LazyLogging {
   private val expectedLines: Int = config.getInt("vizRc210.expectedRcLines")
   private var maybeComment: Option[String] = None
@@ -46,13 +45,13 @@ class DownloadController @Inject()(config: Config, dataCollector: DataCollector,
     implicit request: Request[AnyContent] =>
       val values: Option[Map[String, Seq[String]]] = request.body.asFormUrlEncoded
 
-      maybeComment = (for {
+      maybeComment = for {
         map: Map[String, Seq[String]] <- values
         comments <- map.get("comment")
         comment <- comments.headOption
       } yield {
         comment
-      })
+      }
 
       val table: Table = Table(Header("Download from RC210"), Seq(
         Row.ofAny("ComPort", rc210.comPort),
@@ -60,14 +59,15 @@ class DownloadController @Inject()(config: Config, dataCollector: DataCollector,
         Row.ofAny("Expecting", expectedLines),
       ))
 
-      val webSocketURL: String = controllers.routes.DownloadController.ws(expectedLines).webSocketURL()
+      val webSocketURL: String = controllers.routes.DownloadController.ws().webSocketURL()
       Ok(views.html.progress(webSocketURL, Option(table)))
   }
 
-  def ws(expected: Int): WebSocket = {
-    ProcessWithProgress(expected, dataCollector.progreMod, None)(progressApi =>
+  def ws(): WebSocket = {
+    val p: ProcessWithProgress = ProcessWithProgress( dataCollector.progressMod, None)(progressApi =>
       dataCollector(progressApi, maybeComment)
     )
+    p.webSocket
   }
 
 }

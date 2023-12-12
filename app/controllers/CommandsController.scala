@@ -26,6 +26,7 @@ import net.wa9nnn.rc210.serial.*
 import net.wa9nnn.rc210.serial.comm.RcStreamBased
 import net.wa9nnn.rc210.util.Configs.path
 import org.apache.pekko.stream.Materializer
+import org.apache.pekko.stream.scaladsl.Flow
 import play.api.libs.streams.ActorFlow
 import play.api.mvc.*
 import views.html.batchOpResult
@@ -64,58 +65,53 @@ class CommandsController @Inject()(dataStore: DataStore,
       val fieldEntries = dataStore.candidates
       Ok(views.html.dump(fieldEntries))
   }
-  
+
   def sendFieldValue(fieldKey: FieldKey): Action[AnyContent] = {
     send(fieldKey, sendValue = true)
   }
-  
+
   def sendCandidate(fieldKey: FieldKey): Action[AnyContent] = {
     send(fieldKey)
   }
 
-/**
- * Send command for one [[FieldKey]] to the RC210.
- *
- * @param fieldKey  to send
- * @param sendValue true to send the fieldValue's command. false to send and accept the candidate's.
- * @return
- */
-def send(fieldKey: FieldKey, sendValue: Boolean = false): Action[AnyContent] = Action.async {
-  implicit request =>
-    val actorResult: Future[DataStoreReply] = dataStoreActor.ask(DataStoreMessage(ForFieldKey(fieldKey), _))
+  /**
+   * Send command for one [[FieldKey]] to the RC210.
+   *
+   * @param fieldKey  to send
+   * @param sendValue true to send the fieldValue's command. false to send and accept the candidate's.
+   * @return
+   */
+  def send(fieldKey: FieldKey, sendValue: Boolean = false): Action[AnyContent] = Action {
+    implicit request =>
+      val fieldEntry: FieldEntry = dataStore(fieldKey)
+      val commands: Seq[String] = fieldEntry
+        .candidate
+        .get
+        .toCommands(fieldEntry)
+      val batchOperationsResult: BatchOperationsResult = rc210.sendBatch(fieldKey.toString, commands: _*)
+      Ok(batchOpResult(batchOperationsResult))
+  }
 
-    actorResult.map { dataStoreReply =>
-      dataStoreReply.forEntry { fieldEntry =>
-        val commands: Seq[String] = fieldEntry
-          .candidate
-          .get
-          .toCommands(fieldEntry)
-        val batchOperationsResult: BatchOperationsResult = rc210.sendBatch(fieldKey.toString, commands: _*)
-        Ok(batchOpResult(batchOperationsResult))
-      }
+  def ws(sendField: SendField): WebSocket = WebSocket.accept[String, Progress] { implicit request =>
+    //todo handle authorization See https://www.playframework.com/documentation/3.0.x/ScalaWebSockets
+    val start = Instant.now()
+    val p: ProcessWithProgress = ProcessWithProgress(7, Option(sendLogFile)) { progressApi =>
+      batchRc210Sender(sendField, progressApi)
     }
-}
-
-def ws(sendField: SendField): WebSocket = WebSocket.accept[String, Progress] { implicit request =>
-  //todo handle authorization See https://www.playframework.com/documentation/3.0.x/ScalaWebSockets
-  val start = Instant.now()
-  val p: ProcessWithProgress = ProcessWithProgress(7, Option(sendLogFile)) { progressApi =>
-    batchRc210Sender(sendField, progressApi)
+    Flow.fromSinkAndSource(p.sink, p.source)
   }
-  Flow.fromSinkAndSource(p.sink, p.source)
-}
 
-def lastSendAll(): Action[AnyContent] = Action { implicit request =>
-  Ok(views.html.lastSendAll())
-}
-
-def socket: WebSocket = WebSocket.accept[String, String] { request =>
-  // log the message to stdout and send response back to client
-  Flow[String].map { msg =>
-    println(msg)
-    "I received your message: " + msg
+  def lastSendAll(): Action[AnyContent] = Action { implicit request =>
+    Ok(views.html.lastSendAll())
   }
-}
+
+  def socket: WebSocket = WebSocket.accept[String, String] { request =>
+    // log the message to stdout and send response back to client
+    Flow[String].map { msg =>
+      println(msg)
+      "I received your message: " + msg
+    }
+  }
 
 }
 

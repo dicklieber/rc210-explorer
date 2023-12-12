@@ -19,7 +19,7 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.KeyKind
-import net.wa9nnn.rc210.data.datastore.{AllForKeyKind, DataStore, DataStoreMessage, UpdateCandidate, UpdateData}
+import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey, SimpleFieldValue}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import net.wa9nnn.rc210.ui.SimpleValuesHandler
@@ -35,7 +35,7 @@ class CommonEditorController @Inject()(dataStore: DataStore, components: Message
   def index: Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] =>
 
-      val fieldEntries = dataStore(AllForKeyKind(KeyKind.commonKey)).all
+      val fieldEntries = dataStore(KeyKind.commonKey)
       if (simpleValuesHandler.isEmpty)
         simpleValuesHandler = Some(new SimpleValuesHandler(fieldEntries))
       Ok(views.html.candidates(fieldEntries))
@@ -43,7 +43,7 @@ class CommonEditorController @Inject()(dataStore: DataStore, components: Message
 
   def save(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      dataStore(simpleValuesHandler.get.collect)
+      dataStore.update(simpleValuesHandler.get.collect)
       Redirect(routes.CommonEditorController.index())
   }
 }

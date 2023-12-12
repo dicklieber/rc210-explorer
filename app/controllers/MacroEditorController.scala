@@ -20,18 +20,15 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.Dtmf
 import net.wa9nnn.rc210.data.Dtmf.Dtmf
-import net.wa9nnn.rc210.data.datastore.DataStoreActor.{AllForKeyKind, ForFieldKey}
-import net.wa9nnn.rc210.data.datastore.{DataStoreActor, UpdateCandidate}
+import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.RcMacro
 import net.wa9nnn.rc210.data.macros.RcMacro.*
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
+import net.wa9nnn.rc210.ui.ProcessResult
 import net.wa9nnn.rc210.{Key, KeyKind}
-import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
-import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
-import org.apache.pekko.util.Timeout
 import play.api.mvc.*
 import views.html.macroNodes
 
@@ -43,37 +40,26 @@ import scala.util.Try
 import scala.util.matching.Regex
 
 @Singleton()
-class MacroEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
-                                     (implicit scheduler: Scheduler,
+class MacroEditorController @Inject()(dataStore: DataStore)
+                                     (implicit
                                       functionsProvider: FunctionsProvider,
                                       ec: ExecutionContext, components: MessagesControllerComponents)
   extends MessagesAbstractController(components)
     with LazyLogging {
 
-
-  implicit val timeout: Timeout = 3 seconds
-
-
-  def index(): Action[AnyContent] = Action.async { implicit request =>
-    val future: Future[Seq[FieldEntry]] = actor.ask(AllForKeyKind(KeyKind.macroKey, _))
-    future.map { (fe: Seq[FieldEntry]) =>
-      val nodes: Seq[RcMacro] = fe.map(_.value.asInstanceOf[RcMacro])
-      Ok(macroNodes(nodes))
-    }
+  def index(): Action[AnyContent] = Action { implicit request =>
+    val values: Seq[RcMacro] = dataStore.values(KeyKind.macroKey)
+    Ok(macroNodes(values))
   }
 
-  def edit(key: Key): Action[AnyContent] = Action.async { implicit request =>
+  def edit(key: Key): Action[AnyContent] = Action { implicit request =>
 
     val fieldKey = FieldKey("Macro", key)
-    actor.ask(ForFieldKey(fieldKey, _)).map {
-      case Some(fe: FieldEntry) =>
-        Ok(views.html.macroEditor(fe.value))
-      case None =>
-        NotFound(s"No keyField: $fieldKey")
-    }
+    val rcMacro: RcMacro = dataStore.editValue(fieldKey)
+    Ok(views.html.macroEditor(rcMacro))
   }
 
-  def save(): Action[AnyContent] = Action.async { implicit request =>
+  def save(): Action[AnyContent] = Action { implicit request =>
     val formData: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
 
     val sKey: String = formData("key").head
@@ -94,14 +80,11 @@ class MacroEditorController @Inject()(actor: ActorRef[DataStoreActor.Message])
         }.toOption
       }
 
-    val macroNode = RcMacro(key, functions, dtmf)
-    val ud = UpdateCandidate(macroNode.fieldKey, Right(macroNode))
+    val rcMacro = RcMacro(key, functions, dtmf)
+    val candidateAndNames = ProcessResult(rcMacro)
+    dataStore.update(candidateAndNames)
 
-    val keyNames = Seq(NamedKey(key, formData("name").head))
-    actor.ask[String](DataStoreActor.UpdateData(Seq(UpdateCandidate(macroNode)), keyNames,
-      user(request), _)).map { _ =>
-      Redirect(routes.MacroEditorController.index())
-    }
+    Redirect(routes.MacroEditorController.index())
   }
 }
 

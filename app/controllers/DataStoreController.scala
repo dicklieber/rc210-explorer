@@ -16,39 +16,35 @@
  */
 
 package controllers
-import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
+
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.datastore.{DataStore, DataStoreActor}
-import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
-import org.apache.pekko.util.Timeout
+import net.wa9nnn.rc210.data.datastore.{DataStore, DataTransferJson}
 import play.api.libs.Files
+import play.api.libs.json.Json
 import play.api.mvc.*
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationInt
-import scala.language.postfixOps
 
 @Singleton
 class DataStoreController @Inject()(dataStore: DataStore)
-                                   (implicit scheduler: Scheduler, ec: ExecutionContext, cc: MessagesControllerComponents)
+                                   (implicit cc: MessagesControllerComponents)
   extends MessagesAbstractController(cc) with LazyLogging {
-  implicit val timeout: Timeout = 3 seconds
 
+  private def sJson: String =
+    val dto: DataTransferJson = dataStore.toJson
+    Json.prettyPrint(Json.toJson(dto))
 
-  def downloadJson(): Action[AnyContent] = Action.async {
-    actor.ask(DataStoreActor.Json.apply).map { sJson =>
-      Ok(sJson).withHeaders(
-        "Content-Type" -> "text/json",
-        "Content-Disposition" -> s"""attachment; filename="rc210.json""""
-      )
-    }
+  def downloadJson(): Action[AnyContent] = Action {
+    Ok(sJson).withHeaders(
+      "Content-Type" -> "text/json",
+      "Content-Disposition" -> s"""attachment; filename="rc210.json""""
+    )
   }
 
-  def viewJson(): Action[AnyContent] = Action.async {
-    actor.ask(DataStoreActor.Json.apply).map { sJson =>
-      Ok(sJson)
-    }
+  def viewJson(): Action[AnyContent] = Action {
+    Ok(sJson)
   }
 
   def upload: Action[AnyContent] = Action {
@@ -61,7 +57,9 @@ class DataStoreController @Inject()(dataStore: DataStore)
       .file("jsonFile")
       .foreach { jsonFile =>
         val sJson = java.nio.file.Files.readString(jsonFile.ref.path)
-        actor.ask(IngestJson(sJson, _))
+        val dataTransferJson: DataTransferJson = Json.parse(sJson).as[DataTransferJson]
+        dataStore(dataTransferJson)
+        
       }
     Redirect(routes.MacroEditorController.index())
   }

@@ -20,7 +20,7 @@ package net.wa9nnn.rc210.serial
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.*
-import net.wa9nnn.rc210.data.field.FieldValue
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.serial.BatchRc210Sender.init
 import net.wa9nnn.rc210.serial.comm.RcStreamBased
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
@@ -30,15 +30,16 @@ import org.apache.pekko.stream.scaladsl.*
 import org.apache.pekko.util.Timeout
 import play.api.mvc.{MessagesAbstractController, MessagesControllerComponents}
 
+import java.time.Instant
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.language.postfixOps
 
 @Singleton
-class BatchRc210Sender @Inject()(dataStore:DataStore, rc210: Rc210)
-                                (implicit config: Config, scheduler: Scheduler, ec: ExecutionContext, mat: Materializer)
-  extends  LazyLogging {
+class BatchRc210Sender @Inject()(dataStore: DataStore, rc210: Rc210)
+                                (implicit config: Config, mat: Materializer)
+  extends LazyLogging {
   implicit val timeout: Timeout = 3 seconds
   private val stopOnError: Boolean = config.getBoolean("vizRc210.stopSendOnError")
 
@@ -48,17 +49,21 @@ class BatchRc210Sender @Inject()(dataStore:DataStore, rc210: Rc210)
    * @param progressApi where to report whats going on.
    */
   def apply(sendField: SendField, progressApi: ProgressApi): Unit = {
-
+    val start = Instant.now()
     val streamBased: RcStreamBased = rc210.openStreamBased
 
     val operations = Seq.newBuilder[BatchOperationsResult]
     operations += streamBased.perform("Wakeup", init)
-    val dataStoreReply = dataStore(sendField.dataStoreRequest)
-    progressApi.expectedCount(dataStoreReply.length)
+    val fieldEntries: Seq[FieldEntry] = sendField match
+      case SendField.AllFields =>
+        dataStore.all
+      case SendField.CandidatesOnly =>
+        dataStore.candidates
+    progressApi.expectedCount(fieldEntries.length)
 
     var errorEncountered = false
     for {
-      fieldEntry <- dataStoreReply.all
+      fieldEntry <- fieldEntries
       fieldValue = fieldEntry.value.asInstanceOf[FieldValue]
       if !(errorEncountered && stopOnError)
     } yield {
@@ -69,7 +74,7 @@ class BatchRc210Sender @Inject()(dataStore:DataStore, rc210: Rc210)
       }
       operations += batchOperationsResult
     }
-    LastSendBatch() = Option(LastSendBatch(operations.result(), start))
+    LastSendBatch.save(LastSendBatch(operations.result(), start))
     progressApi.finish("Done")
   }
 }

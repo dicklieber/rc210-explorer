@@ -36,7 +36,7 @@ class CourtesyToneEditorController @Inject()(dataStore: DataStore, components: M
 
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      val cts = dataStore(AllForKeyKind(KeyKind.courtesyToneKey)).allValues[CourtesyTone]
+      val cts:Seq[CourtesyTone] = dataStore.indexValues(KeyKind.courtesyToneKey)
       Ok(views.html.courtesyTones(cts))
   }
 
@@ -44,10 +44,10 @@ class CourtesyToneEditorController @Inject()(dataStore: DataStore, components: M
     implicit request =>
       key.check(KeyKind.courtesyToneKey)
       val fieldKey = CourtesyTonesExtractor.fieldKey(key)
-      val courtesyTone = dataStore(ForFieldKey(fieldKey)).head[CourtesyTone]
+      val courtesyTone: CourtesyTone = dataStore.editValue(fieldKey)
 
-      implicit val form: Form[CourtesyTone] = CourtesyTone.form.fill(courtesyTone)
-      Ok(views.html.courtesyToneEdit(key.namedKey))
+      val form: Form[CourtesyTone] = CourtesyTone.form.fill(courtesyTone)
+      Ok(views.html.courtesyToneEdit(form, key.namedKey))
   }
 
   def save(): Action[AnyContent] = Action {
@@ -57,11 +57,11 @@ class CourtesyToneEditorController @Inject()(dataStore: DataStore, components: M
         .fold(
           (formWithErrors: Form[CourtesyTone]) => {
             val namedKey = Key(formWithErrors.data("key")).namedKey
-            BadRequest(views.html.courtesyToneEdit(namedKey)(formWithErrors, request, request))
+            BadRequest(views.html.courtesyToneEdit(formWithErrors, namedKey))
           },
           (courtesyTone: CourtesyTone) => {
             val candidateAndNames = ProcessResult(courtesyTone)
-            dataStore(candidateAndNames)
+            dataStore.update(candidateAndNames)
             Redirect(routes.CourtesyToneEditorController.index())
           }
         )

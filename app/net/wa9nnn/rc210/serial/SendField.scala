@@ -17,33 +17,19 @@
 
 package net.wa9nnn.rc210.serial
 
-import java.time.{Duration, Instant}
+import enumeratum.{EnumEntry, PlayEnum}
+import net.wa9nnn.rc210.data.remotebase.CtcssMode.findValues
+import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
 
-/**
- * About the last [[BatchRc210Sender]] operation.
- *
- * @param operations what we did
- * @param start      when it started
- * @param finish     when it finshed
- */
-case class LastSendBatch(operations: Seq[BatchOperationsResult], start: Instant, finish: Instant = Instant.now()):
-  val duration: Duration = Duration.between(start, finish)
-  var successCount: Int = 0
-  var failCount: Int = 0
+sealed trait SendField extends EnumEntry:
+  override def values: IndexedSeq[EnumEntry] = values
 
-  for {
-    bo: BatchOperationsResult <- operations
-    op: RcOperationResult <- bo.results
-  } {
-    if (op.isSuccess)
-      successCount += 1
-    else
-      failCount += 1
-  }
+object SendField extends PlayEnum[SendField]:
 
-  object LastSendBatch:
-    var maybeLastSendBatch: Option[LastSendBatch] = None
+  override val values: IndexedSeq[SendField] = findValues
 
-    def save(lastSendBatch: LastSendBatch): Unit =
-      maybeLastSendBatch = Some(lastSendBatch)
-    
+  case object AllFields extends SendField
+
+  case object CandidatesOnly extends SendField
+
+

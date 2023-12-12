@@ -39,13 +39,15 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
   val memoryFile: Path = Configs.path("vizRc210.memoryFile")
   val tempFile: Path = memoryFile.resolveSibling(memoryFile.toFile.toString + ".temp")
   val expectedLines: Int = config.getInt("vizRc210.expectedRcLines")
-  val progreMod: Int = config.getInt("vizRc210.showProgressEvery")
+  val progressMod: Int = config.getInt("vizRc210.showProgressEvery")
 
+  
   /**
    *
    * @return a Future that will be completed with the final [[Progress]] when done and a [[sun.net.ProgressSource]] that can be used to obtain the current [[Progress]] while download is running.
    */
   def apply(progressApi: ProgressApi, maybeComment: Option[String]): Unit = {
+    progressApi.expectedCount(expectedLines)
     val rcOp: RcEventBased = rc210.openEventBased()
     val fileWriter = new PrintWriter(Files.newOutputStream(tempFile))
     fileWriter.println(s"stamp: ${Instant.now()}")

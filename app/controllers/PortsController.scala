@@ -19,51 +19,54 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.*
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey, FieldValue, SimpleFieldValue}
+import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
-import net.wa9nnn.rc210.ui.SimpleValuesHandler
+import net.wa9nnn.rc210.ui.{ProcessResult, SimpleValuesHandler}
 import net.wa9nnn.rc210.{Key, KeyKind}
-import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import play.api.mvc.*
 
 import javax.inject.{Inject, Singleton}
 import scala.collection.mutable
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
-import scala.language.postfixOps
 
 @Singleton
 class PortsController @Inject()(implicit dataStore: DataStore, cc: MessagesControllerComponents)
   extends MessagesAbstractController(cc) with LazyLogging {
-  implicit val timeout: Timeout = 3 seconds
   private var simpleValuesHandler: Option[SimpleValuesHandler] = None
 
   def index(): Action[AnyContent] = Action {
     implicit request => {
-      dataStore(AllForKeyKind(KeyKind.portKey)).forAll(fieldEntries =>
-        if (simpleValuesHandler.isEmpty)
-          simpleValuesHandler = Some(new SimpleValuesHandler(fieldEntries))
+      val fieldEntries = dataStore.apply(KeyKind.portKey)
+      if (simpleValuesHandler.isEmpty)
+        simpleValuesHandler = Some(new SimpleValuesHandler(fieldEntries))
 
-        val rows: Seq[Row] = fieldEntries
-          .groupBy(_.fieldKey.fieldName)
-          .toSeq
-          .sortBy(_._1)
-          .map { (name, portEntries) =>
-            Row(name, portEntries.sortBy(_.fieldKey.key.rc210Value))
-          }
-        Ok(views.html.ports(rows)))
+      val rows: Seq[Row] = fieldEntries
+        .groupBy(_.fieldKey.fieldName)
+        .toSeq
+        .sortBy(_._1)
+        .map { (name, portEntries) =>
+          Row(name, portEntries.sortBy(_.fieldKey.key.rc210Value))
+        }
+      Ok(views.html.ports(rows))
     }
   }
 
   def save(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      val collect: UpdateData = simpleValuesHandler.get.collect
-      dataStore(collect)
+      val collect: CandidateAndNames = simpleValuesHandler.get.collect
+      val candidateAndNames = ProcessResult(collect)
+      dataStore.update(candidateAndNames)
       Redirect(routes.PortsController.index())
   }
-
 }
 
+/**
+ * One <tr> of data used by [[views.html.ports]]
+ *
+ * @param name        row header 
+ * @param portEntries remaining td elements. 
+ */
 case class Row(name: String, portEntries: Seq[FieldEntry]) {
   def cells: Seq[String] = {
     portEntries.map { fe =>

@@ -19,7 +19,7 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.Key.keyFormatter
-import net.wa9nnn.rc210.data.datastore.{AllForKeyKind, DataStore, DataStoreMessage, ForFieldKey}
+import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
 import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
@@ -29,10 +29,8 @@ import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.mvc.*
 
-import scala.concurrent.duration.*
-import scala.concurrent.{ExecutionContext, Future}
 import javax.inject.*
-import scala.concurrent.duration.DurationInt
+import scala.concurrent.duration.*
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
@@ -42,16 +40,15 @@ class LogicAlarmEditorController @Inject()(components: MessagesControllerCompone
 
   def index(): Action[AnyContent] = Action {
     implicit request =>
-      val reply = dataStore(AllForKeyKind(KeyKind.logicAlarmKey))
-      val logicAlarms = reply.allValues[LogicAlarm]
+      val logicAlarms: Seq[LogicAlarm] = dataStore.values(KeyKind.logicAlarmKey)
       Ok(views.html.logic(logicAlarms))
   }
 
   def edit(logicAlarmKey: Key): Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] =>
       val fieldKey = FieldKey("LogicAlarm", logicAlarmKey)
-      dataStore(ForFieldKey(fieldKey)).head[LogicAlarm]
-      val form: Form[LogicAlarm] = LogicAlarm.logicForm.fill(dataStore(ForFieldKey(fieldKey)).head[LogicAlarm])
+      val logicAlarm: LogicAlarm = dataStore.editValue(fieldKey)
+      val form: Form[LogicAlarm] = LogicAlarm.logicForm.fill(logicAlarm)
       Ok(views.html.logicEditor(form, logicAlarmKey.namedKey))
   }
 
@@ -65,7 +62,7 @@ class LogicAlarmEditorController @Inject()(components: MessagesControllerCompone
         },
         (logicAlarm: LogicAlarm) => {
           val candidateAndNames = ProcessResult(logicAlarm)
-          dataStore(candidateAndNames)
+          dataStore.update(candidateAndNames)
           Redirect(routes.LogicAlarmEditorController.index())
         }
       )

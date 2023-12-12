@@ -43,7 +43,7 @@ class ClockController @Inject()(implicit dataStore: DataStore, ec: ExecutionCont
 
   def index: Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] => {
-      val clock: Clock = dataStore.forFieldKey(Clock.fieldKey)
+      val clock: Clock = dataStore.editValue(Clock.fieldKey)
       Ok(views.html.clock(clockForm.fill(clock)))
     }
   }

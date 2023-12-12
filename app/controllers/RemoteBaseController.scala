@@ -19,37 +19,27 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.KeyKind
-import net.wa9nnn.rc210.data.datastore.{AllForKeyKind, CandidateAndNames, DataStore, UpdateCandidate}
+import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.remotebase.RemoteBase
 import net.wa9nnn.rc210.data.timers.Timer
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import net.wa9nnn.rc210.ui.ProcessResult
-import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
-import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
-import org.apache.pekko.util.Timeout
 import play.api.data.Forms.*
 import play.api.data.{Field, Form, Mapping}
 import play.api.mvc.*
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.duration.DurationInt
-import scala.concurrent.{ExecutionContext, Future}
-import scala.language.postfixOps
 
 @Singleton()
-class RemoteBaseController @Inject()(dataStore: DataStore)
-                                    (implicit scheduler: Scheduler, ec: ExecutionContext, components: MessagesControllerComponents)
+class RemoteBaseController @Inject()(dataStore: DataStore, components: MessagesControllerComponents)
   extends MessagesAbstractController(components) with LazyLogging {
-  implicit val timeout: Timeout = 3 seconds
 
   def index: Action[AnyContent] = Action {
     implicit request =>
-      val dataStoreReply = dataStore(AllForKeyKind(KeyKind.remoteBaseKey))
-      dataStoreReply.forHead[RemoteBase] { (_, rb) =>
-        val value: Form[RemoteBase] = RemoteBase.form.fill(rb)
-        Ok(views.html.remoteBase(value))
-      }
+      val remoteBase: RemoteBase = dataStore.editValue(RemoteBase.fieldKey)
+      val value: Form[RemoteBase] = RemoteBase.form.fill(remoteBase)
+      Ok(views.html.remoteBase(value))
   }
 
   def save(): Action[AnyContent] = Action { implicit request =>
@@ -60,16 +50,12 @@ class RemoteBaseController @Inject()(dataStore: DataStore)
           BadRequest(views.html.remoteBase(formWithErrors))
         },
         (remoteBase: RemoteBase) => {
-          val updateCandidate: UpdateCandidate = UpdateCandidate(remoteBase)
-          val candidateAndNames: CandidateAndNames = CandidateAndNames(updateCandidate, None)
-
-          dataStore(candidateAndNames)
+          val candidateAndNames = ProcessResult(remoteBase)
+          dataStore.update(candidateAndNames)
           Redirect(routes.RemoteBaseController.index)
         }
       )
-
   }
-
 }
 
 

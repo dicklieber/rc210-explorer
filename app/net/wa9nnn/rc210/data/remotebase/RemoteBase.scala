@@ -94,14 +94,12 @@ object RemoteBase extends ComplexExtractor {
       )
     }
 
-
     val remoteBase = RemoteBase(radio, yaesu, prefix, memories)
     Seq(FieldEntry(this, remoteBase.fieldKey, remoteBase))
   }
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[RemoteBase]
 
-  override val kind: KeyKind = KeyKind.remoteBaseKey
 
   override def positions: Seq[FieldOffset] = Seq(
     FieldOffset(1176, this, "Radio Type"),
@@ -116,6 +114,9 @@ object RemoteBase extends ComplexExtractor {
    */
   override val name: String = "RemoteBase"
   override val fieldName: String = name
+  override val kind: KeyKind = KeyKind.remoteBaseKey
+  val key:Key = Key(kind)
+  val fieldKey: FieldKey = super.fieldKey(key)
 
   implicit val fmtRBMemory: Format[RBMemory] = Json.format[RBMemory]
   implicit val fmtRemoteBase: Format[RemoteBase] = Json.format[RemoteBase]

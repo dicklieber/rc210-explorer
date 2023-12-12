@@ -23,8 +23,11 @@ import net.wa9nnn.rc210.data.field.ComplexFieldValue
 import net.wa9nnn.rc210.data.named.NamedKey
 import play.api.mvc.{AnyContent, AnyContentAsFormUrlEncoded, Request}
 
+/**
+ * Helpers that extract [[NamedKey]]s from a form request.
+ */
 object ProcessResult {
-  def apply(fieldValue:ComplexFieldValue)(implicit request: Request[AnyContent]): CandidateAndNames = {
+  def apply(fieldValue: ComplexFieldValue)(implicit request: Request[AnyContent]): CandidateAndNames =
     val data: Map[String, String] = request
       .body
       .asFormUrlEncoded
@@ -38,6 +41,19 @@ object ProcessResult {
     val updateCandidate = UpdateCandidate(fieldValue.fieldKey, Right(fieldValue))
 
     CandidateAndNames(updateCandidate, namedKeys)
-  }
+
+  def apply(candidateAndNames: CandidateAndNames)(implicit request: Request[AnyContent]): CandidateAndNames =
+
+    val data: Map[String, String] = request
+      .body
+      .asFormUrlEncoded
+      .get
+      .map(t => t._1 -> t._2.head)
+    val sKey: String = data.getOrElse("key", throw new IllegalArgumentException("No key in form data!"))
+    val key = Key(sKey)
+
+    val namedKeys: Option[NamedKey] = data.get("name").map(name => NamedKey(key, name))
+
+    candidateAndNames.copy(namedKeys = Some(namedKeys))
 
 }
