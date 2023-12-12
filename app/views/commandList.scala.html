@@ -9,7 +9,7 @@
         </a>
     </ul>
     @for(fieldKey <- maybeFieldKey) {
-        <a href="@routes.CommandsController.sendCandidate(fieldKey)" title="Send to RC-210">
+        <a href="@routes.CommandsController.sendFieldValue(fieldKey)" title="Send to RC-210">
         <i class="bi bi-send"></i>
         </a>
         }

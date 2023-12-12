@@ -54,6 +54,6 @@ object ProcessResult {
 
     val namedKeys: Option[NamedKey] = data.get("name").map(name => NamedKey(key, name))
 
-    candidateAndNames.copy(namedKeys = Some(namedKeys))
+    candidateAndNames.copy(namedKeys = namedKeys.iterator.toSeq)
 
 }

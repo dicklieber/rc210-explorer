@@ -41,9 +41,9 @@ case class LastSendBatch(operations: Seq[BatchOperationsResult], start: Instant,
       failCount += 1
   }
 
-  object LastSendBatch:
-    var maybeLastSendBatch: Option[LastSendBatch] = None
+object LastSend:
+  var maybeLastSendBatch: Option[LastSendBatch] = None
 
-    def save(lastSendBatch: LastSendBatch): Unit =
-      maybeLastSendBatch = Some(lastSendBatch)
+  def save(lastSendBatch: LastSendBatch): Unit =
+    maybeLastSendBatch = Some(lastSendBatch)
     

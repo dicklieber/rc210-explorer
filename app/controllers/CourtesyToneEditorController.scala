@@ -46,8 +46,8 @@ class CourtesyToneEditorController @Inject()(dataStore: DataStore, components: M
       val fieldKey = CourtesyTonesExtractor.fieldKey(key)
       val courtesyTone: CourtesyTone = dataStore.editValue(fieldKey)
 
-      val form: Form[CourtesyTone] = CourtesyTone.form.fill(courtesyTone)
-      Ok(views.html.courtesyToneEdit(form, key.namedKey))
+      implicit val f: Form[CourtesyTone] = CourtesyTone.form.fill(courtesyTone)
+      Ok(views.html.courtesyToneEdit( key.namedKey))
   }
 
   def save(): Action[AnyContent] = Action {
@@ -55,9 +55,10 @@ class CourtesyToneEditorController @Inject()(dataStore: DataStore, components: M
       CourtesyTone.form
         .bindFromRequest()
         .fold(
-          (formWithErrors: Form[CourtesyTone]) => {
+          ( formWithErrors: Form[CourtesyTone]) => {
             val namedKey = Key(formWithErrors.data("key")).namedKey
-            BadRequest(views.html.courtesyToneEdit(formWithErrors, namedKey))
+            implicit val f: Form[CourtesyTone] = formWithErrors
+            BadRequest(views.html.courtesyToneEdit( namedKey))
           },
           (courtesyTone: CourtesyTone) => {
             val candidateAndNames = ProcessResult(courtesyTone)

@@ -48,7 +48,7 @@ class MeterController @Inject()(dataStore: DataStore, components: MessagesContro
               metersEntries: Seq[FieldEntry] <- eventualMeters
               meterAlarmsEntries: Seq[FieldEntry] <- eventualAlarmEntries
             yield*/
-      val vRef: Int = dataStore.editValue[FieldInt](FieldKey("vRef", Key(KeyKind.commonKey))).value
+      val vRef: Int = dataStore.apply(FieldKey("vRef", Key(KeyKind.commonKey))).value
       val meters: Seq[Meter] = dataStore.indexValues(KeyKind.meterKey)
       val meterAlarms: Seq[MeterAlarm] = dataStore.indexValues(KeyKind.meterAlarmKey)
       val meterStuff = MeterStuff(vRef, meters, meterAlarms)

@@ -21,8 +21,7 @@ import enumeratum.{EnumEntry, PlayEnum}
 import net.wa9nnn.rc210.data.remotebase.CtcssMode.findValues
 import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
 
-sealed trait SendField extends EnumEntry:
-  override def values: IndexedSeq[EnumEntry] = values
+sealed trait SendField extends EnumEntry
 
 object SendField extends PlayEnum[SendField]:
 

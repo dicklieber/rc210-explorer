@@ -22,12 +22,11 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.serial.BatchRc210Sender.init
+import net.wa9nnn.rc210.serial.LastSend
 import net.wa9nnn.rc210.serial.comm.RcStreamBased
-import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
-import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
+//import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.stream.Materializer
 import org.apache.pekko.stream.scaladsl.*
-import org.apache.pekko.util.Timeout
 import play.api.mvc.{MessagesAbstractController, MessagesControllerComponents}
 
 import java.time.Instant
@@ -40,7 +39,6 @@ import scala.language.postfixOps
 class BatchRc210Sender @Inject()(dataStore: DataStore, rc210: Rc210)
                                 (implicit config: Config, mat: Materializer)
   extends LazyLogging {
-  implicit val timeout: Timeout = 3 seconds
   private val stopOnError: Boolean = config.getBoolean("vizRc210.stopSendOnError")
 
   /**
@@ -74,7 +72,7 @@ class BatchRc210Sender @Inject()(dataStore: DataStore, rc210: Rc210)
       }
       operations += batchOperationsResult
     }
-    LastSendBatch.save(LastSendBatch(operations.result(), start))
+    LastSend.save(LastSendBatch(operations.result(), start))
     progressApi.finish("Done")
   }
 }

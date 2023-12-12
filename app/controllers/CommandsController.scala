@@ -92,6 +92,13 @@ class CommandsController @Inject()(dataStore: DataStore,
       Ok(batchOpResult(batchOperationsResult))
   }
 
+  def sendAll():Action[AnyContent] = Action{
+    ImATeapot
+  }
+  def sendAllCandidates():Action[AnyContent] = Action{
+    ImATeapot
+  }
+  
   def ws(sendField: SendField): WebSocket = WebSocket.accept[String, Progress] { implicit request =>
     //todo handle authorization See https://www.playframework.com/documentation/3.0.x/ScalaWebSockets
     val start = Instant.now()

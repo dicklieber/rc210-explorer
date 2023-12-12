@@ -26,7 +26,7 @@ import net.wa9nnn.rc210.security.authentication.{RcSession, User}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.session
 import play.api.mvc.Request
 
-import javax.inject.Singleton
+import javax.inject.{Inject, Singleton}
 import scala.collection.concurrent.TrieMap
 import scala.util.Try
 
@@ -34,7 +34,7 @@ import scala.util.Try
  * This is the in-memory source of all RC-210 and NamedKey data.
  */
 @Singleton
-class DataStore(persistence: DataStorePersistence) extends NamedKeySource {
+class DataStore @Inject() (persistence: DataStorePersistence) extends NamedKeySource {
   private implicit val keyFieldMap: TrieMap[FieldKey, FieldEntry] = new TrieMap[FieldKey, FieldEntry]()
   private val keyNameMap = new TrieMap[Key, String]
   Key.setNamedSource(this) // so any Key can get it's user-supplied name.
@@ -126,6 +126,7 @@ class DataStore(persistence: DataStorePersistence) extends NamedKeySource {
       keyFieldMap.values.map(FieldEntryJson(_)).toSeq,
       namedKeys = keyNameMap.map { case (key, name) => NamedKey(key, name) }.toSeq)
 
+  override def nameForKey(key: Key): String = keyNameMap.getOrElse(key, "")
 }
 
 

@@ -1,12 +1,10 @@
-@import net.wa9nnn.rc210.ui.Tabs
-
 @import com.wa9nnn.util.TimeConverters
-@import net.wa9nnn.rc210.serial.BatchOperationsResult
-@import net.wa9nnn.rc210.serial.LastSendBatch
+@import net.wa9nnn.rc210.serial.{BatchOperationsResult, LastSend}
+@import net.wa9nnn.rc210.ui.Tabs
 @()
 
     @tabbedmain(Tabs.noTab) {
-        @defining(LastSendBatch.maybeLastSendBatch.get) { lastSendBatch =>
+        @defining(LastSend.maybeLastSendBatch.get) { lastSendBatch =>
             <table class="headeredTable">
                 <tr>
                     <td>Started</td>

@@ -7,7 +7,7 @@
 @import views.html.ct.delay
 @import views.html.ct.duration
 @import views.html.ct.tone
-@(f: Form[CourtesyTone], namedKey: NamedKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+@( namedKey: NamedKey)(implicit f: Form[CourtesyTone], request: RequestHeader, messagesProvider: MessagesProvider)
 
     @tabbedmain(Tabs.ctTab) {
         <div>
