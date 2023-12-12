@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.datastore
 
 import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey, FieldValue}
+import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldKey, FieldValue}
 import net.wa9nnn.rc210.data.named.{NamedKey, NamedKeySource}
 import net.wa9nnn.rc210.security.authentication.{RcSession, User}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.session
@@ -40,42 +40,50 @@ class DataStore(persistence: DataStorePersistence) extends NamedKeySource {
 
   loadFromJson()
 
-  def apply(askRequest: DataStoreRequest)(implicit request: Request[_]): DataStoreReply = {
-    val dataStoreReply: DataStoreReply = DataStoreReply(Try(askRequest.process))
-    askRequest match
-      case _: WriteRequst => save(session)
-      case _ =>
-    dataStoreReply
-  }
-  //
-  //
-  ////        def all: Seq[FieldEntry] = data.values.toSeq
-  //
-  //        def entries(keyKind: KeyKind): Seq[FieldEntry] =
-  //          all.filter(_.fieldKey.key.keyKind == keyKind).sortBy(_.fieldKey)
-  //
-  //        def entries(key: Key): Seq[FieldEntry] =
-  //          all.filter(_.fieldKey.key == key).sortBy(_.fieldKey.fieldName)
-  //
-  //        def withCandidate: Seq[FieldEntry] = all.filter(_.candidate.nonEmpty).sortBy(_.fieldKey.fieldName)
-  //
-  //        def triggerNodes: Seq[TriggerNode] =
-  //          all.flatMap { fieldEntry =>
-  //            fieldEntry match
-  //              case tn: TriggerNode =>
-  //                Option.when(tn.nodeEnabled)(tn)
-  //              case _ =>
-  //                Seq.empty
-  //          }
-  //
-  //        def acceptCandidate(fieldKey: FieldKey, user: User) =
-  //          data.put(fieldKey, data(fieldKey).acceptCandidate())
-  //          save(user)
-  //
+  def forFieldKey[T](fieldKey: FieldKey): T =
+    all.find(_.fieldKey == fieldKey).get.asInstanceOf[T]
 
-  def reload():Unit =
+  def all: Seq[FieldEntry] = 
+    keyFieldMap.values.toIndexedSeq.sorted
+
+  def apply(keyKind: KeyKind): Seq[FieldEntry] =
+    all.filter(_.fieldKey.key.keyKind == keyKind).sorted
+
+  def apply(key: Key): Seq[FieldEntry] =
+    all.filter(_.fieldKey.key == key).sorted
+
+  def candidates: Seq[FieldEntry] =
+    all.filter(_.candidate.nonEmpty).sorted
+
+  def triggerNodes: Seq[TriggerNode] =
+    all.flatMap { fieldEntry =>
+      fieldEntry match
+        case tn: TriggerNode =>
+          Option.when(tn.nodeEnabled)(tn)
+        case _ =>
+          Seq.empty
+    }
+
+  def update(candidateAndNames: CandidateAndNames)(implicit request: Request[_]): Unit =
+    candidateAndNames.candidates.foreach { uc =>
+      val fieldKey = uc.fieldKey
+      val current: FieldEntry = keyFieldMap(fieldKey)
+      keyFieldMap.put(fieldKey, uc.candidate match
+        case Left(value: String) =>
+          current.setCandidate(value)
+        case Right(value: ComplexFieldValue) =>
+          current.setCandidate(value))
+    }
+
+    save(session)
+
+  def acceptCandidate(fieldKey: FieldKey)(implicit request: Request[_]): Unit =
+    keyFieldMap.put(fieldKey, keyFieldMap(fieldKey).acceptCandidate())
+    save(session)
+
+  def reload(): Unit =
     throw new NotImplementedError() //todo
-    
+
   def save(session: RcSession): Unit =
     val dto = toJson.copy(who = Some(session.user.who))
     persistence.save(dto)
@@ -101,7 +109,7 @@ class DataStore(persistence: DataStorePersistence) extends NamedKeySource {
   }
 
   def toJson: DataTransferJson =
-    DataTransferJson(values = 
+    DataTransferJson(values =
       keyFieldMap.values.map(FieldEntryJson(_)).toSeq,
       namedKeys = keyNameMap.map { case (key, name) => NamedKey(key, name) }.toSeq)
 

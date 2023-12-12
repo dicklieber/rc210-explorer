@@ -54,14 +54,14 @@ class CommandsController @Inject()(dataStore: DataStore,
 
   def index: Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] => {
-      val fieldEntries = dataStore(Candidates).all
+      val fieldEntries: Seq[FieldEntry] = dataStore.candidates
       Ok(views.html.candidates(fieldEntries))
     }
   }
 
   def dump(): Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] =>
-      val fieldEntries = dataStore(Candidates).all
+      val fieldEntries = dataStore.candidates
       Ok(views.html.dump(fieldEntries))
   }
   

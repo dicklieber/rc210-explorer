@@ -19,7 +19,7 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.Key.keyFormatter
-import net.wa9nnn.rc210.data.datastore.{AllForKeyKind, DataStore, DataStoreMessage, DataStoreReply, ForFieldKey}
+import net.wa9nnn.rc210.data.datastore.{AllForKeyKind, DataStore, DataStoreMessage, ForFieldKey}
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
 import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user

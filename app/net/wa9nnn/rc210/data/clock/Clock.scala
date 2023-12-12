@@ -21,11 +21,11 @@ import com.wa9nnn.util.JsonFormatUtils.javaEnumFormat
 import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.clock.MonthOfYearDST.*
 import net.wa9nnn.rc210.data.clock.Occurrence.*
-import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
+import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldKey, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.{Format, JsValue, Json}
-import play.api.data._
-import play.api.data.Forms._
+import play.api.data.*
+import play.api.data.Forms.*
 
 case class Clock(key: Key,
                  enableDST: Boolean = true,
@@ -91,7 +91,6 @@ object Clock extends ComplexExtractor {
 
   def unapply(u: Clock): Option[(Key, Boolean, Int, DSTPoint, DSTPoint, Boolean)] = Some((u.key, u.enableDST, u.hourDST, u.startDST, u.endDST, u.say24Hours))
 
-  val key: Key = Key(KeyKind.clockKey) // there's only one
 
   /**
    *
@@ -122,6 +121,8 @@ object Clock extends ComplexExtractor {
 
   override val fieldName: String = name
   override val kind: KeyKind = KeyKind.clockKey
+  val key: Key = Key(KeyKind.clockKey) // there's only one
+  val fieldKey: FieldKey = FieldKey(fieldName, key)
 
   override def positions: Seq[FieldOffset] = Seq(
     FieldOffset(1186, this, "say24Hours"),

@@ -19,7 +19,7 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.KeyKind
-import net.wa9nnn.rc210.data.datastore.{AllForKeyKind, DataStore, DataStoreMessage, DataStoreReply, UpdateCandidate, UpdateData}
+import net.wa9nnn.rc210.data.datastore.{AllForKeyKind, DataStore, DataStoreMessage, UpdateCandidate, UpdateData}
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey, SimpleFieldValue}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import net.wa9nnn.rc210.ui.SimpleValuesHandler
