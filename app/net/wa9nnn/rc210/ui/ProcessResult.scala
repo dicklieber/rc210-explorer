@@ -19,9 +19,11 @@ package net.wa9nnn.rc210.ui
 
 import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.datastore.{CandidateAndNames, UpdateCandidate}
-import net.wa9nnn.rc210.data.field.ComplexFieldValue
+import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldKey}
 import net.wa9nnn.rc210.data.named.NamedKey
 import play.api.mvc.{AnyContent, AnyContentAsFormUrlEncoded, Request}
+
+import scala.collection.immutable
 
 /**
  * Helpers that extract [[NamedKey]]s from a form request.
@@ -43,17 +45,16 @@ object ProcessResult {
     CandidateAndNames(updateCandidate, namedKeys)
 
   def apply(candidateAndNames: CandidateAndNames)(implicit request: Request[AnyContent]): CandidateAndNames =
-
-    val data: Map[String, String] = request
+    val data: Map[FieldKey, String] = request
       .body
       .asFormUrlEncoded
       .get
-      .map(t => t._1 -> t._2.head)
-    val sKey: String = data.getOrElse("key", throw new IllegalArgumentException("No key in form data!"))
-    val key = Key(sKey)
+      .map(t => FieldKey(t._1) -> t._2.head)
+    val named: Map[FieldKey, String] = data.filter(_._1.fieldName == "name")
+    val namedKeys = named.map { (fieldKey, name) =>
+      NamedKey(fieldKey.key, name)
+    }
 
-    val namedKeys: Option[NamedKey] = data.get("name").map(name => NamedKey(key, name))
-
-    candidateAndNames.copy(namedKeys = namedKeys.iterator.toSeq)
+    candidateAndNames.copy(namedKeys = namedKeys.toSeq)
 
 }

@@ -6,7 +6,7 @@
 @(fieldEntries: Seq[FieldEntry])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
     @tabbedmain(Tabs.commonTab) {
-        @form(action = routes.CommonEditorController.save()) {
+        @form(action = routes.CommonController.save()) {
             <table>
                 <thead>
                     <tr>

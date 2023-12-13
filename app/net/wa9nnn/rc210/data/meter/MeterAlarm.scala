@@ -142,7 +142,7 @@ object MeterAlarm extends ComplexExtractor {
   /**
    * for various things e.g. parser name.
    */
-  override val name: String = "Meter"
+  override val name: String = "MeterAlarm"
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[MeterAlarm]
 

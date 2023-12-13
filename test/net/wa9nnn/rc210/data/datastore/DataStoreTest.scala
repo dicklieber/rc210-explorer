@@ -17,13 +17,19 @@
 
 package net.wa9nnn.rc210.data.datastore
 
-import net.wa9nnn.rc210.RcSpec
+import net.wa9nnn.rc210.data.field.{FieldDefinitions, FieldEntry}
+import net.wa9nnn.rc210.{RcSpec, WithTestConfiguration}
 
-class DataStoreLogicTest extends RcSpec {
+class DataStoreTest extends WithTestConfiguration {
+  private val definitions: FieldDefinitions = new FieldDefinitions
+  private val memoryFileLoader: MemoryFileLoader = new MemoryFileLoader(definitions)
+  private val dataStorePersistence: DataStorePersistence = new DataStorePersistence()
+  val dataStore = new DataStore(dataStorePersistence, memoryFileLoader)
+  "DataStore" should {
+    "all" in {
+       val all: Seq[FieldEntry] = dataStore.all
+        all should have length(42)
 
-  "Happy" in {
-//    new DataStoreLogic()
+    }
   }
-
-
 }

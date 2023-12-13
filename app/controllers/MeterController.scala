@@ -48,7 +48,8 @@ class MeterController @Inject()(dataStore: DataStore, components: MessagesContro
               metersEntries: Seq[FieldEntry] <- eventualMeters
               meterAlarmsEntries: Seq[FieldEntry] <- eventualAlarmEntries
             yield*/
-      val vRef: Int = dataStore.apply(FieldKey("vRef", Key(KeyKind.commonKey))).value
+      val vRefEntry: FieldInt = dataStore.editValue(FieldKey("vRef", Key(KeyKind.commonKey, 1)))
+      val vRef: Int = vRefEntry.value
       val meters: Seq[Meter] = dataStore.indexValues(KeyKind.meterKey)
       val meterAlarms: Seq[MeterAlarm] = dataStore.indexValues(KeyKind.meterAlarmKey)
       val meterStuff = MeterStuff(vRef, meters, meterAlarms)
@@ -63,7 +64,8 @@ class MeterController @Inject()(dataStore: DataStore, components: MessagesContro
 
   def editAlarm(alarmKey: Key): Action[AnyContent] = Action {
     implicit request =>
-      val meterAlarm: MeterAlarm = dataStore.editValue(MeterAlarm.fieldKey(alarmKey))
+      val fieldKey = MeterAlarm.fieldKey(alarmKey)
+      val meterAlarm: MeterAlarm = dataStore.editValue(fieldKey)
       Ok(html.meterAlarm(MeterAlarm.form.fill(meterAlarm), alarmKey.namedKey))
   }
 

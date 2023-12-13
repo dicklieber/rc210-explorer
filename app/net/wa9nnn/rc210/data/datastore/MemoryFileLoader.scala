@@ -27,7 +27,7 @@ import net.wa9nnn.rc210.util.Configs.path
 import java.net.URL
 import java.nio.file.Path
 import javax.inject.{Inject, Singleton}
-import scala.util.{Failure, Try}
+import scala.util.{Failure, Success, Try}
 
 /**
  * Holds [[Memory]]
@@ -36,7 +36,9 @@ import scala.util.{Failure, Try}
  * @param datFile
  */
 @Singleton
-class MemoryFileLoader @Inject()(implicit fieldDefinitions: FieldDefinitions, config: Config) extends LazyLogging {
+class MemoryFileLoader @Inject()( fieldDefinitions: FieldDefinitions)(implicit config: Config) extends LazyLogging {
+  private val memoryFilePath: Path = path("vizRc210.memoryFile")
+  private val memoryFile: URL = memoryFilePath.toUri.toURL
 
   private var tryMemory: Try[Memory] = Failure(notInitialized)
 
@@ -48,14 +50,12 @@ class MemoryFileLoader @Inject()(implicit fieldDefinitions: FieldDefinitions, co
    * @return [[Memory]] or the reason why.
    */
   private def loadMemory(): Unit = {
-    val memoryFilePath: Path = path("vizRc210.memoryFile")
-    val memoryFile: URL = memoryFilePath.toUri.toURL
     tryMemory = Memory.load(memoryFile)
   }
 
   def load: Try[Seq[FieldEntry]] = {
     loadMemory()
-    memory.map { implicit memory =>
+    val r: Try[Seq[FieldEntry]] = memory.map { implicit memory =>
       val simpleFields: Seq[FieldEntry] = for {
         fieldDefinition <- fieldDefinitions.simpleFields
         it = fieldDefinition.iterator()
@@ -79,7 +79,12 @@ class MemoryFileLoader @Inject()(implicit fieldDefinitions: FieldDefinitions, co
       }
       simpleFields ++: complexFields
     }
-
+    r match
+      case Failure(exception) =>
+        logger.error("Loading from {} {}", memoryFile.toExternalForm, exception.getMessage)
+      case Success(entries) => 
+        logger.info("Loaded {} entries from {}", entries.size, memoryFile.toExternalForm)
+    r
   }
 }
 

@@ -19,7 +19,7 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.KeyKind
-import net.wa9nnn.rc210.data.datastore.DataStore
+import net.wa9nnn.rc210.data.datastore.{CandidateAndNames, DataStore, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.remotebase.RemoteBase
 import net.wa9nnn.rc210.data.timers.Timer
@@ -50,8 +50,8 @@ class RemoteBaseController @Inject()(dataStore: DataStore, components: MessagesC
           BadRequest(views.html.remoteBase(formWithErrors))
         },
         (remoteBase: RemoteBase) => {
-          val candidateAndNames = ProcessResult(remoteBase)
-          dataStore.update(candidateAndNames)
+          val updateCandidate = UpdateCandidate(RemoteBase.fieldKey, Right(remoteBase))
+          dataStore.update(CandidateAndNames(updateCandidate, None))
           Redirect(routes.RemoteBaseController.index)
         }
       )

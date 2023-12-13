@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.data.datastore
 
+import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.data.clock.Clock
 import net.wa9nnn.rc210.{Key, KeyKind}
@@ -28,24 +29,35 @@ import play.api.mvc.Request
 
 import javax.inject.{Inject, Singleton}
 import scala.collection.concurrent.TrieMap
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 
 /**
  * This is the in-memory source of all RC-210 and NamedKey data.
  */
 @Singleton
-class DataStore @Inject() (persistence: DataStorePersistence) extends NamedKeySource {
+class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: MemoryFileLoader)
+  extends NamedKeySource with LazyLogging {
+
   private implicit val keyFieldMap: TrieMap[FieldKey, FieldEntry] = new TrieMap[FieldKey, FieldEntry]()
   private val keyNameMap = new TrieMap[Key, String]
   Key.setNamedSource(this) // so any Key can get it's user-supplied name.
 
+  loadFromMemory()
   loadFromJson()
 
   def values[T <: ComplexFieldValue](keyKind: KeyKind): Seq[T] =
     apply(keyKind).map(_.value.asInstanceOf[T])
 
-  def editValue[T <: ComplexFieldValue](fieldKey: FieldKey): T =
-    all.find(_.fieldKey == fieldKey).get.asInstanceOf[T]
+  def 
+  
+  editValue[T <: FieldValue](fieldKey: FieldKey): T =
+    val maybeFieldEntry: Option[FieldEntry] = all.find(_.fieldKey == fieldKey)
+    maybeFieldEntry match
+      case Some(fieldEntry: FieldEntry) => 
+        fieldEntry.value.asInstanceOf[T]
+      case None =>
+        throw new IllegalArgumentException(s"No editValue for fieldKey: $fieldKey")
+
 
   def indexValues[T <: ComplexFieldValue](keyKind: KeyKind): Seq[T] =
     all.filter(_.fieldKey.key.keyKind == keyKind).map(_.value.asInstanceOf[T])
@@ -57,7 +69,11 @@ class DataStore @Inject() (persistence: DataStorePersistence) extends NamedKeySo
     throw new NotImplementedError() //todo
 
   def apply(fieldKey: FieldKey): FieldEntry =
-    keyFieldMap(fieldKey)
+    keyFieldMap.get(fieldKey) match
+      case Some(fieldEntry) =>
+        fieldEntry
+      case None =>
+        throw new IllegalArgumentException(s"No value for fieldKey: $fieldKey")
 
   def apply(keyKind: KeyKind): Seq[FieldEntry] =
     all.filter(_.fieldKey.key.keyKind == keyKind).sorted
@@ -88,6 +104,14 @@ class DataStore @Inject() (persistence: DataStorePersistence) extends NamedKeySo
           current.setCandidate(value))
     }
 
+    candidateAndNames.namedKeys foreach{nammedKey =>
+      val key = nammedKey.key
+      if(nammedKey.name.isBlank)
+        keyNameMap.remove(key)
+      else
+        keyNameMap.put(key, nammedKey.name)
+    } 
+    
     save(session)
 
   def acceptCandidate(fieldKey: FieldKey)(implicit request: Request[_]): Unit =
@@ -115,11 +139,20 @@ class DataStore @Inject() (persistence: DataStorePersistence) extends NamedKeySo
         }
       }
       // update namedKeys from datastore.json
-      keyFieldMap.clear()
+      keyNameMap.clear()
       keyNameMap.addAll(dto.namedKeys.map(namedKey => namedKey.key -> namedKey.name))
     }
     }
   }
+
+  private def loadFromMemory(): Unit =
+    memoryFileLoader.load match
+      case Failure(exception) =>
+        logger.error("Loading DataStore from Download Memory image.", exception)
+      case Success(fieldEntries: Seq[FieldEntry]) =>
+        fieldEntries.foreach { fe =>
+          keyFieldMap.put(fe.fieldKey, fe)
+        }
 
   def toJson: DataTransferJson =
     DataTransferJson(values =

@@ -28,7 +28,7 @@ import play.api.mvc.*
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CommonEditorController @Inject()(dataStore: DataStore, components: MessagesControllerComponents)
+class CommonController @Inject()(dataStore: DataStore, components: MessagesControllerComponents)
   extends MessagesAbstractController(components) with LazyLogging {
   private var simpleValuesHandler: Option[SimpleValuesHandler] = None
 
@@ -38,13 +38,13 @@ class CommonEditorController @Inject()(dataStore: DataStore, components: Message
       val fieldEntries = dataStore(KeyKind.commonKey)
       if (simpleValuesHandler.isEmpty)
         simpleValuesHandler = Some(new SimpleValuesHandler(fieldEntries))
-      Ok(views.html.candidates(fieldEntries))
+      Ok(views.html.common(fieldEntries))
   }
 
   def save(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
       dataStore.update(simpleValuesHandler.get.collect)
-      Redirect(routes.CommonEditorController.index())
+      Redirect(routes.CommonController.index())
   }
 }
 

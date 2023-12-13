@@ -18,8 +18,8 @@ POST        /meter/saveAlarm                       controllers.MeterController.s
 POST        /logic/save                            controllers.LogicAlarmEditorController.save()
 GET         /logic/edit/:logicAlarmKey             controllers.LogicAlarmEditorController.edit(logicAlarmKey:Key)
 GET         /logic                                 controllers.LogicAlarmEditorController.index()
-POST        /common/save                           controllers.CommonEditorController.save()
-GET         /common                                controllers.CommonEditorController.index()
+POST        /common/save                           controllers.CommonController.save()
+GET         /common                                controllers.CommonController.index()
 GET         /schedules                             controllers.ScheduleController.index
 GET         /schedules/edit/:key                   controllers.ScheduleController.edit(key:Key)
 POST        /schedule/save                         controllers.ScheduleController.save()
