@@ -23,13 +23,9 @@ import javax.inject.{Inject, Singleton}
 
 @Singleton
 class DefaultNoUsersLogin @Inject()(config: Config) {
-  private val login = Credentials(
+  val login = Credentials(
     callsign = config.getString("vizRc210.authentication.defaultAdmin.callsign"),
     password = config.getString("vizRc210.authentication.defaultAdmin.password")
   )
-
-  def apply(): Credentials = {
-    login
-  }
 
 }

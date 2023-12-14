@@ -29,7 +29,7 @@ class UserManagerTest extends WithTestConfiguration {
 
     val path = dir.resolve("NoFile")
     "No users" should {
-      val userManager = new UserManager(path, defaultLogin)
+      val userManager = new UserStore(path, defaultLogin)
       "With non-default user" in {
         val maybeUser: Option[User] = userManager.validate(Credentials("WA9NNN", "123445"))
         maybeUser mustBe (None)
@@ -40,7 +40,7 @@ class UserManagerTest extends WithTestConfiguration {
       }
     }
     "Round trip" in {
-      val userManager = new UserManager(path, defaultLogin)
+      val userManager = new UserStore(path, defaultLogin)
       val password = Option("12345")
       val userEditDTO: UserEditDTO = UserEditDTO("WA9NNN", Option("Dick"), Option("wa9nnn@u505.com"), new UserId(), password, password)
       val who: User = User(userEditDTO)

@@ -17,23 +17,22 @@
 
 package controllers
 
-import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
-import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.data.timers.Timer
 import net.wa9nnn.rc210.security.UserId.UserId
-import net.wa9nnn.rc210.security.authentication.{User, UserManagerActor}
-import net.wa9nnn.rc210.security.authentication.UserManagerActor.{Get, Put, Remove}
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
+import net.wa9nnn.rc210.security.Who
+import net.wa9nnn.rc210.security.authentication.*
+import net.wa9nnn.rc210.ui.ProcessResult
 import net.wa9nnn.rc210.util.FormHelper
-import org.apache.pekko.util.Timeout
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional, text}
+import play.api.mvc.*
 import play.api.mvc.Security.AuthenticatedRequest
-import play.api.mvc.{Action, AnyContent, MessagesAbstractController, MessagesControllerComponents, MessagesInjectedController, MessagesRequest}
+import views.html.userEditor
+import net.wa9nnn.rc210.security.Who.*
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.Future
-import scala.concurrent.duration.DurationInt
 import scala.language.{implicitConversions, postfixOps}
 
 /**
@@ -44,48 +43,44 @@ import scala.language.{implicitConversions, postfixOps}
  * Handle create/edit/list users/
  */
 @Singleton
-class UsersController @Inject()(val userActor: ActorRef[UserManagerActor.Message])(implicit cc: MessagesControllerComponents, scheduler: Scheduler)
+class UsersController @Inject()(userStore: UserStore)(implicit cc: MessagesControllerComponents)
   extends MessagesAbstractController(cc) with LazyLogging {
 
-  implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
-  implicit val timeout: Timeout = 3 seconds
-
-  def users: Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
-    userActor.ask(UserManagerActor.Users.apply)
-      .map(userRecords =>
-        Ok(views.html.users(userRecords))
-      )
+  def users: Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
+    Ok(views.html.users(userStore.users))
   }
 
-  def editUser(id: UserId): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
-    userActor.ask(Get(id, _))
-      .map {
+  def editUser(id: UserId): Action[AnyContent] = Action {
+    implicit request: MessagesRequest[AnyContent] =>
+      userStore.get(id) match
         case Some(user: User) =>
-          Ok(views.html.userEditor(user.userEditDTO))
+          Ok(userEditor(UserEditDTO.form.fill(user.userEditDTO)))
         case None =>
-          Ok(s"UserId: $id not found!")
-      }
+          NotFound(s"UserId: $id not found!")
   }
 
   def addUser(): Action[AnyContent] = Action { implicit request =>
-    val newUser: UserEditDTO = UserEditDTO()
-    Ok(views.html.userEditor(newUser))
+    Ok(userEditor(UserEditDTO.form.fill(UserEditDTO())))
   }
 
-  def remove(userId: UserId): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
-    userActor.ask(Remove(userId, user, _)).map { _ =>
+  def remove(userId: UserId): Action[AnyContent] = Action {
+    implicit request: MessagesRequest[AnyContent] =>
+      userStore.remove(userId)(session(request))
       Redirect(routes.UsersController.users())
-    }
   }
 
-  def saveUser(): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
-
-    val helper = FormHelper()
-
-    val userEditDTO = UserEditDTO(helper)
-
-    userActor.ask(Put(userEditDTO, helper.user, _)).map { _ =>
-      Redirect(routes.UsersController.users())
-    }
+  def saveUser(): Action[AnyContent] = Action { 
+    implicit request: MessagesRequest[AnyContent] =>
+    UserEditDTO.form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => {
+          BadRequest(userEditor(formWithErrors))
+        },
+        (editDTO: UserEditDTO) => {
+          userStore.put(editDTO)(session(request))
+          Redirect(routes.TimerController.index)
+        }
+      )
   }
 }

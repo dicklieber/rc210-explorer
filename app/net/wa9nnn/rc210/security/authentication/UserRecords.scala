@@ -1,10 +1,26 @@
+/*
+ * Copyright (C) 2023  Dick Lieber, WA9NNN                               
+ *                                                                       
+ * This program is free software: you can redistribute it and/or modify  
+ * it under the terms of the GNU General Public License as published by  
+ * the Free Software Foundation, either version 3 of the License, or     
+ * (at your option) any later version.                                   
+ *                                                                       
+ * This program is distributed in the hope that it will be useful,       
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of        
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
+ * GNU General Public License for more details.                          
+ *                                                                       
+ * You should have received a copy of the GNU General Public License     
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ */
+
 package net.wa9nnn.rc210.security.authentication
 
 import com.typesafe.scalalogging.LazyLogging
 import controllers.UserEditDTO
 import net.wa9nnn.rc210.security.UserId.UserId
 import net.wa9nnn.rc210.security.Who
-import net.wa9nnn.rc210.security.Who.Callsign
 import play.api.libs.json.{Format, Json}
 
 import java.time.Instant
@@ -16,7 +32,9 @@ import java.time.Instant
  * @param users             all the user data.
  * @param stamp             when.
  */
-case class UserRecords(who: Who = Who(), users: List[User] = List.empty, stamp: Instant = Instant.now()) extends LazyLogging {
+case class UserRecords(who: Who = Who(), stamp: Instant = Instant.now(), users: Seq[User] = List.empty) 
+
+/*{
   private lazy val idMap: Map[UserId, User] = {
     users.map(u => u.id -> u).toMap
   }
@@ -51,7 +69,7 @@ case class UserRecords(who: Who = Who(), users: List[User] = List.empty, stamp: 
    * @param who is making this change.
    * @return a new [[UserRecords]]
    */
-  def update(in: UserEditDTO, who: Who): UserRecords = {
+  def update(in: UserEditDTO)(implicit who: Who): UserRecords = {
 
     val maybeRecord: Option[User] = idMap.get(in.id)
 
@@ -82,7 +100,6 @@ case class UserRecords(who: Who = Who(), users: List[User] = List.empty, stamp: 
 
   def iterator: Iterator[User] = users.iterator
 }
-
-object UserRecords {
+*/
+object UserRecords:
   implicit val fmtUserRecords: Format[UserRecords] = Json.format[UserRecords]
-}

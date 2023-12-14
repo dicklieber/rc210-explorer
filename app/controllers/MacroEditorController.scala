@@ -26,7 +26,6 @@ import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.RcMacro
 import net.wa9nnn.rc210.data.macros.RcMacro.*
 import net.wa9nnn.rc210.data.named.NamedKey
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import net.wa9nnn.rc210.ui.ProcessResult
 import net.wa9nnn.rc210.{Key, KeyKind}
 import play.api.mvc.*
@@ -38,6 +37,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 import scala.util.Try
 import scala.util.matching.Regex
+import net.wa9nnn.rc210.security.Who.*
 
 @Singleton()
 class MacroEditorController @Inject()(dataStore: DataStore)
@@ -52,7 +52,7 @@ class MacroEditorController @Inject()(dataStore: DataStore)
     Ok(macroNodes(values))
   }
 
-  def edit(key: Key): Action[AnyContent] = Action { implicit request =>
+  def edit(key: Key): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
 
     val fieldKey = FieldKey("Macro", key)
     val rcMacro: RcMacro = dataStore.editValue(fieldKey)
@@ -82,7 +82,7 @@ class MacroEditorController @Inject()(dataStore: DataStore)
 
     val rcMacro = RcMacro(key, functions, dtmf)
     val candidateAndNames = ProcessResult(rcMacro)
-    dataStore.update(candidateAndNames)
+    dataStore.update(candidateAndNames)(session(request))
 
     Redirect(routes.MacroEditorController.index())
   }

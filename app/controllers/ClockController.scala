@@ -25,11 +25,12 @@ import net.wa9nnn.rc210.data.clock.DSTPoint.dstPointForm
 import net.wa9nnn.rc210.data.clock.{Clock, DSTPoint}
 import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.*
 import net.wa9nnn.rc210.ui.ProcessResult
 import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.mvc.*
+import net.wa9nnn.rc210.security.Who.*
+import net.wa9nnn.rc210.security.authentication.RcSession
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
@@ -48,7 +49,7 @@ class ClockController @Inject()(implicit dataStore: DataStore, ec: ExecutionCont
     }
   }
 
-  def save(): Action[AnyContent] = Action { implicit request =>
+  def save(): Action[AnyContent] = Action { implicit request:MessagesRequest[AnyContent] =>
     clockForm
       .bindFromRequest()
       .fold(
@@ -57,7 +58,8 @@ class ClockController @Inject()(implicit dataStore: DataStore, ec: ExecutionCont
         },
         (clock: Clock) => {
           val candidateAndNames = ProcessResult(clock)
-          dataStore.update(candidateAndNames)
+          val session1: RcSession = session(request)
+          dataStore.update(candidateAndNames)(session1)
           Redirect(routes.ClockController.index)
         }
       )

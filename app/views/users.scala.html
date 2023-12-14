@@ -1,14 +1,12 @@
-@import net.wa9nnn.rc210.data.timers.Timer
-@import net.wa9nnn.rc210.security.authentication.UserRecords
+@import net.wa9nnn.rc210.security.authentication.User
 @import net.wa9nnn.rc210.ui.Tabs
-
-@(userRecords: UserRecords)
+@(users:Seq[User])
 @tabbedmain(Tabs.security) {
 
     <table class="table table-bordered table-sm w-auto">
         <thead>
             <tr>
-                <th colspan="4">Users (@userRecords.size)</th>
+                <th colspan="4">Users (@users.size)</th>
             </tr>
             <tr>
                 <th></th>
@@ -18,7 +16,7 @@
             </tr>
         </thead>
         <tbody>
-        @for(user <- userRecords.users.sorted) {
+        @for(user <- users) {
             <tr>
                 <td>
                 @editButton(routes.UsersController.editUser(user.id))

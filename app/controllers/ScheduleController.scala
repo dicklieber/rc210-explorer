@@ -19,15 +19,12 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, Table}
-import net.wa9nnn.rc210.data.datastore._
+import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.schedules.Schedule
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.{session, user}
+import net.wa9nnn.rc210.security.Who.*
 import net.wa9nnn.rc210.ui.ProcessResult
 import net.wa9nnn.rc210.{Key, KeyKind}
-import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
-import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
-import org.apache.pekko.util.Timeout
 import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.mvc.*
@@ -53,7 +50,7 @@ class ScheduleController @Inject()(dataStore: DataStore, components: MessagesCon
   }
 
   def save(): Action[AnyContent] = Action {
-    implicit request =>
+    implicit request: MessagesRequest[AnyContent] =>
       Schedule.form
         .bindFromRequest()
         .fold(
@@ -63,7 +60,7 @@ class ScheduleController @Inject()(dataStore: DataStore, components: MessagesCon
           },
           (schedule: Schedule) => {
             val candidateAndNames = ProcessResult(schedule)
-            dataStore.update(candidateAndNames)
+            dataStore.update(candidateAndNames)(session(request))
             Redirect(routes.ScheduleController.index)
           }
         )

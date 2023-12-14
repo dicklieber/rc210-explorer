@@ -20,7 +20,6 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.*
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import net.wa9nnn.rc210.ui.{ProcessResult, SimpleValuesHandler}
 import net.wa9nnn.rc210.{Key, KeyKind}
 import play.api.mvc.*
@@ -29,6 +28,7 @@ import javax.inject.{Inject, Singleton}
 import scala.collection.mutable
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
+import net.wa9nnn.rc210.security.Who.*
 
 @Singleton
 class PortsController @Inject()(implicit dataStore: DataStore, cc: MessagesControllerComponents)
@@ -53,10 +53,10 @@ class PortsController @Inject()(implicit dataStore: DataStore, cc: MessagesContr
   }
 
   def save(): Action[AnyContent] = Action {
-    implicit request: Request[AnyContent] =>
+    implicit request: MessagesRequest[AnyContent] =>
       val collect: CandidateAndNames = simpleValuesHandler.get.collect
       val candidateAndNames = ProcessResult(collect)
-      dataStore.update(candidateAndNames)
+      dataStore.update(candidateAndNames)(session(request))
       Redirect(routes.PortsController.index())
   }
 }

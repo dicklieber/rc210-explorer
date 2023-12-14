@@ -18,16 +18,12 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.KeyKind
 import net.wa9nnn.rc210.data.datastore.{CandidateAndNames, DataStore, UpdateCandidate}
-import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.remotebase.RemoteBase
-import net.wa9nnn.rc210.data.timers.Timer
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
-import net.wa9nnn.rc210.ui.ProcessResult
 import play.api.data.Forms.*
 import play.api.data.{Field, Form, Mapping}
 import play.api.mvc.*
+import net.wa9nnn.rc210.security.Who.session
 
 import javax.inject.{Inject, Singleton}
 
@@ -51,7 +47,8 @@ class RemoteBaseController @Inject()(dataStore: DataStore, components: MessagesC
         },
         (remoteBase: RemoteBase) => {
           val updateCandidate = UpdateCandidate(RemoteBase.fieldKey, Right(remoteBase))
-          dataStore.update(CandidateAndNames(updateCandidate, None))
+          val candidateAndNames = CandidateAndNames(updateCandidate, None)
+          dataStore.update(candidateAndNames)(session(request))
           Redirect(routes.RemoteBaseController.index)
         }
       )

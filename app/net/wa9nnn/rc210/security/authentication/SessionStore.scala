@@ -1,10 +1,10 @@
 package net.wa9nnn.rc210.security.authentication
 
-import com.fasterxml.jackson.module.scala.deser.overrides.TrieMap
-import com.typesafe.config.Config
+import com.typesafe.config.*
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.security.authentication.RcSession.SessionId
-import net.wa9nnn.rc210.util.JsonIoWithBackup
+import net.wa9nnn.rc210.util.Configs.*
+import net.wa9nnn.rc210.util.{Configs, JsonIoWithBackup}
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.Cookie
 
@@ -12,7 +12,9 @@ import java.io.FileNotFoundException
 import java.nio.file.Path
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import scala.language.postfixOps
+import java.util.{Timer, TimerTask}
+import javax.inject.{Inject, Singleton}
+import scala.collection.concurrent.TrieMap
 
 /**
  * Creates and manages [[RcSession]] objects.
@@ -20,12 +22,16 @@ import scala.language.postfixOps
  * Periodically Persisted if dirty.
  * Loaded at startup
  */
-class SessionManager(sessionFile: Path) extends LazyLogging {
-
+@Singleton()
+class SessionStore @Inject()(implicit config: Config) extends LazyLogging {
+  private val sessionFile = path("vizRc210.sessionFile")
+  private val purgeTask = new TimerTask:
+    override def run(): Unit = tick()
+  private val purgeTimer = new Timer("purge", true)
+  purgeTimer.schedule(purgeTask, 5000, 1000)
 
   private val sessionMap = new TrieMap[SessionId, RcSession]
   private var dirty = false
-
 
   try {
     val sessions = JsonIoWithBackup(sessionFile).as[RcSessions].sessions
@@ -52,7 +58,6 @@ class SessionManager(sessionFile: Path) extends LazyLogging {
         }
       }
   }
-
 
   def create(user: User, ip: String): RcSession = {
     removeAnyExistingSession(user)
@@ -94,7 +99,7 @@ class SessionManager(sessionFile: Path) extends LazyLogging {
   /**
    * Invoke periodically.
    *
-   * [[SessionManager]] will purge stale sessions and write if dirty.
+   * [[SessionStore]] will purge stale sessions and write if dirty.
    */
   def tick(): Unit = {
     logger.trace("RcSession Purge")
@@ -119,7 +124,7 @@ class SessionManager(sessionFile: Path) extends LazyLogging {
   }
 }
 
-object SessionManager {
+object SessionStore {
   val playSessionName = "rcSession"
 }
 

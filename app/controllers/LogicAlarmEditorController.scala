@@ -22,24 +22,22 @@ import net.wa9nnn.rc210.Key.keyFormatter
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
 import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import net.wa9nnn.rc210.ui.{LogRequest, ProcessResult}
 import net.wa9nnn.rc210.{Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.mvc.*
+import net.wa9nnn.rc210.security.Who.*
 
 import javax.inject.*
 import scala.concurrent.duration.*
-import scala.concurrent.{ExecutionContext, Future}
-import scala.language.postfixOps
 
 @Singleton
 class LogicAlarmEditorController @Inject()(components: MessagesControllerComponents, dataStore: DataStore)
   extends MessagesAbstractController(components) with LazyLogging {
 
   def index(): Action[AnyContent] = Action {
-    implicit request =>
+    implicit request: MessagesRequest[AnyContent] =>
       val logicAlarms: Seq[LogicAlarm] = dataStore.values(KeyKind.logicAlarmKey)
       Ok(views.html.logic(logicAlarms))
   }
@@ -52,7 +50,7 @@ class LogicAlarmEditorController @Inject()(components: MessagesControllerCompone
       Ok(views.html.logicEditor(form, logicAlarmKey.namedKey))
   }
 
-  def save(): Action[AnyContent] = Action { implicit request =>
+  def save(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
     LogicAlarm.logicForm
       .bindFromRequest()
       .fold(
@@ -62,7 +60,7 @@ class LogicAlarmEditorController @Inject()(components: MessagesControllerCompone
         },
         (logicAlarm: LogicAlarm) => {
           val candidateAndNames = ProcessResult(logicAlarm)
-          dataStore.update(candidateAndNames)
+          dataStore.update(candidateAndNames)(session(request))
           Redirect(routes.LogicAlarmEditorController.index())
         }
       )

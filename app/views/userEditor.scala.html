@@ -1,32 +1,32 @@
+@import net.wa9nnn.rc210.ui.MyHelpers.*
 @import net.wa9nnn.rc210.ui.Tabs
+@import views.html.helper.*
 
-@(userEditDTO: controllers.UserEditDTO)
+@(f: Form[UserEditDTO])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
     @import views.html.helper.form
 
     @tabbedmain(Tabs.security) {
+        <script src="@routes.Assets.versioned("javascripts/strength.js")" type="text/javascript"></script>
+
         @form(routes.UsersController.saveUser()) {
-            <input type="hidden" value="@userEditDTO.id" name="id">
+            @inputText(f("id"), Symbol("type") -> "hidden")
             <table class="table table-bordered table-sm w-auto ">
                 <tbody>
                     <tr>
                         <td class="text-end">Callsign:</td>
-                        <td><input name="callsign" value="@userEditDTO.callsign" class="callsign"></td>
+                        <td>@inputText(f("callsign"), Symbol("class") -> "callsign")</td>
                     </tr>
                     <tr>
                         <td class="text-end">Name:</td>
-                        <td><input name="name" value="@userEditDTO.name" ></td>
+                        <td>@inputText(f("name"))</td>
                     </tr>
                     <tr>
                         <td class="text-end">eMail:</td>
-                        <td><input name="email" value="@userEditDTO.email" ></td>
+                        <td>@inputText(f("email"))</td>
                     </tr>
                     <tr>
                         <td class="text-end">Password:</td>
-                        <td><input type="password" name="password" value="_"></td>
-                    </tr>
-                    <tr>
-                        <td class="text-end">Password Again:</td>
-                        <td><input type="password" name="passwor2d" value="_"></td>
+                        <td>@inputText(f("password"), Symbol("type") -> "password")</td>
                     </tr>
                 </tbody>
             </table>

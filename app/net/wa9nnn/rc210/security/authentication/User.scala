@@ -2,8 +2,8 @@ package net.wa9nnn.rc210.security.authentication
 
 import com.typesafe.scalalogging.LazyLogging
 import controllers.UserEditDTO
-import net.wa9nnn.rc210.security.UserId._
-import net.wa9nnn.rc210.security.UserId
+import net.wa9nnn.rc210.security.UserId.*
+import net.wa9nnn.rc210.security.{UserId, Who}
 import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.security.Who.Callsign
 import org.mindrot.jbcrypt.BCrypt
@@ -22,31 +22,26 @@ case class User(callsign: Callsign,
                 email: Option[String] = None,
                 hash: String,
                 id: UserId = UserId())
-  extends Ordered[User] with LazyLogging {
+  extends Ordered[User] with LazyLogging:
 
-
-  def validate(plainText: String): Option[User] = {
-    if (BCrypt.checkpw(plainText, hash))
+  def validate(credentials: Credentials): Option[User] =
+    if (BCrypt.checkpw(credentials.password, hash))
       Option(this)
     else
       None
-  }
 
-
-  override def compare(that: User): Int = {
+  override def compare(that: User): Int =
     this.callsign compare that.callsign
-  }
 
-  def userEditDTO: UserEditDTO = {
+  def userEditDTO: UserEditDTO =
     controllers.UserEditDTO(callsign, name, email, id)
-  }
 
   /**
    *
    * @param in wht ot change
    * @return a copy of modified [[User]]
    */
-  def update(in: UserEditDTO): User = {
+  def update(in: UserEditDTO): User =
     assert(in.id == id, "Attempt to update wrong id!")
     val newHash = in.password match {
       case Some(newPwd) =>
@@ -58,11 +53,8 @@ case class User(callsign: Callsign,
         hash
     }
     new User(in.callsign.toUpperCase, in.name, in.email, newHash, id)
-  }
 
   lazy val who: Who = Who(callsign, id, email.getOrElse(""))
-
-}
 
 object User {
   /**

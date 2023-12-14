@@ -22,7 +22,6 @@ import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
 import net.wa9nnn.rc210.data.message.Message
 import net.wa9nnn.rc210.data.named.NamedKey
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import net.wa9nnn.rc210.ui.ProcessResult
 import net.wa9nnn.rc210.{Key, KeyKind}
 import play.api.mvc.*
@@ -32,6 +31,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationInt
 import scala.util.Try
 import scala.util.matching.Regex
+import net.wa9nnn.rc210.security.Who.*
 
 @Singleton()
 class MessageController @Inject()(dataStore: DataStore, cc: MessagesControllerComponents)
@@ -65,7 +65,7 @@ class MessageController @Inject()(dataStore: DataStore, cc: MessagesControllerCo
 
     val message = Message(messageKey, words)
     val candidateAndNames = ProcessResult(message)
-    dataStore.update(candidateAndNames)
+    dataStore.update(candidateAndNames)(session(request))
     Redirect(routes.MessageController.index())
   }
 }

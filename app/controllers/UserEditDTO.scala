@@ -20,7 +20,11 @@ package controllers
 import net.wa9nnn.rc210.security.UserId
 import net.wa9nnn.rc210.security.UserId.UserId
 import net.wa9nnn.rc210.security.Who.Callsign
+import net.wa9nnn.rc210.security.authentication.Credentials
 import net.wa9nnn.rc210.util.FormHelper
+import play.api.data.Forms.*
+import play.api.data.{Form, FormError}
+import play.api.mvc.*
 
 /**
  *
@@ -35,7 +39,6 @@ case class UserEditDTO(callsign: Callsign = "",
                        email: Option[String] = None,
                        id: UserId = UserId(),
                        password: Option[String] = None,
-                       password2: Option[String] = None
                       ) {
   def withPassword(password: String): UserEditDTO = copy(password = Option(password))
 
@@ -44,13 +47,17 @@ case class UserEditDTO(callsign: Callsign = "",
   def withName(newName: String): UserEditDTO = copy(name = Option(newName))
 }
 
-object UserEditDTO {
-  def apply(fh: FormHelper): UserEditDTO = new UserEditDTO(
-    fh("callSign"),
-    fh.opt("name"),
-    fh.opt("email"),
-    fh("id"),
-    fh.opt("password"),
-    fh.opt("password2")
-  )
-}
+object UserEditDTO:
+  def unapply(u: UserEditDTO): Option[(Callsign, Option[String], Option[String], UserId, Option[String])] =
+    Some(u.callsign, u.name, u.email, u.id, u.password)
+
+  val form: Form[UserEditDTO] = Form {
+    mapping(
+      "callsign" -> text,
+      "name" -> optional(text),
+      "email" -> optional(text),
+      "id" -> text,
+      "password" -> optional(text),
+    )(UserEditDTO.apply)(UserEditDTO.unapply)
+
+  }

@@ -21,10 +21,9 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.KeyKind
 import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey, SimpleFieldValue}
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import net.wa9nnn.rc210.ui.SimpleValuesHandler
 import play.api.mvc.*
-
+import net.wa9nnn.rc210.security.Who.*
 import javax.inject.{Inject, Singleton}
 
 @Singleton
@@ -42,8 +41,8 @@ class CommonController @Inject()(dataStore: DataStore, components: MessagesContr
   }
 
   def save(): Action[AnyContent] = Action {
-    implicit request: Request[AnyContent] =>
-      dataStore.update(simpleValuesHandler.get.collect)
+    implicit request: MessagesRequest[AnyContent] =>
+      dataStore.update(simpleValuesHandler.get.collect)(session(request))
       Redirect(routes.CommonController.index())
   }
 }

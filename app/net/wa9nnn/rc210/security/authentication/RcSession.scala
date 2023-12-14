@@ -3,6 +3,7 @@ package net.wa9nnn.rc210.security.authentication
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Header, Row, RowSource}
 import net.wa9nnn.rc210.StaticConfigs.maxSessionCookieAge
+import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.security.Who.Callsign
 import net.wa9nnn.rc210.security.authentication.RcSession.{SessionId, playSessionName}
 import play.api.libs.json.{Format, Json}
@@ -34,6 +35,7 @@ case class RcSession(sessionId: SessionId,
   def callsign: Callsign = user.callsign
 
   var touched: Instant = started
+  def who:Who = user.who
 
   def cookie: Cookie = Cookie(name = playSessionName,
     value = sessionId,

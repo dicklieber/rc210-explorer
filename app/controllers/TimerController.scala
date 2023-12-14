@@ -26,6 +26,8 @@ import net.wa9nnn.rc210.{Key, KeyKind}
 import play.api.data.Form
 import play.api.mvc.*
 import views.html.timerEditor
+import net.wa9nnn.rc210.security.Who.*
+import net.wa9nnn.rc210.security.authentication.RcSession
 
 import javax.inject.*
 import scala.concurrent.duration.DurationInt
@@ -36,19 +38,19 @@ class TimerController @Inject()(dataStore: DataStore, components: MessagesContro
   extends MessagesAbstractController(components) with LazyLogging {
 
   def index: Action[AnyContent] = Action {
-    implicit request =>
+    implicit request: MessagesRequest[AnyContent] =>
       val timers: Seq[Timer] = dataStore.indexValues(KeyKind.timerKey)
       Ok(views.html.timers(timers))
   }
 
   def edit(key: Key): Action[AnyContent] = Action {
-    implicit request =>
+    implicit request: MessagesRequest[AnyContent] =>
       val timer: Timer = dataStore.editValue(TimerExtractor.fieldKey(key))
       Ok(views.html.timerEditor(Timer.form.fill(timer), key.namedKey))
   }
 
   def save(): Action[AnyContent] = Action {
-    implicit request =>
+    implicit request: MessagesRequest[AnyContent] =>
       Timer.form
         .bindFromRequest()
         .fold(
@@ -58,7 +60,7 @@ class TimerController @Inject()(dataStore: DataStore, components: MessagesContro
           },
           (timer: Timer) => {
             val candidateAndNames = ProcessResult(timer)
-            dataStore.update(candidateAndNames)
+            dataStore.update(candidateAndNames)(session(request))
             Redirect(routes.TimerController.index)
           }
         )

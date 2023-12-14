@@ -19,13 +19,15 @@ package net.wa9nnn.rc210.data.datastore
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.TriggerNode
-import net.wa9nnn.rc210.data.clock.Clock
-import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldKey, FieldValue}
 import net.wa9nnn.rc210.data.named.{NamedKey, NamedKeySource}
-import net.wa9nnn.rc210.security.authentication.{RcSession, User}
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.session
-import play.api.mvc.Request
+import net.wa9nnn.rc210.security.Who
+import net.wa9nnn.rc210.security.Who.given
+import net.wa9nnn.rc210.security.authentication.RcSession
+import net.wa9nnn.rc210.{Key, KeyKind}
+import play.api.mvc.{AnyContent, Request}
+import net.wa9nnn.rc210.security.Who
+import net.wa9nnn.rc210.security.Who.given
 
 import javax.inject.{Inject, Singleton}
 import scala.collection.concurrent.TrieMap
@@ -93,7 +95,7 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
           Seq.empty
     }
 
-  def update(candidateAndNames: CandidateAndNames)(implicit request: Request[_]): Unit =
+  def update(candidateAndNames: CandidateAndNames)(implicit rcSession: RcSession): Unit =
     candidateAndNames.candidates.foreach { uc =>
       val fieldKey = uc.fieldKey
       val current: FieldEntry = keyFieldMap(fieldKey)
@@ -112,14 +114,14 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
         keyNameMap.put(key, nammedKey.name)
     } 
     
-    save(session)
+    save(rcSession)
 
-  def acceptCandidate(fieldKey: FieldKey)(implicit request: Request[_]): Unit =
+  def acceptCandidate(fieldKey: FieldKey)(using rcSession: RcSession): Unit =
     keyFieldMap.put(fieldKey, keyFieldMap(fieldKey).acceptCandidate())
-    save(session)
+    save(rcSession)
 
   def reload(): Unit =
-    throw new NotImplementedError() //todo
+    loadFromMemory()
 
   private def save(session: RcSession): Unit =
     val dto = toJson.copy(who = Some(session.user.who))

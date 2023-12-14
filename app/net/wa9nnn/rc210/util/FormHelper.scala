@@ -32,9 +32,6 @@ class FormHelper(implicit request: Request[AnyContent]) {
 
   private val encoded: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
 
-  val user: User = AuthFilter.user
-
-
   def key(): Key = Key((apply("key")))
 
   def apply(name: String): String = opt(name).getOrElse("")

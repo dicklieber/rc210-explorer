@@ -19,6 +19,8 @@ package net.wa9nnn.rc210.security.authorzation
 
 import com.typesafe.scalalogging.LazyLogging
 import controllers.routes
+import net.wa9nnn.rc210.security.UserId.{UserId, none}
+import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.security.authentication.*
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
@@ -28,10 +30,10 @@ import play.api.libs.typedmap.TypedKey
 import play.api.mvc.*
 import play.api.mvc.Results.Redirect
 import net.wa9nnn.rc210.security.authentication.RcSession.playSessionName
-import net.wa9nnn.rc210.security.authentication.SessionManagerActor.Lookup
-import net.wa9nnn.rc210.security.authentication.{RcSession, SessionManagerActor, User}
+import net.wa9nnn.rc210.security.authentication.{RcSession, User}
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
+import play.api.libs.json.{Json, OFormat}
 
 import javax.inject.Inject
 import scala.concurrent.duration.DurationInt
@@ -42,10 +44,9 @@ import scala.language.{implicitConversions, postfixOps}
  * A Play filter that puts the current [[RcSession]] in to the Request or, if no Session, redirects to the Login Page.
  */
 class AuthFilter @Inject()(implicit val mat: Materializer,
-                           actor: ActorRef[SessionManagerActor.SessionManagerMessage],
+                           sessionStore: SessionStore,
                            scheduler: Scheduler,
                            ec: ExecutionContext) extends Filter with LazyLogging {
-  implicit val timeout: Timeout = 3 seconds
 
   override def apply(next: RequestHeader => Future[Result])(requestHeader: RequestHeader): Future[Result] = {
     val path: String = requestHeader.path
@@ -55,11 +56,10 @@ class AuthFilter @Inject()(implicit val mat: Materializer,
     } else {
       logger.trace("Looking for session by cookie with SessionId")
 
-      val eventualMaybeSession: Future[Option[RcSession]] = actor.ask(ref => Lookup("123", ref)).mapTo[Option[RcSession]]
       val playSession = requestHeader.session
       (for {
         sessionId <- playSession.get(playSessionName)
-        session <- Await.result[Option[RcSession]](actor.ask(ref => Lookup(sessionId, ref)), 3 seconds)
+        session <- sessionStore.lookup(sessionId)
       } yield {
         logger.trace("Got valid session from cookie")
         val requestHeaderWithSession: RequestHeader = requestHeader.addAttr(sessionKey, session)
@@ -85,14 +85,12 @@ object AuthFilter extends LazyLogging {
   //    requestHeader.attrs(sessionKey)
   //  }
 
-  def user(implicit request: Request[_]): User =
+/*  def user(implicit request: Request[_]): User =
     request.attrs(sessionKey).user
 
   def session(implicit request: Request[_]): RcSession = {
     request.attrs(sessionKey)
-  }
+  }*/
 
-  //  implicit def h2w(requestHeader: Request[AnyContent]): Who = {
-  //    requestHeader.attrs(sessionKey).user.who
-  //  }
+
 }

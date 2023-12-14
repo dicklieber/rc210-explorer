@@ -22,18 +22,15 @@ import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldInt, FieldKey}
 import net.wa9nnn.rc210.data.meter.*
 import net.wa9nnn.rc210.data.meter.Meter.meterForm
-import net.wa9nnn.rc210.data.timers.Timer
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.user
 import net.wa9nnn.rc210.ui.ProcessResult
 import net.wa9nnn.rc210.{Key, KeyKind}
 import play.api.data.Forms.*
 import play.api.data.{Form, Mapping}
 import play.api.mvc.*
 import views.html
+import net.wa9nnn.rc210.security.Who.*
 
 import javax.inject.*
-import scala.concurrent.duration.DurationInt
-import scala.concurrent.{ExecutionContext, Future}
 
 class MeterController @Inject()(dataStore: DataStore, components: MessagesControllerComponents)
   extends MessagesAbstractController(components) with LazyLogging {
@@ -70,7 +67,7 @@ class MeterController @Inject()(dataStore: DataStore, components: MessagesContro
   }
 
   def saveMeter(): Action[AnyContent] = Action {
-    implicit request =>
+    implicit request: MessagesRequest[AnyContent] =>
       meterForm
         .bindFromRequest()
         .fold(
@@ -80,7 +77,7 @@ class MeterController @Inject()(dataStore: DataStore, components: MessagesContro
           },
           (meter: Meter) => {
             val candidateAndNames = ProcessResult(meter)
-            dataStore.update(candidateAndNames)
+            dataStore.update(candidateAndNames)(session((request)))
             Redirect(routes.MeterController.index)
           }
         )
@@ -97,7 +94,7 @@ class MeterController @Inject()(dataStore: DataStore, components: MessagesContro
           },
           (meterAlarm: MeterAlarm) => {
             val candidateAndNames = ProcessResult(meterAlarm)
-            dataStore.update(candidateAndNames)
+            dataStore.update(candidateAndNames)(session(request))
             Redirect(routes.MeterController.index)
           }
         )
