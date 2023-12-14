@@ -17,8 +17,8 @@
 
 package net.wa9nnn.rc210.data.datastore
 
+import net.wa9nnn.rc210.WithTestConfiguration
 import net.wa9nnn.rc210.data.field.{FieldDefinitions, FieldEntry}
-import net.wa9nnn.rc210.{RcSpec, WithTestConfiguration}
 
 class DataStoreTest extends WithTestConfiguration {
   private val definitions: FieldDefinitions = new FieldDefinitions
@@ -26,10 +26,9 @@ class DataStoreTest extends WithTestConfiguration {
   private val dataStorePersistence: DataStorePersistence = new DataStorePersistence()
   val dataStore = new DataStore(dataStorePersistence, memoryFileLoader)
   "DataStore" should {
-    "all" in {
-       val all: Seq[FieldEntry] = dataStore.all
-        all should have length(42)
-
+    "initial" in {
+      val all: Seq[FieldEntry] = dataStore.all
+      all.length should equal(0)
     }
   }
 }

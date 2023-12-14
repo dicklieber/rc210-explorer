@@ -8,7 +8,6 @@ import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.util.JsonIoWithBackup
 import play.api.libs.json.Json
 import net.wa9nnn.rc210.util.Configs.*
-import play.api.mvc.Request
 
 import java.nio.file.{Path, Paths}
 import javax.inject.{Inject, Singleton}
@@ -67,11 +66,7 @@ class UserStore @Inject()(implicit config: Config, defaultNoUsersLogin: DefaultN
   def validate(credentials: Credentials): Option[User] =
     if (userMap.isEmpty && credentials == defaultNoUsersLogin.login) {
       logger.info("No users and default credentials used")
-      val dto = UserEditDTO(
-        credentials.callsign,
-        name = Option("Default Admin"),
-        password = Option(credentials.password)
-      )
+      val dto = UserEditDTO(credentials.callsign, name = Option("Default Admin"), password = Option(credentials.password))
       val user = User(dto)
       Option(user)
     } else

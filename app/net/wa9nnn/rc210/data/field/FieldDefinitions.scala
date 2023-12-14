@@ -68,7 +68,7 @@ class FieldDefinitions @Inject()() {
     SimpleField(157, "Repeat Mode", portKey, "nn14b", FieldBoolean),
     SimpleField(160, "Timeout Timer", portKey, "n*1001v", FieldInt) max 32767 units "seconds",
     SimpleField(166, "DTMF Mute", portKey, "n121b", FieldBoolean),
-    SimpleField(184, "vRef", commonKey, "1*2065", FieldInt) max 20000,
+    SimpleField(184, "vRef", commonKey, "1*2065v", FieldInt) max 20000,
 
     // needs to be complex rc2input   SimpleField(184, "Vref", meterKey, "*2065 n v", UiNumber(255, "todo three numbers?")), //*2065 4 9 6
     //###########################################################################################  //todo

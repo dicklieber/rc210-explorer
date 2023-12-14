@@ -20,11 +20,8 @@ package controllers
 import net.wa9nnn.rc210.security.UserId
 import net.wa9nnn.rc210.security.UserId.UserId
 import net.wa9nnn.rc210.security.Who.Callsign
-import net.wa9nnn.rc210.security.authentication.Credentials
-import net.wa9nnn.rc210.util.FormHelper
+import play.api.data.Form
 import play.api.data.Forms.*
-import play.api.data.{Form, FormError}
-import play.api.mvc.*
 
 /**
  *
@@ -34,18 +31,7 @@ import play.api.mvc.*
  * @param id        a unique ID for the user. Not normally shown to users.
  * @param password  Some[String] with new password. None will keep existing password.
  */
-case class UserEditDTO(callsign: Callsign = "",
-                       name: Option[String] = None,
-                       email: Option[String] = None,
-                       id: UserId = UserId(),
-                       password: Option[String] = None,
-                      ) {
-  def withPassword(password: String): UserEditDTO = copy(password = Option(password))
-
-  def withCallsign(newCallsign: String): UserEditDTO = copy(callsign = newCallsign)
-
-  def withName(newName: String): UserEditDTO = copy(name = Option(newName))
-}
+case class UserEditDTO(callsign: Callsign = "", name: Option[Callsign] = None, email: Option[Callsign] = None, password: Option[Callsign] = None, id: UserId = UserId()) 
 
 object UserEditDTO:
   def unapply(u: UserEditDTO): Option[(Callsign, Option[String], Option[String], UserId, Option[String])] =
@@ -58,6 +44,6 @@ object UserEditDTO:
       "email" -> optional(text),
       "id" -> text,
       "password" -> optional(text),
-    )(UserEditDTO.apply)(UserEditDTO.unapply)
+    )((callsign: Callsign, name: Option[Callsign], email: Option[Callsign], id: UserId, password: Option[Callsign]) => UserEditDTO.apply(callsign, name, email, password, id))(UserEditDTO.unapply)
 
   }

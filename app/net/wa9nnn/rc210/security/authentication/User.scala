@@ -34,7 +34,7 @@ case class User(callsign: Callsign,
     this.callsign compare that.callsign
 
   def userEditDTO: UserEditDTO =
-    controllers.UserEditDTO(callsign, name, email, id)
+    controllers.UserEditDTO(callsign, name, email, id = id)
 
   /**
    *
