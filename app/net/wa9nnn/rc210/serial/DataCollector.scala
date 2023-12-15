@@ -89,6 +89,7 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
           case "EEPROM Done" =>
             rcOp.send("OK")
             logger.debug("EEPROM Done")
+            progressApi.finish("Done")
           case "Timeout" =>
             progressApi.error(Timeout(rcOp.comPort))
             cleanup("timeout")
