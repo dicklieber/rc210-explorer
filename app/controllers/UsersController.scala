@@ -18,22 +18,16 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.data.timers.Timer
 import net.wa9nnn.rc210.security.UserId.UserId
 import net.wa9nnn.rc210.security.Who
-import net.wa9nnn.rc210.security.authentication.*
-import net.wa9nnn.rc210.ui.ProcessResult
-import net.wa9nnn.rc210.util.FormHelper
-import play.api.data.Form
-import play.api.data.Forms.{mapping, optional, text}
-import play.api.mvc.*
-import play.api.mvc.Security.AuthenticatedRequest
-import views.html.userEditor
 import net.wa9nnn.rc210.security.Who.*
+import net.wa9nnn.rc210.security.authentication.*
+import play.api.mvc.*
+import views.html.userEditor
 
 import javax.inject.{Inject, Singleton}
-import scala.language.{implicitConversions, postfixOps}
+import scala.language.implicitConversions
+//import scala.language.{implicitConversions, postfixOps}
 
 /**
  * User Management
@@ -78,7 +72,8 @@ class UsersController @Inject()(userStore: UserStore)(implicit cc: MessagesContr
           BadRequest(userEditor(formWithErrors))
         },
         (editDTO: UserEditDTO) => {
-          userStore.put(editDTO)(session(request))
+          import Who.given
+          userStore.put(editDTO)(request)
           Redirect(routes.TimerController.index)
         }
       )

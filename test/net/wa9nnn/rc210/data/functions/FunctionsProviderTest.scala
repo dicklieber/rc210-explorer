@@ -24,7 +24,7 @@ class FunctionsProviderTest extends RcSpec {
   "FunctionsProviderTest" should {
 
     "size" in {
-      fp.size shouldBe(872)
+      fp.size mustBe(872)
     }
 
 

@@ -27,10 +27,10 @@ class FieldKeyTest extends RcSpec {
       val fname = "fname"
       val fieldKey = FieldKey(fname, key)
       val string = fieldKey.toString
-      string shouldBe "portKey1:fname"
+      string mustBe "portKey1:fname"
       val backAgain = FieldKey(string)
-      backAgain.key shouldBe key
-      backAgain.fieldName shouldBe fname
+      backAgain.key mustBe key
+      backAgain.fieldName mustBe fname
 
     }
   }

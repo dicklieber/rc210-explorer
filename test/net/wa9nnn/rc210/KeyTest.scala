@@ -22,22 +22,22 @@ import play.api.libs.json.{Format, Json}
 class KeyTest extends WithMemory {
   val macroKey3 = Key(KeyKind.macroKey, 3)
   "Happy" in {
-    macroKey3.toString shouldBe ("macroKey3")
+    macroKey3.toString mustBe ("macroKey3")
   }
   "round trip toString apply" in {
     val string = macroKey3.toString
     val backAgain = Key(string)
-    backAgain shouldBe (macroKey3)
+    backAgain mustBe (macroKey3)
   }
   "round trip JSON" in {
     val container = KeyContainer(macroKey3)
     val sJson = Json.prettyPrint(Json.toJson(container))
-    sJson shouldBe ("""{
+    sJson mustBe ("""{
                       |  "key" : "macroKey3",
                       |  "other" : 42
                       |}""".stripMargin)
     val backAgain = Json.parse(sJson).as[KeyContainer]
-    backAgain shouldBe (container)
+    backAgain mustBe (container)
   }
   "throw if too big a number" in {
     assertThrows[AssertionError] { // Result type: Assertion
@@ -46,7 +46,7 @@ class KeyTest extends WithMemory {
   }
   "macroKeys" in {
     val keys = Key.macroKeys
-    keys should have length (KeyKind.macroKey.maxN)
+    keys must have length KeyKind.macroKey.maxN
   }
 }
 

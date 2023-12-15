@@ -28,7 +28,7 @@ class DataStoreTest extends WithTestConfiguration {
   "DataStore" should {
     "initial" in {
       val all: Seq[FieldEntry] = dataStore.all
-      all.length should equal(0)
+      all.length mustBe 0
     }
   }
 }

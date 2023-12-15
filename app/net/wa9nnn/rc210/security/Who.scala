@@ -36,4 +36,7 @@ object Who:
   def session( request: MessagesRequest[AnyContent]): RcSession =
     request.attrs(sessionKey)
 
+  given request2Session:Conversion[MessagesRequest[AnyContent], RcSession] with
+    def apply(request: MessagesRequest[AnyContent]):RcSession =
+      request.attrs(sessionKey)
 
