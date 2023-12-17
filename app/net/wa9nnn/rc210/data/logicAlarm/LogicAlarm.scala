@@ -99,9 +99,6 @@ object LogicAlarm extends ComplexExtractor {
       FieldEntry(this, fieldValue)
     }
   }
-  //  def apply(valuesMap: Map[String, String]):LogicAlarm = {
-  //    throw new NotImplementedError() //todo
-  //  }
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[LogicAlarm]
 

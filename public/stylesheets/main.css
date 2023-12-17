@@ -37,7 +37,7 @@
     text-align: center;
     /*font-weight: bold;*/
     background-color: #cfe2ff;
-    border:  #bacbe6;
+    border: #bacbe6;
     white-space: nowrap;
 }
 
@@ -48,6 +48,7 @@
     /*background-color: #bac9e7;*/
     white-space: nowrap;
 }
+
 .selected {
     /*border-top-style: solid;*/
     /*border-top-width: 3px;*/
@@ -55,11 +56,11 @@
     background-color: #00FF00;
     white-space: nowrap;
 }
+
 .badPort {
     background-color: crimson;
 
 }
-
 
 
 .rowHeader {
@@ -201,6 +202,7 @@ body {
 .schedule {
     background-color: lightgrey;
 }
+
 .ctCell {
     vertical-align: top;
 }
@@ -261,11 +263,51 @@ body {
 .rc210-table input {
     width: 7em;
 }
+
 .navbar {
     margin-bottom: 0px;
 }
 
-pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+.rcnav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    background-color: #f1f1f1;
+    border: 1px solid #555;
+}
+
+.rcnav li a {
+    display: block;
+    color: #000;
+    padding: 0;
+    text-decoration: none;
+}
+
+.rcnav li {
+    text-align: left;
+    border-bottom: 1px solid #555;
+}
+
+.rcnav li:last-child {
+    border-bottom: none;
+}
+
+.rcnav li a.active {
+    background-color: #04AA6D;
+    color: white;
+}
+
+.rcnav li a:hover:not(.active) {
+    background-color: #555;
+
+
+pre {
+    outline: 1px solid #ccc;
+    padding: 5px;
+    margin: 5px;
+}
+
 /*.string { color: green; }*/
 /*.number { color: darkorange; }*/
 /*.boolean { color: blue; }*/
