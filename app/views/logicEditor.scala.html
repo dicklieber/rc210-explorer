@@ -6,43 +6,42 @@
 @import net.wa9nnn.rc210.ui.MacroSelect
 @import views.html.helper.checkbox
 @import net.wa9nnn.rc210.data.named.NamedKey
-@(logicAlarmForm: Form[LogicAlarm], namedKey:NamedKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
-@tabbedmain(Tabs.logicAlarmTab) {
-    <div class="container">
-    @form(routes.LogicAlarmEditorController.save()) {
-        @nameEdit(namedKey)
-        <input type="hidden" name="key" value="@logicAlarmForm("key").value">
-        <table>
-            <tr>
-                <td>
-                    Enable
-                </td>
-                <td>@checkbox(logicAlarmForm("enable"))
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Low Macro
-                </td>
-                <td>
-                @select(logicAlarmForm("lowMacro"), MacroSelect.options)
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    High Macro
-                </td>
-                <td>
-            <td>
-                @select(logicAlarmForm("highMacro"), MacroSelect.options)
-            </td>
-            </tr>
+@(logicAlarmForm: Form[LogicAlarm], namedKey: NamedKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+    @tabbedmain(Tabs.logicAlarmTab) {
+        <div class="container">
+        @form(routes.LogicAlarmEditorController.save()) {
+            @nameEdit(namedKey)
+            <input type="hidden" name="key" value="@logicAlarmForm("key").value">
+            <table>
+                <tr>
+                    <td>
+                        Enable
+                    </td>
+                    <td>@checkbox(logicAlarmForm("enable"))
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Low Macro
+                    </td>
+                    <td>
+                    @select(logicAlarmForm("lowMacro"), MacroSelect.options)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        High Macro
+                    </td>
+                    <td>
+                    @select(logicAlarmForm("highMacro"), MacroSelect.options)
+                    </td>
+                </tr>
 
 
-        </table>
-        @submitButton()
+            </table>
+            @submitButton()
 
-    </div>
-}
-} @import views.html.helper.select
+        </div>
+    }
+    } @import views.html.helper.select
 

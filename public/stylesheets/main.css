@@ -152,6 +152,7 @@ body {
     color: #555;
     font: 15px "Helvetica Nueue", sans-serif;
     padding: 10px;
+    width: fit-content;
 }
 
 .credits {
@@ -264,15 +265,33 @@ body {
     width: 7em;
 }
 
+
+header {
+    background-color: lightcyan;
+    padding: 20px;
+    text-align: center;
+    border:  2px solid red;
+}
+
 .navbar {
     margin-bottom: 0px;
+}
+nav {
+    float: left;
+    width: fit-content;
+    background: #ccc;
+    padding: 20px;
+}
+.rcnav {
+    border: #e91e63;
+    background: #8DFF1C;
 }
 
 .rcnav ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
-    width: 200px;
+    /*width: 200px;*/
     background-color: #f1f1f1;
     border: 1px solid #555;
 }
@@ -300,7 +319,27 @@ body {
 
 .rcnav li a:hover:not(.active) {
     background-color: #555;
+}
 
+section {
+    display: flex; /* or inline-flex */
+    border: #FFCC00 2px ;
+}
+article {
+    float: left;
+    padding: 20px;
+    width: fit-content;
+    background-color: lemonchiffon;
+    border 3px solid blue;
+}
+
+footer {
+    background-color: #0d6efd;
+    border: 3px solid forestgreen;
+    padding: 10px;
+    text-align: center;
+    color: white;
+}
 
 pre {
     outline: 1px solid #ccc;

@@ -12,11 +12,12 @@
     <head>
         <script src="@routes.Assets.versioned("javascripts/jquery-3.6.3.min.js")"></script>
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/dropdown.css")">
-        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/w3.css")">
+        @* <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/w3.css")">*@
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
         <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
-
+        <script src="@routes.Assets.versioned("javascripts/main.js")" type="text/javascript"></script>
+        <title>RC-210</title>
         <script>
                 $(document).ready(function () {
                 });
@@ -24,40 +25,46 @@
     </head>
 
     <body>
-        <nav class="rcnav">
-            <ul>
-                @for(tab <- Tabs.tabs) {
-                    <li>
-                        <a class=" @if(tab == activeTab) { active }" href="@tab.url" title="@tab.tooltip">@tab.name</a>
+        <header>
+            <h1>RC210 header xyzzy</h1>
+        </header>
+        <section>
+            <nav class="rcnav">
+                <ul>
+                    @for(tab <- Tabs.tabs) {
+                        <li>
+                            <a class=" @if(tab == activeTab) { active }" href="@tab.url" title="@tab.tooltip">@tab.name</a>
+                        </li>
+                    }
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">More</a>
+                        <div class="dropdown-menu">
+                            <a href="@routes.DataStoreController.downloadJson()" class="dropdown-item">
+                                DownloadActor Json</a>
+                            <a href="@routes.DataStoreController.viewJson()" class="dropdown-item">
+                                View Json</a>
+                            <a href="@routes.DataStoreController.upload" class="dropdown-item">Upload Json</a>
+                            <a href="@routes.CommandsController.dump()" class="dropdown-item">All Commands</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="@routes.MemoryController.index" class="dropdown-item">
+                                RC_210 Memory Map</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="@routes.LoginController.logout()" class="dropdown-item">Logout</a>
+                            <a href="@routes.UsersController.users()" class="dropdown-item">Users</a>
+                            <a href="@routes.SessionController.index" class="dropdown-item">Sessions</a>
+                        </div>
                     </li>
-                }
-                <li class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">More</a>
-                    <div class="dropdown-menu">
-                        <a href="@routes.DataStoreController.downloadJson()" class="dropdown-item">DownloadActor Json</a>
-                        <a href="@routes.DataStoreController.viewJson()" class="dropdown-item">View Json</a>
-                        <a href="@routes.DataStoreController.upload" class="dropdown-item">Upload Json</a>
-                        <a href="@routes.CommandsController.dump()" class="dropdown-item">All Commands</a>
-                        <div class="dropdown-divider"></div>
-                        <a href="@routes.MemoryController.index" class="dropdown-item">RC_210 Memory Map</a>
-                        <div class="dropdown-divider"></div>
-                        <a href="@routes.LoginController.logout()" class="dropdown-item">Logout</a>
-                        <a href="@routes.UsersController.users()" class="dropdown-item">Users</a>
-                        <a href="@routes.SessionController.index" class="dropdown-item">Sessions</a>
-                    </div>
-                </li>
-            </ul>
-        </nav>
+                </ul>
+            </nav>
+            <article>
+            @content
+            </article>
+        </section>
 
-        <div class="">
-        @content
-        </div>
-        <div class="credits" >
+        <footer>
                     &copy; @LocalDate.ofInstant(Instant.ofEpochMilli(BuildInfo.builtAtMillis), ZoneId.systemDefault()).getYear
                 Dick Lieber <a href="https://www.qrz.com/db/wa9nnn">WA9NNN</a>
             <a href="https://github.com/dicklieber/rc210-explorer">Version: @BuildInfo.version</a>
-        </div>
-
-        <script src="@routes.Assets.versioned("javascripts/main.js")" type="text/javascript"></script>
+        </footer>
     </body>
 </html>
