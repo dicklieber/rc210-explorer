@@ -95,7 +95,7 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
           Seq.empty
     }
 
-  def update(candidateAndNames: CandidateAndNames)(implicit rcSession: RcSession): Unit =
+  def update(candidateAndNames: CandidateAndNames)(using rcSession: RcSession): Unit =
     candidateAndNames.candidates.foreach { uc =>
       val fieldKey = uc.fieldKey
       val current: FieldEntry = keyFieldMap(fieldKey)

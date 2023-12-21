@@ -30,7 +30,6 @@ import scala.util.Try
  * @param key       qualifier for the rc2input.
  */
 case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey]  {
-  assert(!fieldName.contains('|'), "Field Name can't contain ':'!")
 
   override def compare(that: FieldKey): Int = {
     var ret = key.keyKind.toString compareTo that.key.keyKind.toString
@@ -45,6 +44,11 @@ case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey]  {
 }
 
 object FieldKey {
+  /**
+   * For use field name is the [[KeyKind]] name.
+   * @param key whose [[KeyKind]] name is the field name.
+   */
+  def apply(key: Key):FieldKey =  new FieldKey(key.entryName, key)
 
   implicit val fmtFieldKey: Format[FieldKey] = new Format[FieldKey] {
     override def writes(o: FieldKey) = JsString(o.toString)

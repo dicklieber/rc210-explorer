@@ -15,12 +15,13 @@
     <script src="@routes.Assets.versioned("javascripts/macroNode.js")"></script>
     <script src="@routes.Assets.versioned("javascripts/contextmenu.js")"></script>
 
-
     @form(action = routes.MacroEditorController.save(), Symbol("id") -> "form") {
         <input type="hidden" name="key", value="@macroNode.key">
         <input type="hidden" name="ids" id="ids">
+
         <div class="row">
-            <div class="col col-md-auto border border-primary">
+            <div class="col">
+                <h1>Metadata</h1>
                 @nameEdit(macroNode.key.namedKey)
                 <div><label for="dtmf">DTMF: </label>
                     <input id="dtmf" name="dtmf" value="@macroNode.dtmf">
@@ -28,9 +29,8 @@
 
                 @submitButton()
             </div>
-            <div class="col col-md-auto border border-primary">
+            <div class="col">
                 <h2>Current</h2>
-
                 <ul id="currentList" class="border border-primary list-unstyled">
                 @for(functionkey <- macroNode.functions) {
                     <li
@@ -43,7 +43,7 @@
                 </ul>
                 <p>Drag function to reorder. Dbl-click to remove.</p>
             </div>
-            <div class="col col-md-auto ">
+            <div class="col">
                 <h2>Available Functions</h2>
                 <div id="myDropdown" class="dropdown-content show functionList">
                     <input type="text" placeholder="Search.." id="filter" onkeyup="filterFunction()">

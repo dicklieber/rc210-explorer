@@ -332,7 +332,13 @@ article {
     background-color: lemonchiffon;
     border 3px solid blue;
 }
-
+.row {
+    display: flex;
+    border: #9c27b0  2px solid;
+}
+.col{
+    border: #9c27b0 3px dot-dash;
+}
 footer {
     background-color: #0d6efd;
     border: 3px solid forestgreen;

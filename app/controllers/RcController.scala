@@ -15,27 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-package net.wa9nnn.rc210.security
+package controllers
 
-import net.wa9nnn.rc210.security.UserId.UserId
-import net.wa9nnn.rc210.security.Who.Callsign
 import net.wa9nnn.rc210.security.authentication.RcSession
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
-import play.api.libs.json.{Json, OFormat}
-import play.api.mvc
-import play.api.mvc.{AnyContent, MessagesRequest, Request}
+import play.api.mvc.{MessagesAbstractController, MessagesControllerComponents}
 
-case class Who(callsign: Callsign = "unknown", id: UserId = UserId.none, email: String = "") extends Ordered[Who] {
-  override def compare(that: Who): Int = this.callsign compareTo that.callsign
+abstract class RcController(protected val controllerComponents: MessagesControllerComponents) extends MessagesAbstractController(controllerComponents){
+  given Conversion[Mess]
+  given RcSession = request.attrs(sessionKey)
 }
-
-object Who:
-  implicit val whoFmt: OFormat[Who] = Json.format
-  type Callsign = String
-
-  def session( request: MessagesRequest[AnyContent]): RcSession =
-    request.attrs(sessionKey)
-
-
-
-

@@ -93,7 +93,7 @@ case class SimpleField(offset: Int,
 //  }
 
 
-trait ComplexExtractor extends FieldExtractor with FieldDefinition  {
+trait ComplexExtractor(val keyKind: KeyKind) extends FieldExtractor with FieldDefinition  {
 
   def fieldKey(key: Key): FieldKey = FieldKey(fieldName, key)
 
