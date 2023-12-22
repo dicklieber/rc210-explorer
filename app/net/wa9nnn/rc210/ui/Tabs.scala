@@ -25,7 +25,7 @@ object Tabs {
   val noTab:Tab = Tab("none", "", "this should never show.")
   val flowTab: Tab = Tab("Flow", routes.FlowController.flow().url, "How to Macros to things. How this all works.")
   val commonTab: Tab = Tab("Common", routes.CommonController.index().url, "Global settings")
-  val ctTab: Tab = Tab("CT", routes.CourtesyToneEditorController.index().url, "Courtesy Tones")
+  val ctTab: Tab = Tab("CT", routes.CourtesyToneController.index().url, "Courtesy Tones")
   val clockTab: Tab = Tab("Clock", routes.ClockController.index.url, "Set clock, DST etc.")
 
   val logicAlarmTab: Tab = Tab("Logic", routes.LogicAlarmEditorController.index().url, "Logic Alarm settings.")
