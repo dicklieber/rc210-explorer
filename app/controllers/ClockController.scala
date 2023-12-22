@@ -18,26 +18,18 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.KeyKind.Common
+import net.wa9nnn.rc210.KeyKind
 import net.wa9nnn.rc210.data.clock.Clock.clockForm
-import net.wa9nnn.rc210.data.clock.DSTPoint.dstPointForm
 import net.wa9nnn.rc210.data.clock.{Clock, DSTPoint}
 import net.wa9nnn.rc210.data.datastore.*
-import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.security.authentication.RcSession
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 import net.wa9nnn.rc210.ui.ProcessResult
 import play.api.data.Form
-import play.api.data.Forms.*
 import play.api.mvc.*
-import net.wa9nnn.rc210.security.Who.*
-import net.wa9nnn.rc210.security.authentication.RcSession
-import net.wa9nnn.rc210.security.Who.given
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.duration.DurationInt
-import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
+import scala.concurrent.ExecutionContext
 
 @Singleton()
 class ClockController @Inject()(implicit dataStore: DataStore, ec: ExecutionContext,
@@ -51,7 +43,7 @@ class ClockController @Inject()(implicit dataStore: DataStore, ec: ExecutionCont
     }
   }
 
-  def save(): Action[AnyContent] = Action { implicit request:MessagesRequest[AnyContent] =>
+  def save(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
     clockForm
       .bindFromRequest()
       .fold(

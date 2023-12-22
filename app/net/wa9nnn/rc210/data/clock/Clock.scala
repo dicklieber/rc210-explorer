@@ -106,7 +106,6 @@ object Clock extends ComplexExtractor {
     //    SimpleField(1186, "Clock 24 Hours", commonKey, "n*5103b", FieldBoolean),
     val say24Hours: Boolean = memory.bool(1186)
 
-    val key = Key(KeyKind.Common)
     val clock = new Clock(key, enableDST, startHour, startDST, endDST, say24Hours)
     Seq(
       FieldEntry(this, fieldKey(key), clock)
@@ -121,7 +120,7 @@ object Clock extends ComplexExtractor {
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[Clock]
 
   override val fieldName: String = name
-  val key: Key = Key(KeyKind.Common) // there's only one
+  val key: Key = Key(KeyKind.Clock) // there's only one
   val fieldKey: FieldKey = FieldKey(fieldName, key)
 
   override def positions: Seq[FieldOffset] = Seq(
