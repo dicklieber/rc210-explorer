@@ -31,20 +31,20 @@ import javax.inject.*
 @Singleton
 class LogicAlarmEditorController @Inject()(components: MessagesControllerComponents, dataStore: DataStore)
   extends ComplexFieldController[LogicAlarm](dataStore, components) with LazyLogging {
-  
 
   override val complexExtractor: ComplexExtractor = LogicAlarm
 
   override def indexResult(values: Seq[LogicAlarm]): Result = {
-    val result: Result = Ok(views.html.logic(values))
-    result
+    Ok(views.html.logic(values))
   }
 
-  override def editResult(filledForm: Form[LogicAlarm], namedKey: NamedKey)(using request: MessagesRequest[AnyContent]): Result = 
+  override def editResult(filledForm: Form[LogicAlarm], namedKey: NamedKey)(using request: MessagesRequest[AnyContent]): Result =
     Ok(views.html.logicEditor(filledForm, namedKey))
 
-  override def saveOkResult(): Result = Redirect(routes.LogicAlarmEditorController.index())
+  override def saveOkResult(): Result =
+    Redirect(routes.LogicAlarmEditorController.index())
 
-  override val form: Form[LogicAlarm] = LogicAlarm.logicForm
+  override val form: Form[LogicAlarm] =
+    LogicAlarm.logicForm
 }
 
