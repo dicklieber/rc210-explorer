@@ -62,7 +62,8 @@ abstract class ComplexFieldController[T <: ComplexFieldValue]( dataStore: DataSt
 
   def save(): Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] =>
-      val r: Result = form.bindFromRequest(request.body.asFormUrlEncoded.get)
+      val map = request.body.asFormUrlEncoded.get
+      val r: Result = form.bindFromRequest(map)
         .fold(
           (formWithErrors: Form[T]) => {
             val namedKey = Key(formWithErrors.data("key")).namedKey

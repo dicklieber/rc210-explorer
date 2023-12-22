@@ -50,9 +50,7 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
   def values[T <: ComplexFieldValue](keyKind: KeyKind): Seq[T] =
     apply(keyKind).map(_.value.asInstanceOf[T])
 
-  def 
-  
-  editValue[T <: FieldValue](fieldKey: FieldKey): T =
+  def editValue[T <: FieldValue](fieldKey: FieldKey): T =
     val maybeFieldEntry: Option[FieldEntry] = all.find(_.fieldKey == fieldKey)
     maybeFieldEntry match
       case Some(fieldEntry: FieldEntry) => 

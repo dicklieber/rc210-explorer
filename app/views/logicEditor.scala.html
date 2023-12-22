@@ -11,7 +11,7 @@
         <div class="container">
         @form(routes.LogicAlarmEditorController.save()) {
             @nameEdit(namedKey)
-            <input type="hidden" name="key" value="@logicAlarmForm("key").value">
+            <input type="hidden" name="key" value="@namedKey.key">
             <table>
                 <tr>
                     <td>
