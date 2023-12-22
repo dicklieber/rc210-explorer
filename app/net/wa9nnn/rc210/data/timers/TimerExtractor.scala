@@ -18,14 +18,15 @@
 package net.wa9nnn.rc210.data.timers
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldKey, FieldOffset, FieldValue}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
+import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.{Format, JsValue, Json}
 
 //noinspection ZeroIndexToHead
 object TimerExtractor extends ComplexExtractor with LazyLogging {
-  private val nTimers = KeyKind.timerKey.maxN
+  val keyKind = KeyKind.Timer
+  private val nTimers = keyKind.maxN
   //  Memory Layout
   //  seconds for each timer 6 2-byte ints
   //  macroToRun for each timer 6 1-byte ints
@@ -48,11 +49,11 @@ object TimerExtractor extends ComplexExtractor with LazyLogging {
 
 
     val r: Seq[FieldEntry] = (for {
-      index <- 0 until KeyKind.timerKey.maxN
+      index <- 0 until KeyKind.Timer.maxN
     } yield {
-      val key: Key = Key(KeyKind.timerKey, index + 1)
+      val key: Key = Key(KeyKind.Timer, index + 1)
       val fieldKey = FieldKey("Timer", key)
-      FieldEntry(this, fieldKey, Timer(key, seconds.next(), Key(KeyKind.macroKey, macroInts.next() + 1)))
+      FieldEntry(this, fieldKey, Timer(key, seconds.next(), Key(KeyKind.RcMacro, macroInts.next() + 1)))
     })
     r
   }
@@ -61,6 +62,5 @@ object TimerExtractor extends ComplexExtractor with LazyLogging {
 
   override val name: String = "Timer"
   override val fieldName: String = name
-  override val kind: KeyKind = KeyKind.timerKey
 
 }

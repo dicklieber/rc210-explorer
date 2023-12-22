@@ -19,13 +19,13 @@ object ScheduleBuilder extends LazyLogging {
 
   def apply(memory: Memory): Seq[Schedule] = {
     // Each chunk is one RC-210 memory setpoint rc2input. With all the setpopint's value withinb that chunk.
-    implicit val chunks: Seq[Chunk] = memory.chunks(616, KeyKind.scheduleKey.maxN, fieldsInRC210Schedule)
+    implicit val chunks: Seq[Chunk] = memory.chunks(616, KeyKind.Schedule.maxN, fieldsInRC210Schedule)
 
 
     for {
-      n <- 0 until KeyKind.scheduleKey.maxN
+      n <- 0 until KeyKind.Schedule.maxN
     } yield {
-      val scheduleKey = Key(KeyKind.scheduleKey, n + 1)
+      val scheduleKey = Key(KeyKind.Schedule, n + 1)
 
       val sDow = chunks(DOW)(n).toString
       val (week: Week, dow: DayOfWeek) = {
@@ -49,7 +49,7 @@ object ScheduleBuilder extends LazyLogging {
       val monthOfYear = MonthOfYearSchedule.find(chunks(MOY)(n))
       val hour = chunks(HOUR)(n)
       val minute = chunks(MINUTE)(n)
-      val macr0 = Key(KeyKind.macroKey, (chunks(MACR0)(n) + 1))
+      val macr0 = Key(KeyKind.RcMacro, (chunks(MACR0)(n) + 1))
       val enable = chunks(ENABLE)(n) > 0
       Schedule(key = scheduleKey,
         dow = dow,

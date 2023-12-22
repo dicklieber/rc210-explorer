@@ -15,9 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-package net.wa9nnn.rc210.data.field
+package net.wa9nnn.rc210
 
-import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.{Key, KeyKind, FieldKey}
 import play.api.libs.json.*
 import play.api.mvc.PathBindable
 

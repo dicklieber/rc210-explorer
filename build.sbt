@@ -72,6 +72,7 @@ libraryDependencies ++= Seq(
 
 
 routesImport += "net.wa9nnn.rc210.Binders._"
-routesImport += "net.wa9nnn.rc210.data.field.FieldKey"
+routesImport += "net.wa9nnn.rc210.FieldKey"
+routesImport += "net.wa9nnn.rc210.KeyKind"
 routesImport += "net.wa9nnn.rc210.Key"
 routesImport += "net.wa9nnn.rc210.serial.ComPort"

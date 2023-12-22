@@ -36,7 +36,7 @@ import scala.collection.immutable.Seq
  * @param key   Message key
  * @param words word numbers. Each 0 to 255. 
  */
-case class Message(key: Key, words: Seq[Int]) extends ComplexFieldValue("Message") {
+case class Message(key: Key, words: Seq[Int]) extends ComplexFieldValue() {
 
   def toWords: Seq[Word] = words.map(Word(_))
 

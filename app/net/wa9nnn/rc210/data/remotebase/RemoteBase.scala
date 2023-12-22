@@ -20,14 +20,14 @@ package net.wa9nnn.rc210.data.remotebase
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.util.Chunk
-import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Forms.*
 import play.api.data.{Form, Mapping}
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.*
 
-case class RemoteBase(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[RBMemory] = Seq.empty) extends ComplexFieldValue("RemoteBase") {
-  override val key: Key = Key(KeyKind.remoteBaseKey)
+case class RemoteBase(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[RBMemory] = Seq.empty) extends ComplexFieldValue() {
+  override val key: Key = Key(KeyKind.RemoteBase)
 
   //  override def display: String = fieldName
 
@@ -46,6 +46,7 @@ case class RemoteBase(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[
 }
 
 object RemoteBase extends ComplexExtractor {
+  val keyKind = KeyKind.RemoteBase
   def unapply(u: RemoteBase): Option[(Radio, Yaesu, String, Seq[RBMemory])] = Some((u.radio, u.yaesu, u.prefix, u.memories))
 
   val form: Form[RemoteBase] = Form(
@@ -114,8 +115,7 @@ object RemoteBase extends ComplexExtractor {
    */
   override val name: String = "RemoteBase"
   override val fieldName: String = name
-  override val kind: KeyKind = KeyKind.remoteBaseKey
-  val key:Key = Key(kind)
+  val key:Key = Key(keyKind)
   val fieldKey: FieldKey = super.fieldKey(key)
 
   implicit val fmtRBMemory: Format[RBMemory] = Json.format[RBMemory]

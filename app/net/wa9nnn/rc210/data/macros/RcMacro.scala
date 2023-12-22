@@ -21,7 +21,7 @@ import scala.annotation.tailrec
  * @param functions that this macro invokes.
  * @param dtmf      that can invoke this macro.
  */
-case class RcMacro(override val key: Key, functions: Seq[Key], dtmf: Option[Dtmf] = None) extends ComplexFieldValue("Macro") with TriggerNode {
+case class RcMacro(override val key: Key, functions: Seq[Key], dtmf: Option[Dtmf] = None) extends ComplexFieldValue() with TriggerNode {
 
   def enabled: Boolean = functions.nonEmpty
 
@@ -58,6 +58,7 @@ case class RcMacro(override val key: Key, functions: Seq[Key], dtmf: Option[Dtmf
 }
 
 object RcMacro extends ComplexExtractor {
+  override val keyKind: KeyKind = KeyKind.RcMacro
   def unapply(u: RcMacro): Option[(Key, Seq[Key], Option[Dtmf])] = Some((u.key, u.functions, u.dtmf))
 
   implicit val fmtMacro: Format[RcMacro] = Json.format[RcMacro]
@@ -83,7 +84,7 @@ object RcMacro extends ComplexExtractor {
     def macroBuilder(offset: Int, chunkLength: Int, nChunks: Int) = {
       memory.chunks(offset, chunkLength, nChunks)
         .map { chunk =>
-          val key: Key = Key(KeyKind.macroKey, mai.getAndIncrement())
+          val key: Key = Key(KeyKind.RcMacro, mai.getAndIncrement())
           val sChunk = chunk.ints
             .map(_.toString)
             .mkString(", ")
@@ -143,12 +144,11 @@ object RcMacro extends ComplexExtractor {
         None // Done. function numbers don't allow 255,512,767.
       case x: Int if x < 255 =>
         val number = soFar + x
-        Some(Key(KeyKind.functionKey, number))
+        Some(Key(KeyKind.Function, number))
       case 255 =>
         parseFunction(iterator, soFar + int) // add next int, which will always be 255.
     }
   }
-
 
   override def parse(jsValue: JsValue): FieldValue = {
     jsValue.as[RcMacro]
@@ -157,9 +157,6 @@ object RcMacro extends ComplexExtractor {
 
   override val name: String = "Macro"
   override val fieldName: String = name
-  override val kind: KeyKind = KeyKind.macroKey
-
-
 }
 
 

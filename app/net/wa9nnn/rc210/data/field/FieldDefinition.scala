@@ -1,7 +1,7 @@
 package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.JsValue
 
@@ -14,7 +14,7 @@ trait FieldDefinition extends LazyLogging:
   def tooltip: String = ""
 
   val fieldName: String
-  val kind: KeyKind
+  val keyKind: KeyKind
   val template: String = ""
   val units: String = ""
 
@@ -27,7 +27,7 @@ trait FieldDefinition extends LazyLogging:
  *
  * @param offset         where in [[Memory]] this comes from.
  * @param fieldName      as shown to users.
- * @param kind           
+ * @param keyKind           
  * @param template       used to generate the rc-210 command.
  * @param fieldExtractor that knows how to get this from the [[net.wa9nnn.rc210.serial.Memory]]
  * @param tooltip        for this rc2input.
@@ -36,7 +36,7 @@ trait FieldDefinition extends LazyLogging:
  */
 case class SimpleField(offset: Int,
                        fieldName: String,
-                       kind: KeyKind,
+                       val keyKind: KeyKind,
                        override val template: String,
                        fieldExtractor: SimpleExtractor,
                        override val tooltip: String = "",
@@ -66,7 +66,7 @@ case class SimpleField(offset: Int,
   }
 
   def fieldKey(number: Int): FieldKey = {
-    new FieldKey(fieldName, Key(kind, number))
+    new FieldKey(fieldName, Key(keyKind, number))
   }
 
   def units(u: String): SimpleField = copy(units = u)
@@ -93,8 +93,7 @@ case class SimpleField(offset: Int,
 //  }
 
 
-trait ComplexExtractor(val keyKind: KeyKind) extends FieldExtractor with FieldDefinition  {
-
+trait ComplexExtractor extends FieldExtractor with FieldDefinition  {
   def fieldKey(key: Key): FieldKey = FieldKey(fieldName, key)
 
   /**

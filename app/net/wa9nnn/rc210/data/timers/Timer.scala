@@ -23,7 +23,7 @@ import play.api.data.Form
 import play.api.data.Forms.{mapping, number, of}
 import play.api.libs.json.{JsValue, Json, OFormat}
 
-case class Timer(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValue("Timer") {
+case class Timer(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValue() {
 
   override def displayHtml: String = s"$seconds => ${macroKey.keyWithName}"
 

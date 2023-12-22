@@ -21,13 +21,13 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.Dtmf
 import net.wa9nnn.rc210.data.Dtmf.Dtmf
 import net.wa9nnn.rc210.data.datastore.DataStore
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
+import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.RcMacro
 import net.wa9nnn.rc210.data.macros.RcMacro.*
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.ui.ProcessResult
-import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.mvc.*
 import views.html.macroNodes
 
@@ -38,6 +38,9 @@ import scala.language.postfixOps
 import scala.util.Try
 import scala.util.matching.Regex
 import net.wa9nnn.rc210.security.Who.*
+import net.wa9nnn.rc210.security.Who.request2Session
+import net.wa9nnn.rc210.security.authentication.RcSession
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 
 @Singleton()
 class MacroEditorController @Inject()(dataStore: DataStore)
@@ -48,7 +51,7 @@ class MacroEditorController @Inject()(dataStore: DataStore)
     with LazyLogging {
 
   def index(): Action[AnyContent] = Action { implicit request =>
-    val values: Seq[RcMacro] = dataStore.values(KeyKind.macroKey)
+    val values: Seq[RcMacro] = dataStore.values(KeyKind.RcMacro)
     Ok(macroNodes(values))
   }
 
@@ -82,7 +85,10 @@ class MacroEditorController @Inject()(dataStore: DataStore)
 
     val rcMacro = RcMacro(key, functions, dtmf)
     val candidateAndNames = ProcessResult(rcMacro)
-    dataStore.update(candidateAndNames)(session(request))
+
+    given RcSession = request.attrs(sessionKey)
+
+    dataStore.update(candidateAndNames)
 
     Redirect(routes.MacroEditorController.index())
   }

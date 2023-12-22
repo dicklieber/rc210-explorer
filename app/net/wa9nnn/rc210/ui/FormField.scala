@@ -17,8 +17,7 @@
 
 package net.wa9nnn.rc210.ui
 
-import net.wa9nnn.rc210.data.field.FieldKey
-
+import net.wa9nnn.rc210.FieldKey
 import java.time.LocalTime
 import scala.xml.*
 

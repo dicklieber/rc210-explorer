@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.{Key, RcSpec}
+import net.wa9nnn.rc210.{FieldKey, Key, RcSpec}
 
 class FieldKeyTest extends RcSpec {
 

@@ -19,11 +19,11 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.DataStore
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
+import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.message.Message
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.ui.ProcessResult
-import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.mvc.*
 
 import javax.inject.{Inject, Singleton}
@@ -31,14 +31,16 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationInt
 import scala.util.Try
 import scala.util.matching.Regex
-import net.wa9nnn.rc210.security.Who.*
+import net.wa9nnn.rc210.security.Who.request2Session
+import net.wa9nnn.rc210.security.authentication.RcSession
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 
 @Singleton()
 class MessageController @Inject()(dataStore: DataStore, cc: MessagesControllerComponents)
   extends MessagesAbstractController(cc) with LazyLogging {
 
   def index(): Action[AnyContent] = Action { implicit request =>
-    val messages: Seq[Message] = dataStore.indexValues(KeyKind.messageKey)
+    val messages: Seq[Message] = dataStore.indexValues(KeyKind.Message)
     Ok(views.html.messages(messages))
   }
 
@@ -65,7 +67,10 @@ class MessageController @Inject()(dataStore: DataStore, cc: MessagesControllerCo
 
     val message = Message(messageKey, words)
     val candidateAndNames = ProcessResult(message)
-    dataStore.update(candidateAndNames)(session(request))
+
+    given RcSession = request.attrs(sessionKey)
+
+    dataStore.update(candidateAndNames) 
     Redirect(routes.MessageController.index())
   }
 }

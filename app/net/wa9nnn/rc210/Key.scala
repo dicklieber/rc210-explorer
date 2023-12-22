@@ -30,7 +30,7 @@ import play.api.mvc.PathBindable
  * Identifies various RC210 objects.
  *
  * @param keyKind     of the Key
- * @param rc210Value  0 is a magic number used for things like [[KeyKind.commonKey]]
+ * @param rc210Value  0 is a magic number used for things like [[KeyKind.CommonKey]]
  */
 case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends Ordered[Key] with EnumEntryValue {
   def check(expected: KeyKind): Unit = if (expected != keyKind) throw IllegalArgumentException(s"Expecting Key of type $expected, but got $this}")
@@ -113,8 +113,8 @@ object Key:
       Key(keyKind, number)
     }
 
-  lazy val portKeys: Seq[Key] = keys(portKey)
-  lazy val macroKeys: Seq[Key] = keys(macroKey)
+  lazy val portKeys: Seq[Key] = keys(Port)
+  lazy val macroKeys: Seq[Key] = keys(RcMacro)
 
   /**
    * Codec to allow non-string types i routes.conf definitions.

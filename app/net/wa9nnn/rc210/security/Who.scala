@@ -33,8 +33,13 @@ object Who:
   implicit val whoFmt: OFormat[Who] = Json.format
   type Callsign = String
 
-  def session( request: MessagesRequest[AnyContent]): RcSession =
+  def session(request: MessagesRequest[AnyContent]): RcSession =
     request.attrs(sessionKey)
+
+  given request2Session: Conversion[MessagesRequest[AnyContent], RcSession] with
+    def apply(request: MessagesRequest[AnyContent]): RcSession =
+      request.attrs(sessionKey)
+  
 
 
 

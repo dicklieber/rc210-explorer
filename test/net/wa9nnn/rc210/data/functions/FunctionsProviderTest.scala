@@ -29,12 +29,12 @@ class FunctionsProviderTest extends RcSpec {
 
 
     "happy path" in {
-      val maybeNode = fp.apply(Key(KeyKind.functionKey, 3))
+      val maybeNode = fp.apply(Key(KeyKind.Function, 3))
       maybeNode
     }
     "wrong key type" in {
       assertThrows[IllegalArgumentException] { // Result type: Assertion
-        fp.apply(Key(KeyKind.meterKey, 3))
+        fp.apply(Key(KeyKind.Meter, 3))
       }
     }
   }

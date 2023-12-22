@@ -23,7 +23,9 @@ import net.wa9nnn.rc210.data.remotebase.RemoteBase
 import play.api.data.Forms.*
 import play.api.data.{Field, Form, Mapping}
 import play.api.mvc.*
-import net.wa9nnn.rc210.security.Who.session
+import net.wa9nnn.rc210.security.Who.request2Session
+import net.wa9nnn.rc210.security.authentication.RcSession
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 
 import javax.inject.{Inject, Singleton}
 
@@ -48,7 +50,10 @@ class RemoteBaseController @Inject()(dataStore: DataStore, components: MessagesC
         (remoteBase: RemoteBase) => {
           val updateCandidate = UpdateCandidate(RemoteBase.fieldKey, Right(remoteBase))
           val candidateAndNames = CandidateAndNames(updateCandidate, None)
-          dataStore.update(candidateAndNames)(session(request))
+
+          given RcSession = request.attrs(sessionKey)
+
+          dataStore.update(candidateAndNames)
           Redirect(routes.RemoteBaseController.index)
         }
       )

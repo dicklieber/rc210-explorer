@@ -17,21 +17,19 @@
 
 package net.wa9nnn.rc210.data.logicAlarm
 
-import net.wa9nnn.rc210.KeyKind.*
-import net.wa9nnn.rc210.data.courtesy.Segment
 import net.wa9nnn.rc210.{Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.Display
 import play.api.data.Form
-import play.api.data.Forms._
+import play.api.data.Forms.*
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.routing.sird
 
-case class LogicAlarm(key: Key, enable: Boolean, lowMacro: Key, highMacro: Key) extends ComplexFieldValue(LogicAlarm.name) {
-  key.check(logicAlarmKey)
-  lowMacro.check(macroKey)
-  highMacro.check(macroKey)
+case class LogicAlarm(key: Key, enable: Boolean, lowMacro: Key, highMacro: Key) extends ComplexFieldValue {
+  key.check(KeyKind.LogicAlarm)
+  lowMacro.check(KeyKind.RcMacro)
+  highMacro.check(KeyKind.RcMacro)
 
 
   override def displayHtml: String =
@@ -68,6 +66,7 @@ case class LogicAlarm(key: Key, enable: Boolean, lowMacro: Key, highMacro: Key) 
 }
 
 object LogicAlarm extends ComplexExtractor {
+  override val keyKind: KeyKind = KeyKind.LogicAlarm
   def unapply(u: LogicAlarm): Option[(Key, Boolean, Key, Key)] = Some((u.key, u.enable, u.lowMacro, u.highMacro))
    val logicForm: Form[LogicAlarm] = Form(
     mapping(
@@ -85,29 +84,28 @@ object LogicAlarm extends ComplexExtractor {
    */
   override def extract(memory: Memory): Seq[FieldEntry] = {
     val enables = memory.sub8(169, 5).map(_ != 0)
-    val lowMacros: Seq[Key] = memory.sub8(174, 5).map(n => Key(KeyKind.macroKey, n + 1))
-    val highMacros: Seq[Key] = memory.sub8(179, 5).map(n => Key(KeyKind.macroKey, n + 1))
+    val lowMacros: Seq[Key] = memory.sub8(174, 5).map(n => Key(KeyKind.RcMacro, n + 1))
+    val highMacros: Seq[Key] = memory.sub8(179, 5).map(n => Key(KeyKind.RcMacro, n + 1))
     //    SimpleField(169, "Enable", logicAlarmKey, "1n91b", FieldBoolean)
     //    SimpleField(174, "Macro Low", logicAlarmKey, "1*2101nv", MacroSelectField)
     //    SimpleField(179, "Macro High", logicAlarmKey, "1*2102nv", MacroSelectField)
 
     for {
-      i <- 0 until KeyKind.logicAlarmKey.maxN
+      i <- 0 until KeyKind.LogicAlarm.maxN
     } yield {
-      val logicAlarmKey = Key(KeyKind.logicAlarmKey, i + 1)
+      val logicAlarmKey = Key(KeyKind.LogicAlarm, i + 1)
       val fieldValue: LogicAlarm = new LogicAlarm(logicAlarmKey, enables(i), lowMacros(i), highMacros(i))
       FieldEntry(this, fieldValue)
     }
   }
 
-  override def parse(jsValue: JsValue): FieldValue = jsValue.as[LogicAlarm]
+  override def parse(jsValue: JsValue): LogicAlarm = jsValue.as[LogicAlarm]
 
   /**
    * for various things e.g. parser name.
    */
   override val name: String = "LogicAlarm"
   override val fieldName: String = name
-  override val kind: KeyKind = KeyKind.logicAlarmKey
 
   override def positions: Seq[FieldOffset] = Seq(
 

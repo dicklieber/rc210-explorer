@@ -18,10 +18,9 @@
 package net.wa9nnn.rc210.data.courtesy
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.KeyKind.courtesyToneKey
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.courtesy.CourtesyTonesExtractor.logger
-import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldKey, FieldOffset, FieldValue}
+import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.{Format, JsValue, Json}
 
@@ -30,7 +29,8 @@ import play.api.libs.json.{Format, JsValue, Json}
  * This gaters all the data and produces all the [[CourtesyTone]]s.
  */
 object CourtesyTonesExtractor extends ComplexExtractor with LazyLogging {
-  private val nCourtesyTones = KeyKind.courtesyToneKey.maxN
+  override val keyKind: KeyKind = KeyKind.CourtesyTone
+  private val nCourtesyTones = keyKind.maxN
 
   override def positions: Seq[FieldOffset] = Seq(
     FieldOffset(856, this),
@@ -54,7 +54,7 @@ object CourtesyTonesExtractor extends ComplexExtractor with LazyLogging {
     }
 
     val courtesyTones: Seq[CourtesyTone] = for (ct <- 0 until 10) yield {
-      val key: Key = Key(courtesyToneKey, ct + 1)
+      val key: Key = Key(KeyKind.CourtesyTone, ct + 1)
       val segments = Seq(
         Segment(array(ct)(8), array(ct)(12), array(ct)(0), array(ct)(1)),
         Segment(array(ct)(9), array(ct)(13), array(ct)(2), array(ct)(3)),
@@ -74,7 +74,6 @@ object CourtesyTonesExtractor extends ComplexExtractor with LazyLogging {
 
   override val name: String = "CourtesyExtractor"
   //  override val fieldName: String = name
-  override val kind: KeyKind = KeyKind.courtesyToneKey
 
   implicit val fmtCourtesyTone: Format[CourtesyTone] = Json.format[CourtesyTone]
   override val fieldName: String = "CourtesyTone"

@@ -18,14 +18,14 @@
 package net.wa9nnn.rc210.ui
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.{FieldKey, Key}
 import net.wa9nnn.rc210.data.datastore.{CandidateAndNames, UpdateCandidate}
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
+import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.named.NamedKey
 import play.api.mvc.*
 
 /**
- * Keeps track of all the [[Key]]s for  a single [[net.wa9nnn.rc210.KeyKind]] e.g. [[net.wa9nnn.rc210.KeyKind.commonKey]] or [[net.wa9nnn.rc210.KeyKind.portKey]]; on index.
+ * Keeps track of all the [[Key]]s for  a single [[net.wa9nnn.rc210.KeyKind]] e.g. [[net.wa9nnn.rc210.KeyKind.CommonKey]] or [[net.wa9nnn.rc210.KeyKind.Port]]; on index.
  * Then uses these, on save, to get all the values.
  * This is needed because HTML checkboxes in foems don't send any value when unchecked.
  */

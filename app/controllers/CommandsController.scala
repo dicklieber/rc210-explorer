@@ -19,8 +19,9 @@ package controllers
 
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.FieldKey
 import net.wa9nnn.rc210.data.datastore.*
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey, FieldValue}
+import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.security.authorzation.AuthFilter
 import net.wa9nnn.rc210.serial.*
 import net.wa9nnn.rc210.serial.comm.RcStreamBased

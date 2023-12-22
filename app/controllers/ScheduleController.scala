@@ -22,7 +22,9 @@ import com.wa9nnn.util.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.schedules.Schedule
-import net.wa9nnn.rc210.security.Who.*
+import net.wa9nnn.rc210.security.Who.request2Session
+import net.wa9nnn.rc210.security.authentication.RcSession
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 import net.wa9nnn.rc210.ui.ProcessResult
 import net.wa9nnn.rc210.{Key, KeyKind}
 import play.api.data.Form
@@ -39,7 +41,7 @@ class ScheduleController @Inject()(dataStore: DataStore, components: MessagesCon
   extends MessagesAbstractController(components) with LazyLogging {
 
   def index: Action[AnyContent] = Action { implicit request =>
-    val schedules: Seq[Schedule] = dataStore.indexValues(KeyKind.scheduleKey)
+    val schedules: Seq[Schedule] = dataStore.indexValues(KeyKind.Schedule)
     Ok(views.html.schedules(schedules))
   }
 
@@ -60,7 +62,10 @@ class ScheduleController @Inject()(dataStore: DataStore, components: MessagesCon
           },
           (schedule: Schedule) => {
             val candidateAndNames = ProcessResult(schedule)
-            dataStore.update(candidateAndNames)(session(request))
+
+            given RcSession = request.attrs(sessionKey)
+
+            dataStore.update(candidateAndNames)
             Redirect(routes.ScheduleController.index)
           }
         )

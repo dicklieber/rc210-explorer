@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.util.tableui.{Cell, Row, RowSource}
-import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.{FieldKey, Key}
 import play.api.libs.json.JsValue
 
 /**
@@ -63,10 +63,10 @@ trait SimpleFieldValue extends FieldValue {
 
 }
 
-abstract class ComplexFieldValue(val fieldName: String) extends FieldValue with LazyLogging {
+abstract class ComplexFieldValue() extends FieldValue with LazyLogging {
   val key: Key
 
-  lazy val fieldKey: FieldKey = FieldKey(fieldName, key)
+  lazy val fieldKey: FieldKey = FieldKey(key)
 
   override def toHtmlField(fieldKey: FieldKey): String =
     throw new IllegalStateException("ComplexFieldValue does not produce HTML")

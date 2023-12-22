@@ -19,15 +19,16 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.DataStore
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
+import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.timers.{Timer, TimerExtractor}
 import net.wa9nnn.rc210.ui.ProcessResult
-import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
 import play.api.mvc.*
 import views.html.timerEditor
-import net.wa9nnn.rc210.security.Who.*
+import net.wa9nnn.rc210.security.Who.request2Session
 import net.wa9nnn.rc210.security.authentication.RcSession
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 
 import javax.inject.*
 import scala.concurrent.duration.DurationInt
@@ -39,7 +40,7 @@ class TimerController @Inject()(dataStore: DataStore, components: MessagesContro
 
   def index: Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] =>
-      val timers: Seq[Timer] = dataStore.indexValues(KeyKind.timerKey)
+      val timers: Seq[Timer] = dataStore.indexValues(KeyKind.Timer)
       Ok(views.html.timers(timers))
   }
 
@@ -60,7 +61,8 @@ class TimerController @Inject()(dataStore: DataStore, components: MessagesContro
           },
           (timer: Timer) => {
             val candidateAndNames = ProcessResult(timer)
-            dataStore.update(candidateAndNames)(session(request))
+            given RcSession = request.attrs(sessionKey)
+            dataStore.update(candidateAndNames)
             Redirect(routes.TimerController.index)
           }
         )

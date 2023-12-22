@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.{FieldKey, Key}
 import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue, Json}
 

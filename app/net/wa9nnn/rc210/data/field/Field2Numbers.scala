@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.{FieldKey, Key}
 import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.*
 
@@ -34,13 +34,13 @@ case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue {
     )
   }
 
-
   override def update(paramValue: String): Field2Numbers = {
     val candidate: Seq[Int] = if (paramValue.isBlank)
       Seq(0, 0)
     else
       paramValue
         .split(" ")
+        .toIndexedSeq
         .map(_.toInt)
     copy(value = candidate)
   }
@@ -78,7 +78,6 @@ object Field2Numbers extends SimpleExtractor {
   //  }
   //    override def writes(o: Field2Numbers): JsString = JsString(o.value.mkString(" "))
   //
-
 
   //  override def jsonToField(jsValue: JsValue): FieldValue = jsValue.as[Field2Numbers]
 

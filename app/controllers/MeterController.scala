@@ -19,16 +19,18 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.DataStore
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldInt, FieldKey}
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldInt}
 import net.wa9nnn.rc210.data.meter.*
 import net.wa9nnn.rc210.data.meter.Meter.meterForm
 import net.wa9nnn.rc210.ui.ProcessResult
-import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Forms.*
 import play.api.data.{Form, Mapping}
 import play.api.mvc.*
 import views.html
-import net.wa9nnn.rc210.security.Who.*
+import net.wa9nnn.rc210.security.Who.request2Session
+import net.wa9nnn.rc210.security.authentication.RcSession
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 
 import javax.inject.*
 
@@ -45,10 +47,10 @@ class MeterController @Inject()(dataStore: DataStore, components: MessagesContro
               metersEntries: Seq[FieldEntry] <- eventualMeters
               meterAlarmsEntries: Seq[FieldEntry] <- eventualAlarmEntries
             yield*/
-      val vRefEntry: FieldInt = dataStore.editValue(FieldKey("vRef", Key(KeyKind.commonKey, 1)))
+      val vRefEntry: FieldInt = dataStore.editValue(FieldKey("vRef", Key(KeyKind.Common, 1)))
       val vRef: Int = vRefEntry.value
-      val meters: Seq[Meter] = dataStore.indexValues(KeyKind.meterKey)
-      val meterAlarms: Seq[MeterAlarm] = dataStore.indexValues(KeyKind.meterAlarmKey)
+      val meters: Seq[Meter] = dataStore.indexValues(KeyKind.Meter)
+      val meterAlarms: Seq[MeterAlarm] = dataStore.indexValues(KeyKind.MeterAlarm)
       val meterStuff = MeterStuff(vRef, meters, meterAlarms)
       Ok(html.meters(meterStuff))
   }
@@ -77,7 +79,10 @@ class MeterController @Inject()(dataStore: DataStore, components: MessagesContro
           },
           (meter: Meter) => {
             val candidateAndNames = ProcessResult(meter)
-            dataStore.update(candidateAndNames)(session((request)))
+
+            given RcSession = request.attrs(sessionKey)
+
+            dataStore.update(candidateAndNames)
             Redirect(routes.MeterController.index)
           }
         )
@@ -94,7 +99,10 @@ class MeterController @Inject()(dataStore: DataStore, components: MessagesContro
           },
           (meterAlarm: MeterAlarm) => {
             val candidateAndNames = ProcessResult(meterAlarm)
-            dataStore.update(candidateAndNames)(session(request))
+
+            given RcSession = request.attrs(sessionKey)
+
+            dataStore.update(candidateAndNames) 
             Redirect(routes.MeterController.index)
           }
         )

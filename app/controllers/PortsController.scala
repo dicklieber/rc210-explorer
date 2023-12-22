@@ -28,7 +28,9 @@ import javax.inject.{Inject, Singleton}
 import scala.collection.mutable
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
-import net.wa9nnn.rc210.security.Who.*
+import net.wa9nnn.rc210.security.Who.request2Session
+import net.wa9nnn.rc210.security.authentication.RcSession
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 
 @Singleton
 class PortsController @Inject()(implicit dataStore: DataStore, cc: MessagesControllerComponents)
@@ -37,7 +39,7 @@ class PortsController @Inject()(implicit dataStore: DataStore, cc: MessagesContr
 
   def index(): Action[AnyContent] = Action {
     implicit request => {
-      val fieldEntries = dataStore.apply(KeyKind.portKey)
+      val fieldEntries = dataStore.apply(KeyKind.Port)
       if (simpleValuesHandler.isEmpty)
         simpleValuesHandler = Some(new SimpleValuesHandler(fieldEntries))
 
@@ -56,7 +58,10 @@ class PortsController @Inject()(implicit dataStore: DataStore, cc: MessagesContr
     implicit request: MessagesRequest[AnyContent] =>
       val collect: CandidateAndNames = simpleValuesHandler.get.collect
       val candidateAndNames = ProcessResult(collect)
-      dataStore.update(candidateAndNames)(session(request))
+
+      given RcSession = request.attrs(sessionKey)
+
+      dataStore.update(candidateAndNames)
       Redirect(routes.PortsController.index())
   }
 }

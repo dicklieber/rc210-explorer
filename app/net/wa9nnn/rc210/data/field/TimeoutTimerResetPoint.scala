@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.data.field
 
+import net.wa9nnn.rc210.FieldKey
 import net.wa9nnn.rc210.ui.FormField
 import net.wa9nnn.rc210.util.{FieldSelect, SelectOption}
 import play.api.libs.json.{JsValue, Json}

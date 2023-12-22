@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.data.meter
 
-import net.wa9nnn.rc210.KeyKind.{macroKey, meterAlarmKey, meterKey}
+import net.wa9nnn.rc210.KeyKind.{RcMacro, MeterAlarm, Meter}
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.{Key, KeyKind}
@@ -28,10 +28,10 @@ import play.api.libs.json.{Format, JsValue, Json}
 import java.util.concurrent.atomic.AtomicInteger
 
 
-case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint: Int, macroKey: Key) extends ComplexFieldValue("MeterAlarm") {
-  key.check(meterAlarmKey)
-  meter.check(meterKey)
-  macroKey.check(KeyKind.macroKey)
+case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint: Int, macroKey: Key) extends ComplexFieldValue() {
+  key.check(KeyKind.MeterAlarm)
+  meter.check(Meter)
+  macroKey.check(KeyKind.RcMacro)
 
   override def displayHtml: String =
     <table>
@@ -93,7 +93,8 @@ case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint:
 * */
 
 
-object MeterAlarm extends ComplexExtractor {
+object MeterAlarm extends ComplexExtractor() {
+  override val keyKind: KeyKind = KeyKind.MeterAlarm
   def unapply(u: MeterAlarm): Option[(Key, Key, AlarmType, Int, Key)] = Some((u.key, u.meter, u.alarmType, u.tripPoint, u.macroKey))
 
   val form: Form[MeterAlarm] = Form(
@@ -115,7 +116,7 @@ object MeterAlarm extends ComplexExtractor {
   override def extract(memory: Memory): Seq[FieldEntry] = {
     val mai = new AtomicInteger()
     val alarmType: Seq[AlarmType] = memory.sub8(274, nMeters).map(AlarmType.find)
-    val macroKeys: Seq[Key] = memory.sub8(314, nMeters).map(Key(macroKey, _))
+    val macroKeys: Seq[Key] = memory.sub8(314, nMeters).map(Key(RcMacro, _))
     val setPoint: Seq[String] = memory.chunks(282, 4, nMeters).map { chunk =>
       val array = chunk.ints
       //      new String(array.map(_.toChar))
@@ -123,17 +124,17 @@ object MeterAlarm extends ComplexExtractor {
     }
     val meters = memory.sub8(266, nMeters).map { number =>
       try {
-        val r: Key = Key(KeyKind.meterKey, number + 1)
+        val r: Key = Key(KeyKind.Meter, number + 1)
         r
       } catch {
         case e: Exception =>
           logger.error(s"Bad meterEditor number got: $number , expecting 1 to $nMeters. Will use Meter 1")
-          Key(KeyKind.meterKey, 1)
+          Key(KeyKind.Meter, 1)
       }
     }
     for {i <- 0 until nMeters}
       yield {
-        val key: Key = Key(KeyKind.meterAlarmKey, mai.incrementAndGet())
+        val key: Key = Key(KeyKind.MeterAlarm, mai.incrementAndGet())
         val meterAlarm = MeterAlarm(key, meters(i), alarmType(i), setPoint(i).toInt, macroKeys(i))
         new FieldEntry(this, meterAlarm.fieldKey, meterAlarm)
       }
@@ -147,7 +148,6 @@ object MeterAlarm extends ComplexExtractor {
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[MeterAlarm]
 
   override val fieldName: String = name
-  override val kind: KeyKind = KeyKind.meterKey
 
   override def positions: Seq[FieldOffset] = Seq(
     FieldOffset(266, this, "Alarm Type"),
@@ -159,6 +159,5 @@ object MeterAlarm extends ComplexExtractor {
   )
 
   implicit val fmtMeterAlarm: Format[MeterAlarm] = Json.format[MeterAlarm]
-
 }
 

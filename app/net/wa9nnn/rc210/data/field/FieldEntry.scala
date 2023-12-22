@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.util.tableui.*
-import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.data.datastore.FieldEntryJson
 
@@ -76,7 +76,7 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
    * @return FieldEntry that invokes the macroKey.
    */
   def canTriggerMacro(macroKey: Key): Boolean =
-    macroKey.check(KeyKind.macroKey)
+    macroKey.check(KeyKind.RcMacro)
     fieldValue match {
       case tn: TriggerNode =>
         tn.canRunMacro(macroKey)

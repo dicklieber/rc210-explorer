@@ -59,7 +59,7 @@ class MemoryFileLoader @Inject()( fieldDefinitions: FieldDefinitions)(implicit c
       val simpleFields: Seq[FieldEntry] = for {
         fieldDefinition <- fieldDefinitions.simpleFields
         it = fieldDefinition.iterator()
-        number <- 1 to fieldDefinition.kind.maxN
+        number <- 1 to fieldDefinition.keyKind.maxN
         fieldValue <- fieldDefinition.extractFromInts(it).toOption
       } yield {
         val fieldKey = fieldDefinition.fieldKey(number)

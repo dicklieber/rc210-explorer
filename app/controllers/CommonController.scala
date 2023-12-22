@@ -18,13 +18,17 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.KeyKind
+import net.wa9nnn.rc210.{FieldKey, KeyKind}
 import net.wa9nnn.rc210.data.datastore.*
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey, SimpleFieldValue}
+import net.wa9nnn.rc210.data.field.{FieldEntry, SimpleFieldValue}
 import net.wa9nnn.rc210.ui.SimpleValuesHandler
 import play.api.mvc.*
 import net.wa9nnn.rc210.security.Who.*
+
 import javax.inject.{Inject, Singleton}
+import net.wa9nnn.rc210.security.Who.given
+import net.wa9nnn.rc210.security.authentication.RcSession
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 
 @Singleton
 class CommonController @Inject()(dataStore: DataStore, components: MessagesControllerComponents)
@@ -34,7 +38,7 @@ class CommonController @Inject()(dataStore: DataStore, components: MessagesContr
   def index: Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] =>
 
-      val fieldEntries = dataStore(KeyKind.commonKey)
+      val fieldEntries = dataStore(KeyKind.Common)
       if (simpleValuesHandler.isEmpty)
         simpleValuesHandler = Some(new SimpleValuesHandler(fieldEntries))
       Ok(views.html.common(fieldEntries))
@@ -42,7 +46,9 @@ class CommonController @Inject()(dataStore: DataStore, components: MessagesContr
 
   def save(): Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] =>
-      dataStore.update(simpleValuesHandler.get.collect)(session(request))
+      given RcSession = request.attrs(sessionKey)
+
+      dataStore.update(simpleValuesHandler.get.collect)
       Redirect(routes.CommonController.index())
   }
 }

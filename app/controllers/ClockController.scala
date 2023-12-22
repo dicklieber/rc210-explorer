@@ -19,7 +19,7 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.KeyKind.clockKey
+import net.wa9nnn.rc210.KeyKind.Common
 import net.wa9nnn.rc210.data.clock.Clock.clockForm
 import net.wa9nnn.rc210.data.clock.DSTPoint.dstPointForm
 import net.wa9nnn.rc210.data.clock.{Clock, DSTPoint}
@@ -31,6 +31,8 @@ import play.api.data.Forms.*
 import play.api.mvc.*
 import net.wa9nnn.rc210.security.Who.*
 import net.wa9nnn.rc210.security.authentication.RcSession
+import net.wa9nnn.rc210.security.Who.given
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
@@ -58,8 +60,10 @@ class ClockController @Inject()(implicit dataStore: DataStore, ec: ExecutionCont
         },
         (clock: Clock) => {
           val candidateAndNames = ProcessResult(clock)
-          val session1: RcSession = session(request)
-          dataStore.update(candidateAndNames)(session1)
+
+          given RcSession = request.attrs(sessionKey)
+
+          dataStore.update(candidateAndNames)
           Redirect(routes.ClockController.index)
         }
       )

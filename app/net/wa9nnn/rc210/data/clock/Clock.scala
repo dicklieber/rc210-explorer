@@ -18,10 +18,10 @@
 package net.wa9nnn.rc210.data.clock
 
 import com.wa9nnn.util.JsonFormatUtils.javaEnumFormat
-import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.clock.MonthOfYearDST.*
 import net.wa9nnn.rc210.data.clock.Occurrence.*
-import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldKey, FieldOffset, FieldValue}
+import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.data.*
@@ -33,7 +33,7 @@ case class Clock(key: Key,
                  startDST: DSTPoint = DSTPoint(March, First),
                  endDST: DSTPoint = DSTPoint(November, Second),
                  say24Hours: Boolean = false,
-                ) extends ComplexFieldValue("Clock") {
+                ) extends ComplexFieldValue() {
 
   override def displayHtml: String = "todo"
 
@@ -79,6 +79,7 @@ case class Clock(key: Key,
 
 
 object Clock extends ComplexExtractor {
+  override val keyKind: KeyKind = KeyKind.Clock
   val clockForm = Form(
     mapping(
       "key" -> of[Key],
@@ -105,7 +106,7 @@ object Clock extends ComplexExtractor {
     //    SimpleField(1186, "Clock 24 Hours", commonKey, "n*5103b", FieldBoolean),
     val say24Hours: Boolean = memory.bool(1186)
 
-    val key = Key(KeyKind.clockKey)
+    val key = Key(KeyKind.Common)
     val clock = new Clock(key, enableDST, startHour, startDST, endDST, say24Hours)
     Seq(
       FieldEntry(this, fieldKey(key), clock)
@@ -120,8 +121,7 @@ object Clock extends ComplexExtractor {
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[Clock]
 
   override val fieldName: String = name
-  override val kind: KeyKind = KeyKind.clockKey
-  val key: Key = Key(KeyKind.clockKey) // there's only one
+  val key: Key = Key(KeyKind.Common) // there's only one
   val fieldKey: FieldKey = FieldKey(fieldName, key)
 
   override def positions: Seq[FieldOffset] = Seq(

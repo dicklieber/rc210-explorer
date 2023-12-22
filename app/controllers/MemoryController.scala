@@ -34,7 +34,7 @@ class MemoryController @Inject()(memoryFileLoader: MemoryFileLoader, fieldDefini
       position: FieldOffset <- fd.positions
     } yield {
       val extraCells: Seq[Cell] = Seq(
-        fd.kind,
+        fd.keyKind,
         fd.fieldName,
         position.field.getOrElse(""),
         fd.template

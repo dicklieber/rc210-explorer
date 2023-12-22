@@ -17,7 +17,6 @@
 
 package net.wa9nnn.rc210
 
-import net.wa9nnn.rc210.data.field.FieldKey
 import net.wa9nnn.rc210.security.UserId.UserId
 import play.api.mvc.PathBindable
 

@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.ui.FormField
-import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.libs.json.{Format, JsResult, JsSuccess, JsValue, Json}
 
 case class FieldMacroKey(macroKey: Key) extends SimpleFieldValue {
@@ -38,7 +38,7 @@ case class FieldMacroKey(macroKey: Key) extends SimpleFieldValue {
 object MacroKeyExtractor extends SimpleExtractor:
   override def extractFromInts(iterator: Iterator[Int], fieldDefinition: SimpleField): FieldValue = {
     val i: Int = iterator.next()
-    val key = Key(KeyKind.macroKey, i)
+    val key = Key(KeyKind.RcMacro, i)
     FieldMacroKey(key)
   }
 

@@ -21,13 +21,15 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.courtesy.{CourtesyTone, CourtesyTonesExtractor}
 import net.wa9nnn.rc210.data.datastore
 import net.wa9nnn.rc210.data.datastore.*
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldKey}
+import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.ui.ProcessResult
-import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.mvc.*
 import net.wa9nnn.rc210.security.Who.*
+import net.wa9nnn.rc210.security.authentication.RcSession
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 
 import javax.inject.*
 
@@ -36,13 +38,13 @@ class CourtesyToneEditorController @Inject()(dataStore: DataStore, components: M
 
   def index(): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      val cts: Seq[CourtesyTone] = dataStore.indexValues(KeyKind.courtesyToneKey)
+      val cts: Seq[CourtesyTone] = dataStore.indexValues(KeyKind.CourtesyTone)
       Ok(views.html.courtesyTones(cts))
   }
 
   def edit(key: Key): Action[AnyContent] = Action {
     implicit request =>
-      key.check(KeyKind.courtesyToneKey)
+      key.check(KeyKind.CourtesyTone)
       val fieldKey = CourtesyTonesExtractor.fieldKey(key)
       val courtesyTone: CourtesyTone = dataStore.editValue(fieldKey)
 
@@ -62,7 +64,10 @@ class CourtesyToneEditorController @Inject()(dataStore: DataStore, components: M
           },
           (courtesyTone: CourtesyTone) => {
             val candidateAndNames = ProcessResult(courtesyTone)
-            dataStore.update(candidateAndNames)(session(request))
+
+            given RcSession = request.attrs(sessionKey)
+
+            dataStore.update(candidateAndNames) 
             Redirect(routes.CourtesyToneEditorController.index())
           }
         )

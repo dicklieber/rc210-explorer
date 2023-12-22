@@ -18,15 +18,16 @@
 package net.wa9nnn.rc210.data.message
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldKey, FieldOffset, FieldValue}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
+import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.util.Chunk
 import play.api.libs.json.JsValue
 
 import java.util.concurrent.atomic.AtomicInteger
 
-object MesssageExtractor extends ComplexExtractor with LazyLogging {
+object MesssageExtractor extends ComplexExtractor() with LazyLogging {
+  val keyKind = KeyKind.Message
   override def positions: Seq[FieldOffset] = {
     Seq(
       FieldOffset(1576, this)
@@ -44,7 +45,7 @@ object MesssageExtractor extends ComplexExtractor with LazyLogging {
     val mai = new AtomicInteger(1)
     for {
       chunk: Chunk <- memory.chunks(1576, 10, 40)
-      key: Key = Key(KeyKind.messageKey, mai.getAndIncrement())
+      key: Key = Key(KeyKind.Message, mai.getAndIncrement())
     } yield {
       val message: Message = Message(key, chunk.ints
         .takeWhile(_ != 0)
@@ -62,6 +63,5 @@ object MesssageExtractor extends ComplexExtractor with LazyLogging {
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[Message]
 
   override val fieldName: String = name
-  override val kind: KeyKind = KeyKind.messageKey
 
 }

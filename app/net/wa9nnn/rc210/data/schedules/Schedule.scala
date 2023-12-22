@@ -9,7 +9,7 @@ import net.wa9nnn.rc210.data.field.schedule.{DayOfWeek, Week}
 import net.wa9nnn.rc210.data.schedules.Schedule.s02
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.Display
-import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.libs.json.{Format, JsValue, Json}
@@ -33,8 +33,8 @@ case class Schedule(override val key: Key,
                     monthOfYear: MonthOfYearSchedule = MonthOfYearSchedule.Every,
                     hour: Int = 0,
                     minute: Int = 0,
-                    macroKey: Key = Key(KeyKind.macroKey, 1),
-                    enabled: Boolean = false) extends ComplexFieldValue("Schedule") with TriggerNode  {
+                    macroKey: Key = Key(KeyKind.RcMacro, 1),
+                    enabled: Boolean = false) extends ComplexFieldValue() with TriggerNode  {
 
   val description: String = {
     //    val week = s" Week: $weekInMonth"
@@ -117,7 +117,7 @@ case class Schedule(override val key: Key,
 }
 
 object Schedule extends LazyLogging with ComplexExtractor {
-
+  val keyKind = KeyKind.Schedule
   def unapply(schedule: Schedule): Option[(Key, DayOfWeek, Week, MonthOfYearSchedule, Int, Int, Key, Boolean)] =
     Some(schedule.key, schedule.dow, schedule.week, schedule.monthOfYear, schedule.hour, schedule.minute, schedule.macroKey, schedule.enabled)
 
@@ -140,7 +140,7 @@ object Schedule extends LazyLogging with ComplexExtractor {
   def s02(n: Int): String = f"$n%02d"
 
   def empty(setPoint: Int): Schedule = {
-    val scheduleKey: Key = Key(KeyKind.scheduleKey, setPoint)
+    val scheduleKey: Key = Key(KeyKind.Schedule, setPoint)
     new Schedule(
       key = scheduleKey
     )
@@ -168,7 +168,7 @@ object Schedule extends LazyLogging with ComplexExtractor {
   }
 
 
-  def apply(setPoint: Int): Schedule = new Schedule(Key(KeyKind.scheduleKey, setPoint))
+  def apply(setPoint: Int): Schedule = new Schedule(Key(KeyKind.Schedule, setPoint))
 
 
   implicit val fmtSchedule: Format[Schedule] = Json.format[Schedule]
@@ -178,7 +178,6 @@ object Schedule extends LazyLogging with ComplexExtractor {
 
   override val name: String = "Schedule"
   override val fieldName: String = name
-  override val kind: KeyKind = KeyKind.scheduleKey
 
 }
 

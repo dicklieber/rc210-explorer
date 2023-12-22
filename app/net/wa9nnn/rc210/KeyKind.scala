@@ -20,37 +20,46 @@ package net.wa9nnn.rc210
 import enumeratum._
 import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
 
-sealed trait KeyKind(val maxN: Int, val display: Boolean = false) extends EnumEntry
+sealed trait KeyKind(val maxN: Int, val display: Boolean = false) extends EnumEntry:
+  def spaces: String =
+    entryName.replaceAll(
+      String.format("%s|%s|%s",
+        "(?<=[A-Z])(?=[A-Z][a-z])",
+        "(?<=[^A-Z])(?=[A-Z])",
+        "(?<=[A-Za-z])(?=[^A-Za-z])"
+      ),
+      " "
+    )
 
 object KeyKind extends PlayEnum[KeyKind] {
 
   override def values: IndexedSeq[KeyKind] = findValues
 
-  case object logicAlarmKey extends KeyKind(5)
+  case object LogicAlarm extends KeyKind(5)
 
-  case object meterKey extends KeyKind(8, false)
+  case object Meter extends KeyKind(8, false)
 
-  case object meterAlarmKey extends KeyKind(8, true)
+  case object MeterAlarm extends KeyKind(8, true)
 
-  case object dtmfMacroKey extends KeyKind(195, false)
+  case object DtmfMacro extends KeyKind(195, false)
 
-  case object courtesyToneKey extends KeyKind(10)
+  case object CourtesyTone extends KeyKind(10)
 
-  case object functionKey extends KeyKind(1005, false)
+  case object Function extends KeyKind(1005, false)
 
-  case object macroKey extends KeyKind(105)
+  case object RcMacro extends KeyKind(105)
 
-  case object messageKey extends KeyKind(70) // 40 (in Main) + 30 (in RTC)
+  case object Message extends KeyKind(70) // 40 (in Main) + 30 (in RTC)
 
-  case object commonKey extends KeyKind(1)
+  case object Clock extends KeyKind(1)
 
-  case object portKey extends KeyKind(3)
+  case object Port extends KeyKind(3)
 
-  case object scheduleKey extends KeyKind(40)
+  case object Schedule extends KeyKind(40)
 
-  case object timerKey extends KeyKind(6)
+  case object Timer extends KeyKind(6)
 
-  case object clockKey extends KeyKind(1)
+  case object Common extends KeyKind(1)
 
-  case object remoteBaseKey extends KeyKind(1)
+  case object RemoteBase extends KeyKind(1)
 }
