@@ -19,9 +19,10 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.DataStore
-import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldEntry}
+import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.data.timers.{Timer, TimerExtractor}
-import net.wa9nnn.rc210.ui.ProcessResult
+import net.wa9nnn.rc210.ui.{ComplexFieldController, ProcessResult}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
 import play.api.mvc.*
@@ -36,35 +37,20 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
 class TimerController @Inject()(dataStore: DataStore, components: MessagesControllerComponents)
-  extends MessagesAbstractController(components) with LazyLogging {
+  extends ComplexFieldController[Timer](dataStore, components) with LazyLogging {
 
-  def index: Action[AnyContent] = Action {
-    implicit request: MessagesRequest[AnyContent] =>
-      val timers: Seq[Timer] = dataStore.indexValues(KeyKind.Timer)
-      Ok(views.html.timers(timers))
+  override val complexExtractor: ComplexExtractor = TimerExtractor
+
+  override def indexResult(values: Seq[Timer]): Result = {
+    Ok(views.html.timers(values))
   }
 
-  def edit(key: Key): Action[AnyContent] = Action {
-    implicit request: MessagesRequest[AnyContent] =>
-      val timer: Timer = dataStore.editValue(TimerExtractor.fieldKey(key))
-      Ok(views.html.timerEditor(Timer.form.fill(timer), key.namedKey))
-  }
+  override def editResult(filledForm: Form[Timer], namedKey: NamedKey)(using request: MessagesRequest[AnyContent]): Result =
+    Ok(views.html.timerEditor(filledForm, namedKey))
 
-  def save(): Action[AnyContent] = Action {
-    implicit request: MessagesRequest[AnyContent] =>
-      Timer.form
-        .bindFromRequest()
-        .fold(
-          (formWithErrors: Form[Timer]) => {
-            val namedKey = Key(formWithErrors.data("key")).namedKey
-            BadRequest(views.html.timerEditor(formWithErrors, namedKey))
-          },
-          (timer: Timer) => {
-            val candidateAndNames = ProcessResult(timer)
-            given RcSession = request.attrs(sessionKey)
-            dataStore.update(candidateAndNames)
-            Redirect(routes.TimerController.index)
-          }
-        )
-  }
+  override def saveOkResult(): Result =
+    Redirect(routes.TimerController.index())
+
+  override val form: Form[Timer] =
+    Timer.form
 }

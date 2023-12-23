@@ -57,7 +57,7 @@ class MacroEditorController @Inject()(dataStore: DataStore)
 
   def edit(key: Key): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
 
-    val fieldKey = FieldKey("Macro", key)
+    val fieldKey = FieldKey( key)
     val rcMacro: RcMacro = dataStore.editValue(fieldKey)
     Ok(views.html.macroEditor(rcMacro))
   }
