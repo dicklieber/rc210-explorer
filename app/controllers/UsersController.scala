@@ -74,7 +74,7 @@ class UsersController @Inject()(userStore: UserStore)(implicit cc: MessagesContr
         (editDTO: UserEditDTO) => {
           import Who.given
           userStore.put(editDTO)(request)
-          Redirect(routes.TimerController.index)
+          Redirect(routes.UsersController.users())
         }
       )
   }

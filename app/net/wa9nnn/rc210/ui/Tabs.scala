@@ -23,7 +23,6 @@ import net.wa9nnn.rc210.ui.Tabs.TabName
 object Tabs {
 
   val noTab:Tab = Tab("none", "", "this should never show.")
-  val flowTab: Tab = Tab("Flow", routes.FlowController.flow().url, "How to Macros to things. How this all works.")
   val commonTab: Tab = Tab("Common", routes.CommonController.index().url, "Global settings")
   val ctTab: Tab = Tab("CT", routes.CourtesyToneController.index().url, "Courtesy Tones")
   val clockTab: Tab = Tab("Clock", routes.ClockController.index.url, "Set clock, DST etc.")
@@ -48,7 +47,6 @@ object Tabs {
   def security: Tab = Tab("Users", routes.UsersController.users().url, "Edit Users")
 
   val tabs: Seq[Tab] = Seq(
-    flowTab,
     metersTab,
     logicAlarmTab,
     commonTab,
