@@ -1,26 +1,26 @@
 /*
- * Copyright (C) 2023  Dick Lieber, WA9NNN
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright (C) 2023  Dick Lieber, WA9NNN                               
+ *                                                                       
+ * This program is free software: you can redistribute it and/or modify  
+ * it under the terms of the GNU General Public License as published by  
+ * the Free Software Foundation, either version 3 of the License, or     
+ * (at your option) any later version.                                   
+ *                                                                       
+ * This program is distributed in the hope that it will be useful,       
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of        
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
+ * GNU General Public License for more details.                          
+ *                                                                       
+ * You should have received a copy of the GNU General Public License     
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-package net.wa9nnn.rc210.data.logicAlarm
+package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.{Key, KeyKind}
-import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
+import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.Display
+import net.wa9nnn.rc210.{Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.libs.json.{Format, JsValue, Json}
@@ -30,7 +30,6 @@ case class LogicAlarm(key: Key, enable: Boolean, lowMacro: Key, highMacro: Key) 
   key.check(KeyKind.LogicAlarm)
   lowMacro.check(KeyKind.RcMacro)
   highMacro.check(KeyKind.RcMacro)
-
 
   override def displayHtml: String =
     <table>
@@ -65,10 +64,12 @@ case class LogicAlarm(key: Key, enable: Boolean, lowMacro: Key, highMacro: Key) 
   override def toJsValue: JsValue = Json.toJson(this)
 }
 
-object LogicAlarm extends ComplexExtractor {
+object LogicAlarm extends ComplexExtractor[LogicAlarm] {
   override val keyKind: KeyKind = KeyKind.LogicAlarm
+
   def unapply(u: LogicAlarm): Option[(Key, Boolean, Key, Key)] = Some((u.key, u.enable, u.lowMacro, u.highMacro))
-   val logicForm: Form[LogicAlarm] = Form(
+
+  val form: Form[LogicAlarm] = Form(
     mapping(
       "key" -> of[Key],
       "enable" -> boolean,
@@ -107,9 +108,7 @@ object LogicAlarm extends ComplexExtractor {
   override val name: String = "LogicAlarm"
   override val fieldName: String = name
 
-  override def positions: Seq[FieldOffset] = Seq(
-
-  )
+  override def positions: Seq[FieldOffset] = Seq()
 
   implicit val fmtLogicAlarm: Format[LogicAlarm] = Json.format[LogicAlarm]
 }

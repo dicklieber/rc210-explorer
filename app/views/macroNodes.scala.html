@@ -21,7 +21,7 @@
                 @for(macroNode <- macros) {
                     <tr>
                         <td>
-                            @editButton(routes.MacroEditorController.edit(macroNode.key))
+                            @editButton(routes.MacroController.edit(macroNode.key))
                         </td>
                         <td title="Click edit button to change macro details..">
                         @macroNode.key.keyWithName

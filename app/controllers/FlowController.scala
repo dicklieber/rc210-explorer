@@ -18,6 +18,7 @@
 package controllers
 
 import com.wa9nnn.util.tableui.{Header, Row, Table}
+import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
@@ -30,7 +31,7 @@ import scala.language.postfixOps
 
 class FlowController @Inject()( dataStore: DataStore, functionsProvider: FunctionsProvider) extends MessagesInjectedController {
 
-  def flow(): Action[AnyContent] = Action {
+  def flow(key:Key): Action[AnyContent] = Action {
     Ok("todo")
 /*
     implicit val timeout: Timeout = 3 seconds

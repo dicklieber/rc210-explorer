@@ -17,8 +17,10 @@
 
 package net.wa9nnn.rc210.data.timers
 
-import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntryBase}
+import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
+import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
+import net.wa9nnn.rc210.serial.Memory
 import play.api.data.Form
 import play.api.data.Forms.{mapping, number, of}
 import play.api.libs.json.{JsValue, Json, OFormat}
@@ -43,10 +45,46 @@ case class Timer(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValu
   override def toJsValue: JsValue = Json.toJson(this)
 }
 
-object Timer {
+//noinspection ZeroIndexToHead
+object Timer extends ComplexExtractor[Timer] with LazyLogging {
+  //  private val nTimers = keyKind.maxN
+  //  Memory Layout
+  //  seconds for each timer 6 2-byte ints
+  //  macroToRun for each timer 6 1-byte ints
+
+  override def positions: Seq[FieldOffset] = {
+    Seq(
+      FieldOffset(1553, this),
+      FieldOffset(1565, this)
+    )
+  }
+
+  /**
+   *
+   * @param memory    source of RC-210 data.
+   * @return what we extracted.
+   */
+  override def extract(memory: Memory): Seq[FieldEntry] = {
+    val seconds: Iterator[Int] = memory.iterator16At(1553)
+    val macroInts: Iterator[Int] = memory.iterator8At(1565)
+
+    val r: Seq[FieldEntry] = (for {
+      index <- 0 until KeyKind.Timer.maxN
+    } yield {
+      val key: Key = Key(KeyKind.Timer, index + 1)
+      FieldEntry(this, fieldKey(key), Timer(key, seconds.next(), Key(KeyKind.RcMacro, macroInts.next() + 1)))
+    })
+    r
+  }
+
+  override def parse(jsValue: JsValue): FieldValue = jsValue.as[Timer]
+
+  override val name: String = "Timer"
+  override val fieldName: String = name
+
   def unapply(u: Timer): Option[(Key, Int, Key)] = Some((u.key, u.seconds, u.macroKey))
 
-   val form : Form[Timer] = Form[Timer](
+  val form: Form[Timer] = Form[Timer](
     mapping(
       "key" -> of[Key],
       "seconds" -> number,
@@ -55,4 +93,5 @@ object Timer {
   )
 
   implicit val fmtTimer: OFormat[Timer] = Json.format[Timer]
+  override val keyKind: KeyKind = KeyKind.Timer
 }

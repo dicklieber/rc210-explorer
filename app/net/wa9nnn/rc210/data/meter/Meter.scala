@@ -62,11 +62,11 @@ case class Meter(key: Key, meterFaceName: MeterFaceName, low: VoltToReading, hig
   override def toJsValue: JsValue = Json.toJson(this)
 }
 
-object Meter extends ComplexExtractor( ) {
+object Meter extends ComplexExtractor[Meter] {
   val keyKind = KeyKind.Meter
   def unapply(u: Meter): Option[(Key, MeterFaceName, VoltToReading, VoltToReading)] = Some((u.key, u.meterFaceName, u.low, u.high))
 
-  val meterForm: Form[Meter] = Form(
+  override val form: Form[Meter] = Form(
     mapping(
       "key" -> of[Key],
       "faceName" -> MeterFaceName.formField,

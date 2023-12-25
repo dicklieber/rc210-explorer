@@ -23,26 +23,26 @@ import net.wa9nnn.rc210.ui.Tabs.TabName
 object Tabs {
 
   val noTab:Tab = Tab("none", "", "this should never show.")
-  val commonTab: Tab = Tab("Common", routes.CommonController.index().url, "Global settings")
-  val ctTab: Tab = Tab("CT", routes.CourtesyToneController.index().url, "Courtesy Tones")
+  val commonTab: Tab = Tab("Common", routes.CommonController.index.url, "Global settings")
+  val ctTab: Tab = Tab("CT", routes.CourtesyToneController.index.url, "Courtesy Tones")
   val clockTab: Tab = Tab("Clock", routes.ClockController.index.url, "Set clock, DST etc.")
 
-  val logicAlarmTab: Tab = Tab("Logic", routes.LogicAlarmEditorController.index().url, "Logic Alarm settings.")
+  val logicAlarmTab: Tab = Tab("Logic", routes.LogicAlarmController.index.url, "Logic Alarm settings.")
   val metersTab: Tab = Tab("Meters", routes.MeterController.index.url, "Analog Meters and Alarms")
   //
   //  val dtmfTab: Tab = Tab(KeyKind.dtmfMacroKey)
   //
 
-  val macrosTab: Tab = Tab("Macros", routes.MacroEditorController.index().url, "Macro settings.")
-  val messagesTab: Tab = Tab("Messages", routes.MessageController.index().url, "Messages.")
+  val macrosTab: Tab = Tab("Macros", routes.MacroController.index.url, "Macro settings.")
+  val messagesTab: Tab = Tab("Messages", routes.MessageController.index.url, "Messages.")
 
-  val portsTab: Tab = Tab("Ports", routes.PortsController.index().url, "Port settings")
+  val portsTab: Tab = Tab("Ports", routes.PortsController.index.url, "Port settings")
 
   val schedulesTab: Tab = Tab("Schedules", routes.ScheduleController.index.url, "Schedule settings.")
-  val timersTab: Tab = Tab("Timers", routes.TimerController.index().url, "Timer settings.")
+  val timersTab: Tab = Tab("Timers", routes.TimerController.index.url, "Timer settings.")
   val rc210Tab: Tab = Tab("RC-210", routes.IOController.listSerialPorts.url, "RC-210 DownloadActor.")
   val fileUpload: Tab = Tab("Upload", routes.DataStoreController.upload.url, "Upload a saved JSON file.")
-  val changes: Tab = Tab("Changes", routes.CommandsController.index().url, "Pending changes that need to be sent to the RC-210.")
+  val changes: Tab = Tab("Changes", routes.CommandsController.index.url, "Pending changes that need to be sent to the RC-210.")
   val remoteBase: Tab = Tab("Remote Base", controllers.routes.RemoteBaseController.index.url, "Manabge Remote Base radio.")
   def security: Tab = Tab("Users", routes.UsersController.users().url, "Edit Users")
 

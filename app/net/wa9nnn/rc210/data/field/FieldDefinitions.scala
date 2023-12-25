@@ -17,16 +17,16 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.KeyKind.*
+//import net.wa9nnn.rc210.KeyKind
+//import net.wa9nnn.rc210.KeyKind.*
+import net.wa9nnn.rc210.KeyKind.{Common, Port}
 import net.wa9nnn.rc210.data.clock.Clock
-import net.wa9nnn.rc210.data.courtesy.{CourtesyTone, CourtesyTonesExtractor}
-import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
+import net.wa9nnn.rc210.data.courtesy.CourtesyTone
 import net.wa9nnn.rc210.data.macros.RcMacro
-import net.wa9nnn.rc210.data.message.MesssageExtractor
 import net.wa9nnn.rc210.data.meter.{Meter, MeterAlarm}
 import net.wa9nnn.rc210.data.remotebase.RemoteBase
 import net.wa9nnn.rc210.data.schedules.Schedule
-import net.wa9nnn.rc210.data.timers.TimerExtractor
+import net.wa9nnn.rc210.data.timers.Timer
 
 import javax.inject.{Inject, Singleton}
 @Singleton
@@ -130,12 +130,13 @@ class FieldDefinitions @Inject()() {
     //todo finish
   )
 
-  val complexFd: Seq[ComplexExtractor] = Seq(
+  val m:ComplexExtractor[Message]  = Message
+  val complexFd: Seq[ComplexExtractor[?]] = Seq(
     Schedule,
     RcMacro,
-    CourtesyTonesExtractor,
-    TimerExtractor,
-    MesssageExtractor,
+    CourtesyTone,
+    Timer,
+    Message,
     Clock,
     RemoteBase,
     Meter,

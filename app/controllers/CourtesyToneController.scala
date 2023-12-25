@@ -18,14 +18,12 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.courtesy.{CourtesyTone, CourtesyTonesExtractor}
+import net.wa9nnn.rc210.data.courtesy.CourtesyTone
 import net.wa9nnn.rc210.data.datastore
 import net.wa9nnn.rc210.data.datastore.*
-import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldEntry}
+import net.wa9nnn.rc210.data.field.ComplexExtractor
 import net.wa9nnn.rc210.data.named.NamedKey
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
-import net.wa9nnn.rc210.ui.{ComplexFieldController, ProcessResult}
-import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.ui.ComplexFieldController
 import play.api.data.Form
 import play.api.mvc.*
 
@@ -34,7 +32,7 @@ import javax.inject.*
 class CourtesyToneController @Inject()(dataStore: DataStore, components: MessagesControllerComponents)
   extends ComplexFieldController[CourtesyTone](dataStore, components) with LazyLogging {
 
-  override val complexExtractor: ComplexExtractor = CourtesyTonesExtractor
+  override val complexExtractor: ComplexExtractor[CourtesyTone] = CourtesyTone
 
   override def indexResult(values: Seq[CourtesyTone]): Result = {
     Ok(views.html.courtesyTones(values))
@@ -46,7 +44,7 @@ class CourtesyToneController @Inject()(dataStore: DataStore, components: Message
     Ok(views.html.courtesyToneEdit(namedKey))
 
   override def saveOkResult(): Result =
-    Redirect(routes.CourtesyToneController.index())
+    Redirect(routes.CourtesyToneController.index)
 
   override val form: Form[CourtesyTone] =
     CourtesyTone.form

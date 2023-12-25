@@ -35,8 +35,7 @@ import play.api.mvc.*
  */
 abstract class ComplexFieldController[T <: ComplexFieldValue](dataStore: DataStore, components: MessagesControllerComponents)
   extends MessagesAbstractController(components) {
-  val form: Form[T]
-  val complexExtractor: ComplexExtractor
+  val complexExtractor: ComplexExtractor[T]
 
   /**
    * Build the Index page for all T for the [[net.wa9nnn.rc210.KeyKind]]
@@ -73,14 +72,14 @@ abstract class ComplexFieldController[T <: ComplexFieldValue](dataStore: DataSto
    * @param values current i.e value or candidate for each instance. For example:
    * {{{
    *      override def saveOkResult(): Result =
-   *        Redirect(routes.LogicAlarmEditorController.index())
+   *        Redirect(routes.LogicAlarmEditorController.index)
    *
    * }}}
    * @return
    */
   def saveOkResult(): Result
 
-  def index(): Action[AnyContent] = Action {
+  def index: Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] =>
       val keyKind = complexExtractor.keyKind
       val values: Seq[T] = dataStore.values(keyKind)
@@ -91,14 +90,14 @@ abstract class ComplexFieldController[T <: ComplexFieldValue](dataStore: DataSto
     implicit request: MessagesRequest[AnyContent] =>
       val fieldKey = FieldKey(key)
       val value: T = dataStore.editValue(fieldKey)
-      val filledForm: Form[T] = form.fill(value)
+      val filledForm: Form[T] = complexExtractor.form.fill(value)
       editResult(filledForm, key.namedKey)(using request)
   }
 
   def save(): Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] =>
       val map = request.body.asFormUrlEncoded.get
-      val r: Result = form.bindFromRequest(map)
+      val r: Result = complexExtractor.form.bindFromRequest(map)
         .fold(
           (formWithErrors: Form[T]) => {
             val namedKey = Key(formWithErrors.data("key")).namedKey

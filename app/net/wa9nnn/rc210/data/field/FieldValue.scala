@@ -63,7 +63,7 @@ trait SimpleFieldValue extends FieldValue {
 
 }
 
-abstract class ComplexFieldValue() extends FieldValue with LazyLogging {
+abstract class ComplexFieldValue extends FieldValue with LazyLogging {
   val key: Key
 
   lazy val fieldKey: FieldKey = FieldKey(key)

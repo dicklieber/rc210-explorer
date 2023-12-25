@@ -1,6 +1,6 @@
 @import net.wa9nnn.rc210.ui.MyHelpers._
 @import net.wa9nnn.rc210.ui.Tabs
-@import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
+@import net.wa9nnn.rc210.data.field.LogicAlarm
 @(logicAlarms: Seq[LogicAlarm])
 
     @tabbedmain(Tabs.logicAlarmTab) {
@@ -18,7 +18,7 @@
             @for(logicAlarm <- logicAlarms) {
                 <tr>
                     <td>
-                    @editButton(routes.LogicAlarmEditorController.edit(logicAlarm.key))
+                    @editButton(routes.LogicAlarmController.edit(logicAlarm.key))
                     </td>
                     <td>
                     @logicAlarm.key.keyWithName

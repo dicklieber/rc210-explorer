@@ -15,8 +15,8 @@
     <script src="@routes.Assets.versioned("javascripts/macroNode.js")"></script>
     <script src="@routes.Assets.versioned("javascripts/contextmenu.js")"></script>
 
-    @form(action = routes.MacroEditorController.save(), Symbol("id") -> "form") {
-        <input type="hidden" name="key", value="@macroNode.key">
+    @form(action = routes.MacroController.save(), Symbol("id") -> "form") {
+        <input type="hidden" name="key" value="@macroNode.key">
         <input type="hidden" name="ids" id="ids">
 
         <div class="row">

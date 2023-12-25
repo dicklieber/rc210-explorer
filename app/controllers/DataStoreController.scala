@@ -61,7 +61,7 @@ class DataStoreController @Inject()(dataStore: DataStore)
         dataStore(dataTransferJson)
         
       }
-    Redirect(routes.MacroEditorController.index())
+    Redirect(routes.MacroController.index)
   }
 
 }

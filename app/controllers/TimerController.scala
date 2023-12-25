@@ -19,27 +19,20 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.DataStore
-import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldEntry}
+import net.wa9nnn.rc210.data.field.ComplexExtractor
 import net.wa9nnn.rc210.data.named.NamedKey
-import net.wa9nnn.rc210.data.timers.{Timer, TimerExtractor}
-import net.wa9nnn.rc210.ui.{ComplexFieldController, ProcessResult}
-import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
+import net.wa9nnn.rc210.data.timers.Timer
+import net.wa9nnn.rc210.ui.ComplexFieldController
 import play.api.data.Form
 import play.api.mvc.*
-import views.html.timerEditor
-import net.wa9nnn.rc210.security.Who.request2Session
-import net.wa9nnn.rc210.security.authentication.RcSession
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 
 import javax.inject.*
-import scala.concurrent.duration.DurationInt
-import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
 class TimerController @Inject()(dataStore: DataStore, components: MessagesControllerComponents)
   extends ComplexFieldController[Timer](dataStore, components) with LazyLogging {
 
-  override val complexExtractor: ComplexExtractor = TimerExtractor
+  override val complexExtractor: ComplexExtractor[Timer] = Timer
 
   override def indexResult(values: Seq[Timer]): Result = {
     Ok(views.html.timers(values))
@@ -49,7 +42,7 @@ class TimerController @Inject()(dataStore: DataStore, components: MessagesContro
     Ok(views.html.timerEditor(filledForm, namedKey))
 
   override def saveOkResult(): Result =
-    Redirect(routes.TimerController.index())
+    Redirect(routes.TimerController.index)
 
   override val form: Form[Timer] =
     Timer.form

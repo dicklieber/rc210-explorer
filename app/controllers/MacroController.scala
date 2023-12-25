@@ -18,39 +18,32 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.Dtmf
 import net.wa9nnn.rc210.data.Dtmf.Dtmf
 import net.wa9nnn.rc210.data.datastore.DataStore
-import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.RcMacro
 import net.wa9nnn.rc210.data.macros.RcMacro.*
-import net.wa9nnn.rc210.data.named.NamedKey
+import net.wa9nnn.rc210.security.authentication.RcSession
+import net.wa9nnn.rc210.security.authorzation.AuthFilter
 import net.wa9nnn.rc210.ui.ProcessResult
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.mvc.*
 import views.html.macroNodes
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.duration.DurationInt
-import scala.concurrent.{ExecutionContext, Future}
-import scala.language.postfixOps
+import scala.concurrent.ExecutionContext
 import scala.util.Try
 import scala.util.matching.Regex
-import net.wa9nnn.rc210.security.Who.*
-import net.wa9nnn.rc210.security.Who.request2Session
-import net.wa9nnn.rc210.security.authentication.RcSession
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 
 @Singleton()
-class MacroEditorController @Inject()(dataStore: DataStore)
+class MacroController @Inject()(dataStore: DataStore)
                                      (implicit
                                       functionsProvider: FunctionsProvider,
                                       ec: ExecutionContext, components: MessagesControllerComponents)
   extends MessagesAbstractController(components)
     with LazyLogging {
 
-  def index(): Action[AnyContent] = Action { implicit request =>
+  def index: Action[AnyContent] = Action { implicit request =>
     val values: Seq[RcMacro] = dataStore.values(KeyKind.RcMacro)
     Ok(macroNodes(values))
   }
@@ -62,7 +55,7 @@ class MacroEditorController @Inject()(dataStore: DataStore)
     Ok(views.html.macroEditor(rcMacro))
   }
 
-  def save(): Action[AnyContent] = Action { implicit request =>
+  def save(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
     val formData: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
 
     val sKey: String = formData("key").head
@@ -86,15 +79,15 @@ class MacroEditorController @Inject()(dataStore: DataStore)
     val rcMacro = RcMacro(key, functions, dtmf)
     val candidateAndNames = ProcessResult(rcMacro)
 
-    given RcSession = request.attrs(sessionKey)
+    given RcSession = request.attrs(AuthFilter.sessionKey)
 
     dataStore.update(candidateAndNames)
 
-    Redirect(routes.MacroEditorController.index())
+    Redirect(routes.MacroController.index)
   }
 }
 
-object MacroEditorController {
+object MacroController {
   val r: Regex = """[^\d]*(\d*)""".r
 }
 

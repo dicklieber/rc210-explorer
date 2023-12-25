@@ -37,7 +37,7 @@ class PortsController @Inject()(implicit dataStore: DataStore, cc: MessagesContr
   extends MessagesAbstractController(cc) with LazyLogging {
   private var simpleValuesHandler: Option[SimpleValuesHandler] = None
 
-  def index(): Action[AnyContent] = Action {
+  def index: Action[AnyContent] = Action {
     implicit request => {
       val fieldEntries = dataStore.apply(KeyKind.Port)
       if (simpleValuesHandler.isEmpty)
@@ -62,7 +62,7 @@ class PortsController @Inject()(implicit dataStore: DataStore, cc: MessagesContr
       given RcSession = request.attrs(sessionKey)
 
       dataStore.update(candidateAndNames)
-      Redirect(routes.PortsController.index())
+      Redirect(routes.PortsController.index)
   }
 }
 

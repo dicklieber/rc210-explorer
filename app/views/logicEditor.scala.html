@@ -2,14 +2,14 @@
 @import views.html.helper._
 @import play.api.mvc.RequestHeader
 @import net.wa9nnn.rc210.ui.Tabs
-@import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
 @import net.wa9nnn.rc210.ui.MacroSelect
 @import views.html.helper.checkbox
 @import net.wa9nnn.rc210.data.named.NamedKey
+@import net.wa9nnn.rc210.data.field.LogicAlarm
 @(logicAlarmForm: Form[LogicAlarm], namedKey: NamedKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider) extends 
     @tabbedmain(Tabs.logicAlarmTab) {
         <div class="container">
-        @form(routes.LogicAlarmEditorController.save()) {
+        @form(routes.LogicAlarmController.save()) {
             @nameEdit(namedKey)
             <input type="hidden" name="key" value="@namedKey.key">
             <table>

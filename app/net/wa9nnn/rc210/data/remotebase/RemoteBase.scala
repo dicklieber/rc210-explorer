@@ -26,7 +26,7 @@ import play.api.data.{Form, Mapping}
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.*
 
-case class RemoteBase(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[RBMemory] = Seq.empty) extends ComplexFieldValue() {
+case class RemoteBase(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[RBMemory] = Seq.empty) extends ComplexFieldValue {
   override val key: Key = Key(KeyKind.RemoteBase)
 
   //  override def display: String = fieldName
@@ -45,11 +45,11 @@ case class RemoteBase(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[
   override def displayHtml: String = toString
 }
 
-object RemoteBase extends ComplexExtractor {
-  val keyKind = KeyKind.RemoteBase
+object RemoteBase extends ComplexExtractor[RemoteBase] {
+  override val keyKind: KeyKind = KeyKind.RemoteBase
   def unapply(u: RemoteBase): Option[(Radio, Yaesu, String, Seq[RBMemory])] = Some((u.radio, u.yaesu, u.prefix, u.memories))
 
-  val form: Form[RemoteBase] = Form(
+  override val form: Form[RemoteBase] = Form(
     mapping(
       "radio" -> Radio.formField,
       "yaesu" -> Yaesu.formField,

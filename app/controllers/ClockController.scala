@@ -19,7 +19,7 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.KeyKind
-import net.wa9nnn.rc210.data.clock.Clock.clockForm
+import net.wa9nnn.rc210.data.clock.Clock.form
 import net.wa9nnn.rc210.data.clock.{Clock, DSTPoint}
 import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.security.authentication.RcSession
@@ -39,12 +39,12 @@ class ClockController @Inject()(implicit dataStore: DataStore, ec: ExecutionCont
   def index: Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] => {
       val clock: Clock = dataStore.editValue(Clock.fieldKey)
-      Ok(views.html.clock(clockForm.fill(clock)))
+      Ok(views.html.clock(form.fill(clock)))
     }
   }
 
   def save(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
-    clockForm
+    form
       .bindFromRequest()
       .fold(
         (formWithErrors: Form[Clock]) => {

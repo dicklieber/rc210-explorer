@@ -57,7 +57,7 @@ case class RcMacro(override val key: Key, functions: Seq[Key], dtmf: Option[Dtmf
   override def toJsValue: JsValue = Json.toJson(this)
 }
 
-object RcMacro extends ComplexExtractor {
+object RcMacro extends ComplexExtractor[RcMacro] {
   override val keyKind: KeyKind = KeyKind.RcMacro
   def unapply(u: RcMacro): Option[(Key, Seq[Key], Option[Dtmf])] = Some((u.key, u.functions, u.dtmf))
 
@@ -157,6 +157,7 @@ object RcMacro extends ComplexExtractor {
 
   override val name: String = "Macro"
   override val fieldName: String = name
+  override val form: Form[RcMacro] = throw new NotImplementedError("Forms not used with macros") //todo
 }
 
 

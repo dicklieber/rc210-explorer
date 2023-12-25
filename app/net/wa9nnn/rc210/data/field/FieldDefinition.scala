@@ -1,11 +1,11 @@
 package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
+import play.api.data.Form
 import play.api.libs.json.JsValue
 
-import java.text.FieldPosition
 import scala.util.Try
 
 trait FieldDefinition extends LazyLogging:
@@ -84,16 +84,8 @@ case class SimpleField(offset: Int,
   override def positions: Seq[FieldOffset] = Seq(FieldOffset(offset, this))
 }
 
-//trait FieldFormParseable[K <: Key, T <: ComplexFieldValue[K]]:
-//  def parseFormFields[T <: ComplexFieldValue[K]](using valuesMap: Map[String, String]): T
-//
-//  def int(name:String):Int = {
-//    val x: x.type = summon[Map[String, String]]
-//    x
-//  }
 
-
-trait ComplexExtractor extends FieldExtractor with FieldDefinition  {
+trait ComplexExtractor[T <: ComplexFieldValue] extends FieldExtractor with FieldDefinition  {
   def fieldKey(key: Key): FieldKey = FieldKey(fieldName, key)
 
   /**
@@ -102,16 +94,7 @@ trait ComplexExtractor extends FieldExtractor with FieldDefinition  {
    * @return what we extracted.
    */
   def extract(memory: Memory): Seq[FieldEntry]
-
-
-  //   lazy val fieldDefinition: FieldDefinition = {
-  //    new FieldDefinition {
-  //      override val fieldName: String = name
-  //      override val kind: KeyKind = KeyKind.courtesyToneKey
-  //
-  //      override def parse(jsValue: JsValue): FieldValue
-  //    }
-  //  }
+  val form:Form[T]
 
 }
 
@@ -134,9 +117,9 @@ trait FieldExtractor {
 /**
  * where in the memory image
  *
- * @param offset
- * @param fieldDefinition
- * @param field
+ * @param offset where in [[Memory]].
+ * @param fieldDefinition details.
+ * @param field a name.
  */
 case class FieldOffset(offset: Int, fieldDefinition: FieldDefinition, field: Option[String] = None)
 

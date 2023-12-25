@@ -49,7 +49,7 @@ class CommonController @Inject()(dataStore: DataStore, components: MessagesContr
       given RcSession = request.attrs(sessionKey)
 
       dataStore.update(simpleValuesHandler.get.collect)
-      Redirect(routes.CommonController.index())
+      Redirect(routes.CommonController.index)
   }
 }
 

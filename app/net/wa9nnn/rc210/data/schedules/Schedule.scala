@@ -116,12 +116,12 @@ case class Schedule(override val key: Key,
   override def canRunMacro(candidate: Key): Boolean = macroKey == candidate
 }
 
-object Schedule extends LazyLogging with ComplexExtractor {
-  val keyKind = KeyKind.Schedule
+object Schedule extends LazyLogging with ComplexExtractor[Schedule] {
+  override val keyKind: KeyKind = KeyKind.Schedule
   def unapply(schedule: Schedule): Option[(Key, DayOfWeek, Week, MonthOfYearSchedule, Int, Int, Key, Boolean)] =
     Some(schedule.key, schedule.dow, schedule.week, schedule.monthOfYear, schedule.hour, schedule.minute, schedule.macroKey, schedule.enabled)
 
-  val form: Form[Schedule] = Form[Schedule](
+  override val form: Form[Schedule] = Form[Schedule](
     mapping(
       "key" -> of[Key],
       "dow" -> DayOfWeek.formField,

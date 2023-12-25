@@ -19,8 +19,7 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.DataStore
-import net.wa9nnn.rc210.data.field.ComplexExtractor
-import net.wa9nnn.rc210.data.logicAlarm.LogicAlarm
+import net.wa9nnn.rc210.data.field.{ComplexExtractor, LogicAlarm}
 import net.wa9nnn.rc210.data.named.NamedKey
 import net.wa9nnn.rc210.ui.ComplexFieldController
 import play.api.data.Form
@@ -29,10 +28,10 @@ import play.api.mvc.*
 import javax.inject.*
 
 @Singleton
-class LogicAlarmEditorController @Inject()(components: MessagesControllerComponents, dataStore: DataStore)
+class LogicAlarmController @Inject()(components: MessagesControllerComponents, dataStore: DataStore)
   extends ComplexFieldController[LogicAlarm](dataStore, components) with LazyLogging {
 
-  override val complexExtractor: ComplexExtractor = LogicAlarm
+  override val complexExtractor: ComplexExtractor[LogicAlarm] = LogicAlarm
 
   override def indexResult(values: Seq[LogicAlarm]): Result = {
     Ok(views.html.logic(values))
@@ -42,9 +41,7 @@ class LogicAlarmEditorController @Inject()(components: MessagesControllerCompone
     Ok(views.html.logicEditor(filledForm, namedKey))
 
   override def saveOkResult(): Result =
-    Redirect(routes.LogicAlarmEditorController.index())
+    Redirect(routes.LogicAlarmController.index)
 
-  override val form: Form[LogicAlarm] =
-    LogicAlarm.logicForm
 }
 

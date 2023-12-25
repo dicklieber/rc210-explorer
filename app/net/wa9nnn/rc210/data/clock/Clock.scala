@@ -33,7 +33,7 @@ case class Clock(key: Key,
                  startDST: DSTPoint = DSTPoint(March, First),
                  endDST: DSTPoint = DSTPoint(November, Second),
                  say24Hours: Boolean = false,
-                ) extends ComplexFieldValue() {
+                ) extends ComplexFieldValue {
 
   override def displayHtml: String = "todo"
 
@@ -78,9 +78,9 @@ case class Clock(key: Key,
 }
 
 
-object Clock extends ComplexExtractor {
+object Clock extends ComplexExtractor[Clock] {
   override val keyKind: KeyKind = KeyKind.Clock
-  val clockForm = Form(
+  override val form: Form[Clock] = Form(
     mapping(
       "key" -> of[Key],
       "enableDST" -> boolean,

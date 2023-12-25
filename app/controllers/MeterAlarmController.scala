@@ -22,43 +22,33 @@ import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldInt}
 import net.wa9nnn.rc210.data.meter.*
 import net.wa9nnn.rc210.data.meter.Meter.meterForm
-import net.wa9nnn.rc210.security.Who.request2Session
-import net.wa9nnn.rc210.security.authentication.RcSession
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 import net.wa9nnn.rc210.ui.ProcessResult
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Forms.*
 import play.api.data.{Form, Mapping}
 import play.api.mvc.*
 import views.html
+import net.wa9nnn.rc210.security.Who.request2Session
+import net.wa9nnn.rc210.security.authentication.RcSession
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 
 import javax.inject.*
 
-class MeterController @Inject()(dataStore: DataStore, components: MessagesControllerComponents)
-  extends ComplexFieldController[Meter](dataStore, components) with LazyLogging {
+class MeterAlarmController @Inject()(dataStore: DataStore, components: MessagesControllerComponents)
+  extends ComplexFieldController[MeterAlarm](dataStore, components) with LazyLogging {
 
-  override val complexExtractor: ComplexExtractor[Meter] = Meter
+  override val complexExtractor: ComplexExtractor[MeterAlarm] = Timer
 
-  def index: Action[AnyContent] = Action {
-    implicit request =>
-      val vRefEntry: FieldInt = dataStore.editValue(FieldKey("vRef", Key(KeyKind.Common, 1)))
-      val vRef: Int = vRefEntry.value
-      val meters: Seq[Meter] = dataStore.indexValues(KeyKind.Meter)
-      val meterAlarms: Seq[MeterAlarm] = dataStore.indexValues(KeyKind.MeterAlarm)
-      val meterStuff = MeterStuff(vRef, meters, meterAlarms)
-      Ok(html.meters(meterStuff))
+
+  override def indexResult(values: Seq[MeterAlarm]): Result = {
+    throw new NotImplementedError("cauae we override meter index")
   }
 
-  override def indexResult(values: Seq[Meter]): Result = {
-    throw new NotImplementedError("cauae we override index") 
-  }
-
-  override def editResult(filledForm: Form[Meter], namedKey: NamedKey)(using request: MessagesRequest[AnyContent]): Result =
+  override def editResult(filledForm: Form[MeterAlarm], namedKey: NamedKey)(using request: MessagesRequest[AnyContent]): Result =
     Ok(views.html.meterEditor(filledForm, namedKey))
 
   override def saveOkResult(): Result =
     Redirect(routes.meters.index)
-  
 
 }
 

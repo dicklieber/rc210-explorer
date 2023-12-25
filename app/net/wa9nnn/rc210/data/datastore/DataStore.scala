@@ -26,8 +26,6 @@ import net.wa9nnn.rc210.security.Who.given
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.mvc.{AnyContent, Request}
-import net.wa9nnn.rc210.security.Who
-import net.wa9nnn.rc210.security.Who.given
 
 import javax.inject.{Inject, Singleton}
 import scala.collection.concurrent.TrieMap
