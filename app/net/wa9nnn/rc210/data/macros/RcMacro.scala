@@ -157,7 +157,7 @@ object RcMacro extends ComplexExtractor[RcMacro] {
 
   override val name: String = "Macro"
   override val fieldName: String = name
-  override val form: Form[RcMacro] = throw new NotImplementedError("Forms not used with macros") //todo
+  override def form: Form[RcMacro] = throw new NotImplementedError("Forms not used with macros") //todo
 }
 
 

@@ -44,18 +44,17 @@ class Memory(val data: Array[Int] = Array.empty) {
 
   private val array = new ArraySeq.ofInt(data)
 
-  def stringAt(offset: Int):String = {
+  def stringAt(offset: Int): String = {
     new String(iterator8At(offset)
       .takeWhile(_ != 0)
       .map(_.toChar)
       .toArray)
   }
+
   def iterator8At(offset: Int): Iterator[Int] = {
     val value: Iterator[Int] = array.drop(offset).iterator
     value
   }
-
-
 
   def iterator16At(offset: Int): Iterator[Int] =
     new Iterator16(offset)
@@ -91,61 +90,66 @@ class Memory(val data: Array[Int] = Array.empty) {
 
   }
 
-//  /**
-//   * File looks like:
-//   * comment: comment\n
-//   * stamp: ISO-8601\n as ISO-860
-//   * size: data.length \n
-//   * followed by one value per line.
-//   *
-//   * @param path where to save.
-//   */
-//  def save(path: Path): Unit = {
-//    Using(new PrintWriter(Files.newBufferedWriter(path))) { writer: PrintWriter =>
-////      writer.println(s"comment: \t$comment")
-////      writer.println(s"stamp: \t${stamp.toString}")
-////      writer.println(s"size: \t${data.length}")
-//      data.zipWithIndex.foreach { case (v, i) =>
-//        val s = f"$i%04d:$v%d"
-//        writer.println(s)
-//      }
-//    }
-//  }
+  //  /**
+  //   * File looks like:
+  //   * comment: comment\n
+  //   * stamp: ISO-8601\n as ISO-860
+  //   * size: data.length \n
+  //   * followed by one value per line.
+  //   *
+  //   * @param path where to save.
+  //   */
+  //  def save(path: Path): Unit = {
+  //    Using(new PrintWriter(Files.newBufferedWriter(path))) { writer: PrintWriter =>
+  ////      writer.println(s"comment: \t$comment")
+  ////      writer.println(s"stamp: \t${stamp.toString}")
+  ////      writer.println(s"size: \t${data.length}")
+  //      data.zipWithIndex.foreach { case (v, i) =>
+  //        val s = f"$i%04d:$v%d"
+  //        writer.println(s)
+  //      }
+  //    }
+  //  }
 
 }
 
 object Memory extends LazyLogging {
 
+  val r: Regex = """(.*):\s+(.*)""".r
 
-    val r: Regex = """(.*):\s+(.*)""".r
+  /**
+   * Read from a file produced by [[Memory]].save().
+   *
+   * @param url where to read from.
+   * @return the data or an exception.
+   */
+  def load(url: URL): Try[Memory] = {
 
-    /**
-     * Read from a file produced by [[Memory]].save().
-     *
-     * @param url where to read from.
-     * @return the data or an exception.
-     */
-    def load(url: URL): Try[Memory] = {
+    Using(new BufferedSource(url.openStream())) { bs =>
+      var comment = ""
+      var stamp = Instant.now()
+      var size = -1
+      val builder = Array.newBuilder[Int]
 
-      Using(new BufferedSource(url.openStream())) { bs =>
-        var comment = ""
-        var stamp = Instant.now()
-        var size = -1
-        val builder = Array.newBuilder[Int]
+      bs.getLines().foreach { s =>
 
-        bs.getLines().foreach {
-          case r("comment", rvalue) =>
-            comment = rvalue
-          case r("stamp", rvalue) =>
-            stamp = Instant.parse(rvalue)
-          case r("size", rvalue) =>
-            size = rvalue.toInt
-          case line =>
-            val value = line.drop(5) // get ride of index and colon
-            builder += value.trim.toInt // get rid of index and colon
-        }
-        new Memory(builder.result())
+        try
+          s match
+            case r("comment", rvalue) =>
+              comment = rvalue
+            case r("stamp", rvalue) =>
+              stamp = Instant.parse(rvalue)
+            case r("size", rvalue) =>
+              size = rvalue.toInt
+            case line =>
+              val value = line.drop(5) // get ride of index and colon
+              builder += value.trim.toInt
+        catch
+          case e: Exception =>
+            logger.error(s"Processing line: $s", e)
       }
+      new Memory(builder.result())
     }
+  }
 }
 

@@ -102,5 +102,5 @@ object Message extends ComplexExtractor[Message] with LazyLogging {
 
   override val fieldName: String = name
 
-  override val form: Form[Message] = throw new NotImplementedError("No fprm used with Message!") //todo
+  override def form: Form[Message] = throw new NotImplementedError("No fprm used with Message!") //todo
 }

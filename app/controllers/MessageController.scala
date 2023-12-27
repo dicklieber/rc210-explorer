@@ -21,7 +21,7 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field
 import net.wa9nnn.rc210.data.field.{FieldEntry, Message}
-import net.wa9nnn.rc210.data.named.NamedKey
+import net.wa9nnn.rc210.NamedKey
 import net.wa9nnn.rc210.ui.ProcessResult
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.mvc.*

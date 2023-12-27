@@ -20,18 +20,7 @@ package net.wa9nnn.rc210.data.named
 import net.wa9nnn.rc210.Key
 import play.api.libs.json.{Format, Json}
 
-case class NamedKey(key: Key, name: String) extends Ordered[NamedKey] {
-  override def compare(that: NamedKey): Int = key compareTo that.key
-}
 
-object NamedKey {
-  implicit val fmtNamedKey: Format[NamedKey] = Json.format[NamedKey]
-}
 
-trait NamedKeySource {
-  def nameForKey(key: Key): String
-  def namedKey(key: Key):NamedKey=
-    NamedKey(key, nameForKey(key))
-}
 
 

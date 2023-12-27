@@ -41,7 +41,7 @@
                     <tbody>
                     @for(meter <- meterStuff.meters) {
                         <tr>
-                            <td>@editButton(routes.MeterController.editMeter(meter.key))</td>
+                            <td>@editButton(routes.MeterController.edit(meter.key))</td>
                             <td>@meter.key.keyWithName</td>
                             <td>@meter.meterFaceName</td>
                             <td>@meter.low.hundredthVolt</td>
@@ -54,7 +54,7 @@
                 </table>
                 </div>
                 <div class="col-">
-                    <table class="table table-bordered table-sm  w-auto rc210-table">
+                    <table >
                         <thead class="table-primary">
                             <tr>
                                 <th colspan="6">Meter  Alarms</th>
@@ -71,7 +71,7 @@
                         <tbody>
                         @for(alarm <- meterStuff.alarms) {
                             <tr>
-                                <td>@editButton(routes.MeterController.editAlarm(alarm.key))</td>
+                                <td>@editButton(routes.MeterAlarmController.edit(alarm.key))</td>
                                 <td>@alarm.key.keyWithName</td>
                                 <td>@alarm.meter.keyWithName</td>
                                 <td>@alarm.alarmType</td>

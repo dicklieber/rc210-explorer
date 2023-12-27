@@ -20,7 +20,7 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, LogicAlarm}
-import net.wa9nnn.rc210.data.named.NamedKey
+import net.wa9nnn.rc210.NamedKey
 import net.wa9nnn.rc210.ui.ComplexFieldController
 import play.api.data.Form
 import play.api.mvc.*

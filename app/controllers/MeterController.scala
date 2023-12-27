@@ -19,13 +19,13 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.DataStore
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldInt}
+import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldEntry, FieldInt}
 import net.wa9nnn.rc210.data.meter.*
-import net.wa9nnn.rc210.data.meter.Meter.meterForm
+import net.wa9nnn.rc210.NamedKey
 import net.wa9nnn.rc210.security.Who.request2Session
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
-import net.wa9nnn.rc210.ui.ProcessResult
+import net.wa9nnn.rc210.ui.{ComplexFieldController, ProcessResult}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Forms.*
 import play.api.data.{Form, Mapping}
@@ -39,8 +39,9 @@ class MeterController @Inject()(dataStore: DataStore, components: MessagesContro
 
   override val complexExtractor: ComplexExtractor[Meter] = Meter
 
-  def index: Action[AnyContent] = Action {
-    implicit request =>
+  override def index: Action[AnyContent] = Action {
+    implicit request: MessagesRequest[AnyContent] =>
+
       val vRefEntry: FieldInt = dataStore.editValue(FieldKey("vRef", Key(KeyKind.Common, 1)))
       val vRef: Int = vRefEntry.value
       val meters: Seq[Meter] = dataStore.indexValues(KeyKind.Meter)
@@ -50,15 +51,14 @@ class MeterController @Inject()(dataStore: DataStore, components: MessagesContro
   }
 
   override def indexResult(values: Seq[Meter]): Result = {
-    throw new NotImplementedError("cauae we override index") 
+    throw new NotImplementedError("cauae we override index")
   }
 
   override def editResult(filledForm: Form[Meter], namedKey: NamedKey)(using request: MessagesRequest[AnyContent]): Result =
     Ok(views.html.meterEditor(filledForm, namedKey))
 
   override def saveOkResult(): Result =
-    Redirect(routes.meters.index)
-  
+    Redirect(routes.MeterController.index)
 
 }
 

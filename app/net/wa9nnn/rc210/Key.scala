@@ -19,7 +19,7 @@ package net.wa9nnn.rc210
 
 import net.wa9nnn.rc210.Key.nameForKey
 import net.wa9nnn.rc210.KeyKind.*
-import net.wa9nnn.rc210.data.named.{NamedKey, NamedKeySource}
+import net.wa9nnn.rc210.{NamedKey, NamedKeySource}
 import net.wa9nnn.rc210.ui.{EnumEntryValue, MacroSelect}
 import play.api.data.FormError
 import play.api.data.format.Formatter

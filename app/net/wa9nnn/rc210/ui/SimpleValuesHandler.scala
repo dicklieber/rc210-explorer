@@ -21,7 +21,7 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.{FieldKey, Key}
 import net.wa9nnn.rc210.data.datastore.{CandidateAndNames, UpdateCandidate}
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.data.named.NamedKey
+import net.wa9nnn.rc210.NamedKey
 import play.api.mvc.*
 
 /**

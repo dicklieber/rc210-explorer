@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.ui
 
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue}
-import net.wa9nnn.rc210.data.named.NamedKey
+import net.wa9nnn.rc210.NamedKey
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 import net.wa9nnn.rc210.{FieldKey, Key}

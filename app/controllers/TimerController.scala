@@ -20,7 +20,7 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.ComplexExtractor
-import net.wa9nnn.rc210.data.named.NamedKey
+import net.wa9nnn.rc210.NamedKey
 import net.wa9nnn.rc210.data.timers.Timer
 import net.wa9nnn.rc210.ui.ComplexFieldController
 import play.api.data.Form
@@ -44,6 +44,4 @@ class TimerController @Inject()(dataStore: DataStore, components: MessagesContro
   override def saveOkResult(): Result =
     Redirect(routes.TimerController.index)
 
-  override val form: Form[Timer] =
-    Timer.form
 }

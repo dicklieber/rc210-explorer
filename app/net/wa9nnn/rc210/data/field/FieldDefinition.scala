@@ -94,7 +94,7 @@ trait ComplexExtractor[T <: ComplexFieldValue] extends FieldExtractor with Field
    * @return what we extracted.
    */
   def extract(memory: Memory): Seq[FieldEntry]
-  val form:Form[T]
+  def form:Form[T]
 
 }
 

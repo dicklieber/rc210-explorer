@@ -22,7 +22,7 @@ import net.wa9nnn.rc210.data.courtesy.CourtesyTone
 import net.wa9nnn.rc210.data.datastore
 import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.ComplexExtractor
-import net.wa9nnn.rc210.data.named.NamedKey
+import net.wa9nnn.rc210.NamedKey
 import net.wa9nnn.rc210.ui.ComplexFieldController
 import play.api.data.Form
 import play.api.mvc.*
@@ -30,7 +30,7 @@ import play.api.mvc.*
 import javax.inject.*
 
 class CourtesyToneController @Inject()(dataStore: DataStore, components: MessagesControllerComponents)
-  extends ComplexFieldController[CourtesyTone](dataStore, components) with LazyLogging {
+  extends ComplexFieldController[CourtesyTone](dataStore, components) with LazyLogging:
 
   override val complexExtractor: ComplexExtractor[CourtesyTone] = CourtesyTone
 
@@ -46,6 +46,4 @@ class CourtesyToneController @Inject()(dataStore: DataStore, components: Message
   override def saveOkResult(): Result =
     Redirect(routes.CourtesyToneController.index)
 
-  override val form: Form[CourtesyTone] =
-    CourtesyTone.form
-}
+

@@ -1,12 +1,12 @@
 @import net.wa9nnn.rc210.ui.MyHelpers._
 @import net.wa9nnn.rc210.data.meter.{AlarmType, MeterAlarm}
-@import net.wa9nnn.rc210.data.named.NamedKey
+@import net.wa9nnn.rc210.NamedKey
 @import net.wa9nnn.rc210.ui.{MacroSelect, MeterSelect, Tabs}
 @import views.html.helper.*
 @import views.html.input.selectOptions
 @(meterAlarm: Form[MeterAlarm], namedKey: NamedKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
     @tabbedmain(Tabs.metersTab) {
-        @form(routes.MeterController.saveAlarm()) {
+        @form(routes.MeterAlarmController.save()) {
             @inputText(meterAlarm("key"), Symbol("type") -> "hidden")
             <div class="col-">
                 <table class="table table-bordered table-sm  w-auto rc210-table">
