@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.data.clock
 
-import com.wa9nnn.util.JsonFormatUtils.javaEnumFormat
+import com.wa9nnn.wa9nnnutil.JsonFormatUtils.javaEnumFormat
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.clock.MonthOfYearDST.*
 import net.wa9nnn.rc210.data.clock.Occurrence.*

@@ -18,18 +18,19 @@
 package net.wa9nnn.rc210.serial
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.TimeConverters.durationToString
-import org.apache.pekko.{Done, NotUsed}
+import com.wa9nnn.wa9nnnutil.DurationHelpers
+import com.wa9nnn.wa9nnnutil.DurationHelpers.given
 import org.apache.pekko.stream.scaladsl.{Flow, Sink, Source, SourceQueueWithComplete}
 import org.apache.pekko.stream.{Materializer, OverflowStrategy}
+import org.apache.pekko.{Done, NotUsed}
 import play.api.mvc.{RequestHeader, WebSocket}
 
 import java.io.PrintWriter
 import java.nio.file.{Files, Path}
-import java.time.{Duration, Instant, LocalTime}
+import java.time.{Instant, LocalTime}
 import java.util.concurrent.atomic.AtomicInteger
 import scala.concurrent.Future
-
+import scala.language.implicitConversions
 /**
  * Run a long running process that can report it's progress using the [[ProgressApi]]
  * This runs the process in a new Thread and handles developer logging and send [[Progress]] message to the client.
@@ -80,7 +81,7 @@ class ProcessWithProgress(mod: Int, maybeSendfile: Option[Path])(callback: Progr
         running = running,
         soFar = soFar,
         percent = f"$double%2.1f%%",
-        sDuration = Duration.between(began, Instant.now()),
+        sDuration = DurationHelpers.between(began),
         expected = expected,
         start = began,
         error = ""

@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.serial.comm
 
 import com.fazecast.jSerialComm.{SerialPort, SerialPortDataListener}
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.{Cell, CellProvider, Row}
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, CellProvider, Row}
 import controllers.routes
 import net.wa9nnn.rc210.serial.{ComPort, NoPortSelected}
 

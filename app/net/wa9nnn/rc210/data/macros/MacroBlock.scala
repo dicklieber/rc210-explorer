@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.data.macros
 
-import com.wa9nnn.util.tableui._
+import com.wa9nnn.wa9nnnutil.tableui._
 
 /**
  * Build function rows for a [[RcMacro]]

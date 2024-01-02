@@ -19,7 +19,7 @@ package controllers
 
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.{Header, Row, Table}
+import com.wa9nnn.wa9nnnutil.tableui.*
 import net.wa9nnn.rc210.serial.{ComPort, DataCollector, ProcessWithProgress, Rc210}
 import org.apache.pekko.stream.Materializer
 import play.api.mvc.*
@@ -30,16 +30,14 @@ import scala.concurrent.ExecutionContext
 
 @Singleton()
 class DownloadController @Inject()(config: Config, dataCollector: DataCollector, rc210: Rc210)
-                                  (implicit  ec: ExecutionContext, mat: Materializer, components: MessagesControllerComponents)
+                                  (implicit ec: ExecutionContext, mat: Materializer, components: MessagesControllerComponents)
   extends MessagesAbstractController(components) with LazyLogging {
   private val expectedLines: Int = config.getInt("vizRc210.expectedRcLines")
   private var maybeComment: Option[String] = None
 
-
   def index: Action[AnyContent] = Action {
     Ok(views.html.download(rc210.comPort))
   }
-
 
   def startDownload: Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
@@ -64,7 +62,7 @@ class DownloadController @Inject()(config: Config, dataCollector: DataCollector,
   }
 
   def ws(): WebSocket = {
-    val p: ProcessWithProgress = ProcessWithProgress( dataCollector.progressMod, None)(progressApi =>
+    val p: ProcessWithProgress = ProcessWithProgress(dataCollector.progressMod, None)(progressApi =>
       dataCollector(progressApi, maybeComment)
     )
     p.webSocket

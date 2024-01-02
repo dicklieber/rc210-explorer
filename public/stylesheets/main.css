@@ -80,7 +80,17 @@
 }
 
 .headeredTable th {
-    border: 1px solid black;
+    /*border: 1px solid black;*/
+}
+
+.tagValuetable {
+    border-collapse: collapse;
+    border: 1px;
+
+}
+.tagValuetable th{
+    text-align: center;
+    vertical-align: top;
 }
 
 table th {

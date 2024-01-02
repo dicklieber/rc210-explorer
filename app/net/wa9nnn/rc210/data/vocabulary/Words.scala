@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.data.vocabulary
 
-import com.wa9nnn.util.tableui.Header
+import com.wa9nnn.wa9nnnutil.tableui.Header
 import play.api.libs.json.{Format, JsValue, Json}
 
 import scala.io.BufferedSource

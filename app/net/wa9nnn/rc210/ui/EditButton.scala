@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.ui
 
-import com.wa9nnn.util.tableui.Cell
+import com.wa9nnn.wa9nnnutil.tableui.Cell
 import play.api.mvc.Call
 
 object EditButton {

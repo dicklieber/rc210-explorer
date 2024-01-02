@@ -20,7 +20,7 @@ package net.wa9nnn.rc210.serial
 import com.fazecast.jSerialComm.{SerialPort, SerialPortDataListener}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.{Header, Row, Table}
+import com.wa9nnn.wa9nnnutil.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.serial.comm.*
 import net.wa9nnn.rc210.util.Configs
 

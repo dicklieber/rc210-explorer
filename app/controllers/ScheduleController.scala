@@ -18,7 +18,7 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.{Header, Row, Table}
+import com.wa9nnn.wa9nnnutil.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.data.schedules.Schedule

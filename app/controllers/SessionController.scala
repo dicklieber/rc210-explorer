@@ -18,7 +18,7 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.Table
+import com.wa9nnn.wa9nnnutil.tableui.Table
 import net.wa9nnn.rc210.security.authentication.{RcSession, SessionStore}
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}

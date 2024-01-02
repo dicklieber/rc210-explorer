@@ -1,7 +1,7 @@
 package net.wa9nnn.rc210.security.authentication
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.tableui.{Header, Row, RowSource}
+import com.wa9nnn.wa9nnnutil.tableui.{Header, Row, RowSource}
 import net.wa9nnn.rc210.StaticConfigs.maxSessionCookieAge
 import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.security.Who.Callsign

@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.serial
 
-import com.wa9nnn.util.tableui.{Cell, Header, Row, RowSource}
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, RowSource}
 import net.wa9nnn.rc210.serial.comm.RcResponse
 
 import scala.util.{Failure, Success, Try}

@@ -1,8 +1,8 @@
 package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.util.JsonFormatUtils.*
-import com.wa9nnn.util.tableui.{Cell, Header, Row}
+import com.wa9nnn.wa9nnnutil.JsonFormatUtils.*
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row}
 import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.field.schedule.{DayOfWeek, Week}
@@ -64,7 +64,7 @@ case class Schedule(override val key: Key,
   }
 
   override def displayHtml: String =
-    <table>
+    <table class="tagValuetable">
       <tr>
         <td>Day Of Week</td>
         <td>

@@ -1,6 +1,6 @@
 package net.wa9nnn.rc210.ui
 
-import com.wa9nnn.util.tableui._
+import com.wa9nnn.wa9nnnutil.tableui._
 import play.api.i18n.{Messages, MessagesProvider}
 
 object KeyValueTable {

@@ -4,7 +4,6 @@ name := """rc210-explorer"""
 organization := "net.wa9nnn"
 maintainer := "dick@u50.com"
 
-
 enablePlugins(JavaServerAppPackaging)
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
@@ -32,6 +31,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
 
     scalacOptions ++= Seq(
       "-feature",
+      " - language: implicitConversions",
       //      "-deprecation",
       //      "-Xfatal-warnings",
       //      "-Ymacro-annotations",
@@ -43,33 +43,30 @@ Compile / unmanagedResourceDirectories += baseDirectory.value / "resources"
 Test / logBuffered := false
 Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-h", "target/scalatest.html")
 
-resolvers += ("Reposilite" at "http://194.113.64.105:8080/releases").withAllowInsecureProtocol(true)
-
+//resolvers += ("Reposilite" at "http://194.113.64.105:8080/releases").withAllowInsecureProtocol(true)
+//resolvers += Resolver.githubPackages("OWNER")
+resolvers +=
+  "reposilite-repository-releases" at "http://localhost:8080/releases"
 
 val logbackVersion = "1.4.11"
 libraryDependencies ++= Seq(
   guice,
   "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.0" % Test,
-  //  "org.apache.pekko" %% "akka-actor-testkit-typed" % akkaVersion % Test,
-
   "com.vladsch.flexmark" % "flexmark-all" % "0.64.8" % Test,
-  "net.wa9nnn" %% "util" % "0.1.15-SNAPSHOT",
+  "com.wa9nnn" %% "wa9nnnutil" % "3.0.1-SNAPSHOT",
 
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
   "ch.qos.logback" % "logback-classic" % logbackVersion,
   "ch.qos.logback" % "logback-core" % logbackVersion,
   "commons-io" % "commons-io" % "2.11.0",
   "com.fazecast" % "jSerialComm" % "2.10.4",
-  //  "io.suzaku" %% "boopickle" % "1.4.0",
   "org.fusesource.jansi" % "jansi" % "2.4.0",
   "org.apache.commons" % "commons-text" % "1.10.0",
-  //  "com.github.kxbmap" %% "configs" % "0.6.1",
   "org.mindrot" % "jbcrypt" % "0.4",
   "com.github.andyglow" %% "typesafe-config-scala" % "2.0.0" % Compile,
   "com.beachape" %% "enumeratum" % "1.7.3",
   "com.beachape" %% "enumeratum-play" % "1.8.0",
 )
-
 
 routesImport += "net.wa9nnn.rc210.Binders._"
 routesImport += "net.wa9nnn.rc210.FieldKey"

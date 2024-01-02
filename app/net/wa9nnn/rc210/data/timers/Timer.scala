@@ -18,16 +18,34 @@
 package net.wa9nnn.rc210.data.timers
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
-import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
+import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.{Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, number, of}
 import play.api.libs.json.{JsValue, Json, OFormat}
 
-case class Timer(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValue() {
+import scala.concurrent.duration.{Duration, FiniteDuration}
 
-  override def displayHtml: String = s"$seconds => ${macroKey.keyWithName}"
+case class Timer(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValue() {
+  val duration: FiniteDuration = Duration(seconds, "seconds")
+  //  override def displayHtml: String = //s"$seconds => ${macroKey.keyWithName}"
+
+  override def displayHtml: String =
+    <table class="tagValuetable">
+      <tr>
+        <td>Timer</td>
+        <td>
+          {key.keyWithName}
+        </td>
+      </tr>
+      <tr>
+        <td>time</td>
+        <td>
+          {duration}
+        </td>
+      </tr>
+    </table>.toString
 
   /**
    * Render this value as an RD-210 command string.

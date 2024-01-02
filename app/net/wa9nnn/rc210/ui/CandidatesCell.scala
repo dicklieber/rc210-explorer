@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.ui
 
-import com.wa9nnn.util.tableui.{Cell, Row, Table, TableInACell}
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, Table, TableInACell}
 
 object CandidatesCell {
   def apply(commands: Seq[String]): Cell = {

@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.serial
 
-import com.wa9nnn.util.tableui.{Cell, Row}
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row}
 
 /**
  * Result for a named batch of RC210 operations under

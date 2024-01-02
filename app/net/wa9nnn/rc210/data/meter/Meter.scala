@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.data.meter
 
-import com.wa9nnn.util.tableui.{Cell, Row}
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
@@ -37,7 +37,27 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 case class Meter(key: Key, meterFaceName: MeterFaceName, low: VoltToReading, high: VoltToReading) extends ComplexFieldValue {
 
-  override def displayHtml: String = toString
+  override def displayHtml: String =
+    <table class="tagValuetable">
+      <tr>
+        <td>Face</td>
+        <td>
+          {meterFaceName}
+        </td>
+      </tr>
+      <tr>
+        <td>Low</td>
+        <td>
+          {low}
+        </td>
+      </tr>
+      <tr>
+        <td>High</td>
+        <td>
+          {high}
+        </td>
+      </tr>
+    </table>.toString
 
   /**
    * Render this value as an RD-210 command string.
@@ -64,6 +84,7 @@ case class Meter(key: Key, meterFaceName: MeterFaceName, low: VoltToReading, hig
 
 object Meter extends ComplexExtractor[Meter] {
   val keyKind = KeyKind.Meter
+
   def unapply(u: Meter): Option[(Key, MeterFaceName, VoltToReading, VoltToReading)] = Some((u.key, u.meterFaceName, u.low, u.high))
 
   override val form: Form[Meter] = Form(
@@ -117,6 +138,7 @@ object Meter extends ComplexExtractor[Meter] {
   implicit val fmtMeter: Format[Meter] = Json.format[Meter]
 
 }
+
 /**
  *
  * @param hundredthVolt  input voltage

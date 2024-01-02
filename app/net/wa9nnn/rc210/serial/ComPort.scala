@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.serial
 
 import com.fazecast.jSerialComm.SerialPort
-import com.wa9nnn.util.tableui.{Cell, Row, RowSource}
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, RowSource}
 import controllers.routes
 
 /**

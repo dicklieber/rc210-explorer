@@ -17,7 +17,7 @@
 
 package controllers
 
-import com.wa9nnn.util.tableui.{Header, Row, Table}
+import com.wa9nnn.wa9nnnutil.tableui.{Header, Table}
 import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
@@ -25,31 +25,31 @@ import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import play.api.mvc.*
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
+import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
-class FlowController @Inject()( dataStore: DataStore, functionsProvider: FunctionsProvider) extends MessagesInjectedController {
+class FlowController @Inject()(dataStore: DataStore, functionsProvider: FunctionsProvider) extends MessagesInjectedController {
 
-  def flow(key:Key): Action[AnyContent] = Action {
+  def flow(key: Key): Action[AnyContent] = Action {
     Ok("todo")
-/*
-    implicit val timeout: Timeout = 3 seconds
-
-    implicit request: Request[AnyContent] =>
-
-     actor.ask (ref => Triggers(ref))
-       .map{
-
-       }
-
-      val rows: Seq[Row] = dataStore.apply(KeyKind.macroKey)
-        .map(fieldEntry =>
-          MacroBlock(fieldEntry.value)
-        )
-      val header = Header(s"Macro Flow (${rows.length})", "Triggers", "Macro", "Functions")
-      val table = Table(header, rows)
-      Ok(views.html.flow(table))
-*/
+    /*
+        implicit val timeout: Timeout = 3 seconds
+    
+        implicit request: Request[AnyContent] =>
+    
+         actor.ask (ref => Triggers(ref))
+           .map{
+    
+           }
+    
+          val rows: Seq[Row] = dataStore.apply(KeyKind.macroKey)
+            .map(fieldEntry =>
+              MacroBlock(fieldEntry.value)
+            )
+          val header = Header(s"Macro Flow (${rows.length})", "Triggers", "Macro", "Functions")
+          val table = Table(header, rows)
+          Ok(views.html.flow(table))
+    */
   }
 }
