@@ -1,0 +1,13 @@
+@import net.wa9nnn.rc210.serial.DataCollector
+@import net.wa9nnn.rc210.ui.Tabs
+@import com.wa9nnn.wa9nnnutil.tableui.html.renderTable
+@import net.wa9nnn.rc210.serial.DownloadState
+@(maybeLastDownState: DownloadState)
+@tabbedmain(Tabs.rc210Tab) {
+    @defining(maybeLastDownState) { lastDownload =>
+        <div class="flex-container">
+            @renderTable(lastDownload.summaryTable)
+            @renderTable(lastDownload.detailTable)
+        </div>
+    }
+}

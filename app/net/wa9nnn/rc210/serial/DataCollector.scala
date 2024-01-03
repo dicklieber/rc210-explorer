@@ -20,50 +20,69 @@ package net.wa9nnn.rc210.serial
 import com.fazecast.jSerialComm.{SerialPort, SerialPortEvent, SerialPortMessageListenerWithExceptions}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
+import com.wa9nnn.wa9nnnutil.tableui.Table
 import net.wa9nnn.rc210.data.datastore.DataStore
+import net.wa9nnn.rc210.serial
 import net.wa9nnn.rc210.serial.comm.RcEventBased
 import net.wa9nnn.rc210.util.Configs
-import org.apache.pekko.actor.typed.ActorRef
 
 import java.io.PrintWriter
 import java.nio.file.{Files, Path}
 import java.time.Instant
+import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.{Inject, Singleton}
 
 /**
  * Reads eeprom from RC210 using the "1SendEram" command
+ * Records it's status in _maybeLastDownload; accessable via [[downloadState]].
+ * Saves data as a [[Memory]] recorded in [[memoryFile]].
+ * Wen finished asks the [[DataStore]] to reload the [[Memory]] file.
  */
 @Singleton
-class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: DataStore) extends LazyLogging {
+class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: DataStore) extends LazyLogging:
+  var stopAfter: Int = Integer.MAX_VALUE
+  logger.whenTraceEnabled{
+    stopAfter = 100
+  }
 
   val memoryFile: Path = Configs.path("vizRc210.memoryFile")
   val tempFile: Path = memoryFile.resolveSibling(memoryFile.toFile.toString + ".temp")
   val expectedLines: Int = config.getInt("vizRc210.expectedRcLines")
   val progressMod: Int = config.getInt("vizRc210.showProgressEvery")
+  private var _downloadState: DownloadState = serial.DownloadState.neverStarted
 
-  
+  def downloadState: DownloadState = _downloadState
+
+  /**
+   *
+   * @param requestTable what user requested.
+   */
+  def newDownload(requestTable: Table): Unit =
+    _downloadState = _downloadState.start(requestTable)
+
   /**
    *
    * @return a Future that will be completed with the final [[Progress]] when done and a [[sun.net.ProgressSource]] that can be used to obtain the current [[Progress]] while download is running.
    */
-  def apply(progressApi: ProgressApi, maybeComment: Option[String]): Unit = {
+  def startDownload(progressApi: ProgressApi): Unit =
     progressApi.expectedCount(expectedLines)
-    val rcOp: RcEventBased = rc210.openEventBased()
+    val operations = Seq.newBuilder[DownloadOp]
+    val opCount = new AtomicInteger()
+
+    val rcOperation: RcEventBased = rc210.openEventBased()
     val fileWriter = new PrintWriter(Files.newOutputStream(tempFile))
     fileWriter.println(s"stamp: ${Instant.now()}")
-    maybeComment.foreach(comment => fileWriter.println(s"comment: $comment"))
 
-    def cleanup(error: String = ""): Unit = {
+    def cleanup(error: String = ""): Unit =
       fileWriter.close()
-      rcOp.close()
-      if (error.isBlank) {
+      _downloadState = _downloadState.complete(operations.result())
+      rcOperation.close()
+      if (error.isBlank)
         dataStore.reload()
-      }
-    }
 
-    rcOp.addDataListener(new SerialPortMessageListenerWithExceptions {
-
-      override def catchException(e: Exception): Unit = logger.error(s"comPort: ${rcOp.comPort}", e)
+    rcOperation.addDataListener(new SerialPortMessageListenerWithExceptions {
+      // These overriden methods are the asynchronous callbacks invoked by jSerialComm.
+      override def catchException(e: Exception): Unit = logger.error(s"comPort: ${rcOperation.comPort}", e)
 
       override def getMessageDelimiter: Array[Byte] = Array('\n')
 
@@ -76,8 +95,8 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
         val response = new String(receivedData).trim
 
         response match {
+          // Handle the vaarious responses from the RC-210.
           case "Complete" =>
-
             cleanup()
             Files.deleteIfExists(memoryFile)
             Files.move(tempFile, memoryFile)
@@ -87,11 +106,11 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
             cleanup()
             logger.debug("+SENDE")
           case "EEPROM Done" =>
-            rcOp.send("OK")
+            rcOperation.send("OK")
             logger.debug("EEPROM Done")
             progressApi.finish("Done")
           case "Timeout" =>
-            progressApi.error(Timeout(rcOp.comPort))
+            progressApi.error(Timeout(rcOperation.comPort))
             cleanup("timeout")
           case response =>
             try {
@@ -103,17 +122,13 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
               case e: Exception =>
                 logger.error(s"response: $response", e)
             }
-            rcOp.send("OK")
+            rcOperation.send("OK")
+            if(opCount.incrementAndGet() >  stopAfter)
+              cleanup("StopAfter")
+
         }
+        operations.addOne(DownloadOp(response))
       }
     })
-    rcOp.send("1SendEram")
-
-  }
-
-}
-
-
-
-
+    rcOperation.send("1SendEram")
 

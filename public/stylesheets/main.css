@@ -106,8 +106,12 @@ table th {
 
 .sectionHeader {
     font-size: 1.17em;
+    background-color: #cfe2ff;
 }
 
+.downloadOp{
+    font-family: monospace;
+}
 .number {
     text-align: right;
     white-space: nowrap;

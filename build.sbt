@@ -43,17 +43,15 @@ Compile / unmanagedResourceDirectories += baseDirectory.value / "resources"
 Test / logBuffered := false
 Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-h", "target/scalatest.html")
 
-//resolvers += ("Reposilite" at "http://194.113.64.105:8080/releases").withAllowInsecureProtocol(true)
-//resolvers += Resolver.githubPackages("OWNER")
 resolvers +=
-  "reposilite-repository-releases" at "http://localhost:8080/releases"
+  ("reposilite-repository-releases" at "http://repo.wa9nnn.tech:8080/releases").withAllowInsecureProtocol(true)
 
 val logbackVersion = "1.4.11"
 libraryDependencies ++= Seq(
   guice,
   "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.0" % Test,
   "com.vladsch.flexmark" % "flexmark-all" % "0.64.8" % Test,
-  "com.wa9nnn" %% "wa9nnnutil" % "3.0.1-SNAPSHOT",
+  "com.wa9nnn" %% "wa9nnnutil" % "3.0.0.3-SNAPSHOT",
 
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
   "ch.qos.logback" % "logback-classic" % logbackVersion,

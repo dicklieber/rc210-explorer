@@ -4,17 +4,16 @@
 @import java.net.URL
 @import net.wa9nnn.rc210.ui.Tabs
 
-
-@(url: String, table: Option[Table] = None)(implicit request: RequestHeader)
+@(webSocketUrl: String, table: Table, finishUrl:String)(implicit request: RequestHeader)
 @tabbedmain(Tabs.rc210Tab) {
     <script>
-
-            webSocket = new WebSocket("@url");
+            // Use s WebSocket to update the progress bar.
+            webSocket = new WebSocket("@webSocketUrl");
             webSocket.onmessage = (event) => {
                 console.log("data" + event.data);
                 const progress = JSON.parse(event.data);
                 if (!progress.running)
-                    window.location.href = '@routes.CommandsController.lastSendAll()';
+                    window.location.href = '@finishUrl';
                 else {
                     const $progress = $('.progress-bar');
                     $progress.css("width", progress.percent);
@@ -34,11 +33,7 @@
         <div class="progress">
             <div class="progress-bar progress-bar-striped" style="min-width: 0px;"></div>
         </div>
-        @for(table <- table) {
-            <div>
-            @renderTable(table)
-            </div>
-        }
+        @renderTable(table)
     </div>
 
 }
