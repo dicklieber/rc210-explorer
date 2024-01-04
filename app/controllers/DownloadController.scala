@@ -20,11 +20,10 @@ package controllers
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.*
-import net.wa9nnn.rc210.serial.{ComPort, DataCollector, DownloadState, ProcessWithProgress, Rc210}
+import net.wa9nnn.rc210.serial.*
 import org.apache.pekko.stream.Materializer
 import play.api.mvc.*
 
-import java.time.Instant
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
@@ -50,7 +49,7 @@ class DownloadController @Inject()(config: Config, dataCollector: DataCollector,
         comment
       })
 
-      val requestTable = Table(Header("Download from RC210", "Field","Value"), Seq(
+      val requestTable = Table(Header("Download from RC210", "Field", "Value"), Seq(
         Row.ofAny("ComPort", rc210.comPort),
         Row.ofAny("Comment", comment),
         Row.ofAny("Expecting", expectedLines),
@@ -61,12 +60,9 @@ class DownloadController @Inject()(config: Config, dataCollector: DataCollector,
       Ok(views.html.progress(webSocketURL, requestTable, routes.DownloadController.results.url))
   }
 
-  def ws(): WebSocket = {
-    val p: ProcessWithProgress = ProcessWithProgress(dataCollector.progressMod, None)(progressApi =>
-      dataCollector.startDownload(progressApi)
-    )
-    p.webSocket
-  }
+  def ws(): WebSocket =
+    new ProcessWithProgress[DownloadOp](1)(progressApi =>
+      dataCollector.startDownload(progressApi)).webSocket
 
   def results: Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>

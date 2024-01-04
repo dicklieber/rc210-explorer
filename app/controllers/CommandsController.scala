@@ -19,6 +19,7 @@ package controllers
 
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
+import com.wa9nnn.wa9nnnutil.tableui.Cell
 import net.wa9nnn.rc210.FieldKey
 import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.FieldEntry
@@ -93,21 +94,21 @@ class CommandsController @Inject()(dataStore: DataStore,
       Ok(batchOpResult(batchOperationsResult))
   }
 
-  def sendAll():Action[AnyContent] = Action{
+  def sendAll(): Action[AnyContent] = Action {
     ImATeapot
   }
-  def sendAllCandidates():Action[AnyContent] = Action{
+
+  def sendAllCandidates(): Action[AnyContent] = Action {
     ImATeapot
   }
-  
-  def ws(sendField: SendField): WebSocket = WebSocket.accept[String, Progress] { implicit request =>
+
+  def ws(sendField: SendField): WebSocket =
     //todo handle authorization See https://www.playframework.com/documentation/3.0.x/ScalaWebSockets
-    val start = Instant.now()
-    val p: ProcessWithProgress = ProcessWithProgress(7, Option(sendLogFile)) { progressApi =>
-      batchRc210Sender(sendField, progressApi)
-    }
-    Flow.fromSinkAndSource(p.sink, p.source)
-  }
+
+    new ProcessWithProgress[SendProgressItem](1)(
+      (progressApi: ProgressApi) =>
+        batchRc210Sender(sendField, progressApi)
+    ).webSocket
 
   def lastSendAll(): Action[AnyContent] = Action { implicit request =>
     Ok(views.html.lastSendAll())
@@ -123,3 +124,5 @@ class CommandsController @Inject()(dataStore: DataStore,
 
 }
 
+case class SendProgressItem() extends ProgressItem:
+  override def toCell: Cell = ???

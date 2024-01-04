@@ -20,6 +20,7 @@ package net.wa9nnn.rc210.serial
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.DurationHelpers
 import com.wa9nnn.wa9nnnutil.DurationHelpers.given
+import com.wa9nnn.wa9nnnutil.tableui.CellProvider
 import org.apache.pekko.stream.scaladsl.{Flow, Sink, Source, SourceQueueWithComplete}
 import org.apache.pekko.stream.{Materializer, OverflowStrategy}
 import org.apache.pekko.{Done, NotUsed}
@@ -31,24 +32,23 @@ import java.time.{Instant, LocalTime}
 import java.util.concurrent.atomic.AtomicInteger
 import scala.concurrent.Future
 import scala.language.implicitConversions
+
 /**
  * Run a long running process that can report it's progress using the [[ProgressApi]]
  * This runs the process in a new Thread and handles developer logging and send [[Progress]] message to the client.
  *
  * @param mod           send progress every.
- * @param maybeSendfile where to log for dev debugging.
  * @param callback      what to do to do. With ProgressApi for reporting status.
  * @param mat           needed to Akka streams use by Play WebSocket.
  */
-class ProcessWithProgress(mod: Int, maybeSendfile: Option[Path])(callback: ProgressApi => Unit)(implicit mat: Materializer)
-  extends Thread with Runnable with LazyLogging with ProgressApi {
+class ProcessWithProgress[T <: ProgressItem](mod: Int)(callback: ProgressApi => Unit)(implicit mat: Materializer)
+  extends Thread with Runnable with LazyLogging with ProgressApi:
 
-  val (queue, source) = Source.queue[Progress](250, OverflowStrategy.dropHead).preMaterialize()
+  val (queue: SourceQueueWithComplete[Progress], source: Source[Progress, NotUsed]) = Source.queue[Progress](250, OverflowStrategy.dropHead).preMaterialize()
 
   private val began = Instant.now()
   private var running = true
   private val count = new AtomicInteger()
-  private val sendLogWriter: Option[PrintWriter] = maybeSendfile.map { path => new PrintWriter(Files.newBufferedWriter(path)) }
   private var expected: Int = 0
 
   setDaemon(true)
@@ -64,14 +64,9 @@ class ProcessWithProgress(mod: Int, maybeSendfile: Option[Path])(callback: Progr
     }
   }
 
-  def doOne(message: String): Unit = {
+  def doOne(message: String): Unit =
     val soFar = count.incrementAndGet()
-    sendLogWriter.foreach { printWriter =>
-      printWriter.println(s"$soFar\t${LocalTime.now()}\t $message")
-      printWriter.flush()
-    }
     sendProgress()
-  }
 
   private def sendProgress(): Unit = {
     val soFar = count.get()
@@ -93,7 +88,6 @@ class ProcessWithProgress(mod: Int, maybeSendfile: Option[Path])(callback: Progr
   def finish(message: String): Unit = {
     assert(running, "Must be running to finish!")
     running = false
-    sendLogWriter.foreach(writer => writer.close())
     doOne(message)
     sendProgress()
 
@@ -115,4 +109,5 @@ class ProcessWithProgress(mod: Int, maybeSendfile: Option[Path])(callback: Progr
   }
 
   override def expectedCount(count: Int): Unit = expected = count
-}
+
+trait ProgressItem extends CellProvider

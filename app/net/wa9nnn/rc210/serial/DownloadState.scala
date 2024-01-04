@@ -48,7 +48,7 @@ case class DownloadState(requestTable: Table, start: Instant = Instant.now(), op
 object DownloadState:
   val neverStarted: DownloadState = new DownloadState(Table("Not Started", Seq.empty))
 
-case class DownloadOp(response: String) extends CellProvider:
+case class DownloadOp(response: String) extends ProgressItem:
 
   import net.wa9nnn.rc210.serial.DownloadOp.parser
 
