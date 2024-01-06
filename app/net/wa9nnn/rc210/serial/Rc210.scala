@@ -21,7 +21,7 @@ import com.fazecast.jSerialComm.{SerialPort, SerialPortDataListener}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Header, Row, Table}
-import net.wa9nnn.rc210.serial.comm.*
+import net.wa9nnn.rc210.serial.comm.{RcEventBased, RcResponse, RcStreamBased}
 import net.wa9nnn.rc210.util.Configs
 
 import java.nio.file.{Files, Path}
@@ -30,7 +30,6 @@ import javax.inject.{Inject, Singleton}
 import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Try, Using}
 
-
 @Singleton
 class Rc210 @Inject()(implicit config: Config) extends LazyLogging {
 
@@ -38,14 +37,13 @@ class Rc210 @Inject()(implicit config: Config) extends LazyLogging {
 
   private val serialConfig = SerialConfig(config)
 
-
   private val serialPortsSource = new SerialPortsSource()
 
   private val file: Path = Configs.path("vizRc210.serialPortsFile")
 
   Files.createDirectories(file.getParent)
   private var maybeRcSerialPort: Option[RcSerialPort] = None
-  if(Files.exists(file))
+  if (Files.exists(file))
     selectPort(Files.readString(file))
 
   implicit def serialPort: RcSerialPort = {
@@ -58,22 +56,21 @@ class Rc210 @Inject()(implicit config: Config) extends LazyLogging {
     })
   }
 
-  def sendBatch(name: String, requests: String*): BatchOperationsResult = {
-    BatchOperationsResult(name, Using.resource(openStreamBased) { (rcOp: RcStreamBased) =>
+  def sendBatch(requests: String*): Seq[RcOperationResult] = {
+    Using.resource(openStreamBased) { (rcOp: RcStreamBased) =>
       requests.map { request =>
         RcOperationResult(request, Try(rcOp.perform(request)))
       }
-    })
+    }
   }
 
   def openStreamBased: RcStreamBased = {
-    new RcStreamBased(serialPort,serialConfig)
+    new RcStreamBased(serialPort, serialConfig)
   }
 
   def openEventBased(): RcEventBased = {
     new RcEventBased(serialPort)
   }
-
 
   def selectPort(portDescriptor: String): Unit =
     try {
@@ -115,7 +112,6 @@ class Rc210 @Inject()(implicit config: Config) extends LazyLogging {
     val table = Table(Header("Serial Ports", "Descriptor", "Friendly Name"), rows)
     table
   }
-
 
 }
 

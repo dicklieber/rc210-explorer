@@ -31,4 +31,6 @@ object SendField extends PlayEnum[SendField]:
 
   case object CandidatesOnly extends SendField
 
+  case object TestVCandidates extends SendField
+
 

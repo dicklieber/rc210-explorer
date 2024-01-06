@@ -64,17 +64,17 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
    *
    * @return a Future that will be completed with the final [[Progress]] when done and a [[sun.net.ProgressSource]] that can be used to obtain the current [[Progress]] while download is running.
    */
-  def startDownload(progressApi: ProgressApi): Unit =
+  def startDownload(progressApi: ProgressApi[DownloadOp]): Unit =
     progressApi.expectedCount(expectedLines)
     val operations = Seq.newBuilder[DownloadOp]
     val opCount = new AtomicInteger()
 
     val rcOperation: RcEventBased = rc210.openEventBased()
-    val fileWriter = new PrintWriter(Files.newOutputStream(tempFile))
-    fileWriter.println(s"stamp: ${Instant.now()}")
+    val temMemoryFileWriter = new PrintWriter(Files.newOutputStream(tempFile))
+    temMemoryFileWriter.println(s"stamp: ${Instant.now()}")
 
     def cleanup(error: String = ""): Unit =
-      fileWriter.close()
+      temMemoryFileWriter.close()
       _downloadState = _downloadState.complete(operations.result())
       rcOperation.close()
       if (error.isBlank)
@@ -116,8 +116,9 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
             try {
               val tokens: Array[String] = response.split(',')
               val line = f"${tokens.head.toInt}%04d:${tokens(1).toInt}"
-              fileWriter.println(line)
-              progressApi.doOne(line)
+              temMemoryFileWriter.println(line)
+              
+              progressApi.doOne(DownloadOp(line))
             } catch {
               case e: Exception =>
                 logger.error(s"response: $response", e)

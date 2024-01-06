@@ -20,7 +20,7 @@ package net.wa9nnn.rc210.serial
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.DurationHelpers
 import com.wa9nnn.wa9nnnutil.DurationHelpers.given
-import com.wa9nnn.wa9nnnutil.tableui.CellProvider
+import com.wa9nnn.wa9nnnutil.tableui.{CellProvider, Table}
 import org.apache.pekko.stream.scaladsl.{Flow, Sink, Source, SourceQueueWithComplete}
 import org.apache.pekko.stream.{Materializer, OverflowStrategy}
 import org.apache.pekko.{Done, NotUsed}
@@ -41,15 +41,16 @@ import scala.language.implicitConversions
  * @param callback      what to do to do. With ProgressApi for reporting status.
  * @param mat           needed to Akka streams use by Play WebSocket.
  */
-class ProcessWithProgress[T <: ProgressItem](mod: Int)(callback: ProgressApi => Unit)(implicit mat: Materializer)
-  extends Thread with Runnable with LazyLogging with ProgressApi:
+class ProcessWithProgress[T <: ProgressItem](mod: Int, resultTableColumns: Int)(callback: ProgressApi[T] => Unit)(implicit mat: Materializer)
+  extends Thread with Runnable with LazyLogging with ProgressApi[T]:
 
   val (queue: SourceQueueWithComplete[Progress], source: Source[Progress, NotUsed]) = Source.queue[Progress](250, OverflowStrategy.dropHead).preMaterialize()
 
   private val began = Instant.now()
-  private var running = true
   private val count = new AtomicInteger()
   private var expected: Int = 0
+
+  private val itemsBuilder = Seq.newBuilder[T]
 
   setDaemon(true)
   setName("RcProcess")
@@ -64,33 +65,51 @@ class ProcessWithProgress[T <: ProgressItem](mod: Int)(callback: ProgressApi => 
     }
   }
 
-  def doOne(message: String): Unit =
-    val soFar = count.incrementAndGet()
+  def doOne(progressItem: T) =
+    itemsBuilder.addOne(progressItem)
     sendProgress()
 
+  override def results: Seq[T] =
+    itemsBuilder.result()
+
   private def sendProgress(): Unit = {
-    val soFar = count.get()
     if (!running || soFar % mod == 0) {
-      val double = soFar * 100.0 / expected
-      val progress = new Progress(
-        running = running,
-        soFar = soFar,
-        percent = f"$double%2.1f%%",
-        sDuration = DurationHelpers.between(began),
-        expected = expected,
-        start = began,
-        error = ""
-      )
+
+      val progress = buildProgressMessage(soFar, double)
       queue.offer(progress)
     }
   }
 
-  def finish(message: String): Unit = {
-    assert(running, "Must be running to finish!")
-    running = false
-    doOne(message)
-    sendProgress()
+  private def buildProgressMessage = {
+    val soFar = count.get()
+    val double = soFar * 100.0 / expected
+    new Progress(
+      running = true,
+      soFar = soFar,
+      percent = f"$double%2.1f%%",
+      sDuration = DurationHelpers.between(began),
+      expected = expected,
+      start = began,
+      error = ""
+    )
+  }
 
+  def finish(): Unit = {
+    val progressMessage = buildProgressMessage
+    var successCount = 0
+    var errorCount = 0
+    val value: Seq[T] = itemsBuilder.result()
+    value
+      .foreach{progresssItem: T =>
+        if(progresssItem.success)
+          successCount += 1
+        else
+          errorCount += 1
+        
+      }
+    
+    val detailTable :Table = Table.empty("todo")
+    Finish(progressMessage, errorCount, successCount, detailTable )
   }
 
   override def error(exception: Throwable): Unit = {
@@ -111,3 +130,4 @@ class ProcessWithProgress[T <: ProgressItem](mod: Int)(callback: ProgressApi => 
   override def expectedCount(count: Int): Unit = expected = count
 
 trait ProgressItem extends CellProvider
+  val success:Boolean = true

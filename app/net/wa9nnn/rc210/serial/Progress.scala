@@ -17,29 +17,31 @@
 
 package net.wa9nnn.rc210.serial
 
+import com.wa9nnn.wa9nnnutil.tableui.Table
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.WebSocket.MessageFlowTransformer
 
 import java.time.Instant
+import scala.concurrent.duration.Duration
 
 /**
  * Update progress that will go to the client.
  */
-trait ProgressApi:
+trait ProgressApi[T <: ProgressItem]:
   def expectedCount(count:Int):Unit
   /**
    * We processed one thing.
    *
    * @param message
    */
-  def doOne(message: String): Unit
+  def doOne(progressItem:T): Unit
 
   /**
    * We're done.
    *
    * @param message
    */
-  def finish(message: String): Unit
+  def finish(): Unit
 
   /**
    * Something went wrong. Implies finish.
@@ -47,12 +49,26 @@ trait ProgressApi:
    * @param exception
    */
   def error(exception: Throwable): Unit
+  
+  def results:Seq[T]
 
+
+trait ClientMessage
+
+/**
+ * Sent to client on completion of the operation.
+ * @param lastProgress
+ * @param errorCount
+ * @param successCount
+ * @param detail
+ */
+
+case class Finish(lastProgress:Progress, errorCount:Int, successCount:Int, detail:Table)
 
 /**
  * A DTO that is sent as JSON to client for progress display.
  */
-case class Progress(running: Boolean = true, soFar: Int = 0, percent: String = "", sDuration: String = "", expected: Int, start: Instant, error: String = "")
+case class Progress(running: Boolean = true, soFar: Int = 0, percent: String = "", sDuration: String = "", expected: Int, start: Instant, error: String = "") extends ClientMessage
 
 object Progress:
   implicit val fmtProgress: Format[Progress] = Json.format[Progress]

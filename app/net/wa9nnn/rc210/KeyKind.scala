@@ -62,4 +62,5 @@ object KeyKind extends PlayEnum[KeyKind] {
   case object Common extends KeyKind(1)
 
   case object RemoteBase extends KeyKind(1)
+
 }

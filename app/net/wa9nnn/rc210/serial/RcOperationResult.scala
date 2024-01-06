@@ -18,16 +18,20 @@
 package net.wa9nnn.rc210.serial
 
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, RowSource}
+import net.wa9nnn.rc210.FieldKey
 import net.wa9nnn.rc210.serial.comm.RcResponse
 
 import scala.util.{Failure, Success, Try}
 import scala.xml.Elem
 
-case class RcOperationResult(request: String, triedResponse: Try[RcResponse]) {
+/**
+ * 
+ * @param request command to send to RC-210
+ * @param triedResponse what we got back in response to sending the requeted c0mmand to the RC-210/
+ */
+case class RcOperationResult(request: String, triedResponse: Try[RcResponse]) extends ProgressItem {
 
-  def isSuccess: Boolean = triedResponse.isSuccess
-
-  def isFailure: Boolean = triedResponse.isFailure
+  def success: Boolean = triedResponse.isSuccess
 
   def head: String = triedResponse match {
     case Failure(exception)
@@ -44,9 +48,18 @@ case class RcOperationResult(request: String, triedResponse: Try[RcResponse]) {
 
   private def flatten(rcResponse: RcResponse): String = fixUp(rcResponse.lines.mkString(" "))
 
+  override def toCell: Cell =
+    triedResponse match
+      case Failure(exception: Throwable) =>
+        Cell(s"$request => ${exception.getMessage}")
+          .withCssClass("happyCell")
+      case Success(rcResponse: RcResponse) =>
+        Cell(s"$request => ${rcResponse.head}")
+          .withCssClass("happyCell")
+}
 
-  }
+object RcOperationResult {
+  def header(count: Int): Header = Header(s"RC Operation Results ($count)", "Field", "Command", "Response")
+}
 
-  object RcOperationResult {
-    def header(count: Int): Header = Header(s"RC Operation Results ($count)", "Field", "Command", "Response")
-  }
+case class FieldOperationsResult(fieldKey: FieldKey, results:Seq[RcOperationResult])

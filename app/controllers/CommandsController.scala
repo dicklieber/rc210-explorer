@@ -23,18 +23,13 @@ import com.wa9nnn.wa9nnnutil.tableui.Cell
 import net.wa9nnn.rc210.FieldKey
 import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.security.authorzation.AuthFilter
 import net.wa9nnn.rc210.serial.*
-import net.wa9nnn.rc210.serial.comm.RcStreamBased
 import net.wa9nnn.rc210.util.Configs.path
 import org.apache.pekko.stream.Materializer
 import org.apache.pekko.stream.scaladsl.Flow
-import play.api.libs.streams.ActorFlow
 import play.api.mvc.*
-import views.html.batchOpResult
 
 import java.nio.file.Path
-import java.time.{Duration, Instant}
 import javax.inject.{Inject, Singleton}
 
 /**
@@ -68,51 +63,36 @@ class CommandsController @Inject()(dataStore: DataStore,
       Ok(views.html.dump(fieldEntries))
   }
 
-  def sendFieldValue(fieldKey: FieldKey): Action[AnyContent] = {
-    send(fieldKey, sendValue = true)
-  }
 
-  def sendCandidate(fieldKey: FieldKey): Action[AnyContent] = {
-    send(fieldKey)
-  }
 
-  /**
-   * Send command for one [[FieldKey]] to the RC210.
-   *
-   * @param fieldKey  to send
-   * @param sendValue true to send the fieldValue's command. false to send and accept the candidate's.
-   * @return
-   */
-  def send(fieldKey: FieldKey, sendValue: Boolean = false): Action[AnyContent] = Action {
-    implicit request =>
-      val fieldEntry: FieldEntry = dataStore(fieldKey)
-      val commands: Seq[String] = fieldEntry
-        .candidate
-        .get
-        .toCommands(fieldEntry)
-      val batchOperationsResult: BatchOperationsResult = rc210.sendBatch(fieldKey.toString, commands: _*)
-      Ok(batchOpResult(batchOperationsResult))
-  }
+//  /**
+//   * Send command for one [[FieldKey]] to the RC210.
+//   *
+//   * @param fieldKey  to send
+//   * @param sendValue true to send the fieldValue's command. false to send and accept the candidate's.
+//   * @return
+//   */
+//  def send(fieldKey: FieldKey, sendValue: Boolean = false): Action[AnyContent] = Action {
+//    implicit request =>
+///*      val fieldEntry: FieldEntry = dataStore(fieldKey)
+//      val commands: Seq[String] = fieldEntry
+//        .candidate
+//        .get
+//        .toCommands(fieldEntry)
+//      val batchOperationsResult: BatchOperationsResult = rc210.sendBatch(fieldKey.toString, commands: _*)
+//      Ok(batchOpResult(batchOperationsResult))
+//*/  
+//    NotImplemented("todo")
+//  }
 
-  def sendAll(): Action[AnyContent] = Action {
-    ImATeapot
-  }
-
-  def sendAllCandidates(): Action[AnyContent] = Action {
-    ImATeapot
-  }
-
-  def ws(sendField: SendField): WebSocket =
+  def ws(sendField: SendField, fieldKey:Option[FieldKey]): WebSocket =
     //todo handle authorization See https://www.playframework.com/documentation/3.0.x/ScalaWebSockets
 
-    new ProcessWithProgress[SendProgressItem](1)(
-      (progressApi: ProgressApi) =>
-        batchRc210Sender(sendField, progressApi)
+    new ProcessWithProgress[RcOperationResult](1, 1)(
+      progressApi =>
+        batchRc210Sender(sendField, fieldKey, progressApi)
     ).webSocket
 
-  def lastSendAll(): Action[AnyContent] = Action { implicit request =>
-    Ok(views.html.lastSendAll())
-  }
 
   def socket: WebSocket = WebSocket.accept[String, String] { request =>
     // log the message to stdout and send response back to client
@@ -124,5 +104,3 @@ class CommandsController @Inject()(dataStore: DataStore,
 
 }
 
-case class SendProgressItem() extends ProgressItem:
-  override def toCell: Cell = ???

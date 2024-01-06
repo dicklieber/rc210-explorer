@@ -19,40 +19,47 @@ package net.wa9nnn.rc210.serial
 
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.datastore.*
+import net.wa9nnn.rc210.FieldKey
+import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.serial.BatchRc210Sender.init
-import net.wa9nnn.rc210.serial.LastSend
 import net.wa9nnn.rc210.serial.comm.RcStreamBased
 //import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.stream.Materializer
-import org.apache.pekko.stream.scaladsl.*
-import play.api.mvc.{MessagesAbstractController, MessagesControllerComponents}
 
 import java.time.Instant
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.duration.DurationInt
-import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.language.postfixOps
 
 @Singleton
+
+/**
+ * Sends Comands tp RC-210 in a batch with Prigress UI.
+ * @param dataStore
+ * @param rc210
+ * @param config
+ * @param mat
+ */
 class BatchRc210Sender @Inject()(dataStore: DataStore, rc210: Rc210)
                                 (implicit config: Config, mat: Materializer)
   extends LazyLogging {
   private val stopOnError: Boolean = config.getBoolean("vizRc210.stopSendOnError")
 
   /**
-   *
-   * @param sendField   what to send
+   * Send commands for fields
+   * This needs to run in a brackground thread; @see [[ProcessWithProgress]] @param sendField   what to send
+   * 
+   * Results will live in [[LastSendBatch]]
+   * @param sendField   what to send for. all of just candiates.
+   * @param field None to send all fields. Of just the one.
    * @param progressApi where to report whats going on.
    */
-  def apply(sendField: SendField, progressApi: ProgressApi): Unit = {
+  def apply(sendField: SendField, fieldKey:Option[FieldKey], progressApi: ProgressApi[RcOperationResult]): Unit = {
     val start = Instant.now()
     val streamBased: RcStreamBased = rc210.openStreamBased
 
-    val operations = Seq.newBuilder[BatchOperationsResult]
-    operations += streamBased.perform("Wakeup", init)
-    val fieldEntries: Seq[FieldEntry] = sendField match
+    streamBased.perform("Wakeup", init)
+    val fieldEntries: Seq[FieldEntry] = sendFields match
       case SendField.AllFields =>
         dataStore.all
       case SendField.CandidatesOnly =>
@@ -66,14 +73,13 @@ class BatchRc210Sender @Inject()(dataStore: DataStore, rc210: Rc210)
       if !(errorEncountered && stopOnError)
     } yield {
       val batchOperationsResult = streamBased.perform(fieldEntry.fieldKey.toString, fieldValue.toCommands(fieldEntry))
-      batchOperationsResult.results.foreach { rcOperationResult =>
+      batchOperationsResult.results.foreach { (rcOperationResult: RcOperationResult) =>
         errorEncountered = rcOperationResult.isFailure
-        progressApi.doOne(rcOperationResult.toString)
+        progressApi.doOne(rcOperationResult)
       }
-      operations += batchOperationsResult
+      //      operations += batchOperationsResult
     }
-    LastSend.save(LastSendBatch(operations.result(), start))
-    progressApi.finish("Done")
+    progressApi.finish()
   }
 }
 
