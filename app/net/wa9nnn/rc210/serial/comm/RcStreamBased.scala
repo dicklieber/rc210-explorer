@@ -19,12 +19,12 @@ package net.wa9nnn.rc210.serial.comm
 
 import com.fazecast.jSerialComm.{SerialPort, SerialPortTimeoutException}
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.serial.RcOperationResult
 import net.wa9nnn.rc210.serial.comm.RcStreamBased.isTerminal
-import net.wa9nnn.rc210.serial.{BatchOperationsResult, RcOperationResult}
 
 import scala.concurrent.duration.Duration
 import scala.io.BufferedSource
-import scala.util.Try
+import scala.util.{Try, Using}
 
 /**
  * Used for sending commands to the RC-210. Nicely handles multiple lines of response.
@@ -58,35 +58,47 @@ class RcStreamBased(rcSerialPort: RcSerialPort, serialConfig: SerialConfig) exte
         resultBuilder += line
       }
     catch
-      case e:SerialPortTimeoutException =>
+      case e: SerialPortTimeoutException =>
         val message = s"\tTimeout. ${serialConfig.readTimeoutMs} ms  request: $request"
         resultBuilder += message
         logger.error(message)
-      case e:Exception =>
+      case e: Exception =>
         logger.error(s"Reading response for request: $request")
         resultBuilder += e.getMessage
     val result = resultBuilder.result()
     RcResponse(result)
   }
 
-  def perform(name: String, requests: Seq[String]): BatchOperationsResult = {
-
-    val results: Seq[RcOperationResult] = requests.map(request => {
+  def perform(requests: Seq[String]): Seq[RcOperationResult] = {
+    requests.map(request => {
       val response: Try[RcResponse] = Try(perform(request))
       RcOperationResult(request, response)
     })
-    BatchOperationsResult(name, results)
   }
-
 
   override def close(): Unit = {
     serialPort.removeDataListener()
     super.close()
   }
 
+//  def sendOne(request: String): RcOperationResult = {
+//    RcOperationResult(request, Using(openStreamBased) { rcOp =>
+//      rcOp.perform(request)
+//    })
+//  }
+
+//  def sendBatch(requests: String*): Seq[RcOperationResult] = {
+//    Using.resource(openStreamBased) { (rcOp: RcStreamBased) =>
+//      requests.map { request =>
+//        RcOperationResult(request, Try(rcOp.perform(request)))
+//      }
+//    }
+//  }
+
 }
 
 object RcStreamBased {
+
   def isTerminal(line: String): Boolean =
     line.nonEmpty && terminalPrefaces.contains(line.head)
 

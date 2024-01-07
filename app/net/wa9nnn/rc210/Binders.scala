@@ -33,19 +33,19 @@ object Binders {
     }
   }
 
-  implicit def fieldKeyBinder: PathBindable[FieldKey] = new PathBindable[FieldKey] {
-    override def bind(key: String, value: String): Either[String, FieldKey] =
-
-      try {
-        Right(FieldKey(value))
-      } catch {
-        case e: Exception =>
-          Left(e.getMessage)
-      }
-
-    override def unbind(key: String, fieldKey: FieldKey): String =
-      fieldKey.toString
-  }
+//  implicit def fieldKeyBinder: PathBindable[FieldKey] = new PathBindable[net.wa9nnn.rc210.FieldKey.fieldKeyPathBinder] {
+//    override def bind(key: String, value: String): Either[String, FieldKey] =
+//
+//      try {
+//        Right(FieldKey(value))
+//      } catch {
+//        case e: Exception =>
+//          Left(e.getMessage)
+//      }
+//
+//    override def unbind(key: String, fieldKey: FieldKey): String =
+//      fieldKey.toString
+//  }
 
   implicit def userIdBinder: PathBindable[UserId] = new PathBindable[UserId] {
     override def bind(key: String, value: String): Either[String, UserId] =

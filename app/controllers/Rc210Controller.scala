@@ -23,7 +23,8 @@ package controllers
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Header, Table}
-import net.wa9nnn.rc210.serial.{ DataCollector, Rc210}
+import net.wa9nnn.rc210.serial.comm.RcStreamBased
+import net.wa9nnn.rc210.serial.{CommandsSender, DataCollector, Rc210}
 import org.apache.pekko.stream.Materializer
 import org.apache.pekko.util.Timeout
 import play.api.mvc.MessagesAbstractController

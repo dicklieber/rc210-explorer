@@ -1,4 +1,6 @@
 @import net.wa9nnn.rc210.FieldKey
+@import net.wa9nnn.rc210.serial.CommandSendRequest
+@import net.wa9nnn.rc210.serial.SendField
 @(commands: Seq[String], maybeFieldKey: Option[FieldKey] = None)
 
 <div>
@@ -9,7 +11,7 @@
         </a>
     </ul>
     @for(fieldKey <- maybeFieldKey) {
-        <a href="@routes.CommandsController.sendFieldValue(fieldKey)" title="Send to RC-210">
+        <a href="@routes.CommandsController.ws(CommandSendRequest(SendField.CandidatesOnly, maybeFieldKey))" title="Send to RC-210">
         <i class="bi bi-send"></i>
         </a>
         }

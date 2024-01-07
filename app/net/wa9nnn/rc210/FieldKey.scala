@@ -73,6 +73,8 @@ object FieldKey {
     override def unbind(key: String, fieldKey: FieldKey): String =
       fieldKey.toString
   }
+  def opt(maybeSFieldKey:Option[String]):Option[FieldKey] =
+    maybeSFieldKey.map(FieldKey(_))
 
   def apply(param: String): FieldKey = {
     param match

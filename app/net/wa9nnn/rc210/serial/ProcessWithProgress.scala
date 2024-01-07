@@ -47,8 +47,9 @@ class ProcessWithProgress[T <: ProgressItem](mod: Int, resultTableColumns: Int)(
   val (queue: SourceQueueWithComplete[Progress], source: Source[Progress, NotUsed]) = Source.queue[Progress](250, OverflowStrategy.dropHead).preMaterialize()
 
   private val began = Instant.now()
-  private val count = new AtomicInteger()
+  private var soFar = 0
   private var expected: Int = 0
+  private var fatalError:Option[Throwable] = None
 
   private val itemsBuilder = Seq.newBuilder[T]
 
@@ -67,21 +68,21 @@ class ProcessWithProgress[T <: ProgressItem](mod: Int, resultTableColumns: Int)(
 
   def doOne(progressItem: T) =
     itemsBuilder.addOne(progressItem)
+    soFar += 1
     sendProgress()
 
   override def results: Seq[T] =
     itemsBuilder.result()
 
   private def sendProgress(): Unit = {
-    if (!running || soFar % mod == 0) {
+    if ( soFar % mod == 0) {
 
-      val progress = buildProgressMessage(soFar, double)
+      val progress = buildProgressMessage
       queue.offer(progress)
     }
   }
 
-  private def buildProgressMessage = {
-    val soFar = count.get()
+  private def buildProgressMessage: Progress = {
     val double = soFar * 100.0 / expected
     new Progress(
       running = true,
@@ -95,12 +96,11 @@ class ProcessWithProgress[T <: ProgressItem](mod: Int, resultTableColumns: Int)(
   }
 
   def finish(): Unit = {
-    val progressMessage = buildProgressMessage
     var successCount = 0
     var errorCount = 0
     val value: Seq[T] = itemsBuilder.result()
     value
-      .foreach{progresssItem: T =>
+      .foreach{ (progresssItem: T) =>
         if(progresssItem.success)
           successCount += 1
         else
@@ -109,12 +109,13 @@ class ProcessWithProgress[T <: ProgressItem](mod: Int, resultTableColumns: Int)(
       }
     
     val detailTable :Table = Table.empty("todo")
-    Finish(progressMessage, errorCount, successCount, detailTable )
+    Finish(buildProgressMessage, errorCount, successCount, detailTable )
   }
 
-  override def error(exception: Throwable): Unit = {
-    finish(exception.getMessage)
+  override def fatalError(exception: Throwable): Unit = {
+    fatalError = Option (exception)
     sendProgress()
+    finish()
   }
 
   lazy val webSocket: WebSocket = WebSocket.accept[String, Progress] { (request: RequestHeader) =>
@@ -129,5 +130,5 @@ class ProcessWithProgress[T <: ProgressItem](mod: Int, resultTableColumns: Int)(
 
   override def expectedCount(count: Int): Unit = expected = count
 
-trait ProgressItem extends CellProvider
-  val success:Boolean = true
+trait ProgressItem extends CellProvider:
+  def success:Boolean = true

@@ -64,12 +64,14 @@ case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends Order
   override def values: IndexedSeq[EnumEntryValue] =
     throw new NotImplementedError() //Not needed as we override options
 
-
   override def options: Seq[(String, String)] = MacroSelect.options
 }
 
 object Key:
   private val kparser = """(\D+)(\d*)""".r
+
+  def apply(maybeSKey: Option[String]): Option[Key] =
+    maybeSKey.map(Key(_))
 
   def apply(sKey: String): Key =
     sKey match
@@ -99,7 +101,6 @@ object Key:
       JsString(sak.toString)
     }
   }
-
 
   private var _namedSource: Option[NamedKeySource] = None
 
@@ -134,7 +135,6 @@ object Key:
   implicit val keyFormatter: Formatter[Key] = new Formatter[Key]:
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Key] =
       parsing(Key(_), s"BadKey $key", Nil)(key, data)
-
 
     override def unbind(key: String, value: Key): Map[String, String] = Map(key -> value.toString)
 

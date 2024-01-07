@@ -65,8 +65,8 @@ class Rc210Spec extends RcSpec with  MockitoSugar with TryValues {
 
   class StartStopClose extends RcSpec {
     val rcOperation: RcStreamBased = rc210.openStreamBased
-    private val r1 = rcOperation.perform("one", Seq("1GetVersion", "1GetVersion"))
-    private val r2 = rcOperation.perform("two", Seq("1GetVersion", "1GetVersion"))
+    private val r1 = rcOperation.perform(Seq("1GetVersion", "1GetVersion"))
+    private val r2 = rcOperation.perform(Seq("1GetVersion", "1GetVersion"))
 
     r1.name should be("one")
     r2.name should be("two")

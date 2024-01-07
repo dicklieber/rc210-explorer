@@ -48,7 +48,7 @@ trait ProgressApi[T <: ProgressItem]:
    *
    * @param exception
    */
-  def error(exception: Throwable): Unit
+  def fatalError(exception: Throwable): Unit
   
   def results:Seq[T]
 

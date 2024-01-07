@@ -100,7 +100,7 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
             cleanup()
             Files.deleteIfExists(memoryFile)
             Files.move(tempFile, memoryFile)
-            progressApi.finish("Done")
+            progressApi.finish()
             logger.debug("Done")
           case "+SENDE" =>
             cleanup()
@@ -108,9 +108,9 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
           case "EEPROM Done" =>
             rcOperation.send("OK")
             logger.debug("EEPROM Done")
-            progressApi.finish("Done")
+            progressApi.finish()
           case "Timeout" =>
-            progressApi.error(Timeout(rcOperation.comPort))
+            progressApi.fatalError(Timeout(rcOperation.comPort))
             cleanup("timeout")
           case response =>
             try {

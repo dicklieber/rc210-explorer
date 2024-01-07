@@ -31,7 +31,7 @@ import scala.xml.Elem
  */
 case class RcOperationResult(request: String, triedResponse: Try[RcResponse]) extends ProgressItem {
 
-  def success: Boolean = triedResponse.isSuccess
+  override val success: Boolean = triedResponse.isSuccess
 
   def head: String = triedResponse match {
     case Failure(exception)

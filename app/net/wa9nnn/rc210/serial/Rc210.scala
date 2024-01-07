@@ -21,7 +21,7 @@ import com.fazecast.jSerialComm.{SerialPort, SerialPortDataListener}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Header, Row, Table}
-import net.wa9nnn.rc210.serial.comm.{RcEventBased, RcResponse, RcStreamBased}
+import net.wa9nnn.rc210.serial.comm.{Rc210Version, RcEventBased, RcResponse, RcSerialPort, RcStreamBased, SerialConfig}
 import net.wa9nnn.rc210.util.Configs
 
 import java.nio.file.{Files, Path}
@@ -50,6 +50,16 @@ class Rc210 @Inject()(implicit config: Config) extends LazyLogging {
     maybeRcSerialPort.getOrElse(throw NoPortSelected())
   }
 
+
+
+  def openStreamBased: RcStreamBased = {
+    new RcStreamBased(serialPort, serialConfig)
+  }
+
+  def openEventBased(): RcEventBased = {
+    new RcEventBased(serialPort)
+  }
+
   def sendOne(request: String): RcOperationResult = {
     RcOperationResult(request, Using(openStreamBased) { rcOp =>
       rcOp.perform(request)
@@ -62,15 +72,7 @@ class Rc210 @Inject()(implicit config: Config) extends LazyLogging {
         RcOperationResult(request, Try(rcOp.perform(request)))
       }
     }
-  }
-
-  def openStreamBased: RcStreamBased = {
-    new RcStreamBased(serialPort, serialConfig)
-  }
-
-  def openEventBased(): RcEventBased = {
-    new RcEventBased(serialPort)
-  }
+  }  
 
   def selectPort(portDescriptor: String): Unit =
     try {

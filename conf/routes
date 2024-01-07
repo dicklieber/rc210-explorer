@@ -43,12 +43,11 @@ POST        /ports/save                                controllers.PortsControll
 GET         /ports                                     controllers.PortsController.index
 GET         /candidates                                controllers.CommandsController.index
 GET         /datastore/dump                            controllers.CommandsController.dump()
-GET         /candidates/ws/:sendField/:fieldKey        controllers.CommandsController.ws(sendField:SendField, fieldKey:Option[FieldKey])
+GET         /candidates/ws/:commandSendRequest        controllers.CommandsController.ws(commandSendRequest:CommandSendRequest)
 GET         /memory                                    controllers.MemoryController.index
 POST        /clock/save                                controllers.ClockController.save()
 GET         /clock/set                                 controllers.Rc210Controller.setClock()
 GET         /restart                                   controllers.Rc210Controller.restart()
-GET         /lastResults                               controllers.Rc210Controller.lastResult
 POST        /download/start                            controllers.DownloadController.startDownload()
 GET         /download/ws                               controllers.DownloadController.ws()
 GET         /download/results                          controllers.DownloadController.results
