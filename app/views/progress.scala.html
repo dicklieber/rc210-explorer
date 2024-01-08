@@ -4,7 +4,7 @@
 @import java.net.URL
 @import net.wa9nnn.rc210.ui.Tabs
 
-@(webSocketUrl: String, table: Table, finishUrl:String)(implicit request: RequestHeader)
+@(webSocketUrl: String, requestTable: Table, finishUrl:String)(implicit request: RequestHeader)
 @tabbedmain(Tabs.rc210Tab) {
     <script>
             // Use s WebSocket to update the progress bar.
@@ -33,7 +33,10 @@
         <div class="progress">
             <div class="progress-bar progress-bar-striped" style="min-width: 0px;"></div>
         </div>
-        @renderTable(table)
+        @renderTable(requestTable)
+    </div>
+    <div id="result">
+
     </div>
 
 }

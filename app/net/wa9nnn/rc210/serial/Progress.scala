@@ -28,13 +28,14 @@ import scala.concurrent.duration.Duration
  * Update progress that will go to the client.
  */
 trait ProgressApi[T <: ProgressItem]:
-  def expectedCount(count:Int):Unit
+  def expectedCount(count: Int): Unit
+
   /**
    * We processed one thing.
    *
    * @param message
    */
-  def doOne(progressItem:T): Unit
+  def doOne(progressItem: T): Unit
 
   /**
    * We're done.
@@ -49,26 +50,16 @@ trait ProgressApi[T <: ProgressItem]:
    * @param exception
    */
   def fatalError(exception: Throwable): Unit
-  
-  def results:Seq[T]
 
-
-trait ClientMessage
-
-/**
- * Sent to client on completion of the operation.
- * @param lastProgress
- * @param errorCount
- * @param successCount
- * @param detail
- */
-
-case class Finish(lastProgress:Progress, errorCount:Int, successCount:Int, detail:Table)
+  def results: Seq[T]
 
 /**
  * A DTO that is sent as JSON to client for progress display.
+ *
+ * @param percent    drives the progress bar.
+ * @param resultHtml empty when running, HTML for the result <div> when finshed.
  */
-case class Progress(running: Boolean = true, soFar: Int = 0, percent: String = "", sDuration: String = "", expected: Int, start: Instant, error: String = "") extends ClientMessage
+case class Progress(percent: String = "", resultHtml: Option[String] = None)
 
 object Progress:
   implicit val fmtProgress: Format[Progress] = Json.format[Progress]

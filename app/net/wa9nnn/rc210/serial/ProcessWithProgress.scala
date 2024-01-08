@@ -47,10 +47,14 @@ class ProcessWithProgress[T <: ProgressItem](mod: Int, resultTableColumns: Int)(
   val (queue: SourceQueueWithComplete[Progress], source: Source[Progress, NotUsed]) = Source.queue[Progress](250, OverflowStrategy.dropHead).preMaterialize()
 
   private val began = Instant.now()
+  private var running = true
   private var soFar = 0
   private var expected: Int = 0
-  private var fatalError:Option[Throwable] = None
-
+  private var fatalError: Option[Throwable] = None
+  /**
+   * Contains HTML string to show to user when finished.
+   */
+  private var maybeResultHtml: Option[String] = None
   private val itemsBuilder = Seq.newBuilder[T]
 
   setDaemon(true)
@@ -75,8 +79,7 @@ class ProcessWithProgress[T <: ProgressItem](mod: Int, resultTableColumns: Int)(
     itemsBuilder.result()
 
   private def sendProgress(): Unit = {
-    if ( soFar % mod == 0) {
-
+    if (soFar % mod == 0) {
       val progress = buildProgressMessage
       queue.offer(progress)
     }
@@ -84,36 +87,28 @@ class ProcessWithProgress[T <: ProgressItem](mod: Int, resultTableColumns: Int)(
 
   private def buildProgressMessage: Progress = {
     val double = soFar * 100.0 / expected
-    new Progress(
-      running = true,
-      soFar = soFar,
-      percent = f"$double%2.1f%%",
-      sDuration = DurationHelpers.between(began),
-      expected = expected,
-      start = began,
-      error = ""
-    )
+    new Progress(percent = f"$double%2.0f%%", maybeResultHtml)
   }
 
   def finish(): Unit = {
+    running = false
     var successCount = 0
     var errorCount = 0
     val value: Seq[T] = itemsBuilder.result()
     value
-      .foreach{ (progresssItem: T) =>
-        if(progresssItem.success)
+      .foreach { (progresssItem: T) =>
+        if (progresssItem.success)
           successCount += 1
         else
           errorCount += 1
-        
       }
-    
-    val detailTable :Table = Table.empty("todo")
-    Finish(buildProgressMessage, errorCount, successCount, detailTable )
+
+    val detailTable: Table = Table.empty("todo")
+    sendProgress()
   }
 
   override def fatalError(exception: Throwable): Unit = {
-    fatalError = Option (exception)
+    fatalError = Option(exception)
     sendProgress()
     finish()
   }
@@ -131,4 +126,4 @@ class ProcessWithProgress[T <: ProgressItem](mod: Int, resultTableColumns: Int)(
   override def expectedCount(count: Int): Unit = expected = count
 
 trait ProgressItem extends CellProvider:
-  def success:Boolean = true
+  def success: Boolean = true

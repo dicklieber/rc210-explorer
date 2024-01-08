@@ -29,7 +29,6 @@ import net.wa9nnn.rc210.util.Configs
 import java.io.PrintWriter
 import java.nio.file.{Files, Path}
 import java.time.Instant
-import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.{Inject, Singleton}
 
 /**
@@ -40,10 +39,6 @@ import javax.inject.{Inject, Singleton}
  */
 @Singleton
 class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: DataStore) extends LazyLogging:
-  var stopAfter: Int = Integer.MAX_VALUE
-  logger.whenTraceEnabled{
-    stopAfter = 100
-  }
 
   val memoryFile: Path = Configs.path("vizRc210.memoryFile")
   val tempFile: Path = memoryFile.resolveSibling(memoryFile.toFile.toString + ".temp")
@@ -66,8 +61,6 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
    */
   def startDownload(progressApi: ProgressApi[DownloadOp]): Unit =
     progressApi.expectedCount(expectedLines)
-    val operations = Seq.newBuilder[DownloadOp]
-    val opCount = new AtomicInteger()
 
     val rcOperation: RcEventBased = rc210.openEventBased()
     val temMemoryFileWriter = new PrintWriter(Files.newOutputStream(tempFile))
@@ -75,7 +68,6 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
 
     def cleanup(error: String = ""): Unit =
       temMemoryFileWriter.close()
-      _downloadState = _downloadState.complete(operations.result())
       rcOperation.close()
       if (error.isBlank)
         dataStore.reload()
@@ -94,6 +86,7 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
         val receivedData: Array[Byte] = event.getReceivedData
         val response = new String(receivedData).trim
 
+        logger.trace("reponse: {}", response)
         response match {
           // Handle the vaarious responses from the RC-210.
           case "Complete" =>
@@ -101,13 +94,14 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
             Files.deleteIfExists(memoryFile)
             Files.move(tempFile, memoryFile)
             progressApi.finish()
-            logger.debug("Done")
-          case "+SENDE" =>
+            logger.trace("\tDone")
+
+          case m@"+SENDE" =>
             cleanup()
-            logger.debug("+SENDE")
+            logger.debug("\t{}}", m)
           case "EEPROM Done" =>
             rcOperation.send("OK")
-            logger.debug("EEPROM Done")
+            logger.debug("\tEEPROM Done")
             progressApi.finish()
           case "Timeout" =>
             progressApi.fatalError(Timeout(rcOperation.comPort))
@@ -119,16 +113,13 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
               temMemoryFileWriter.println(line)
               
               progressApi.doOne(DownloadOp(line))
+              logger.trace("\t{}", line)
             } catch {
               case e: Exception =>
                 logger.error(s"response: $response", e)
             }
             rcOperation.send("OK")
-            if(opCount.incrementAndGet() >  stopAfter)
-              cleanup("StopAfter")
-
         }
-        operations.addOne(DownloadOp(response))
       }
     })
     rcOperation.send("1SendEram")
