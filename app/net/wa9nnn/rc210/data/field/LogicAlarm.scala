@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.data.field
 
+import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.Display
@@ -26,7 +27,7 @@ import play.api.data.Forms.*
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.routing.sird
 
-case class LogicAlarm(key: Key, enable: Boolean, lowMacro: Key, highMacro: Key) extends ComplexFieldValue {
+case class LogicAlarm(key: Key, enable: Boolean, lowMacro: Key, highMacro: Key) extends ComplexFieldValue with TriggerNode{
   key.check(KeyKind.LogicAlarm)
   lowMacro.check(KeyKind.RcMacro)
   highMacro.check(KeyKind.RcMacro)

@@ -20,6 +20,7 @@ package net.wa9nnn.rc210.data.datastore
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
+import net.wa9nnn.rc210.data.macros.RcMacro
 import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.security.Who.given
 import net.wa9nnn.rc210.security.authentication.RcSession
@@ -28,6 +29,7 @@ import play.api.mvc.{AnyContent, Request}
 
 import javax.inject.{Inject, Singleton}
 import scala.collection.concurrent.TrieMap
+import scala.collection.mutable
 import scala.util.{Failure, Success, Try}
 
 /**
@@ -50,11 +52,14 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
   def editValue[T <: FieldValue](fieldKey: FieldKey): T =
     val maybeFieldEntry: Option[FieldEntry] = all.find(_.fieldKey == fieldKey)
     maybeFieldEntry match
-      case Some(fieldEntry: FieldEntry) => 
+      case Some(fieldEntry: FieldEntry) =>
         fieldEntry.value.asInstanceOf[T]
       case None =>
         throw new IllegalArgumentException(s"No editValue for fieldKey: $fieldKey")
 
+  def search(str: String): Seq[Key] =
+    throw new NotImplementedError() //todo
+  //https://lucene.apache.org/core/
 
   def indexValues[T <: ComplexFieldValue](keyKind: KeyKind): Seq[T] =
     all.filter(_.fieldKey.key.keyKind == keyKind).map(_.value.asInstanceOf[T])
@@ -101,14 +106,14 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
           current.setCandidate(value))
     }
 
-    candidateAndNames.namedKeys foreach{nammedKey =>
+    candidateAndNames.namedKeys foreach { nammedKey =>
       val key = nammedKey.key
-      if(nammedKey.name.isBlank)
+      if (nammedKey.name.isBlank)
         keyNameMap.remove(key)
       else
         keyNameMap.put(key, nammedKey.name)
-    } 
-    
+    }
+
     save(rcSession)
 
   def acceptCandidate(fieldKey: FieldKey)(using rcSession: RcSession): Unit =
@@ -157,6 +162,45 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
       namedKeys = keyNameMap.map { case (key, name) => NamedKey(key, name) }.toSeq)
 
   override def nameForKey(key: Key): String = keyNameMap.getOrElse(key, "")
+
+//  def triggerNodes: Seq[FieldEntry] =
+//    keyFieldMap.filter(_.isInstanceOf[TriggerNode])
+//      .values
+//      .toIndexedSeq
+
+  def flow(search: Key): Option[FlowData] =
+    def buildFlowData(rcMacroEntry: FieldEntry): FlowData =
+      assert(rcMacroEntry.fieldKey.key.keyKind == KeyKind.RcMacro, s"Must be an RcMacro entry!  But got: $rcMacroEntry")
+      // find triggers
+      val rcMacro: RcMacro = rcMacroEntry.value
+      val key = rcMacro.key
+      val triggers: Seq[TriggerNode] = all.filter((pred: FieldEntry) => pred
+        .canTriggerMacro(key)) map (_.value)
+
+      FlowData(rcMacro, triggers, search)
+
+    val entries: Seq[FieldEntry] = apply(search)
+    assert(entries.length == 1, s"Should only be one entry for a compplex key, but got $entries")
+    entries.headOption.map { fieldEntry =>
+      fieldEntry.fieldKey.key.keyKind match
+        case KeyKind.LogicAlarm => ???
+        case KeyKind.Meter => ???
+        case KeyKind.MeterAlarm => ???
+        case KeyKind.DtmfMacro => ???
+        case KeyKind.CourtesyTone => ???
+        case KeyKind.Function => ???
+        case KeyKind.RcMacro =>
+          buildFlowData(fieldEntry)
+        case KeyKind.Message => ???
+        case KeyKind.Clock => ???
+        case KeyKind.Port => ???
+        case KeyKind.Schedule => ???
+        case KeyKind.Timer => ???
+        case KeyKind.Common => ???
+        case KeyKind.RemoteBase => ???
+
+    }
+
 }
 
 

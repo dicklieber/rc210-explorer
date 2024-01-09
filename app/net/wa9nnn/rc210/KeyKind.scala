@@ -20,7 +20,7 @@ package net.wa9nnn.rc210
 import enumeratum._
 import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
 
-sealed trait KeyKind(val maxN: Int, val display: Boolean = false) extends EnumEntry:
+sealed trait KeyKind(val maxN: Int) extends EnumEntry:
   def spaces: String =
     entryName.replaceAll(
       String.format("%s|%s|%s",
@@ -37,15 +37,15 @@ object KeyKind extends PlayEnum[KeyKind] {
 
   case object LogicAlarm extends KeyKind(5)
 
-  case object Meter extends KeyKind(8, false)
+  case object Meter extends KeyKind(8)
 
-  case object MeterAlarm extends KeyKind(8, true)
+  case object MeterAlarm extends KeyKind(8)
 
-  case object DtmfMacro extends KeyKind(195, false)
+  case object DtmfMacro extends KeyKind(195)
 
   case object CourtesyTone extends KeyKind(10)
 
-  case object Function extends KeyKind(1005, false)
+  case object Function extends KeyKind(1005)
 
   case object RcMacro extends KeyKind(105)
 

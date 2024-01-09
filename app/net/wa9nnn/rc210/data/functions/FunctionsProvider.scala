@@ -1,6 +1,7 @@
 package net.wa9nnn.rc210.data.functions
 
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.{Key, KeyKind}
 import play.api.libs.json.*
 
@@ -37,13 +38,13 @@ class FunctionsProvider extends LazyLogging {
   def size: Int = functions.length
 
 
-//  lazy val invokedMacros: Seq[Key] = for {
-//    function <- functions
-//    destKey <- function.destination
-//    if destKey.isInstanceOf[Key]
-//  } yield {
-//    destKey.asInstanceOf[Key]
-//  }
+  //  lazy val invokedMacros: Seq[Key] = for {
+  //    function <- functions
+  //    destKey <- function.destination
+  //    if destKey.isInstanceOf[Key]
+  //  } yield {
+  //    destKey.asInstanceOf[Key]
+  //  }
 
 }
 
@@ -53,16 +54,18 @@ class FunctionsProvider extends LazyLogging {
  * @param description human readable.
  * @param destination Key or MessageKey
  */
-case class FunctionNode(key: Key, description: String, destination: Option[Key]) extends Ordered[FunctionNode]  {
-  destination foreach (destKey =>
-    assert(destKey.keyKind == KeyKind.RcMacro || destKey.keyKind == KeyKind.Message, s"destination must be Key or MessageKey! But got: $key")
-    )
+case class SimpleFunctionNode(key: Key, description: String) extends FunctionNode
+
+case class TriggerFunctionNode(key: Key, description: String, destination: Key) extends FunctionNode with TriggerNode:
+  assert(destination.keyKind == KeyKind.RcMacro || destination.keyKind == KeyKind.Message, s"destination must be Key or MessageKey! But got: $key")
+
+trait FunctionNode extends Ordered[FunctionNode]:
+  val key: Key
+  val description: String
 
   override def compare(that: FunctionNode): Int = description compareTo that.description
 
-
   override def toString: String = s"$description (${key.rc210Value})"
-}
 
 object FunctionNode {
   implicit val fmtFunction: Format[FunctionNode] = new Format[FunctionNode] {
@@ -71,10 +74,14 @@ object FunctionNode {
       try {
         val key: Key = (json \ "key").as[Key]
 
-        val sdesc: String = (json \ "description").as[String]
-        val dest: Option[Key] = (json \ "destination").asOpt[Key]
-
-        val f = FunctionNode(key, sdesc, dest)
+        val description: String = (json \ "description").as[String]
+        val maybeDestination: Option[Key] = (json \ "destination").asOpt[Key]
+        val f: FunctionNode = (maybeDestination match
+          case Some(destinstion) =>
+            TriggerFunctionNode(key, description, destinstion)
+          case None =>
+            SimpleFunctionNode(key, description)
+          )
         JsSuccess(f)
       }
       catch {

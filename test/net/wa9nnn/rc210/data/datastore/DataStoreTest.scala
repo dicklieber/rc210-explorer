@@ -17,7 +17,8 @@
 
 package net.wa9nnn.rc210.data.datastore
 
-import net.wa9nnn.rc210.WithTestConfiguration
+import net.wa9nnn.rc210.data.TriggerNode
+import net.wa9nnn.rc210.{FieldKey, Key, WithTestConfiguration}
 import net.wa9nnn.rc210.data.field.{FieldDefinitions, FieldEntry}
 
 class DataStoreTest extends WithTestConfiguration {
@@ -28,7 +29,19 @@ class DataStoreTest extends WithTestConfiguration {
   "DataStore" should {
     "initial" in {
       val all: Seq[FieldEntry] = dataStore.all
-      all.length mustBe 0
+      all.length mustBe 341
     }
+  }
+
+  "FlowData" should {
+    "dump triggers" in {
+      val triggers: Seq[TriggerNode] = dataStore.triggerNodes
+      triggers.foreach(println(_))
+
+    }
+  }
+  "happy path" in {
+    val maybeFlowData: Option[FlowData] = dataStore.flow(Key.macroKeys.head)
+    throw new NotImplementedError() //todo
   }
 }

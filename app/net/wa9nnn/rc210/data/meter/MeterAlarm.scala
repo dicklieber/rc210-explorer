@@ -17,7 +17,8 @@
 
 package net.wa9nnn.rc210.data.meter
 
-import net.wa9nnn.rc210.KeyKind.{RcMacro, MeterAlarm, Meter}
+import net.wa9nnn.rc210.KeyKind.{Meter, MeterAlarm, RcMacro}
+import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.{Key, KeyKind}
@@ -27,7 +28,7 @@ import play.api.libs.json.{Format, JsValue, Json}
 
 import java.util.concurrent.atomic.AtomicInteger
 
-case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint: Int, macroKey: Key) extends ComplexFieldValue() {
+case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint: Int, macroKey: Key) extends ComplexFieldValue with TriggerNode{
   key.check(KeyKind.MeterAlarm)
   meter.check(Meter)
   macroKey.check(KeyKind.RcMacro)

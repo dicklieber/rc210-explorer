@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data.timers
 
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.{Key, KeyKind}
@@ -27,7 +28,7 @@ import play.api.libs.json.{JsValue, Json, OFormat}
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
-case class Timer(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValue() {
+case class Timer(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValue() with TriggerNode{
   val duration: FiniteDuration = Duration(seconds, "seconds")
   //  override def displayHtml: String = //s"$seconds => ${macroKey.keyWithName}"
 
@@ -61,6 +62,9 @@ case class Timer(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValu
   }
 
   override def toJsValue: JsValue = Json.toJson(this)
+
+  override def canRunMacro(candidate: Key): Boolean = 
+    macroKey eq candidate
 }
 
 //noinspection ZeroIndexToHead
