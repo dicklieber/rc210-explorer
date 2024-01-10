@@ -21,14 +21,12 @@ import scala.annotation.tailrec
  * @param functions that this macro invokes.
  * @param dtmf      that can invoke this macro.
  */
-case class RcMacro(override val key: Key, functions: Seq[Key], dtmf: Option[Dtmf] = None) extends ComplexFieldValue() with TriggerNode {
+case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dtmf] = None) extends ComplexFieldValue {
 
   def enabled: Boolean = functions.nonEmpty
 
-  override def canRunMacro(macroKey: Key): Boolean = false //todo look for FunctionNode with destination that has the macro of interest.
 
   //  override val commandStringValue: String = "*4002 10 * 162 * 187 * 122 * 347" // todo
-
 
   /**
    * Render this value as an RD-210 command string.
@@ -57,19 +55,19 @@ case class RcMacro(override val key: Key, functions: Seq[Key], dtmf: Option[Dtmf
   override def toJsValue: JsValue = Json.toJson(this)
 }
 
-object RcMacro extends ComplexExtractor[RcMacro] {
+object MacroNode extends ComplexExtractor[MacroNode] {
   override val keyKind: KeyKind = KeyKind.RcMacro
-  def unapply(u: RcMacro): Option[(Key, Seq[Key], Option[Dtmf])] = Some((u.key, u.functions, u.dtmf))
 
-  implicit val fmtMacro: Format[RcMacro] = Json.format[RcMacro]
+  def unapply(u: MacroNode): Option[(Key, Seq[Key], Option[Dtmf])] = Some((u.key, u.functions, u.dtmf))
 
-  val macroForm: Form[RcMacro] = Form[RcMacro](
+  implicit val fmtMacro: Format[MacroNode] = Json.format[MacroNode]
+
+  val macroForm: Form[MacroNode] = Form[MacroNode](
     mapping(
       "key" -> of[Key],
       "functions" -> seq(of[Key]),
       "dtmf" -> optional(text)
-    )(RcMacro.apply)(RcMacro.unapply))
-
+    )(MacroNode.apply)(MacroNode.unapply))
 
   override def positions: Seq[FieldOffset] = Seq(
     FieldOffset(1985, this),
@@ -89,7 +87,6 @@ object RcMacro extends ComplexExtractor[RcMacro] {
             .map(_.toString)
             .mkString(", ")
 
-
           val functions: Seq[Key] = try {
             parseChunk(chunk.iterator)
           } catch {
@@ -101,11 +98,11 @@ object RcMacro extends ComplexExtractor[RcMacro] {
               Seq.empty
 
           }
-          RcMacro(key, functions, dtmfMacros(key))
+          MacroNode(key, functions, dtmfMacros(key))
         }
     }
 
-    val macros: Seq[RcMacro] = macroBuilder(1985, 16, 40) //SlicePos("//Macro - 1985-2624"), memory, 16)
+    val macros: Seq[MacroNode] = macroBuilder(1985, 16, 40) //SlicePos("//Macro - 1985-2624"), memory, 16)
       .concat(macroBuilder(2825, 7, 50)) // SlicePos("//ShortMacro - 2825-3174"), memory, 7))
 
     val r: Seq[FieldEntry] = macros.map { m =>
@@ -151,13 +148,13 @@ object RcMacro extends ComplexExtractor[RcMacro] {
   }
 
   override def parse(jsValue: JsValue): FieldValue = {
-    jsValue.as[RcMacro]
+    jsValue.as[MacroNode]
   }
-
 
   override val name: String = "Macro"
   override val fieldName: String = name
-  override def form: Form[RcMacro] = throw new NotImplementedError("Forms not used with macros") //todo
+
+  override def form: Form[MacroNode] = throw new NotImplementedError("Forms not used with macros") //todo
 }
 
 

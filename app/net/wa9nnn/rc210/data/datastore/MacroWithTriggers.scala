@@ -18,6 +18,6 @@
 package net.wa9nnn.rc210.data.datastore
 
 import net.wa9nnn.rc210.data.TriggerNode
-import net.wa9nnn.rc210.data.macros.RcMacro
+import net.wa9nnn.rc210.data.macros.MacroNode
 
-case class MacroWithTriggers(macroNode: RcMacro, triggers: Seq[TriggerNode])
+case class MacroWithTriggers(macroNode: MacroNode, triggers: Seq[TriggerNode])

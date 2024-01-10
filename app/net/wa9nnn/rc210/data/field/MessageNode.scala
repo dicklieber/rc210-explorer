@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * @param key   Message key
  * @param words word numbers. Each 0 to 255. 
  */
-case class Message(key: Key, words: Seq[Int]) extends ComplexFieldValue() {
+case class MessageNode(key: Key, words: Seq[Int]) extends ComplexFieldValue() {
 
   def toWords: Seq[Word] = words.map(Word(_))
 
@@ -51,17 +51,17 @@ case class Message(key: Key, words: Seq[Int]) extends ComplexFieldValue() {
 
   override def toJsValue: JsValue = Json.toJson(this)
 }
-object Message extends ComplexExtractor[Message] with LazyLogging {
-  implicit val fmtPhrase: Format[Message] = Json.format[Message]
+object MessageNode extends ComplexExtractor[MessageNode] with LazyLogging {
+  implicit val fmtPhrase: Format[MessageNode] = Json.format[MessageNode]
 
-  def apply(key: Key, kv: Map[String, String]): Message = {
+  def apply(key: Key, kv: Map[String, String]): MessageNode = {
 
     val csv: String = kv("words")
     val wordIds: Seq[Int] = csv
       .split(",")
       .toIndexedSeq
       .filter(_.nonEmpty).map(_.toInt)
-    new Message(key, wordIds)
+    new MessageNode(key, wordIds)
   }
 
   override val keyKind: KeyKind = KeyKind.Message
@@ -85,7 +85,7 @@ object Message extends ComplexExtractor[Message] with LazyLogging {
       chunk: Chunk <- memory.chunks(1576, 10, 40)
       key: Key = Key(KeyKind.Message, mai.getAndIncrement())
     } yield {
-      val message: Message = Message(key, chunk.ints
+      val message: MessageNode = MessageNode(key, chunk.ints
         .takeWhile(_ != 0)
       )
       val fieldKey = FieldKey(fieldName, key)
@@ -98,9 +98,9 @@ object Message extends ComplexExtractor[Message] with LazyLogging {
    */
   override val name: String = "Message"
 
-  override def parse(jsValue: JsValue): FieldValue = jsValue.as[Message]
+  override def parse(jsValue: JsValue): FieldValue = jsValue.as[MessageNode]
 
   override val fieldName: String = name
 
-  override def form: Form[Message] = throw new NotImplementedError("No fprm used with Message!") //todo
+  override def form: Form[MessageNode] = throw new NotImplementedError("No fprm used with Message!") //todo
 }

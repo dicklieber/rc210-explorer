@@ -19,8 +19,8 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.KeyKind
-import net.wa9nnn.rc210.data.clock.Clock.form
-import net.wa9nnn.rc210.data.clock.{Clock, DSTPoint}
+import net.wa9nnn.rc210.data.clock.ClockNode.form
+import net.wa9nnn.rc210.data.clock.{ClockNode, DSTPoint}
 import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
@@ -38,7 +38,7 @@ class ClockController @Inject()(implicit dataStore: DataStore, ec: ExecutionCont
 
   def index: Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] => {
-      val clock: Clock = dataStore.editValue(Clock.fieldKey)
+      val clock: ClockNode = dataStore.editValue(ClockNode.fieldKey)
       Ok(views.html.clock(form.fill(clock)))
     }
   }
@@ -47,10 +47,10 @@ class ClockController @Inject()(implicit dataStore: DataStore, ec: ExecutionCont
     form
       .bindFromRequest()
       .fold(
-        (formWithErrors: Form[Clock]) => {
+        (formWithErrors: Form[ClockNode]) => {
           BadRequest(views.html.clock(formWithErrors))
         },
-        (clock: Clock) => {
+        (clock: ClockNode) => {
           val candidateAndNames = ProcessResult(clock)
 
           given RcSession = request.attrs(sessionKey)

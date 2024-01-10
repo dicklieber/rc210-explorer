@@ -28,7 +28,7 @@ import play.api.libs.json.{Format, JsValue, Json}
 
 import java.util.concurrent.atomic.AtomicInteger
 
-case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint: Int, macroKey: Key) extends ComplexFieldValue with TriggerNode{
+case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint: Int, macroKey: Key) extends ComplexFieldValue with TriggerNode( macroKey){
   key.check(KeyKind.MeterAlarm)
   meter.check(Meter)
   macroKey.check(KeyKind.RcMacro)
@@ -83,6 +83,8 @@ case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint:
   }
 
   override def toJsValue: JsValue = Json.toJson(this)
+
+  override def canRunMacro(macroKey: Key): Boolean = macroKey == this.macroKey
 }
 
 /*

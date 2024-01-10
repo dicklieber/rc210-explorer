@@ -22,7 +22,7 @@ trait FieldDefinition extends LazyLogging:
 
 
 /**
- * A [[SimpleField]] produces one RC-210 command as opposed to a complex rc2input like [[net.wa9nnn.rc210.data.schedules.Schedule]] that may produce multiple commands.
+ * A [[SimpleField]] produces one RC-210 command as opposed to a complex rc2input like [[net.wa9nnn.rc210.data.schedules.ScheduleNode]] that may produce multiple commands.
  * And generally will be an HTML form itself to edit.
  *
  * @param offset         where in [[Memory]] this comes from.

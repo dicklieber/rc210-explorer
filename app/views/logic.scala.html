@@ -1,7 +1,7 @@
 @import net.wa9nnn.rc210.ui.MyHelpers._
 @import net.wa9nnn.rc210.ui.Tabs
-@import net.wa9nnn.rc210.data.field.LogicAlarm
-@(logicAlarms: Seq[LogicAlarm])
+@import net.wa9nnn.rc210.data.field.LogicAlarmNode
+@(logicAlarms: Seq[LogicAlarmNode])
 
     @tabbedmain(Tabs.logicAlarmTab) {
         <table class="table table-bordered table-sm  w-auto rc210-table">
@@ -24,7 +24,7 @@
                     @logicAlarm.key.keyWithName
                     </td>
                     <td>
-                    @if(logicAlarm.enable){
+                    @if(logicAlarm.enabled){
                         <input type="checkbox" checked = "checked" onclick="return false;"></input>
                     }else{
                         <input type="checkbox" onclick="return false;"></input>

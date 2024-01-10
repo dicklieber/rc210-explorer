@@ -26,7 +26,7 @@ case class FieldString(value: String) extends SimpleFieldValue {
 
   /**
    * Render as HTML for this rc2input.
-   * For complex fields like [[net.wa9nnn.rc210.data.schedules.Schedule]] it's an entire HTML form.
+   * For complex fields like [[net.wa9nnn.rc210.data.schedules.ScheduleNode]] it's an entire HTML form.
    *
    * @return
    */

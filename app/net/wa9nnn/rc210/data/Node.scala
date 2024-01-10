@@ -26,14 +26,18 @@ trait Node {
 /**
  * A [[Node]] that can invoke a Macro
  */
-trait TriggerNode extends Node:
+trait TriggerNode( macroKeys: Key*) extends Node:
+  def enabled: Boolean = true
   def canRunMacro(macroKey: Key): Boolean
 
-  def nodeEnabled: Boolean = true
-
+  def dump: String = s"$enabled macros: ${
+    macroKeys
+      .map(_.toString)
+      .mkString(", ")
+  }"
 
 //case class TriggerDetail(key:Key, macroToRun: MacroKey, description:String)
 object TriggerNode {
-//  def header(count: Int): Header = Header(s"Trigger ($count)", "Key", "Description")
+  //  def header(count: Int): Header = Header(s"Trigger ($count)", "Key", "Description")
 }
 

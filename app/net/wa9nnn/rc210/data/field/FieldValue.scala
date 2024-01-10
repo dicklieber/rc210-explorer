@@ -49,7 +49,6 @@ sealed trait FieldValue extends LazyLogging {
   def toJsValue: JsValue
 }
 
-
 /**
  * Renders itself as a [[[Cell]]
  */
@@ -63,7 +62,7 @@ trait SimpleFieldValue extends FieldValue {
 
 }
 
-abstract class ComplexFieldValue extends FieldValue with LazyLogging {
+trait ComplexFieldValue extends FieldValue with LazyLogging {
   val key: Key
 
   lazy val fieldKey: FieldKey = FieldKey(key)

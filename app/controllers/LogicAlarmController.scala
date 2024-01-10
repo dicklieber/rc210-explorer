@@ -19,7 +19,7 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.DataStore
-import net.wa9nnn.rc210.data.field.{ComplexExtractor, LogicAlarm}
+import net.wa9nnn.rc210.data.field.{ComplexExtractor, LogicAlarmNode}
 import net.wa9nnn.rc210.NamedKey
 import net.wa9nnn.rc210.ui.ComplexFieldController
 import play.api.data.Form
@@ -29,15 +29,15 @@ import javax.inject.*
 
 @Singleton
 class LogicAlarmController @Inject()(components: MessagesControllerComponents, dataStore: DataStore)
-  extends ComplexFieldController[LogicAlarm](dataStore, components) with LazyLogging {
+  extends ComplexFieldController[LogicAlarmNode](dataStore, components) with LazyLogging {
 
-  override val complexExtractor: ComplexExtractor[LogicAlarm] = LogicAlarm
+  override val complexExtractor: ComplexExtractor[LogicAlarmNode] = LogicAlarmNode
 
-  override def indexResult(values: Seq[LogicAlarm]): Result = {
+  override def indexResult(values: Seq[LogicAlarmNode]): Result = {
     Ok(views.html.logic(values))
   }
 
-  override def editResult(filledForm: Form[LogicAlarm], namedKey: NamedKey)(using request: MessagesRequest[AnyContent]): Result =
+  override def editResult(filledForm: Form[LogicAlarmNode], namedKey: NamedKey)(using request: MessagesRequest[AnyContent]): Result =
     Ok(views.html.logicEditor(filledForm, namedKey))
 
   override def saveOkResult(): Result =

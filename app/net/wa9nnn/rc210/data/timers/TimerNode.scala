@@ -28,7 +28,7 @@ import play.api.libs.json.{JsValue, Json, OFormat}
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
-case class Timer(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValue() with TriggerNode{
+case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValue() with TriggerNode(macroKey) {
   val duration: FiniteDuration = Duration(seconds, "seconds")
   //  override def displayHtml: String = //s"$seconds => ${macroKey.keyWithName}"
 
@@ -63,12 +63,12 @@ case class Timer(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValu
 
   override def toJsValue: JsValue = Json.toJson(this)
 
-  override def canRunMacro(candidate: Key): Boolean = 
+  override def canRunMacro(candidate: Key): Boolean =
     macroKey eq candidate
 }
 
 //noinspection ZeroIndexToHead
-object Timer extends ComplexExtractor[Timer] with LazyLogging {
+object TimerNode extends ComplexExtractor[TimerNode] with LazyLogging {
   //  private val nTimers = keyKind.maxN
   //  Memory Layout
   //  seconds for each timer 6 2-byte ints
@@ -94,26 +94,26 @@ object Timer extends ComplexExtractor[Timer] with LazyLogging {
       index <- 0 until KeyKind.Timer.maxN
     } yield {
       val key: Key = Key(KeyKind.Timer, index + 1)
-      FieldEntry(this, fieldKey(key), Timer(key, seconds.next(), Key(KeyKind.RcMacro, macroInts.next() + 1)))
+      FieldEntry(this, fieldKey(key), TimerNode(key, seconds.next(), Key(KeyKind.RcMacro, macroInts.next() + 1)))
     })
     r
   }
 
-  override def parse(jsValue: JsValue): FieldValue = jsValue.as[Timer]
+  override def parse(jsValue: JsValue): FieldValue = jsValue.as[TimerNode]
 
   override val name: String = "Timer"
   override val fieldName: String = name
 
-  def unapply(u: Timer): Option[(Key, Int, Key)] = Some((u.key, u.seconds, u.macroKey))
+  def unapply(u: TimerNode): Option[(Key, Int, Key)] = Some((u.key, u.seconds, u.macroKey))
 
-  val form: Form[Timer] = Form[Timer](
+  val form: Form[TimerNode] = Form[TimerNode](
     mapping(
       "key" -> of[Key],
       "seconds" -> number,
       "macroKey" -> of[Key],
-    )(Timer.apply)(Timer.unapply)
+    )(TimerNode.apply)(TimerNode.unapply)
   )
 
-  implicit val fmtTimer: OFormat[Timer] = Json.format[Timer]
+  implicit val fmtTimer: OFormat[TimerNode] = Json.format[TimerNode]
   override val keyKind: KeyKind = KeyKind.Timer
 }

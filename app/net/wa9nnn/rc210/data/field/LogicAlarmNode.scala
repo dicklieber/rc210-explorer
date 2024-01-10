@@ -27,7 +27,7 @@ import play.api.data.Forms.*
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.routing.sird
 
-case class LogicAlarm(key: Key, enable: Boolean, lowMacro: Key, highMacro: Key) extends ComplexFieldValue with TriggerNode{
+case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, lowMacro: Key, highMacro: Key) extends TriggerNode(lowMacro, highMacro) with ComplexFieldValue {
   key.check(KeyKind.LogicAlarm)
   lowMacro.check(KeyKind.RcMacro)
   highMacro.check(KeyKind.RcMacro)
@@ -37,7 +37,7 @@ case class LogicAlarm(key: Key, enable: Boolean, lowMacro: Key, highMacro: Key) 
       <tr>
         <td>Enabled</td>
         <td>
-          {Display(enable)}
+          {Display(enabled)}
         </td>
       </tr>
       <tr>
@@ -63,20 +63,23 @@ case class LogicAlarm(key: Key, enable: Boolean, lowMacro: Key, highMacro: Key) 
   }
 
   override def toJsValue: JsValue = Json.toJson(this)
+
+  override def canRunMacro(macroKey: Key): Boolean =
+    enabled && highMacro == macroKey || lowMacro == key
 }
 
-object LogicAlarm extends ComplexExtractor[LogicAlarm] {
+object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode] {
   override val keyKind: KeyKind = KeyKind.LogicAlarm
 
-  def unapply(u: LogicAlarm): Option[(Key, Boolean, Key, Key)] = Some((u.key, u.enable, u.lowMacro, u.highMacro))
+  def unapply(u: LogicAlarmNode): Option[(Key, Boolean, Key, Key)] = Some((u.key, u.enabled, u.lowMacro, u.highMacro))
 
-  val form: Form[LogicAlarm] = Form(
+  val form: Form[LogicAlarmNode] = Form(
     mapping(
       "key" -> of[Key],
       "enable" -> boolean,
       "lowMacro" -> of[Key],
       "highMacro" -> of[Key]
-    )(LogicAlarm.apply)(LogicAlarm.unapply)
+    )(LogicAlarmNode.apply)(LogicAlarmNode.unapply)
   )
 
   /**
@@ -96,12 +99,12 @@ object LogicAlarm extends ComplexExtractor[LogicAlarm] {
       i <- 0 until KeyKind.LogicAlarm.maxN
     } yield {
       val logicAlarmKey = Key(KeyKind.LogicAlarm, i + 1)
-      val fieldValue: LogicAlarm = new LogicAlarm(logicAlarmKey, enables(i), lowMacros(i), highMacros(i))
+      val fieldValue: LogicAlarmNode = new LogicAlarmNode(logicAlarmKey, enables(i), lowMacros(i), highMacros(i))
       FieldEntry(this, fieldValue)
     }
   }
 
-  override def parse(jsValue: JsValue): LogicAlarm = jsValue.as[LogicAlarm]
+  override def parse(jsValue: JsValue): LogicAlarmNode = jsValue.as[LogicAlarmNode]
 
   /**
    * for various things e.g. parser name.
@@ -111,5 +114,5 @@ object LogicAlarm extends ComplexExtractor[LogicAlarm] {
 
   override def positions: Seq[FieldOffset] = Seq()
 
-  implicit val fmtLogicAlarm: Format[LogicAlarm] = Json.format[LogicAlarm]
+  implicit val fmtLogicAlarm: Format[LogicAlarmNode] = Json.format[LogicAlarmNode]
 }

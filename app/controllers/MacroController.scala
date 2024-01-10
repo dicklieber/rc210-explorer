@@ -21,8 +21,8 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.Dtmf.Dtmf
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
-import net.wa9nnn.rc210.data.macros.RcMacro
-import net.wa9nnn.rc210.data.macros.RcMacro.*
+import net.wa9nnn.rc210.data.macros.MacroNode
+import net.wa9nnn.rc210.data.macros.MacroNode.*
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.security.authorzation.AuthFilter
 import net.wa9nnn.rc210.ui.ProcessResult
@@ -44,14 +44,14 @@ class MacroController @Inject()(dataStore: DataStore)
     with LazyLogging {
 
   def index: Action[AnyContent] = Action { implicit request =>
-    val values: Seq[RcMacro] = dataStore.values(KeyKind.RcMacro)
+    val values: Seq[MacroNode] = dataStore.values(KeyKind.RcMacro)
     Ok(macroNodes(values))
   }
 
   def edit(key: Key): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
 
     val fieldKey = FieldKey( key)
-    val rcMacro: RcMacro = dataStore.editValue(fieldKey)
+    val rcMacro: MacroNode = dataStore.editValue(fieldKey)
     Ok(views.html.macroEditor(rcMacro))
   }
 
@@ -76,7 +76,7 @@ class MacroController @Inject()(dataStore: DataStore)
         }.toOption
       }
 
-    val rcMacro = RcMacro(key, functions, dtmf)
+    val rcMacro = MacroNode(key, functions, dtmf)
     val candidateAndNames = ProcessResult(rcMacro)
 
     given RcSession = request.attrs(AuthFilter.sessionKey)

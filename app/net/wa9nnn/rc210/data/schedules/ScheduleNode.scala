@@ -6,7 +6,7 @@ import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row}
 import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.field.schedule.{DayOfWeek, Week}
-import net.wa9nnn.rc210.data.schedules.Schedule.s02
+import net.wa9nnn.rc210.data.schedules.ScheduleNode.s02
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.Display
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
@@ -27,14 +27,14 @@ import java.time.LocalTime
  * @param macroKey               e.g. "macro42"
  * @param enabled                duh
  */
-case class Schedule(override val key: Key,
-                    dow: DayOfWeek = DayOfWeek.EveryDay,
-                    week: Week = Week.Every,
-                    monthOfYear: MonthOfYearSchedule = MonthOfYearSchedule.Every,
-                    hour: Int = 0,
-                    minute: Int = 0,
-                    macroKey: Key = Key(KeyKind.RcMacro, 1),
-                    enabled: Boolean = false) extends ComplexFieldValue() with TriggerNode  {
+case class ScheduleNode(override val key: Key,
+                        dow: DayOfWeek = DayOfWeek.EveryDay,
+                        week: Week = Week.Every,
+                        monthOfYear: MonthOfYearSchedule = MonthOfYearSchedule.Every,
+                        hour: Int = 0,
+                        minute: Int = 0,
+                        macroKey: Key = Key(KeyKind.RcMacro, 1),
+                        override val enabled: Boolean = false) extends ComplexFieldValue with TriggerNode( macroKey)  {
 
   val description: String = {
     //    val week = s" Week: $weekInMonth"
@@ -116,12 +116,12 @@ case class Schedule(override val key: Key,
   override def canRunMacro(candidate: Key): Boolean = macroKey == candidate
 }
 
-object Schedule extends LazyLogging with ComplexExtractor[Schedule] {
+object ScheduleNode extends LazyLogging with ComplexExtractor[ScheduleNode] {
   override val keyKind: KeyKind = KeyKind.Schedule
-  def unapply(schedule: Schedule): Option[(Key, DayOfWeek, Week, MonthOfYearSchedule, Int, Int, Key, Boolean)] =
+  def unapply(schedule: ScheduleNode): Option[(Key, DayOfWeek, Week, MonthOfYearSchedule, Int, Int, Key, Boolean)] =
     Some(schedule.key, schedule.dow, schedule.week, schedule.monthOfYear, schedule.hour, schedule.minute, schedule.macroKey, schedule.enabled)
 
-  override val form: Form[Schedule] = Form[Schedule](
+  override val form: Form[ScheduleNode] = Form[ScheduleNode](
     mapping(
       "key" -> of[Key],
       "dow" -> DayOfWeek.formField,
@@ -131,7 +131,7 @@ object Schedule extends LazyLogging with ComplexExtractor[Schedule] {
       "minute" -> number(0, 59),
       "macroKey" -> of[Key],
       "enabled" -> boolean
-    )(Schedule.apply)(Schedule.unapply)
+    )(ScheduleNode.apply)(ScheduleNode.unapply)
   )
 
   /**
@@ -139,9 +139,9 @@ object Schedule extends LazyLogging with ComplexExtractor[Schedule] {
    */
   def s02(n: Int): String = f"$n%02d"
 
-  def empty(setPoint: Int): Schedule = {
+  def empty(setPoint: Int): ScheduleNode = {
     val scheduleKey: Key = Key(KeyKind.Schedule, setPoint)
-    new Schedule(
+    new ScheduleNode(
       key = scheduleKey
     )
   }
@@ -168,13 +168,13 @@ object Schedule extends LazyLogging with ComplexExtractor[Schedule] {
   }
 
 
-  def apply(setPoint: Int): Schedule = new Schedule(Key(KeyKind.Schedule, setPoint))
+  def apply(setPoint: Int): ScheduleNode = new ScheduleNode(Key(KeyKind.Schedule, setPoint))
 
 
-  implicit val fmtSchedule: Format[Schedule] = Json.format[Schedule]
+  implicit val fmtSchedule: Format[ScheduleNode] = Json.format[ScheduleNode]
 
 
-  override def parse(jsValue: JsValue): FieldValue = jsValue.as[Schedule]
+  override def parse(jsValue: JsValue): FieldValue = jsValue.as[ScheduleNode]
 
   override val name: String = "Schedule"
   override val fieldName: String = name

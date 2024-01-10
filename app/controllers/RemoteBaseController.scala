@@ -19,7 +19,7 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.{CandidateAndNames, DataStore, UpdateCandidate}
-import net.wa9nnn.rc210.data.remotebase.RemoteBase
+import net.wa9nnn.rc210.data.remotebase.RemoteBaseNode
 import play.api.data.Forms.*
 import play.api.data.{Field, Form, Mapping}
 import play.api.mvc.*
@@ -35,20 +35,20 @@ class RemoteBaseController @Inject()(dataStore: DataStore, components: MessagesC
 
   def index: Action[AnyContent] = Action {
     implicit request =>
-      val remoteBase: RemoteBase = dataStore.editValue(RemoteBase.fieldKey)
-      val value: Form[RemoteBase] = RemoteBase.form.fill(remoteBase)
+      val remoteBase: RemoteBaseNode = dataStore.editValue(RemoteBaseNode.fieldKey)
+      val value: Form[RemoteBaseNode] = RemoteBaseNode.form.fill(remoteBase)
       Ok(views.html.remoteBase(value))
   }
 
   def save(): Action[AnyContent] = Action { implicit request =>
-    RemoteBase.form
+    RemoteBaseNode.form
       .bindFromRequest()
       .fold(
-        (formWithErrors: Form[RemoteBase]) => {
+        (formWithErrors: Form[RemoteBaseNode]) => {
           BadRequest(views.html.remoteBase(formWithErrors))
         },
-        (remoteBase: RemoteBase) => {
-          val updateCandidate = UpdateCandidate(RemoteBase.fieldKey, Right(remoteBase))
+        (remoteBase: RemoteBaseNode) => {
+          val updateCandidate = UpdateCandidate(RemoteBaseNode.fieldKey, Right(remoteBase))
           val candidateAndNames = CandidateAndNames(updateCandidate, None)
 
           given RcSession = request.attrs(sessionKey)

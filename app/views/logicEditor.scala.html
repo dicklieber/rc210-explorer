@@ -5,8 +5,8 @@
 @import net.wa9nnn.rc210.ui.MacroSelect
 @import views.html.helper.checkbox
 @import net.wa9nnn.rc210.NamedKey
-@import net.wa9nnn.rc210.data.field.LogicAlarm
-@(logicAlarmForm: Form[LogicAlarm], namedKey: NamedKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider) extends 
+@import net.wa9nnn.rc210.data.field.LogicAlarmNode
+@(logicAlarmForm: Form[LogicAlarmNode], namedKey: NamedKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider) extends 
     @tabbedmain(Tabs.logicAlarmTab) {
         <div class="container">
         @form(routes.LogicAlarmController.save()) {

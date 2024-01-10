@@ -4,7 +4,7 @@
 @import views.html.input.selectOptions
 @import net.wa9nnn.rc210.ui.Tabs
 @import net.wa9nnn.rc210.data.remotebase._
-@(f: Form[RemoteBase])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+@(f: Form[RemoteBaseNode])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
 @tabbedmain(Tabs.remoteBase) {
     @form(routes.RemoteBaseController.save()) {

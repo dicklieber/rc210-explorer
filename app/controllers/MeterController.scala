@@ -35,26 +35,26 @@ import views.html
 import javax.inject.*
 
 class MeterController @Inject()(dataStore: DataStore, components: MessagesControllerComponents)
-  extends ComplexFieldController[Meter](dataStore, components) with LazyLogging {
+  extends ComplexFieldController[MeterNode](dataStore, components) with LazyLogging {
 
-  override val complexExtractor: ComplexExtractor[Meter] = Meter
+  override val complexExtractor: ComplexExtractor[MeterNode] = MeterNode
 
   override def index: Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] =>
 
       val vRefEntry: FieldInt = dataStore.editValue(FieldKey("vRef", Key(KeyKind.Common, 1)))
       val vRef: Int = vRefEntry.value
-      val meters: Seq[Meter] = dataStore.indexValues(KeyKind.Meter)
+      val meters: Seq[MeterNode] = dataStore.indexValues(KeyKind.Meter)
       val meterAlarms: Seq[MeterAlarm] = dataStore.indexValues(KeyKind.MeterAlarm)
       val meterStuff = MeterStuff(vRef, meters, meterAlarms)
       Ok(html.meters(meterStuff))
   }
 
-  override def indexResult(values: Seq[Meter]): Result = {
+  override def indexResult(values: Seq[MeterNode]): Result = {
     throw new NotImplementedError("cauae we override index")
   }
 
-  override def editResult(filledForm: Form[Meter], namedKey: NamedKey)(using request: MessagesRequest[AnyContent]): Result =
+  override def editResult(filledForm: Form[MeterNode], namedKey: NamedKey)(using request: MessagesRequest[AnyContent]): Result =
     Ok(views.html.meterEditor(filledForm, namedKey))
 
   override def saveOkResult(): Result =
@@ -62,4 +62,4 @@ class MeterController @Inject()(dataStore: DataStore, components: MessagesContro
 
 }
 
-case class MeterStuff(vref: Int, meters: Seq[Meter], alarms: Seq[MeterAlarm])
+case class MeterStuff(vref: Int, meters: Seq[MeterNode], alarms: Seq[MeterAlarm])

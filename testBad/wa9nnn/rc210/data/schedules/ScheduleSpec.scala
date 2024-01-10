@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.schedules
 
 class ScheduleSpec extends WithMemory {
-  val schedule: Schedule = Schedule(1)
+  val schedule: ScheduleNode = ScheduleNode(1)
 
   "Schedule" should {
     "toCommands" in {

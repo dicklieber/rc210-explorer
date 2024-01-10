@@ -56,7 +56,7 @@ class FunctionsProvider extends LazyLogging {
  */
 case class SimpleFunctionNode(key: Key, description: String) extends FunctionNode
 
-case class TriggerFunctionNode(key: Key, description: String, destination: Key) extends FunctionNode with TriggerNode:
+case class TriggerFunctionNode(key: Key, description: String, destination: Key) extends FunctionNode :
   assert(destination.keyKind == KeyKind.RcMacro || destination.keyKind == KeyKind.Message, s"destination must be Key or MessageKey! But got: $key")
 
 trait FunctionNode extends Ordered[FunctionNode]:

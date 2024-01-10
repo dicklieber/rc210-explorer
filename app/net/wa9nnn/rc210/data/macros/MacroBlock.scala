@@ -20,7 +20,7 @@ package net.wa9nnn.rc210.data.macros
 import com.wa9nnn.wa9nnnutil.tableui._
 
 /**
- * Build function rows for a [[RcMacro]]
+ * Build function rows for a [[MacroNode]]
  * Prepends a column with MacroNode metadata key and name. etc.
  */
 object MacroBlock {

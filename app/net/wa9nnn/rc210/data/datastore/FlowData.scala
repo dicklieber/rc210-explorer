@@ -17,14 +17,31 @@
 
 package net.wa9nnn.rc210.data.datastore
 
+import com.wa9nnn.wa9nnnutil.tableui.*
 import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.TriggerNode
-import net.wa9nnn.rc210.data.macros.RcMacro
+import net.wa9nnn.rc210.data.macros.MacroNode
+
+import scala.language.postfixOps
 
 /**
- * 
- * @param rcMacro that this flow centers around.
+ *
+ * @param rcMacro  that this flow centers around.
  * @param triggers what this macro does.
  * @param searched what we looked for. UI should highlight this node. 
  */
-case class FlowData(rcMacro: RcMacro, triggers: Seq[TriggerNode], searched:Key)
+case class FlowData(rcMacro: MacroNode, triggers: Seq[TriggerNode], searched: Key):
+  def table(): Table =
+    KvTable.apply("Flow Data",
+      "Search" -> searched.keyWithName,
+      "Macro" -> rcMacro.key.keyWithName,
+      TableSection("Triggers", triggers.map { tn =>
+        Row("trigger", tn.key.keyWithName)
+      }),
+      TableSection("Functions", rcMacro.functions.map { function =>
+        Row(function.keyWithName, function.keyWithName)
+      })
+    )
+
+
+

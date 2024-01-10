@@ -36,12 +36,30 @@ class DataStoreTest extends WithTestConfiguration {
   "FlowData" should {
     "dump triggers" in {
       val triggers: Seq[TriggerNode] = dataStore.triggerNodes
-      triggers.foreach(println(_))
+      triggers.foreach(tn => println(s"$tn ${tn.dump}"))
+
+      println("======== Enabled =======")
+      triggers
+        .filter(_.enabled)
+        .foreach(tn => println(s"$tn ${tn.dump}"))
 
     }
   }
   "happy path" in {
-    val maybeFlowData: Option[FlowData] = dataStore.flow(Key.macroKeys.head)
-    throw new NotImplementedError() //todo
+    val key1 = Key.macroKeys(2)
+    val maybeFlowData: Option[FlowData] = dataStore.flow(key1)
+
+    maybeFlowData.foreach{fd =>
+      fd.rcMacro.key mustBe key1
+      fd.searched mustBe key1
+      
+      fd.triggers must have length(2)
+      fd.triggers.head.toString mustBe "ScheduleNode(Schedule1,EveryDay,Every,Every,23,0,RcMacro3,true)"
+
+      val table = fd.table()
+      table
+      
+      
+    }
   }
 }

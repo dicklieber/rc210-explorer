@@ -36,11 +36,11 @@ case class DownloadState(requestTable: Table, start: Instant = Instant.now(), op
   def complete(operations: Seq[DownloadOp]): DownloadState = copy(operations = operations, finish = Instant.now)
 
   def summaryTable: Table =
-    requestTable.appendSection("Result", Seq(
+    requestTable.appendSection(TableSection("Result", Seq(
       Row("Finished", finish),
       Row("Duration", DurationHelpers.between(start, finish)),
       Row("Items", operations.length)
-    ))
+    )))
 
   def detailTable: Table =
     MultiColumn(operations, 10, "Detail")

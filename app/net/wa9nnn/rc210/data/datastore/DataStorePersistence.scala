@@ -29,13 +29,13 @@ import java.io.InputStream
 import java.nio.file.{Files, Path}
 import javax.inject.Inject
 import scala.collection.immutable.Seq
-import scala.util.{Try, Using}
+import scala.util.{Failure, Success, Try, Using}
 
 /**
  * Parses JSON saved from [[DataStore]]
  */
 
-class DataStorePersistence @Inject()( implicit config: Config) extends LazyLogging {
+class DataStorePersistence @Inject()(implicit config: Config) extends LazyLogging {
   def save(dataTransferJson: DataTransferJson): Unit = {
     Files.writeString(path,
       toJson(dataTransferJson))
@@ -50,11 +50,16 @@ class DataStorePersistence @Inject()( implicit config: Config) extends LazyLoggi
   private val path: Path = Configs.path("vizRc210.dataStoreFile")
 
   def load(): Try[DataTransferJson] = {
-    Using(Files.newInputStream(path)) { inputStream =>
+    val r = Using(Files.newInputStream(path)) { inputStream =>
       Json.parse(inputStream).as[DataTransferJson]
     }
-  }
+    r match
+      case Failure(exception) =>
+        logger.error(s"Failed to load: ${exception.getMessage}")
+      case _ =>
 
+    r
+  }
 }
 
 /**

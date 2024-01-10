@@ -47,7 +47,7 @@
     <logger name="net.wa9nnmacroNn.rc210.data.datastore.DataStore" level="INFO"/>
     <logger name="net.wa9nnn.rc210.data.field.FieldDtmf" level="INFO"/>
     <logger name="controllers.CommandsController" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.data.macros.RcMacro" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.data.macros.MacroNode" level="INFO"/>
     <logger name="net.wa9nnn.rc210.security.authentication.SessionStore" level="INFO"/>
     <logger name="net.wa9nnn.rc210.security.authorzation.AuthFilter" level="INFO"/>
     <logger name="net.wa9nnn.rc210.serial.DataCollector" level="TRACE"/>

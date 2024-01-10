@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.schedules
 
 class ScheduleBuilderSpec extends WithMemory {
-  val schedules: Seq[Schedule] = ScheduleBuilder(memory)
+  val schedules: Seq[ScheduleNode] = ScheduleBuilder(memory)
 
   "ScheduleBuilder" should {
 
@@ -27,7 +27,7 @@ class ScheduleBuilderSpec extends WithMemory {
       schedules.last.key.rc210Value should equal(40)
     }
     "Fields correct" in {
-      val schedule3: Schedule = schedules(2)
+      val schedule3: ScheduleNode = schedules(2)
       schedule3.key.rc210Value should equal(3)
       schedule3.dow should equal(DayOfWeek.EveryDay)
       schedule3.hour should equal(7)

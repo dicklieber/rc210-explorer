@@ -20,7 +20,7 @@ package net.wa9nnn.rc210.data.datastore
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
-import net.wa9nnn.rc210.data.macros.RcMacro
+import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.security.Who.given
 import net.wa9nnn.rc210.security.authentication.RcSession
@@ -87,12 +87,13 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
     all.filter(_.candidate.nonEmpty).sorted
 
   def triggerNodes: Seq[TriggerNode] =
-    all.flatMap { fieldEntry =>
-      fieldEntry match
+    keyFieldMap.values.foldLeft(Seq.empty[TriggerNode]) { (accum, fieldEntry: FieldEntry) =>
+      fieldEntry.value[FieldValue] match
         case tn: TriggerNode =>
-          Option.when(tn.nodeEnabled)(tn)
+          accum ++ Seq(tn)
         case _ =>
-          Seq.empty
+          accum ++ Seq.empty
+
     }
 
   def update(candidateAndNames: CandidateAndNames)(using rcSession: RcSession): Unit =
@@ -129,22 +130,26 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
 
   def loadFromJson(): Unit = {
     // update values from datastore.json
-    persistence.load().foreach { dto => {
-      dto.values.foreach { fieldEntryJson =>
-        val fieldKey = fieldEntryJson.fieldKey
-        keyFieldMap.get(fieldKey).foreach { fieldEntry =>
-          val newFieldValue: FieldValue = fieldEntry.fieldDefinition.parse(fieldEntryJson.fieldValue)
-          val newCandidate: Option[FieldValue] = fieldEntryJson.candidate.map(fieldEntry.fieldDefinition.parse)
+    try
+      persistence.load().foreach { dto => {
+        dto.values.foreach { fieldEntryJson =>
+          val fieldKey = fieldEntryJson.fieldKey
+          keyFieldMap.get(fieldKey).foreach { fieldEntry =>
+            val newFieldValue: FieldValue = fieldEntry.fieldDefinition.parse(fieldEntryJson.fieldValue)
+            val newCandidate: Option[FieldValue] = fieldEntryJson.candidate.map(fieldEntry.fieldDefinition.parse)
 
-          val updated = fieldEntry.copy(fieldValue = newFieldValue, candidate = newCandidate)
-          keyFieldMap.put(fieldKey, updated)
+            val updated = fieldEntry.copy(fieldValue = newFieldValue, candidate = newCandidate)
+            keyFieldMap.put(fieldKey, updated)
+          }
         }
+        // update namedKeys from datastore.json
+        keyNameMap.clear()
+        keyNameMap.addAll(dto.namedKeys.map(namedKey => namedKey.key -> namedKey.name))
       }
-      // update namedKeys from datastore.json
-      keyNameMap.clear()
-      keyNameMap.addAll(dto.namedKeys.map(namedKey => namedKey.key -> namedKey.name))
-    }
-    }
+      }
+    catch
+      case e:Exception =>
+        logger.error("Loading", e)
   }
 
   private def loadFromMemory(): Unit =
@@ -163,19 +168,14 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
 
   override def nameForKey(key: Key): String = keyNameMap.getOrElse(key, "")
 
-//  def triggerNodes: Seq[FieldEntry] =
-//    keyFieldMap.filter(_.isInstanceOf[TriggerNode])
-//      .values
-//      .toIndexedSeq
-
   def flow(search: Key): Option[FlowData] =
     def buildFlowData(rcMacroEntry: FieldEntry): FlowData =
       assert(rcMacroEntry.fieldKey.key.keyKind == KeyKind.RcMacro, s"Must be an RcMacro entry!  But got: $rcMacroEntry")
       // find triggers
-      val rcMacro: RcMacro = rcMacroEntry.value
+      val rcMacro: MacroNode = rcMacroEntry.value
       val key = rcMacro.key
-      val triggers: Seq[TriggerNode] = all.filter((pred: FieldEntry) => pred
-        .canTriggerMacro(key)) map (_.value)
+
+      val triggers: Seq[TriggerNode] = triggerNodes.filter(triggerNode => triggerNode.enabled && triggerNode.canRunMacro(key))
 
       FlowData(rcMacro, triggers, search)
 

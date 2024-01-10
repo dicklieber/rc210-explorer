@@ -1,5 +1,5 @@
 @import net.wa9nnn.rc210.ui.MyHelpers.*
-@import net.wa9nnn.rc210.data.schedules.Schedule
+@import net.wa9nnn.rc210.data.schedules.ScheduleNode
 @import net.wa9nnn.rc210.ui.Tabs
 @import net.wa9nnn.rc210.NamedKey
 @import views.html.helper.*
@@ -8,7 +8,7 @@
 @import net.wa9nnn.rc210.data.field.schedule.Week
 @import net.wa9nnn.rc210.data.field.MonthOfYearSchedule
 @import net.wa9nnn.rc210.ui.MacroSelect
-@(f: Form[Schedule], namedKey: NamedKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+@(f: Form[ScheduleNode], namedKey: NamedKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 @tabbedmain(Tabs.clockTab) {
     @form(action = routes.ScheduleController.save()) {
         @inputText(f("key"), Symbol("type") -> "hidden")

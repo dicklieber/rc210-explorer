@@ -20,7 +20,7 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field
-import net.wa9nnn.rc210.data.field.{FieldEntry, Message}
+import net.wa9nnn.rc210.data.field.{FieldEntry, MessageNode}
 import net.wa9nnn.rc210.NamedKey
 import net.wa9nnn.rc210.ui.ProcessResult
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
@@ -40,13 +40,13 @@ class MessageController @Inject()(dataStore: DataStore, cc: MessagesControllerCo
   extends MessagesAbstractController(cc) with LazyLogging {
 
   def index: Action[AnyContent] = Action { implicit request =>
-    val messages: Seq[Message] = dataStore.indexValues(KeyKind.Message)
+    val messages: Seq[MessageNode] = dataStore.indexValues(KeyKind.Message)
     Ok(views.html.messages(messages))
   }
 
   def edit(key: Key): Action[AnyContent] = Action { implicit request =>
     val fieldKey = FieldKey("Message", key)
-    val message: Message = dataStore.editValue(fieldKey)
+    val message: MessageNode = dataStore.editValue(fieldKey)
     Ok(views.html.messageEditor(message))
   }
 
@@ -65,7 +65,7 @@ class MessageController @Inject()(dataStore: DataStore, cc: MessagesControllerCo
         }.toOption
       }
 
-    val message = field.Message(messageKey, words)
+    val message = field.MessageNode(messageKey, words)
     val candidateAndNames = ProcessResult(message)
 
     given RcSession = request.attrs(sessionKey)

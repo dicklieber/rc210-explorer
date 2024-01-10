@@ -2,9 +2,9 @@
 @import views.html.helper._
 @import net.wa9nnn.rc210.ui.Tabs
 @import net.wa9nnn.rc210.ui.MacroSelect
-@import net.wa9nnn.rc210.data.timers.Timer
+@import net.wa9nnn.rc210.data.timers.TimerNode
 @import net.wa9nnn.rc210.NamedKey
-@(f: Form[Timer], namedKey: NamedKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+@(f: Form[TimerNode], namedKey: NamedKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
 @tabbedmain(Tabs.timersTab) {
     @form(routes.TimerController.save()) {

@@ -21,7 +21,7 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.data.schedules.Schedule
+import net.wa9nnn.rc210.data.schedules.ScheduleNode
 import net.wa9nnn.rc210.security.Who.request2Session
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
@@ -41,26 +41,26 @@ class ScheduleController @Inject()(dataStore: DataStore, components: MessagesCon
   extends MessagesAbstractController(components) with LazyLogging {
 
   def index: Action[AnyContent] = Action { implicit request =>
-    val schedules: Seq[Schedule] = dataStore.indexValues(KeyKind.Schedule)
+    val schedules: Seq[ScheduleNode] = dataStore.indexValues(KeyKind.Schedule)
     Ok(views.html.schedules(schedules))
   }
 
   def edit(key: Key): Action[AnyContent] = Action { implicit request =>
-    val fieldKey = Schedule.fieldKey(key)
-    val schedule: Schedule = dataStore.editValue(fieldKey)
-    Ok(views.html.scheduleEdit(Schedule.form.fill(schedule), key.namedKey))
+    val fieldKey = ScheduleNode.fieldKey(key)
+    val schedule: ScheduleNode = dataStore.editValue(fieldKey)
+    Ok(views.html.scheduleEdit(ScheduleNode.form.fill(schedule), key.namedKey))
   }
 
   def save(): Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] =>
-      Schedule.form
+      ScheduleNode.form
         .bindFromRequest()
         .fold(
-          (formWithErrors: Form[Schedule]) => {
+          (formWithErrors: Form[ScheduleNode]) => {
             val namedKey = Key(formWithErrors.data("key")).namedKey
             BadRequest(views.html.scheduleEdit(formWithErrors, namedKey))
           },
-          (schedule: Schedule) => {
+          (schedule: ScheduleNode) => {
             val candidateAndNames = ProcessResult(schedule)
 
             given RcSession = request.attrs(sessionKey)

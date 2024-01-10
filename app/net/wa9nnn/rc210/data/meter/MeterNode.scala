@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * @param low           calibrate for high.
  * @param high          calibrate for low.
  */
-case class Meter(key: Key, meterFaceName: MeterFaceName, low: VoltToReading, high: VoltToReading) extends ComplexFieldValue {
+case class MeterNode(key: Key, meterFaceName: MeterFaceName, low: VoltToReading, high: VoltToReading) extends ComplexFieldValue {
 
   override def displayHtml: String =
     <table class="tagValuetable">
@@ -82,18 +82,18 @@ case class Meter(key: Key, meterFaceName: MeterFaceName, low: VoltToReading, hig
   override def toJsValue: JsValue = Json.toJson(this)
 }
 
-object Meter extends ComplexExtractor[Meter] {
+object MeterNode extends ComplexExtractor[MeterNode] {
   val keyKind = KeyKind.Meter
 
-  def unapply(u: Meter): Option[(Key, MeterFaceName, VoltToReading, VoltToReading)] = Some((u.key, u.meterFaceName, u.low, u.high))
+  def unapply(u: MeterNode): Option[(Key, MeterFaceName, VoltToReading, VoltToReading)] = Some((u.key, u.meterFaceName, u.low, u.high))
 
-  override val form: Form[Meter] = Form(
+  override val form: Form[MeterNode] = Form(
     mapping(
       "key" -> of[Key],
       "faceName" -> MeterFaceName.formField,
       "low" -> VoltToReading.form,
       "high" -> VoltToReading.form,
-    )(Meter.apply)(Meter.unapply))
+    )(MeterNode.apply)(MeterNode.unapply))
 
   def extract(memory: Memory): Seq[FieldEntry] = {
     val mai = new AtomicInteger()
@@ -111,7 +111,7 @@ object Meter extends ComplexExtractor[Meter] {
       val meterKey: Key = Key(KeyKind.Meter, mai.incrementAndGet())
       val low = VoltToReading(lowX(i), lowY(i))
       val high = VoltToReading(highX(i), highY(i))
-      val meter: Meter = Meter(meterKey, faceNames(i), low, high)
+      val meter: MeterNode = MeterNode(meterKey, faceNames(i), low, high)
       new FieldEntry(this, meter.fieldKey, meter)
     }
     meters
@@ -122,7 +122,7 @@ object Meter extends ComplexExtractor[Meter] {
    */
   override val name: String = "Meter"
 
-  override def parse(jsValue: JsValue): FieldValue = jsValue.as[Meter]
+  override def parse(jsValue: JsValue): FieldValue = jsValue.as[MeterNode]
 
   override val fieldName: String = name
 
@@ -135,7 +135,7 @@ object Meter extends ComplexExtractor[Meter] {
   )
 
   implicit val fmtVoltToReading: Format[VoltToReading] = Json.format[VoltToReading]
-  implicit val fmtMeter: Format[Meter] = Json.format[Meter]
+  implicit val fmtMeter: Format[MeterNode] = Json.format[MeterNode]
 
 }
 

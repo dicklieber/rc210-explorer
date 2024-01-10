@@ -26,7 +26,7 @@ import play.api.data.{Form, Mapping}
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.*
 
-case class RemoteBase(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[RBMemory] = Seq.empty) extends ComplexFieldValue {
+case class RemoteBaseNode(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[RBMemory] = Seq.empty) extends ComplexFieldValue {
   override val key: Key = Key(KeyKind.RemoteBase)
 
   //  override def display: String = fieldName
@@ -45,17 +45,17 @@ case class RemoteBase(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[
   override def displayHtml: String = toString
 }
 
-object RemoteBase extends ComplexExtractor[RemoteBase] {
+object RemoteBaseNode extends ComplexExtractor[RemoteBaseNode] {
   override val keyKind: KeyKind = KeyKind.RemoteBase
-  def unapply(u: RemoteBase): Option[(Radio, Yaesu, String, Seq[RBMemory])] = Some((u.radio, u.yaesu, u.prefix, u.memories))
+  def unapply(u: RemoteBaseNode): Option[(Radio, Yaesu, String, Seq[RBMemory])] = Some((u.radio, u.yaesu, u.prefix, u.memories))
 
-  override val form: Form[RemoteBase] = Form(
+  override val form: Form[RemoteBaseNode] = Form(
     mapping(
       "radio" -> Radio.formField,
       "yaesu" -> Yaesu.formField,
       "prefix" -> text,
       "memories" -> seq(RBMemory.form),
-    )(RemoteBase.apply)(RemoteBase.unapply))
+    )(RemoteBaseNode.apply)(RemoteBaseNode.unapply))
 
   /**
    *
@@ -95,11 +95,11 @@ object RemoteBase extends ComplexExtractor[RemoteBase] {
       )
     }
 
-    val remoteBase = RemoteBase(radio, yaesu, prefix, memories)
+    val remoteBase = RemoteBaseNode(radio, yaesu, prefix, memories)
     Seq(FieldEntry(this, remoteBase.fieldKey, remoteBase))
   }
 
-  override def parse(jsValue: JsValue): FieldValue = jsValue.as[RemoteBase]
+  override def parse(jsValue: JsValue): FieldValue = jsValue.as[RemoteBaseNode]
 
 
   override def positions: Seq[FieldOffset] = Seq(
@@ -119,7 +119,7 @@ object RemoteBase extends ComplexExtractor[RemoteBase] {
   val fieldKey: FieldKey = super.fieldKey(key)
 
   implicit val fmtRBMemory: Format[RBMemory] = Json.format[RBMemory]
-  implicit val fmtRemoteBase: Format[RemoteBase] = Json.format[RemoteBase]
+  implicit val fmtRemoteBase: Format[RemoteBaseNode] = Json.format[RemoteBaseNode]
 
 }
 

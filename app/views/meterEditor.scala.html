@@ -1,11 +1,11 @@
-@import net.wa9nnn.rc210.data.meter.{Meter, MeterFaceName}
+@import net.wa9nnn.rc210.data.meter.{MeterNode, MeterFaceName}
 @import net.wa9nnn.rc210.ui.MyHelpers.*
 @import net.wa9nnn.rc210.ui.Tabs
 @import views.html.helper.*
 @import views.html.input.selectOptions
 @import net.wa9nnn.rc210.NamedKey
 
-@(f: Form[Meter], namedKey: NamedKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+@(f: Form[MeterNode], namedKey: NamedKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
     @tabbedmain(Tabs.metersTab) {
         @form(action = routes.MeterController.save()) {
             @inputText(f("key"), Symbol("type") -> "hidden")

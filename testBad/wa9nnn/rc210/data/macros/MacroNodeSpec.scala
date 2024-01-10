@@ -41,7 +41,7 @@ class MacroNodeSpec extends WithMemory {
     "parseChunk" in {
       val chunk: Seq[Int] = Seq(165, 85, 27, 60, 196, 255, 255, 255, 234, 0, 0, 0, 0, 0, 0, 0)
       val iterator = chunk.iterator
-      val Keys: Seq[Key] = RcMacro.parseChunk(iterator)
+      val Keys: Seq[Key] = MacroNode.parseChunk(iterator)
       Keys should have length (6)
       Keys.map(_.rc210Value).mkString(",") should equal("""165,85,27,60,196,999""")
     }
@@ -49,24 +49,24 @@ class MacroNodeSpec extends WithMemory {
     "parseFunction" in {
       val chunk: Seq[Int] = Seq(165, 85, 27, 60, 196, 255, 255, 255, 234, 0, 0, 0, 0, 0, 0, 0)
       val iterator = chunk.iterator
-      RcMacro.parseFunction(iterator).get.rc210Value should equal(165)
-      RcMacro.parseFunction(iterator).get.rc210Value should equal(85)
-      RcMacro.parseFunction(iterator).get.rc210Value should equal(27)
-      RcMacro.parseFunction(iterator).get.rc210Value should equal(60)
-      RcMacro.parseFunction(iterator).get.rc210Value should equal(196)
+      MacroNode.parseFunction(iterator).get.rc210Value should equal(165)
+      MacroNode.parseFunction(iterator).get.rc210Value should equal(85)
+      MacroNode.parseFunction(iterator).get.rc210Value should equal(27)
+      MacroNode.parseFunction(iterator).get.rc210Value should equal(60)
+      MacroNode.parseFunction(iterator).get.rc210Value should equal(196)
       val i = 255 + 255 + 255 + 234
       i should equal(999)
-      RcMacro.parseFunction(iterator).get.rc210Value should equal(i)
-      val last: Option[Key] = RcMacro.parseFunction(iterator)
+      MacroNode.parseFunction(iterator).get.rc210Value should equal(i)
+      val last: Option[Key] = MacroNode.parseFunction(iterator)
       assert(last.isEmpty)
     }
     "parseFunction empty" in {
-      val name = RcMacro.name
+      val name = MacroNode.name
       val chunk: Seq[Int] = Seq.fill(16) {
         0
       }
       val iterator = chunk.iterator
-      val last = RcMacro.parseFunction(iterator)
+      val last = MacroNode.parseFunction(iterator)
       assert(last.isEmpty)
     }
 //    "parseFunction no terminator" in {
@@ -91,7 +91,7 @@ class MacroNodeSpec extends WithMemory {
   }
 
   "extract" in {
-    val macroNodes = RcMacro.extract(memory)
+    val macroNodes = MacroNode.extract(memory)
 
     macroNodes should have length 90
     val fieldEntry = macroNodes(8)

@@ -27,12 +27,12 @@ import play.api.libs.json.{Format, JsValue, Json}
 import play.api.data.*
 import play.api.data.Forms.*
 
-case class Clock(key: Key,
-                 enableDST: Boolean = true,
-                 hourDST: Int = 2,
-                 startDST: DSTPoint = DSTPoint(March, First),
-                 endDST: DSTPoint = DSTPoint(November, Second),
-                 say24Hours: Boolean = false,
+case class ClockNode(key: Key,
+                     enableDST: Boolean = true,
+                     hourDST: Int = 2,
+                     startDST: DSTPoint = DSTPoint(March, First),
+                     endDST: DSTPoint = DSTPoint(November, Second),
+                     say24Hours: Boolean = false,
                 ) extends ComplexFieldValue {
 
   override def displayHtml: String = "todo"
@@ -78,9 +78,9 @@ case class Clock(key: Key,
 }
 
 
-object Clock extends ComplexExtractor[Clock] {
+object ClockNode extends ComplexExtractor[ClockNode] {
   override val keyKind: KeyKind = KeyKind.Clock
-  override val form: Form[Clock] = Form(
+  override val form: Form[ClockNode] = Form(
     mapping(
       "key" -> of[Key],
       "enableDST" -> boolean,
@@ -88,9 +88,9 @@ object Clock extends ComplexExtractor[Clock] {
       "startDST" -> DSTPoint.dstPointForm,
       "endDST" -> DSTPoint.dstPointForm,
       "say24Hours" -> boolean
-    )(Clock.apply)(Clock.unapply))
+    )(ClockNode.apply)(ClockNode.unapply))
 
-  def unapply(u: Clock): Option[(Key, Boolean, Int, DSTPoint, DSTPoint, Boolean)] = Some((u.key, u.enableDST, u.hourDST, u.startDST, u.endDST, u.say24Hours))
+  def unapply(u: ClockNode): Option[(Key, Boolean, Int, DSTPoint, DSTPoint, Boolean)] = Some((u.key, u.enableDST, u.hourDST, u.startDST, u.endDST, u.say24Hours))
 
 
   /**
@@ -106,7 +106,7 @@ object Clock extends ComplexExtractor[Clock] {
     //    SimpleField(1186, "Clock 24 Hours", commonKey, "n*5103b", FieldBoolean),
     val say24Hours: Boolean = memory.bool(1186)
 
-    val clock = new Clock(key, enableDST, startHour, startDST, endDST, say24Hours)
+    val clock = new ClockNode(key, enableDST, startHour, startDST, endDST, say24Hours)
     Seq(
       FieldEntry(this, fieldKey(key), clock)
     )
@@ -117,7 +117,7 @@ object Clock extends ComplexExtractor[Clock] {
    */
   override val name: String = "Clock"
 
-  override def parse(jsValue: JsValue): FieldValue = jsValue.as[Clock]
+  override def parse(jsValue: JsValue): FieldValue = jsValue.as[ClockNode]
 
   override val fieldName: String = name
   val key: Key = Key(KeyKind.Clock) // there's only one
@@ -131,7 +131,7 @@ object Clock extends ComplexExtractor[Clock] {
     FieldOffset(4050, this, "hour"),
   )
 
-  implicit val fmtClock: Format[Clock] = Json.format[Clock]
+  implicit val fmtClock: Format[ClockNode] = Json.format[ClockNode]
 
 }
 
