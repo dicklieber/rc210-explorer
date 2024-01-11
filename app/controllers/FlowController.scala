@@ -17,6 +17,7 @@
 
 package controllers
 
+import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Header, Table}
 import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.datastore.DataStore
@@ -24,15 +25,20 @@ import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import play.api.mvc.*
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
-
-class FlowController @Inject()(dataStore: DataStore, functionsProvider: FunctionsProvider) extends MessagesInjectedController {
+@Singleton
+class FlowController @Inject()(dataStore: DataStore, functionsProvider: FunctionsProvider)(implicit components: MessagesControllerComponents)
+  extends MessagesAbstractController(components) with LazyLogging {
 
   def flow(key: Key): Action[AnyContent] = Action {
-    Ok("todo")
+
+    dataStore.flow(key).map{fd =>
+      val table = fd.table()
+      Ok(views.html.flow(table))
+    }.getOrElse(NotFound(key.keyWithName))
     /*
         implicit val timeout: Timeout = 3 seconds
     

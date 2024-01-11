@@ -17,22 +17,26 @@
 
 package net.wa9nnn.rc210.data.field
 
+import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.ui.FormField
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.libs.json.{Format, JsResult, JsSuccess, JsValue, Json}
 
-case class FieldMacroKey(macroKey: Key) extends SimpleFieldValue {
+case class FieldMacroKey(key: Key) extends SimpleFieldValue with TriggerNode{
   def update(paramValue: String): SimpleFieldValue =
     val key = Key(paramValue)
     FieldMacroKey(key)
 
-  def displayHtml: String = macroKey.toString
+  def displayHtml: String = key.toString
 
   def toCommands(fieldEntry: FieldEntryBase): Seq[String] = Seq.empty //todo
 
-  def toJsValue: JsValue = Json.toJson(macroKey)
+  def toJsValue: JsValue = Json.toJson(key)
 
-  override def toHtmlField(fieldKey: FieldKey): String = FormField(fieldKey, macroKey)
+  override def toHtmlField(fieldKey: FieldKey): String = FormField(fieldKey, key)
+
+  override def canRunMacro(macroKey: Key): Boolean = 
+    this.key == key
 }
 
 object MacroKeyExtractor extends SimpleExtractor:
@@ -50,7 +54,7 @@ object MacroKeyExtractor extends SimpleExtractor:
       JsSuccess(FieldMacroKey(key))
     }
 
-    override def writes(o: FieldMacroKey): JsValue = Json.toJson(o.macroKey)
+    override def writes(o: FieldMacroKey): JsValue = Json.toJson(o.key)
   }
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[FieldMacroKey]

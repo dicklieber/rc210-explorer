@@ -50,7 +50,7 @@ class PortsController @Inject()(implicit dataStore: DataStore, cc: MessagesContr
         .map { (name, portEntries) =>
           Row(name, portEntries.sortBy(_.fieldKey.key.rc210Value))
         }
-      Ok(views.html.ports(rows))
+      Ok(views.html.ports(  rows))
     }
   }
 

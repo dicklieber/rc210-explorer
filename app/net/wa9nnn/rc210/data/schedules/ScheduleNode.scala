@@ -34,14 +34,14 @@ case class ScheduleNode(override val key: Key,
                         hour: Int = 0,
                         minute: Int = 0,
                         macroKey: Key = Key(KeyKind.RcMacro, 1),
-                        override val enabled: Boolean = false) extends ComplexFieldValue with TriggerNode( macroKey)  {
+                        enabled: Boolean = false) extends ComplexFieldValue with TriggerNode(macroKey):
 
   val description: String = {
     //    val week = s" Week: $weekInMonth"
     //    s"$monthOfYear$week on $dayOfWeek at $time"
     "" //todo"
   }
-  
+
   /**
    * Render this value as an RD-210 command string.
    */
@@ -110,14 +110,14 @@ case class ScheduleNode(override val key: Key,
     </table>
       .toString
 
-
   override def toJsValue: JsValue = Json.toJson(this)
 
-  override def canRunMacro(candidate: Key): Boolean = macroKey == candidate
-}
+  override def canRunMacro(candidate: Key): Boolean =
+    macroKey == candidate && enabled
 
 object ScheduleNode extends LazyLogging with ComplexExtractor[ScheduleNode] {
   override val keyKind: KeyKind = KeyKind.Schedule
+
   def unapply(schedule: ScheduleNode): Option[(Key, DayOfWeek, Week, MonthOfYearSchedule, Int, Int, Key, Boolean)] =
     Some(schedule.key, schedule.dow, schedule.week, schedule.monthOfYear, schedule.hour, schedule.minute, schedule.macroKey, schedule.enabled)
 
@@ -167,12 +167,9 @@ object ScheduleNode extends LazyLogging with ComplexExtractor[ScheduleNode] {
     }
   }
 
-
   def apply(setPoint: Int): ScheduleNode = new ScheduleNode(Key(KeyKind.Schedule, setPoint))
 
-
   implicit val fmtSchedule: Format[ScheduleNode] = Json.format[ScheduleNode]
-
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[ScheduleNode]
 

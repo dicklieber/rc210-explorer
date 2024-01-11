@@ -35,13 +35,8 @@ class DataStoreTest extends WithTestConfiguration {
 
   "FlowData" should {
     "dump triggers" in {
-      val triggers: Seq[TriggerNode] = dataStore.triggerNodes
-      triggers.foreach(tn => println(s"$tn ${tn.dump}"))
-
-      println("======== Enabled =======")
-      triggers
-        .filter(_.enabled)
-        .foreach(tn => println(s"$tn ${tn.dump}"))
+      val triggers: Seq[FieldEntry] = dataStore.triggerNodes(Key.macroKeys(2))
+      triggers.foreach(fe => println(fe))
 
     }
   }

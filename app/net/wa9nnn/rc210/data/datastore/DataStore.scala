@@ -20,6 +20,7 @@ package net.wa9nnn.rc210.data.datastore
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
+import net.wa9nnn.rc210.data.functions.TriggerFunctionNode
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.security.Who.given
@@ -86,15 +87,15 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
   def candidates: Seq[FieldEntry] =
     all.filter(_.candidate.nonEmpty).sorted
 
-  def triggerNodes: Seq[TriggerNode] =
-    keyFieldMap.values.foldLeft(Seq.empty[TriggerNode]) { (accum, fieldEntry: FieldEntry) =>
-      fieldEntry.value[FieldValue] match
-        case tn: TriggerNode =>
-          accum ++ Seq(tn)
-        case _ =>
-          accum ++ Seq.empty
-
-    }
+  def triggerNodes(macroKey: Key): Seq[FieldEntry] =
+    (for {
+      fieldEntry <- keyFieldMap.values
+      fieldValue: FieldValue = fieldEntry.value[FieldValue]
+      triggerNode: TriggerNode <- Option.when(fieldValue.isInstanceOf[TriggerNode])(fieldValue.asInstanceOf[TriggerNode])
+      if triggerNode.canRunMacro(macroKey)
+    } yield {
+      fieldEntry
+    }).toIndexedSeq
 
   def update(candidateAndNames: CandidateAndNames)(using rcSession: RcSession): Unit =
     candidateAndNames.candidates.foreach { uc =>
@@ -148,7 +149,7 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
       }
       }
     catch
-      case e:Exception =>
+      case e: Exception =>
         logger.error("Loading", e)
   }
 
@@ -175,7 +176,7 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
       val rcMacro: MacroNode = rcMacroEntry.value
       val key = rcMacro.key
 
-      val triggers: Seq[TriggerNode] = triggerNodes.filter(triggerNode => triggerNode.enabled && triggerNode.canRunMacro(key))
+      val triggers: Seq[FieldEntry] = triggerNodes(key)
 
       FlowData(rcMacro, triggers, search)
 

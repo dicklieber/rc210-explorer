@@ -22,6 +22,7 @@
                     <tr>
                         <td>
                             @editButton(routes.MacroController.edit(macroNode.key))
+                            @editButton(routes.FlowController.flow(macroNode.key))
                         </td>
                         <td title="Click edit button to change macro details..">
                         @macroNode.key.keyWithName
