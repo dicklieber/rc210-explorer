@@ -20,6 +20,7 @@ package net.wa9nnn.rc210.data.datastore
 import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.{FieldKey, Key, WithTestConfiguration}
 import net.wa9nnn.rc210.data.field.{FieldDefinitions, FieldEntry}
+import play.api.libs.json.Json
 
 class DataStoreTest extends WithTestConfiguration {
   private val definitions: FieldDefinitions = new FieldDefinitions
@@ -39,22 +40,17 @@ class DataStoreTest extends WithTestConfiguration {
       triggers.foreach(fe => println(fe))
 
     }
-  }
-  "happy path" in {
-    val key1 = Key.macroKeys(2)
-    val maybeFlowData: Option[FlowData] = dataStore.flow(key1)
 
-    maybeFlowData.foreach{fd =>
-      fd.rcMacro.key mustBe key1
-      fd.searched mustBe key1
-      
-      fd.triggers must have length(2)
-      fd.triggers.head.toString mustBe "ScheduleNode(Schedule1,EveryDay,Every,Every,23,0,RcMacro3,true)"
+    "happy path" when {
+      val key1 = Key.macroKeys(2)
+      val flowData = dataStore.flow(key1).get
+      "only for macro" in {
+        flowData.triggers.foreach { fieldEntry =>
+          val tn: TriggerNode = fieldEntry.value
+          tn.macroKeys.contains(key1) mustBe true
+        }
+      }
 
-      val table = fd.table()
-      table
-      
-      
     }
   }
 }

@@ -22,6 +22,7 @@ import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.data.macros.MacroNode
+import play.api.libs.json.{Format, Json}
 
 import scala.language.postfixOps
 
@@ -44,6 +45,9 @@ case class FlowData(rcMacro: MacroNode, triggers: Seq[FieldEntry], searched: Key
         Row(function.keyWithName, function.keyWithName)
       })
     )
+
+
+
 
 
 

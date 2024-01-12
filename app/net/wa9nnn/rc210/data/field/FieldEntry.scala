@@ -17,10 +17,11 @@
 
 package net.wa9nnn.rc210.data.field
 
-import  com.wa9nnn.wa9nnnutil.tableui.*
+import com.wa9nnn.wa9nnnutil.tableui.*
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.data.datastore.FieldEntryJson
+import play.api.libs.json.{Format, Json}
 
 /**
  *
@@ -101,7 +102,6 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
 
 
 object FieldEntry {
-
   def apply(complexExtractor: ComplexExtractor[?], complexFieldValue: ComplexFieldValue): FieldEntry = {
 
     new FieldEntry(complexExtractor, complexFieldValue.fieldKey, complexFieldValue)

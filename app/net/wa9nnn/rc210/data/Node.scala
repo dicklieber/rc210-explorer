@@ -26,7 +26,7 @@ trait Node {
 /**
  * A [[Node]] that can invoke a Macro
  */
-trait TriggerNode( macroKeys: Key*) extends Node:
+trait TriggerNode(val macroKeys: Key*) extends Node:
   def canRunMacro(macroKey: Key): Boolean
 
 

@@ -22,7 +22,7 @@ import net.wa9nnn.rc210.ui.FormField
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.libs.json.{Format, JsResult, JsSuccess, JsValue, Json}
 
-case class FieldMacroKey(key: Key) extends SimpleFieldValue with TriggerNode{
+case class FieldMacroKey(key: Key) extends SimpleFieldValue with TriggerNode(key){
   def update(paramValue: String): SimpleFieldValue =
     val key = Key(paramValue)
     FieldMacroKey(key)
@@ -36,7 +36,7 @@ case class FieldMacroKey(key: Key) extends SimpleFieldValue with TriggerNode{
   override def toHtmlField(fieldKey: FieldKey): String = FormField(fieldKey, key)
 
   override def canRunMacro(macroKey: Key): Boolean = 
-    this.key == key
+    this.key == macroKey
 }
 
 object MacroKeyExtractor extends SimpleExtractor:

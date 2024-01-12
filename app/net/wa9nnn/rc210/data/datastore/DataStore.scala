@@ -88,6 +88,7 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
     all.filter(_.candidate.nonEmpty).sorted
 
   def triggerNodes(macroKey: Key): Seq[FieldEntry] =
+    assert(macroKey.keyKind == KeyKind.RcMacro, "Must have a MacroKey!")
     (for {
       fieldEntry <- keyFieldMap.values
       fieldValue: FieldValue = fieldEntry.value[FieldValue]
