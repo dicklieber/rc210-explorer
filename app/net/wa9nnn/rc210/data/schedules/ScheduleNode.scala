@@ -1,8 +1,7 @@
 package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.wa9nnnutil.JsonFormatUtils.*
-import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row}
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header}
 import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.field.schedule.{DayOfWeek, Week}
@@ -13,9 +12,6 @@ import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.libs.json.{Format, JsValue, Json}
-import play.api.mvc.*
-
-import java.time.LocalTime
 
 /**
  *

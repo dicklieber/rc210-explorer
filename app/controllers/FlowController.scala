@@ -36,7 +36,7 @@ class FlowController @Inject()(dataStore: DataStore, functionsProvider: Function
   def flow(key: Key): Action[AnyContent] = Action {
 
     dataStore.flow(key).map{fd =>
-      val table = fd.table()
+      val table = fd.table(functionsProvider)
       Ok(views.html.flow(table))
     }.getOrElse(NotFound(key.keyWithName))
     /*
