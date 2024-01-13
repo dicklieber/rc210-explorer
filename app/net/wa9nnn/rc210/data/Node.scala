@@ -17,11 +17,14 @@
 
 package net.wa9nnn.rc210.data
 
-import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.{FieldKey, Key}
+import net.wa9nnn.rc210.ui.flow.D3Node
 
-trait Node {
+trait Node:
   val key: Key
-}
+
+  def d3Node(nodeKey: String): D3Node =
+    D3Node(nodeKey, toString, "todo")
 
 /**
  * A [[Node]] that can invoke a Macro

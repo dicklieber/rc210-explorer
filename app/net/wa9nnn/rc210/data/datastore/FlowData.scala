@@ -18,11 +18,12 @@
 package net.wa9nnn.rc210.data.datastore
 
 import com.wa9nnn.wa9nnnutil.tableui.*
-import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.data.TriggerNode
-import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.{FieldKey, Key}
+import net.wa9nnn.rc210.data.{Node, TriggerNode}
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.MacroNode
+import net.wa9nnn.rc210.ui.flow.{D3Data, D3Link, D3Node}
 
 import scala.language.postfixOps
 
@@ -32,22 +33,44 @@ import scala.language.postfixOps
  * @param triggers what this macro does.
  * @param searched what we looked for. UI should highlight this node. 
  */
-case class FlowData(rcMacro: MacroNode, triggers: Seq[FieldEntry], searched: Key):
-  def table(functionsProvider: FunctionsProvider): Table =
+case class FlowData(macroFieldEntry: FieldEntry, triggers: Seq[FieldEntry], searched: Key):
+  private val macroNode: MacroNode = macroFieldEntry.value
+  private val macroFieldKey: FieldKey = macroFieldEntry.fieldKey
+
+  def table: Table = {
     KvTable.apply("Flow Data",
       "Search" -> searched.keyWithName,
-      "Macro" -> rcMacro.key.keyWithName,
+      "Macro" -> macroFieldKey.key.keyWithName,
       TableSection("Triggers", triggers.map { fieldEntry =>
         val value: TriggerNode = fieldEntry.value.asInstanceOf[TriggerNode]
         Row.ofAny(fieldEntry.fieldKey, value)
       }),
-      TableSection("Functions", rcMacro.functions.map { functionKey =>
-        val description = functionsProvider(functionKey).map{ fn =>
-          fn.description
-        }.getOrElse(functionKey.toString)
+      TableSection("Functions", macroNode.functions.map { functionKey =>
+        val description = FunctionsProvider(functionKey).description
         Row.ofAny(functionKey.keyWithName, description)
       })
     )
+  }
+
+  def d3Data(): D3Data =
+    val fNodes: Seq[D3Node] = macroNode.functions.map(functionKey => FunctionsProvider(functionKey).d3Node(functionKey.toString))
+    val tNodes: Seq[D3Node] = triggers.map { fe =>
+      val n: TriggerNode = fe.value
+      n.d3Node(fe.fieldKey.toString)
+    }
+    val nodes: Seq[D3Node] = (fNodes ++ tNodes).+:(macroNode.d3Node(macroFieldKey.toString))
+
+    val linkBuilder = Seq.newBuilder[D3Link]
+    triggers.foreach { tn =>
+      linkBuilder += D3Link(macroFieldKey.toString, tn.fieldKey.toString)
+    }
+
+    D3Data(
+      nodes = nodes
+      ,
+      Seq.empty
+    )
+
 
 
 

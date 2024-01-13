@@ -38,7 +38,6 @@ GET         /rc210/select/:portDescriptor             controllers.IOController.s
 #GET         /rc210/progress                            controllers.IOController.progress()
 GET         /rc210/result                             controllers.IOController.downloadResult
 GET         /rc210                                    controllers.IOController.listSerialPorts
-GET         /flow:macroKey                            controllers.FlowController.flow(macroKey:Key)
 POST        /ports/save                               controllers.PortsController.save()
 GET         /ports                                    controllers.PortsController.index
 GET         /candidates                               controllers.CommandsController.index
@@ -66,6 +65,8 @@ POST        /loginDo                                  controllers.LoginControlle
 GET         /logout                                   controllers.LoginController.logout()
 GET         /loginError/:error                        controllers.LoginController.error(error:String)
 GET         /                                         controllers.LoginController.loginLanding
+GET         /flow/:macroKey                           controllers.FlowController.flow(macroKey:Key)
+GET         /d3Data/:macroKey                         controllers.FlowController.d3Data(macroKey:Key)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                             controllers.Assets.versioned(path="/public", file: Asset)

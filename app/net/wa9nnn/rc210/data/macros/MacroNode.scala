@@ -1,11 +1,11 @@
 package net.wa9nnn.rc210.data.macros
 
 import net.wa9nnn.rc210.data.Dtmf.Dtmf
-import net.wa9nnn.rc210.data.TriggerNode
+import net.wa9nnn.rc210.data.{Node, TriggerNode}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.{Key, KeyKind}
-import play.api.data.Forms._
+import play.api.data.Forms.*
 import play.api.data.{Form, FormError}
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.*
@@ -21,7 +21,7 @@ import scala.annotation.tailrec
  * @param functions that this macro invokes.
  * @param dtmf      that can invoke this macro.
  */
-case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dtmf] = None) extends ComplexFieldValue {
+case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dtmf] = None) extends ComplexFieldValue with Node {
 
   def enabled: Boolean = functions.nonEmpty
 

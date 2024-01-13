@@ -23,39 +23,40 @@ import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.*
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
+import net.wa9nnn.rc210.ui.flow.D3Data
+
 @Singleton
-class FlowController @Inject()(dataStore: DataStore, functionsProvider: FunctionsProvider)(implicit components: MessagesControllerComponents)
+class FlowController @Inject()(dataStore: DataStore)(using components: MessagesControllerComponents)
   extends MessagesAbstractController(components) with LazyLogging {
 
   def flow(key: Key): Action[AnyContent] = Action {
 
-    dataStore.flow(key).map{fd =>
-      val table = fd.table(functionsProvider)
-      Ok(views.html.flow(table))
+    dataStore.flow(key).map { fd =>
+      val table = fd.table
+      Ok(views.html.bubbleSvg())
     }.getOrElse(NotFound(key.keyWithName))
-    /*
-        implicit val timeout: Timeout = 3 seconds
-    
-        implicit request: Request[AnyContent] =>
-    
-         actor.ask (ref => Triggers(ref))
-           .map{
-    
-           }
-    
-          val rows: Seq[Row] = dataStore.apply(KeyKind.macroKey)
-            .map(fieldEntry =>
-              MacroBlock(fieldEntry.value)
-            )
-          val header = Header(s"Macro Flow (${rows.length})", "Triggers", "Macro", "Functions")
-          val table = Table(header, rows)
-          Ok(views.html.flow(table))
-    */
+  }
+
+  //  def flow(key: Key): Action[AnyContent] = Action {
+  //
+  //    dataStore.flow(key).map { fd =>
+  //      val table = fd.table(functionsProvider)
+  //      Ok(views.html.bubbleSvg())
+  //    }.getOrElse(NotFound(key.keyWithName))
+  //  }
+  def d3Data(key: Key): Action[AnyContent] = Action {
+    dataStore.flow(key).map { fd =>
+
+      val d3Data: D3Data = fd.d3Data()
+      val jsValue: JsValue = Json.toJson(d3Data)
+      Ok(jsValue)
+    }.getOrElse(NotFound(key.keyWithName))
   }
 }

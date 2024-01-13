@@ -1,7 +1,7 @@
 package net.wa9nnn.rc210.data.functions
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.TriggerNode
+import net.wa9nnn.rc210.data.{Node, TriggerNode}
 import net.wa9nnn.rc210.{Key, KeyKind}
 import play.api.libs.json.*
 
@@ -10,7 +10,7 @@ import javax.inject.Singleton
 import scala.util.{Failure, Success, Using}
 
 @Singleton
-class FunctionsProvider extends LazyLogging {
+class FunctionsProvider extends LazyLogging:
 
   val functions: Seq[FunctionNode] = Using(getClass.getResourceAsStream("/FunctionList.json")) { (is: InputStream) =>
     Json.parse(is).as[List[FunctionNode]]
@@ -22,6 +22,7 @@ class FunctionsProvider extends LazyLogging {
     case Success(value) =>
       value
   }
+  FunctionsProvider._fp = this
 
   val byDescription: Seq[FunctionNode] = functions.sorted
   private val map = functions.map(f => f.key -> f).toMap
@@ -37,16 +38,11 @@ class FunctionsProvider extends LazyLogging {
 
   def size: Int = functions.length
 
+object FunctionsProvider:
+  private var _fp:FunctionsProvider = _
+  def apply(key:Key):FunctionNode = _fp(key).get
+    
 
-  //  lazy val invokedMacros: Seq[Key] = for {
-  //    function <- functions
-  //    destKey <- function.destination
-  //    if destKey.isInstanceOf[Key]
-  //  } yield {
-  //    destKey.asInstanceOf[Key]
-  //  }
-
-}
 
 /**
  *
@@ -59,7 +55,7 @@ case class SimpleFunctionNode(key: Key, description: String) extends FunctionNod
 case class TriggerFunctionNode(key: Key, description: String, destination: Key) extends FunctionNode :
   assert(destination.keyKind == KeyKind.RcMacro || destination.keyKind == KeyKind.Message, s"destination must be Key or MessageKey! But got: $key")
 
-trait FunctionNode extends Ordered[FunctionNode]:
+trait FunctionNode extends Ordered[FunctionNode] with Node:
   val key: Key
   val description: String
 
