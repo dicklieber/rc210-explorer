@@ -1,11 +1,15 @@
 @import net.wa9nnn.rc210.data.datastore.FlowData
 @import net.wa9nnn.rc210.ui.Tabs.noTab
+@import com.wa9nnn.wa9nnnutil.tableui.html.renderTable
+@import net.wa9nnn.rc210.data.TriggerNode
 @(flowData: FlowData)
-@tabbedmain(noTab){
+@tabbedmain(noTab) {
     <div class="triggers">
-        @for(triggerNode <- flowData.triggers){
-            
-        }
-        
+        <fieldset>
+            <legend>Triggersx</legend>
+    @for(triggerNode <- flowData.triggers) {
+        @renderTable(triggerNode.table)
+    }
+        </fieldset>
     </div>
 }

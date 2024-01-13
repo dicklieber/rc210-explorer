@@ -18,10 +18,9 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.*
-import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
-import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.data.datastore.FieldEntryJson
-import play.api.libs.json.{Format, Json}
+import net.wa9nnn.rc210.data.{Node, TriggerNode}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 
 /**
  *
@@ -35,6 +34,10 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
   def value[F <: FieldValue]: F = {
     candidate.getOrElse(fieldValue).asInstanceOf[F]
   }
+
+  def table: Table =
+    val value1: Node = value
+    value1.table(fieldKey)
 
   /**
    *
@@ -60,7 +63,6 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
     }
   }
 
-
   def acceptCandidate(): FieldEntry = copy(
     candidate = None,
     fieldValue = candidate.getOrElse(throw new IllegalStateException(s"No candidate to accept!")))
@@ -70,7 +72,7 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
       .getOrElse(throw new IllegalStateException(s"No candidate for: $fieldKey!"))
       .toCommands(this)
   }
-  
+
   /**
    *
    * @param macroKey of interest.
@@ -85,7 +87,6 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
         false
     }
 
-
   override def toString: String = {
     s"${fieldKey.fieldName}: ${fieldValue.displayHtml}"
   }
@@ -99,7 +100,6 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
   override val template: String = fieldDefinition.template
 
 }
-
 
 object FieldEntry {
   def apply(complexExtractor: ComplexExtractor[?], complexFieldValue: ComplexFieldValue): FieldEntry = {

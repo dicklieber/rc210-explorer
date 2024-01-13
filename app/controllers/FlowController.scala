@@ -46,8 +46,7 @@ class FlowController @Inject()(dataStore: DataStore)(using components: MessagesC
   def flowChart(key: Key): Action[AnyContent] = Action {
 
     dataStore.flow(key).map { fd =>
-      val table = fd.table
-      Ok(views.html.bubbleSvg())
+      Ok(views.html.flowChart(fd))
     }.getOrElse(NotFound(key.keyWithName))
   }
 
