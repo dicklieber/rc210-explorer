@@ -179,7 +179,7 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
 
       val triggers: Seq[FieldEntry] = triggerNodes(key)
 
-      FlowData(rcMacro, triggers, search)
+      FlowData(rcMacroEntry, triggers, search)
 
     val entries: Seq[FieldEntry] = apply(search)
     assert(entries.length == 1, s"Should only be one entry for a compplex key, but got $entries")

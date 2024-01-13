@@ -44,7 +44,8 @@ sealed trait FieldValue extends LazyLogging {
    *
    * @param fieldKey
    */
-  def toHtmlField(fieldKey: FieldKey): String
+  def toHtmlField(fieldKey: FieldKey): String =
+    throw new NotImplementedError() //todo
 
   def toJsValue: JsValue
 }
@@ -67,8 +68,6 @@ trait ComplexFieldValue extends FieldValue with LazyLogging {
 
   lazy val fieldKey: FieldKey = FieldKey(key)
 
-  override def toHtmlField(fieldKey: FieldKey): String =
-    throw new IllegalStateException("ComplexFieldValue does not produce HTML")
 }
 
 

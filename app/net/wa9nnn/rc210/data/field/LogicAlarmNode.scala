@@ -27,7 +27,8 @@ import play.api.data.Forms.*
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.routing.sird
 
-case class LogicAlarmNode(override val key: Key,  val enabled: Boolean, lowMacro: Key, highMacro: Key) extends TriggerNode(lowMacro, highMacro) with ComplexFieldValue {
+case class LogicAlarmNode(override val key: Key,  val enabled: Boolean, lowMacro: Key, highMacro: Key) extends TriggerNode(lowMacro, highMacro) 
+  with ComplexFieldValue {
   key.check(KeyKind.LogicAlarm)
   lowMacro.check(KeyKind.RcMacro)
   highMacro.check(KeyKind.RcMacro)

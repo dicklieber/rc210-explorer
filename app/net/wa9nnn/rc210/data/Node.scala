@@ -17,14 +17,18 @@
 
 package net.wa9nnn.rc210.data
 
+import com.wa9nnn.wa9nnnutil.tableui.Table
 import net.wa9nnn.rc210.{FieldKey, Key}
 import net.wa9nnn.rc210.ui.flow.D3Node
 
 trait Node:
   val key: Key
+  
+  def table(fieldKey: FieldKey): Table =
+    throw new NotImplementedError() //todo
 
   def d3Node(nodeKey: String): D3Node =
-    D3Node(nodeKey, toString, "todo")
+    D3Node(nodeKey, toString, "todo", "todo")
 
 /**
  * A [[Node]] that can invoke a Macro

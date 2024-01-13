@@ -66,6 +66,7 @@ GET         /logout                                   controllers.LoginControlle
 GET         /loginError/:error                        controllers.LoginController.error(error:String)
 GET         /                                         controllers.LoginController.loginLanding
 GET         /flow/:macroKey                           controllers.FlowController.flow(macroKey:Key)
+GET         /flowchart/:macroKey                      controllers.FlowController.flowChart(macroKey:Key)
 GET         /d3Data/:macroKey                         controllers.FlowController.d3Data(macroKey:Key)
 
 # Map static resources from the /public folder to the /assets URL path

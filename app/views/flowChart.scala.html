@@ -1,0 +1,11 @@
+@import net.wa9nnn.rc210.data.datastore.FlowData
+@import net.wa9nnn.rc210.ui.Tabs.noTab
+@(flowData: FlowData)
+@tabbedmain(noTab){
+    <div class="triggers">
+        @for(triggerNode <- flowData.triggers){
+            
+        }
+        
+    </div>
+}
