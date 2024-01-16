@@ -4,12 +4,24 @@
 @import net.wa9nnn.rc210.data.TriggerNode
 @(flowData: FlowData)
 @tabbedmain(noTab) {
-    <div class="triggers">
-        <fieldset>
-            <legend>Triggersx</legend>
-    @for(triggerNode <- flowData.triggers) {
-        @renderTable(triggerNode.table)
-    }
-        </fieldset>
+    <div class="w3-cell-row">
+        <div class="w3-container w3-cell">
+            <fieldset>
+                <legend>Triggers</legend>
+                @renderTable(flowData.triggersTable)
+            </fieldset>
+        </div>
+        <div class="w3-container w3-cell">
+            <fieldset>
+                <legend>Macro</legend>
+                @renderTable(flowData.macroSection)
+            </fieldset>
+        </div>
+        <div class="w3-container w3-cell">
+            <fieldset>
+                <legend>Functions</legend>
+                @renderTable(flowData.functionsTable)
+            </fieldset>
+        </div>
     </div>
 }

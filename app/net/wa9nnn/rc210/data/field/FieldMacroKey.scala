@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.data.field
 
+import com.wa9nnn.wa9nnnutil.tableui.{KvTable, Table, TableSection}
 import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.ui.FormField
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
@@ -26,6 +27,16 @@ case class FieldMacroKey(key: Key) extends SimpleFieldValue with TriggerNode(key
   def update(paramValue: String): SimpleFieldValue =
     val key = Key(paramValue)
     FieldMacroKey(key)
+
+  override def table(fieldKey: FieldKey): Table =
+    KvTable(fieldKey.toString,
+      "Macro" -> key.keyWithName
+    )
+  override def tableSection(fieldKey: FieldKey): TableSection =
+    TableSection(fieldKey.toString, 
+      "Macro" -> key.keyWithName
+    )
+
 
   def displayHtml: String = key.toString
 
@@ -37,6 +48,7 @@ case class FieldMacroKey(key: Key) extends SimpleFieldValue with TriggerNode(key
 
   override def canRunMacro(macroKey: Key): Boolean = 
     this.key == macroKey
+
 }
 
 object MacroKeyExtractor extends SimpleExtractor:

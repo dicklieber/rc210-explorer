@@ -37,18 +37,41 @@ case class FlowData(macroFieldEntry: FieldEntry, triggers: Seq[FieldEntry], sear
   private val macroNode: MacroNode = macroFieldEntry.value
   private val macroFieldKey: FieldKey = macroFieldEntry.fieldKey
 
+  def triggersTable:Table =
+    var table: Table = KvTable("Triggers")
+    triggers.foreach{fieldEntry =>
+      val tn: TriggerNode = fieldEntry.value
+      val tableSection = tn.tableSection(fieldEntry.fieldKey)
+      table = table.appendSection(tableSection)
+    }
+    table
+  
+  def functionsTable: Table =
+    val f: Seq[(String, String)] = macroNode.functions.map { functionKey =>
+      functionKey.rc210Value.toString -> FunctionsProvider(functionKey).description
+    }
+
+    KvTable(f: _*)
+
+  def macroSection: Table =
+    KvTable(s"Macro ${macroFieldEntry.fieldKey.key.keyWithName}",
+      "DTMF" -> macroFieldEntry.value[MacroNode].dtmf
+    )
+
   def table: Table = {
+    val triggerRows: Seq[Row] = triggers.map { fieldEntry =>
+      val value: TriggerNode = fieldEntry.value.asInstanceOf[TriggerNode]
+      Row.ofAny(fieldEntry.fieldKey, value)
+    }
+    val functionRows = macroNode.functions.map { functionKey =>
+      val description = FunctionsProvider(functionKey).description
+      Row.ofAny(functionKey.keyWithName, description)
+    }
     KvTable.apply("Flow Data",
       "Search" -> searched.keyWithName,
       "Macro" -> macroFieldKey.key.keyWithName,
-      TableSection("Triggers", triggers.map { fieldEntry =>
-        val value: TriggerNode = fieldEntry.value.asInstanceOf[TriggerNode]
-        Row.ofAny(fieldEntry.fieldKey, value)
-      }),
-      TableSection("Functions", macroNode.functions.map { functionKey =>
-        val description = FunctionsProvider(functionKey).description
-        Row.ofAny(functionKey.keyWithName, description)
-      })
+      TableSection("Triggers", triggerRows: _*),
+      TableSection("Functions", functionRows: _*)
     )
   }
 

@@ -17,15 +17,16 @@
 
 package net.wa9nnn.rc210.data
 
-import com.wa9nnn.wa9nnnutil.tableui.Table
+import com.wa9nnn.wa9nnnutil.tableui.{Table, TableSection}
 import net.wa9nnn.rc210.{FieldKey, Key}
 import net.wa9nnn.rc210.ui.flow.D3Node
 
 trait Node:
   val key: Key
   
+//  def table(fieldKey: FieldKey, includeMacroKey:Boolean = false): Table =
   def table(fieldKey: FieldKey): Table =
-    throw new NotImplementedError() //todo
+    Table.empty(s"todo: $key")
 
   def d3Node(nodeKey: String): D3Node =
     D3Node(nodeKey, toString, "todo", "todo")
@@ -35,5 +36,7 @@ trait Node:
  */
 trait TriggerNode(val macroKeys: Key*) extends Node:
   def canRunMacro(macroKey: Key): Boolean
+  def tableSection(fieldKey: FieldKey):TableSection
+    
 
 

@@ -51,7 +51,7 @@ libraryDependencies ++= Seq(
   guice,
   "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.0" % Test,
   "com.vladsch.flexmark" % "flexmark-all" % "0.64.8" % Test,
-  "com.wa9nnn" %% "wa9nnnutil" % "3.0.0.3-SNAPSHOT",
+  "com.wa9nnn" %% "wa9nnnutil" % "3.0.0.4-SNAPSHOT",
 
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
   "ch.qos.logback" % "logback-classic" % logbackVersion,

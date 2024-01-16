@@ -17,21 +17,34 @@
 
 package net.wa9nnn.rc210.data.field
 
+import com.wa9nnn.wa9nnnutil.tableui.{KvTable, Row, Table, TableSection}
 import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.Display
-import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.routing.sird
 
-case class LogicAlarmNode(override val key: Key,  val enabled: Boolean, lowMacro: Key, highMacro: Key) extends TriggerNode(lowMacro, highMacro) 
+case class LogicAlarmNode(override val key: Key, val enabled: Boolean, lowMacro: Key, highMacro: Key) extends TriggerNode(lowMacro, highMacro)
   with ComplexFieldValue {
   key.check(KeyKind.LogicAlarm)
   lowMacro.check(KeyKind.RcMacro)
   highMacro.check(KeyKind.RcMacro)
+
+  private val tt = Seq(
+    "Enabled" -> Display(enabled),
+    "Low" -> lowMacro,
+    "High" -> highMacro,
+  ).map(Row(_))
+
+  override def table(fieldKey: FieldKey): Table =
+    KvTable(s"Logic Alarm ${key.keyWithName}", tt: _*)
+
+  override def tableSection(fieldKey: FieldKey): TableSection =
+    TableSection(s"Logic Alarm ${fieldKey.key.keyWithName}", tt:_*)
 
   override def displayHtml: String =
     <table>

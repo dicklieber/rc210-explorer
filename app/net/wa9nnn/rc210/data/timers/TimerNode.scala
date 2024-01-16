@@ -18,10 +18,11 @@
 package net.wa9nnn.rc210.data.timers
 
 import com.typesafe.scalalogging.LazyLogging
+import com.wa9nnn.wa9nnnutil.tableui.TableSection
 import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, number, of}
 import play.api.libs.json.{JsValue, Json, OFormat}
@@ -31,6 +32,11 @@ import scala.concurrent.duration.{Duration, FiniteDuration}
 case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValue() with TriggerNode(macroKey) {
   val duration: FiniteDuration = Duration(seconds, "seconds")
   //  override def displayHtml: String = //s"$seconds => ${macroKey.keyWithName}"
+
+  override def tableSection(fieldKey: FieldKey): TableSection =
+    TableSection(s"Timer ${key.keyWithName}",
+      "Duration" -> duration
+    )
 
   override def displayHtml: String =
     <table class="tagValuetable">
@@ -65,6 +71,7 @@ case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends ComplexField
 
   override def canRunMacro(candidate: Key): Boolean =
     macroKey eq candidate
+
 }
 
 //noinspection ZeroIndexToHead

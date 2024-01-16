@@ -1,7 +1,7 @@
 package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header}
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, KvTable, Row, Table, TableSection}
 import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.field.schedule.{DayOfWeek, Week}
@@ -58,6 +58,21 @@ case class ScheduleNode(override val key: Key,
     val command = s"1*4001$setPoint*$sWeek$sDow*${moy}*$hours*$minutes*$sMacro"
     Seq(command)
   }
+
+  private val rows: Seq[Row] = Seq(
+    "Day Of Week" -> dow,
+    "Week" -> week,
+    "Month" -> monthOfYear,
+    "Hour" -> hour,
+    "Minute" -> minute,
+  ).map(Row(_))
+
+  override def table(fieldKey: FieldKey): Table =
+    KvTable(s"Schedule ${key.keyWithName}", rows: _*)
+      .appendRows(Seq(Row("Macro" -> macroKey.keyWithName)))
+
+  override def tableSection(fieldKey: FieldKey): TableSection =
+    TableSection(s"Schedule ${key.keyWithName}", rows: _*)
 
   override def displayHtml: String =
     <table class="tagValuetable">

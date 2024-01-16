@@ -1,10 +1,12 @@
 package net.wa9nnn.rc210.data.macros
 
+import com.wa9nnn.wa9nnnutil.tableui.{KvTable, Row, Table, TableSection}
 import net.wa9nnn.rc210.data.Dtmf.Dtmf
 import net.wa9nnn.rc210.data.{Node, TriggerNode}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
+import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Forms.*
 import play.api.data.{Form, FormError}
 import play.api.libs.json.{Format, JsValue, Json}
@@ -53,6 +55,18 @@ case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dt
   override def displayHtml: String = functions.map(_.rc210Value).mkString(" ")
 
   override def toJsValue: JsValue = Json.toJson(this)
+
+  override def table(fieldKey: FieldKey): Table = {
+    throw new NotImplementedError() //todo
+//    val value: Seq[Row] = functions.map { functionKey =>
+//      val name = functionKey.rc210Value.toString
+//      Row(name, FunctionsProvider(functionKey).description): _*
+//    }
+//    KvTable(s"Macro ${key.keyWithName}",
+//      TableSection("Functions", value)
+//    )
+  }
+
 }
 
 object MacroNode extends ComplexExtractor[MacroNode] {
