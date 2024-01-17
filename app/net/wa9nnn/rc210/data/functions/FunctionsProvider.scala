@@ -53,7 +53,7 @@ object FunctionsProvider:
 case class SimpleFunctionNode(key: Key, description: String) extends FunctionNode
 
 case class TriggerFunctionNode(key: Key, description: String, destination: Key) extends FunctionNode :
-  assert(destination.keyKind == KeyKind.RcMacro || destination.keyKind == KeyKind.Message, s"destination must be Key or MessageKey! But got: $key")
+  assert(destination.keyKind == KeyKind.Macro || destination.keyKind == KeyKind.Message, s"destination must be Key or MessageKey! But got: $key")
 
 trait FunctionNode extends Ordered[FunctionNode] with Node:
   val key: Key

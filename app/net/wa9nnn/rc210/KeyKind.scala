@@ -17,10 +17,10 @@
 
 package net.wa9nnn.rc210
 
-import enumeratum._
-import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
+import enumeratum.*
+import enumeratum.EnumEntry.CapitalWords
 
-sealed trait KeyKind(val maxN: Int) extends EnumEntry:
+sealed trait KeyKind(val maxN: Int) extends EnumEntry with CapitalWords:
   def spaces: String =
     entryName.replaceAll(
       String.format("%s|%s|%s",
@@ -47,7 +47,7 @@ object KeyKind extends PlayEnum[KeyKind] {
 
   case object Function extends KeyKind(1005)
 
-  case object RcMacro extends KeyKind(105)
+  case object Macro extends KeyKind(105)
 
   case object Message extends KeyKind(70) // 40 (in Main) + 30 (in RTC)
 

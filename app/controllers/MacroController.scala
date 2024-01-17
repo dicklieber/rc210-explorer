@@ -44,15 +44,15 @@ class MacroController @Inject()(dataStore: DataStore)
     with LazyLogging {
 
   def index: Action[AnyContent] = Action { implicit request =>
-    val values: Seq[MacroNode] = dataStore.values(KeyKind.RcMacro)
+    val values: Seq[MacroNode] = dataStore.values(KeyKind.Macro)
     Ok(macroNodes(values))
   }
 
   def edit(key: Key): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
 
     val fieldKey = FieldKey( key)
-    val rcMacro: MacroNode = dataStore.editValue(fieldKey)
-    Ok(views.html.macroEditor(rcMacro))
+    val Macro: MacroNode = dataStore.editValue(fieldKey)
+    Ok(views.html.macroEditor(Macro))
   }
 
   def save(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
@@ -76,8 +76,8 @@ class MacroController @Inject()(dataStore: DataStore)
         }.toOption
       }
 
-    val rcMacro = MacroNode(key, functions, dtmf)
-    val candidateAndNames = ProcessResult(rcMacro)
+    val Macro = MacroNode(key, functions, dtmf)
+    val candidateAndNames = ProcessResult(Macro)
 
     given RcSession = request.attrs(AuthFilter.sessionKey)
 

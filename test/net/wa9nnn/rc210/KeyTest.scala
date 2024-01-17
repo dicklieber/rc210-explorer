@@ -20,9 +20,9 @@ package net.wa9nnn.rc210
 import play.api.libs.json.{Format, Json}
 
 class KeyTest extends WithMemory {
-  val macroKey3 = Key(KeyKind.RcMacro, 3)
+  val macroKey3 = Key(KeyKind.Macro, 3)
   "Happy" in {
-    macroKey3.toString mustBe ("macroKey3")
+    macroKey3.toString mustBe ("Macro3")
   }
   "round trip toString apply" in {
     val string = macroKey3.toString
@@ -33,7 +33,7 @@ class KeyTest extends WithMemory {
     val container = KeyContainer(macroKey3)
     val sJson = Json.prettyPrint(Json.toJson(container))
     sJson mustBe ("""{
-                      |  "key" : "macroKey3",
+                      |  "key" : "Macro3",
                       |  "other" : 42
                       |}""".stripMargin)
     val backAgain = Json.parse(sJson).as[KeyContainer]
@@ -46,7 +46,7 @@ class KeyTest extends WithMemory {
   }
   "macroKeys" in {
     val keys = Key.macroKeys
-    keys must have length KeyKind.RcMacro.maxN
+    keys must have length KeyKind.Macro.maxN
   }
 }
 

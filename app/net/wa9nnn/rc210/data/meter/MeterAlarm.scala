@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.meter
 
 import com.wa9nnn.wa9nnnutil.tableui.*
-import net.wa9nnn.rc210.KeyKind.{Meter, MeterAlarm, RcMacro}
+import net.wa9nnn.rc210.KeyKind.{Meter, MeterAlarm, Macro}
 import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
@@ -29,10 +29,10 @@ import play.api.libs.json.{Format, JsValue, Json}
 
 import java.util.concurrent.atomic.AtomicInteger
 
-case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint: Int, macroKey: Key) extends ComplexFieldValue with TriggerNode(macroKey) {
+case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint: Int, macroKey: Key) extends ComplexFieldValue with TriggerNode {
   key.check(KeyKind.MeterAlarm)
   meter.check(Meter)
-  macroKey.check(KeyKind.RcMacro)
+  macroKey.check(KeyKind.Macro)
 
   private val rows: Seq[(Row)] = Seq(
     "Meter" -> meter.keyWithName,
@@ -143,7 +143,7 @@ object MeterAlarm extends ComplexExtractor[MeterAlarm] {
   override def extract(memory: Memory): Seq[FieldEntry] = {
     val mai = new AtomicInteger()
     val alarmType: Seq[AlarmType] = memory.sub8(274, nMeters).map(AlarmType.find)
-    val macroKeys: Seq[Key] = memory.sub8(314, nMeters).map(Key(RcMacro, _))
+    val macroKeys: Seq[Key] = memory.sub8(314, nMeters).map(Key(Macro, _))
     val setPoint: Seq[String] = memory.chunks(282, 4, nMeters).map { chunk =>
       val array = chunk.ints
       //      new String(array.map(_.toChar))

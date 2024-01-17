@@ -43,11 +43,11 @@ class DataStoreTest extends WithTestConfiguration {
 
     "happy path" when {
       val key1 = Key.macroKeys(2)
-      val flowData = dataStore.flow(key1).get
+      val flowData = dataStore.flowTable(key1).get
       "only for macro" in {
         flowData.triggers.foreach { fieldEntry =>
           val tn: TriggerNode = fieldEntry.value
-          tn.macroKeys.contains(key1) mustBe true
+          tn.canRunMacro(key1) mustBe true
         }
       }
 

@@ -36,16 +36,16 @@ import net.wa9nnn.rc210.ui.flow.D3Data
 class FlowController @Inject()(dataStore: DataStore)(using components: MessagesControllerComponents)
   extends MessagesAbstractController(components) with LazyLogging {
 
-  def flow(key: Key): Action[AnyContent] = Action {
+  def flowTable(key: Key): Action[AnyContent] = Action {
 
-    dataStore.flow(key).map { fd =>
+    dataStore.flowTable(key).map { fd =>
       val table = fd.table
-      Ok(views.html.bubbleSvg())
+      Ok(views.html.flow(table))
     }.getOrElse(NotFound(key.keyWithName))
   }
   def flowChart(key: Key): Action[AnyContent] = Action {
 
-    dataStore.flow(key).map { fd =>
+    dataStore.flowTable(key).map { fd =>
       Ok(views.html.flowChart(fd))
     }.getOrElse(NotFound(key.keyWithName))
   }
@@ -58,7 +58,7 @@ class FlowController @Inject()(dataStore: DataStore)(using components: MessagesC
   //    }.getOrElse(NotFound(key.keyWithName))
   //  }
   def d3Data(key: Key): Action[AnyContent] = Action {
-    dataStore.flow(key).map { fd =>
+    dataStore.flowTable(key).map { fd =>
 
       val d3Data: D3Data = fd.d3Data()
       val jsValue: JsValue = Json.toJson(d3Data)

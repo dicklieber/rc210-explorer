@@ -29,9 +29,8 @@ import play.api.libs.json.{JsValue, Json, OFormat}
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
-case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValue() with TriggerNode(macroKey) {
+case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValue() with TriggerNode {
   val duration: FiniteDuration = Duration(seconds, "seconds")
-  //  override def displayHtml: String = //s"$seconds => ${macroKey.keyWithName}"
 
   override def tableSection(fieldKey: FieldKey): TableSection =
     TableSection(s"Timer ${key.keyWithName}",
@@ -71,15 +70,9 @@ case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends ComplexField
 
   override def canRunMacro(candidate: Key): Boolean =
     macroKey eq candidate
-
 }
 
-//noinspection ZeroIndexToHead
 object TimerNode extends ComplexExtractor[TimerNode] with LazyLogging {
-  //  private val nTimers = keyKind.maxN
-  //  Memory Layout
-  //  seconds for each timer 6 2-byte ints
-  //  macroToRun for each timer 6 1-byte ints
 
   override def positions: Seq[FieldOffset] = {
     Seq(
@@ -101,7 +94,7 @@ object TimerNode extends ComplexExtractor[TimerNode] with LazyLogging {
       index <- 0 until KeyKind.Timer.maxN
     } yield {
       val key: Key = Key(KeyKind.Timer, index + 1)
-      FieldEntry(this, fieldKey(key), TimerNode(key, seconds.next(), Key(KeyKind.RcMacro, macroInts.next() + 1)))
+      FieldEntry(this, fieldKey(key), TimerNode(key, seconds.next(), Key(KeyKind.Macro, macroInts.next() + 1)))
     })
     r
   }

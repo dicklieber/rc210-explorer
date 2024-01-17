@@ -28,11 +28,11 @@ import play.api.data.Forms.*
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.routing.sird
 
-case class LogicAlarmNode(override val key: Key, val enabled: Boolean, lowMacro: Key, highMacro: Key) extends TriggerNode(lowMacro, highMacro)
+case class LogicAlarmNode(override val key: Key, val enabled: Boolean, lowMacro: Key, highMacro: Key) extends TriggerNode
   with ComplexFieldValue {
   key.check(KeyKind.LogicAlarm)
-  lowMacro.check(KeyKind.RcMacro)
-  highMacro.check(KeyKind.RcMacro)
+  lowMacro.check(KeyKind.Macro)
+  highMacro.check(KeyKind.Macro)
 
   private val tt = Seq(
     "Enabled" -> Display(enabled),
@@ -103,8 +103,8 @@ object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode] {
    */
   override def extract(memory: Memory): Seq[FieldEntry] = {
     val enables = memory.sub8(169, 5).map(_ != 0)
-    val lowMacros: Seq[Key] = memory.sub8(174, 5).map(n => Key(KeyKind.RcMacro, n + 1))
-    val highMacros: Seq[Key] = memory.sub8(179, 5).map(n => Key(KeyKind.RcMacro, n + 1))
+    val lowMacros: Seq[Key] = memory.sub8(174, 5).map(n => Key(KeyKind.Macro, n + 1))
+    val highMacros: Seq[Key] = memory.sub8(179, 5).map(n => Key(KeyKind.Macro, n + 1))
     //    SimpleField(169, "Enable", logicAlarmKey, "1n91b", FieldBoolean)
     //    SimpleField(174, "Macro Low", logicAlarmKey, "1*2101nv", MacroSelectField)
     //    SimpleField(179, "Macro High", logicAlarmKey, "1*2102nv", MacroSelectField)

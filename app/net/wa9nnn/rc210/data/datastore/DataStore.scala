@@ -88,7 +88,7 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
     all.filter(_.candidate.nonEmpty).sorted
 
   def triggerNodes(macroKey: Key): Seq[FieldEntry] =
-    assert(macroKey.keyKind == KeyKind.RcMacro, "Must have a MacroKey!")
+    assert(macroKey.keyKind == KeyKind.Macro, "Must have a MacroKey!")
     (for {
       fieldEntry <- keyFieldMap.values
       fieldValue: FieldValue = fieldEntry.value[FieldValue]
@@ -170,16 +170,16 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
 
   override def nameForKey(key: Key): String = keyNameMap.getOrElse(key, "")
 
-  def flow(search: Key): Option[FlowData] =
-    def buildFlowData(rcMacroEntry: FieldEntry): FlowData =
-      assert(rcMacroEntry.fieldKey.key.keyKind == KeyKind.RcMacro, s"Must be an RcMacro entry!  But got: $rcMacroEntry")
+  def flowTable(search: Key): Option[FlowData] =
+    def buildFlowData(MacroEntry: FieldEntry): FlowData =
+      assert(MacroEntry.fieldKey.key.keyKind == KeyKind.Macro, s"Must be an Macro entry!  But got: $MacroEntry")
       // find triggers
-      val rcMacro: MacroNode = rcMacroEntry.value
-      val key = rcMacro.key
+      val Macro: MacroNode = MacroEntry.value
+      val key = Macro.key
 
       val triggers: Seq[FieldEntry] = triggerNodes(key)
 
-      FlowData(rcMacroEntry, triggers, search)
+      FlowData(MacroEntry, triggers, search)
 
     val entries: Seq[FieldEntry] = apply(search)
     assert(entries.length == 1, s"Should only be one entry for a compplex key, but got $entries")
@@ -191,7 +191,7 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
         case KeyKind.DtmfMacro => ???
         case KeyKind.CourtesyTone => ???
         case KeyKind.Function => ???
-        case KeyKind.RcMacro =>
+        case KeyKind.Macro =>
           buildFlowData(fieldEntry)
         case KeyKind.Message => ???
         case KeyKind.Clock => ???

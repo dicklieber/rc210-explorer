@@ -34,7 +34,7 @@ trait Node:
 /**
  * A [[Node]] that can invoke a Macro
  */
-trait TriggerNode(val macroKeys: Key*) extends Node:
+trait TriggerNode extends Node:
   def canRunMacro(macroKey: Key): Boolean
   def tableSection(fieldKey: FieldKey):TableSection
     

@@ -70,7 +70,7 @@ case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dt
 }
 
 object MacroNode extends ComplexExtractor[MacroNode] {
-  override val keyKind: KeyKind = KeyKind.RcMacro
+  override val keyKind: KeyKind = KeyKind.Macro
 
   def unapply(u: MacroNode): Option[(Key, Seq[Key], Option[Dtmf])] = Some((u.key, u.functions, u.dtmf))
 
@@ -96,7 +96,7 @@ object MacroNode extends ComplexExtractor[MacroNode] {
     def macroBuilder(offset: Int, chunkLength: Int, nChunks: Int) = {
       memory.chunks(offset, chunkLength, nChunks)
         .map { chunk =>
-          val key: Key = Key(KeyKind.RcMacro, mai.getAndIncrement())
+          val key: Key = Key(KeyKind.Macro, mai.getAndIncrement())
           val sChunk = chunk.ints
             .map(_.toString)
             .mkString(", ")

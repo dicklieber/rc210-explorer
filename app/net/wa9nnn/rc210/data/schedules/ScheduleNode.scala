@@ -29,8 +29,8 @@ case class ScheduleNode(override val key: Key,
                         monthOfYear: MonthOfYearSchedule = MonthOfYearSchedule.Every,
                         hour: Int = 0,
                         minute: Int = 0,
-                        macroKey: Key = Key(KeyKind.RcMacro, 1),
-                        enabled: Boolean = false) extends ComplexFieldValue with TriggerNode(macroKey):
+                        macroKey: Key = Key(KeyKind.Macro, 1),
+                        enabled: Boolean = false) extends ComplexFieldValue with TriggerNode:
 
   val description: String = {
     //    val week = s" Week: $weekInMonth"

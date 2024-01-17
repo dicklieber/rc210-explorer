@@ -23,7 +23,7 @@ import net.wa9nnn.rc210.ui.FormField
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.libs.json.{Format, JsResult, JsSuccess, JsValue, Json}
 
-case class FieldMacroKey(key: Key) extends SimpleFieldValue with TriggerNode(key){
+case class FieldMacroKey(key: Key) extends SimpleFieldValue with TriggerNode{
   def update(paramValue: String): SimpleFieldValue =
     val key = Key(paramValue)
     FieldMacroKey(key)
@@ -54,7 +54,7 @@ case class FieldMacroKey(key: Key) extends SimpleFieldValue with TriggerNode(key
 object MacroKeyExtractor extends SimpleExtractor:
   override def extractFromInts(iterator: Iterator[Int], fieldDefinition: SimpleField): FieldValue = {
     val i: Int = iterator.next()
-    val key = Key(KeyKind.RcMacro, i)
+    val key = Key(KeyKind.Macro, i)
     FieldMacroKey(key)
   }
 

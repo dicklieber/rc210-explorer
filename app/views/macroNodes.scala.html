@@ -22,8 +22,8 @@
                     <tr>
                         <td>
                             @editButton(routes.MacroController.edit(macroNode.key))
-                            @editButton(routes.FlowController.flowChart(macroNode.key))
-@*                            @editButton(routes.FlowController.d3Data(macroNode.key))*@
+                            @flowChartButton(macroNode.key)
+                            @flowTableButton(macroNode.key)
                         </td>
                         <td title="Click edit button to change macro details..">
                         @macroNode.key.keyWithName

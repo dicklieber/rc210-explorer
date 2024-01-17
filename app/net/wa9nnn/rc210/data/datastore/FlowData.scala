@@ -29,7 +29,7 @@ import scala.language.postfixOps
 
 /**
  *
- * @param rcMacro  that this flow centers around.
+ * @param Macro  that this flow centers around.
  * @param triggers what this macro does.
  * @param searched what we looked for. UI should highlight this node. 
  */

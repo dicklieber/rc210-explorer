@@ -37,7 +37,7 @@ case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends Order
 
   assert(rc210Value <= keyKind.maxN, s"Max number for $keyKind is ${keyKind.maxN}")
 
-  override def toString: String = s"$keyKind$rc210Value"
+  override def toString: String = s"${keyKind.entryName}$rc210Value"
 
   override def compare(that: Key): Int =
     var ret = keyKind.toString compare that.keyKind.toString
@@ -74,12 +74,16 @@ object Key:
     maybeSKey.map(Key(_))
 
   def apply(sKey: String): Key =
-    sKey match
-      case kparser(sKind, sNumber) =>
-        val keyKind = KeyKind.withName(sKind)
-        new Key(keyKind, sNumber.toInt)
-      case _ =>
-        throw new IllegalArgumentException(s"""Can't parse "$sKey"!""")
+    try
+      sKey match
+        case kparser(sKind, sNumber) =>
+          val keyKind = KeyKind.withName(sKind)
+          new Key(keyKind, sNumber.toInt)
+        case _ =>
+          throw new IllegalArgumentException(s"""Can't parse "$sKey"!""")
+    catch
+      case e:Exception =>
+        throw e
 
   def setNamedSource(namedSource: NamedKeySource): Unit = {
     if (_namedSource.isDefined) throw new IllegalStateException("NamedSource already set.")
@@ -115,7 +119,8 @@ object Key:
     }
 
   lazy val portKeys: Seq[Key] = keys(Port)
-  lazy val macroKeys: Seq[Key] = keys(RcMacro)
+  lazy val macroKeys: Seq[Key] = keys(Macro)
+  lazy val timerKeys: Seq[Key] = keys(Timer)
 
   /**
    * Codec to allow non-string types i routes.conf definitions.

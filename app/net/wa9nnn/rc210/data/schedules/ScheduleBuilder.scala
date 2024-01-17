@@ -49,7 +49,7 @@ object ScheduleBuilder extends LazyLogging {
       val monthOfYear = MonthOfYearSchedule.find(chunks(MOY)(n))
       val hour = chunks(HOUR)(n)
       val minute = chunks(MINUTE)(n)
-      val macr0 = Key(KeyKind.RcMacro, (chunks(MACR0)(n) + 1))
+      val macr0 = Key(KeyKind.Macro, (chunks(MACR0)(n) + 1))
       val enable = chunks(ENABLE)(n) > 0
       ScheduleNode(key = scheduleKey,
         dow = dow,

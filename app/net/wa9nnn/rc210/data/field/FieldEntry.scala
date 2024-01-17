@@ -79,7 +79,7 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
    * @return FieldEntry that invokes the macroKey.
    */
   def canTriggerMacro(macroKey: Key): Boolean =
-    macroKey.check(KeyKind.RcMacro)
+    macroKey.check(KeyKind.Macro)
     fieldValue match {
       case tn: TriggerNode =>
         tn.canRunMacro(macroKey)
