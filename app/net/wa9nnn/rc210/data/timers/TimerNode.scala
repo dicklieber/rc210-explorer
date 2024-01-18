@@ -29,7 +29,7 @@ import play.api.libs.json.{JsValue, Json, OFormat}
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
-case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValue() with TriggerNode {
+case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValue() with TriggerNode(macroKey) {
   val duration: FiniteDuration = Duration(seconds, "seconds")
 
   override def tableSection(fieldKey: FieldKey): TableSection =
@@ -68,8 +68,6 @@ case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends ComplexField
 
   override def toJsValue: JsValue = Json.toJson(this)
 
-  override def canRunMacro(candidate: Key): Boolean =
-    macroKey eq candidate
 }
 
 object TimerNode extends ComplexExtractor[TimerNode] with LazyLogging {

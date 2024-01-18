@@ -28,7 +28,7 @@ import play.api.data.Forms.*
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.routing.sird
 
-case class LogicAlarmNode(override val key: Key, val enabled: Boolean, lowMacro: Key, highMacro: Key) extends TriggerNode
+case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, lowMacro: Key, highMacro: Key) extends TriggerNode(lowMacro, highMacro)
   with ComplexFieldValue {
   key.check(KeyKind.LogicAlarm)
   lowMacro.check(KeyKind.Macro)
@@ -44,7 +44,7 @@ case class LogicAlarmNode(override val key: Key, val enabled: Boolean, lowMacro:
     KvTable(s"Logic Alarm ${key.keyWithName}", tt: _*)
 
   override def tableSection(fieldKey: FieldKey): TableSection =
-    TableSection(s"Logic Alarm ${fieldKey.key.keyWithName}", tt:_*)
+    TableSection(s"Logic Alarm ${fieldKey.key.keyWithName}", tt: _*)
 
   override def displayHtml: String =
     <table>
@@ -77,9 +77,6 @@ case class LogicAlarmNode(override val key: Key, val enabled: Boolean, lowMacro:
   }
 
   override def toJsValue: JsValue = Json.toJson(this)
-
-  override def canRunMacro(macroKey: Key): Boolean =
-    enabled && highMacro == macroKey || lowMacro == key
 }
 
 object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode] {

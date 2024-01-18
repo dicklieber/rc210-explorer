@@ -32,7 +32,7 @@ class ScheduleBuilderSpec extends WithMemory {
       schedule3.dow should equal(DayOfWeek.EveryDay)
       schedule3.hour should equal(7)
       schedule3.minute should equal(0)
-      schedule3.macroKey should equal(KeyFactory.macroKey(4))
+      schedule3.macroKeys should equal(KeyFactory.macroKey(4))
     }
   }
 }

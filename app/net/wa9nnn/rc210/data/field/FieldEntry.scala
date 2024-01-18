@@ -87,9 +87,9 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
         false
     }
 
-  override def toString: String = {
-    s"${fieldKey.fieldName}: ${fieldValue.displayHtml}"
-  }
+//  override def toString: String = {
+//    s"${fieldKey.fieldName}: ${fieldValue.displayHtml}"
+//  }
 
   def toJson: FieldEntryJson = {
     FieldEntryJson(this)

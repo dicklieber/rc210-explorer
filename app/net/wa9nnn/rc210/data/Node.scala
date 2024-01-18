@@ -23,8 +23,8 @@ import net.wa9nnn.rc210.ui.flow.D3Node
 
 trait Node:
   val key: Key
-  
-//  def table(fieldKey: FieldKey, includeMacroKey:Boolean = false): Table =
+
+  //  def table(fieldKey: FieldKey, includeMacroKey:Boolean = false): Table =
   def table(fieldKey: FieldKey): Table =
     Table.empty(s"todo: $key")
 
@@ -34,9 +34,19 @@ trait Node:
 /**
  * A [[Node]] that can invoke a Macro
  */
-trait TriggerNode extends Node:
-  def canRunMacro(macroKey: Key): Boolean
-  def tableSection(fieldKey: FieldKey):TableSection
-    
+trait TriggerNode(val macroKeys: Key*) extends Node:
+  def enabled: Boolean = true
 
+  final def canRunMacro(candidate: Key): Boolean =
+    enabled && macroKeys.contains(candidate)
+
+  def tableSection(fieldKey: FieldKey): TableSection
+
+  def triggerInfo(fieldKey: FieldKey, tableSection: TableSection): TriggerInfo =
+    TriggerInfo(fieldKey, this)
+
+case class TriggerInfo(fieldKey: FieldKey, triggerNode: TriggerNode ):
+  def tableSection: TableSection = triggerNode.tableSection(fieldKey)
+  def canRun(key:Key):Boolean =
+    triggerNode.canRunMacro(key)
 

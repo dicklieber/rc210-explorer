@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.datastore
 
 import com.wa9nnn.wa9nnnutil.tableui.*
 import net.wa9nnn.rc210.{FieldKey, Key}
-import net.wa9nnn.rc210.data.{Node, TriggerNode}
+import net.wa9nnn.rc210.data.{Node, TriggerInfo, TriggerNode}
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.MacroNode
@@ -33,16 +33,14 @@ import scala.language.postfixOps
  * @param triggers what this macro does.
  * @param searched what we looked for. UI should highlight this node. 
  */
-case class FlowData(macroFieldEntry: FieldEntry, triggers: Seq[FieldEntry], searched: Key):
+case class FlowData(macroFieldEntry: FieldEntry, triggers: Seq[TriggerInfo], searched: Key):
   private val macroNode: MacroNode = macroFieldEntry.value
   private val macroFieldKey: FieldKey = macroFieldEntry.fieldKey
 
   def triggersTable:Table =
     var table: Table = KvTable("Triggers")
-    triggers.foreach{fieldEntry =>
-      val tn: TriggerNode = fieldEntry.value
-      val tableSection = tn.tableSection(fieldEntry.fieldKey)
-      table = table.appendSection(tableSection)
+    triggers.foreach{triggerInfo =>
+      table = table.appendSection(triggerInfo.tableSection)
     }
     table
   
@@ -59,9 +57,9 @@ case class FlowData(macroFieldEntry: FieldEntry, triggers: Seq[FieldEntry], sear
     )
 
   def table: Table = {
-    val triggerRows: Seq[Row] = triggers.map { fieldEntry =>
-      val value: TriggerNode = fieldEntry.value.asInstanceOf[TriggerNode]
-      Row.ofAny(fieldEntry.fieldKey, value)
+    val triggerRows: Seq[Row] = triggers.map { triggerInfo =>
+//      val value: TriggerNode = triggerInfo.tableSection
+      Row.ofAny(triggerInfo.fieldKey, triggerInfo.tableSection)
     }
     val functionRows = macroNode.functions.map { functionKey =>
       val description = FunctionsProvider(functionKey).description
@@ -75,7 +73,9 @@ case class FlowData(macroFieldEntry: FieldEntry, triggers: Seq[FieldEntry], sear
     )
   }
 
-  def d3Data(): D3Data =
+  def d3Data(): D3Data = ???
+
+/*
     val fNodes: Seq[D3Node] = macroNode.functions.map(functionKey => FunctionsProvider(functionKey).d3Node(functionKey.toString))
     val tNodes: Seq[D3Node] = triggers.map { fe =>
       val n: TriggerNode = fe.value
@@ -93,7 +93,7 @@ case class FlowData(macroFieldEntry: FieldEntry, triggers: Seq[FieldEntry], sear
       ,
       Seq.empty
     )
-
+*/
 
 
 

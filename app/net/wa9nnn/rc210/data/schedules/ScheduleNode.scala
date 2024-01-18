@@ -20,7 +20,7 @@ import play.api.libs.json.{Format, JsValue, Json}
  * @param monthOfYear            enumerated
  * @param hour                   when this runs on selected day.
  * @param minute                 when this runs on selected day.
- * @param macroKey               e.g. "macro42"
+ * @param macroKeys               e.g. "macro42"
  * @param enabled                duh
  */
 case class ScheduleNode(override val key: Key,
@@ -30,7 +30,7 @@ case class ScheduleNode(override val key: Key,
                         hour: Int = 0,
                         minute: Int = 0,
                         macroKey: Key = Key(KeyKind.Macro, 1),
-                        enabled: Boolean = false) extends ComplexFieldValue with TriggerNode:
+                        override val enabled: Boolean = false) extends ComplexFieldValue with TriggerNode(macroKey):
 
   val description: String = {
     //    val week = s" Week: $weekInMonth"
@@ -109,7 +109,7 @@ case class ScheduleNode(override val key: Key,
       <tr>
         <td>Macro</td>
         <td>
-          {macroKey}
+          {macroKeys}
         </td>
       </tr>
       <tr>
@@ -123,8 +123,6 @@ case class ScheduleNode(override val key: Key,
 
   override def toJsValue: JsValue = Json.toJson(this)
 
-  override def canRunMacro(candidate: Key): Boolean =
-    macroKey == candidate && enabled
 
 object ScheduleNode extends LazyLogging with ComplexExtractor[ScheduleNode] {
   override val keyKind: KeyKind = KeyKind.Schedule

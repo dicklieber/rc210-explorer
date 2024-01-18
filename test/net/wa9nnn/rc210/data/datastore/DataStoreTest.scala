@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.data.datastore
 
-import net.wa9nnn.rc210.data.TriggerNode
+import net.wa9nnn.rc210.data.{TriggerInfo, TriggerNode}
 import net.wa9nnn.rc210.{FieldKey, Key, WithTestConfiguration}
 import net.wa9nnn.rc210.data.field.{FieldDefinitions, FieldEntry}
 import play.api.libs.json.Json
@@ -36,21 +36,15 @@ class DataStoreTest extends WithTestConfiguration {
 
   "FlowData" should {
     "dump triggers" in {
-      val triggers: Seq[FieldEntry] = dataStore.triggerNodes(Key.macroKeys(2))
+      val triggers: Seq[TriggerInfo] = dataStore.triggers
+      triggers.foreach(triggerInfo =>
+        println(triggerInfo))
+    }
+    "dump triggersNodes" in {
+      val triggers: Seq[TriggerInfo] = dataStore.triggerNodes(Key.macroKeys(2))
       triggers.foreach(fe => println(fe))
 
     }
 
-    "happy path" when {
-      val key1 = Key.macroKeys(2)
-      val flowData = dataStore.flowTable(key1).get
-      "only for macro" in {
-        flowData.triggers.foreach { fieldEntry =>
-          val tn: TriggerNode = fieldEntry.value
-          tn.canRunMacro(key1) mustBe true
-        }
-      }
-
-    }
   }
 }

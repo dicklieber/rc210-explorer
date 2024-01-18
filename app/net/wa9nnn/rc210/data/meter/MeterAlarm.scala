@@ -29,25 +29,24 @@ import play.api.libs.json.{Format, JsValue, Json}
 
 import java.util.concurrent.atomic.AtomicInteger
 
-case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint: Int, macroKey: Key) extends ComplexFieldValue with TriggerNode {
+case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint: Int, macroKey: Key) extends ComplexFieldValue with TriggerNode(macroKey):
   key.check(KeyKind.MeterAlarm)
   meter.check(Meter)
   macroKey.check(KeyKind.Macro)
 
-  private val rows: Seq[(Row)] = Seq(
+  private val rows: Seq[Row] = Seq(
     "Meter" -> meter.keyWithName,
     "Alarm Type" -> alarmType,
     "Trip Point" -> tripPoint,
   ).map(Row(_))
+
   override def table(fieldKey: FieldKey): Table = {
-    val table: Table = KvTable(s"Meter ${key.keyWithName}", rows :_*)
+    val table: Table = KvTable(s"Meter ${key.keyWithName}", rows: _*)
     table.appendRows(Seq(Row("Macro", macroKey.keyWithName)))
   }
 
-  
   override def tableSection(fieldKey: FieldKey): TableSection =
-    TableSection(s"Meter ${key.keyWithName}", rows:_*)
-
+    TableSection(s"Meter ${key.keyWithName}", rows: _*)
 
   override def displayHtml: String =
     <table class="tagValuetable">
@@ -91,7 +90,7 @@ case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint:
     val aNumber = key.rc210Value
     val mNumber = meter.rc210Value
     val at = alarmType.rc210Value
-    val trip = tripPoint
+    val trip = tripPoint //todo don't we need this?
     val macNumber = macroKey.rc210Value
     Seq(
       s"1*2066$aNumber*$mNumber*$at*$macNumber*"
@@ -99,10 +98,6 @@ case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint:
   }
 
   override def toJsValue: JsValue = Json.toJson(this)
-
-  override def canRunMacro(macroKey: Key): Boolean = macroKey == this.macroKey
-
-}
 
 /*
 *2064 C * M* X1* Y1* X2* Y2* C= Channel 1 to 8 M=MeterKind Type 0 to 6 X1, Y1, X2, Y2 represent two calibration points. There must be 6 parameters entered to define a meterEditor face, each value ending with *.

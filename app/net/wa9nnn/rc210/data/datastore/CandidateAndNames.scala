@@ -19,9 +19,11 @@ package net.wa9nnn.rc210.data.datastore
 
 import net.wa9nnn.rc210.NamedKey
 
-case class CandidateAndNames(candidates: Seq[UpdateCandidate], namedKeys: Seq[NamedKey] = Seq.empty) 
+case class CandidateAndNames(candidates: Seq[UpdateCandidate], namedKeys: Seq[NamedKey] = Seq.empty)
 
 object CandidateAndNames:
-  def apply(updateCandidate: UpdateCandidate, maybeNamedKey: Option[NamedKey]): CandidateAndNames = {
+  def apply(updateCandidate: UpdateCandidate, maybeNamedKey: Option[NamedKey]): CandidateAndNames =
     new CandidateAndNames(Seq(updateCandidate), maybeNamedKey.toIndexedSeq)
-  }
+
+  def apply(updateCandidate: UpdateCandidate): CandidateAndNames =
+    new CandidateAndNames(Seq(updateCandidate))

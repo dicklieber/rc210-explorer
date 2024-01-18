@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.datastore
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.TriggerNode
+import net.wa9nnn.rc210.data.{TriggerInfo, TriggerNode}
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
 import net.wa9nnn.rc210.data.functions.TriggerFunctionNode
 import net.wa9nnn.rc210.data.macros.MacroNode
@@ -87,7 +87,7 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
   def candidates: Seq[FieldEntry] =
     all.filter(_.candidate.nonEmpty).sorted
 
-  def triggerNodes(macroKey: Key): Seq[FieldEntry] =
+  def triggerNodes(macroKey: Key): Seq[TriggerInfo] =
     assert(macroKey.keyKind == KeyKind.Macro, "Must have a MacroKey!")
     (for {
       fieldEntry <- keyFieldMap.values
@@ -95,7 +95,8 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
       triggerNode: TriggerNode <- Option.when(fieldValue.isInstanceOf[TriggerNode])(fieldValue.asInstanceOf[TriggerNode])
       if triggerNode.canRunMacro(macroKey)
     } yield {
-      fieldEntry
+      val fieldKey = fieldEntry.fieldKey
+      triggerNode.triggerInfo(fieldKey, triggerNode.tableSection(fieldKey))
     }).toIndexedSeq
 
   def update(candidateAndNames: CandidateAndNames)(using rcSession: RcSession): Unit =
@@ -170,6 +171,17 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
 
   override def nameForKey(key: Key): String = keyNameMap.getOrElse(key, "")
 
+  def triggers: Seq[TriggerInfo] =
+    (for {
+      fieldEntry <- keyFieldMap.values
+      value: FieldValue = fieldEntry.value
+      if value.isInstanceOf[TriggerNode]
+      triggerNode = value.asInstanceOf[TriggerNode]
+    } yield {
+      val fieldKey = fieldEntry.fieldKey
+      triggerNode.triggerInfo(fieldKey, triggerNode.tableSection(fieldKey))
+    }).toIndexedSeq
+
   def flowTable(search: Key): Option[FlowData] =
     def buildFlowData(MacroEntry: FieldEntry): FlowData =
       assert(MacroEntry.fieldKey.key.keyKind == KeyKind.Macro, s"Must be an Macro entry!  But got: $MacroEntry")
@@ -177,7 +189,7 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
       val Macro: MacroNode = MacroEntry.value
       val key = Macro.key
 
-      val triggers: Seq[FieldEntry] = triggerNodes(key)
+      val triggers: Seq[TriggerInfo] = triggerNodes(key)
 
       FlowData(MacroEntry, triggers, search)
 
