@@ -22,7 +22,7 @@ import net.wa9nnn.rc210.{FieldKey, Key}
 import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.*
 
-case class FieldString(value: String) extends SimpleFieldValue {
+case class FieldString(value: String) extends SimpleFieldValue() {
 
   /**
    * Render as HTML for this rc2input.

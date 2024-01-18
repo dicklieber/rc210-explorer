@@ -19,7 +19,6 @@ package net.wa9nnn.rc210.data.meter
 
 import com.wa9nnn.wa9nnnutil.tableui.*
 import net.wa9nnn.rc210.KeyKind.{Meter, MeterAlarm, Macro}
-import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
@@ -29,7 +28,7 @@ import play.api.libs.json.{Format, JsValue, Json}
 
 import java.util.concurrent.atomic.AtomicInteger
 
-case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint: Int, macroKey: Key) extends ComplexFieldValue with TriggerNode(macroKey):
+case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint: Int, macroKey: Key) extends ComplexFieldValue(macroKey):
   key.check(KeyKind.MeterAlarm)
   meter.check(Meter)
   macroKey.check(KeyKind.Macro)
@@ -40,10 +39,10 @@ case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint:
     "Trip Point" -> tripPoint,
   ).map(Row(_))
 
-  override def table(fieldKey: FieldKey): Table = {
-    val table: Table = KvTable(s"Meter ${key.keyWithName}", rows: _*)
-    table.appendRows(Seq(Row("Macro", macroKey.keyWithName)))
-  }
+//  override def table(fieldKey: FieldKey): Table = {
+//    val table: Table = KvTable(s"Meter ${key.keyWithName}", rows: _*)
+//    table.appendRows(Seq(Row("Macro", macroKey.keyWithName)))
+//  }
 
   override def tableSection(fieldKey: FieldKey): TableSection =
     TableSection(s"Meter ${key.keyWithName}", rows: _*)

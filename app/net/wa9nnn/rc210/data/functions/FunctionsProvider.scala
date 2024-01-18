@@ -1,7 +1,7 @@
 package net.wa9nnn.rc210.data.functions
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.{Node, TriggerNode}
+import net.wa9nnn.rc210.data.Node
 import net.wa9nnn.rc210.{Key, KeyKind}
 import play.api.libs.json.*
 

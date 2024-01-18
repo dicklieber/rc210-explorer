@@ -23,7 +23,7 @@ import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.*
 //import views.html.fieldNumber
 
-case class FieldInt(value: Int) extends SimpleFieldValue {
+case class FieldInt(value: Int) extends SimpleFieldValue() {
   override def toHtmlField(fieldKey: FieldKey): String = FormField(fieldKey, value)
 
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {

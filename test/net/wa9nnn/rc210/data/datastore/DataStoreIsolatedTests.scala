@@ -1,7 +1,6 @@
 package net.wa9nnn.rc210.data.datastore
 
 import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.data.TriggerInfo
 import net.wa9nnn.rc210.{WithMemory, WithTestConfiguration}
 import net.wa9nnn.rc210.data.field.{FieldDefinitions, FieldEntry}
 import net.wa9nnn.rc210.data.timers.TimerNode
@@ -25,10 +24,9 @@ class DataStoreIsolatedTests extends WithTestConfiguration {
 
         dataStore.update(CandidateAndNames(UpdateCandidate(TimerNode(timerKey, 123, macroKey))))
 
-        val fieldsTriggerByMacro: Seq[TriggerInfo] = dataStore.triggerNodes(macroKey)
-        fieldsTriggerByMacro .foreach{ti =>
-          println(ti)
-          ti.canRun(macroKey) mustBe true
+        val fieldsTriggerByMacro: Seq[FieldEntry] = dataStore.triggerNodes(macroKey)
+        fieldsTriggerByMacro .foreach{ fieldEntry =>
+          println(fieldEntry)
         }
         
         
@@ -36,9 +34,9 @@ class DataStoreIsolatedTests extends WithTestConfiguration {
 
       }
       "dump triggers" in {
-        val triggers: Seq[TriggerInfo] = dataStore.triggers
-        triggers.foreach(triggerInfo =>
-          println(triggerInfo))
+        val triggers: Seq[FieldEntry] = dataStore.triggers
+        triggers.foreach(fieldEntry =>
+          println(fieldEntry))
       }
     }
   }

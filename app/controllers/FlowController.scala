@@ -38,14 +38,14 @@ class FlowController @Inject()(dataStore: DataStore)(using components: MessagesC
 
   def flowTable(key: Key): Action[AnyContent] = Action {
 
-    dataStore.flowTable(key).map { fd =>
+    dataStore.flowData(key).map { fd =>
       val table = fd.table
       Ok(views.html.flow(table))
     }.getOrElse(NotFound(key.keyWithName))
   }
   def flowChart(key: Key): Action[AnyContent] = Action {
 
-    dataStore.flowTable(key).map { fd =>
+    dataStore.flowData(key).map { fd =>
       Ok(views.html.flowChart(fd))
     }.getOrElse(NotFound(key.keyWithName))
   }
@@ -58,7 +58,7 @@ class FlowController @Inject()(dataStore: DataStore)(using components: MessagesC
   //    }.getOrElse(NotFound(key.keyWithName))
   //  }
   def d3Data(key: Key): Action[AnyContent] = Action {
-    dataStore.flowTable(key).map { fd =>
+    dataStore.flowData(key).map { fd =>
 
       val d3Data: D3Data = fd.d3Data()
       val jsValue: JsValue = Json.toJson(d3Data)

@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, RowSource}
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, RowSource, TableSection}
 import net.wa9nnn.rc210.{FieldKey, Key}
 import play.api.libs.json.JsValue
 
@@ -28,6 +28,23 @@ import play.api.libs.json.JsValue
  * Has enough metadata needed yo render
  */
 sealed trait FieldValue extends LazyLogging {
+  /**
+   * Nodes that actuall have an eneabled field should override this.
+   *
+   * @return
+   */
+  def enabled: Boolean = true
+
+  def runableMacros: Seq[Key]
+
+  def canRunMacro(candidate: Key): Boolean =
+    enabled && runableMacros.contains(candidate)
+  def canRunAny:Boolean =
+    runableMacros.nonEmpty
+
+  def tableSection(fieldKey: FieldKey):TableSection =
+    throw new NotImplementedError() //todo
+
 
   /**
    * Render this value as an RC-210 command string.
@@ -53,7 +70,7 @@ sealed trait FieldValue extends LazyLogging {
 /**
  * Renders itself as a [[[Cell]]
  */
-trait SimpleFieldValue extends FieldValue {
+trait SimpleFieldValue(val runableMacros: Key*) extends FieldValue {
   /**
    *
    * @param paramValue candidate from form.
@@ -63,7 +80,7 @@ trait SimpleFieldValue extends FieldValue {
 
 }
 
-trait ComplexFieldValue extends FieldValue with LazyLogging {
+trait ComplexFieldValue(val runableMacros: Key*) extends FieldValue with LazyLogging {
   val key: Key
 
   lazy val fieldKey: FieldKey = FieldKey(key)

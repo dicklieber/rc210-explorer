@@ -21,7 +21,7 @@ import net.wa9nnn.rc210.{FieldKey, Key}
 import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.*
 
-case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue {
+case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue() {
 
   /**
    * Render this value as an RD-210 command string.

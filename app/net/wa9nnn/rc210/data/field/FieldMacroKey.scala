@@ -18,20 +18,19 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.{KvTable, Table, TableSection}
-import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.ui.FormField
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.libs.json.{Format, JsResult, JsSuccess, JsValue, Json}
 
-case class FieldMacroKey(key: Key) extends SimpleFieldValue with TriggerNode(key):
+case class FieldMacroKey(key: Key) extends SimpleFieldValue(key):
   def update(paramValue: String): SimpleFieldValue =
     val key = Key(paramValue)
     FieldMacroKey(key)
 
-  override def table(fieldKey: FieldKey): Table =
-    KvTable(fieldKey.toString,
-      "Macro" -> key.keyWithName
-    )
+//  override def table(fieldKey: FieldKey): Table =
+//    KvTable(fieldKey.toString,
+//      "Macro" -> key.keyWithName
+//    )
 
   override def tableSection(fieldKey: FieldKey): TableSection =
     TableSection(fieldKey.toString,

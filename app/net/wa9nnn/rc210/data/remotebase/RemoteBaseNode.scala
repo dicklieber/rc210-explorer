@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.data.remotebase
 
+import com.wa9nnn.wa9nnnutil.tableui.TableSection
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.util.Chunk
@@ -26,7 +27,7 @@ import play.api.data.{Form, Mapping}
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.*
 
-case class RemoteBaseNode(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[RBMemory] = Seq.empty) extends ComplexFieldValue {
+case class RemoteBaseNode(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[RBMemory] = Seq.empty) extends ComplexFieldValue() {
   override val key: Key = Key(KeyKind.RemoteBase)
 
   //  override def display: String = fieldName
@@ -43,6 +44,8 @@ case class RemoteBaseNode(radio: Radio, yaesu: Yaesu, prefix: String, memories: 
   override def toJsValue: JsValue = Json.toJson(this)
 
   override def displayHtml: String = toString
+
+  override def tableSection(fieldKey: FieldKey): TableSection = ???
 }
 
 object RemoteBaseNode extends ComplexExtractor[RemoteBaseNode] {

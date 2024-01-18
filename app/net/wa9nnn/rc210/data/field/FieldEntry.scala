@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.*
 import net.wa9nnn.rc210.data.datastore.FieldEntryJson
-import net.wa9nnn.rc210.data.{Node, TriggerNode}
+import net.wa9nnn.rc210.data.Node
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 
 /**
@@ -35,6 +35,9 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
     candidate.getOrElse(fieldValue).asInstanceOf[F]
   }
 
+  def tableSection:TableSection=
+    value[FieldValue].tableSection(fieldKey)
+  
   def table: Table =
     val value1: Node = value
     value1.table(fieldKey)
@@ -73,23 +76,6 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
       .toCommands(this)
   }
 
-  /**
-   *
-   * @param macroKey of interest.
-   * @return FieldEntry that invokes the macroKey.
-   */
-  def canTriggerMacro(macroKey: Key): Boolean =
-    macroKey.check(KeyKind.Macro)
-    fieldValue match {
-      case tn: TriggerNode =>
-        tn.canRunMacro(macroKey)
-      case _ =>
-        false
-    }
-
-//  override def toString: String = {
-//    s"${fieldKey.fieldName}: ${fieldValue.displayHtml}"
-//  }
 
   def toJson: FieldEntryJson = {
     FieldEntryJson(this)

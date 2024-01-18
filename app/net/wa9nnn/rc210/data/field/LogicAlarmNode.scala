@@ -18,7 +18,6 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.{KvTable, Row, Table, TableSection}
-import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.Display
@@ -28,8 +27,7 @@ import play.api.data.Forms.*
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.routing.sird
 
-case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, lowMacro: Key, highMacro: Key) extends TriggerNode(lowMacro, highMacro)
-  with ComplexFieldValue {
+case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, lowMacro: Key, highMacro: Key) extends ComplexFieldValue(lowMacro, highMacro) {
   key.check(KeyKind.LogicAlarm)
   lowMacro.check(KeyKind.Macro)
   highMacro.check(KeyKind.Macro)
@@ -40,8 +38,8 @@ case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, 
     "High" -> highMacro,
   ).map(Row(_))
 
-  override def table(fieldKey: FieldKey): Table =
-    KvTable(s"Logic Alarm ${key.keyWithName}", tt: _*)
+//  override def table(fieldKey: FieldKey): Table =
+//    KvTable(s"Logic Alarm ${key.keyWithName}", tt: _*)
 
   override def tableSection(fieldKey: FieldKey): TableSection =
     TableSection(s"Logic Alarm ${fieldKey.key.keyWithName}", tt: _*)

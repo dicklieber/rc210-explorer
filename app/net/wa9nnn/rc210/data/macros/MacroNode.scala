@@ -2,7 +2,7 @@ package net.wa9nnn.rc210.data.macros
 
 import com.wa9nnn.wa9nnnutil.tableui.{KvTable, Row, Table, TableSection}
 import net.wa9nnn.rc210.data.Dtmf.Dtmf
-import net.wa9nnn.rc210.data.{Node, TriggerNode}
+import net.wa9nnn.rc210.data.Node
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.serial.Memory
@@ -17,15 +17,14 @@ import scala.annotation.tailrec
 
 /**
  * This RC-210 Macro
- * Would like to name this Macro by too many issues with "macro" in scala.
  *
  * @param key       unique id for this macro.
  * @param functions that this macro invokes.
  * @param dtmf      that can invoke this macro.
  */
-case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dtmf] = None) extends ComplexFieldValue with Node {
+case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dtmf] = None) extends ComplexFieldValue() with Node {
 
-  def enabled: Boolean = functions.nonEmpty
+//  def enabled: Boolean = functions.nonEmpty
 
 
   //  override val commandStringValue: String = "*4002 10 * 162 * 187 * 122 * 347" // todo

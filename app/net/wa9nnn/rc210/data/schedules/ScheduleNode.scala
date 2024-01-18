@@ -2,7 +2,6 @@ package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, KvTable, Row, Table, TableSection}
-import net.wa9nnn.rc210.data.TriggerNode
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.field.schedule.{DayOfWeek, Week}
 import net.wa9nnn.rc210.data.schedules.ScheduleNode.s02
@@ -30,7 +29,7 @@ case class ScheduleNode(override val key: Key,
                         hour: Int = 0,
                         minute: Int = 0,
                         macroKey: Key = Key(KeyKind.Macro, 1),
-                        override val enabled: Boolean = false) extends ComplexFieldValue with TriggerNode(macroKey):
+                        override val enabled: Boolean = false) extends ComplexFieldValue(macroKey):
 
   val description: String = {
     //    val week = s" Week: $weekInMonth"
@@ -67,9 +66,9 @@ case class ScheduleNode(override val key: Key,
     "Minute" -> minute,
   ).map(Row(_))
 
-  override def table(fieldKey: FieldKey): Table =
-    KvTable(s"Schedule ${key.keyWithName}", rows: _*)
-      .appendRows(Seq(Row("Macro" -> macroKey.keyWithName)))
+//  override def table(fieldKey: FieldKey): Table =
+//    KvTable(s"Schedule ${key.keyWithName}", rows: _*)
+//      .appendRows(Seq(Row("Macro" -> macroKey.keyWithName)))
 
   override def tableSection(fieldKey: FieldKey): TableSection =
     TableSection(s"Schedule ${key.keyWithName}", rows: _*)
@@ -109,7 +108,7 @@ case class ScheduleNode(override val key: Key,
       <tr>
         <td>Macro</td>
         <td>
-          {macroKeys}
+          {macroKey}
         </td>
       </tr>
       <tr>

@@ -21,7 +21,7 @@ import net.wa9nnn.rc210.{FieldKey, Key}
 import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.*
 
-case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue {
+case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue() {
 
   /**
    * Render this value as an RD-210 command string.

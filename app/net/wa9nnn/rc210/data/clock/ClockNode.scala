@@ -33,7 +33,7 @@ case class ClockNode(key: Key,
                      startDST: DSTPoint = DSTPoint(March, First),
                      endDST: DSTPoint = DSTPoint(November, Second),
                      say24Hours: Boolean = false,
-                ) extends ComplexFieldValue {
+                ) extends ComplexFieldValue() {
 
   override def displayHtml: String = "todo"
 

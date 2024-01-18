@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.datastore
 
 import com.wa9nnn.wa9nnnutil.tableui.*
 import net.wa9nnn.rc210.{FieldKey, Key}
-import net.wa9nnn.rc210.data.{Node, TriggerInfo, TriggerNode}
+import net.wa9nnn.rc210.data.Node
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.MacroNode
@@ -29,21 +29,21 @@ import scala.language.postfixOps
 
 /**
  *
- * @param Macro  that this flow centers around.
+ * @param Macro    that this flow centers around.
  * @param triggers what this macro does.
  * @param searched what we looked for. UI should highlight this node. 
  */
-case class FlowData(macroFieldEntry: FieldEntry, triggers: Seq[TriggerInfo], searched: Key):
+case class FlowData(macroFieldEntry: FieldEntry, triggers: Seq[FieldEntry], searched: Key):
   private val macroNode: MacroNode = macroFieldEntry.value
   private val macroFieldKey: FieldKey = macroFieldEntry.fieldKey
 
-  def triggersTable:Table =
+  def triggersTable: Table =
     var table: Table = KvTable("Triggers")
-    triggers.foreach{triggerInfo =>
-      table = table.appendSection(triggerInfo.tableSection)
+    triggers.foreach { fieldEntry =>
+      table = table.appendSection(fieldEntry.tableSection)
     }
     table
-  
+
   def functionsTable: Table =
     val f: Seq[(String, String)] = macroNode.functions.map { functionKey =>
       functionKey.rc210Value.toString -> FunctionsProvider(functionKey).description
@@ -57,9 +57,9 @@ case class FlowData(macroFieldEntry: FieldEntry, triggers: Seq[TriggerInfo], sea
     )
 
   def table: Table = {
-    val triggerRows: Seq[Row] = triggers.map { triggerInfo =>
-//      val value: TriggerNode = triggerInfo.tableSection
-      Row.ofAny(triggerInfo.fieldKey, triggerInfo.tableSection)
+    val triggerRows: Seq[Row] = triggers.map { fieldEntry =>
+      //      val value: TriggerNode = triggerInfo.tableSection
+      Row.ofAny(fieldEntry.fieldKey, fieldEntry.value.tableSection)
     }
     val functionRows = macroNode.functions.map { functionKey =>
       val description = FunctionsProvider(functionKey).description

@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.data.field
 
+import com.wa9nnn.wa9nnnutil.tableui.TableSection
 import net.wa9nnn.rc210.FieldKey
 import net.wa9nnn.rc210.ui.FormField
 import net.wa9nnn.rc210.util.{FieldSelect, SelectOption}
@@ -27,7 +28,7 @@ import play.api.libs.json.{JsValue, Json}
  *
  * @param value    one of the display values in DayOfWeek.options.
  */
-case class TimeoutTimerResetPoint(value: TotReset = TotReset.values.head) extends SimpleFieldValue {
+case class TimeoutTimerResetPoint(value: TotReset = TotReset.values.head) extends SimpleFieldValue() {
   def displayHtml: String = "TotResetPoint"
   def toCommands(fieldEntry: FieldEntryBase): Seq[String] =
     Seq(s"*2122${value.rc210Value}")
@@ -39,6 +40,11 @@ case class TimeoutTimerResetPoint(value: TotReset = TotReset.values.head) extend
   override def toHtmlField(fieldKey: FieldKey): String = FormField(fieldKey, value)
 
   override def toJsValue: JsValue = Json.toJson(value)
+
+  override def tableSection(fieldKey: FieldKey): TableSection =
+    TableSection(fieldKey.toString,
+      "TotReset" -> value.entryName
+    )
 }
 
 object TimeoutTimerResetPoint extends SimpleExtractor {
