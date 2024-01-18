@@ -130,11 +130,14 @@ table th {
     background: #00FF00;
 }
 
-.help {
-    font-size: smaller;
-    color: darkgrey;
-    width: 25em;
-    justify-content: left;
+.helpText {
+    background-color:#ddffdd;
+    word-wrap:break-word;
+}
+.helpHeader {
+    background-color:#ddffdd;
+    font-size: larger;
+    justify-content: center;
 }
 
 .functionSource {
