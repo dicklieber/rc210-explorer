@@ -18,13 +18,16 @@
 package net.wa9nnn.rc210.data.meter
 
 import com.wa9nnn.wa9nnnutil.tableui.*
-import net.wa9nnn.rc210.KeyKind.{Meter, MeterAlarm, Macro}
+import controllers.routes
+import net.wa9nnn.rc210.KeyKind.{Macro, Meter, MeterAlarm}
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.ui.TableSectionButtons
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.libs.json.{Format, JsValue, Json}
+import views.html.editButton
 
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -39,13 +42,11 @@ case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint:
     "Trip Point" -> tripPoint,
   ).map(Row(_))
 
-//  override def table(fieldKey: FieldKey): Table = {
-//    val table: Table = KvTable(s"Meter ${key.keyWithName}", rows: _*)
-//    table.appendRows(Seq(Row("Macro", macroKey.keyWithName)))
-//  }
-
   override def tableSection(fieldKey: FieldKey): TableSection =
-    TableSection(s"Meter ${key.keyWithName}", rows: _*)
+    TableSectionButtons(fieldKey,
+      editButton(routes.MeterController.edit(fieldKey.key)),
+      rows: _*
+    )
 
   override def displayHtml: String =
     <table class="tagValuetable">

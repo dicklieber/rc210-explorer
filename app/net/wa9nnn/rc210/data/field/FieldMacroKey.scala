@@ -18,22 +18,21 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.{KvTable, Table, TableSection}
-import net.wa9nnn.rc210.ui.FormField
+import controllers.routes
+import net.wa9nnn.rc210.ui.{FormField, TableSectionButtons}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.libs.json.{Format, JsResult, JsSuccess, JsValue, Json}
+import views.html.{editButton, flowChartButton}
 
 case class FieldMacroKey(key: Key) extends SimpleFieldValue(key):
   def update(paramValue: String): SimpleFieldValue =
     val key = Key(paramValue)
     FieldMacroKey(key)
-
-//  override def table(fieldKey: FieldKey): Table =
-//    KvTable(fieldKey.toString,
-//      "Macro" -> key.keyWithName
-//    )
+  
 
   override def tableSection(fieldKey: FieldKey): TableSection =
-    TableSection(fieldKey.toString,
+    TableSectionButtons(fieldKey,
+      editButton(routes.PortsController.index),
       "Macro" -> key.keyWithName
     )
 

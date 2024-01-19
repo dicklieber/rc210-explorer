@@ -40,7 +40,7 @@ case class FlowData(macroFieldEntry: FieldEntry, triggers: Seq[FieldEntry], sear
   def triggersTable: Table =
     var table: Table = KvTable("Triggers")
     triggers.foreach { fieldEntry =>
-      table = table.appendSection(fieldEntry.tableSection)
+      table = table.append(fieldEntry.tableSection)
     }
     table
 
@@ -68,8 +68,8 @@ case class FlowData(macroFieldEntry: FieldEntry, triggers: Seq[FieldEntry], sear
     KvTable.apply("Flow Data",
       "Search" -> searched.keyWithName,
       "Macro" -> macroFieldKey.key.keyWithName,
-      TableSection("Triggers", triggerRows: _*),
-      TableSection("Functions", functionRows: _*)
+      KvTableSection("Triggers", triggerRows: _*),
+      KvTableSection("Functions", functionRows: _*)
     )
   }
 

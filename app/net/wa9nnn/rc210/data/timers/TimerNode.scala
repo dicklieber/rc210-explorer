@@ -18,23 +18,29 @@
 package net.wa9nnn.rc210.data.timers
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.wa9nnnutil.tableui.TableSection
+import com.wa9nnn.wa9nnnutil.tableui.{KvTableSection, TableSection}
+import controllers.{TimerController, routes}
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.ui.TableSectionButtons
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, number, of}
 import play.api.libs.json.{JsValue, Json, OFormat}
+import play.twirl.api.Html
+import views.html.{editButton, flowChartButton}
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
-case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValue(macroKey)  {
+case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValue(macroKey) {
   val duration: FiniteDuration = Duration(seconds, "seconds")
 
-  override def tableSection(fieldKey: FieldKey): TableSection =
-    TableSection(s"Timer ${key.keyWithName}",
+  override def tableSection(fieldKey: FieldKey): TableSection = {
+    TableSectionButtons(fieldKey, 
+      editButton(routes.TimerController.edit(key)),
       "Duration" -> duration
     )
+  }
 
   override def displayHtml: String =
     <table class="tagValuetable">

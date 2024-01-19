@@ -2,15 +2,17 @@ package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, KvTable, Row, Table, TableSection}
+import controllers.routes
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.field.schedule.{DayOfWeek, Week}
 import net.wa9nnn.rc210.data.schedules.ScheduleNode.s02
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.Display
+import net.wa9nnn.rc210.ui.{Display, TableSectionButtons}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.libs.json.{Format, JsValue, Json}
+import views.html.editButton
 
 /**
  *
@@ -65,13 +67,12 @@ case class ScheduleNode(override val key: Key,
     "Hour" -> hour,
     "Minute" -> minute,
   ).map(Row(_))
-
-//  override def table(fieldKey: FieldKey): Table =
-//    KvTable(s"Schedule ${key.keyWithName}", rows: _*)
-//      .appendRows(Seq(Row("Macro" -> macroKey.keyWithName)))
-
+  
   override def tableSection(fieldKey: FieldKey): TableSection =
-    TableSection(s"Schedule ${key.keyWithName}", rows: _*)
+    TableSectionButtons(fieldKey,
+      editButton(routes.MeterController.edit(fieldKey.key)),
+      rows: _*
+    )
 
   override def displayHtml: String =
     <table class="tagValuetable">
