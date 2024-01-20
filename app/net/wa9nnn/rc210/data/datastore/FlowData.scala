@@ -18,12 +18,17 @@
 package net.wa9nnn.rc210.data.datastore
 
 import com.wa9nnn.wa9nnnutil.tableui.*
+import controllers.routes
 import net.wa9nnn.rc210.{FieldKey, Key}
 import net.wa9nnn.rc210.data.Node
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.MacroNode
+import net.wa9nnn.rc210.ui.TableSectionButtons
 import net.wa9nnn.rc210.ui.flow.{D3Data, D3Link, D3Node}
+import play.api.mvc.Call
+import play.twirl.api.{Html, StringInterpolation}
+import views.html.editButton
 
 import scala.language.postfixOps
 
@@ -52,9 +57,13 @@ case class FlowData(macroFieldEntry: FieldEntry, triggers: Seq[FieldEntry], sear
     KvTable(f: _*)
 
   def macroSection: Table =
-    KvTable(s"Macro ${macroFieldEntry.fieldKey.key.keyWithName}",
+    val table = Table(Seq.empty, Seq.empty)
+    val key = macroFieldEntry.fieldKey.key
+    val edit: Html = editButton(routes.MacroController.edit(key))
+    val ts = new TableSectionButtons("Macro", edit)(
       "DTMF" -> macroFieldEntry.value[MacroNode].dtmf
     )
+    table.append(ts)
 
   def table: Table = {
     val triggerRows: Seq[Row] = triggers.map { fieldEntry =>
