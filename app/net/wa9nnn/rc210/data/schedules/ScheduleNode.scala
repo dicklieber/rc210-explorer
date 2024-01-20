@@ -67,10 +67,10 @@ case class ScheduleNode(override val key: Key,
     "Hour" -> hour,
     "Minute" -> minute,
   ).map(Row(_))
-  
+
   override def tableSection(fieldKey: FieldKey): TableSection =
     TableSectionButtons(fieldKey,
-      editButton(routes.MeterController.edit(fieldKey.key)),
+      editButton(routes.ScheduleController.edit(fieldKey.key)),
       rows: _*
     )
 
