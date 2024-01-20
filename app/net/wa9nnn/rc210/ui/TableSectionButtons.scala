@@ -2,6 +2,7 @@ package net.wa9nnn.rc210.ui
 
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, TableSection}
 import net.wa9nnn.rc210.FieldKey
+import play.api.mvc.Call
 import play.twirl.api.Html
 import views.html.{editButton, flowChartButton}
 
@@ -43,12 +44,9 @@ class TableSectionButtons(sectionName: String, buttons: Html*)(newRows: (Row | (
 
 object TableSectionButtons:
 
-  def apply(fieldKey: FieldKey, edit: Html, newRows: (Row | (String, Any))*): TableSection =
+  def apply(fieldKey: FieldKey, edit: Call, newRows: Row | (String, Any)*): TableSection =
     val flowChart = flowChartButton(fieldKey.key)
-    new TableSectionButtons(fieldKey.toString, edit, flowChart)(newRows: _*)
+    
+    new TableSectionButtons(fieldKey.toString, 
+      editButton(edit), flowChart)(newRows: _*)
 
-
-
-
-
-//val rb: Html = views.html.editButton()

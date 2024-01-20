@@ -19,6 +19,7 @@ package net.wa9nnn.rc210.data.meter
 
 import com.wa9nnn.wa9nnnutil.tableui.*
 import controllers.routes
+import controllers.routes.MeterController
 import net.wa9nnn.rc210.KeyKind.{Macro, Meter, MeterAlarm}
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
@@ -43,10 +44,7 @@ case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint:
   ).map(Row(_))
 
   override def tableSection(fieldKey: FieldKey): TableSection =
-    TableSectionButtons(fieldKey,
-      editButton(routes.MeterController.edit(fieldKey.key)),
-      rows: _*
-    )
+    TableSectionButtons(fieldKey, routes.MeterAlarmController.edit(fieldKey.key), rows: _*)
 
   override def displayHtml: String =
     <table class="tagValuetable">

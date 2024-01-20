@@ -46,9 +46,8 @@ case class TimeoutTimerResetPoint(value: TotReset = TotReset.values.head) extend
 
   override def tableSection(fieldKey: FieldKey): TableSection =
     TableSectionButtons(fieldKey,
-      editButton(routes.PortsController.index),
-      "TotReset" -> value
-    )
+      routes.PortsController.index,
+      "TotReset" -> value)
 }
 
 object TimeoutTimerResetPoint extends SimpleExtractor {

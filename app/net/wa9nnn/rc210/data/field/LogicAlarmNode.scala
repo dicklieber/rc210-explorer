@@ -18,7 +18,8 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.{KvTable, Row, Table, TableSection}
-import controllers.routes
+import controllers.routes.*
+import controllers.routes.{LogicAlarmController, PortsController}
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.{Display, TableSectionButtons}
@@ -41,11 +42,7 @@ case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, 
   ).map(Row(_))
 
   override def tableSection(fieldKey: FieldKey): TableSection =
-    TableSectionButtons(fieldKey,
-      editButton(routes.PortsController.index),
-      "Low" -> lowMacro,
-      "High" -> highMacro,
-    )
+    TableSectionButtons(fieldKey, LogicAlarmController.index, "Low" -> lowMacro, "High" -> highMacro)
 
   override def displayHtml: String =
     <table>
