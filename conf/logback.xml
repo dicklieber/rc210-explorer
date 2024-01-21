@@ -56,7 +56,8 @@
     <logger name="controllers.LogicAlarmEditorController" level="INFO"/>
     <logger name="controllers.MacroEditorController" level="INFO"/>
     <logger name="net.wa9nnn.rc210.ui.SimpleValuesHandler" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.serial.comm.RcStreamBased" level="TRACE"/>
+    <logger name="net.wa9nnn.rc210.serial.comm.RcStreamBased" level="INFO"/>
+    <logger name="controllers.MacroController" level="INFO"/>
 
     <logger name="actors" level="INFO" />
     <logger name="akka" level="INFO" />

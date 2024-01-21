@@ -45,7 +45,7 @@ class MacroController @Inject()(dataStore: DataStore)
 
   def index: Action[AnyContent] = Action { implicit request =>
     val values: Seq[MacroNode] = dataStore.values(KeyKind.Macro)
-    Ok(macroNodes(values))
+    Ok(macroNodes(values, logger))
   }
 
   def edit(key: Key): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>

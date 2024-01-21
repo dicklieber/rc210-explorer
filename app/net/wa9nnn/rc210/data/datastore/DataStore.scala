@@ -189,25 +189,16 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
       FlowData(MacroEntry, triggers, search)
 
     val entries: Seq[FieldEntry] = apply(search)
-    assert(entries.length == 1, s"Should only be one entry for a compplex key, but got $entries")
+    assert(entries.length == 1, s"Should only be one entry for a complex key, but got $entries")
     entries.headOption.map { fieldEntry =>
       fieldEntry.fieldKey.key.keyKind match
-        case KeyKind.LogicAlarm => ???
-        case KeyKind.Meter => ???
-        case KeyKind.MeterAlarm => ???
-        case KeyKind.DtmfMacro => ???
-        case KeyKind.CourtesyTone => ???
-        case KeyKind.Function => ???
+
         case KeyKind.Macro =>
           buildFlowData(fieldEntry)
-        case KeyKind.Message => ???
-        case KeyKind.Clock => ???
-        case KeyKind.Port => ???
-        case KeyKind.Schedule => ???
-        case KeyKind.Timer => ???
-        case KeyKind.Common => ???
-        case KeyKind.RemoteBase => ???
-
+        case other =>
+          val entry: FieldValue = fieldEntry.value
+          val key: Key = entry.runableMacros.head
+          flowData(key).get
     }
 
 }
