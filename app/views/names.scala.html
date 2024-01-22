@@ -1,0 +1,13 @@
+@import net.wa9nnn.rc210.ui.Tabs
+@import com.wa9nnn.wa9nnnutil.tableui.Table
+@import com.wa9nnn.wa9nnnutil.tableui.html.renderTable
+@(table: Table)
+@tabbedmain(Tabs.namesTab) {
+    <div class="helpText">
+        <p >
+            These are the things that have user-defined names.
+        </p>
+    </div>
+
+    @renderTable(table)
+}

@@ -39,7 +39,13 @@ import scala.util.{Failure, Success, Try}
 class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: MemoryFileLoader)
   extends NamedKeySource with LazyLogging {
 
+  /**
+   * This is all the data tht a user can edit that can be sent or received from an RC-210.
+   */
   private implicit val keyFieldMap: TrieMap[FieldKey, FieldEntry] = new TrieMap[FieldKey, FieldEntry]()
+  /**
+   * This is the user-suplied metadata about a [[Key]].
+   */
   private val keyNameMap = new TrieMap[Key, String]
   Key.setNamedSource(this) // so any Key can get it's user-supplied name.
 
@@ -56,10 +62,6 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
         fieldEntry.value.asInstanceOf[T]
       case None =>
         throw new IllegalArgumentException(s"No editValue for fieldKey: $fieldKey")
-
-  def search(str: String): Seq[Key] =
-    throw new NotImplementedError() //todo
-  //https://lucene.apache.org/core/
 
   def indexValues[T <: ComplexFieldValue](keyKind: KeyKind): Seq[T] =
     all.filter(_.fieldKey.key.keyKind == keyKind).map(_.value.asInstanceOf[T])
@@ -167,6 +169,10 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
       namedKeys = keyNameMap.map { case (key, name) => NamedKey(key, name) }.toSeq)
 
   override def nameForKey(key: Key): String = keyNameMap.getOrElse(key, "")
+
+  override def namedKeys: Seq[NamedKey] =
+    keyNameMap.map((key, name) => NamedKey(key, name)).toIndexedSeq.sorted
+    
 
   def triggers: Seq[FieldEntry] =
     (for {

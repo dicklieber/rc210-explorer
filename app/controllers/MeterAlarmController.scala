@@ -18,6 +18,7 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
+import controllers.EditableController.register
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldEntry, FieldInt}
 import net.wa9nnn.rc210.data.meter.*
@@ -36,6 +37,7 @@ import javax.inject.*
 
 class MeterAlarmController @Inject()(dataStore: DataStore, components: MessagesControllerComponents)
   extends ComplexFieldController[MeterAlarm](dataStore, components) with LazyLogging {
+  register(KeyKind.MeterAlarm, this)
 
   override val complexExtractor: ComplexExtractor[MeterAlarm] = MeterAlarm
 

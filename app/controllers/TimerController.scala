@@ -18,9 +18,10 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
+import controllers.EditableController.register
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.ComplexExtractor
-import net.wa9nnn.rc210.NamedKey
+import net.wa9nnn.rc210.{KeyKind, NamedKey}
 import net.wa9nnn.rc210.data.timers.TimerNode
 import net.wa9nnn.rc210.ui.ComplexFieldController
 import play.api.data.Form
@@ -31,6 +32,7 @@ import scala.language.postfixOps
 
 class TimerController @Inject()(dataStore: DataStore, components: MessagesControllerComponents)
   extends ComplexFieldController[TimerNode](dataStore, components) with LazyLogging {
+  register(KeyKind.Timer, this)
 
   override val complexExtractor: ComplexExtractor[TimerNode] = TimerNode
 

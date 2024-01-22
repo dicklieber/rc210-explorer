@@ -34,8 +34,6 @@ GET         /datastore/view                           controllers.DataStoreContr
 GET         /datastore/upload                         controllers.DataStoreController.upload
 POST        /datastore/save                           controllers.DataStoreController.save()
 GET         /rc210/select/:portDescriptor             controllers.IOController.select(portDescriptor:String)
-#POST        /rc210/progress                            controllers.IOController.progress()
-#GET         /rc210/progress                            controllers.IOController.progress()
 GET         /rc210/result                             controllers.IOController.downloadResult
 GET         /rc210                                    controllers.IOController.listSerialPorts
 POST        /ports/save                               controllers.PortsController.save()
@@ -54,7 +52,8 @@ GET         /download                                 controllers.DownloadContro
 GET         /clock                                    controllers.ClockController.index
 POST        /remote/save                              controllers.RemoteBaseController.save()
 GET         /remote                                   controllers.RemoteBaseController.index
-
+GET         /names                                    controllers.NamesController.index
+GET         /edit/:key                                controllers.NamesController.edit(key:Key)
 GET         /editUser/:id                             controllers.UsersController.editUser(id:String)
 GET         /users                                    controllers.UsersController.users()
 GET         /addUser                                  controllers.UsersController.addUser()
@@ -67,7 +66,7 @@ GET         /loginError/:error                        controllers.LoginControlle
 GET         /                                         controllers.LoginController.loginLanding
 GET         /flow/:macroKey                           controllers.FlowController.flowTable(macroKey:Key)
 GET         /flowchart/:macroKey                      controllers.FlowController.flowChart(macroKey:Key)
-    GET         /d3Data/:macroKey                         controllers.FlowController.d3Data(macroKey:Key)
+GET         /d3Data/:macroKey                         controllers.FlowController.d3Data(macroKey:Key)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                             controllers.Assets.versioned(path="/public", file: Asset)

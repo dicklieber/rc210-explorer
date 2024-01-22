@@ -18,9 +18,10 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
+import controllers.EditableController.register
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, LogicAlarmNode}
-import net.wa9nnn.rc210.NamedKey
+import net.wa9nnn.rc210.{KeyKind, NamedKey}
 import net.wa9nnn.rc210.ui.ComplexFieldController
 import play.api.data.Form
 import play.api.mvc.*
@@ -30,6 +31,7 @@ import javax.inject.*
 @Singleton
 class LogicAlarmController @Inject()(components: MessagesControllerComponents, dataStore: DataStore)
   extends ComplexFieldController[LogicAlarmNode](dataStore, components) with LazyLogging {
+  register(KeyKind.LogicAlarm, this)
 
   override val complexExtractor: ComplexExtractor[LogicAlarmNode] = LogicAlarmNode
 

@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.ui
 
+import controllers.EditableController
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue}
 import net.wa9nnn.rc210.NamedKey
@@ -29,12 +30,13 @@ import play.api.mvc.*
 /**
  * Handle logic for any [[ComplexFieldValue]]  play Controller.
  *
- * @param dataStore where RC-210 data lives.
+ * @param dataStore  where RC-210 data lives.
  * @param components needed for any Controller.
  * @tparam T
  */
 abstract class ComplexFieldController[T <: ComplexFieldValue](dataStore: DataStore, components: MessagesControllerComponents)
-  extends MessagesAbstractController(components) {
+  extends MessagesAbstractController(components) with EditableController{
+
   val complexExtractor: ComplexExtractor[T]
 
   /**
@@ -119,3 +121,7 @@ abstract class ComplexFieldController[T <: ComplexFieldValue](dataStore: DataSto
 
   }
 }
+  
+
+
+

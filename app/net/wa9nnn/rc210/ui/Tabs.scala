@@ -35,6 +35,7 @@ object Tabs {
 
   val macrosTab: Tab = Tab("Macros", routes.MacroController.index.url, "Macro settings.")
   val messagesTab: Tab = Tab("Messages", routes.MessageController.index.url, "Messages.")
+  val namesTab: Tab = Tab("Names", routes.NamesController.index.url, "User supp;ied names for varous fields.")
 
   val portsTab: Tab = Tab("Ports", routes.PortsController.index.url, "Port settings")
 
@@ -58,6 +59,7 @@ object Tabs {
     schedulesTab,
     timersTab,
     remoteBase,
+    namesTab,
     rc210Tab,
     changes,
   ).sortBy(_.name)

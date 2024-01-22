@@ -17,20 +17,31 @@
 
 package net.wa9nnn.rc210
 
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, RowSource}
+import controllers.routes
 import play.api.libs.json.{Format, Json}
 
-case class NamedKey(key: Key, name: String) extends Ordered[NamedKey] {
+case class NamedKey(key: Key, name: String) extends Ordered[NamedKey] with RowSource {
   override def compare(that: NamedKey): Int = key compareTo that.key
+
+  override def toRow: Row = {
+    Row(
+      Cell(key.toString)
+        .withUrl(routes.NamesController.edit(key).url),
+      name)
+  }
 }
 
 object NamedKey {
   implicit val fmtNamedKey: Format[NamedKey] = Json.format[NamedKey]
 }
 
-
 trait NamedKeySource {
   def nameForKey(key: Key): String
-  def namedKey(key: Key):NamedKey=
+
+  def namedKey(key: Key): NamedKey =
     NamedKey(key, nameForKey(key))
+
+  def namedKeys: Seq[NamedKey]
 }
 

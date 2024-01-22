@@ -19,14 +19,16 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Header, Row, Table}
+import controllers.EditableController.{register, registeredControllers}
 import net.wa9nnn.rc210.data.datastore.*
-import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.field.{ComplexExtractor, FieldEntry}
+import net.wa9nnn.rc210.data.meter.MeterAlarm
 import net.wa9nnn.rc210.data.schedules.ScheduleNode
 import net.wa9nnn.rc210.security.Who.request2Session
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
-import net.wa9nnn.rc210.ui.ProcessResult
-import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.ui.{ComplexFieldController, ProcessResult}
+import net.wa9nnn.rc210.{Key, KeyKind, NamedKey}
 import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.mvc.*
@@ -38,36 +40,49 @@ import scala.language.postfixOps
 
 @Singleton()
 class ScheduleController @Inject()(dataStore: DataStore, components: MessagesControllerComponents)
-  extends MessagesAbstractController(components) with LazyLogging {
+  extends ComplexFieldController[ScheduleNode](dataStore, components) with LazyLogging { 
 
-  def index: Action[AnyContent] = Action { implicit request =>
-    val schedules: Seq[ScheduleNode] = dataStore.indexValues(KeyKind.Schedule)
-    Ok(views.html.schedules(schedules))
+  register(KeyKind.Schedule, this)
+
+  override def indexResult(values: Seq[ScheduleNode]): Result = {
+    Ok(views.html.schedules(values))
   }
 
-  def edit(key: Key): Action[AnyContent] = Action { implicit request =>
-    val fieldKey = ScheduleNode.fieldKey(key)
-    val schedule: ScheduleNode = dataStore.editValue(fieldKey)
-    Ok(views.html.scheduleEdit(ScheduleNode.form.fill(schedule), key.namedKey))
-  }
+  override def editResult(filledForm: Form[ScheduleNode], namedKey: NamedKey)(using request: MessagesRequest[AnyContent]): Result =
+    Ok(views.html.scheduleEdit(filledForm, namedKey))
 
-  def save(): Action[AnyContent] = Action {
-    implicit request: MessagesRequest[AnyContent] =>
-      ScheduleNode.form
-        .bindFromRequest()
-        .fold(
-          (formWithErrors: Form[ScheduleNode]) => {
-            val namedKey = Key(formWithErrors.data("key")).namedKey
-            BadRequest(views.html.scheduleEdit(formWithErrors, namedKey))
-          },
-          (schedule: ScheduleNode) => {
-            val candidateAndNames = ProcessResult(schedule)
+  override def saveOkResult(): Result =
+    Redirect(routes.ScheduleController.index)
 
-            given RcSession = request.attrs(sessionKey)
+//  def index: Action[AnyContent] = Action { implicit request =>
+//    val schedules: Seq[ScheduleNode] = dataStore.indexValues(KeyKind.Schedule)
+//    Ok(views.html.schedules(schedules))
+//  }
 
-            dataStore.update(candidateAndNames)
-            Redirect(routes.ScheduleController.index)
-          }
-        )
-  }
+//  def edit(key: Key): Action[AnyContent] = Action { implicit request =>
+//    val fieldKey = ScheduleNode.fieldKey(key)
+//    val schedule: ScheduleNode = dataStore.editValue(fieldKey)
+//    Ok(views.html.scheduleEdit(ScheduleNode.form.fill(schedule), key.namedKey))
+//  }
+
+//  def save(): Action[AnyContent] = Action {
+//    implicit request: MessagesRequest[AnyContent] =>
+//      ScheduleNode.form
+//        .bindFromRequest()
+//        .fold(
+//          (formWithErrors: Form[ScheduleNode]) => {
+//            val namedKey = Key(formWithErrors.data("key")).namedKey
+//            BadRequest(views.html.scheduleEdit(formWithErrors, namedKey))
+//          },
+//          (schedule: ScheduleNode) => {
+//            val candidateAndNames = ProcessResult(schedule)
+//
+//            given RcSession = request.attrs(sessionKey)
+//
+//            dataStore.update(candidateAndNames)
+//            Redirect(routes.ScheduleController.index)
+//          }
+//        )
+//  }
+  override val complexExtractor: ComplexExtractor[ScheduleNode] = ScheduleNode
 }
