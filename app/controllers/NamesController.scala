@@ -53,27 +53,6 @@ class NamesController @Inject()(dataStore: DataStore, components: MessagesContro
       Ok(views.html.names(table))
   }
 
-  /**
-   * Edit a for a [[Key]].
-   *
-   */
-  def edit(key: Key): Action[AnyContent] = Action {
-    implicit request =>
-      val controller: EditableController = EditableController.registeredControllers.getOrElse(key.keyKind,
-          throw new IllegalArgumentException(s"No controller is registered for $key"))
-      val value: Result = controller.edit(key)
-      Redirect(value)
-  }
-
-trait EditableController:
-  def edit(key: Key): Action[AnyContent]
-
-object EditableController:
-  val registeredControllers: TrieMap[KeyKind, EditableController] = TrieMap.empty
-
-  def register(keyKind: KeyKind, editableController: EditableController): Unit =
-    registeredControllers.put(keyKind, editableController)
-
 
 
 

@@ -2,9 +2,10 @@
 @import net.wa9nnn.rc210.ui.Tabs
 @import net.wa9nnn.rc210.data.vocabulary.Words
 @import net.wa9nnn.rc210.data.field.MessageNode
+@import net.wa9nnn.rc210.KeyKind
 @(message: MessageNode)
 
-@tabbedmain(Tabs.messagesTab) {
+@tabbedmain(KeyKind.Message) {
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/contextmenu.css")">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
@@ -19,7 +20,7 @@
         <input type="hidden" name="ids" id="ids">
         <div class="row">
             <div class="col col-md-auto border border-primary">
-                @nameEdit(message.key.namedKey)
+                @nameEdit(message.key)
 
                 @submitButton()
                 <p>Drag function to reorder. Dbl-click to remove.</p>

@@ -17,18 +17,20 @@
 
 package net.wa9nnn.rc210.data.field
 
-import com.wa9nnn.wa9nnnutil.tableui.{KvTable, Row, Table, TableSection}
+import com.wa9nnn.wa9nnnutil.tableui.*
+import controllers.routes
 import controllers.routes.*
-import controllers.routes.{LogicAlarmController, PortsController}
+import net.wa9nnn.rc210.data.EditHandler
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.{Display, TableSectionButtons}
+import net.wa9nnn.rc210.ui.*
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
-import play.api.data.Form
 import play.api.data.Forms.*
-import play.api.libs.json.{Format, JsValue, Json}
-import play.api.routing.sird
-import views.html.editButton
+import play.api.data.*
+import play.api.i18n.MessagesProvider
+import play.api.libs.json.*
+import play.api.mvc.*
+import views.html.{editButton, logicAlarmEditor}
 
 case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, lowMacro: Key, highMacro: Key) extends ComplexFieldValue(lowMacro, highMacro) {
   key.check(KeyKind.LogicAlarm)
@@ -42,7 +44,8 @@ case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, 
   ).map(Row(_))
 
   override def tableSection(fieldKey: FieldKey): TableSection =
-    TableSectionButtons(fieldKey, LogicAlarmController.index, "Low" -> lowMacro, "High" -> highMacro)
+    TableSectionButtons(fieldKey, routes.EditController.edit(fieldKey),
+      "Low" -> lowMacro, "High" -> highMacro)
 
   override def displayHtml: String =
     <table>
@@ -75,10 +78,19 @@ case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, 
   }
 
   override def toJsValue: JsValue = Json.toJson(this)
+
+  override def toRow: Row = Row(EditButtonCell(fieldKey),
+    enabled,
+    lowMacro,
+    highMacro
+  )
 }
 
-object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode] {
+object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode] with EditHandler[LogicAlarmNode] {
   override val keyKind: KeyKind = KeyKind.LogicAlarm
+
+  override def editOp(form: Form[LogicAlarmNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result =
+    Results.Ok(logicAlarmEditor(form, fieldKey))
 
   def unapply(u: LogicAlarmNode): Option[(Key, Boolean, Key, Key)] = Some((u.key, u.enabled, u.lowMacro, u.highMacro))
 
@@ -90,6 +102,16 @@ object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode] {
       "highMacro" -> of[Key]
     )(LogicAlarmNode.apply)(LogicAlarmNode.unapply)
   )
+
+  override def index(values: Seq[LogicAlarmNode]): Table =
+    Table(Header(s"Logic Alarm  (${values.length})",
+      "Logic Alarm",
+      "Enable",
+      "Low Macro",
+      "High Macro"
+    ),
+      values.map(_.toRow)
+    )
 
   /**
    *
@@ -124,4 +146,9 @@ object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode] {
   override def positions: Seq[FieldOffset] = Seq()
 
   implicit val fmtLogicAlarm: Format[LogicAlarmNode] = Json.format[LogicAlarmNode]
+
+
+  
+//  override def editOp(form: Form[LogicAlarmNode], fieldKey: FieldKey): Result =
+//    logicAlarmEditor(form, fieldKey)
 }

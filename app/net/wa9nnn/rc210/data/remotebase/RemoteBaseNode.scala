@@ -17,9 +17,10 @@
 
 package net.wa9nnn.rc210.data.remotebase
 
-import com.wa9nnn.wa9nnnutil.tableui.TableSection
+import com.wa9nnn.wa9nnnutil.tableui.{Row, TableSection}
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.ui.EditButtonCell
 import net.wa9nnn.rc210.util.Chunk
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Forms.*
@@ -46,6 +47,14 @@ case class RemoteBaseNode(radio: Radio, yaesu: Yaesu, prefix: String, memories: 
   override def displayHtml: String = toString
 
   override def tableSection(fieldKey: FieldKey): TableSection = ???
+
+  override def toRow: Row = Row(
+    EditButtonCell(fieldKey),
+    radio,
+    yaesu,
+    prefix,
+    "memories"
+  )
 }
 
 object RemoteBaseNode extends ComplexExtractor[RemoteBaseNode] {

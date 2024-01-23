@@ -5,9 +5,10 @@
 
 @import net.wa9nnn.rc210.data.clock.Occurrence
 @import net.wa9nnn.rc210.data.clock.MonthOfYearDST
+@import net.wa9nnn.rc210.KeyKind
 @(clockForm: Form[ClockNode])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
-    @tabbedmain(Tabs.clockTab) {
+    @tabbedmain(KeyKind.Clock) {
         <div class="container">
         @form(routes.ClockController.save()) {
             <input type="hidden" name="key" value="@clockForm("key").value">

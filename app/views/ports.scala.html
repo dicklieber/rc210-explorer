@@ -5,9 +5,10 @@
 @import net.wa9nnn.rc210.NamedKey
 
 @import net.wa9nnn.rc210.ui.FormField
+@import net.wa9nnn.rc210.KeyKind
 @(rows: Seq[Row])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
-@tabbedmain(Tabs.portsTab) {
+@tabbedmain(KeyKind.Port) {
     @form(action = routes.PortsController.save()) {
         @submitButton()
         <table class="table table-bordered table-sm  w-auto rc210-table headeredTable   ">

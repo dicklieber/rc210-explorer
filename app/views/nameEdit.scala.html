@@ -1,9 +1,12 @@
+@import net.wa9nnn.rc210.Key
 @import net.wa9nnn.rc210.NamedKey
-@(namedKey: NamedKey)
+@(key: Key)
 <div class="nameEditor">
-    @namedKey.key.rc210Value:
-    <label>
+    @defining(key.namedKey) { namedKey =>
+        @namedKey.key.rc210Value:
+        <label>
         Name:
-        <input name="name" value="@namedKey.name">
+            <input name="name" value="@namedKey.name">
     </label>
+    }
 </div>

@@ -17,9 +17,9 @@
 
 package net.wa9nnn.rc210
 
-import net.wa9nnn.rc210.{Key, KeyKind, FieldKey}
+import net.wa9nnn.rc210.data.EditHandler
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.libs.json.*
-import play.api.mvc.PathBindable
 
 import scala.util.Try
 
@@ -29,7 +29,7 @@ import scala.util.Try
  * @param fieldName name of rc2input. Shown in UIs
  * @param key       qualifier for the rc2input.
  */
-case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey]  {
+case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey] {
 
   override def compare(that: FieldKey): Int = {
     var ret = key.keyKind.toString compareTo that.key.keyKind.toString
@@ -41,14 +41,18 @@ case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey]  {
   }
 
   override def toString: String = s"${key.toString}:$fieldName"
+
+  val editHandler: EditHandler[?] =
+    key.keyKind.handler
 }
 
 object FieldKey {
   /**
    * For use field name is the [[KeyKind]] name.
+   *
    * @param key whose [[KeyKind]] name is the field name.
    */
-  def apply(key: Key):FieldKey =  new FieldKey(key.keyKind.entryName, key)
+  def apply(key: Key): FieldKey = new FieldKey(key.keyKind.entryName, key)
 
   implicit val fmtFieldKey: Format[FieldKey] = new Format[FieldKey] {
     override def writes(o: FieldKey) = JsString(o.toString)
@@ -60,25 +64,13 @@ object FieldKey {
     }
   }
 
-  implicit def fieldKeyPathBinder(implicit intBinder: PathBindable[FieldKey]): PathBindable[FieldKey] = new PathBindable[FieldKey] {
-    override def bind(key: String, fromPath: String): Either[String, FieldKey] = {
-      try {
-        Right(FieldKey(fromPath))
-      } catch {
-        case e: Exception =>
-          Left(e.getMessage)
-      }
-    }
 
-    override def unbind(key: String, fieldKey: FieldKey): String =
-      fieldKey.toString
-  }
-  def opt(maybeSFieldKey:Option[String]):Option[FieldKey] =
+  def opt(maybeSFieldKey: Option[String]): Option[FieldKey] =
     maybeSFieldKey.map(FieldKey(_))
 
   def apply(param: String): FieldKey = {
     param match
-      case r( sKey, fieldName) =>
+      case r(sKey, fieldName) =>
         val key = Key(sKey)
         FieldKey(fieldName, key)
       case s: String =>

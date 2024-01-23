@@ -18,12 +18,18 @@
 package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
+import com.wa9nnn.wa9nnnutil.tableui.Row
 import net.wa9nnn.rc210.{FieldKey, Key}
 import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue, Json}
 
 case class FieldDtmf(value: String) extends SimpleFieldValue() with LazyLogging {
   logger.debug("value: {}", value)
+
+  override def toRow: Row = Row(
+    "FieldDtmf",
+    toString
+  )
 
   override def toHtmlField(fieldKey: FieldKey): String = FormField(fieldKey, value)
 

@@ -26,9 +26,8 @@ case class NamedKey(key: Key, name: String) extends Ordered[NamedKey] with RowSo
 
   override def toRow: Row = {
     Row(
-      Cell(key.toString)
-        .withUrl(routes.NamesController.edit(key).url),
-      name)
+      Cell(key.toString), name
+    )
   }
 }
 

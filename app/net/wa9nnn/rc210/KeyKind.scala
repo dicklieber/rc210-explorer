@@ -17,25 +17,21 @@
 
 package net.wa9nnn.rc210
 
+import controllers.routes
 import enumeratum.*
 import enumeratum.EnumEntry.CapitalWords
+import net.wa9nnn.rc210.data.EditHandler
+import net.wa9nnn.rc210.data.field.{FieldValue, LogicAlarmNode}
+import net.wa9nnn.rc210.ui.{AbstractTab, Tabs}
 
-sealed trait KeyKind(val maxN: Int) extends EnumEntry with CapitalWords:
-  def spaces: String =
-    entryName.replaceAll(
-      String.format("%s|%s|%s",
-        "(?<=[A-Z])(?=[A-Z][a-z])",
-        "(?<=[^A-Z])(?=[A-Z])",
-        "(?<=[A-Za-z])(?=[^A-Za-z])"
-      ),
-      " "
-    )
+sealed trait KeyKind(val maxN: Int,  val handler: EditHandler[?] = null) extends EnumEntry with CapitalWords with AbstractTab:
+  override def indexUrl:String = routes.EditController.index(this).url
 
-object KeyKind extends PlayEnum[KeyKind] {
+object KeyKind extends PlayEnum[KeyKind]:
 
   override def values: IndexedSeq[KeyKind] = findValues
 
-  case object LogicAlarm extends KeyKind(5)
+  case object LogicAlarm extends KeyKind(5, LogicAlarmNode)
 
   case object Meter extends KeyKind(8)
 
@@ -63,4 +59,3 @@ object KeyKind extends PlayEnum[KeyKind] {
 
   case object RemoteBase extends KeyKind(1)
 
-}

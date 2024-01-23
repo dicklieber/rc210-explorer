@@ -7,7 +7,7 @@ import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.field.schedule.{DayOfWeek, Week}
 import net.wa9nnn.rc210.data.schedules.ScheduleNode.s02
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.{Display, TableSectionButtons}
+import net.wa9nnn.rc210.ui.{Display, EditButtonCell, TableSectionButtons}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.*
@@ -16,13 +16,13 @@ import views.html.editButton
 
 /**
  *
- * @param key                    for [[ScheduleKey]]
- * @param dow                    [[DayOfWeek]] or [[WeekAndDow]].
- * @param monthOfYear            enumerated
- * @param hour                   when this runs on selected day.
- * @param minute                 when this runs on selected day.
+ * @param key                     for [[ScheduleKey]]
+ * @param dow                     [[DayOfWeek]] or [[WeekAndDow]].
+ * @param monthOfYear             enumerated
+ * @param hour                    when this runs on selected day.
+ * @param minute                  when this runs on selected day.
  * @param macroKeys               e.g. "macro42"
- * @param enabled                duh
+ * @param enabled                 duh
  */
 case class ScheduleNode(override val key: Key,
                         dow: DayOfWeek = DayOfWeek.EveryDay,
@@ -32,6 +32,24 @@ case class ScheduleNode(override val key: Key,
                         minute: Int = 0,
                         macroKey: Key = Key(KeyKind.Macro, 1),
                         override val enabled: Boolean = false) extends ComplexFieldValue(macroKey):
+
+  override def toRow: Row = Row(
+    EditButtonCell(fieldKey),
+    dow,
+    week,
+    monthOfYear,
+    hour,
+    minute,
+    macroKey
+  )
+
+  private val rows: Seq[Row] = Seq(
+    "Day Of Week" -> dow,
+    "Week" -> week,
+    "Month" -> monthOfYear,
+    "Hour" -> hour,
+    "Minute" -> minute,
+  ).map(Row(_))
 
   val description: String = {
     //    val week = s" Week: $weekInMonth"
@@ -60,16 +78,8 @@ case class ScheduleNode(override val key: Key,
     Seq(command)
   }
 
-  private val rows: Seq[Row] = Seq(
-    "Day Of Week" -> dow,
-    "Week" -> week,
-    "Month" -> monthOfYear,
-    "Hour" -> hour,
-    "Minute" -> minute,
-  ).map(Row(_))
-
   override def tableSection(fieldKey: FieldKey): TableSection =
-    TableSectionButtons(fieldKey, routes.ScheduleController.edit(fieldKey.key), rows: _*)
+    TableSectionButtons(fieldKey, routes.EditController.edit(fieldKey), rows: _*)
 
   override def displayHtml: String =
     <table class="tagValuetable">
@@ -119,8 +129,7 @@ case class ScheduleNode(override val key: Key,
       .toString
 
   override def toJsValue: JsValue = Json.toJson(this)
-
-
+  
 object ScheduleNode extends LazyLogging with ComplexExtractor[ScheduleNode] {
   override val keyKind: KeyKind = KeyKind.Schedule
 

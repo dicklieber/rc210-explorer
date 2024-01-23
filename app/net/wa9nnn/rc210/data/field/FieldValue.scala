@@ -27,7 +27,7 @@ import play.api.libs.json.JsValue
  * Knows how to render as HTML control or string for JSON, showing to a user or RC-210 Command,
  * Has enough metadata needed yo render
  */
-sealed trait FieldValue extends LazyLogging {
+sealed trait FieldValue extends LazyLogging with RowSource {
   /**
    * Nodes that actuall have an eneabled field should override this.
    *

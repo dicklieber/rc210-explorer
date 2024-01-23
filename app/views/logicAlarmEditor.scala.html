@@ -1,17 +1,19 @@
-@import net.wa9nnn.rc210.ui.MyHelpers._
-@import views.html.helper._
-@import play.api.mvc.RequestHeader
-@import net.wa9nnn.rc210.ui.Tabs
-@import net.wa9nnn.rc210.ui.MacroSelect
-@import views.html.helper.checkbox
 @import net.wa9nnn.rc210.NamedKey
 @import net.wa9nnn.rc210.data.field.LogicAlarmNode
-@(logicAlarmForm: Form[LogicAlarmNode], namedKey: NamedKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider) extends 
-    @tabbedmain(Tabs.logicAlarmTab) {
+@import net.wa9nnn.rc210.ui.MyHelpers.*
+@import net.wa9nnn.rc210.ui.{MacroSelect, Tabs}
+@import play.api.mvc.RequestHeader
+@import views.html.helper.{checkbox, *}
+@import net.wa9nnn.rc210.Key
+@import net.wa9nnn.rc210.FieldKey
+@import net.wa9nnn.rc210.KeyKind
+@(logicAlarmForm: Form[LogicAlarmNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider) extends
+    @tabbedmain(KeyKind.LogicAlarm) {
         <div class="container">
-        @form(routes.LogicAlarmController.save()) {
-            @nameEdit(namedKey)
-            <input type="hidden" name="key" value="@namedKey.key">
+        @form(routes.EditController.save()) {
+
+            @nameEdit(fieldKey.key)
+            <input type="hidden" name="key" value="@fieldKey.key">
             <table>
                 <tr>
                     <td>
@@ -43,5 +45,5 @@
 
         </div>
     }
-    } @import views.html.helper.select
+    }
 

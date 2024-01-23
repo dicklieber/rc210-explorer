@@ -1,12 +1,13 @@
 @import net.wa9nnn.rc210.ui.Tabs
-@import net.wa9nnn.rc210.ui.Tab
+@import net.wa9nnn.rc210.ui.AbstractTab
 @import net.wa9nnn.rc210explorer.BuildInfo
 @import java.time.Instant
 @import java.time.LocalTime
 @import java.time.LocalDate
 @import java.time.ZoneId
 @import java.time.ZoneId._
-@(activeTab: Tab)(content: Html)
+@import net.wa9nnn.rc210.KeyKind
+@(activeTab: AbstractTab)(content: Html)
 <!doctype html>
 <html lang="en">
     <head>
@@ -35,7 +36,7 @@
                 <ul>
                     @for(tab <- Tabs.tabs) {
                         <li>
-                            <a class=" @if(tab == activeTab) { active }" href="@tab.url" title="@tab.tooltip">@tab.name</a>
+                            <a class=" @if(tab == activeTab) { active }" href="@tab.indexUrl" >@tab.entryName</a>
                         </li>
                     }
                     <li class="nav-item dropdown">

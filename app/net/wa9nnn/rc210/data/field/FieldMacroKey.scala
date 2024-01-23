@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.data.field
 
-import com.wa9nnn.wa9nnnutil.tableui.{KvTable, Table, TableSection}
+import com.wa9nnn.wa9nnnutil.tableui.{KvTable, Row, Table, TableSection}
 import controllers.routes
 import controllers.routes.PortsController
 import net.wa9nnn.rc210.ui.{FormField, TableSectionButtons}
@@ -41,6 +41,10 @@ case class FieldMacroKey(key: Key) extends SimpleFieldValue(key):
   def toJsValue: JsValue = Json.toJson(key)
 
   override def toHtmlField(fieldKey: FieldKey): String = FormField(fieldKey, key)
+
+  override def toRow: Row = Row(
+    "FieldMacroKey", toString
+  )
 
 object MacroKeyExtractor extends SimpleExtractor:
   override def extractFromInts(iterator: Iterator[Int], fieldDefinition: SimpleField): FieldValue = {

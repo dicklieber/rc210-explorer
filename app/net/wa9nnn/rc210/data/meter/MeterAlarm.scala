@@ -19,11 +19,10 @@ package net.wa9nnn.rc210.data.meter
 
 import com.wa9nnn.wa9nnnutil.tableui.*
 import controllers.routes
-import controllers.routes.MeterController
 import net.wa9nnn.rc210.KeyKind.{Macro, Meter, MeterAlarm}
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.TableSectionButtons
+import net.wa9nnn.rc210.ui.{EditButtonCell, TableSectionButtons}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.*
@@ -43,8 +42,17 @@ case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint:
     "Trip Point" -> tripPoint,
   ).map(Row(_))
 
+  override def toRow: Row = Row(
+    EditButtonCell(fieldKey),
+    meter.keyWithName,
+    alarmType,
+    tripPoint,
+    tripPoint,
+    macroKey
+  )
+
   override def tableSection(fieldKey: FieldKey): TableSection =
-    TableSectionButtons(fieldKey, routes.MeterAlarmController.edit(fieldKey.key), rows: _*)
+    TableSectionButtons(fieldKey, routes.EditController.edit(fieldKey), rows: _*)
 
   override def displayHtml: String =
     <table class="tagValuetable">
@@ -96,6 +104,7 @@ case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint:
   }
 
   override def toJsValue: JsValue = Json.toJson(this)
+
 
 /*
 *2064 C * M* X1* Y1* X2* Y2* C= Channel 1 to 8 M=MeterKind Type 0 to 6 X1, Y1, X2, Y2 represent two calibration points. There must be 6 parameters entered to define a meterEditor face, each value ending with *.

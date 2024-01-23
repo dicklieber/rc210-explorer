@@ -18,9 +18,11 @@
 package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
+import com.wa9nnn.wa9nnnutil.tableui.Row
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.vocabulary.Word
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.ui.EditButtonCell
 import net.wa9nnn.rc210.util.Chunk
 import play.api.data.Form
 import play.api.libs.json.{Format, JsValue, Json}
@@ -50,7 +52,15 @@ case class MessageNode(key: Key, words: Seq[Int]) extends ComplexFieldValue() {
   }
 
   override def toJsValue: JsValue = Json.toJson(this)
+
+  override def toRow: Row = {
+    Row(
+      EditButtonCell(fieldKey),
+      toWords.map(_.string).mkString(" ")
+    )
+  }
 }
+
 object MessageNode extends ComplexExtractor[MessageNode] with LazyLogging {
   implicit val fmtPhrase: Format[MessageNode] = Json.format[MessageNode]
 

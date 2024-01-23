@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data.courtesy
 
 import com.typesafe.scalalogging.LazyLogging
+import com.wa9nnn.wa9nnnutil.tableui.Row
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
@@ -32,7 +33,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * @param key id
  * @param segments the four segment that mke up a courtesy tone.
  */
-case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends ComplexFieldValue {
+case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends ComplexFieldValue() {
   assert(segments.length == 4, s"Must have four segemnts but only have: $segments")
 
   override def displayHtml: String = s"$key"
@@ -51,6 +52,8 @@ case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends C
   }
 
   override def toJsValue: JsValue = Json.toJson(this)
+
+  override def toRow: Row = ???
 }
 
 

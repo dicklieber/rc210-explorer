@@ -18,11 +18,13 @@
 package net.wa9nnn.rc210.data.clock
 
 import com.wa9nnn.wa9nnnutil.JsonFormatUtils.javaEnumFormat
+import com.wa9nnn.wa9nnnutil.tableui.Row
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.clock.MonthOfYearDST.*
 import net.wa9nnn.rc210.data.clock.Occurrence.*
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.ui.EditButtonCell
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.data.*
 import play.api.data.Forms.*
@@ -33,7 +35,7 @@ case class ClockNode(key: Key,
                      startDST: DSTPoint = DSTPoint(March, First),
                      endDST: DSTPoint = DSTPoint(November, Second),
                      say24Hours: Boolean = false,
-                ) extends ComplexFieldValue() {
+                    ) extends ComplexFieldValue():
 
   override def displayHtml: String = "todo"
 
@@ -75,8 +77,16 @@ case class ClockNode(key: Key,
   }
 
   override def toJsValue: JsValue = Json.toJson(this)
-}
 
+  override def toRow: Row = Row(
+    EditButtonCell(fieldKey),
+    key.keyWithName,
+    enableDST,
+    hourDST,
+    startDST,
+    endDST,
+    say24Hours
+  )
 
 object ClockNode extends ComplexExtractor[ClockNode] {
   override val keyKind: KeyKind = KeyKind.Clock
@@ -91,7 +101,6 @@ object ClockNode extends ComplexExtractor[ClockNode] {
     )(ClockNode.apply)(ClockNode.unapply))
 
   def unapply(u: ClockNode): Option[(Key, Boolean, Int, DSTPoint, DSTPoint, Boolean)] = Some((u.key, u.enableDST, u.hourDST, u.startDST, u.endDST, u.say24Hours))
-
 
   /**
    *

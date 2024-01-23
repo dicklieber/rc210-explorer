@@ -18,58 +18,91 @@
 package net.wa9nnn.rc210.ui
 
 import controllers.routes
-import net.wa9nnn.rc210.ui.Tabs.TabName
+import net.wa9nnn.rc210.KeyKind
+
+trait AbstractTab:
+  def toolTip: String = ""
+
+  def entryName: String
+
+  def indexUrl: String
+
+case class Tab(override val entryName: String, override val indexUrl: String, override val toolTip: String) extends AbstractTab
 
 object Tabs {
 
-  val noTab:Tab = Tab("none", "", "this should never show.")
-  val commonTab: Tab = Tab("Common", routes.CommonController.index.url, "Global settings")
-  val ctTab: Tab = Tab("CT", routes.CourtesyToneController.index.url, "Courtesy Tones")
-  val clockTab: Tab = Tab("Clock", routes.ClockController.index.url, "Set clock, DST etc.")
-
-  val logicAlarmTab: Tab = Tab("Logic", routes.LogicAlarmController.index.url, "Logic Alarm settings.")
-  val metersTab: Tab = Tab("Meters", routes.MeterController.index.url, "Analog Meters and Alarms")
-  //
-  //  val dtmfTab: Tab = Tab(KeyKind.dtmfMacroKey)
-  //
-
-  val macrosTab: Tab = Tab("Macros", routes.MacroController.index.url, "Macro settings.")
-  val messagesTab: Tab = Tab("Messages", routes.MessageController.index.url, "Messages.")
-  val namesTab: Tab = Tab("Names", routes.NamesController.index.url, "User supp;ied names for varous fields.")
-
-  val portsTab: Tab = Tab("Ports", routes.PortsController.index.url, "Port settings")
-
-  val schedulesTab: Tab = Tab("Schedules", routes.ScheduleController.index.url, "Schedule settings.")
-  val timersTab: Tab = Tab("Timers", routes.TimerController.index.url, "Timer settings.")
-  val rc210Tab: Tab = Tab("RC-210", routes.IOController.listSerialPorts.url, "RC-210 DownloadActor.")
-  val fileUpload: Tab = Tab("Upload", routes.DataStoreController.upload.url, "Upload a saved JSON file.")
+  val rc210Tab: Tab = Tab("RC-210", routes.IOController.listSerialPorts.url, "RC-210 Operations")
   val changes: Tab = Tab("Changes", routes.CommandsController.index.url, "Pending changes that need to be sent to the RC-210.")
-  val remoteBase: Tab = Tab("Remote Base", controllers.routes.RemoteBaseController.index.url, "Manabge Remote Base radio.")
-  def security: Tab = Tab("Users", routes.UsersController.users().url, "Edit Users")
+  val noTab: Tab = Tab("none", "", "this should never show.")
+  val fileUpload: Tab = Tab("Upload", routes.DataStoreController.upload.url, "Upload a saved JSON file.")
+  val security: Tab = Tab("Users", routes.UsersController.users().url, "Edit Users")
+  val names: Tab = Tab("Names", routes.NamesController.index.url, "User supp;ied names for varous fields.")
+  val tabs: Seq[AbstractTab] =
+    KeyKind.values :++ Seq(
+      rc210Tab,
+      changes,
+      noTab,
+      fileUpload,
+      security,
+      names
+    )
 
-  val tabs: Seq[Tab] = Seq(
-    metersTab,
-    logicAlarmTab,
-    commonTab,
-    clockTab,
-    macrosTab,
-    messagesTab,
-    ctTab,
-    portsTab,
-    schedulesTab,
-    timersTab,
-    remoteBase,
-    namesTab,
-    rc210Tab,
-    changes,
-  ).sortBy(_.name)
-
-
-  type TabName = String
-
+  //
+  //  val todo: Tab = Tab("todo", "", "todo")
+  //
+  //  val noTab: Tab = Tab("none", "", "this should never show.")
+  //  val commonTab: Tab = Tab("Common", KeyKind.Common, "Global settings")
+  //  val ctTab: Tab = Tab("CT", KeyKind.CourtesyTone, "Courtesy Tones")
+  //  val clockTab: Tab = Tab("Clock", routes.ClockController.index.url, "Set clock, DST etc.")
+  //
+  //  val logicAlarmTab: Tab = Tab("Logic", routes.LogicAlarmController.index.url, "Logic Alarm settings.")
+  //  val metersTab: Tab = Tab("Meters", routes.MeterController.index.url, "Analog Meters and Alarms")
+  //  //
+  //  //  val dtmfTab: Tab = Tab(KeyKind.dtmfMacroKey)
+  //  //
+  //
+  //  val macrosTab: Tab = Tab("Macros", routes.MacroController.index.url, "Macro settings.")
+  //  val messagesTab: Tab = Tab("Messages", routes.MessageController.index.url, "Messages.")
+  // 
+  //
+  //  val portsTab: Tab = Tab("Ports", routes.PortsController.index.url, "Port settings")
+  //
+  //  val schedulesTab: Tab = Tab("Schedules", routes.ScheduleController.index.url, "Schedule settings.")
+  //  val timersTab: Tab = Tab("Timers", routes.TimerController.index.url, "Timer settings.")
+  //  val rc210Tab: Tab = Tab("RC-210", routes.IOController.listSerialPorts.url, "RC-210 DownloadActor.")
+  //  val fileUpload: Tab = Tab("Upload", routes.DataStoreController.upload.url, "Upload a saved JSON file.")
+  //  val changes: Tab = Tab("Changes", routes.CommandsController.index.url, "Pending changes that need to be sent to the RC-210.")
+  //  val remoteBase: Tab = Tab("Remote Base", controllers.routes.RemoteBaseController.index.url, "Manabge Remote Base radio.")
+  //
+  //  def security: Tab = Tab("Users", routes.UsersController.users().url, "Edit Users")
+  //
+  //  val tabs: Seq[Tab] = Seq(
+  //    metersTab,
+  //    logicAlarmTab,
+  //    commonTab,
+  //    clockTab,
+  //    macrosTab,
+  //    messagesTab,
+  //    ctTab,
+  //    portsTab,
+  //    schedulesTab,
+  //    timersTab,
+  //    remoteBase,
+  //    namesTab,
+  //    rc210Tab,
+  //    changes,
+  //  ).sortBy(_.name)
+  //
+  //  type TabName = String
 
 }
 
-case class Tab(name: TabName, url: String, tooltip: String)
+//class Tab(val name: TabName, url: String, tooltip: String)
+//
+//object Tab:
+//  def apply(keyKind: KeyKind): Tab
+//
+//  () url(): String
+//  = routes.EditController.index(keyKind)
 
 

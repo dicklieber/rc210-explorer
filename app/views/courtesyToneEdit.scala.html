@@ -7,11 +7,12 @@
 @import views.html.ct.delay
 @import views.html.ct.duration
 @import views.html.ct.tone
-@( namedKey: NamedKey)(implicit f: Form[CourtesyTone], request: RequestHeader, messagesProvider: MessagesProvider)
+@import net.wa9nnn.rc210.KeyKind
+@( key:Key)(implicit f: Form[CourtesyTone], request: RequestHeader, messagesProvider: MessagesProvider)
 
-    @tabbedmain(Tabs.ctTab) {
+    @tabbedmain(KeyKind.CourtesyTone) {
         <div>
-            <form action="@routes.CourtesyToneController.save()" method="post">
+            <form action="@routes.EditController.save()" method="post">
                 @inputText(f("key"), Symbol("type") -> "hidden")
 
                 <table class="headeredTable">
@@ -41,7 +42,7 @@
 
                     }
                     <tbody>
-                        @nameEdit(namedKey)
+                        @nameEdit(key)
                         <tr>
                         @for(segment <- 0 to 3) {
                             <td rowspan="3">@delay(segment)</td>

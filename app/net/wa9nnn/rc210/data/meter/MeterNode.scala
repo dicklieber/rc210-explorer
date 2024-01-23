@@ -21,6 +21,7 @@ import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.ui.EditButtonCell
 import play.api.data.{Form, Mapping}
 import play.api.data.Forms.*
 import play.api.mvc.*
@@ -80,6 +81,15 @@ case class MeterNode(key: Key, meterFaceName: MeterFaceName, low: VoltToReading,
   }
 
   override def toJsValue: JsValue = Json.toJson(this)
+
+  override def toRow: Row = Row(
+    EditButtonCell(fieldKey),
+    meterFaceName,
+    low.hundredthVolt,
+    low.reading,
+    high.hundredthVolt,
+    high.reading,
+  )
 }
 
 object MeterNode extends ComplexExtractor[MeterNode] {

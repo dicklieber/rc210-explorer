@@ -1,29 +1,7 @@
-
-# Routes
-# This file defines all application routes (Higher priority routes first)
-# https://www.playframework.com/documentation/latest/ScalaRouting
-# ~~~~
-
-GET         /timer/edit/:key                          controllers.TimerController.edit(key:Key)
-POST        /timer/save                               controllers.TimerController.save()
-GET         /timers                                   controllers.TimerController.index
-POST        /courtesytones/save                       controllers.CourtesyToneController.save()
-GET         /courtesytones/edit/:key                  controllers.CourtesyToneController.edit(key:Key)
-GET         /courtesytones                            controllers.CourtesyToneController.index
-GET         /meter/edit/:meterKey                     controllers.MeterController.edit(meterKey:Key)
-GET         /meterAlarm/edit/:meterKey                controllers.MeterAlarmController.edit(meterKey:Key)
-GET         /meter                                    controllers.MeterController.index
-POST        /meter/save                               controllers.MeterController.save()
-POST        /meterAlarm/save                          controllers.MeterAlarmController.save()
-POST        /logic/save                               controllers.LogicAlarmController.save()
-GET         /logic/edit/:logicAlarmKey                controllers.LogicAlarmController.edit(logicAlarmKey:Key)
-GET         /logic                                    controllers.LogicAlarmController.index
-POST        /common/save                              controllers.CommonController.save()
-GET         /common                                   controllers.CommonController.index
-GET         /schedules                                controllers.ScheduleController.index
-GET         /schedules/edit/:key                      controllers.ScheduleController.edit(key:Key)
-POST        /schedule/save                            controllers.ScheduleController.save()
 GET         /macros                                   controllers.MacroController.index
+GET         /index/:keyKind                           controllers.EditController.index(keyKind:KeyKind)
+GET         /edit/:fieldKey                           controllers.EditController.edit(fieldKey:FieldKey)
+POST        /save                                     controllers.EditController.save()
 GET         /macro/edit/:key                          controllers.MacroController.edit(key:Key)
 POST        /macro/save                               controllers.MacroController.save()
 GET         /messages                                 controllers.MessageController.index
@@ -53,7 +31,6 @@ GET         /clock                                    controllers.ClockControlle
 POST        /remote/save                              controllers.RemoteBaseController.save()
 GET         /remote                                   controllers.RemoteBaseController.index
 GET         /names                                    controllers.NamesController.index
-GET         /edit/:key                                controllers.NamesController.edit(key:Key)
 GET         /editUser/:id                             controllers.UsersController.editUser(id:String)
 GET         /users                                    controllers.UsersController.users()
 GET         /addUser                                  controllers.UsersController.addUser()

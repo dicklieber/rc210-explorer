@@ -1,8 +1,9 @@
 @import net.wa9nnn.rc210.ui.Tabs
 
 @import net.wa9nnn.rc210.data.field.MessageNode
+@import net.wa9nnn.rc210.KeyKind
 @(messages: Seq[MessageNode])
-    @tabbedmain(Tabs.messagesTab) {
+    @tabbedmain(KeyKind.Message) {
     <div class="container">
             <table class="table table-bordered w-auto table-sm">
             <thead class="table-primary">

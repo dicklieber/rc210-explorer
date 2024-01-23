@@ -17,8 +17,9 @@
 
 package net.wa9nnn.rc210.data.field
 
+import com.wa9nnn.wa9nnnutil.tableui.Row
 import net.wa9nnn.rc210.{FieldKey, Key}
-import net.wa9nnn.rc210.ui.FormField
+import net.wa9nnn.rc210.ui.{EditButtonCell, FormField}
 import play.api.libs.json.*
 
 case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue() {
@@ -50,6 +51,11 @@ case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue() {
   override def displayHtml: String = value.map(_.toString).mkString(" ")
 
   override def toHtmlField(fieldKey: FieldKey): String = FormField(fieldKey, value)
+
+  override def toRow: Row = Row(
+    "Field2Numbers",
+    toString
+  )
 }
 
 object Field2Numbers extends SimpleExtractor {

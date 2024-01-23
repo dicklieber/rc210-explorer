@@ -6,6 +6,7 @@ import net.wa9nnn.rc210.data.Node
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.ui.EditButtonCell
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Forms.*
 import play.api.data.{Form, FormError}
@@ -66,6 +67,10 @@ case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dt
 //    )
   }
 
+  override def toRow: Row = Row(
+    EditButtonCell(fieldKey),
+    functions.map(_.rc210Value).mkString(",")
+  )
 }
 
 object MacroNode extends ComplexExtractor[MacroNode] {

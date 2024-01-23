@@ -17,11 +17,16 @@
 
 package net.wa9nnn.rc210.data.field
 
+import com.wa9nnn.wa9nnnutil.tableui.Row
 import net.wa9nnn.rc210.{FieldKey, Key}
 import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.*
 
 case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue() {
+  override def toRow: Row = Row(
+    "FieldBoolean",
+    toString
+  )
 
   /**
    * Render this value as an RD-210 command string.
