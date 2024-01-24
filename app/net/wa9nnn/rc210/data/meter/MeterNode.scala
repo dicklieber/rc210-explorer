@@ -17,11 +17,12 @@
 
 package net.wa9nnn.rc210.data.meter
 
-import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, Table}
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.EditButtonCell
+import net.wa9nnn.rc210.ui.html.meterEditor
 import play.api.data.{Form, Mapping}
 import play.api.data.Forms.*
 import play.api.i18n.MessagesProvider
@@ -85,6 +86,7 @@ case class MeterNode(key: Key, meterFaceName: MeterFaceName, low: VoltToReading,
 
   override def toRow: Row = Row(
     EditButtonCell(fieldKey),
+    fieldKey.key.keyWithName,
     meterFaceName,
     low.hundredthVolt,
     low.reading,
@@ -93,7 +95,7 @@ case class MeterNode(key: Key, meterFaceName: MeterFaceName, low: VoltToReading,
   )
 }
 
-object MeterNode extends ComplexExtractor[MeterNode] {
+object MeterNode extends ComplexExtractor[MeterNode]:
   val keyKind = KeyKind.Meter
 
   def unapply(u: MeterNode): Option[(Key, MeterFaceName, VoltToReading, VoltToReading)] = Some((u.key, u.meterFaceName, u.low, u.high))
@@ -148,12 +150,31 @@ object MeterNode extends ComplexExtractor[MeterNode] {
   implicit val fmtVoltToReading: Format[VoltToReading] = Json.format[VoltToReading]
   implicit val fmtMeter: Format[MeterNode] = Json.format[MeterNode]
 
-  override def index(values: Seq[MeterNode]): Table = ???
+  override def index(values: Seq[MeterNode]): Table =
+    val header = Seq(
+      Seq(Cell(s"Meters  (${values.length})").withColSpan(7)),
+      Seq(
+        Cell("").withRowSpan(2),
+        Cell("Meter").withRowSpan(2),
+        Cell("Face").withRowSpan(2),
+        Cell("Low").withColSpan(2),
+        Cell("High").withColSpan(2)
+      ),
+      Seq(
+        Cell("Volt"),
+        Cell("Reading"),
+        Cell("Volt"),
+        Cell("Reading"),
+      ),
+    )
+    Table(header, values.map(_.toRow)
+    )
 
-  override def editOp(form: Form[MeterNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result = ???
+  override def editOp(form: Form[MeterNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result =
+    Results.Ok(meterEditor(form, fieldKey))
 
-  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue = ???
-}
+  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue =
+    form.bindFromRequest(data).get
 
 /**
  *

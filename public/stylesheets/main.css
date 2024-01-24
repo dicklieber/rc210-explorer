@@ -35,9 +35,12 @@
 
 .headeredTable th {
     text-align: center;
+    vertical-align: top;
     /*font-weight: bold;*/
     background-color: #cfe2ff;
-    border: #bacbe6;
+    border-width: 1px;
+    border-color: black;
+    border-style: solid;
     white-space: nowrap;
 }
 
@@ -79,9 +82,7 @@
     background-color: #bac9e7;
 }
 
-.headeredTable th {
-    /*border: 1px solid black;*/
-}
+
 
 .tagValuetable {
     border-collapse: collapse;

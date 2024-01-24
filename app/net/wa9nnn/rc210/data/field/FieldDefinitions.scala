@@ -23,7 +23,7 @@ import net.wa9nnn.rc210.KeyKind.{Common, Port}
 import net.wa9nnn.rc210.data.clock.ClockNode
 import net.wa9nnn.rc210.data.courtesy.CourtesyTone
 import net.wa9nnn.rc210.data.macros.MacroNode
-import net.wa9nnn.rc210.data.meter.{MeterNode, MeterAlarm}
+import net.wa9nnn.rc210.data.meter.{MeterNode, MeterAlarmNode}
 import net.wa9nnn.rc210.data.remotebase.RemoteBaseNode
 import net.wa9nnn.rc210.data.schedules.ScheduleNode
 import net.wa9nnn.rc210.data.timers.TimerNode
@@ -140,7 +140,7 @@ class FieldDefinitions @Inject()() {
     ClockNode,
     RemoteBaseNode,
     MeterNode,
-    MeterAlarm,
+    MeterAlarmNode,
     LogicAlarmNode
   )
 

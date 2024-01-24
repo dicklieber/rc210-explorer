@@ -22,6 +22,7 @@ import enumeratum.*
 import enumeratum.EnumEntry.CapitalWords
 import net.wa9nnn.rc210.data.EditHandler
 import net.wa9nnn.rc210.data.field.{FieldValue, LogicAlarmNode}
+import net.wa9nnn.rc210.data.meter.{MeterAlarmNode, MeterNode}
 import net.wa9nnn.rc210.data.timers.TimerNode
 import net.wa9nnn.rc210.ui.{AbstractTab, Tabs}
 
@@ -34,9 +35,9 @@ object KeyKind extends PlayEnum[KeyKind]:
 
   case object LogicAlarm extends KeyKind(5, LogicAlarmNode)
 
-  case object Meter extends KeyKind(8)
+  case object Meter extends KeyKind(8, MeterNode)
 
-  case object MeterAlarm extends KeyKind(8)
+  case object MeterAlarm extends KeyKind(8, MeterAlarmNode)
 
   case object DtmfMacro extends KeyKind(195)
 

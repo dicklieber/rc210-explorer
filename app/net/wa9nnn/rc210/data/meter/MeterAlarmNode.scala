@@ -21,19 +21,21 @@ import com.wa9nnn.wa9nnnutil.tableui.*
 import controllers.routes
 import net.wa9nnn.rc210.KeyKind.{Macro, Meter, MeterAlarm}
 import net.wa9nnn.rc210.data.field.*
+import net.wa9nnn.rc210.data.timers.TimerNode
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.ui.html.meterAlarmEditor
 import net.wa9nnn.rc210.ui.{EditButtonCell, TableSectionButtons}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json}
-import play.api.mvc.{RequestHeader, Result}
+import play.api.mvc.{RequestHeader, Result, Results}
 import views.html.editButton
 
 import java.util.concurrent.atomic.AtomicInteger
 
-case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint: Int, macroKey: Key) extends ComplexFieldValue(macroKey):
+case class MeterAlarmNode(val key: Key, meter: Key, alarmType: AlarmType, tripPoint: Int, macroKey: Key) extends ComplexFieldValue(macroKey):
   key.check(KeyKind.MeterAlarm)
   meter.check(Meter)
   macroKey.check(KeyKind.Macro)
@@ -123,19 +125,19 @@ case class MeterAlarm(val key: Key, meter: Key, alarmType: AlarmType, tripPoint:
 *
 * */
 
-object MeterAlarm extends ComplexExtractor[MeterAlarm] {
+object MeterAlarmNode extends ComplexExtractor[MeterAlarmNode]:
   override val keyKind: KeyKind = KeyKind.MeterAlarm
 
-  def unapply(u: MeterAlarm): Option[(Key, Key, AlarmType, Int, Key)] = Some((u.key, u.meter, u.alarmType, u.tripPoint, u.macroKey))
+  def unapply(u: MeterAlarmNode): Option[(Key, Key, AlarmType, Int, Key)] = Some((u.key, u.meter, u.alarmType, u.tripPoint, u.macroKey))
 
-  val form: Form[MeterAlarm] = Form(
+  val form: Form[MeterAlarmNode] = Form(
     mapping(
       "key" -> of[Key],
       "meter" -> of[Key],
       "alarmType" -> AlarmType.formField,
       "tripPoint" -> number,
       "macroKey" -> of[Key]
-    )(MeterAlarm.apply)(MeterAlarm.unapply))
+    )(MeterAlarmNode.apply)(MeterAlarmNode.unapply))
 
   private val nMeters = 8
 
@@ -166,7 +168,7 @@ object MeterAlarm extends ComplexExtractor[MeterAlarm] {
     for {i <- 0 until nMeters}
       yield {
         val key: Key = Key(KeyKind.MeterAlarm, mai.incrementAndGet())
-        val meterAlarm = MeterAlarm(key, meters(i), alarmType(i), setPoint(i).toInt, macroKeys(i))
+        val meterAlarm = MeterAlarmNode(key, meters(i), alarmType(i), setPoint(i).toInt, macroKeys(i))
         new FieldEntry(this, meterAlarm.fieldKey, meterAlarm)
       }
   }
@@ -176,7 +178,7 @@ object MeterAlarm extends ComplexExtractor[MeterAlarm] {
    */
   override val name: String = "MeterAlarm"
 
-  override def parse(jsValue: JsValue): FieldValue = jsValue.as[MeterAlarm]
+  override def parse(jsValue: JsValue): FieldValue = jsValue.as[MeterAlarmNode]
 
   override val fieldName: String = name
 
@@ -189,12 +191,23 @@ object MeterAlarm extends ComplexExtractor[MeterAlarm] {
     FieldOffset(282, this, "alarm Set Point"),
   )
 
-  implicit val fmtMeterAlarm: Format[MeterAlarm] = Json.format[MeterAlarm]
+  implicit val fmtMeterAlarm: Format[MeterAlarmNode] = Json.format[MeterAlarmNode]
 
-  override def index(values: Seq[MeterAlarm]): Table = ???
+  override def index(values: Seq[MeterAlarmNode]): Table =
+    Table(Header(s"Timers  (${values.length})",
+      "",
+      "Meter",
+      "Alarm Type",
+      "Trip Point",
+      "Macro",
+    ),
+      values.map(_.toRow)
+    )
 
-  override def editOp(form: Form[MeterAlarm], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result = ???
+  override def editOp(form: Form[MeterAlarmNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result =
+    Results.Ok(meterAlarmEditor(form, fieldKey))
 
-  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue = ???
-}
+  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue =
+    form.bindFromRequest(data).get
+
 

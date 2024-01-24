@@ -1,0 +1,46 @@
+@import net.wa9nnn.rc210.ui.MyHelpers._
+@import net.wa9nnn.rc210.data.meter.{AlarmType, MeterAlarmNode}
+@import net.wa9nnn.rc210.NamedKey
+@import net.wa9nnn.rc210.ui.{MacroSelect, MeterSelect, Tabs}
+@import views.html.helper.*
+@import views.html.input.selectOptions
+@import net.wa9nnn.rc210.FieldKey
+@import net.wa9nnn.rc210.KeyKind
+@(meterAlarm: Form[MeterAlarmNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+    @tabbedmain(KeyKind.MeterAlarm) {
+        @form(routes.EditController.save()) {
+           @keyStuff(fieldKey)
+            <div class="col-">
+                <table class="table table-bordered table-sm  w-auto rc210-table">
+                    <thead>
+                        <tr>
+                            <th colspan="2">Meter Alarm @meterAlarm("Key").value<th>
+                        </tr>
+                        <tr>
+                            <th>Field</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Meter</td>
+                            <td>@select(meterAlarm("meter"), MeterSelect.options) </td>
+                        </tr>
+                        <tr>
+                            <td >Alarm Type</td>
+                            <td>@select(meterAlarm("alarmType"), AlarmType.options) </td>
+                        </tr>
+                        <tr>
+                            <td >trip Point</td>
+                            <td>@inputText(meterAlarm("tripPoint"), Symbol("type") -> "number", Symbol("max") -> 35000)</td>
+                        </tr>
+                        <tr>
+                            <td >Macro</td>
+                            <td>@select(meterAlarm("macroKey"), MacroSelect.options)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                @submitButton()
+            </div>
+        }
+    }
