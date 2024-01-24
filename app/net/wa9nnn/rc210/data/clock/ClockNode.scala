@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.clock
 
 import com.wa9nnn.wa9nnnutil.JsonFormatUtils.javaEnumFormat
-import com.wa9nnn.wa9nnnutil.tableui.Row
+import com.wa9nnn.wa9nnnutil.tableui.{Row, Table}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.clock.MonthOfYearDST.*
 import net.wa9nnn.rc210.data.clock.Occurrence.*
@@ -28,6 +28,8 @@ import net.wa9nnn.rc210.ui.EditButtonCell
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.data.*
 import play.api.data.Forms.*
+import play.api.i18n.MessagesProvider
+import play.api.mvc.{RequestHeader, Result}
 
 case class ClockNode(key: Key,
                      enableDST: Boolean = true,
@@ -142,5 +144,10 @@ object ClockNode extends ComplexExtractor[ClockNode] {
 
   implicit val fmtClock: Format[ClockNode] = Json.format[ClockNode]
 
+  override def index(values: Seq[ClockNode]): Table = ???
+
+  override def editOp(form: Form[ClockNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result = ???
+
+  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue = ???
 }
 

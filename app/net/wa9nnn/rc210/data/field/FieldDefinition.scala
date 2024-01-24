@@ -1,6 +1,7 @@
 package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.data.EditHandler
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
@@ -85,7 +86,7 @@ case class SimpleField(offset: Int,
 }
 
 
-trait ComplexExtractor[T <: ComplexFieldValue] extends FieldExtractor with FieldDefinition  {
+trait ComplexExtractor[T <: ComplexFieldValue] extends FieldExtractor with FieldDefinition with EditHandler[T] {
   def fieldKey(key: Key): FieldKey = FieldKey(fieldName, key)
 
   /**

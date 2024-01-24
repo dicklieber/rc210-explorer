@@ -80,20 +80,18 @@ case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, 
   override def toJsValue: JsValue = Json.toJson(this)
 
   override def toRow: Row = Row(EditButtonCell(fieldKey),
+    key.keyWithName,
     enabled,
     lowMacro,
     highMacro
   )
 }
 
-object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode] with EditHandler[LogicAlarmNode] {
+object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode] {
   override val keyKind: KeyKind = KeyKind.LogicAlarm
 
   override def editOp(form: Form[LogicAlarmNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result =
     Results.Ok(logicAlarmEditor(form, fieldKey))
-
-//  override def editOp(form: Form[LogicAlarmNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result =
-//    Results.Ok(logicAlarmEditor(form, fieldKey))
 
   def unapply(u: LogicAlarmNode): Option[(Key, Boolean, Key, Key)] = Some((u.key, u.enabled, u.lowMacro, u.highMacro))
 
@@ -108,6 +106,7 @@ object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode] with EditHandler[
 
   override def index(values: Seq[LogicAlarmNode]): Table =
     Table(Header(s"Logic Alarm  (${values.length})",
+      "",
       "Logic Alarm",
       "Enable",
       "Low Macro",
@@ -150,16 +149,7 @@ object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode] with EditHandler[
 
   implicit val fmtLogicAlarm: Format[LogicAlarmNode] = Json.format[LogicAlarmNode]
 
-
-  
-//  override def editOp(form: Form[LogicAlarmNode], fieldKey: FieldKey): Result =
-//    logicAlarmEditor(form, fieldKey)
-
   override def bindFromRequest(data: Map[String, Seq[String]]): LogicAlarmNode = {
-    val value: Form[LogicAlarmNode] = form.bindFromRequest(data)
-    val hasErrors: Boolean = value.hasErrors
-    val errors: Seq[FormError] = value.errors
-    val mayBeValue: Option[LogicAlarmNode] = value.value
-    value.get
+    form.bindFromRequest(data).get
   }
 }

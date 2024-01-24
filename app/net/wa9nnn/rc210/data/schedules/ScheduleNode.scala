@@ -11,7 +11,9 @@ import net.wa9nnn.rc210.ui.{Display, EditButtonCell, TableSectionButtons}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.*
+import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json}
+import play.api.mvc.{RequestHeader, Result}
 import views.html.editButton
 
 /**
@@ -191,6 +193,11 @@ object ScheduleNode extends LazyLogging with ComplexExtractor[ScheduleNode] {
   override val name: String = "Schedule"
   override val fieldName: String = name
 
+  override def index(values: Seq[ScheduleNode]): Table = ???
+
+  override def editOp(form: Form[ScheduleNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result = ???
+
+  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue = ???
 }
 
 

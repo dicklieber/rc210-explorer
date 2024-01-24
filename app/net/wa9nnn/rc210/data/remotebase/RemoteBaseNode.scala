@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.data.remotebase
 
-import com.wa9nnn.wa9nnnutil.tableui.{Row, TableSection}
+import com.wa9nnn.wa9nnnutil.tableui.{Row, Table, TableSection}
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.EditButtonCell
@@ -25,6 +25,7 @@ import net.wa9nnn.rc210.util.Chunk
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Forms.*
 import play.api.data.{Form, Mapping}
+import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.*
 
@@ -133,6 +134,11 @@ object RemoteBaseNode extends ComplexExtractor[RemoteBaseNode] {
   implicit val fmtRBMemory: Format[RBMemory] = Json.format[RBMemory]
   implicit val fmtRemoteBase: Format[RemoteBaseNode] = Json.format[RemoteBaseNode]
 
+  override def index(values: Seq[RemoteBaseNode]): Table = ???
+
+  override def editOp(form: Form[RemoteBaseNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result = ???
+
+  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue = ???
 }
 
 /**

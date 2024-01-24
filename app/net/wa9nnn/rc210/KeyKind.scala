@@ -22,6 +22,7 @@ import enumeratum.*
 import enumeratum.EnumEntry.CapitalWords
 import net.wa9nnn.rc210.data.EditHandler
 import net.wa9nnn.rc210.data.field.{FieldValue, LogicAlarmNode}
+import net.wa9nnn.rc210.data.timers.TimerNode
 import net.wa9nnn.rc210.ui.{AbstractTab, Tabs}
 
 sealed trait KeyKind(val maxN: Int,  val handler: EditHandler[?] = null) extends EnumEntry with CapitalWords with AbstractTab:
@@ -53,7 +54,7 @@ object KeyKind extends PlayEnum[KeyKind]:
 
   case object Schedule extends KeyKind(40)
 
-  case object Timer extends KeyKind(6)
+  case object Timer extends KeyKind(6, TimerNode)
 
   case object Common extends KeyKind(1)
 

@@ -18,14 +18,16 @@
 package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.wa9nnnutil.tableui.Row
+import com.wa9nnn.wa9nnnutil.tableui.{Row, Table}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.vocabulary.Word
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.EditButtonCell
 import net.wa9nnn.rc210.util.Chunk
 import play.api.data.Form
+import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json}
+import play.api.mvc.{RequestHeader, Result}
 
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -113,4 +115,10 @@ object MessageNode extends ComplexExtractor[MessageNode] with LazyLogging {
   override val fieldName: String = name
 
   override def form: Form[MessageNode] = throw new NotImplementedError("No fprm used with Message!") //todo
+
+  override def index(values: Seq[MessageNode]): Table = ???
+
+  override def editOp(form: Form[MessageNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result = ???
+
+  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue = ???
 }

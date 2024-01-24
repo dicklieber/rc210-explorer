@@ -18,13 +18,15 @@
 package net.wa9nnn.rc210.data.courtesy
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.wa9nnnutil.tableui.Row
+import com.wa9nnn.wa9nnnutil.tableui.{Row, Table}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
 import play.api.data.*
 import play.api.data.Forms.*
+import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json, OFormat}
+import play.api.mvc.{RequestHeader, Result}
 
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -117,5 +119,11 @@ object CourtesyTone extends ComplexExtractor[CourtesyTone] with LazyLogging {
   override val name: String = "CourtesyExtractor"
 
   override val fieldName: String = "CourtesyTone"
+
+  override def index(values: Seq[CourtesyTone]): Table = ???
+
+  override def editOp(form: Form[CourtesyTone], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result = ???
+
+  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue = ???
 }
 

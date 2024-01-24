@@ -26,7 +26,9 @@ import net.wa9nnn.rc210.ui.{EditButtonCell, TableSectionButtons}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.*
+import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json}
+import play.api.mvc.{RequestHeader, Result}
 import views.html.editButton
 
 import java.util.concurrent.atomic.AtomicInteger
@@ -188,5 +190,11 @@ object MeterAlarm extends ComplexExtractor[MeterAlarm] {
   )
 
   implicit val fmtMeterAlarm: Format[MeterAlarm] = Json.format[MeterAlarm]
+
+  override def index(values: Seq[MeterAlarm]): Table = ???
+
+  override def editOp(form: Form[MeterAlarm], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result = ???
+
+  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue = ???
 }
 

@@ -1,0 +1,43 @@
+@import net.wa9nnn.rc210.ui.MyHelpers.*
+@import views.html.helper._
+@import net.wa9nnn.rc210.ui.Tabs
+@import net.wa9nnn.rc210.ui.MacroSelect
+@import net.wa9nnn.rc210.data.timers.TimerNode
+@import net.wa9nnn.rc210.NamedKey
+@import net.wa9nnn.rc210.FieldKey
+@import net.wa9nnn.rc210.KeyKind
+@(f: Form[TimerNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+
+@tabbedmain(fieldKey.key.keyKind) {
+    @form(routes.EditController.save()) {
+        @keyStuff(fieldKey)
+        <table>
+            <thead>
+                <tr>
+                    <th>Field</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Seconds</td>
+                    <td>
+                    @inputText(f("seconds"),
+                        Symbol("type")-> "number",
+                        Symbol("min")-> 0,
+                        Symbol("max")-> 32767)
+                    </td>
+                </tr>
+                <tr>
+                    <td>Macro</td>
+                    <td>
+                    @select(f("macroKey"), MacroSelect.options)
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+        @submitButton()
+    }
+}

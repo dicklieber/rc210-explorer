@@ -17,13 +17,14 @@
 
 package net.wa9nnn.rc210.data.meter
 
-import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row}
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, Table}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.EditButtonCell
 import play.api.data.{Form, Mapping}
 import play.api.data.Forms.*
+import play.api.i18n.MessagesProvider
 import play.api.mvc.*
 import play.api.libs.json.{Format, JsValue, Json}
 
@@ -147,6 +148,11 @@ object MeterNode extends ComplexExtractor[MeterNode] {
   implicit val fmtVoltToReading: Format[VoltToReading] = Json.format[VoltToReading]
   implicit val fmtMeter: Format[MeterNode] = Json.format[MeterNode]
 
+  override def index(values: Seq[MeterNode]): Table = ???
+
+  override def editOp(form: Form[MeterNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result = ???
+
+  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue = ???
 }
 
 /**

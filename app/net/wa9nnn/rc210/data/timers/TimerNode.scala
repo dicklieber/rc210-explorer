@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.timers
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.wa9nnnutil.tableui.{KvTableSection, Row, TableSection}
+import com.wa9nnn.wa9nnnutil.tableui.{Header, KvTableSection, Row, Table, TableSection}
 import controllers.routes
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
@@ -26,9 +26,11 @@ import net.wa9nnn.rc210.ui.{EditButtonCell, TableSectionButtons}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, number, of}
+import play.api.i18n.MessagesProvider
 import play.api.libs.json.{JsValue, Json, OFormat}
+import play.api.mvc.{RequestHeader, Result, Results}
 import play.twirl.api.Html
-import views.html.{editButton, flowChartButton}
+import views.html.{editButton, flowChartButton, logicAlarmEditor, timerEditor}
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
@@ -37,6 +39,7 @@ case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends ComplexField
 
   override def toRow: Row = Row(
     EditButtonCell(fieldKey),
+    key.keyWithName,
     seconds,
     macroKey
   )
@@ -122,4 +125,21 @@ object TimerNode extends ComplexExtractor[TimerNode] with LazyLogging {
 
   implicit val fmtTimer: OFormat[TimerNode] = Json.format[TimerNode]
   override val keyKind: KeyKind = KeyKind.Timer
+
+  override def index(values: Seq[TimerNode]): Table =
+    Table(Header(s"Timers  (${values.length})",
+      "",
+      "Timer",
+      "Seconds",
+      "Macro"
+    ),
+      values.map(_.toRow)
+    )
+
+  override def editOp(form: Form[TimerNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result =
+    Results.Ok(timerEditor(form, fieldKey))
+
+  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue =
+    form.bindFromRequest(data).get
+
 }

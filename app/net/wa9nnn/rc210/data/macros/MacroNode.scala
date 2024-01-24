@@ -10,6 +10,7 @@ import net.wa9nnn.rc210.ui.EditButtonCell
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Forms.*
 import play.api.data.{Form, FormError}
+import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.*
 
@@ -173,6 +174,12 @@ object MacroNode extends ComplexExtractor[MacroNode] {
   override val fieldName: String = name
 
   override def form: Form[MacroNode] = throw new NotImplementedError("Forms not used with macros") //todo
+
+  override def index(values: Seq[MacroNode]): Table = ???
+
+  override def editOp(form: Form[MacroNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result = ???
+
+  override def bindFromRequest(data: Map[Dtmf, Seq[Dtmf]]): ComplexFieldValue = ???
 }
 
 

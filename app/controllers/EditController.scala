@@ -25,7 +25,7 @@ import net.wa9nnn.rc210.{FieldKey, KeyKind, NamedKey}
 import net.wa9nnn.rc210.data.clock.ClockNode.{form, keyKind}
 import net.wa9nnn.rc210.data.clock.{ClockNode, DSTPoint}
 import net.wa9nnn.rc210.data.datastore.*
-import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry}
+import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 import net.wa9nnn.rc210.ui.ProcessResult
@@ -60,7 +60,7 @@ class EditController @Inject()(implicit dataStore: DataStore, ec: ExecutionConte
     }
   }
 
-  def save(): Action[AnyContent] = Action { 
+  def save(): Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] =>
 
     given data: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
