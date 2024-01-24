@@ -92,6 +92,9 @@ object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode] with EditHandler[
   override def editOp(form: Form[LogicAlarmNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result =
     Results.Ok(logicAlarmEditor(form, fieldKey))
 
+//  override def editOp(form: Form[LogicAlarmNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result =
+//    Results.Ok(logicAlarmEditor(form, fieldKey))
+
   def unapply(u: LogicAlarmNode): Option[(Key, Boolean, Key, Key)] = Some((u.key, u.enabled, u.lowMacro, u.highMacro))
 
   val form: Form[LogicAlarmNode] = Form(
@@ -151,4 +154,12 @@ object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode] with EditHandler[
   
 //  override def editOp(form: Form[LogicAlarmNode], fieldKey: FieldKey): Result =
 //    logicAlarmEditor(form, fieldKey)
+
+  override def bindFromRequest(data: Map[String, Seq[String]]): LogicAlarmNode = {
+    val value: Form[LogicAlarmNode] = form.bindFromRequest(data)
+    val hasErrors: Boolean = value.hasErrors
+    val errors: Seq[FormError] = value.errors
+    val mayBeValue: Option[LogicAlarmNode] = value.value
+    value.get
+  }
 }

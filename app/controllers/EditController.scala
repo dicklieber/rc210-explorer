@@ -21,11 +21,11 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.Table
 import net.wa9nnn.rc210
 import net.wa9nnn.rc210.data.EditHandler
-import net.wa9nnn.rc210.{FieldKey, KeyKind}
-import net.wa9nnn.rc210.data.clock.ClockNode.form
+import net.wa9nnn.rc210.{FieldKey, KeyKind, NamedKey}
+import net.wa9nnn.rc210.data.clock.ClockNode.{form, keyKind}
 import net.wa9nnn.rc210.data.clock.{ClockNode, DSTPoint}
 import net.wa9nnn.rc210.data.datastore.*
-import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry}
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 import net.wa9nnn.rc210.ui.ProcessResult
@@ -35,8 +35,10 @@ import play.api.mvc.*
 import play.twirl.api.Html
 import views.html.fieldIndex
 
+import java.util.Optional
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
+import scala.reflect.ClassTag
 
 @Singleton()
 class EditController @Inject()(implicit dataStore: DataStore, ec: ExecutionContext, components: MessagesControllerComponents)
@@ -58,25 +60,38 @@ class EditController @Inject()(implicit dataStore: DataStore, ec: ExecutionConte
     }
   }
 
-  def save(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
-    form
-      .bindFromRequest()
-      .fold(
-        (formWithErrors: Form[ClockNode]) => {
-          BadRequest(views.html.clock(formWithErrors))
-        },
-        (clock: ClockNode) => {
-          val candidateAndNames = ProcessResult(clock)
+  def save(): Action[AnyContent] = Action { 
+    implicit request: MessagesRequest[AnyContent] =>
 
-          given RcSession = request.attrs(sessionKey)
+    given data: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
 
-          dataStore.update(candidateAndNames)
-          Redirect(routes.ClockController.index)
-        }
-      )
+    given RcSession = request.attrs(sessionKey)
+
+    logger.whenDebugEnabled {
+      data.foreach { (name, values) =>
+        println(s"$name: ${values.mkString(", ")}")
+      }
+    }
+
+    val fieldKey: FieldKey = ExtractField("fieldKey", (value) => FieldKey(value))
+    val name: String = ExtractField("name", (value) => value)
+    val handler: EditHandler[?] = fieldKey.key.keyKind.handler
+    val value1: ComplexFieldValue = handler.bindFromRequest(data)
+    val updateCandidate = UpdateCandidate(fieldKey, value1)
+    val function: Option[NamedKey] = Option.when(name.nonEmpty)(NamedKey(fieldKey.key, name))
+    val candidateAndNames: CandidateAndNames = CandidateAndNames(updateCandidate, function)
+    dataStore.update(candidateAndNames)
+    handler.saveOp()
   }
 }
 
-
+object ExtractField:
+  def apply[T](name: String, f: (String) => T)(using encoded: Map[String, Seq[String]]): T =
+    (for {
+      e <- encoded.get(name)
+      v <- e.headOption
+    } yield {
+      f(v)
+    }).getOrElse(throw new IllegalArgumentException(s"No $name in body!"))
 
 

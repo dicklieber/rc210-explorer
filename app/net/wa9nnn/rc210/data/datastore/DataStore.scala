@@ -103,9 +103,9 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
       val fieldKey = uc.fieldKey
       val current: FieldEntry = keyFieldMap(fieldKey)
       keyFieldMap.put(fieldKey, uc.candidate match
-        case Left(value: String) =>
+        case value: String =>
           current.setCandidate(value)
-        case Right(value: ComplexFieldValue) =>
+        case value: ComplexFieldValue =>
           current.setCandidate(value))
     }
 
@@ -172,7 +172,6 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
 
   override def namedKeys: Seq[NamedKey] =
     keyNameMap.map((key, name) => NamedKey(key, name)).toIndexedSeq.sorted
-    
 
   def triggers: Seq[FieldEntry] =
     (for {

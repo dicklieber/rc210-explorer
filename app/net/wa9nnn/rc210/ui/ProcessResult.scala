@@ -40,7 +40,7 @@ object ProcessResult {
 
     val namedKeys: Option[NamedKey] = data.get("name").map(name => NamedKey(key, name))
 
-    val updateCandidate = UpdateCandidate(fieldValue.fieldKey, Right(fieldValue))
+    val updateCandidate = UpdateCandidate(fieldValue.fieldKey, fieldValue)
 
     CandidateAndNames(updateCandidate, namedKeys)
 

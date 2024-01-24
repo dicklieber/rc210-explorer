@@ -9,11 +9,28 @@
 @import net.wa9nnn.rc210.KeyKind
 @(logicAlarmForm: Form[LogicAlarmNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider) extends
     @tabbedmain(KeyKind.LogicAlarm) {
+        <script>
+                @*  https://stackoverflow.com/questions/3746678/force-a-checkbox-to-always-submit-even-when-unchecked  "Complete solution" *@
+                $(document).on('submit', 'form', function () {
+                    $(this).find('input[type=checkbox]').each(function () {
+                        var checkbox = $(this);
+
+                        // add a hidden field with the same name before the checkbox with value = 0
+                        if (!checkbox.prop('checked')) {
+                            checkbox.clone()
+                                    .prop('type', 'hidden')
+                                    .val("false")
+                                    .insertBefore(checkbox);
+                        }
+                    });
+                });
+        </script>
         <div class="container">
         @form(routes.EditController.save()) {
 
             @nameEdit(fieldKey.key)
             <input type="hidden" name="key" value="@fieldKey.key">
+            <input type="hidden" name="fieldKey" value="@fieldKey">
             <table>
                 <tr>
                     <td>

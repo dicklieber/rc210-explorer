@@ -63,7 +63,7 @@ class SimpleValuesHandler(fieldEntries: Seq[FieldEntry]) extends LazyLogging:
     val updateCandidates: Seq[UpdateCandidate] = fieldKeys.map { fieldKey =>
       val str: String = formDataMap.getOrElse(fieldKey, "")
       logger.debug("fieldKey: {} => value: {}", fieldKey.toString, str)
-      UpdateCandidate(fieldKey, Left(str))
+      UpdateCandidate(fieldKey, str)
     }
     val justNames: Map[FieldKey, String] = formDataMap.filter { (fieldKey, _) =>
       fieldKey.fieldName == "name"

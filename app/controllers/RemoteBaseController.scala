@@ -48,7 +48,7 @@ class RemoteBaseController @Inject()(dataStore: DataStore, components: MessagesC
           BadRequest(views.html.remoteBase(formWithErrors))
         },
         (remoteBase: RemoteBaseNode) => {
-          val updateCandidate = UpdateCandidate(RemoteBaseNode.fieldKey, Right(remoteBase))
+          val updateCandidate = UpdateCandidate(RemoteBaseNode.fieldKey, remoteBase)
           val candidateAndNames = CandidateAndNames(updateCandidate, None)
 
           given RcSession = request.attrs(sessionKey)

@@ -21,7 +21,6 @@ import net.wa9nnn.rc210.{FieldKey, Key}
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry}
 import play.api.libs.json.{Format, JsValue, Json}
 
-
 /**
  * Data transfer object for JSON.
  * This is what's written to or Parsed (by PlayJson) from the [[DataStore]] JSON data..
@@ -31,8 +30,6 @@ import play.api.libs.json.{Format, JsValue, Json}
  * @param candidate  next value.
  */
 case class FieldEntryJson(fieldKey: FieldKey, fieldValue: JsValue, candidate: Option[JsValue])
-
-
 
 /**
  * Helper to transfer values from an html form to the [[DataStore]].
@@ -50,7 +47,6 @@ object FieldEntryJson {
     new FieldEntryJson(fieldKey, fieldEntry.fieldValue.toJsValue, fieldEntry.candidate.map(_.toJsValue))
   }
 
-
   implicit val fmtFieldEntryJson: Format[FieldEntryJson] = Json.format[FieldEntryJson]
 
 }
@@ -59,15 +55,10 @@ object FieldEntryJson {
  * What is sent to the [[DataStore]] to be the new candidate and name.
  *
  * @param fieldKey   id of value.
- * @param candidate  contents of value. To set as candidate.
+ * @param candidate String for [[net.wa9nnn.rc210.data.field.SimpleFieldValue]] or a [[ComplexFieldValue]]
  */
-case class UpdateCandidate(fieldKey: FieldKey, candidate: Either[String, ComplexFieldValue])
+case class UpdateCandidate(fieldKey: FieldKey, candidate: String | ComplexFieldValue)
 
-object UpdateCandidate {
-  def apply(complexFieldValue: ComplexFieldValue): UpdateCandidate = {
-    new UpdateCandidate(complexFieldValue.fieldKey, Right(complexFieldValue))
-  }
-}
 
 //case class UpdateData(candidates: Seq[UpdateCandidate], names: Seq[NamedKey] = Seq.empty)
 
