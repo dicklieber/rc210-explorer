@@ -18,7 +18,9 @@
 package net.wa9nnn.rc210.ui
 
 import controllers.routes
+import enumeratum.{EnumEntry, PlayEnum}
 import net.wa9nnn.rc210.KeyKind
+import net.wa9nnn.rc210.ui.TabKind.Fields
 
 trait AbstractTab:
   def toolTip: String = ""
@@ -27,10 +29,21 @@ trait AbstractTab:
 
   def indexUrl: String
 
-case class Tab(override val entryName: String, override val indexUrl: String, override val toolTip: String) extends AbstractTab
+  def tabKind: TabKind
 
-object Tabs {
+  /**
+   * 
+   * @param entryName show to users
+   * @param indexUrl how
+   * @param toolTip
+   * @param tabKind
+   */
+  case class Tab(override val entryName: String,
+               override val indexUrl: String,
+               override val toolTip: String,
+               override val tabKind: TabKind = Fields) extends AbstractTab
 
+object Tabs:
   val rc210Tab: Tab = Tab("RC-210", routes.IOController.listSerialPorts.url, "RC-210 Operations")
   val changes: Tab = Tab("Changes", routes.CommandsController.index.url, "Pending changes that need to be sent to the RC-210.")
   val noTab: Tab = Tab("none", "", "this should never show.")
@@ -47,62 +60,16 @@ object Tabs {
       names
     )
 
-  //
-  //  val todo: Tab = Tab("todo", "", "todo")
-  //
-  //  val noTab: Tab = Tab("none", "", "this should never show.")
-  //  val commonTab: Tab = Tab("Common", KeyKind.Common, "Global settings")
-  //  val ctTab: Tab = Tab("CT", KeyKind.CourtesyTone, "Courtesy Tones")
-  //  val clockTab: Tab = Tab("Clock", routes.ClockController.index.url, "Set clock, DST etc.")
-  //
-  //  val logicAlarmTab: Tab = Tab("Logic", routes.LogicAlarmController.index.url, "Logic Alarm settings.")
-  //  val metersTab: Tab = Tab("Meters", routes.MeterController.index.url, "Analog Meters and Alarms")
-  //  //
-  //  //  val dtmfTab: Tab = Tab(KeyKind.dtmfMacroKey)
-  //  //
-  //
-  //  val macrosTab: Tab = Tab("Macros", routes.MacroController.index.url, "Macro settings.")
-  //  val messagesTab: Tab = Tab("Messages", routes.MessageController.index.url, "Messages.")
-  // 
-  //
-  //  val portsTab: Tab = Tab("Ports", routes.PortsController.index.url, "Port settings")
-  //
-  //  val schedulesTab: Tab = Tab("Schedules", routes.ScheduleController.index.url, "Schedule settings.")
-  //  val timersTab: Tab = Tab("Timers", routes.TimerController.index.url, "Timer settings.")
-  //  val rc210Tab: Tab = Tab("RC-210", routes.IOController.listSerialPorts.url, "RC-210 DownloadActor.")
-  //  val fileUpload: Tab = Tab("Upload", routes.DataStoreController.upload.url, "Upload a saved JSON file.")
-  //  val changes: Tab = Tab("Changes", routes.CommandsController.index.url, "Pending changes that need to be sent to the RC-210.")
-  //  val remoteBase: Tab = Tab("Remote Base", controllers.routes.RemoteBaseController.index.url, "Manabge Remote Base radio.")
-  //
-  //  def security: Tab = Tab("Users", routes.UsersController.users().url, "Edit Users")
-  //
-  //  val tabs: Seq[Tab] = Seq(
-  //    metersTab,
-  //    logicAlarmTab,
-  //    commonTab,
-  //    clockTab,
-  //    macrosTab,
-  //    messagesTab,
-  //    ctTab,
-  //    portsTab,
-  //    schedulesTab,
-  //    timersTab,
-  //    remoteBase,
-  //    namesTab,
-  //    rc210Tab,
-  //    changes,
-  //  ).sortBy(_.name)
-  //
-  //  type TabName = String
+sealed trait TabKind() extends EnumEntry
+
+object TabKind extends PlayEnum[TabKind] {
+
+  override val values: Seq[TabKind] = findValues
+
+  case object Fields extends TabKind
+
+  case object Rc210Io extends TabKind
+
+  case object Settings extends TabKind
 
 }
-
-//class Tab(val name: TabName, url: String, tooltip: String)
-//
-//object Tab:
-//  def apply(keyKind: KeyKind): Tab
-//
-//  () url(): String
-//  = routes.EditController.index(keyKind)
-
-
