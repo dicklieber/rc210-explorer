@@ -7,9 +7,16 @@ import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
 import net.wa9nnn.rc210.ui.{AbstractTab, SimpleValuesHandler, Tabs}
 import play.api.data.Form
 import play.api.i18n.MessagesProvider
-import play.api.mvc.{Request, RequestHeader, Result, Results}
+import play.api.mvc.{Call, Request, RequestHeader, Result, Results}
 
 trait EditHandler[T <: FieldValue]:
+  /**
+   * Allows overriding where  [[controllers.EditController]] will go for index request.
+   * @param keyKind
+   * @return
+   */
+  def redirect(keyKind: KeyKind): Option[Call] = None
+
   //  var svh: Option[SimpleValuesHandler] = None
   val keyKind: KeyKind
 

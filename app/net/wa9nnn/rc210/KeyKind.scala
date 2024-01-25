@@ -51,13 +51,15 @@ object KeyKind extends PlayEnum[KeyKind]:
 
   case object Clock extends KeyKind(1)
 
-  case object Port extends KeyKind(3)
+  case object Port extends KeyKind(3):
+    override def indexUrl: String = routes.PortsController.index.url
 
   case object Schedule extends KeyKind(40)
 
   case object Timer extends KeyKind(6, TimerNode)
 
-  case object Common extends KeyKind(1)
+  case object Common extends KeyKind(1):
+    override def indexUrl: String = routes.CommonController.index.url
 
   case object RemoteBase extends KeyKind(1)
 

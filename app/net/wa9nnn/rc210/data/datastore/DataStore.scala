@@ -63,7 +63,7 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
       case None =>
         throw new IllegalArgumentException(s"No editValue for fieldKey: $fieldKey")
 
-  def indexValues[T <: ComplexFieldValue](keyKind: KeyKind): Seq[T] =
+  def indexValues[T <: FieldValue](keyKind: KeyKind): Seq[T] =
     all.filter(_.fieldKey.key.keyKind == keyKind).map(_.value.asInstanceOf[T])
 
   def all: Seq[FieldEntry] =

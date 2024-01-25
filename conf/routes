@@ -16,6 +16,8 @@ GET         /rc210/result                             controllers.IOController.d
 GET         /rc210                                    controllers.IOController.listSerialPorts
 POST        /ports/save                               controllers.PortsController.save()
 GET         /ports                                    controllers.PortsController.index
+GET         /common/index                             controllers.CommonController.index
+POST        /common/save                              controllers.CommonController.save()
 GET         /candidates                               controllers.CommandsController.index
 GET         /datastore/dump                           controllers.CommandsController.dump()
 GET         /candidates/ws/:commandSendRequest        controllers.CommandsController.ws(commandSendRequest:CommandSendRequest)

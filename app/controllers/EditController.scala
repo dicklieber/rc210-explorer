@@ -47,9 +47,15 @@ class EditController @Inject()(implicit dataStore: DataStore, ec: ExecutionConte
 
   def index(keyKind: KeyKind): Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] => {
-      val table: Table = keyKind.handler.index(dataStore.indexValues(keyKind))
-      val html: Html = fieldIndex(keyKind, table)
-      Ok(html)
+      keyKind.handler.redirect(keyKind) match
+        case Some(call) =>
+          Redirect(call)
+
+        case None =>
+          val value = dataStore.indexValues(keyKind)
+          val table: Table = keyKind.handler.index(value)
+          val html: Html = fieldIndex(keyKind, table)
+          Ok(html)
     }
   }
 
@@ -63,25 +69,25 @@ class EditController @Inject()(implicit dataStore: DataStore, ec: ExecutionConte
   def save(): Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] =>
 
-    given data: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
+      given data: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
 
-    given RcSession = request.attrs(sessionKey)
+      given RcSession = request.attrs(sessionKey)
 
-    logger.whenDebugEnabled {
-      data.foreach { (name, values) =>
-        println(s"$name: ${values.mkString(", ")}")
+      logger.whenDebugEnabled {
+        data.foreach { (name, values) =>
+          println(s"$name: ${values.mkString(", ")}")
+        }
       }
-    }
 
-    val fieldKey: FieldKey = ExtractField("fieldKey", (value) => FieldKey(value))
-    val name: String = ExtractField("name", (value) => value)
-    val handler: EditHandler[?] = fieldKey.key.keyKind.handler
-    val value1: ComplexFieldValue = handler.bindFromRequest(data)
-    val updateCandidate = UpdateCandidate(fieldKey, value1)
-    val function: Option[NamedKey] = Option.when(name.nonEmpty)(NamedKey(fieldKey.key, name))
-    val candidateAndNames: CandidateAndNames = CandidateAndNames(updateCandidate, function)
-    dataStore.update(candidateAndNames)
-    handler.saveOp()
+      val fieldKey: FieldKey = ExtractField("fieldKey", (value) => FieldKey(value))
+      val name: String = ExtractField("name", (value) => value)
+      val handler: EditHandler[?] = fieldKey.key.keyKind.handler
+      val value1: ComplexFieldValue = handler.bindFromRequest(data)
+      val updateCandidate = UpdateCandidate(fieldKey, value1)
+      val function: Option[NamedKey] = Option.when(name.nonEmpty)(NamedKey(fieldKey.key, name))
+      val candidateAndNames: CandidateAndNames = CandidateAndNames(updateCandidate, function)
+      dataStore.update(candidateAndNames)
+      handler.saveOp()
   }
 }
 
