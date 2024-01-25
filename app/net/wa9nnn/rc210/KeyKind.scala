@@ -26,8 +26,8 @@ import net.wa9nnn.rc210.data.meter.{MeterAlarmNode, MeterNode}
 import net.wa9nnn.rc210.data.timers.TimerNode
 import net.wa9nnn.rc210.ui.{AbstractTab, Tabs}
 
-sealed trait KeyKind(val maxN: Int,  val handler: EditHandler[?] = null) extends EnumEntry with CapitalWords with AbstractTab:
-  override def indexUrl:String = routes.EditController.index(this).url
+sealed trait KeyKind(val maxN: Int, val handler: EditHandler[?] = null) extends EnumEntry with CapitalWords with AbstractTab:
+  override def indexUrl: String = routes.EditController.index(this).url
 
 object KeyKind extends PlayEnum[KeyKind]:
 
@@ -45,9 +45,11 @@ object KeyKind extends PlayEnum[KeyKind]:
 
   case object Function extends KeyKind(1005)
 
-  case object Macro extends KeyKind(105)
+  case object Macro extends KeyKind(105):
+    override def indexUrl: String = routes.MacroController.index.url
 
-  case object Message extends KeyKind(70) // 40 (in Main) + 30 (in RTC)
+  case object Message extends KeyKind(70): // 40 (in Main) + 30 (in RTC)
+    override def indexUrl: String = routes.MessageController.index.url
 
   case object Clock extends KeyKind(1)
 
