@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="RC-210" type="Play2FrameworkRunConfigurations" factoryName="Play 2 App" singleton="false" show_console_on_std_err="false" show_console_on_std_out="false">
+  <configuration default="false" name="RC-210" type="Play2FrameworkRunConfigurations" factoryName="Play 2 App" singleton="true" show_console_on_std_err="false" show_console_on_std_out="false">
     <module name="rc210-explorer" />
-    <option name="allowRunningInParallel" value="true" />
+    <option name="allowRunningInParallel" value="false" />
     <option name="enableSbtGlobalPlugins" value="false" />
     <option name="play2EnvVariables">
       <map />

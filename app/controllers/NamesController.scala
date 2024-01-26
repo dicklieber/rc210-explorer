@@ -19,18 +19,18 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.*
-import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.datastore.{CandidateAndNames, DataStore, UpdateCandidate}
 import net.wa9nnn.rc210.data.remotebase.RemoteBaseNode
 import net.wa9nnn.rc210.security.Who.request2Session
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
+import net.wa9nnn.rc210.ui.EditButtonCell
 import play.api.data.Forms.*
 import play.api.data.{Field, Form, Mapping}
 import play.api.mvc.*
 
 import javax.inject.{Inject, Singleton}
-import scala.collection.concurrent.TrieMap
 
 @Singleton()
 class NamesController @Inject()(dataStore: DataStore, components: MessagesControllerComponents)
@@ -42,13 +42,23 @@ class NamesController @Inject()(dataStore: DataStore, components: MessagesContro
    */
   def index: Action[AnyContent] = Action {
     implicit request =>
-      val table = Table(Header("Names",
+      val rows: Seq[Row] = dataStore.namedKeys.map { namedKey =>
+        val key = namedKey.key
+        val fieldKey = FieldKey(key)
+        Row(
+          EditButtonCell(fieldKey),
+          Cell(key),
+          namedKey.name
+        )
+      }
+      val header = Header(
+        "Named Keys",
+        "",
         Cell("Key")
           .withToolTip("Keys are, usually, RC-210 data that are numbered."),
         "Name"
-      ),
-        dataStore.namedKeys.map(_.toRow)
       )
+      val table = Table(header, rows)
 
       Ok(views.html.names(table))
   }
