@@ -19,6 +19,7 @@ package net.wa9nnn.rc210.data.courtesy
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Row, Table}
+import controllers.routes
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
@@ -26,13 +27,14 @@ import play.api.data.*
 import play.api.data.Forms.*
 import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json, OFormat}
-import play.api.mvc.{RequestHeader, Result}
+import play.api.mvc.{RequestHeader, Result, Results}
+import views.html.courtesyToneEdit
 
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
- * 
- * @param key id
+ *
+ * @param key      id
  * @param segments the four segment that mke up a courtesy tone.
  */
 case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends ComplexFieldValue() {
@@ -58,14 +60,14 @@ case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends C
   override def toRow: Row = ???
 }
 
-
 /**
  * [[CourtesyTone]] data are spread out in the [[Memory]] image.
  * This gaters all the data and produces all the [[CourtesyTone]]s.
  */
-object CourtesyTone extends ComplexExtractor[CourtesyTone] with LazyLogging {
+object CourtesyTone extends ComplexExtractor[CourtesyTone] with LazyLogging:
   override val keyKind: KeyKind = KeyKind.CourtesyTone
   private val nCourtesyTones = keyKind.maxN
+
   def unapply(u: CourtesyTone): Option[(Key, Seq[Segment])] = Some((u.key, u.segments))
 
   val form: Form[CourtesyTone] = Form(
@@ -112,18 +114,17 @@ object CourtesyTone extends ComplexExtractor[CourtesyTone] with LazyLogging {
     }
   }
 
-
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[CourtesyTone]
-
-
-  override val name: String = "CourtesyExtractor"
-
-  override val fieldName: String = "CourtesyTone"
 
   override def index(values: Seq[CourtesyTone]): Table = ???
 
-  override def editOp(form: Form[CourtesyTone], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result = ???
+  override def editOp(form: Form[CourtesyTone], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result =
+    given Form[CourtesyTone] = form
+    Results.Ok(courtesyToneEdit(fieldKey))
 
-  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue = ???
-}
+  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue =
+    form.bindFromRequest(data).get
+
+  override def saveOp()(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result =
+    Results.Redirect(routes.CourtesyToneController.index)
 
