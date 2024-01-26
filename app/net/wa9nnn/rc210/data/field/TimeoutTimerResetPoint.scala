@@ -68,6 +68,4 @@ object TimeoutTimerResetPoint extends SimpleExtractor {
 
   override def parse(jsValue: JsValue): FieldValue = new TimeoutTimerResetPoint(jsValue.as[TotReset])
 
-  override val name: String = "TOT Reset Point"
-
 }

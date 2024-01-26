@@ -110,8 +110,6 @@ object TimerNode extends ComplexExtractor[TimerNode] with LazyLogging {
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[TimerNode]
 
-  override val name: String = "Timer"
-  override val fieldName: String = name
 
   def unapply(u: TimerNode): Option[(Key, Int, Key)] = Some((u.key, u.seconds, u.macroKey))
 

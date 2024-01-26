@@ -4,7 +4,7 @@ import com.wa9nnn.wa9nnnutil.tableui.Table
 import controllers.routes
 import net.wa9nnn.rc210.{FieldKey, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
-import net.wa9nnn.rc210.ui.{AbstractTab, SimpleValuesHandler, Tabs}
+import net.wa9nnn.rc210.ui.{Tab, SimpleValuesHandler, Tabs}
 import play.api.data.Form
 import play.api.i18n.MessagesProvider
 import play.api.mvc.{Call, Request, RequestHeader, Result, Results}

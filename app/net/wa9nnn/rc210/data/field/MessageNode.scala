@@ -105,14 +105,7 @@ object MessageNode extends ComplexExtractor[MessageNode] with LazyLogging {
     }
   }
 
-  /**
-   * for various things e.g. parser name.
-   */
-  override val name: String = "Message"
-
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[MessageNode]
-
-  override val fieldName: String = name
 
   override def form: Form[MessageNode] = throw new NotImplementedError("No fprm used with Message!") //todo
 

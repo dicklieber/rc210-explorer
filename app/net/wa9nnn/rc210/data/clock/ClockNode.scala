@@ -19,16 +19,16 @@ package net.wa9nnn.rc210.data.clock
 
 import com.wa9nnn.wa9nnnutil.JsonFormatUtils.javaEnumFormat
 import com.wa9nnn.wa9nnnutil.tableui.{Row, Table}
-import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.clock.MonthOfYearDST.*
 import net.wa9nnn.rc210.data.clock.Occurrence.*
-import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
+import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.EditButtonCell
-import play.api.libs.json.{Format, JsValue, Json}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.*
 import play.api.data.Forms.*
 import play.api.i18n.MessagesProvider
+import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.{RequestHeader, Result}
 
 case class ClockNode(key: Key,
@@ -126,11 +126,9 @@ object ClockNode extends ComplexExtractor[ClockNode] {
   /**
    * for various things e.g. parser name.
    */
-  override val name: String = "Clock"
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[ClockNode]
 
-  override val fieldName: String = name
   val key: Key = Key(KeyKind.Clock) // there's only one
   val fieldKey: FieldKey = FieldKey(fieldName, key)
 

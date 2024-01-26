@@ -126,8 +126,6 @@ object RemoteBaseNode extends ComplexExtractor[RemoteBaseNode] {
   /**
    * for various things e.g. parser name.
    */
-  override val name: String = "RemoteBase"
-  override val fieldName: String = name
   val key:Key = Key(keyKind)
   val fieldKey: FieldKey = super.fieldKey(key)
 

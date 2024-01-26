@@ -139,12 +139,6 @@ object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode] {
 
   override def parse(jsValue: JsValue): LogicAlarmNode = jsValue.as[LogicAlarmNode]
 
-  /**
-   * for various things e.g. parser name.
-   */
-  override val name: String = "LogicAlarm"
-  override val fieldName: String = name
-
   override def positions: Seq[FieldOffset] = Seq()
 
   implicit val fmtLogicAlarm: Format[LogicAlarmNode] = Json.format[LogicAlarmNode]

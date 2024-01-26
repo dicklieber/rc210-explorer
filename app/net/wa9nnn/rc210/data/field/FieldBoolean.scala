@@ -69,5 +69,4 @@ object FieldBoolean extends SimpleExtractor:
 
   override def parse(jsValue: JsValue): FieldValue = FieldBoolean(jsValue.as[Boolean])
 
-  override val name: String = "FieldBoolean"
 

@@ -173,14 +173,7 @@ object MeterAlarmNode extends ComplexExtractor[MeterAlarmNode]:
       }
   }
 
-  /**
-   * for various things e.g. parser name.
-   */
-  override val name: String = "MeterAlarm"
-
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[MeterAlarmNode]
-
-  override val fieldName: String = name
 
   override def positions: Seq[FieldOffset] = Seq(
     FieldOffset(266, this, "Alarm Type"),

@@ -286,9 +286,9 @@ body {
 
 header {
     background-color: lightcyan;
-    padding: 20px;
+    padding: 5px;
     text-align: center;
-    border:  2px solid red;
+    /*border:  2px solid red;*/
 }
 
 .navbar {

@@ -169,10 +169,7 @@ object MacroNode extends ComplexExtractor[MacroNode] {
   override def parse(jsValue: JsValue): FieldValue = {
     jsValue.as[MacroNode]
   }
-
-  override val name: String = "Macro"
-  override val fieldName: String = name
-
+  
   override def form: Form[MacroNode] = throw new NotImplementedError("Forms not used with macros") //todo
 
   override def index(values: Seq[MacroNode]): Table = ???

@@ -4,6 +4,9 @@ GET         /edit/:fieldKey                           controllers.EditController
 POST        /save                                     controllers.EditController.save()
 GET         /macro/edit/:key                          controllers.MacroController.edit(key:Key)
 POST        /macro/save                               controllers.MacroController.save()
+#POST        /courtesytones/save                       controllers.CourtesyToneController.save
+#GET         /courtesytones/edit/:key                  controllers.CourtesyToneController.edit(key:Key)
+GET         /courtesytones                            controllers.CourtesyToneController.index
 GET         /messages                                 controllers.MessageController.index
 GET         /message/edit/:key                        controllers.MessageController.edit(key:Key)
 POST        /message/save                             controllers.MessageController.save()

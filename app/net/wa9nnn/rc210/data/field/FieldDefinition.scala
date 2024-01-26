@@ -21,14 +21,13 @@ trait FieldDefinition extends LazyLogging:
 
   def positions: Seq[FieldOffset]
 
-
 /**
  * A [[SimpleField]] produces one RC-210 command as opposed to a complex rc2input like [[net.wa9nnn.rc210.data.schedules.ScheduleNode]] that may produce multiple commands.
  * And generally will be an HTML form itself to edit.
  *
  * @param offset         where in [[Memory]] this comes from.
  * @param fieldName      as shown to users.
- * @param keyKind           
+ * @param keyKind
  * @param template       used to generate the rc-210 command.
  * @param fieldExtractor that knows how to get this from the [[net.wa9nnn.rc210.serial.Memory]]
  * @param tooltip        for this rc2input.
@@ -85,9 +84,10 @@ case class SimpleField(offset: Int,
   override def positions: Seq[FieldOffset] = Seq(FieldOffset(offset, this))
 }
 
-
 trait ComplexExtractor[T <: ComplexFieldValue] extends FieldExtractor with FieldDefinition with EditHandler[T] {
-  def fieldKey(key: Key): FieldKey = FieldKey(fieldName, key)
+  def fieldKey(key: Key): FieldKey = FieldKey(key)
+
+  final override val fieldName: String = KeyKind.CourtesyTone.entryName
 
   /**
    *
@@ -95,7 +95,8 @@ trait ComplexExtractor[T <: ComplexFieldValue] extends FieldExtractor with Field
    * @return what we extracted.
    */
   def extract(memory: Memory): Seq[FieldEntry]
-  def form:Form[T]
+
+  def form: Form[T]
 
 }
 
@@ -107,20 +108,14 @@ abstract class SimpleExtractor extends FieldExtractor {
 trait FieldExtractor {
 
   def parse(jsValue: JsValue): FieldValue
-
-  /**
-   * for various things e.g. parser name.
-   */
-  val name: String
-
 }
 
 /**
  * where in the memory image
  *
- * @param offset where in [[Memory]].
+ * @param offset          where in [[Memory]].
  * @param fieldDefinition details.
- * @param field a name.
+ * @param field           a name.
  */
 case class FieldOffset(offset: Int, fieldDefinition: FieldDefinition, field: Option[String] = None)
 

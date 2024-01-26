@@ -1,5 +1,5 @@
 @import net.wa9nnn.rc210.ui.Tabs
-@import net.wa9nnn.rc210.ui.AbstractTab
+@import net.wa9nnn.rc210.ui.Tab
 @import net.wa9nnn.rc210explorer.BuildInfo
 @import java.time.Instant
 @import java.time.LocalTime
@@ -7,7 +7,7 @@
 @import java.time.ZoneId
 @import java.time.ZoneId._
 @import net.wa9nnn.rc210.KeyKind
-@(activeTab: AbstractTab)(content: Html)
+@(activeTab: Tab)(content: Html)
 <!doctype html>
 <html lang="en">
     <head>
@@ -51,7 +51,7 @@
         <section>
             <nav class="rcnav">
                 <ul>
-                    @for(tab <- Tabs.tabs) {
+                    @for(tab <- Tabs.releventTabs(activeTab)) {
                         <li>
                             <a class=" @if(tab == activeTab) { active }" href="@tab.indexUrl" >@tab.entryName</a>
                         </li>

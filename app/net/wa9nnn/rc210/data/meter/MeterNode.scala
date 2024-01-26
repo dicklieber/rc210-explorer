@@ -38,7 +38,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * @param low           calibrate for high.
  * @param high          calibrate for low.
  */
-case class MeterNode(key: Key, meterFaceName: MeterFaceName, low: VoltToReading, high: VoltToReading) extends ComplexFieldValue() {
+case class MeterNode(key: Key, meterFaceName: MeterFaceName, low: VoltToReading, high: VoltToReading) extends ComplexFieldValue():
 
   override def displayHtml: String =
     <table class="tagValuetable">
@@ -93,7 +93,6 @@ case class MeterNode(key: Key, meterFaceName: MeterFaceName, low: VoltToReading,
     high.hundredthVolt,
     high.reading,
   )
-}
 
 object MeterNode extends ComplexExtractor[MeterNode]:
   val keyKind = KeyKind.Meter
@@ -130,14 +129,7 @@ object MeterNode extends ComplexExtractor[MeterNode]:
     meters
   }
 
-  /**
-   * for various things e.g. parser name.
-   */
-  override val name: String = "Meter"
-
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[MeterNode]
-
-  override val fieldName: String = name
 
   override def positions: Seq[FieldOffset] = Seq(
     FieldOffset(186, this, "meterFace"),

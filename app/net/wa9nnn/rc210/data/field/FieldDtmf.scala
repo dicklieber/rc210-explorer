@@ -23,7 +23,7 @@ import net.wa9nnn.rc210.{FieldKey, Key}
 import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue, Json}
 
-case class FieldDtmf(value: String) extends SimpleFieldValue() with LazyLogging {
+case class FieldDtmf(value: String) extends SimpleFieldValue() with LazyLogging:
   logger.debug("value: {}", value)
 
   override def toRow: Row = Row(
@@ -51,9 +51,9 @@ case class FieldDtmf(value: String) extends SimpleFieldValue() with LazyLogging 
   }
 
   override def toJsValue: JsValue = Json.toJson(value)
-}
 
-object FieldDtmf extends SimpleExtractor {
+
+object FieldDtmf extends SimpleExtractor:
 
   override def extractFromInts(itr: Iterator[Int], fieldDefinition: SimpleField): FieldValue = {
     val ints: Seq[Int] = for {
@@ -77,6 +77,3 @@ object FieldDtmf extends SimpleExtractor {
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[FieldDtmf]
 
-  override val name: String = "FieldDtmf"
-
-}

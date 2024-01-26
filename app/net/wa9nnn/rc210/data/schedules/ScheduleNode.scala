@@ -190,8 +190,6 @@ object ScheduleNode extends LazyLogging with ComplexExtractor[ScheduleNode] {
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[ScheduleNode]
 
-  override val name: String = "Schedule"
-  override val fieldName: String = name
 
   override def index(values: Seq[ScheduleNode]): Table = ???
 
