@@ -23,6 +23,7 @@ import enumeratum.EnumEntry.CapitalWords
 import net.wa9nnn.rc210.data.EditHandler
 import net.wa9nnn.rc210.data.field.{FieldValue, LogicAlarmNode}
 import net.wa9nnn.rc210.data.meter.{MeterAlarmNode, MeterNode}
+import net.wa9nnn.rc210.data.schedules.ScheduleNode
 import net.wa9nnn.rc210.data.timers.TimerNode
 import net.wa9nnn.rc210.ui.{Tab, Tabs}
 
@@ -58,7 +59,8 @@ object KeyKind extends PlayEnum[KeyKind]:
   case object Port extends KeyKind(3):
     override def indexUrl: String = routes.PortsController.index.url
 
-  case object Schedule extends KeyKind(40)
+  case object Schedule extends KeyKind(40, ScheduleNode)
+
 
   case object Timer extends KeyKind(6, TimerNode)
 

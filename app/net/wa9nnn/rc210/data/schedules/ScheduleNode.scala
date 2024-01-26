@@ -13,8 +13,8 @@ import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json}
-import play.api.mvc.{RequestHeader, Result}
-import views.html.editButton
+import play.api.mvc.{RequestHeader, Result, Results}
+import views.html.{editButton, scheduleEdit}
 
 /**
  *
@@ -131,7 +131,7 @@ case class ScheduleNode(override val key: Key,
       .toString
 
   override def toJsValue: JsValue = Json.toJson(this)
-  
+
 object ScheduleNode extends LazyLogging with ComplexExtractor[ScheduleNode] {
   override val keyKind: KeyKind = KeyKind.Schedule
 
@@ -190,12 +190,24 @@ object ScheduleNode extends LazyLogging with ComplexExtractor[ScheduleNode] {
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[ScheduleNode]
 
+  override def index(values: Seq[ScheduleNode]): Table =
+    Table(Header(s"Schedules (${values.length})",
+      "SetPoint",
+      "Enabled",
+      "Day in Week",
+      "Month",
+      Cell("Week").withToolTip("Week in month"),
+      "Time",
+      "Macro To Run"
+    ),
+      values.map(_.toRow)
+    )
 
-  override def index(values: Seq[ScheduleNode]): Table = ???
+  override def editOp(form: Form[ScheduleNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result =
+    Results.Ok(scheduleEdit(form, fieldKey))
 
-  override def editOp(form: Form[ScheduleNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result = ???
-
-  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue = ???
+  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue =
+    form.bindFromRequest(data).get
 }
 
 
