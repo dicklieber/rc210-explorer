@@ -3,6 +3,28 @@
 @import com.wa9nnn.wa9nnnutil.tableui.html.renderTable
 @(table: Table)
 @tabbedmain(Tabs.names) {
+
+
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/theme.blue.css")">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.widgets.min.js" integrity="sha512-dj/9K5GRIEZu+Igm9tC16XPOTz0RdPk9FGxfZxShWf65JJNU2TjbElGjuOo3EhwAJRPhJxwEJ5b+/Ouo+VqZdQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+            $(function(){
+                $('table').tablesorter({
+                    theme: 'blue',
+                    // widgets        : ['zebra', 'columns'],
+                    usNumberFormat : false,
+                    sortReset      : true,
+                    sortRestart    : true
+                });
+            });
+    </script>
+
+
+
     <div class="helpText">
         <p >
             These are the things that have user-defined names.

@@ -51,8 +51,7 @@ class NamesController @Inject()(dataStore: DataStore, components: MessagesContro
           namedKey.name
         )
       }
-      val header = Header(
-        "Named Keys",
+      val header = Header.singleRow(
         "",
         Cell("Key")
           .withToolTip("Keys are, usually, RC-210 data that are numbered."),
