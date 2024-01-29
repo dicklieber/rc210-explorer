@@ -165,6 +165,39 @@ fieldset {
     text-align: right;
 }
 
+/*header {*/
+/*    display: flex;*/
+/*    background-color: lightcyan;*/
+/*    !*padding: 5px;*!*/
+/*    text-align: center;*/
+/*    border:  2px solid red;*/
+/*    justify-content: space-between;*/
+/*}*/
+
+/*h1 {*/
+/*    border: 1px solid red*/
+/*}*/
+
+/*#topNav {*/
+/*    background-color: cyan;*/
+/*    !*justify-content: flex-end;*!*/
+/*    border: 3px solid hotpink;*/
+/*    text-align: right;*/
+/*    vertical-align:bottom;*/
+/*    white-space: nowrap;*/
+/*    width:100%;"*/
+/*}*/
+
+/*.topNavItem {*/
+/*    !*background-color: green;*!*/
+/*    display: inline-block;*/
+/*    vertical-align: bottom;*/
+/*    !*margin: 2px;*!*/
+/*}*/
+
+
+
+
 body {
     /*background: #f5f5f5;*/
     color: #555;
@@ -172,6 +205,11 @@ body {
     padding: 10px;
     width: fit-content;
 }
+
+
+
+
+
 
 .credits {
     font-size: smaller;
@@ -284,12 +322,6 @@ body {
 }
 
 
-header {
-    background-color: lightcyan;
-    padding: 5px;
-    text-align: center;
-    /*border:  2px solid red;*/
-}
 
 .navbar {
     margin-bottom: 0px;
@@ -311,7 +343,7 @@ nav {
     padding: 0;
     /*width: 200px;*/
     background-color: #f1f1f1;
-    border: 1px solid #555;
+    /*border: 1px solid #555;*/
 }
 
 .rcnav li a {

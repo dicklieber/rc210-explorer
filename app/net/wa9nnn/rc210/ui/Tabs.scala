@@ -65,8 +65,10 @@ object Tabs:
       names
     )
 
-  def releventTabs(tab:Tab): Seq[Tab] =
-    tabs.filter(_.tabKind == tab.tabKind)
+  def releventTabs(tab:Tab): Seq[Tab] = {
+    val desired = tab.tabKind
+    tabs.filter(_.tabKind == desired)
+  }
 
 sealed trait TabKind() extends EnumEntry
 
