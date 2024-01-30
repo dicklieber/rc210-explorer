@@ -2,8 +2,10 @@
 @import com.wa9nnn.wa9nnnutil.tableui.html.renderTable
 @import net.wa9nnn.rc210.ui.Tabs
 
-@(tables: Seq[Table])
-@tabbedmain(Tabs.noTab) {
+@import net.wa9nnn.rc210.ui.TabKind.Settings
+@import net.wa9nnn.rc210.ui.Tab
+@(tab:Tab, tables: Seq[Table])
+@tabbedmain(tab) {
     @for(table <- tables) {
         @renderTable(table
 //                .withCssClass("tablesorter")

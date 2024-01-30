@@ -2,8 +2,10 @@
 @import com.wa9nnn.wa9nnnutil.tableui.html.renderTable
 @import net.wa9nnn.rc210.ui.Tabs
 @import net.wa9nnn.rc210.data.functions.FunctionsProvider
+@import net.wa9nnn.rc210.ui.TabKind
+@import net.wa9nnn.rc210.KeyKind.Macro
 @(table: Table)
 
-@tabbedmain(Tabs.noTab) {
+@tabbedmain(Macro) {
     @renderTable(table)
 }

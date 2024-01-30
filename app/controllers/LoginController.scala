@@ -5,6 +5,7 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.security.authentication.RcSession.playSessionName
 import net.wa9nnn.rc210.security.authentication.*
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
+import net.wa9nnn.rc210.ui.TabKind
 import play.api.data.Forms.{mapping, text}
 import play.api.data.{Form, FormError}
 import play.api.mvc.*
@@ -75,7 +76,7 @@ class LoginController @Inject()(implicit config: Config,
           session: RcSession = sessionManager.create(user, request.remoteAddress)
         } yield {
           logger.info(s"Login callsign:${credentials.callsign}  ip:${request.remoteAddress}")
-          Ok(views.html.empty())
+          Ok(views.html.landing(TabKind.Fields))
             .withSession(RcSession.playSessionName -> session.sessionId)
         })
           .getOrElse {

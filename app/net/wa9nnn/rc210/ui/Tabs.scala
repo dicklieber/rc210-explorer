@@ -20,7 +20,7 @@ package net.wa9nnn.rc210.ui
 import controllers.routes
 import enumeratum.{EnumEntry, PlayEnum}
 import net.wa9nnn.rc210.KeyKind
-import net.wa9nnn.rc210.ui.TabKind.{Fields, Rc210Io}
+import net.wa9nnn.rc210.ui.TabKind.{Debug, Fields, Rc210Io, Settings}
 
 trait Tab:
   def toolTip: String = ""
@@ -49,29 +49,33 @@ case class Tabx(override val entryName: String,
                 override val tabKind: TabKind = Fields) extends Tab
 
 object Tabs:
-  
+
   val rc210Tab: Tabx = Tabx("RC-210", routes.IOController.listSerialPorts.url, "RC-210 Operations", tabKind = Rc210Io)
+  val memory: Tab = Tab("Memory", routes.MemoryController.index.url, Debug, "View raw data received from the RC-210 controller.")
   val changes: Tabx = Tabx("Changes", routes.CommandsController.index.url, "Pending changes that need to be sent to the RC-210.", tabKind = Rc210Io)
-  val noTab: Tabx = Tabx("none", "", "this should never show.")
   val fileUpload: Tabx = Tabx("Upload", routes.DataStoreController.upload.url, "Upload a saved JSON file.")
-  val security: Tabx = Tabx("Users", routes.UsersController.users().url, "Edit Users")
+  val security: Tabx = Tabx("Users", routes.UsersController.users().url, "Edit Users", TabKind.Settings)
   val names: Tabx = Tabx("Names", routes.NamesController.index.url, "User supp;ied names for varous fields.")
+  val logout:Tab = Tab("Logout", routes.LoginController.logout().url, Settings, "Finish this session")
   val tabs: Seq[Tab] =
     KeyKind.values.sortBy(_.entryName) :++ Seq(
       rc210Tab,
+      memory,
       changes,
-      noTab,
       fileUpload,
       security,
-      names
+      names,
+      logout
     )
 
   def releventTabs(tab:Tab): Seq[Tab] = {
     val desired = tab.tabKind
-    tabs.filter(_.tabKind == desired)
+    tabs
+      .filter(_.tabKind == desired)
+      .sortBy(_.entryName)
   }
 
-sealed trait TabKind(val iconName:String) extends EnumEntry:
+sealed trait TabKind(val iconName:String, val toolTip: String) extends EnumEntry:
   val noTab:Tab =
     Tabx("none", "", "", this)
 
@@ -79,10 +83,11 @@ object TabKind extends PlayEnum[TabKind] {
 
   override val values = findValues
 
-  case object Fields extends TabKind("bi-database")
+  case object Fields extends TabKind("bi-database", "Edit RC-210 fields.")
 
-  case object Rc210Io extends TabKind("bi-arrow-down-up")
+  case object Rc210Io extends TabKind("bi-arrow-down-up", "Deal with RC-210. e.g. upload, dpwnload, clock etc.")
 
-  case object Settings extends TabKind("bi-gear-wide-connected")
+  case object Settings extends TabKind("bi-gear-wide-connected", "Users")
+  case object Debug extends TabKind("bi-question-diamond", "Debug Tools")
 
 }

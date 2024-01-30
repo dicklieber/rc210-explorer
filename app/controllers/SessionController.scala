@@ -20,6 +20,7 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.Table
 import net.wa9nnn.rc210.security.authentication.{RcSession, SessionStore}
+import net.wa9nnn.rc210.ui.Tabs
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
@@ -41,6 +42,6 @@ class SessionController @Inject()(sessionStore: SessionStore, components: Messag
     val sessions = sessionStore.sessions
     val rows = sessions.map(_.toRow)
     val table: Table = Table(RcSession.header(rows.length), rows)
-    Ok(justdat(Seq(table)))
+    Ok(justdat(Tabs.security,  Seq(table)))
   }
 }

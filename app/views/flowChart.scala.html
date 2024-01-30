@@ -1,8 +1,9 @@
-@import net.wa9nnn.rc210.data.datastore.FlowData
-@import net.wa9nnn.rc210.ui.Tabs.noTab
 @import com.wa9nnn.wa9nnnutil.tableui.html.renderTable
+@import net.wa9nnn.rc210.FieldKey
+@import net.wa9nnn.rc210.KeyKind.Macro
+@import net.wa9nnn.rc210.data.datastore.FlowData
 @(flowData: FlowData)
-    @tabbedmain(noTab) {
+    @tabbedmain(Macro) {
         <div class="w3-container w3-cell">
             <fieldset>
                 <legend>Triggers</legend>
