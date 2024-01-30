@@ -1,7 +1,7 @@
 @import net.wa9nnn.rc210.ui.TabKind
 @(tabKind: TabKind, activetab: TabKind)
 
-<button type="button" class="btn btn-primary btn-lg @if(tabKind == activetab){ active }" >
+<button type="button" class="btn  @if(tabKind == activetab){ btn-primary }else{btn-secondary}" >
     <i class="bi @tabKind.iconName"></i>
 </button>
 
