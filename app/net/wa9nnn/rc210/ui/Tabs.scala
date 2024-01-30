@@ -70,16 +70,16 @@ object Tabs:
     tabs.filter(_.tabKind == desired)
   }
 
-sealed trait TabKind() extends EnumEntry
+sealed trait TabKind(val iconName:String) extends EnumEntry
 
 object TabKind extends PlayEnum[TabKind] {
 
   override val values = findValues
 
-  case object Fields extends TabKind
+  case object Fields extends TabKind("bi-database")
 
-  case object Rc210Io extends TabKind
+  case object Rc210Io extends TabKind("bi-arrow-down-up")
 
-  case object Settings extends TabKind
+  case object Settings extends TabKind("bi-gear-wide-connected")
 
 }

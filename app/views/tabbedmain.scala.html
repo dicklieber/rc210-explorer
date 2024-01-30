@@ -14,8 +14,12 @@
     <head>
         <script src="@routes.Assets.versioned("javascripts/jquery-3.6.3.min.js")"></script>
 
-        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/dropdown.css")">
-        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/w3.css")">
+@*        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/dropdown.css")">*@
+@*        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/bootstrap.css")">*@
+        @* <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/w3.css")">*@
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@@1.11.3/font/bootstrap-icons.min.css">
+
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
         <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
@@ -77,11 +81,11 @@
         <header>
             <h1 >RC210 header</h1>
             <div id="topNav">
-            @for(tabKind <- TabKind.values) {
-                <div class="topNavItem">
-                @tabKind.entryName
-                </div>
-            }
+                @for(tabKind <- TabKind.values) {
+                    <div class="topNavItem">
+                    @tabButton(tabKind, activeTab.tabKind)
+                    </div>
+                }
             </div>
         </header>
         <section>
@@ -92,24 +96,24 @@
                             <a class=" @if(tab == activeTab) { active }" href="@tab.indexUrl" >@tab.entryName</a>
                         </li>
                     }
-                    <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">More</a>
-                        <div class="dropdown-menu">
-                            <a href="@routes.DataStoreController.downloadJson()" class="dropdown-item">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">More</a>
+                    <div class="dropdown-menu">
+                        <a href="@routes.DataStoreController.downloadJson()" class="dropdown-item">
                                 DownloadActor Json</a>
-                            <a href="@routes.DataStoreController.viewJson()" class="dropdown-item">
+                        <a href="@routes.DataStoreController.viewJson()" class="dropdown-item">
                                 View Json</a>
-                            <a href="@routes.DataStoreController.upload" class="dropdown-item">Upload Json</a>
-                            <a href="@routes.CommandsController.dump()" class="dropdown-item">All Commands</a>
-                            <div class="dropdown-divider"></div>
-                            <a href="@routes.MemoryController.index" class="dropdown-item">
+                        <a href="@routes.DataStoreController.upload" class="dropdown-item">Upload Json</a>
+                        <a href="@routes.CommandsController.dump()" class="dropdown-item">All Commands</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="@routes.MemoryController.index" class="dropdown-item">
                                 RC_210 Memory Map</a>
-                            <div class="dropdown-divider"></div>
-                            <a href="@routes.LoginController.logout()" class="dropdown-item">Logout</a>
-                            <a href="@routes.UsersController.users()" class="dropdown-item">Users</a>
-                            <a href="@routes.SessionController.index" class="dropdown-item">Sessions</a>
-                        </div>
-                    </li>
+                        <div class="dropdown-divider"></div>
+                        <a href="@routes.LoginController.logout()" class="dropdown-item">Logout</a>
+                        <a href="@routes.UsersController.users()" class="dropdown-item">Users</a>
+                        <a href="@routes.SessionController.index" class="dropdown-item">Sessions</a>
+                    </div>
+                </li>
                 </ul>
             </nav>
             <div class="contentDiv">
