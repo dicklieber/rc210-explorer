@@ -1,14 +1,10 @@
 @import com.wa9nnn.wa9nnnutil.tableui.Table
-@()
+@import net.wa9nnn.rc210.ui.TabKind
+@import net.wa9nnn.rc210.ui.Tabs
+@(tabKind: TabKind)
 
-@main("RCP Dat") {
-    <h1>Default Landing Page</h1>
-    <ul>
-        <li><a href="/tabs">Tabs</a> </li>
-
-        <li><a href="/flow">Process Flow</a> </li>
-        <li><a href="/functions">Functions</a> </li>
-        <li><a href="/vocabulary">Vocabulary</a> </li>
-    </ul>
-
+@tabbedmain(tabKind.noTab){
+    <div class="helpText">
+        <p>Click on one of the icons above.</p>
+    </div>
 }

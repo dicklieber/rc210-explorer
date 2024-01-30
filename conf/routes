@@ -2,6 +2,7 @@ GET         /macros                                   controllers.MacroControlle
 GET         /index/:keyKind                           controllers.EditController.index(keyKind:KeyKind)
 GET         /edit/:fieldKey                           controllers.EditController.edit(fieldKey:FieldKey)
 POST        /save                                     controllers.EditController.save()
+GET         /landing/:tabKind                         controllers.NavigationController.selectTabKind(tabKind:TabKind)
 GET         /macro/edit/:key                          controllers.MacroController.edit(key:Key)
 POST        /macro/save                               controllers.MacroController.save()
 #POST        /courtesytones/save                       controllers.CourtesyToneController.save

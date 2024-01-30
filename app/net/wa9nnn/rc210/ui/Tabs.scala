@@ -49,6 +49,7 @@ case class Tabx(override val entryName: String,
                 override val tabKind: TabKind = Fields) extends Tab
 
 object Tabs:
+  
   val rc210Tab: Tabx = Tabx("RC-210", routes.IOController.listSerialPorts.url, "RC-210 Operations", tabKind = Rc210Io)
   val changes: Tabx = Tabx("Changes", routes.CommandsController.index.url, "Pending changes that need to be sent to the RC-210.", tabKind = Rc210Io)
   val noTab: Tabx = Tabx("none", "", "this should never show.")
@@ -70,7 +71,9 @@ object Tabs:
     tabs.filter(_.tabKind == desired)
   }
 
-sealed trait TabKind(val iconName:String) extends EnumEntry
+sealed trait TabKind(val iconName:String) extends EnumEntry:
+  val noTab:Tab =
+    Tabx("none", "", "", this)
 
 object TabKind extends PlayEnum[TabKind] {
 

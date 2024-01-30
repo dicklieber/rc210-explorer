@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210
 
 import net.wa9nnn.rc210.security.UserId.UserId
+import net.wa9nnn.rc210.ui.TabKind
 import play.api.mvc.PathBindable
 
 object Binders {
@@ -61,6 +62,19 @@ object Binders {
     override def unbind(key: String, fieldKey: FieldKey): String =
       fieldKey.toString
   }
+//  implicit def tabKeyBinder: PathBindable[TabKind] = new PathBindable[TabKind] {
+//    override def bind(key: String, value: String): Either[String, TabKind] =
+//
+//      try {
+//        Right(FieldKey(value))
+//      } catch {
+//        case e: Exception =>
+//          Left(e.getMessage)
+//      }
+//
+//    override def unbind(key: String, tabKind: TabKind): String =
+//      tabKind.toString
+//  }
 
   implicit def userIdBinder: PathBindable[UserId] = new PathBindable[UserId] {
     override def bind(key: String, value: String): Either[String, UserId] =

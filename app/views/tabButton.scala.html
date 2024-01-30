@@ -1,7 +1,8 @@
 @import net.wa9nnn.rc210.ui.TabKind
 @(tabKind: TabKind, activetab: TabKind)
 
-<button type="button" class="btn  @if(tabKind == activetab){ btn-primary }else{btn-secondary}" >
+<button type="button" class="btn  @if(tabKind == activetab) { btn-primary } else {btn-secondary}"
+onclick="window.location.href = '@routes.NavigationController.selectTabKind(tabKind)';">
     <i class="bi @tabKind.iconName"></i>
 </button>
 
