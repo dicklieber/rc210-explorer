@@ -57,6 +57,7 @@
     <logger name="controllers.MacroEditorController" level="INFO"/>
     <logger name="net.wa9nnn.rc210.ui.SimpleValuesHandler" level="INFO"/>
     <logger name="net.wa9nnn.rc210.serial.comm.RcStreamBased" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.serial.comm.RcSerialPort" level="TRACE"/>
     <logger name="controllers.MacroController" level="INFO"/>
 
     <logger name="actors" level="INFO" />

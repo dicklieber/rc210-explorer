@@ -26,4 +26,4 @@ import scala.util.Try
 
 
 
-case class SerialPortOpenException(comPort: ComPort) extends Exception(s"Did not open: $comPort!")
+case class SerialPortOpenException(serialPort:SerialPort) extends Exception(s"Did not open: $serialPort!")

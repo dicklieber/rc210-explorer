@@ -31,8 +31,8 @@ import scala.util.{Try, Using}
  *
  * @param rcSerialPort provides access to the serial port.
  */
-class RcStreamBased(rcSerialPort: RcSerialPort, serialConfig: SerialConfig) extends RcOp(rcSerialPort) with AutoCloseable with LazyLogging {
-  serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, serialConfig.readTimeoutMs, 0)
+class RcStreamBased(rcSerialPort: RcSerialPort) extends RcOp(rcSerialPort) with AutoCloseable with LazyLogging {
+  serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 2000, 0)
   private val source = new BufferedSource(serialPort.getInputStream, 50)
 
   private val lines: Iterator[String] = source.getLines()
@@ -49,25 +49,48 @@ class RcStreamBased(rcSerialPort: RcSerialPort, serialConfig: SerialConfig) exte
     val resultBuilder = Seq.newBuilder[String]
 
     var line = ""
-    try
-      while
-        !isTerminal(line)
-      do {
-        line = lines.next()
-        logger.trace("\tline: {}", line)
-        resultBuilder += line
-      }
-    catch
-      case e: SerialPortTimeoutException =>
-        val message = s"\tTimeout. ${serialConfig.readTimeoutMs} ms  request: $request"
-        resultBuilder += message
-        logger.error(message)
-      case e: Exception =>
-        logger.error(s"Reading response for request: $request")
-        resultBuilder += e.getMessage
+    while
+      !isTerminal(line)
+    do {
+      line = lines.next()
+      logger.trace("\tline: {}", line)
+      resultBuilder += line
+    }
+
     val result = resultBuilder.result()
     RcResponse(result)
   }
+  //  /**
+  //   * This drains anything waiting in from [[BufferedSource]].
+  //   *
+  //   * @param request sends a request to the RC210
+  //   * @return lines received up to a line starting with a [[terminalPrefaces]].
+  //   * */
+  //  def perform(request: String): RcResponse = {
+  //    logger.trace("perform: {}", request)
+  //    send(request)
+  //    val resultBuilder = Seq.newBuilder[String]
+  //
+  //    var line = ""
+  //    try
+  //      while
+  //        !isTerminal(line)
+  //      do {
+  //        line = lines.next()
+  //        logger.trace("\tline: {}", line)
+  //        resultBuilder += line
+  //      }
+  //    catch
+  //      case e: SerialPortTimeoutException =>
+  //        val message = s"\tTimeout on request: $request"
+  //        resultBuilder += message
+  //        logger.error(message)
+  //      case e: Exception =>
+  //        logger.error(s"Reading response for request: $request")
+  //        resultBuilder += e.getMessage
+  //    val result = resultBuilder.result()
+  //    RcResponse(result)
+  //  }
 
   def perform(requests: Seq[String]): Seq[RcOperationResult] = {
     requests.map(request => {
@@ -78,22 +101,22 @@ class RcStreamBased(rcSerialPort: RcSerialPort, serialConfig: SerialConfig) exte
 
   override def close(): Unit = {
     serialPort.removeDataListener()
-    super.close()
+    serialPort.closePort()
   }
 
-//  def sendOne(request: String): RcOperationResult = {
-//    RcOperationResult(request, Using(openStreamBased) { rcOp =>
-//      rcOp.perform(request)
-//    })
-//  }
+  //  def sendOne(request: String): RcOperationResult = {
+  //    RcOperationResult(request, Using(openStreamBased) { rcOp =>
+  //      rcOp.perform(request)
+  //    })
+  //  }
 
-//  def sendBatch(requests: String*): Seq[RcOperationResult] = {
-//    Using.resource(openStreamBased) { (rcOp: RcStreamBased) =>
-//      requests.map { request =>
-//        RcOperationResult(request, Try(rcOp.perform(request)))
-//      }
-//    }
-//  }
+  //  def sendBatch(requests: String*): Seq[RcOperationResult] = {
+  //    Using.resource(openStreamBased) { (rcOp: RcStreamBased) =>
+  //      requests.map { request =>
+  //        RcOperationResult(request, Try(rcOp.perform(request)))
+  //      }
+  //    }
+  //  }
 
 }
 

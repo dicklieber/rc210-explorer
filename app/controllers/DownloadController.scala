@@ -34,7 +34,7 @@ class DownloadController @Inject()(config: Config, dataCollector: DataCollector,
   private val expectedLines: Int = config.getInt("vizRc210.expectedRcLines")
 
   def index: Action[AnyContent] = Action {
-    Ok(views.html.download(rc210.comPort))
+    Ok(views.html.download(rc210.rcSerialPort()))
   }
 
   def startDownload: Action[AnyContent] = Action {
@@ -50,7 +50,7 @@ class DownloadController @Inject()(config: Config, dataCollector: DataCollector,
       })
 
       val requestTable = Table(Header("Download from RC210", "Field", "Value"), Seq(
-        Row.ofAny("ComPort", rc210.comPort),
+        Row.ofAny("SerialPort", rc210.rcSerialPort()),
         Row.ofAny("Comment", comment),
         Row.ofAny("Expecting", expectedLines),
       ))

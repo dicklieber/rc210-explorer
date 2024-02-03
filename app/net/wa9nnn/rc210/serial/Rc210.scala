@@ -21,7 +21,7 @@ import com.fazecast.jSerialComm.{SerialPort, SerialPortDataListener}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Header, Row, Table}
-import net.wa9nnn.rc210.serial.comm.{Rc210Version, RcEventBased, RcResponse, RcSerialPort, RcStreamBased, SerialConfig}
+import net.wa9nnn.rc210.serial.comm.*
 import net.wa9nnn.rc210.util.Configs
 
 import java.nio.file.{Files, Path}
@@ -31,9 +31,9 @@ import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Try, Using}
 
 @Singleton
-class Rc210 @Inject()(implicit config: Config) extends LazyLogging {
+class Rc210 @Inject()(implicit config: Config) extends LazyLogging:
 
-  def comPort: ComPort = maybeRcSerialPort.map(_.comPort).get
+  //  def maybeSelectedComPort: ComPort = maybeRcSerialPort.map(_.comPort).get
 
   private val serialConfig = SerialConfig(config)
 
@@ -46,18 +46,17 @@ class Rc210 @Inject()(implicit config: Config) extends LazyLogging {
   if (Files.exists(file))
     selectPort(Files.readString(file))
 
-  implicit def serialPort: RcSerialPort = {
-    maybeRcSerialPort.getOrElse(throw NoPortSelected())
-  }
-
-
-
   def openStreamBased: RcStreamBased = {
-    new RcStreamBased(serialPort, serialConfig)
+    new RcStreamBased(rcSerialPort())
   }
 
-  def openEventBased(): RcEventBased = {
-    new RcEventBased(serialPort)
+  def rcSerialPortOption: Option[RcSerialPort] = maybeRcSerialPort
+
+  def rcSerialPort(): RcSerialPort =
+    maybeRcSerialPort.getOrElse(throw new IllegalStateException("No serial port selected!"))
+
+  def openEventBased(): RcEventBasedOp = {
+    new RcEventBasedOp(rcSerialPort())
   }
 
   def sendOne(request: String): RcOperationResult = {
@@ -66,25 +65,32 @@ class Rc210 @Inject()(implicit config: Config) extends LazyLogging {
     })
   }
 
-  def sendBatch(requests: String*): Seq[RcOperationResult] = {
+  def sendBatch(requests: String*): Seq[RcOperationResult] =
     Using.resource(openStreamBased) { (rcOp: RcStreamBased) =>
       requests.map { request =>
         RcOperationResult(request, Try(rcOp.perform(request)))
       }
     }
-  }  
 
-  def selectPort(portDescriptor: String): Unit =
+  def checkedFlag(candidate: SerialPort): String =
+    (for {
+      rcSerialPort <- maybeRcSerialPort
+      bool = rcSerialPort.serialPort.getSystemPortName == candidate.getSystemPortName
+      if bool
+    }
+    yield
+      logger.info("checked")
+      "checked"
+      ).getOrElse("")
+
+  def selectPort(candidate: String): Unit =
     try {
-      serialPortsSource().find(_.descriptor == portDescriptor)
-        .foreach { comPort =>
-          Files.writeString(file, comPort.descriptor)
-          val rcSerialPort = RcSerialPort(SerialPort.getCommPort(comPort.descriptor))
+      serialPortsSource.apply().find(_.getSystemPortName == candidate)
+        .foreach { serialPort =>
+          Files.writeString(file, serialPort.getSystemPortName)
+          val rcSerialPort = RcSerialPort(serialPort)
           try {
-            maybeRcSerialPort = Option(rcSerialPort) // may get overridden if we have a version
-            val rcOperationResult = sendOne("1GetVersion")
-            val rawVersion = rcOperationResult.head
-            maybeRcSerialPort = Option(rcSerialPort.withVersion(Rc210Version(rawVersion, comPort)))
+            maybeRcSerialPort = Option(rcSerialPort)
           } catch {
             case e: Exception =>
               logger.error(s"Getting Version from RC210", e)
@@ -92,29 +98,9 @@ class Rc210 @Inject()(implicit config: Config) extends LazyLogging {
         }
     } catch {
       case e: Exception =>
-        logger.error(s"Selecting $portDescriptor", e)
+        logger.error(s"Selecting $candidate", e)
     }
 
-  def table(): Table = {
-    val currentComPort: Option[ComPort] = maybeRcSerialPort.map(_.comPort)
-    val rows: Seq[Row] = serialPortsSource().map { comPort =>
-      var row = comPort.toRow
-      if (currentComPort.contains(comPort)) {
-        row = row.withCssClass("selected")
-        for {
-          asp <- maybeRcSerialPort
-          ver <- asp.maybeVersion
-        } {
-          row = row :+ ver.toCell.withToolTip("Version reported by RC210.")
-        }
-      }
-      row
-    }
-
-    val table = Table(Header("Serial Ports", "Descriptor", "Friendly Name"), rows)
-    table
-  }
-
-}
-
+  def listPorts(): Seq[SerialPort] =
+    serialPortsSource()
 

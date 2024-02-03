@@ -23,7 +23,7 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.Table
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.serial
-import net.wa9nnn.rc210.serial.comm.RcEventBased
+import net.wa9nnn.rc210.serial.comm.RcEventBasedOp
 import net.wa9nnn.rc210.util.Configs
 
 import java.io.PrintWriter
@@ -62,19 +62,19 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
   def startDownload(progressApi: ProgressApi[DownloadOp]): Unit =
     progressApi.expectedCount(expectedLines)
 
-    val rcOperation: RcEventBased = rc210.openEventBased()
+    val eventBased: RcEventBasedOp = rc210.openEventBased()
     val temMemoryFileWriter = new PrintWriter(Files.newOutputStream(tempFile))
     temMemoryFileWriter.println(s"stamp: ${Instant.now()}")
 
     def cleanup(error: String = ""): Unit =
       temMemoryFileWriter.close()
-      rcOperation.close()
+      eventBased.close()
       if (error.isBlank)
         dataStore.reload()
 
-    rcOperation.addDataListener(new SerialPortMessageListenerWithExceptions {
+    eventBased.addDataListener(new SerialPortMessageListenerWithExceptions {
       // These overriden methods are the asynchronous callbacks invoked by jSerialComm.
-      override def catchException(e: Exception): Unit = logger.error(s"comPort: ${rcOperation.comPort}", e)
+      override def catchException(e: Exception): Unit = logger.error(s"comPort: ${eventBased.serialPort}", e)
 
       override def getMessageDelimiter: Array[Byte] = Array('\n')
 
@@ -100,11 +100,11 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
             cleanup()
             logger.debug("\t{}}", m)
           case "EEPROM Done" =>
-            rcOperation.send("OK")
+            eventBased.send("OK")
             logger.debug("\tEEPROM Done")
-            progressApi.finish()
+            progressApi.finish() 
           case "Timeout" =>
-            progressApi.fatalError(Timeout(rcOperation.comPort))
+            progressApi.fatalError(Timeout(eventBased.serialPort))
             cleanup("timeout")
           case response =>
             try {
@@ -118,9 +118,9 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
               case e: Exception =>
                 logger.error(s"response: $response", e)
             }
-            rcOperation.send("OK")
+            eventBased.send("OK")
         }
       }
     })
-    rcOperation.send("1SendEram")
+    eventBased.send("1SendEram")
 

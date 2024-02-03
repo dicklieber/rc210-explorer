@@ -19,7 +19,6 @@ package net.wa9nnn.rc210.serial.comm
 
 import com.fazecast.jSerialComm.SerialPort
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.serial.ComPort
 import net.wa9nnn.rc210.serial.comm.RcSerialPort
 import java.io.PrintWriter
 
@@ -30,17 +29,15 @@ import java.io.PrintWriter
  */
 abstract class RcOp(rcSerialPort: RcSerialPort) extends LazyLogging {
   val serialPort: SerialPort = rcSerialPort.serialPort
-  val comPort: ComPort = rcSerialPort.comPort
-  if (serialPort.isOpen)
-    logger.error(s"${comPort.toString} is already open!}")
-  if (!serialPort.openPort())
-    logger.error(s"$comPort did not open!}")
-  private  val printWriter = new PrintWriter(serialPort.getOutputStream)
 
-  def send(request:String): Unit = {
-    printWriter.print(request + '\r')
-    printWriter.flush()
+  def send(request: String): Unit = {
+    val bytes = request.getBytes
+    rcSerialPort.serialPort.writeBytes(bytes, bytes.length)
   }
-  def close():Unit =
-    serialPort.closePort()
+  
+//  private  val printWriter = new PrintWriter(serialPort.getOutputStream)
+//  def send(request:String): Unit = {
+//    printWriter.print(request + '\r')
+//    printWriter.flush()
+//  }
 }

@@ -21,48 +21,23 @@ import com.fazecast.jSerialComm.SerialPort
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, RowSource}
 import controllers.routes
 
-/**
- * Reference tgo a [[SerialPort]].
- *
- * @param descriptor   used to actual get the [[SerialPort]]
- * @param friendlyName depended on the OS a, somewhat, friendly name.
- */
-case class ComPort(descriptor: String = "com1", friendlyName: String = "com1") extends Ordered[ComPort] with RowSource {
-  override def toString: String = s"$descriptor/$friendlyName"
 
-  override def compare(that: ComPort): Int = friendlyName compareTo (that.friendlyName)
 
-  override def toRow: Row = Row(
-    Cell(descriptor)
-      .withUrl(routes.IOController.select(descriptor).url),
-    friendlyName
-  )
-}
 
-object ComPort {
-  def apply(serialPort: SerialPort): ComPort = {
-    new ComPort(serialPort.getSystemPortPath, serialPort.getDescriptivePortName)
-  }
-
-  //  def apply(fromToString: String): ComPort = {
-  //    val tokens = fromToString.split("/")
-  //    new ComPort(tokens.head, tokens(1))
-  //  }
-}
 
 
 abstract class ComPortException(message:String = "") extends Exception(message)
 
 case class NoPortSelected() extends ComPortException()
 
-case class OpenFailed(comPort: ComPort) extends ComPortException(comPort.toString)
-case class WriteFailed(comPort: ComPort, request:String) extends ComPortException(
-  s"Sending $request to $comPort"
+case class OpenFailed(comPort: SerialPort) extends ComPortException(comPort.toString)
+case class WriteFailed(serialPort: SerialPort, request:String) extends ComPortException(
+  s"Sending $request to $serialPort"
 )
 
-case class NoVersion(comPort: ComPort) extends ComPortException(comPort.toString)
+case class NoVersion(comPort: SerialPort) extends ComPortException(comPort.toString)
 
-case class Timeout(comPort: ComPort) extends ComPortException(comPort.toString)
+case class Timeout(serialPort: SerialPort) extends ComPortException(serialPort.toString)
 
 
 

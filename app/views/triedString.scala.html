@@ -1,0 +1,12 @@
+@import scala.util.*
+@(label: String, tried: Try[Object])
+<p>@label:
+    @tried match {
+        case Success(value) =>{
+            @value
+        }
+        case Failure(exception)=>{
+            <span class="sadMessage">@{exception.getMessage}</span>
+        }
+    }
+</p>

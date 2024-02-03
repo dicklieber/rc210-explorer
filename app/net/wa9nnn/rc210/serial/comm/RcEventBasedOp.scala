@@ -27,14 +27,15 @@ import scala.concurrent.duration.Duration
  *
  * @param rcSerialPort provides access to the serial port.
  */
-class RcEventBased(rcSerialPort: RcSerialPort) extends RcOp(rcSerialPort) with AutoCloseable {
+class RcEventBasedOp(rcSerialPort: RcSerialPort) extends RcOp(rcSerialPort) with AutoCloseable {
   serialPort.flushIOBuffers() // get rid of any left over crap.
 
   def addDataListener(serialPortDataListener: SerialPortDataListener): Unit = serialPort.addDataListener(serialPortDataListener)
 
 
+
   override def close(): Unit = {
     serialPort.removeDataListener()
-    super.close()
+    rcSerialPort.close()
   }
 }

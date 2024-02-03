@@ -66,6 +66,7 @@ libraryDependencies ++= Seq(
   "com.beachape" %% "enumeratum-play" % "1.8.0",
 )
 
+
 routesImport += "net.wa9nnn.rc210.Binders._"
 routesImport += "net.wa9nnn.rc210.FieldKey"
 routesImport += "net.wa9nnn.rc210.serial.CommandSendRequest"
@@ -73,5 +74,4 @@ routesImport += "net.wa9nnn.rc210.serial.CommandSendRequest.pathBinder"
 routesImport += "net.wa9nnn.rc210.KeyKind"
 routesImport += "net.wa9nnn.rc210.Key"
 routesImport += "net.wa9nnn.rc210.ui.TabKind"
-routesImport += "net.wa9nnn.rc210.serial.ComPort"
 routesImport += "net.wa9nnn.rc210.serial.SendField"

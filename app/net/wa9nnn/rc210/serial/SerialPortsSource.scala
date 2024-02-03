@@ -29,12 +29,13 @@ class SerialPortsSource() {
    *
    * @return serial portw as [[ComPort]]
    */
-  def apply(): Seq[ComPort] = {
-    val ports = SerialPort.getCommPorts
-    ports.map(ComPort(_))
-      .filterNot(_.descriptor.contains("/tty")) // just want callin, devices. Leaves COM alone
+  def apply(): Seq[SerialPort] =
+    SerialPort.getCommPorts
+      .filterNot { pred =>
+        val systemPortName = pred.getSystemPortName
+        systemPortName.startsWith("tty")
+      } // just want call-in, devices. Leaves COM alone
       .toList
-  }
 }
 
 

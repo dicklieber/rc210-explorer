@@ -141,7 +141,7 @@ object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode] {
 
   override def positions: Seq[FieldOffset] = Seq()
 
-  implicit val fmtLogicAlarm: Format[LogicAlarmNode] = Json.format[LogicAlarmNode]
+  implicit val fmtLogicAlarm: OFormat[LogicAlarmNode] = Json.format[LogicAlarmNode]
 
   override def bindFromRequest(data: Map[String, Seq[String]]): LogicAlarmNode = {
     form.bindFromRequest(data).get

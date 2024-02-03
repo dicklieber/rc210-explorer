@@ -37,19 +37,15 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
       throw new NotImplementedError() //todo
   }
 
-
   def select(descriptor: String): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
       rc210.selectPort(descriptor)
       Redirect(routes.IOController.listSerialPorts)
   }
 
-
   def listSerialPorts: Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-
-      val table = rc210.table()
-      Ok(views.html.RC210Landings(table))
+      Ok(views.html.RC210SerialPorts(rc210))
   }
 }
 

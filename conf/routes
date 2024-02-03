@@ -18,6 +18,7 @@ POST        /datastore/save                           controllers.DataStoreContr
 GET         /rc210/select/:portDescriptor             controllers.IOController.select(portDescriptor:String)
 GET         /rc210/result                             controllers.IOController.downloadResult
 GET         /rc210                                    controllers.IOController.listSerialPorts
+GET         /select/:name                             controllers.IOController.select(name:String)
 POST        /ports/save                               controllers.PortsController.save()
 GET         /ports                                    controllers.PortsController.index
 GET         /common/index                             controllers.CommonController.index

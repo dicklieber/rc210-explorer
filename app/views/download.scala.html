@@ -1,7 +1,7 @@
 @import views.html.helper.form
 @import net.wa9nnn.rc210.ui.Tabs
-@import net.wa9nnn.rc210.serial.ComPort
-@(comPort: ComPort)
+@import net.wa9nnn.rc210.serial.comm.RcSerialPort
+@(serialPort:RcSerialPort)
     @tabbedmain(Tabs.rc210Tab) {
         @form(action = routes.DownloadController.startDownload()) {
             <table class="table table-bordered w-auto">
@@ -13,7 +13,7 @@
                 <tbody>
                     <tr>
                         <td>ComPort:</td>
-                        <td>@comPort</td>
+                        <td>@serialPort</td>
                     </tr>
                     <tr>
                         <td>Comment:</td>

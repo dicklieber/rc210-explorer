@@ -21,19 +21,45 @@ import com.fazecast.jSerialComm.{SerialPort, SerialPortDataListener}
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, CellProvider, Row}
 import controllers.routes
-import net.wa9nnn.rc210.serial.{ComPort, NoPortSelected}
+import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.serial.{NoPortSelected, SerialPortOpenException}
+import play.twirl.api.Html
+import views.html.nameEditKey
+
+import scala.util.{Failure, Success, Try, Using}
 
 /**
  * Holds a [[SerialPort]]
+ * And some low-level behaviour..
  *
  * @param serialPort underlying
  */
-case class RcSerialPort(private[comm] val serialPort: SerialPort, maybeVersion: Option[Rc210Version] = None) extends Ordered[RcSerialPort] with LazyLogging {
+class RcSerialPort(val serialPort: SerialPort) extends LazyLogging:
 
+  logger.debug(toString)
+  serialPort.setBaudRate(19200)
 
-  def bytesAvailable(): Int = serialPort.bytesAvailable()
+  def version: Try[String] =
+    val html: Html = nameEditKey(Key.portKeys.head)
+    drain()
+    Using(startStreamBased) { (streamBased: RcStreamBased) =>
+      val response = streamBased.perform("\r\r1GetVersion\r")
 
-  //  private implicit val codec = Codec("US-ASCII")
+      val lines = response.lines
+      logger.whenWarnEnabled {
+        if (lines.nonEmpty)
+          logger.debug("Getting version:")
+
+        lines.foreach(line =>
+          logger.debug(s"\t:$line")
+        )
+      }
+      val versionLine: String = lines.head
+      val left = versionLine.head
+      val right: String = versionLine.drop(1)
+      val r = s"$left.$right"
+      r
+    }
 
   def write(request: String): Unit = {
     val bytes = s"\r$request\r".getBytes
@@ -43,45 +69,54 @@ case class RcSerialPort(private[comm] val serialPort: SerialPort, maybeVersion: 
       throw new NoPortSelected
   }
 
-  def readBytes(buffer: Array[Byte], length: Int): Int = {
+  def open(): Unit =
+    if (serialPort.isOpen)
+      logger.warn("{} is alerady open!", toString)
+
+    val bool = serialPort.openPort()
+    if (!bool)
+      logger.error(s"Did not oppen: $serialPort")
+
+  def close(): Unit =
+    serialPort.closePort()
+
+  def readBytes(length: Int): Array[Byte] =
+    val buffer = new Array[Byte](length)
     serialPort.readBytes(buffer, length)
-  }
+    buffer
 
-  def addDataListener(listener: SerialPortDataListener): Unit = {
-    serialPort.addDataListener(listener)
-  }
+  def startEventBased(): RcEventBasedOp =
+    open()
+    new RcEventBasedOp(this)
 
-  val comPort: ComPort = ComPort(serialPort)
-  serialPort.setBaudRate(19200)
-  
-  def openEventBased(): RcEventBased =
-    new RcEventBased(this)
+  def startStreamBased: RcStreamBased =
+    open()
+    new RcStreamBased(this)
 
+  def drain(): Unit =
+    open()
+    val available = serialPort.bytesAvailable()
+    if (available > 0)
+      logger.info("Draining {} bytes from buffer.", available)
+      readBytes(available)
+    close()
 
-  def withVersion(rc210Version: Rc210Version): RcSerialPort =
-    copy(maybeVersion = Option(rc210Version))
-
-  override def compare(that: RcSerialPort): Int = this.comPort compareTo that.comPort
-
-  override def toString: String = comPort.toString
-
-  def toRow: Row = {
-    Row(
-      Cell(comPort.descriptor)
-        .withUrl(routes.IOController.select(comPort.descriptor).url)
-      ,
-      comPort.friendlyName)
-  }
-}
+  override def toString: String =
+    val description = serialPort.getPortDescription
+    val systemPortName = serialPort.getSystemPortName
+    s"description: $description systemPortName: $systemPortName"
 
 
-case class Rc210Version(version: String, comPort: ComPort) extends CellProvider {
-  override def toCell: Cell = Cell(version)
-}
 
-object Rc210Version {
-  def apply(s: String, comPort: ComPort): Rc210Version = {
-    new Rc210Version(s"${s.head}.${s.tail}", comPort)
-  }
-}
+
+//
+//case class Rc210Version(version: String, comPort: ComPort) extends CellProvider {
+//  override def toCell: Cell = Cell(version)
+//}
+//
+//object Rc210Version {
+//  def apply(s: String, comPort: ComPort): Rc210Version = {
+//    new Rc210Version(s"${s.head}.${s.tail}", comPort)
+//  }
+//}
 
