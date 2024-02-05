@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210
 
 import net.wa9nnn.rc210.security.UserId.UserId
-import net.wa9nnn.rc210.ui.TabKind
+import net.wa9nnn.rc210.ui.nav.TabKind
 import play.api.mvc.PathBindable
 
 object Binders {

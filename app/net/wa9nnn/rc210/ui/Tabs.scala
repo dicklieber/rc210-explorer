@@ -18,9 +18,9 @@
 package net.wa9nnn.rc210.ui
 
 import controllers.routes
-import enumeratum.{EnumEntry, PlayEnum}
 import net.wa9nnn.rc210.KeyKind
-import net.wa9nnn.rc210.ui.TabKind.{Debug, Fields, Rc210Io, Settings}
+import net.wa9nnn.rc210.ui.nav.TabKind
+import net.wa9nnn.rc210.ui.nav.TabKind.*
 
 trait Tab:
   def toolTip: String = ""
@@ -75,20 +75,4 @@ object Tabs:
       .sortBy(_.entryName)
   }
 
-sealed trait TabKind(val iconName: String, val toolTip: String) extends EnumEntry:
-  val noTab: Tab =
-    Tabx("none", "", "", this)
 
-object TabKind extends PlayEnum[TabKind] {
-
-  override val values = findValues
-
-  case object Fields extends TabKind("bi-database", "Edit RC-210 fields.")
-
-  case object Rc210Io extends TabKind("bi-arrow-down-up", "Deal with RC-210. e.g. upload, dpwnload, clock etc.")
-
-  case object Settings extends TabKind("bi-gear-wide-connected", "Users")
-
-  case object Debug extends TabKind("bi-question-diamond", "Debug Tools")
-
-}

@@ -5,7 +5,7 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.security.authentication.RcSession.playSessionName
 import net.wa9nnn.rc210.security.authentication.*
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
-import net.wa9nnn.rc210.ui.TabKind
+import net.wa9nnn.rc210.ui.nav.TabKind
 import play.api.data.Forms.{mapping, text}
 import play.api.data.{Form, FormError}
 import play.api.mvc.*

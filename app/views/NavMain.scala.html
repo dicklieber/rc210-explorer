@@ -7,7 +7,7 @@
 @import java.time.ZoneId
 @import java.time.ZoneId._
 @import net.wa9nnn.rc210.KeyKind
-@import net.wa9nnn.rc210.ui.TabKind
+@import net.wa9nnn.rc210.ui.nav.TabKind
 @import net.wa9nnn.rc210.ui.nav.TabManager
 @this(tabManager: TabManager)
 @(activeTab: Tab, content: Html)
@@ -82,7 +82,7 @@
 
     <body>
         <header>
-            <h1 >RC210 header</h1>
+            <h1 >RC210 (NavMain) </h1>
             <div id="topNav">
                 @for(tabKind <- TabKind.values) {
                     <div class="topNavItem">

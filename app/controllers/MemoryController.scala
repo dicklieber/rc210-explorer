@@ -20,7 +20,7 @@ package controllers
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.datastore.MemoryFileLoader
 import net.wa9nnn.rc210.data.field.{FieldDefinition, FieldDefinitions, FieldOffset}
-import net.wa9nnn.rc210.ui.TabKind.Rc210Io
+import net.wa9nnn.rc210.ui.nav.TabKind.Rc210Io
 import net.wa9nnn.rc210.ui.Tabs
 import play.api.mvc.*
 
