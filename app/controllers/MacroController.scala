@@ -36,7 +36,7 @@ import scala.util.Try
 import scala.util.matching.Regex
 
 @Singleton()
-class MacroController @Inject()(dataStore: DataStore)
+class MacroController @Inject()(dataStore: DataStore, navMain:views.html.NavMain)
                                      (implicit
                                       functionsProvider: FunctionsProvider,
                                       ec: ExecutionContext, components: MessagesControllerComponents)
@@ -45,7 +45,9 @@ class MacroController @Inject()(dataStore: DataStore)
 
   def index: Action[AnyContent] = Action { implicit request =>
     val values: Seq[MacroNode] = dataStore.values(KeyKind.Macro)
-    Ok(macroNodes(values, logger))
+
+    Ok(navMain(KeyKind.Macro, macroNodes(values, logger)))
+//    Ok(macroNodes(values, logger))
   }
 
   def edit(key: Key): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
