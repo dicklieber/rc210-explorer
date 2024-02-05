@@ -32,7 +32,7 @@ trait Tab:
   def tabKind: TabKind = TabKind.Fields
 
 object Tab:
-  def apply(entryName: String, indexUrl: String, tabKind: TabKind, toolTip: String = ""):Tab =
+  def apply(entryName: String, indexUrl: String, tabKind: TabKind, toolTip: String = ""): Tab =
     Tabx(entryName, indexUrl, toolTip, tabKind)
 end Tab
 
@@ -50,13 +50,13 @@ case class Tabx(override val entryName: String,
 
 object Tabs:
 
-  val rc210Tab: Tabx = Tabx("RC-210", routes.IOController.listSerialPorts.url, "RC-210 Operations", tabKind = Rc210Io)
+  val rc210Tab: Tabx = Tabx("RC-210", routes.IOController.listSerialPorts.url, "RC-210 Operations", Rc210Io)
   val memory: Tab = Tab("Memory", routes.MemoryController.index.url, Debug, "View raw data received from the RC-210 controller.")
-  val changes: Tabx = Tabx("Changes", routes.CommandsController.index.url, "Pending changes that need to be sent to the RC-210.", tabKind = Rc210Io)
-  val fileUpload: Tabx = Tabx("Upload", routes.DataStoreController.upload.url, "Upload a saved JSON file.")
-  val security: Tabx = Tabx("Users", routes.UsersController.users().url, "Edit Users", TabKind.Settings)
-  val names: Tabx = Tabx("Names", routes.NamesController.index.url, "User supp;ied names for varous fields.")
-  val logout:Tab = Tab("Logout", routes.LoginController.logout().url, Settings, "Finish this session")
+  val changes: Tabx = Tabx("Changes", routes.CommandsController.index.url, "Pending changes that need to be sent to the RC-210.", Rc210Io)
+  val fileUpload: Tabx = Tabx("Upload", routes.DataStoreController.upload.url, "Upload a saved JSON file.", Rc210Io)
+  val security: Tabx = Tabx("Users", routes.UsersController.users().url, "Edit Users", Settings)
+  val names: Tabx = Tabx("Names", routes.NamesController.index.url, "User supplied names for varous fields.")
+  val logout: Tab = Tab("Logout", routes.LoginController.logout().url, Settings, "Finish this session")
   val tabs: Seq[Tab] =
     KeyKind.values.sortBy(_.entryName) :++ Seq(
       rc210Tab,
@@ -68,15 +68,15 @@ object Tabs:
       logout
     )
 
-  def releventTabs(tab:Tab): Seq[Tab] = {
+  def releventTabs(tab: Tab): Seq[Tab] = {
     val desired = tab.tabKind
     tabs
       .filter(_.tabKind == desired)
       .sortBy(_.entryName)
   }
 
-sealed trait TabKind(val iconName:String, val toolTip: String) extends EnumEntry:
-  val noTab:Tab =
+sealed trait TabKind(val iconName: String, val toolTip: String) extends EnumEntry:
+  val noTab: Tab =
     Tabx("none", "", "", this)
 
 object TabKind extends PlayEnum[TabKind] {
@@ -88,6 +88,7 @@ object TabKind extends PlayEnum[TabKind] {
   case object Rc210Io extends TabKind("bi-arrow-down-up", "Deal with RC-210. e.g. upload, dpwnload, clock etc.")
 
   case object Settings extends TabKind("bi-gear-wide-connected", "Users")
+
   case object Debug extends TabKind("bi-question-diamond", "Debug Tools")
 
 }
