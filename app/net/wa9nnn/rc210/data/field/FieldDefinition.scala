@@ -14,7 +14,7 @@ trait FieldDefinition extends LazyLogging:
 
   def tooltip: String = ""
 
-  val fieldName: String
+  def fieldName: String
   val keyKind: KeyKind
   val template: String = ""
   val units: String = ""
@@ -87,7 +87,7 @@ case class SimpleField(offset: Int,
 trait ComplexExtractor[T <: ComplexFieldValue] extends FieldExtractor with FieldDefinition with EditHandler[T] {
   def fieldKey(key: Key): FieldKey = FieldKey(key)
 
-  final override val fieldName: String = KeyKind.CourtesyTone.entryName
+  override def fieldName: String = keyKind.entryName
 
   /**
    *

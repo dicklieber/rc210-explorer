@@ -45,7 +45,7 @@ class MessageController @Inject()(dataStore: DataStore, cc: MessagesControllerCo
   }
 
   def edit(key: Key): Action[AnyContent] = Action { implicit request =>
-    val fieldKey = FieldKey("Message", key)
+    val fieldKey = FieldKey(key)
     val message: MessageNode = dataStore.editValue(fieldKey)
     Ok(views.html.messageEditor(message))
   }

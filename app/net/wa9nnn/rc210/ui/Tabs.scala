@@ -52,11 +52,14 @@ object Tabs:
 
   val rc210Tab: Tabx = Tabx("RC-210", routes.IOController.listSerialPorts.url, "RC-210 Operations", Rc210Io)
   val memory: Tab = Tab("Memory", routes.MemoryController.index.url, Debug, "View raw data received from the RC-210 controller.")
+  val viewJson: Tab = Tab("Json", routes.DataStoreController.viewJson().url, Debug, "View data as JSON.")
   val changes: Tabx = Tabx("Changes", routes.CommandsController.index.url, "Pending changes that need to be sent to the RC-210.", Rc210Io)
   val fileUpload: Tabx = Tabx("Upload", routes.DataStoreController.upload.url, "Upload a saved JSON file.", Rc210Io)
   val security: Tabx = Tabx("Users", routes.UsersController.users().url, "Edit Users", Settings)
   val names: Tabx = Tabx("Names", routes.NamesController.index.url, "User supplied names for varous fields.")
   val logout: Tab = Tab("Logout", routes.LoginController.logout().url, Settings, "Finish this session")
+
+
   val tabs: Seq[Tab] =
     KeyKind.values.sortBy(_.entryName) :++ Seq(
       rc210Tab,
@@ -65,6 +68,7 @@ object Tabs:
       fileUpload,
       security,
       names,
+      viewJson,
       logout
     )
 
