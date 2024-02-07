@@ -62,7 +62,8 @@ class EditController @Inject()(implicit dataStore: DataStore, ec: ExecutionConte
   def edit(fieldKey: FieldKey): Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] => {
       val entry: FieldEntry = dataStore.apply(fieldKey)
-      fieldKey.editHandler.edit(entry)
+      val editHandler = fieldKey.editHandler
+      editHandler.edit(entry)
     }
   }
 

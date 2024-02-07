@@ -24,10 +24,13 @@ import net.wa9nnn.rc210.data.vocabulary.Word
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.EditButtonCell
 import net.wa9nnn.rc210.util.Chunk
+import org.apache.pekko.http.scaladsl.model.HttpHeader.ParsingResult.Ok
 import play.api.data.Form
+import play.api.http.Status
 import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json}
-import play.api.mvc.{RequestHeader, Result}
+import play.api.mvc.{RequestHeader, Result, Results}
+import play.twirl.api.Html
 
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -109,9 +112,16 @@ object MessageNode extends ComplexExtractor[MessageNode] with LazyLogging {
 
   override def form: Form[MessageNode] = throw new NotImplementedError("No fprm used with Message!") //todo
 
-  override def index(values: Seq[MessageNode]): Table = ???
+  override def index(values: Seq[MessageNode]): Table =
+    throw new NotImplementedError() //todo
 
-  override def editOp(form: Form[MessageNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result = ???
+  override def editOp(form: Form[MessageNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result = {
+    val messageNode: MessageNode = form.get
+    Results.Ok(views.html.messageEditor(messageNode))
+  }
 
-  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue = ???
+  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue = {
+    val value: Form[MessageNode] = form.bindFromRequest(data)
+    value.get
+  }
 }

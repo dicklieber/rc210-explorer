@@ -130,7 +130,7 @@ object ClockNode extends ComplexExtractor[ClockNode] {
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[ClockNode]
 
   val key: Key = Key(KeyKind.Clock) // there's only one
-  val fieldKey: FieldKey = FieldKey(fieldName, key)
+  val fieldKey: FieldKey = FieldKey(key)
 
   override def positions: Seq[FieldOffset] = Seq(
     FieldOffset(1186, this, "say24Hours"),

@@ -54,7 +54,8 @@ object KeyKind extends PlayEnum[KeyKind]:
   case object Message extends KeyKind(70): // 40 (in Main) + 30 (in RTC)
     override def indexUrl: String = routes.MessageController.index.url
 
-  case object Clock extends KeyKind(1)
+  case object Clock extends KeyKind(1):
+    override def indexUrl: String = routes.ClockController.index.url
 
   case object Port extends KeyKind(3):
     override def indexUrl: String = routes.PortsController.index.url
@@ -67,5 +68,6 @@ object KeyKind extends PlayEnum[KeyKind]:
   case object Common extends KeyKind(1):
     override def indexUrl: String = routes.CommonController.index.url
 
-  case object RemoteBase extends KeyKind(1)
+  case object RemoteBase extends KeyKind(1):
+    override def indexUrl: String = routes.RemoteBaseController.index.url
 
