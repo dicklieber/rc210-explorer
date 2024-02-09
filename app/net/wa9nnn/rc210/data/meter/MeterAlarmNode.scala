@@ -31,6 +31,7 @@ import play.api.data.Forms.*
 import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.{RequestHeader, Result, Results}
+import play.twirl.api.Html
 import views.html.editButton
 
 import java.util.concurrent.atomic.AtomicInteger
@@ -186,19 +187,19 @@ object MeterAlarmNode extends ComplexExtractor[MeterAlarmNode]:
 
   implicit val fmtMeterAlarm: Format[MeterAlarmNode] = Json.format[MeterAlarmNode]
 
-  override def index(values: Seq[MeterAlarmNode]): Table =
-    Table(Header(s"Timers  (${values.length})",
+  override def index(fieldEntries: Seq[FieldEntry]): Table =
+    Table(Header(s"Timers  (${fieldEntries.length})",
       "",
       "Meter",
       "Alarm Type",
       "Trip Point",
       "Macro",
     ),
-      values.map(_.toRow)
+      fieldEntries.map(_.value.toRow)
     )
 
-  override def editOp(form: Form[MeterAlarmNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result =
-    Results.Ok(meterAlarmEditor(form, fieldKey))
+  override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
+    meterAlarmEditor(form.fill(fieldEntry.value), fieldEntry.fieldKey)
 
   override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue =
     form.bindFromRequest(data).get

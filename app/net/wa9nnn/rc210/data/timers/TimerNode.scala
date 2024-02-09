@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data.timers
 
 import com.typesafe.scalalogging.LazyLogging
+import com.wa9nnn.wa9nnnutil.tableui.html.renderTable
 import com.wa9nnn.wa9nnnutil.tableui.{Header, KvTableSection, Row, Table, TableSection}
 import controllers.routes
 import net.wa9nnn.rc210.data.field.*
@@ -124,8 +125,8 @@ object TimerNode extends ComplexExtractor[TimerNode] with LazyLogging {
   implicit val fmtTimer: OFormat[TimerNode] = Json.format[TimerNode]
   override val keyKind: KeyKind = KeyKind.Timer
 
-  override def index(values: Seq[TimerNode]): Table =
-    Table(Header(s"Timers  (${values.length})",
+  override def index(values: Seq[TimerNode]): Html =
+    val table = Table(Header(s"Timers  (${values.length})",
       "",
       "Timer",
       "Seconds",
@@ -133,9 +134,11 @@ object TimerNode extends ComplexExtractor[TimerNode] with LazyLogging {
     ),
       values.map(_.toRow)
     )
+    val r:Html = renderTable(table)
+    r
 
-  override def editOp(form: Form[TimerNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result =
-    Results.Ok(timerEditor(form, fieldKey))
+  override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
+    timerEditor(form.fill(fieldEntry.value), fieldEntry.fieldKey)
 
   override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue =
     form.bindFromRequest(data).get

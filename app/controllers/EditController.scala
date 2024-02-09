@@ -21,50 +21,39 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.Table
 import net.wa9nnn.rc210
 import net.wa9nnn.rc210.data.EditHandler
-import net.wa9nnn.rc210.{FieldKey, KeyKind, NamedKey}
-import net.wa9nnn.rc210.data.clock.ClockNode.{form, keyKind}
-import net.wa9nnn.rc210.data.clock.{ClockNode, DSTPoint}
 import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
-import net.wa9nnn.rc210.ui.ProcessResult
-import play.api.data.Form
+import net.wa9nnn.rc210.{FieldKey, KeyKind, NamedKey}
 import play.api.i18n.MessagesProvider
 import play.api.mvc.*
 import play.twirl.api.Html
-import views.html.fieldIndex
+import views.html.{NavMain, fieldIndex}
 
-import java.util.Optional
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
-import scala.reflect.ClassTag
 
 @Singleton()
-class EditController @Inject()(implicit dataStore: DataStore, ec: ExecutionContext, components: MessagesControllerComponents)
-  extends MessagesAbstractController(components)
-    with LazyLogging {
+class EditController @Inject()(navMain: NavMain)
+                              (implicit dataStore: DataStore,
+                               ec: ExecutionContext, components: MessagesControllerComponents)
+  extends MessagesAbstractController(components) with LazyLogging {
 
   def index(keyKind: KeyKind): Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] => {
-      keyKind.handler.redirect(keyKind) match
-        case Some(call) =>
-          Redirect(call)
-
-        case None =>
-          val value = dataStore.indexValues(keyKind)
-          val table: Table = keyKind.handler.index(value)
-          val html: Html = fieldIndex(keyKind, table)
-          Ok(html)
+      val value = dataStore.indexValues(keyKind)
+      val content: Html = keyKind.handler.index(value)
+      Ok(navMain(keyKind, content))
     }
   }
 
   def edit(fieldKey: FieldKey): Action[AnyContent] = Action {
-    implicit request: MessagesRequest[AnyContent] => {
+    implicit request: MessagesRequest[AnyContent] =>
       val entry: FieldEntry = dataStore.apply(fieldKey)
       val editHandler = fieldKey.editHandler
-      editHandler.edit(entry)
-    }
+      val html: Html = editHandler.edit(entry)
+      Results.Ok(html)
   }
 
   def save(): Action[AnyContent] = Action {
@@ -83,10 +72,11 @@ class EditController @Inject()(implicit dataStore: DataStore, ec: ExecutionConte
       val fieldKey: FieldKey = ExtractField("fieldKey", (value) => FieldKey(value))
       val name: String = ExtractField("name", (value) => value)
       val handler: EditHandler[?] = fieldKey.key.keyKind.handler
-      val value1: ComplexFieldValue = handler.bindFromRequest(data)
-      val updateCandidate = UpdateCandidate(fieldKey, value1)
-      val function: Option[NamedKey] = Option.when(name.nonEmpty)(NamedKey(fieldKey.key, name))
-      val candidateAndNames: CandidateAndNames = CandidateAndNames(updateCandidate, function)
+      val updateCandidates: Seq[UpdateCandidate] = handler.bindFromRequest(data)
+      //      val updateCandidate = UpdateCandidate(fieldKey, value1)
+      // todo handle named keys.
+      //      val function: Option[NamedKey] = Option.when(name.nonEmpty)(NamedKey(fieldKey.key, name))
+      val candidateAndNames: CandidateAndNames = CandidateAndNames(updateCandidates, Seq.empty)
       dataStore.update(candidateAndNames)
       handler.saveOp()
   }

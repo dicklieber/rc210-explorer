@@ -132,11 +132,17 @@ object RemoteBaseNode extends ComplexExtractor[RemoteBaseNode] {
   implicit val fmtRBMemory: Format[RBMemory] = Json.format[RBMemory]
   implicit val fmtRemoteBase: Format[RemoteBaseNode] = Json.format[RemoteBaseNode]
 
-  override def index(values: Seq[RemoteBaseNode]): Table = ???
+  override def index(values: Seq[RemoteBaseNode])(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result =
+    val filledForm = form.fill(values.head)
+    Results.Ok(views.html.remoteBase(filledForm))
 
-  override def editOp(form: Form[RemoteBaseNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result = ???
 
-  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue = ???
+
+  override def edit(fieldKey: FieldKey)(value: RemoteBaseNode, request: RequestHeader, messagesProvider: MessagesProvider): Result =
+    throw new NotImplementedError() //todo
+
+
+//  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue =
 }
 
 /**

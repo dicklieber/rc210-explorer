@@ -2,16 +2,21 @@ package net.wa9nnn.rc210.data
 
 import com.wa9nnn.wa9nnnutil.tableui.Table
 import controllers.routes
+import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.{FieldKey, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
-import net.wa9nnn.rc210.ui.{Tab, SimpleValuesHandler, Tabs}
+import net.wa9nnn.rc210.ui.{SimpleValuesHandler, Tab, Tabs}
 import play.api.data.Form
 import play.api.i18n.MessagesProvider
 import play.api.mvc.{Call, Request, RequestHeader, Result, Results}
+import play.twirl.api.Html
+import views.html.helper.form
+import play.api.i18n.MessagesProvider
 
 trait EditHandler[T <: FieldValue]:
   /**
    * Allows overriding where  [[controllers.EditController]] will go for index request.
+   *
    * @param keyKind
    * @return
    */
@@ -20,9 +25,9 @@ trait EditHandler[T <: FieldValue]:
   //  var svh: Option[SimpleValuesHandler] = None
   val keyKind: KeyKind
 
-  def form: Form[T]
+  //  def form: Form[T]
 
-  def index(values: Seq[T]): Table
+  def index(values: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html
 
   /**
    * Invoked by [[controllers.EditController]].
@@ -30,17 +35,12 @@ trait EditHandler[T <: FieldValue]:
    * @param value from datastore
    * @return
    */
-  final def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Result =
+  def edit(fieldEntry:FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html
+  //   def save(data: Map[String, Seq[String]])(using request: RequestHeader, messagesProvider: MessagesProvider): Result
 
-    //    if (svh.isEmpty)
-    //      svh = Some(new SimpleValuesHandler(fieldEntries))
+  //  def editOp(fieldEntry:FieldEntry)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result
 
-    val value: T = fieldEntry.value
-    editOp(form.fill(value), fieldEntry.fieldKey)
-
-  def editOp(form: Form[T], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result
-
-  def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue
+  def bindFromRequest(data: Map[String, Seq[String]]): Seq[UpdateCandidate]
 
   //  def saveOkResult(): Result
   def saveOp()(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result =

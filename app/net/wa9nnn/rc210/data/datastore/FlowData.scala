@@ -22,7 +22,7 @@ import controllers.routes
 import net.wa9nnn.rc210.{FieldKey, Key}
 import net.wa9nnn.rc210.data.Node
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
-import net.wa9nnn.rc210.data.functions.FunctionsProvider
+import net.wa9nnn.rc210.Functions
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.ui.TableSectionButtons
 import net.wa9nnn.rc210.ui.flow.{D3Data, D3Link, D3Node}
@@ -38,7 +38,7 @@ import scala.language.postfixOps
  * @param triggers what this macro does.
  * @param searched what we looked for. UI should highlight this node. 
  */
-case class FlowData(macroFieldEntry: FieldEntry, triggers: Seq[FieldEntry], searched: Key):
+class FlowData(val macroFieldEntry: FieldEntry, val triggers: Seq[FieldEntry], val searched: Key):
   private val macroNode: MacroNode = macroFieldEntry.value
   private val macroFieldKey: FieldKey = macroFieldEntry.fieldKey
 
@@ -51,7 +51,7 @@ case class FlowData(macroFieldEntry: FieldEntry, triggers: Seq[FieldEntry], sear
 
   def functionsTable: Table =
     val f: Seq[(String, String)] = macroNode.functions.map { functionKey =>
-      functionKey.rc210Value.toString -> FunctionsProvider(functionKey).description
+      functionKey.rc210Value.toString -> Functions.description(functionKey)
     }
 
     KvTable(f: _*)
@@ -71,8 +71,7 @@ case class FlowData(macroFieldEntry: FieldEntry, triggers: Seq[FieldEntry], sear
       Row.ofAny(fieldEntry.fieldKey, fieldEntry.value.tableSection)
     }
     val functionRows = macroNode.functions.map { functionKey =>
-      val description = FunctionsProvider(functionKey).description
-      Row.ofAny(functionKey.keyWithName, description)
+      Row.ofAny(functionKey.keyWithName, Functions.description(functionKey))
     }
     KvTable.apply("Flow Data",
       "Search" -> searched.keyWithName,

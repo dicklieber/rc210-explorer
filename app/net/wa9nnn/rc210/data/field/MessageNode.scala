@@ -18,7 +18,9 @@
 package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.wa9nnnutil.tableui.{Row, Table}
+import com.wa9nnn.wa9nnnutil.tableui.{Header, Row, Table}
+import net.wa9nnn.rc210.data.datastore.UpdateCandidate
+import net.wa9nnn.rc210.data.field.LogicAlarmNode.{form, keyKind}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.vocabulary.Word
 import net.wa9nnn.rc210.serial.Memory
@@ -31,6 +33,7 @@ import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.{RequestHeader, Result, Results}
 import play.twirl.api.Html
+import views.html.{fieldIndex, logicAlarmEditor, messageEditor}
 
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -66,7 +69,7 @@ case class MessageNode(key: Key, words: Seq[Int]) extends ComplexFieldValue() {
   }
 }
 
-object MessageNode extends ComplexExtractor[MessageNode] with LazyLogging {
+object MessageNode extends ComplexExtractor[MessageNode] with LazyLogging:
   implicit val fmtPhrase: Format[MessageNode] = Json.format[MessageNode]
 
   def apply(key: Key, kv: Map[String, String]): MessageNode = {
@@ -112,16 +115,24 @@ object MessageNode extends ComplexExtractor[MessageNode] with LazyLogging {
 
   override def form: Form[MessageNode] = throw new NotImplementedError("No fprm used with Message!") //todo
 
-  override def index(values: Seq[MessageNode]): Table =
-    throw new NotImplementedError() //todo
 
-  override def editOp(form: Form[MessageNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result = {
-    val messageNode: MessageNode = form.get
-    Results.Ok(views.html.messageEditor(messageNode))
-  }
+  override def index(values: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
+    val table = Table(Header(s"Messages  (${values.length})",
+      "",
+      "Words"
+    ),
+      values.map(_.value.toRow)
+    )
+    fieldIndex(keyKind, table)
 
-  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue = {
-    val value: Form[MessageNode] = form.bindFromRequest(data)
-    value.get
-  }
-}
+  override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
+    messageEditor(fieldEntry.value)
+
+  override def bindFromRequest(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
+    val courtesyTone = form.bindFromRequest(data).get
+    Seq(
+      UpdateCandidate(courtesyTone.fieldKey, courtesyTone)
+    )
+
+
+

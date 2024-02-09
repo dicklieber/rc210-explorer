@@ -20,7 +20,6 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.Dtmf.Dtmf
 import net.wa9nnn.rc210.data.datastore.DataStore
-import net.wa9nnn.rc210.data.functions.FunctionsProvider
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.macros.MacroNode.*
 import net.wa9nnn.rc210.security.authentication.RcSession
@@ -38,7 +37,6 @@ import scala.util.matching.Regex
 @Singleton()
 class MacroController @Inject()(dataStore: DataStore, navMain:views.html.NavMain)
                                      (implicit
-                                      functionsProvider: FunctionsProvider,
                                       ec: ExecutionContext, components: MessagesControllerComponents)
   extends MessagesAbstractController(components)
     with LazyLogging {
@@ -53,8 +51,8 @@ class MacroController @Inject()(dataStore: DataStore, navMain:views.html.NavMain
   def edit(key: Key): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
 
     val fieldKey = FieldKey( key)
-    val Macro: MacroNode = dataStore.editValue(fieldKey)
-    Ok(views.html.macroEditor(Macro))
+    val macroNode: MacroNode = dataStore.editValue(fieldKey)
+    Ok(views.html.macroEditor(macroNode))
   }
 
   def save(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>

@@ -18,13 +18,13 @@
 package net.wa9nnn.rc210.data.datastore
 
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210
+import net.wa9nnn.rc210.*
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
-import net.wa9nnn.rc210.data.functions.TriggerFunctionNode
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.security.Who.given
 import net.wa9nnn.rc210.security.authentication.RcSession
-import net.wa9nnn.rc210.{FieldKey, Key, KeyKind, NamedKey, NamedKeySource}
 import play.api.mvc.{AnyContent, Request}
 
 import javax.inject.{Inject, Singleton}
@@ -37,7 +37,7 @@ import scala.util.{Failure, Success, Try}
  */
 @Singleton
 class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: MemoryFileLoader)
-  extends NamedKeySource with LazyLogging {
+  extends NamedKeySource with LazyLogging:
 
   /**
    * This is all the data tht a user can edit that can be sent or received from an RC-210.
@@ -47,7 +47,7 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
    * This is the user-suplied metadata about a [[Key]].
    */
   private val keyNameMap = new TrieMap[Key, String]
-  Key.setNamedSource(this) // so any Key can get it's user-supplied name.
+  rc210.Key.setNamedSource(this) // so any Key can get it's user-supplied name.
 
   loadFromMemory()
   loadFromJson()
@@ -191,7 +191,7 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
 
       val triggers: Seq[FieldEntry] = triggerNodes(key)
 
-      FlowData(MacroEntry, triggers, search)
+      new FlowData(MacroEntry, triggers, search)
 
     val entries: Seq[FieldEntry] = apply(search)
     assert(entries.length == 1, s"Should only be one entry for a complex key, but got $entries")
@@ -205,7 +205,5 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
           val key: Key = entry.runableMacros.head
           flowData(key).get
     }
-
-}
 
 

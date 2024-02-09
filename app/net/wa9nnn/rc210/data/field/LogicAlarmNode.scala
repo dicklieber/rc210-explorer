@@ -21,6 +21,9 @@ import com.wa9nnn.wa9nnnutil.tableui.*
 import controllers.routes
 import controllers.routes.*
 import net.wa9nnn.rc210.data.EditHandler
+import net.wa9nnn.rc210.data.courtesy.CourtesyTone
+import net.wa9nnn.rc210.data.courtesy.CourtesyTone.{form, keyKind}
+import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.*
@@ -30,7 +33,8 @@ import play.api.data.*
 import play.api.i18n.MessagesProvider
 import play.api.libs.json.*
 import play.api.mvc.*
-import views.html.{editButton, logicAlarmEditor}
+import play.twirl.api.Html
+import views.html.{courtesyToneEdit, editButton, fieldIndex, logicAlarmEditor}
 
 case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, lowMacro: Key, highMacro: Key) extends ComplexFieldValue(lowMacro, highMacro) {
   key.check(KeyKind.LogicAlarm)
@@ -87,11 +91,9 @@ case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, 
   )
 }
 
-object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode] {
+object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode]:
   override val keyKind: KeyKind = KeyKind.LogicAlarm
 
-  override def editOp(form: Form[LogicAlarmNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result =
-    Results.Ok(logicAlarmEditor(form, fieldKey))
 
   def unapply(u: LogicAlarmNode): Option[(Key, Boolean, Key, Key)] = Some((u.key, u.enabled, u.lowMacro, u.highMacro))
 
@@ -104,16 +106,6 @@ object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode] {
     )(LogicAlarmNode.apply)(LogicAlarmNode.unapply)
   )
 
-  override def index(values: Seq[LogicAlarmNode]): Table =
-    Table(Header(s"Logic Alarm  (${values.length})",
-      "",
-      "Logic Alarm",
-      "Enable",
-      "Low Macro",
-      "High Macro"
-    ),
-      values.map(_.toRow)
-    )
 
   /**
    *
@@ -143,7 +135,26 @@ object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode] {
 
   implicit val fmtLogicAlarm: OFormat[LogicAlarmNode] = Json.format[LogicAlarmNode]
 
-  override def bindFromRequest(data: Map[String, Seq[String]]): LogicAlarmNode = {
-    form.bindFromRequest(data).get
-  }
-}
+  override def index(values: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
+    val table = Table(Header(s"Logic Alarm  (${values.length})",
+      "",
+      "Logic Alarm",
+      "Enable",
+      "Low Macro",
+      "High Macro"
+    ),
+      values.map(_.value.toRow)
+    )
+    fieldIndex(keyKind, table)
+
+  override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
+    val filled: Form[LogicAlarmNode] = form.fill(fieldEntry.value)
+
+    logicAlarmEditor(filled, fieldEntry.fieldKey)
+
+  override def bindFromRequest(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
+    val courtesyTone = form.bindFromRequest(data).get
+    Seq(
+      UpdateCandidate(courtesyTone.fieldKey, courtesyTone)
+    )
+

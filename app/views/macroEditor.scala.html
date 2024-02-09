@@ -4,9 +4,9 @@
 
 @import scala.util.Random
 @import net.wa9nnn.rc210.data.macros.MacroNode
-@import net.wa9nnn.rc210.data.functions.FunctionsProvider
+@import net.wa9nnn.rc210.Functions
 @import net.wa9nnn.rc210.KeyKind
-@(macroNode: MacroNode)(implicit functionsProvider: FunctionsProvider)
+@(macroNode: MacroNode)
 
 @tabbedmain(KeyKind.Macro) {
 
@@ -39,7 +39,7 @@
                     class="functionSource selected"
                     data-function="@functionkey.toString"
                     ondblclick=dblClick(this)>
-                    @functionsProvider.apply(functionkey).get
+                    @Functions.description(functionkey)
                     </li>
                 }
                 </ul>
@@ -51,7 +51,7 @@
                     <input type="text" placeholder="Search.." id="filter" onkeyup="filterFunction()">
                     <div>
                         <ul id="availableList" class="list-unstyled">
-                        @for(function <- functionsProvider.functions) {
+                        @for(function <- Functions.functions) {
                             <li class="functionSource"
                             ondblclick="dblClick(this)"
                             data-function="@function.key.toString">

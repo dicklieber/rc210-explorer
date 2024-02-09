@@ -14,6 +14,7 @@ import play.api.data.Forms.*
 import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.{RequestHeader, Result, Results}
+import play.twirl.api.Html
 import views.html.{editButton, scheduleEdit}
 
 /**
@@ -203,8 +204,8 @@ object ScheduleNode extends LazyLogging with ComplexExtractor[ScheduleNode] {
       values.map(_.toRow)
     )
 
-  override def editOp(form: Form[ScheduleNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result =
-    Results.Ok(scheduleEdit(form, fieldKey))
+  override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
+    scheduleEdit(form.fill(fieldEntry.value), fieldEntry.fieldKey)
 
   override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue =
     form.bindFromRequest(data).get

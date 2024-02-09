@@ -1,9 +1,9 @@
+@import com.typesafe.scalalogging.Logger
+@import net.wa9nnn.rc210.{Functions, KeyKind}
+@import net.wa9nnn.rc210.Functions
 @import net.wa9nnn.rc210.data.macros.MacroNode
 @import net.wa9nnn.rc210.ui.Tabs
-@import com.typesafe.scalalogging.Logger
-@import net.wa9nnn.rc210.data.functions.FunctionsProvider
-@import net.wa9nnn.rc210.KeyKind
-@(macros: Seq[MacroNode], logger: Logger)(implicit functionsProvider: FunctionsProvider)
+@(macros: Seq[MacroNode], logger: Logger)
 
 <div class="container">
     <table class="table table-bordered w-auto table-sm">
@@ -36,7 +36,7 @@
                 <td>
                     <ul class="list-unstyled">
                     @for(functionKey <- macroNode.functions) {
-                        <li>@functionsProvider(functionKey).map(_.toString).getOrElse("???")</li>
+                        <li>@Functions.description(functionKey)</li>
                     }
                     </ul>
                 </td>

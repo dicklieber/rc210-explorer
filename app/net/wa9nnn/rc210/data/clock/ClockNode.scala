@@ -19,8 +19,7 @@ package net.wa9nnn.rc210.data.clock
 
 import com.wa9nnn.wa9nnnutil.JsonFormatUtils.javaEnumFormat
 import com.wa9nnn.wa9nnnutil.tableui.{Row, Table}
-import net.wa9nnn.rc210.data.clock.MonthOfYearDST.*
-import net.wa9nnn.rc210.data.clock.Occurrence.*
+import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.EditButtonCell
@@ -29,13 +28,14 @@ import play.api.data.*
 import play.api.data.Forms.*
 import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json}
-import play.api.mvc.{RequestHeader, Result}
+import play.api.mvc.{RequestHeader, Result, Results}
+import play.twirl.api.Html
 
 case class ClockNode(key: Key,
                      enableDST: Boolean = true,
                      hourDST: Int = 2,
-                     startDST: DSTPoint = DSTPoint(March, First),
-                     endDST: DSTPoint = DSTPoint(November, Second),
+                     startDST: DSTPoint = DSTPoint(MonthOfYearDST.March, Occurrence.First),
+                     endDST: DSTPoint = DSTPoint(MonthOfYearDST.November, Occurrence.Second),
                      say24Hours: Boolean = false,
                     ) extends ComplexFieldValue():
 
@@ -142,10 +142,19 @@ object ClockNode extends ComplexExtractor[ClockNode] {
 
   implicit val fmtClock: Format[ClockNode] = Json.format[ClockNode]
 
-  override def index(values: Seq[ClockNode]): Table = ???
+  override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
+    val r: Html = fieldEntries.headOption match
+      case Some(fe) =>
+        views.html.clock(form.fill(fe.value))
+      case None =>
+        throw new IllegalArgumentException("No ClockNode")
+      r
+  override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html = {
+    views.html.clock(form.fill(fieldEntry.value))
+  }
 
-  override def editOp(form: Form[ClockNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result = ???
-
-  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue = ???
+  override def bindFromRequest(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
+    val clockNode: ClockNode = form.bindFromRequest(data).get
+    Seq(UpdateCandidate(clockNode.fieldKey, clockNode))
 }
 

@@ -1,10 +1,12 @@
 package net.wa9nnn.rc210.data.macros
 
-import com.wa9nnn.wa9nnnutil.tableui.{KvTable, Row, Table, TableSection}
+import com.wa9nnn.wa9nnnutil.tableui.{Header, KvTable, Row, Table, TableSection}
 import net.wa9nnn.rc210.data.Dtmf.Dtmf
 import net.wa9nnn.rc210.data.Node
+import net.wa9nnn.rc210.data.datastore.UpdateCandidate
+import net.wa9nnn.rc210.data.field.MessageNode.{form, keyKind}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
-import net.wa9nnn.rc210.data.functions.FunctionsProvider
+import net.wa9nnn.rc210.Functions
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.EditButtonCell
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
@@ -13,6 +15,8 @@ import play.api.data.{Form, FormError}
 import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.*
+import play.twirl.api.Html
+import views.html.{fieldIndex, macroEditor, messageEditor}
 
 import java.util.concurrent.atomic.AtomicInteger
 import scala.annotation.tailrec
@@ -74,7 +78,7 @@ case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dt
   )
 }
 
-object MacroNode extends ComplexExtractor[MacroNode] {
+object MacroNode extends ComplexExtractor[MacroNode] :
   override val keyKind: KeyKind = KeyKind.Macro
 
   def unapply(u: MacroNode): Option[(Key, Seq[Key], Option[Dtmf])] = Some((u.key, u.functions, u.dtmf))
@@ -172,11 +176,23 @@ object MacroNode extends ComplexExtractor[MacroNode] {
   
   override def form: Form[MacroNode] = throw new NotImplementedError("Forms not used with macros") //todo
 
-  override def index(values: Seq[MacroNode]): Table = ???
+  override def index(values: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
+    val table = Table(Header(s"Messages  (${values.length})",
+      "",
+      "todo"
+    ),
+      values.map(_.value.toRow)
+    )
+    fieldIndex(keyKind, table)
 
-  override def editOp(form: Form[MacroNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result = ???
+  override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
+    macroEditor(fieldEntry.value)
 
-  override def bindFromRequest(data: Map[Dtmf, Seq[Dtmf]]): ComplexFieldValue = ???
-}
+  override def bindFromRequest(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
+    val macroNode: MacroNode = form.bindFromRequest(data).get
+    Seq(
+      UpdateCandidate(macroNode.fieldKey, macroNode)
+    )
+
 
 
