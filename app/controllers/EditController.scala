@@ -73,10 +73,8 @@ class EditController @Inject()(navMain: NavMain)
       val name: String = ExtractField("name", (value) => value)
       val handler: EditHandler[?] = fieldKey.key.keyKind.handler
       val updateCandidates: Seq[UpdateCandidate] = handler.bindFromRequest(data)
-      //      val updateCandidate = UpdateCandidate(fieldKey, value1)
-      // todo handle named keys.
-      //      val function: Option[NamedKey] = Option.when(name.nonEmpty)(NamedKey(fieldKey.key, name))
-      val candidateAndNames: CandidateAndNames = CandidateAndNames(updateCandidates, Seq.empty)
+      val namedKeys: Option[NamedKey] = data.get("name").map(name => NamedKey(fieldKey.key, name.head))
+      val candidateAndNames: CandidateAndNames = CandidateAndNames(updateCandidates, namedKeys.toSeq)
       dataStore.update(candidateAndNames)
       handler.saveOp()
   }
