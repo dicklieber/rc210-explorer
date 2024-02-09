@@ -21,7 +21,9 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.html.renderTable
 import com.wa9nnn.wa9nnnutil.tableui.{Header, KvTableSection, Row, Table, TableSection}
 import controllers.routes
+import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
+import net.wa9nnn.rc210.data.meter.MeterNode.{bindOne, form}
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.{EditButtonCell, TableSectionButtons}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
@@ -31,7 +33,7 @@ import play.api.i18n.MessagesProvider
 import play.api.libs.json.{JsValue, Json, OFormat}
 import play.api.mvc.{RequestHeader, Result, Results}
 import play.twirl.api.Html
-import views.html.{editButton, flowChartButton, logicAlarmEditor, timerEditor}
+import views.html.{editButton, fieldIndex, flowChartButton, logicAlarmEditor, timerEditor}
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
@@ -82,7 +84,7 @@ case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends ComplexField
 
 }
 
-object TimerNode extends ComplexExtractor[TimerNode] with LazyLogging {
+object TimerNode extends ComplexExtractor[TimerNode] with LazyLogging:
 
   override def positions: Seq[FieldOffset] = {
     Seq(
@@ -111,7 +113,6 @@ object TimerNode extends ComplexExtractor[TimerNode] with LazyLogging {
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[TimerNode]
 
-
   def unapply(u: TimerNode): Option[(Key, Int, Key)] = Some((u.key, u.seconds, u.macroKey))
 
   val form: Form[TimerNode] = Form[TimerNode](
@@ -125,22 +126,20 @@ object TimerNode extends ComplexExtractor[TimerNode] with LazyLogging {
   implicit val fmtTimer: OFormat[TimerNode] = Json.format[TimerNode]
   override val keyKind: KeyKind = KeyKind.Timer
 
-  override def index(values: Seq[TimerNode]): Html =
-    val table = Table(Header(s"Timers  (${values.length})",
+  override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
+    fieldIndex(keyKind, Table(Header(s"Timers  (${fieldEntries.length})",
       "",
       "Timer",
       "Seconds",
       "Macro"
     ),
-      values.map(_.toRow)
-    )
-    val r:Html = renderTable(table)
-    r
+      fieldEntries.map(_.toRow)
+    ))
 
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     timerEditor(form.fill(fieldEntry.value), fieldEntry.fieldKey)
 
-  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue =
-    form.bindFromRequest(data).get
+  override def bindFromRequest(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
+    bindOne(form.bindFromRequest(data).get)
 
-}
+

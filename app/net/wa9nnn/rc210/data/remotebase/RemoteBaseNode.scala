@@ -18,7 +18,9 @@
 package net.wa9nnn.rc210.data.remotebase
 
 import com.wa9nnn.wa9nnnutil.tableui.{Row, Table, TableSection}
+import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
+import net.wa9nnn.rc210.data.meter.MeterNode.{bindOne, form}
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.EditButtonCell
 import net.wa9nnn.rc210.util.Chunk
@@ -28,6 +30,7 @@ import play.api.data.{Form, Mapping}
 import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.*
+import play.twirl.api.Html
 
 case class RemoteBaseNode(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[RBMemory] = Seq.empty) extends ComplexFieldValue() {
   override val key: Key = Key(KeyKind.RemoteBase)
@@ -132,17 +135,16 @@ object RemoteBaseNode extends ComplexExtractor[RemoteBaseNode] {
   implicit val fmtRBMemory: Format[RBMemory] = Json.format[RBMemory]
   implicit val fmtRemoteBase: Format[RemoteBaseNode] = Json.format[RemoteBaseNode]
 
-  override def index(values: Seq[RemoteBaseNode])(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result =
-    val filledForm = form.fill(values.head)
-    Results.Ok(views.html.remoteBase(filledForm))
+  override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
+    val filledForm = form.fill(fieldEntries.head.value)
+    views.html.remoteBase(filledForm)
 
-
-
-  override def edit(fieldKey: FieldKey)(value: RemoteBaseNode, request: RequestHeader, messagesProvider: MessagesProvider): Result =
+  override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html=
     throw new NotImplementedError() //todo
 
-
-//  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue =
+  override def bindFromRequest(data: Map[String, Seq[String]]): Seq[UpdateCandidate] = {
+    bindOne(form.bindFromRequest(data).get)
+  }
 }
 
 /**

@@ -20,6 +20,7 @@ package net.wa9nnn.rc210.data.meter
 import com.wa9nnn.wa9nnnutil.tableui.*
 import controllers.routes
 import net.wa9nnn.rc210.KeyKind.{Macro, Meter, MeterAlarm}
+import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.timers.TimerNode
 import net.wa9nnn.rc210.serial.Memory
@@ -32,7 +33,7 @@ import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.{RequestHeader, Result, Results}
 import play.twirl.api.Html
-import views.html.editButton
+import views.html.{editButton, fieldIndex}
 
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -187,8 +188,8 @@ object MeterAlarmNode extends ComplexExtractor[MeterAlarmNode]:
 
   implicit val fmtMeterAlarm: Format[MeterAlarmNode] = Json.format[MeterAlarmNode]
 
-  override def index(fieldEntries: Seq[FieldEntry]): Table =
-    Table(Header(s"Timers  (${fieldEntries.length})",
+  override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
+    fieldIndex(keyKind, Table(Header(s"Timers  (${fieldEntries.length})",
       "",
       "Meter",
       "Alarm Type",
@@ -197,11 +198,13 @@ object MeterAlarmNode extends ComplexExtractor[MeterAlarmNode]:
     ),
       fieldEntries.map(_.value.toRow)
     )
+    )
 
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     meterAlarmEditor(form.fill(fieldEntry.value), fieldEntry.fieldKey)
 
-  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue =
-    form.bindFromRequest(data).get
+  override def bindFromRequest(data: Map[String, Seq[String]]): Seq[UpdateCandidate] = {
+    bindOne(form.bindFromRequest(data).get)
+  }
 
 

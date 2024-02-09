@@ -85,6 +85,10 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
 
   override val template: String = fieldDefinition.template
 
+  override def toRow: Row = {
+    val value1:FieldValue = value
+    value1.toRow
+  }
 }
 
 object FieldEntry {

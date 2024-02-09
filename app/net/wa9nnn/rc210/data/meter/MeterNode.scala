@@ -18,8 +18,10 @@
 package net.wa9nnn.rc210.data.meter
 
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
+import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.field.*
+import net.wa9nnn.rc210.data.meter.MeterAlarmNode.{bindOne, form}
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.EditButtonCell
 import net.wa9nnn.rc210.ui.html.meterEditor
@@ -28,6 +30,8 @@ import play.api.data.Forms.*
 import play.api.i18n.MessagesProvider
 import play.api.mvc.*
 import play.api.libs.json.{Format, JsValue, Json}
+import play.twirl.api.Html
+import views.html.fieldIndex
 
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -142,9 +146,9 @@ object MeterNode extends ComplexExtractor[MeterNode]:
   implicit val fmtVoltToReading: Format[VoltToReading] = Json.format[VoltToReading]
   implicit val fmtMeter: Format[MeterNode] = Json.format[MeterNode]
 
-  override def index(values: Seq[MeterNode]): Table =
+  override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     val header = Seq(
-      Seq(Cell(s"Meters  (${values.length})").withColSpan(7)),
+      Seq(Cell(s"Meters  (${fieldEntries.length})").withColSpan(7)),
       Seq(
         Cell("").withRowSpan(2),
         Cell("Meter").withRowSpan(2),
@@ -159,14 +163,13 @@ object MeterNode extends ComplexExtractor[MeterNode]:
         Cell("Reading"),
       ),
     )
-    Table(header, values.map(_.toRow)
-    )
+    fieldIndex(keyKind, Table(header, fieldEntries.map(_.value.toRow)))
 
-  override def editOp(form: Form[MeterNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result =
-    Results.Ok(meterEditor(form, fieldKey))
+  override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
+    meterEditor(form.fill(fieldEntry.value), fieldEntry.fieldKey)
 
-  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue =
-    form.bindFromRequest(data).get
+  override def bindFromRequest(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
+    bindOne(form.bindFromRequest(data).get)
 
 /**
  *

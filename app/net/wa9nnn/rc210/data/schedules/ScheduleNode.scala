@@ -3,10 +3,13 @@ package net.wa9nnn.rc210.data.schedules
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, KvTable, Row, Table, TableSection}
 import controllers.routes
+import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.field.schedule.{DayOfWeek, Week}
+import net.wa9nnn.rc210.data.meter.MeterNode.{bindOne, form}
 import net.wa9nnn.rc210.data.schedules.ScheduleNode.s02
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.ui.html.meterEditor
 import net.wa9nnn.rc210.ui.{Display, EditButtonCell, TableSectionButtons}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
@@ -15,7 +18,7 @@ import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.{RequestHeader, Result, Results}
 import play.twirl.api.Html
-import views.html.{editButton, scheduleEdit}
+import views.html.{editButton, fieldIndex, scheduleEdit}
 
 /**
  *
@@ -133,7 +136,7 @@ case class ScheduleNode(override val key: Key,
 
   override def toJsValue: JsValue = Json.toJson(this)
 
-object ScheduleNode extends LazyLogging with ComplexExtractor[ScheduleNode] {
+object ScheduleNode extends LazyLogging with ComplexExtractor[ScheduleNode]:
   override val keyKind: KeyKind = KeyKind.Schedule
 
   def unapply(schedule: ScheduleNode): Option[(Key, DayOfWeek, Week, MonthOfYearSchedule, Int, Int, Key, Boolean)] =
@@ -191,8 +194,8 @@ object ScheduleNode extends LazyLogging with ComplexExtractor[ScheduleNode] {
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[ScheduleNode]
 
-  override def index(values: Seq[ScheduleNode]): Table =
-    Table(Header(s"Schedules (${values.length})",
+  override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
+    fieldIndex(keyKind, Table(Header(s"Schedules (${fieldEntries.length})",
       "SetPoint",
       "Enabled",
       "Day in Week",
@@ -201,15 +204,17 @@ object ScheduleNode extends LazyLogging with ComplexExtractor[ScheduleNode] {
       "Time",
       "Macro To Run"
     ),
-      values.map(_.toRow)
-    )
+      fieldEntries.map(_.value.toRow)
+    ))
 
-  override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    scheduleEdit(form.fill(fieldEntry.value), fieldEntry.fieldKey)
+  override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html = {
+    val value = form.fill(fieldEntry.value)
+    scheduleEdit(value, fieldEntry.fieldKey)
+  }
 
-  override def bindFromRequest(data: Map[String, Seq[String]]): ComplexFieldValue =
-    form.bindFromRequest(data).get
-}
+  override def bindFromRequest(data: Map[String, Seq[String]]): Seq[UpdateCandidate] = {
+    bindOne(form.bindFromRequest(data).get)
+  }
 
 
 

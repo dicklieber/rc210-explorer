@@ -35,12 +35,21 @@ trait EditHandler[T <: FieldValue]:
    * @param value from datastore
    * @return
    */
-  def edit(fieldEntry:FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html
+  def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html
   //   def save(data: Map[String, Seq[String]])(using request: RequestHeader, messagesProvider: MessagesProvider): Result
 
   //  def editOp(fieldEntry:FieldEntry)(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result
 
   def bindFromRequest(data: Map[String, Seq[String]]): Seq[UpdateCandidate]
+
+  def bindOne(in: ComplexFieldValue): Seq[UpdateCandidate] =
+    Seq(
+      UpdateCandidate(in.fieldKey, in)
+    )
+  def bindOne(in:String, fieldKey: FieldKey): Seq[UpdateCandidate] =
+    Seq(
+      UpdateCandidate(fieldKey, in)
+    )
 
   //  def saveOkResult(): Result
   def saveOp()(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result =
