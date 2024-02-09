@@ -63,14 +63,17 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
       case None =>
         throw new IllegalArgumentException(s"No editValue for fieldKey: $fieldKey")
 
-  def indexValues[T <: FieldValue](keyKind: KeyKind): Seq[T] =
-    all.filter(_.fieldKey.key.keyKind == keyKind).map(_.value.asInstanceOf[T])
+  def apply(keyKind: KeyKind): Seq[FieldEntry] =
+    all.filter(_.fieldKey.key.keyKind == keyKind)
 
   def all: Seq[FieldEntry] =
     keyFieldMap.values.toIndexedSeq.sorted
 
   def apply(dataTransferJson: DataTransferJson): Unit =
     throw new NotImplementedError() //todo
+
+  def indexValues[T <: FieldValue](keyKind: KeyKind): Seq[T] =
+    all.filter(_.fieldKey.key.keyKind == keyKind).map(_.value.asInstanceOf[T])
 
   def apply(fieldKey: FieldKey): FieldEntry =
     keyFieldMap.get(fieldKey) match
@@ -79,8 +82,8 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
       case None =>
         throw new IllegalArgumentException(s"No value for fieldKey: $fieldKey")
 
-  def apply(keyKind: KeyKind): Seq[FieldEntry] =
-    all.filter(_.fieldKey.key.keyKind == keyKind).sorted
+//  def apply(keyKind: KeyKind): Seq[FieldEntry] =
+//    all.filter(_.fieldKey.key.keyKind == keyKind).sorted
 
   def apply(key: Key): Seq[FieldEntry] =
     all.filter(_.fieldKey.key == key).sorted

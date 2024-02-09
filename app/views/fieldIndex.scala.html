@@ -5,8 +5,6 @@
 @(keyKind: KeyKind, tables: Table*)
 
 <h1>@keyKind.entryName</h1>
-@tabbedmain(keyKind) {
     @for(table <- tables) {
         @renderTable(table)
     }
-}

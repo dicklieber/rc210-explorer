@@ -32,7 +32,7 @@ import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json, OFormat}
 import play.api.mvc.{RequestHeader, Result, Results}
 import play.twirl.api.Html
-import views.html.{courtesyToneEdit, fieldIndex, named}
+import views.html.{courtesyToneEdit, courtesyTones, fieldIndex, named}
 
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -125,12 +125,7 @@ object CourtesyTone extends ComplexExtractor[CourtesyTone] with LazyLogging:
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[CourtesyTone]
 
   override def index(values: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    val rows: Seq[Row] = values.map { fieldEntry =>
-      val value: CourtesyTone = fieldEntry.value
-      value.toRow
-    }
-    val table: Table = Table(Header(s"CourtesyTone (${values.length})"), rows)
-    fieldIndex(keyKind, table)
+    courtesyTones(values.map(_.value[CourtesyTone]))
 
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     given Form[CourtesyTone] = form.fill(fieldEntry.value)

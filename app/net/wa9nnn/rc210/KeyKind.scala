@@ -43,8 +43,7 @@ object KeyKind extends PlayEnum[KeyKind]:
 
   case object DtmfMacro extends KeyKind(195)
 
-  case object CourtesyTone extends KeyKind(10, net.wa9nnn.rc210.data.courtesy.CourtesyTone):
-    override def indexUrl: String = routes.CourtesyToneController.index.url
+  case object CourtesyTone extends KeyKind(10, net.wa9nnn.rc210.data.courtesy.CourtesyTone)
 
   case object Function extends KeyKind(1005)
 

@@ -20,7 +20,7 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.{FieldKey, KeyKind}
 import net.wa9nnn.rc210.data.datastore.*
-import net.wa9nnn.rc210.data.field.{FieldEntry, SimpleFieldValue}
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue, SimpleFieldValue}
 import net.wa9nnn.rc210.ui.SimpleValuesHandler
 import play.api.mvc.*
 import net.wa9nnn.rc210.security.Who.*
@@ -38,7 +38,7 @@ class CommonController @Inject()(dataStore: DataStore, components: MessagesContr
   def index: Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] =>
 
-      val fieldEntries = dataStore(KeyKind.Common)
+      val fieldEntries: Seq[FieldEntry] = dataStore(KeyKind.Common)
       if (simpleValuesHandler.isEmpty)
         simpleValuesHandler = Some(new SimpleValuesHandler(fieldEntries))
       Ok(views.html.common(fieldEntries))

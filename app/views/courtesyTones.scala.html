@@ -3,36 +3,35 @@
 @import net.wa9nnn.rc210.KeyKind
 @(courtesyTones: Seq[CourtesyTone])
 
-@tabbedmain(KeyKind.CourtesyTone) {
-    <div>
-        <table class="headeredTable">
-            @defining("<th>Duration<br>Tone1<br>Tone2</th>") { DTT =>
-                <thead>
-                    <tr>
-                        <th colspan="10">Courtesy Tones</th>
-                    </tr>
+<div>
+    <table class="headeredTable">
+        @defining("<th>Duration<br>Tone1<br>Tone2</th>") { DTT =>
+            <thead>
+                <tr>
+                    <th colspan="10">Courtesy Tones</th>
+                </tr>
 
-                    <tr>
-                        <th rowspan="2"></th>
-                        <th rowspan="2">Name</th>
-                        <th colspan="2">Segment 1</th>
-                        <th colspan="2">Segment 2</th>
-                        <th colspan="2">Segment 3</th>
-                        <th colspan="2">Segment 4</th>
-                    </tr>
-                    <tr>
-                        <th title="From loss of COS.">Delay</th>
-                        @Html(DTT)
-                        <th title="to Segment 2">Delay</th>
-                        @Html(DTT)
-                        <th title="to Segment 3">Delay</th>
-                        @Html(DTT)
-                        <th title="to Segment 4">Delay</th>
-                        <th>Duration/Tones</th>
-                    </tr>
-                </thead>
+                <tr>
+                    <th rowspan="2"></th>
+                    <th rowspan="2">Name</th>
+                    <th colspan="2">Segment 1</th>
+                    <th colspan="2">Segment 2</th>
+                    <th colspan="2">Segment 3</th>
+                    <th colspan="2">Segment 4</th>
+                </tr>
+                <tr>
+                    <th title="From loss of COS.">Delay</th>
+                    @Html(DTT)
+                    <th title="to Segment 2">Delay</th>
+                    @Html(DTT)
+                    <th title="to Segment 3">Delay</th>
+                    @Html(DTT)
+                    <th title="to Segment 4">Delay</th>
+                    <th>Duration/Tones</th>
+                </tr>
+            </thead>
 
-            }
+        }
 
             <tbody>
             @for(courtesyTone <- courtesyTones) {
@@ -51,8 +50,6 @@
                     </tr>
                 }
             }
-            </tbody>
-        </table>
-    </div>
-
-}
+    </tbody>
+    </table>
+</div>

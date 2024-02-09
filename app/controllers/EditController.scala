@@ -42,7 +42,7 @@ class EditController @Inject()(navMain: NavMain)
 
   def index(keyKind: KeyKind): Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] => {
-      val value = dataStore.indexValues(keyKind)
+      val value: Seq[FieldEntry] = dataStore(keyKind)
       val content: Html = keyKind.handler.index(value)
       Ok(navMain(keyKind, content))
     }
