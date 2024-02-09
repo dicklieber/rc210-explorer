@@ -1,18 +1,17 @@
 package net.wa9nnn.rc210.data
 
-import com.wa9nnn.wa9nnnutil.tableui.Table
 import controllers.routes
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
-import net.wa9nnn.rc210.{FieldKey, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
-import net.wa9nnn.rc210.ui.{SimpleValuesHandler, Tab, Tabs}
-import play.api.data.Form
+import net.wa9nnn.rc210.{FieldKey, KeyKind}
 import play.api.i18n.MessagesProvider
-import play.api.mvc.{Call, Request, RequestHeader, Result, Results}
+import play.api.mvc.{Call, RequestHeader, Result, Results}
 import play.twirl.api.Html
-import views.html.helper.form
-import play.api.i18n.MessagesProvider
 
+/**
+ * This defined the behavior for a [[KeyKind]].
+ * @tparam T
+ */
 trait EditHandler[T <: FieldValue]:
   /**
    * Allows overriding where  [[controllers.EditController]] will go for index request.
@@ -54,21 +53,4 @@ trait EditHandler[T <: FieldValue]:
   //  def saveOkResult(): Result
   def saveOp()(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result =
     Results.Redirect(routes.EditController.index(keyKind))
-//    Results.ImATeapot("todo EditHandler")
-//    val r: Result = form.bindFromRequest()
-//      .fold(
-//        (formWithErrors: Form[T]) => {
-//          BadRequest(editOp(formWithErrors))
-//          BadRequest(views.html.clock(formWithErrors))
-//        },
-//        (clock: ClockNode) => {
-//          val candidateAndNames = ProcessResult(clock)
-//
-//          given RcSession = request.attrs(sessionKey)
-//
-//          dataStore.update(candidateAndNames)
-//          Redirect(routes.ClockController.index)
-//        }
-//      )
-//    r
 

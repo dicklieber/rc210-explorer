@@ -44,7 +44,7 @@ case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends ComplexField
     EditButtonCell(fieldKey),
     key.keyWithName,
     seconds,
-    macroKey
+    macroKey.keyWithName
   )
 
   override def tableSection(fieldKey: FieldKey): TableSection = {

@@ -41,12 +41,13 @@ case class ScheduleNode(override val key: Key,
 
   override def toRow: Row = Row(
     EditButtonCell(fieldKey),
+    key.keyWithName,
+    enabled,
     dow,
     week,
     monthOfYear,
-    hour,
-    minute,
-    macroKey
+    f"$hour%02d:$minute%02d",
+    macroKey.keyWithName
   )
 
   private val rows: Seq[Row] = Seq(
@@ -167,8 +168,9 @@ object ScheduleNode extends LazyLogging with ComplexExtractor[ScheduleNode]:
     )
   }
 
-  val header = Header.singleRow(
-    "SetPoint",
+  def header(count: Int): Header = Header(s"Schedules ($count)",
+    "",
+    "Schedule",
     "Enabled",
     "Day in Week",
     "Month",
@@ -194,18 +196,11 @@ object ScheduleNode extends LazyLogging with ComplexExtractor[ScheduleNode]:
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[ScheduleNode]
 
-  override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    fieldIndex(keyKind, Table(Header(s"Schedules (${fieldEntries.length})",
-      "SetPoint",
-      "Enabled",
-      "Day in Week",
-      "Month",
-      Cell("Week").withToolTip("Week in month"),
-      "Time",
-      "Macro To Run"
-    ),
-      fieldEntries.map(_.value.toRow)
-    ))
+  override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html = {
+    val rows: Seq[Row] = fieldEntries.map(_.value.toRow)
+    val table = Table(header(fieldEntries.length), rows)
+    fieldIndex(keyKind, table)
+  }
 
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html = {
     val value = form.fill(fieldEntry.value)
