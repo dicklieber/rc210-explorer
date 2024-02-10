@@ -23,7 +23,7 @@ import play.api.data.Mapping
 import play.api.libs.json.{Format, Json}
 
 /**
- * One piece of a [[CourtesyTone]].
+ * One piece of a [[CourtesyToneNode]].
  *
  * @param delayMs until this segment starts.
  * @param durationMs how long.

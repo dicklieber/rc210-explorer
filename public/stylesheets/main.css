@@ -397,6 +397,10 @@ footer {
     color: white;
 }
 
+.checkbox{
+    text-align: center;
+    color: #222321;
+}
 pre {
     outline: 1px solid #ccc;
     padding: 5px;

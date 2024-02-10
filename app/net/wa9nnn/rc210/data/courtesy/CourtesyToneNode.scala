@@ -41,7 +41,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * @param key      id
  * @param segments the four segment that mke up a courtesy tone.
  */
-case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends ComplexFieldValue() {
+case class CourtesyToneNode(override val key: Key, segments: Seq[Segment]) extends ComplexFieldValue() {
   assert(segments.length == 4, s"Must have four segemnts but only have: $segments")
 
   override def displayHtml: String = s"$key"
@@ -69,22 +69,22 @@ case class CourtesyTone(override val key: Key, segments: Seq[Segment]) extends C
 }
 
 /**
- * [[CourtesyTone]] data are spread out in the [[Memory]] image.
- * This gaters all the data and produces all the [[CourtesyTone]]s.
+ * [[CourtesyToneNode]] data are spread out in the [[Memory]] image.
+ * This gaters all the data and produces all the [[CourtesyToneNode]]s.
  */
-object CourtesyTone extends ComplexExtractor[CourtesyTone] with LazyLogging:
+object CourtesyToneNode extends ComplexExtractor[CourtesyToneNode] with LazyLogging:
   override val keyKind: KeyKind = KeyKind.CourtesyTone
   private val nCourtesyTones = keyKind.maxN
 
-  def unapply(u: CourtesyTone): Option[(Key, Seq[Segment])] = Some((u.key, u.segments))
+  def unapply(u: CourtesyToneNode): Option[(Key, Seq[Segment])] = Some((u.key, u.segments))
 
-  val form: Form[CourtesyTone] = Form(
+  val form: Form[CourtesyToneNode] = Form(
     mapping(
       "key" -> of[Key],
       "segment" -> seq(Segment.form),
-    )(CourtesyTone.apply)(CourtesyTone.unapply)
+    )(CourtesyToneNode.apply)(CourtesyToneNode.unapply)
   )
-  implicit val fmtCourtesyTone: Format[CourtesyTone] = Json.format[CourtesyTone]
+  implicit val fmtCourtesyTone: Format[CourtesyToneNode] = Json.format[CourtesyToneNode]
 
   override def positions: Seq[FieldOffset] = Seq(
     FieldOffset(856, this),
@@ -107,7 +107,7 @@ object CourtesyTone extends ComplexExtractor[CourtesyTone] with LazyLogging:
       array(ct)(part) = iterator.next()
     }
 
-    val courtesyTones: Seq[CourtesyTone] = for (ct <- 0 until 10) yield {
+    val courtesyTones: Seq[CourtesyToneNode] = for (ct <- 0 until 10) yield {
       val key: Key = Key(KeyKind.CourtesyTone, ct + 1)
       val segments = Seq(
         Segment(array(ct)(8), array(ct)(12), array(ct)(0), array(ct)(1)),
@@ -115,20 +115,20 @@ object CourtesyTone extends ComplexExtractor[CourtesyTone] with LazyLogging:
         Segment(array(ct)(10), array(ct)(14), array(ct)(4), array(ct)(5)),
         Segment(array(ct)(11), array(ct)(15), array(ct)(6), array(ct)(7)),
       )
-      CourtesyTone(key, segments)
+      CourtesyToneNode(key, segments)
     }
     courtesyTones.map { ct =>
       FieldEntry(this, FieldKey(fieldName, ct.key), ct)
     }
   }
 
-  override def parse(jsValue: JsValue): FieldValue = jsValue.as[CourtesyTone]
+  override def parse(jsValue: JsValue): FieldValue = jsValue.as[CourtesyToneNode]
 
   override def index(values: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    courtesyTones(values.map(_.value[CourtesyTone]))
+    courtesyTones(values.map(_.value[CourtesyToneNode]))
 
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    given Form[CourtesyTone] = form.fill(fieldEntry.value)
+    given Form[CourtesyToneNode] = form.fill(fieldEntry.value)
 
     courtesyToneEdit(fieldEntry.fieldKey)
 

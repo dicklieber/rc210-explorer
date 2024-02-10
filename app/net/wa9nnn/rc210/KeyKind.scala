@@ -21,7 +21,9 @@ import controllers.routes
 import enumeratum.*
 import enumeratum.EnumEntry.CapitalWords
 import net.wa9nnn.rc210.data.EditHandler
-import net.wa9nnn.rc210.data.field.{FieldValue, LogicAlarmNode}
+import net.wa9nnn.rc210.data.courtesy.CourtesyToneNode
+import net.wa9nnn.rc210.data.field.{FieldValue, LogicAlarmNode, MessageNode}
+import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.meter.{MeterAlarmNode, MeterNode}
 import net.wa9nnn.rc210.data.schedules.ScheduleNode
 import net.wa9nnn.rc210.data.timers.TimerNode
@@ -41,16 +43,14 @@ object KeyKind extends PlayEnum[KeyKind]:
 
   case object MeterAlarm extends KeyKind(8, MeterAlarmNode)
 
-  case object DtmfMacro extends KeyKind(195)
-
-  case object CourtesyTone extends KeyKind(10, net.wa9nnn.rc210.data.courtesy.CourtesyTone)
+  case object CourtesyTone extends KeyKind(10, CourtesyToneNode)
 
   case object Function extends KeyKind(1005)
 
-  case object Macro extends KeyKind(105):
+  case object Macro extends KeyKind(105, MacroNode):
     override def indexUrl: String = routes.MacroController.index.url
 
-  case object Message extends KeyKind(70): // 40 (in Main) + 30 (in RTC)
+  case object Message extends KeyKind(70, MessageNode): // 40 (in Main) + 30 (in RTC)
     override def indexUrl: String = routes.MessageController.index.url
 
   case object Clock extends KeyKind(1):

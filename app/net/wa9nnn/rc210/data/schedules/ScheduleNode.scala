@@ -10,6 +10,7 @@ import net.wa9nnn.rc210.data.meter.MeterNode.{bindOne, form}
 import net.wa9nnn.rc210.data.schedules.ScheduleNode.s02
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.html.meterEditor
+import net.wa9nnn.rc210.ui.nav.checkBoxCell
 import net.wa9nnn.rc210.ui.{Display, EditButtonCell, TableSectionButtons}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
@@ -42,7 +43,7 @@ case class ScheduleNode(override val key: Key,
   override def toRow: Row = Row(
     EditButtonCell(fieldKey),
     key.keyWithName,
-    enabled,
+    checkBoxCell(enabled),
     dow,
     week,
     monthOfYear,

@@ -1,10 +1,10 @@
 @import net.wa9nnn.rc210.{FieldKey, Key, KeyKind, NamedKey}
-@import net.wa9nnn.rc210.data.courtesy.CourtesyTone
+@import net.wa9nnn.rc210.data.courtesy.CourtesyToneNode
 @import net.wa9nnn.rc210.ui.MyHelpers.*
 @import net.wa9nnn.rc210.ui.Tabs
 @import views.html.ct.{delay, duration, tone}
 @import views.html.helper.*
-@( fieldKey: FieldKey)(implicit f: Form[CourtesyTone], request: RequestHeader, messagesProvider: MessagesProvider)
+@( fieldKey: FieldKey)(implicit f: Form[CourtesyToneNode], request: RequestHeader, messagesProvider: MessagesProvider)
 
     @tabbedmain(KeyKind.CourtesyTone) {
         <div>

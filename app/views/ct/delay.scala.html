@@ -1,4 +1,4 @@
 @import net.wa9nnn.rc210.ui.MyHelpers._
-@import net.wa9nnn.rc210.data.courtesy.CourtesyTone
-@(segment:Int)(implicit form:Form[CourtesyTone], request: RequestHeader, messagesProvider: MessagesProvider)
+@import net.wa9nnn.rc210.data.courtesy.CourtesyToneNode
+@(segment:Int)(implicit form:Form[CourtesyToneNode], request: RequestHeader, messagesProvider: MessagesProvider)
 @inputNumber(form(s"segment[$segment].delayMs"),  0 to 10000, "ctField")

@@ -21,8 +21,8 @@ import com.wa9nnn.wa9nnnutil.tableui.*
 import controllers.routes
 import controllers.routes.*
 import net.wa9nnn.rc210.data.EditHandler
-import net.wa9nnn.rc210.data.courtesy.CourtesyTone
-import net.wa9nnn.rc210.data.courtesy.CourtesyTone.{form, keyKind}
+import net.wa9nnn.rc210.data.courtesy.CourtesyToneNode
+import net.wa9nnn.rc210.data.courtesy.CourtesyToneNode.{form, keyKind}
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory

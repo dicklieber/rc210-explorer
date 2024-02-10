@@ -21,7 +21,7 @@ package net.wa9nnn.rc210.data.field
 //import net.wa9nnn.rc210.KeyKind.*
 import net.wa9nnn.rc210.KeyKind.{Common, Port}
 import net.wa9nnn.rc210.data.clock.ClockNode
-import net.wa9nnn.rc210.data.courtesy.CourtesyTone
+import net.wa9nnn.rc210.data.courtesy.CourtesyToneNode
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.meter.{MeterNode, MeterAlarmNode}
 import net.wa9nnn.rc210.data.remotebase.RemoteBaseNode
@@ -134,7 +134,7 @@ class FieldDefinitions @Inject()() {
   val complexFd: Seq[ComplexExtractor[?]] = Seq(
     ScheduleNode,
     MacroNode,
-    CourtesyTone,
+    CourtesyToneNode,
     TimerNode,
     MessageNode,
     ClockNode,
