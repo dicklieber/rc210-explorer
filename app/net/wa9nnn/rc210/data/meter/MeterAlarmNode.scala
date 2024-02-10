@@ -50,11 +50,11 @@ case class MeterAlarmNode(val key: Key, meter: Key, alarmType: AlarmType, tripPo
 
   override def toRow: Row = Row(
     EditButtonCell(fieldKey),
+    key.keyWithName,
     meter.keyWithName,
     alarmType,
     tripPoint,
-    tripPoint,
-    macroKey
+    macroKey.keyWithName
   )
 
   override def tableSection(fieldKey: FieldKey): TableSection =
@@ -189,8 +189,9 @@ object MeterAlarmNode extends ComplexExtractor[MeterAlarmNode]:
   implicit val fmtMeterAlarm: Format[MeterAlarmNode] = Json.format[MeterAlarmNode]
 
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    fieldIndex(keyKind, Table(Header(s"Timers  (${fieldEntries.length})",
+    fieldIndex(keyKind, Table(Header(s"Alarm Meters  (${fieldEntries.length})",
       "",
+      "Alarm",
       "Meter",
       "Alarm Type",
       "Trip Point",

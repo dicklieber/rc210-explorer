@@ -18,29 +18,14 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.wa9nnnutil.tableui.Table
 import net.wa9nnn.rc210
-import net.wa9nnn.rc210.*
-import net.wa9nnn.rc210.data.EditHandler
-import net.wa9nnn.rc210.data.clock.ClockNode.{form, keyKind}
-import net.wa9nnn.rc210.data.clock.{ClockNode, DSTPoint}
 import net.wa9nnn.rc210.data.datastore.*
-import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
-import net.wa9nnn.rc210.security.authentication.RcSession
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
-import net.wa9nnn.rc210.ui.ProcessResult
 import net.wa9nnn.rc210.ui.nav.TabKind
-import play.api.data.Form
-import play.api.i18n.MessagesProvider
 import play.api.mvc.*
-import play.twirl.api.Html
-import views.html.{fieldIndex, landing}
+import views.html.landing
 
-import java.util.Optional
 import javax.inject.{Inject, Singleton}
-import scala.annotation.meta.languageFeature
 import scala.concurrent.ExecutionContext
-import scala.reflect.ClassTag
 
 @Singleton()
 class NavigationController @Inject()(implicit dataStore: DataStore, ec: ExecutionContext, components: MessagesControllerComponents)
