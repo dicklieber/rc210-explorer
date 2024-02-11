@@ -51,6 +51,6 @@ trait EditHandler[T <: FieldValue]:
     )
 
   //  def saveOkResult(): Result
-  def saveOp()(implicit request: RequestHeader, messagesProvider: MessagesProvider): Result =
+  def saveOp(): Result =
     Results.Redirect(routes.EditController.index(keyKind))
 

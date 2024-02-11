@@ -17,34 +17,37 @@
 
 package controllers
 
-import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.KeyKind
+import net.wa9nnn.rc210.data.clock.ClockNode
 import net.wa9nnn.rc210.data.clock.ClockNode.{fieldKey, form}
-import net.wa9nnn.rc210.data.clock.{ClockNode, DSTPoint}
 import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
-import net.wa9nnn.rc210.ui.{ProcessResult, Tab}
+import net.wa9nnn.rc210.ui.*
 import play.api.data.Form
 import play.api.mvc.*
-import views.html.NavMain
+import play.twirl.api.Html
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton()
-class ClockController @Inject()(implicit dataStore: DataStore, ec: ExecutionContext,
-                                components: MessagesControllerComponents, navMain: NavMain)
-  extends MessagesAbstractController(components) with LazyLogging {
+class ClockController @Inject()(implicit dataStore: DataStore,
+                                ec: ExecutionContext,
+                                components: ControllerComponents)
+  extends NavMainController(components) {
+  def index: Action[AnyContent] = Action{
+    implicit request: Request[AnyContent] =>
 
-  def index: Action[AnyContent] = Action {
-    implicit request: MessagesRequest[AnyContent] => {
       val clock: ClockNode = dataStore.editValue(ClockNode.fieldKey)
-      Ok(navMain(fieldKey.key.keyKind, views.html.clock(form.fill(clock))))
-    }
-  }
+      val filled: Form[ClockNode] = form.fill(clock)
+      val html1 = views.html.clock(filled)
+      val html: Html = navMain(fieldKey.key.keyKind, html1)
 
-  def save(): Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
+      val r: Result = Ok(html)
+      r
+    }
+
+  def save(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     form
       .bindFromRequest()
       .fold(
@@ -62,7 +65,4 @@ class ClockController @Inject()(implicit dataStore: DataStore, ec: ExecutionCont
       )
   }
 }
-
-
-
 

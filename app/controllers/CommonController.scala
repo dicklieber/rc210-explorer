@@ -21,7 +21,7 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.{FieldKey, KeyKind}
 import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue, SimpleFieldValue}
-import net.wa9nnn.rc210.ui.SimpleValuesHandler
+import net.wa9nnn.rc210.ui.{NavMainController, SimpleValuesHandler}
 import play.api.mvc.*
 import net.wa9nnn.rc210.security.Who.*
 
@@ -29,23 +29,24 @@ import javax.inject.{Inject, Singleton}
 import net.wa9nnn.rc210.security.Who.given
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
+import net.wa9nnn.rc210.ui.nav.TabKind
 
 @Singleton
-class CommonController @Inject()(dataStore: DataStore, components: MessagesControllerComponents)
-  extends MessagesAbstractController(components) with LazyLogging {
+class CommonController @Inject()(dataStore: DataStore, components: ControllerComponents)
+  extends NavMainController(components)  {
   private var simpleValuesHandler: Option[SimpleValuesHandler] = None
 
   def index: Action[AnyContent] = Action {
-    implicit request: MessagesRequest[AnyContent] =>
+    implicit request =>
 
       val fieldEntries: Seq[FieldEntry] = dataStore(KeyKind.Common)
       if (simpleValuesHandler.isEmpty)
         simpleValuesHandler = Some(new SimpleValuesHandler(fieldEntries))
-      Ok(views.html.common(fieldEntries))
+      Ok(navMain(KeyKind.Common, views.html.common(fieldEntries)))
   }
 
   def save(): Action[AnyContent] = Action {
-    implicit request: MessagesRequest[AnyContent] =>
+    implicit request =>
       given RcSession = request.attrs(sessionKey)
 
       dataStore.update(simpleValuesHandler.get.collect)

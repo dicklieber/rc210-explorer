@@ -25,6 +25,7 @@ import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
+import net.wa9nnn.rc210.ui.NavMainController
 import net.wa9nnn.rc210.{FieldKey, KeyKind, NamedKey}
 import play.api.i18n.MessagesProvider
 import play.api.mvc.*
@@ -37,11 +38,11 @@ import scala.concurrent.ExecutionContext
 @Singleton()
 class EditController @Inject()(navMain: NavMain)
                               (implicit dataStore: DataStore,
-                               ec: ExecutionContext, components: MessagesControllerComponents)
-  extends MessagesAbstractController(components) with LazyLogging {
+                               ec: ExecutionContext, components: ControllerComponents)
+  extends NavMainController(components) with LazyLogging {
 
   def index(keyKind: KeyKind): Action[AnyContent] = Action {
-    implicit request: MessagesRequest[AnyContent] => {
+    implicit request => {
       val value: Seq[FieldEntry] = dataStore(keyKind)
       val content: Html = keyKind.handler.index(value)
       Ok(navMain(keyKind, content))
@@ -49,15 +50,15 @@ class EditController @Inject()(navMain: NavMain)
   }
 
   def edit(fieldKey: FieldKey): Action[AnyContent] = Action {
-    implicit request: MessagesRequest[AnyContent] =>
+    implicit request =>
       val entry: FieldEntry = dataStore.apply(fieldKey)
       val editHandler = fieldKey.editHandler
       val html: Html = editHandler.edit(entry)
-      Results.Ok(html)
+      Ok(navMain(fieldKey.key.keyKind, html))
   }
 
-  def save(): Action[AnyContent] = Action {
-    implicit request: MessagesRequest[AnyContent] =>
+  def save(): Action[AnyContent] = Action{
+    implicit request: Request[AnyContent] =>
 
       given data: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
 
