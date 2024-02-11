@@ -19,27 +19,28 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.KeyKind
-import net.wa9nnn.rc210.data.clock.ClockNode.form
+import net.wa9nnn.rc210.data.clock.ClockNode.{fieldKey, form}
 import net.wa9nnn.rc210.data.clock.{ClockNode, DSTPoint}
 import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
-import net.wa9nnn.rc210.ui.ProcessResult
+import net.wa9nnn.rc210.ui.{ProcessResult, Tab}
 import play.api.data.Form
 import play.api.mvc.*
+import views.html.NavMain
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton()
 class ClockController @Inject()(implicit dataStore: DataStore, ec: ExecutionContext,
-                                components: MessagesControllerComponents)
+                                components: MessagesControllerComponents, navMain: NavMain)
   extends MessagesAbstractController(components) with LazyLogging {
 
   def index: Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] => {
       val clock: ClockNode = dataStore.editValue(ClockNode.fieldKey)
-      Ok(views.html.clock(form.fill(clock)))
+      Ok(navMain(fieldKey.key.keyKind, views.html.clock(form.fill(clock))))
     }
   }
 
