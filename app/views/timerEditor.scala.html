@@ -8,7 +8,6 @@
 @import net.wa9nnn.rc210.KeyKind
 @(f: Form[TimerNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
-@tabbedmain(fieldKey.key.keyKind) {
     @form(routes.EditController.save()) {
         @keyStuff(fieldKey)
         <table>
@@ -40,4 +39,3 @@
 
         @submitButton()
     }
-}

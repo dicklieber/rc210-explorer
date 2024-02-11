@@ -3,34 +3,34 @@
 @import net.wa9nnn.rc210.data.field.MessageNode
 @import net.wa9nnn.rc210.KeyKind
 @(messages: Seq[MessageNode])
-    @tabbedmain(KeyKind.Message) {
-    <div class="container">
-            <table class="table table-bordered w-auto table-sm">
-            <thead class="table-primary">
-                <tr>
-                    <th colspan="3">Message Macros (@messages.length)</th>
-                </tr>
-                <tr>
-                    <th>&nbsp;</th>
-                    <th>Name</th>
-                    <th>Words</th>
-                </tr>
-            </thead>
-            <tbody>
-            @for(message <- messages) {
-                <tr>
-                    <td>
-                        @{editButton(routes.MessageController.edit(message.key))}
-                    </td >
-                    <td>
-                        @message.key.keyWithName
-                    </td>
-                    <td>
-                        @message.displayHtml
-                    </td>
-                </tr >
-            }
-            </tbody>
-        </table>
-    </div>
-    }
+<div class="container">
+    <table class="table table-bordered w-auto table-sm">
+        <thead class="table-primary">
+            <tr>
+                <th colspan="3">Message Macros (@messages.length)</th>
+            </tr>
+            <tr>
+                <th>&nbsp;</th>
+                <th>Name</th>
+                <th>Words</th>
+            </tr>
+        </thead>
+        <tbody>
+        @for(message <- messages) {
+            <tr>
+                <td>
+                @{
+                    editButton(routes.MessageController.edit(message.key))
+                }
+                </td >
+                <td>
+                @message.key.keyWithName
+                </td>
+                <td>
+                @message.displayHtml
+                </td>
+            </tr >
+        }
+        </tbody>
+    </table>
+</div>

@@ -10,6 +10,7 @@ import play.api.data.Forms.{mapping, text}
 import play.api.data.{Form, FormError}
 import play.api.mvc.*
 import play.twirl.api.HtmlFormat
+import views.html.NavMain
 
 import javax.inject.*
 
@@ -17,7 +18,8 @@ import javax.inject.*
 class LoginController @Inject()(implicit config: Config,
                                 sessionManager: SessionStore,
                                 userManager: UserStore,
-                                cc: MessagesControllerComponents
+                                cc: MessagesControllerComponents,
+                                navMain: NavMain
                                ) extends MessagesInjectedController with LazyLogging {
   setControllerComponents(cc) //todo should not need to do this!
 
@@ -76,7 +78,8 @@ class LoginController @Inject()(implicit config: Config,
           session: RcSession = sessionManager.create(user, request.remoteAddress)
         } yield {
           logger.info(s"Login callsign:${credentials.callsign}  ip:${request.remoteAddress}")
-          Ok(views.html.landing(TabKind.Fields))
+          val html = navMain(TabKind.Fields.noTab, views.html.landing())
+          Ok(html)
             .withSession(RcSession.playSessionName -> session.sessionId)
         })
           .getOrElse {

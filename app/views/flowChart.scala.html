@@ -3,29 +3,26 @@
 @import net.wa9nnn.rc210.KeyKind.Macro
 @import net.wa9nnn.rc210.data.datastore.FlowData
 @(flowData: FlowData)
-    @tabbedmain(Macro) {
-        <div class="w3-container w3-cell">
-            <fieldset>
-                <legend>Triggers</legend>
-                @renderTable(flowData.triggersTable)
-            </fieldset>
-        </div>
-        <div class="w3-container w3-cell">
-            <fieldset>
-                <legend>Macro</legend>
-                @renderTable(flowData.macroSection)
-            </fieldset>
-            <div class="helpText">
-                <p > <span title="Click on this icon, on other pages, to get to this display." class="helpHeader">&#10199;</span><br/>
-                    This shows how things that can trigger @flowData.macroFieldEntry.fieldKey along with the Functions that the macro will invoke.
-                </p>
-            </div>
-        </div>
-        <div class="w3-container w3-cell">
-            <fieldset>
-                <legend>Functions</legend>
-                @renderTable(flowData.functionsTable)
-            </fieldset>
-        </div>
-
-    }
+<div class="w3-container w3-cell">
+    <fieldset>
+        <legend>Triggers</legend>
+        @renderTable(flowData.triggersTable)
+        </fieldset>
+</div>
+<div class="w3-container w3-cell">
+    <fieldset>
+        <legend>Macro</legend>
+        @renderTable(flowData.macroSection)
+    </fieldset>
+    <div class="helpText">
+        <p > <span title="Click on this icon, on other pages, to get to this display." class="helpHeader">&#10199;</span><br/>
+            This shows how things that can trigger @flowData.macroFieldEntry.fieldKey along with the Functions that the macro will invoke.
+        </p>
+    </div>
+</div>
+<div class="w3-container w3-cell">
+    <fieldset>
+        <legend>Functions</legend>
+        @renderTable(flowData.functionsTable)
+    </fieldset>
+</div>

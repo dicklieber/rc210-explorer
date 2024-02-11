@@ -10,7 +10,6 @@
 @import net.wa9nnn.rc210.ui.MacroSelect
 @import net.wa9nnn.rc210.FieldKey
 @(f: Form[ScheduleNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
-@tabbedmain(fieldKey.key.keyKind) {
     @form(action = routes.EditController.save()) {
         @inputText(f("key"), Symbol("type") -> "hidden")
         <div class="col-">
@@ -68,4 +67,3 @@
             @submitButton()
         </div>
     }
-}

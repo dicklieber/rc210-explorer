@@ -8,65 +8,62 @@
 @import net.wa9nnn.rc210.KeyKind
 @(clockForm: Form[ClockNode])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
-    @tabbedmain(KeyKind.Clock) {
-        <div class="container">
-        @form(routes.ClockController.save()) {
-            <input type="hidden" name="key" value="@clockForm("key").value">
-            <table class="table table-bordered table-sm">
-                <thead class="table-primary">
-                    <tr>
-                        <th>Field</th>
-                        <th>Value</th>
-                    </tr>
-                </thead>
+<div class="container">
+    @form(routes.ClockController.save()) {
+        <input type="hidden" name="key" value="@clockForm("key").value">
+        <table class="table table-bordered table-sm">
+            <thead class="table-primary">
                 <tr>
-                    <td class="text-end">Say 24 Hour</td>
-                    <td>
-                    @checkbox(clockForm("say24Hours"))
-                    </td>
+                    <th>Field</th>
+                    <th>Value</th>
                 </tr>
-                <tr>
-                    <td class="text-end">Enable DST</td>
-                    <td>
-                    @checkbox(clockForm("enableDST"))
-                    </td>
-                </tr>
-                <tr>
-                    <td class="text-end">DST Schedule</td>
-                    <td>
-                        <table>
-                            <tr>
-                                <td>Starts on the </td>
-                                <td>@select(clockForm("startDST.occurrence"), Occurrence.options)</td>
-                                <td rowspan="2">  Sunday of</td>
-                                <td>@select(clockForm("startDST.month"), MonthOfYearDST.options)</td>
-                                <td rowspan="2">
-                                    at
-                                </td>
-                                <td rowspan="2">
-                                @inputText(clockForm("hourDST"), Symbol("type") -> "number", Symbol("max") -> 23)
-                                </td>
-                                <td rowspan="2">
-                                    Hours
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Ends on the </td>
-                                <td>@select(clockForm("endDST.occurrence"), Occurrence.options)</td>
-                                <td>@select(clockForm("endDST.month"), MonthOfYearDST.options)</td>
-                            </tr>
-                        </table>
+            </thead>
+            <tr>
+                <td class="text-end">Say 24 Hour</td>
+                <td>
+                @checkbox(clockForm("say24Hours"))
+                </td>
+            </tr>
+            <tr>
+                <td class="text-end">Enable DST</td>
+                <td>
+                @checkbox(clockForm("enableDST"))
+                </td>
+            </tr>
+            <tr>
+                <td class="text-end">DST Schedule</td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>Starts on the </td>
+                            <td>@select(clockForm("startDST.occurrence"), Occurrence.options)</td>
+                            <td rowspan="2">  Sunday of</td>
+                            <td>@select(clockForm("startDST.month"), MonthOfYearDST.options)</td>
+                            <td rowspan="2">
+                                at
+                            </td>
+                            <td rowspan="2">
+                            @inputText(clockForm("hourDST"), Symbol("type") -> "number", Symbol("max") -> 23)
+                            </td>
+                            <td rowspan="2">
+                                Hours
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ends on the </td>
+                            <td>@select(clockForm("endDST.occurrence"), Occurrence.options)</td>
+                            <td>@select(clockForm("endDST.month"), MonthOfYearDST.options)</td>
+                        </tr>
+                    </table>
 
-                    </td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>
-                    @submitButton()
-                    </td>
-                </tr>
-            </table>
-        }
-        </div>
-
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>
+                @submitButton()
+                </td>
+            </tr>
+        </table>
     }
+</div>

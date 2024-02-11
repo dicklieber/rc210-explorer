@@ -7,65 +7,63 @@
 @import net.wa9nnn.rc210.KeyKind
 @(f: Form[RemoteBaseNode])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
-@tabbedmain(KeyKind.RemoteBase) {
-    @form(routes.RemoteBaseController.save()) {
-        <table>
+@form(routes.RemoteBaseController.save()) {
+    <table>
+        <tr>
+            <td>Radio:</td>
+            <td>@select(f("radio"), Radio.options)</td>
+        </tr>
+        <tr>
+            <td>Yaesu:</td>
+            <td>@select(f("yaesu"), Yaesu.options)</td>
+        </tr>
+        <tr>
+            <td>Prefix:</td>
+            <td>@inputText(f("prefix"))</td>
+        </tr>
+    </table>
+
+    <table>
+        <thead>
             <tr>
-                <td>Radio:</td>
-                <td>@select(f("radio"), Radio.options)</td>
+                <th>Number</th>
+                <th>Frequency</th>
+                <th>Offset</th>
+                <th>Mode</th>
+                <th>CTCSS Mode</th>
+                <th>CTCSS Code</th>
             </tr>
+        </thead>
+
+
+        @helper.repeatWithIndex(f("memories"), min = 1) { (rbMemeory, index) =>
             <tr>
-                <td>Yaesu:</td>
-                <td>@select(f("yaesu"), Yaesu.options)</td>
+                <td>
+                    @{
+                        index + 1
+                    }
+                </td>
+                <td>
+                @inputText(rbMemeory("frequency"))
+                </td>
+                <td>
+                @select(rbMemeory("offset"), Offset.options)
+                </td>
+                <td>
+                @select(rbMemeory("mode"), Mode.options)
+                </td>
+                <td>
+                @select(rbMemeory("ctcssMode"), CtcssMode.options)
+                </td>
+                <td>
+                @inputText(rbMemeory("ctcssCode"),
+                    Symbol("type") -> "number",
+                    Symbol("min") -> 0,
+                    Symbol("max") -> 255)
+                </td>
             </tr>
-            <tr>
-                <td>Prefix:</td>
-                <td>@inputText(f("prefix"))</td>
-            </tr>
-        </table>
+        }
+    </table>
+    @submitButton()
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Number</th>
-                    <th>Frequency</th>
-                    <th>Offset</th>
-                    <th>Mode</th>
-                    <th>CTCSS Mode</th>
-                    <th>CTCSS Code</th>
-                </tr>
-            </thead>
-
-
-            @helper.repeatWithIndex(f("memories"), min = 1) { (rbMemeory, index) =>
-                <tr>
-                    <td>
-                        @{
-                            index + 1
-                        }
-                    </td>
-                    <td>
-                    @inputText(rbMemeory("frequency"))
-                    </td>
-                    <td>
-                    @select(rbMemeory("offset"), Offset.options)
-                    </td>
-                    <td>
-                    @select(rbMemeory("mode"), Mode.options)
-                    </td>
-                    <td>
-                    @select(rbMemeory("ctcssMode"), CtcssMode.options)
-                    </td>
-                    <td>
-                    @inputText(rbMemeory("ctcssCode"),
-                        Symbol("type") -> "number",
-                        Symbol("min") -> 0,
-                        Symbol("max") -> 255)
-                    </td>
-                </tr>
-            }
-        </table>
-        @submitButton()
-
-    }
 }

@@ -4,55 +4,53 @@
 @import net.wa9nnn.rc210.ui.Tabs
 @import views.html.ct.{delay, duration, tone}
 @import views.html.helper.*
-@( fieldKey: FieldKey)(implicit f: Form[CourtesyToneNode], request: RequestHeader, messagesProvider: MessagesProvider)
+@(fieldKey: FieldKey)(implicit f: Form[CourtesyToneNode], request: RequestHeader, messagesProvider: MessagesProvider)
 
-    @tabbedmain(KeyKind.CourtesyTone) {
-        <div>
-            <form action="@routes.EditController.save()" method="post">
-                @inputText(f("key"), Symbol("type") -> "hidden")
-                @keyStuff(fieldKey)
-                <table class="headeredTable">
-                    @defining("<th>Duration<br>Tone1<br>Tone2</th>") { DTT =>
-                        <thead>
-                            <tr>
-                                <th colspan="9">Courtesy Tones</th>
-                            </tr>
+<div>
+    <form action="@routes.EditController.save()" method="post">
+        @inputText(f("key"), Symbol("type") -> "hidden")
+        @keyStuff(fieldKey)
+        <table class="headeredTable">
+            @defining("<th>Duration<br>Tone1<br>Tone2</th>") { DTT =>
+                <thead>
+                    <tr>
+                        <th colspan="9">Courtesy Tones</th>
+                    </tr>
 
-                            <tr>
-                                <th colspan="2">Segment 1</th>
-                                <th colspan="2">Segment 2</th>
-                                <th colspan="2">Segment 3</th>
-                                <th colspan="2">Segment 4</th>
-                            </tr>
-                            <tr>
-                                <th title="From loss of COS.">Delay</th>
-                                @Html(DTT)
-                                <th title="to Segment 2">Delay</th>
-                                @Html(DTT)
-                                <th title="to Segment 3">Delay</th>
-                                @Html(DTT)
-                                <th title="to Segment 4">Delay</th>
-                                <th>Duration/Tones</th>
-                            </tr>
-                        </thead>
+                    <tr>
+                        <th colspan="2">Segment 1</th>
+                        <th colspan="2">Segment 2</th>
+                        <th colspan="2">Segment 3</th>
+                        <th colspan="2">Segment 4</th>
+                    </tr>
+                    <tr>
+                        <th title="From loss of COS.">Delay</th>
+                        @Html(DTT)
+                        <th title="to Segment 2">Delay</th>
+                        @Html(DTT)
+                        <th title="to Segment 3">Delay</th>
+                        @Html(DTT)
+                        <th title="to Segment 4">Delay</th>
+                        <th>Duration/Tones</th>
+                    </tr>
+                </thead>
 
+            }
+            <tbody>
+                <tr>
+                @for(segment <- 0 to 3) {
+                    <td rowspan="3">@delay(segment)</td>
+                    <td>@duration(segment)</td>
+                }
+                </tr>
+                @for(toneNo <- 1 to 2) {
+                    <tr> @for(segment <- 0 to 3) {
+                        <td>@tone(segment, toneNo)</td>
                     }
-                    <tbody>
-                        <tr>
-                        @for(segment <- 0 to 3) {
-                            <td rowspan="3">@delay(segment)</td>
-                            <td>@duration(segment)</td>
-                        }
-                        </tr>
-                        @for(toneNo <- 1 to 2) {
-                            <tr> @for(segment <- 0 to 3) {
-                                <td>@tone(segment, toneNo)</td>
-                            }
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-                @submitButton()
-            </form>
-        </div>
-    }
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @submitButton()
+    </form>
+</div>

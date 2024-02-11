@@ -4,35 +4,32 @@
 @import net.wa9nnn.rc210.ui.Tabs
 
 @()(implicit request: RequestHeader)
-    @tabbedmain(Tabs.rc210Tab) {
-        <script>
-                @*const route = '@routes.IOController.progress().url';*@
-                setInterval(myMethod, 979);
+<script>
+        @*const route = '@routes.IOController.progress().url';*@
+        setInterval(myMethod, 979);
 
-                function myMethod() {
-                    $.ajax(route,
-                            {
-                                dataType: 'json', // type of response data
-                                timeout: 500,     // timeout milliseconds
-                                success: function (progress) {   // success callback function
-                                    const $progress = $('.progress-bar');
-                                    $progress.css("width", progress.percent);
-                                    $progress.text(progress.percent)
-                                    if(!progress.running){
-                                        window.location.href = '@routes.IOController.downloadResult';
-                                    }
-                                },
-                                error: function (jqXhr, textStatus, errorMessage) { // error callback
-                                    $('p').append('Error: ' + errorMessage);
-                                }
-                            })
-                }
-        </script>
+        function myMethod() {
+            $.ajax(route,
+                    {
+                        dataType: 'json', // type of response data
+                        timeout: 500,     // timeout milliseconds
+                        success: function (progress) {   // success callback function
+                            const $progress = $('.progress-bar');
+                            $progress.css("width", progress.percent);
+                            $progress.text(progress.percent)
+                            if (!progress.running) {
+                                window.location.href = '@routes.IOController.downloadResult';
+                            }
+                        },
+                        error: function (jqXhr, textStatus, errorMessage) { // error callback
+                            $('p').append('Error: ' + errorMessage);
+                        }
+                    })
+        }
+</script>
 
-        <h2>DownloadActor from RC-210</h2>
-            <!-- Progress bar HTML -->
-        <div class="progress">
-            <div class="progress-bar progress-bar-striped" style="min-width: 0px;"></div>
-        </div>
-
-    }
+<h2>DownloadActor from RC-210</h2>
+    <!-- Progress bar HTML -->
+<div class="progress">
+    <div class="progress-bar progress-bar-striped" style="min-width: 0px;"></div>
+</div>

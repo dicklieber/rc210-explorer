@@ -8,60 +8,57 @@
 @import net.wa9nnn.rc210.KeyKind
 @(macroNode: MacroNode)
 
-@tabbedmain(KeyKind.Macro) {
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/contextmenu.css")">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/contextmenu.css")">
+<script src="@routes.Assets.versioned("javascripts/macroNode.js")"></script>
+<script src="@routes.Assets.versioned("javascripts/contextmenu.js")"></script>
 
-    <script src="@routes.Assets.versioned("javascripts/macroNode.js")"></script>
-    <script src="@routes.Assets.versioned("javascripts/contextmenu.js")"></script>
+@form(action = routes.MacroController.save(), Symbol("id") -> "form") {
+    <input type="hidden" name="key" value="@macroNode.key">
+    <input type="hidden" name="ids" id="ids">
 
-    @form(action = routes.MacroController.save(), Symbol("id") -> "form") {
-        <input type="hidden" name="key" value="@macroNode.key">
-        <input type="hidden" name="ids" id="ids">
-
-        <div class="row">
-            <div class="col">
-                <h1>Metadata</h1>
-                @nameEdit(macroNode.key)
-                <div><label for="dtmf">DTMF: </label>
-                    <input id="dtmf" name="dtmf" value="@macroNode.dtmf">
-                </div>
-
-                @submitButton()
+    <div class="row">
+        <div class="col">
+            <h1>Metadata</h1>
+            @nameEdit(macroNode.key)
+            <div><label for="dtmf">DTMF: </label>
+                <input id="dtmf" name="dtmf" value="@macroNode.dtmf">
             </div>
-            <div class="col">
-                <h2>Current</h2>
-                <ul id="currentList" class="border border-primary list-unstyled">
-                @for(functionkey <- macroNode.functions) {
-                    <li
-                    class="functionSource selected"
-                    data-function="@functionkey.toString"
-                    ondblclick=dblClick(this)>
-                    @Functions.description(functionkey)
-                    </li>
-                }
-                </ul>
-                <p>Drag function to reorder. Dbl-click to remove.</p>
-            </div>
-            <div class="col">
-                <h2>Available Functions</h2>
-                <div id="myDropdown" class="dropdown-content show functionList">
-                    <input type="text" placeholder="Search.." id="filter" onkeyup="filterFunction()">
-                    <div>
-                        <ul id="availableList" class="list-unstyled">
-                        @for(function <- Functions.functions) {
-                            <li class="functionSource"
-                            ondblclick="dblClick(this)"
-                            data-function="@function.key.toString">
-                            @function
-                            </li>
-                        }
-                        </ul>
-                    </div>
+
+            @submitButton()
+        </div>
+        <div class="col">
+            <h2>Current</h2>
+            <ul id="currentList" class="border border-primary list-unstyled">
+            @for(functionkey <- macroNode.functions) {
+                <li
+                class="functionSource selected"
+                data-function="@functionkey.toString"
+                ondblclick=dblClick(this)>
+                @Functions.description(functionkey)
+                </li>
+            }
+            </ul>
+            <p>Drag function to reorder. Dbl-click to remove.</p>
+        </div>
+        <div class="col">
+            <h2>Available Functions</h2>
+            <div id="myDropdown" class="dropdown-content show functionList">
+                <input type="text" placeholder="Search.." id="filter" onkeyup="filterFunction()">
+                <div>
+                    <ul id="availableList" class="list-unstyled">
+                    @for(function <- Functions.functions) {
+                        <li class="functionSource"
+                        ondblclick="dblClick(this)"
+                        data-function="@function.key.toString">
+                        @function
+                        </li>
+                    }
+                    </ul>
                 </div>
             </div>
         </div>
-    }
+    </div>
 }

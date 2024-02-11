@@ -20,21 +20,24 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210
 import net.wa9nnn.rc210.data.datastore.*
+import net.wa9nnn.rc210.ui.Tabs
 import net.wa9nnn.rc210.ui.nav.TabKind
 import play.api.mvc.*
-import views.html.landing
+import views.html.{NavMain, landing}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton()
-class NavigationController @Inject()(implicit dataStore: DataStore, ec: ExecutionContext, components: MessagesControllerComponents)
+class NavigationController @Inject()(implicit dataStore: DataStore, ec: ExecutionContext,
+                                     components: MessagesControllerComponents,
+                                     navMain: NavMain)
   extends MessagesAbstractController(components) with LazyLogging {
 
   def selectTabKind(tabKind: TabKind): Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] => {
       logger.debug(tabKind.toString)
-      Ok(landing(tabKind))
+      Ok(navMain(tabKind.noTab,landing()))
     }
   }
 }

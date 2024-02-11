@@ -8,41 +8,39 @@
 @import net.wa9nnn.rc210.FieldKey
 @import net.wa9nnn.rc210.KeyKind
 @(logicAlarmForm: Form[LogicAlarmNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider) extends
-    @tabbedmain(KeyKind.LogicAlarm) {
-        <div class="container">
-        @form(routes.EditController.save()) {
+<div class="container">
+    @form(routes.EditController.save()) {
 
-            @keyStuff(fieldKey)
-            <table>
-                <tr>
-                    <td>
-                        Enable
-                    </td>
-                    <td>@checkbox(logicAlarmForm("enable"))
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Low Macro
-                    </td>
-                    <td>
-                    @select(logicAlarmForm("lowMacro"), MacroSelect.options)
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        High Macro
-                    </td>
-                    <td>
-                    @select(logicAlarmForm("highMacro"), MacroSelect.options)
-                    </td>
-                </tr>
+        @keyStuff(fieldKey)
+        <table>
+            <tr>
+                <td>
+                    Enable
+                </td>
+                <td>@checkbox(logicAlarmForm("enable"))
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Low Macro
+                </td>
+                <td>
+                @select(logicAlarmForm("lowMacro"), MacroSelect.options)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    High Macro
+                </td>
+                <td>
+                @select(logicAlarmForm("highMacro"), MacroSelect.options)
+                </td>
+            </tr>
 
 
-            </table>
-            @submitButton()
+        </table>
+        @submitButton()
 
-        </div>
-    }
-    }
+    </div>
+}
 

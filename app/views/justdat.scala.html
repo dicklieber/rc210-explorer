@@ -4,12 +4,10 @@
 
 @import net.wa9nnn.rc210.ui.nav.TabKind.Settings
 @import net.wa9nnn.rc210.ui.Tab
-@(tab:Tab, tables: Seq[Table])
-@tabbedmain(tab) {
-    @for(table <- tables) {
-        @renderTable(table
-//                .withCssClass("tablesorter")
-                .withCssClass("table table-bordered table-sm  w-auto rc210-table")
-        )
-    }
+@(tab: Tab, tables: Seq[Table])
+@for(table <- tables) {
+    @renderTable(table
+            //                .withCssClass("tablesorter")
+    .withCssClass("table table-bordered table-sm  w-auto rc210-table")
+    )
 }

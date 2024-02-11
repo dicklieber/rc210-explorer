@@ -5,7 +5,6 @@
 @import net.wa9nnn.rc210.ui.Tabs
 
 @(webSocketUrl: String, requestTable: Table, finishUrl:String)(implicit request: RequestHeader)
-@tabbedmain(Tabs.rc210Tab) {
     <script>
             // Use s WebSocket to update the progress bar.
             webSocket = new WebSocket("@webSocketUrl");
@@ -38,5 +37,3 @@
     <div id="result">
 
     </div>
-
-}

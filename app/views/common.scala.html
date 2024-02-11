@@ -6,27 +6,25 @@
 @import net.wa9nnn.rc210.KeyKind
 @(fieldEntries: Seq[FieldEntry])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
-    @tabbedmain(KeyKind.Common) {
-        @form(action = routes.CommonController.save()) {
-            <table class="headeredTable">
-                <thead>
-                    <tr>
-                        <th colspan="2">Common (@fieldEntries.size)</th>
-                    </tr>
-                    <tr>
-                        <th>Field</th>
-                        <th>Value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @for(fieldEntry <- fieldEntries) {
-                    <tr>
-                        <td>@fieldEntry.fieldKey.fieldName</td>
-                        <td>@Html(fieldEntry.value.toHtmlField(fieldEntry.fieldKey))</td>
-                    </tr>
-                }
-                </tbody>
-            </table>
-            @submitButton()
+@form(action = routes.CommonController.save()) {
+    <table class="headeredTable">
+        <thead>
+            <tr>
+                <th colspan="2">Common (@fieldEntries.size)</th>
+            </tr>
+            <tr>
+                <th>Field</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+        @for(fieldEntry <- fieldEntries) {
+            <tr>
+                <td>@fieldEntry.fieldKey.fieldName</td>
+                <td>@Html(fieldEntry.value.toHtmlField(fieldEntry.fieldKey))</td>
+            </tr>
         }
-    }
+        </tbody>
+    </table>
+    @submitButton()
+}
