@@ -27,11 +27,25 @@ $(function () {
             .map(function () {
                 return this.dataset.function;
             }).get();
-        const csv = wordIds.join();
-        $("#ids").val(csv);
 
-        const formData = new FormData($('form')[0]);
-        formData.append("words", wordIds);
+        const form = document.getElementById("form");
+        const formData = new FormData(form);
+        const inputValue = formData.get("key");
+        const b4w = formData.get("words");
+         for(n of wordIds) {
+            console.log(n);
+             form.append('<input name="words" value=n>')
+            // formData.append("words", n)
+            // formData.append("words", n);
+        }
+
+        const formDataAfter= new FormData(form);
+
+        let all1 = formDataAfter.getAll();
+        const afterW = formData.get("words");
+        const all = formData.getAll("words");
+
+        document.getElementById("form").formData = formData
         return true;
     });
 

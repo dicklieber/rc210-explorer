@@ -70,14 +70,19 @@ class EditController @Inject()(navMain: NavMain)
         }
       }
 
-      val fieldKey: FieldKey = ExtractField("fieldKey", (value) => FieldKey(value))
-      val name: String = ExtractField("name", (value) => value)
-      val handler: EditHandler[?] = fieldKey.key.keyKind.handler
-      val updateCandidates: Seq[UpdateCandidate] = handler.bindFromRequest(data)
-      val namedKeys: Option[NamedKey] = data.get("name").map(name => NamedKey(fieldKey.key, name.head))
-      val candidateAndNames: CandidateAndNames = CandidateAndNames(updateCandidates, namedKeys.toSeq)
-      dataStore.update(candidateAndNames)
-      handler.saveOp()
+      try
+        val fieldKey: FieldKey = ExtractField("fieldKey", (value) => FieldKey(value))
+        val name: String = ExtractField("name", (value) => value)
+        val handler: EditHandler[?] = fieldKey.key.keyKind.handler
+        val updateCandidates: Seq[UpdateCandidate] = handler.bindFromRequest(data)
+        val namedKeys: Option[NamedKey] = data.get("name").map(name => NamedKey(fieldKey.key, name.head))
+        val candidateAndNames: CandidateAndNames = CandidateAndNames(updateCandidates, namedKeys.toSeq)
+        dataStore.update(candidateAndNames)
+        handler.saveOp()
+      catch
+        case e:Exception =>
+          logger.error(s"save: ${e.getMessage}", e)
+          InternalServerError(s"request.toString $e.getMessage")
   }
 }
 

@@ -3,7 +3,8 @@
 @import net.wa9nnn.rc210.data.vocabulary.Words
 @import net.wa9nnn.rc210.data.field.MessageNode
 @import net.wa9nnn.rc210.KeyKind
-@(message: MessageNode)
+@import net.wa9nnn.rc210.FieldKey
+@(message: MessageNode, fieldKey: FieldKey)
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/contextmenu.css")">
@@ -14,9 +15,8 @@
     <script src="@routes.Assets.versioned("javascripts/contextmenu.js")"></script>
 
 
-    @form(action = routes.MessageController.save(), Symbol("id") -> "form") {
-        <input type="hidden" name="key" value="@message.key">
-        <input type="hidden" name="ids" id="ids">
+    @form(action = routes.EditController.save(), Symbol("id") -> "form") {
+        @keyStuff(fieldKey)
         <div class="row">
             <div class="col col-md-auto border border-primary">
                 @nameEdit(message.key)

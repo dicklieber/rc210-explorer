@@ -19,15 +19,17 @@ package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Header, Row, Table}
+import controllers.ExtractField
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.LogicAlarmNode.{form, keyKind}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
-import net.wa9nnn.rc210.data.vocabulary.Word
+import net.wa9nnn.rc210.data.vocabulary.{Word, Words}
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.EditButtonCell
 import net.wa9nnn.rc210.util.Chunk
 import org.apache.pekko.http.scaladsl.model.HttpHeader.ParsingResult.Ok
 import play.api.data.Form
+import play.api.data.Forms.*
 import play.api.http.Status
 import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json}
@@ -36,6 +38,7 @@ import play.twirl.api.Html
 import views.html.{fieldIndex, logicAlarmEditor, messageEditor}
 
 import java.util.concurrent.atomic.AtomicInteger
+import scala.util.Try
 
 /**
  * These are called "Message Macros in the RC-210 docs, called "Phrases" in the PHP
@@ -82,6 +85,16 @@ object MessageNode extends ComplexExtractor[MessageNode] with LazyLogging:
     new MessageNode(key, wordIds)
   }
 
+  def unapply(u: MessageNode): Option[(Key, Seq[Int])] = Some((u.key, u.words))
+
+  val form: Form[MessageNode] = Form(
+  mapping(
+    "key" -> of[Key],
+    "words" -> seq(number(1, Words.length))
+  )(MessageNode.apply)(MessageNode.unapply)
+)
+
+
   override val keyKind: KeyKind = KeyKind.Message
 
   override def positions: Seq[FieldOffset] = {
@@ -113,7 +126,6 @@ object MessageNode extends ComplexExtractor[MessageNode] with LazyLogging:
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[MessageNode]
 
-  override def form: Form[MessageNode] = throw new NotImplementedError("No fprm used with Message!") //todo
 
 
   override def index(values: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
@@ -126,13 +138,14 @@ object MessageNode extends ComplexExtractor[MessageNode] with LazyLogging:
     fieldIndex(keyKind, table)
 
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    messageEditor(fieldEntry.value)
+    messageEditor(fieldEntry.value, fieldEntry.fieldKey)
 
   override def bindFromRequest(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
-    val courtesyTone = form.bindFromRequest(data).get
+    val messageNode = form.bindFromRequest(data).get
     Seq(
-      UpdateCandidate(courtesyTone.fieldKey, courtesyTone)
+      UpdateCandidate(messageNode.fieldKey, messageNode)
     )
+
 
 
 

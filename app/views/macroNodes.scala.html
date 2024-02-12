@@ -21,7 +21,7 @@
         @for(macroNode <- macros) {
             <tr>
                 <td>
-                    @editButton(routes.MacroController.edit(macroNode.key))
+                    @editButton(routes.EditController.edit(macroNode.fieldKey))
                     @flowChartButton(macroNode.key)
                     @if(logger.underlying.isDebugEnabled) {
                         @flowTableButton(macroNode.key)

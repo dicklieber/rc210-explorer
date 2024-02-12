@@ -21,6 +21,7 @@ import controllers.routes
 import enumeratum.*
 import enumeratum.EnumEntry.CapitalWords
 import net.wa9nnn.rc210.data.EditHandler
+import net.wa9nnn.rc210.data.clock.ClockNode
 import net.wa9nnn.rc210.data.courtesy.CourtesyToneNode
 import net.wa9nnn.rc210.data.field.{FieldValue, LogicAlarmNode, MessageNode}
 import net.wa9nnn.rc210.data.macros.MacroNode
@@ -50,11 +51,9 @@ object KeyKind extends PlayEnum[KeyKind]:
   case object Macro extends KeyKind(105, MacroNode):
     override def indexUrl: String = routes.MacroController.index.url
 
-  case object Message extends KeyKind(70, MessageNode): // 40 (in Main) + 30 (in RTC)
-    override def indexUrl: String = routes.MessageController.index.url
+  case object Message extends KeyKind(70, MessageNode) // 40 (in Main) + 30 (in RTC)
 
-  case object Clock extends KeyKind(1):
-    override def indexUrl: String = routes.ClockController.index.url
+  case object Clock extends KeyKind(1, ClockNode)
 
   case object Port extends KeyKind(3):
     override def indexUrl: String = routes.PortsController.index.url

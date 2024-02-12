@@ -48,6 +48,7 @@ object Words {
    */
   def apply(string: String): Word = byText(string)
 
+  val length:Int = words.length
 }
 
 /**

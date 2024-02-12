@@ -58,8 +58,7 @@ class FlowData(val macroFieldEntry: FieldEntry, val triggers: Seq[FieldEntry], v
 
   def macroSection: Table =
     val table = Table(Seq.empty, Seq.empty)
-    val key = macroFieldEntry.fieldKey.key
-    val edit: Html = editButton(routes.MacroController.edit(key))
+    val edit: Html = editButton(routes.EditController.edit(macroFieldEntry.fieldKey))
     val ts = new TableSectionButtons("Macro", edit)(
       "DTMF" -> macroFieldEntry.value[MacroNode].dtmf
     )

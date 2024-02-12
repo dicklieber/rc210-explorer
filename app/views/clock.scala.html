@@ -9,7 +9,7 @@
 @(clockForm: Form[ClockNode])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
 <div class="container">
-    @form(routes.ClockController.save()) {
+    @form(routes.EditController.save()) {
         <input type="hidden" name="key" value="@clockForm("key").value">
         <table class="table table-bordered table-sm">
             <thead class="table-primary">
