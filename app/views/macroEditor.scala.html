@@ -16,9 +16,8 @@
 <script src="@routes.Assets.versioned("javascripts/contextmenu.js")"></script>
 
 @form(action = routes.EditController.save(), Symbol("id") -> "form") {
-    <input type="hidden" name="key" value="@macroNode.key">
     <input type="hidden" name="ids" id="ids">
-
+    @keyStuff(macroNode.fieldKey)
     <div class="row">
         <div class="col">
             <h1>Metadata</h1>
@@ -35,7 +34,7 @@
             @for(functionkey <- macroNode.functions) {
                 <li
                 class="functionSource selected"
-                data-function="@functionkey.toString"
+                data-rcnumber="@functionkey.rc210Value"
                 ondblclick=dblClick(this)>
                 @Functions.description(functionkey)
                 </li>
@@ -52,7 +51,7 @@
                     @for(function <- Functions.functions) {
                         <li class="functionSource"
                         ondblclick="dblClick(this)"
-                        data-function="@function.key.toString">
+                        data-rcnumber="@function.key.rc210Value">
                         @function
                         </li>
                     }

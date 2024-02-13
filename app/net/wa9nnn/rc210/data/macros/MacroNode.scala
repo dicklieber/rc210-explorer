@@ -2,7 +2,7 @@ package net.wa9nnn.rc210.data.macros
 
 import com.wa9nnn.wa9nnnutil.tableui.{Header, KvTable, Row, Table, TableSection}
 import net.wa9nnn.rc210.data.Dtmf.Dtmf
-import net.wa9nnn.rc210.data.Node
+import net.wa9nnn.rc210.data.{EditHandler, Node}
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.MessageNode.{form, keyKind}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
@@ -188,11 +188,18 @@ object MacroNode extends ComplexExtractor[MacroNode] :
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     macroEditor(fieldEntry.value)
 
-  override def bindFromRequest(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
-    val macroNode: MacroNode = form.bindFromRequest(data).get
-    Seq(
-      UpdateCandidate(macroNode.fieldKey, macroNode)
-    )
+  override def bindFromRequest(using data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
+
+    (for {
+      fieldKey <- EditHandler.fieldKey
+      ids <- EditHandler.str("ids")
+    } yield {
+      val strings: Array[String] = ids.split(',').filter(_.nonEmpty)
+      val messageNode = MacroNode(fieldKey.key, strings.map(s =>Key(KeyKind.Function,s.toInt)))
+      UpdateCandidate(fieldKey, messageNode)
+    }).toSeq
+
+
 
 
 
