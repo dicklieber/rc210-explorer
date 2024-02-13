@@ -11,7 +11,7 @@ import net.wa9nnn.rc210.data.schedules.ScheduleNode.s02
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.html.meterEditor
 import net.wa9nnn.rc210.ui.nav.checkBoxCell
-import net.wa9nnn.rc210.ui.{Display, EditButtonCell, TableSectionButtons}
+import net.wa9nnn.rc210.ui.{Display, EditButtonCell, EditFlowButtonCell, TableSectionButtons}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.*
@@ -41,7 +41,7 @@ case class ScheduleNode(override val key: Key,
                         override val enabled: Boolean = false) extends ComplexFieldValue(macroKey):
 
   override def toRow: Row = Row(
-    EditButtonCell(fieldKey),
+    EditFlowButtonCell(fieldKey),
     key.keyWithName,
     checkBoxCell(enabled),
     dow,

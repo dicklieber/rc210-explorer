@@ -25,7 +25,7 @@ import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.meter.MeterNode.{bindOne, form}
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.{EditButtonCell, TableSectionButtons}
+import net.wa9nnn.rc210.ui.{EditButtonCell, EditFlowButtonCell, TableSectionButtons}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, number, of}
@@ -41,7 +41,7 @@ case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends ComplexField
   val duration: FiniteDuration = Duration(seconds, "seconds")
 
   override def toRow: Row = Row(
-    EditButtonCell(fieldKey),
+    EditFlowButtonCell(fieldKey),
     key.keyWithName,
     seconds,
     macroKey.keyWithName

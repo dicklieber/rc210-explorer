@@ -83,7 +83,8 @@ case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, 
 
   override def toJsValue: JsValue = Json.toJson(this)
 
-  override def toRow: Row = Row(EditButtonCell(fieldKey),
+  override def toRow: Row = Row(
+    EditFlowButtonCell(fieldKey),
     key.keyWithName,
     enabled,
     lowMacro,
@@ -136,7 +137,7 @@ object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode]:
   implicit val fmtLogicAlarm: OFormat[LogicAlarmNode] = Json.format[LogicAlarmNode]
 
   override def index(values: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    val table = Table(Header(s"Logic Alarm  (${values.length})",
+    val table = Table(Header(s"Logic Alarms  (${values.length})",
       "",
       "Logic Alarm",
       "Enable",
