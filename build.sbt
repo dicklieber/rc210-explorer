@@ -65,6 +65,12 @@ libraryDependencies ++= Seq(
   "com.beachape" %% "enumeratum" % "1.7.3",
   "com.beachape" %% "enumeratum-play" % "1.8.0",
 )
+publishTo := {
+  if (isSnapshot.value)
+    Some(("Reposilite Repository" at "http://repo.wa9nnn.tech:8080/snapshots").withAllowInsecureProtocol(true))
+  else
+    Some(("Reposilite Repository" at "http://repo.wa9nnn.tech:8080/releases").withAllowInsecureProtocol(true))
+}
 
 
 routesImport += "net.wa9nnn.rc210.Binders._"
