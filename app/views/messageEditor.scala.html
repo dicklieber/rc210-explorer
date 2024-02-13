@@ -4,37 +4,36 @@
 @import net.wa9nnn.rc210.data.field.MessageNode
 @import net.wa9nnn.rc210.KeyKind
 @import net.wa9nnn.rc210.FieldKey
-@(message: MessageNode, fieldKey: FieldKey)
+@import net.wa9nnn.rc210.data.vocabulary.Word
+@(message: MessageNode)
 
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/contextmenu.css")">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/contextmenu.css")">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
-    <script src="@routes.Assets.versioned("javascripts/macroNode.js")"></script>
-    <script src="@routes.Assets.versioned("javascripts/contextmenu.js")"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+<script src="@routes.Assets.versioned("javascripts/macroNode.js")"></script>
+<script src="@routes.Assets.versioned("javascripts/contextmenu.js")"></script>
 
     @form(action = routes.EditController.save(), Symbol("id") -> "form") {
-        @keyStuff(fieldKey)
+        @keyStuff(message.fieldKey)
+        <input type="hidden" name="ids" id="ids"> @* this will get set at submit time via javascript. *@
         <div class="row">
             <div class="col col-md-auto border border-primary">
-                @nameEdit(message.key)
-
                 @submitButton()
                 <p>Drag function to reorder. Dbl-click to remove.</p>
             </div>
-            <div  class="col col-md-auto border border-primary">
+            <div class="col col-md-auto border border-primary">
                 <h2>Current</h2>
 
                 <ul id="currentList" class="border border-primary list-unstyled">
 
-                  @for(word <- message.toWords) {
+                @for(id <- message.words) {
                     <li
                     class="functionSource selected"
-                    data-function="@word.toString"
+                    data-rcnumber="@id"
                     ondblclick=dblClick(this)>
-                    @word.string
+                    @Word(id).string
                     </li>
                 }
                 </ul>
@@ -49,9 +48,10 @@
                     <div>
                         <ul id="availableList" class="list-unstyled">
                         @for(word <- Words.words) {
-                            <li class="functionSource"
-                            ondblclick="dblClick(this)"
-                            data-function="@word.id.toString">
+                            <li
+                            class="functionSource"
+                            data-rcnumber="@word._1"
+                            ondblclick=dblClick(this)>
                             @word.string
                             </li>
                         }

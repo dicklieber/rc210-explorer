@@ -20,6 +20,7 @@ package net.wa9nnn.rc210.data.field
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Header, Row, Table}
 import controllers.ExtractField
+import net.wa9nnn.rc210.data.EditHandler
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.LogicAlarmNode.{form, keyKind}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
@@ -85,15 +86,7 @@ object MessageNode extends ComplexExtractor[MessageNode] with LazyLogging:
     new MessageNode(key, wordIds)
   }
 
-  def unapply(u: MessageNode): Option[(Key, Seq[Int])] = Some((u.key, u.words))
-
-  val form: Form[MessageNode] = Form(
-  mapping(
-    "key" -> of[Key],
-    "words" -> seq(number(1, Words.length))
-  )(MessageNode.apply)(MessageNode.unapply)
-)
-
+  def form: Form[MessageNode] = throw new IllegalStateException("Not used with MessageNode!")
 
   override val keyKind: KeyKind = KeyKind.Message
 
@@ -126,8 +119,6 @@ object MessageNode extends ComplexExtractor[MessageNode] with LazyLogging:
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[MessageNode]
 
-
-
   override def index(values: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     val table = Table(Header(s"Messages  (${values.length})",
       "",
@@ -138,13 +129,17 @@ object MessageNode extends ComplexExtractor[MessageNode] with LazyLogging:
     fieldIndex(keyKind, table)
 
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    messageEditor(fieldEntry.value, fieldEntry.fieldKey)
+    messageEditor(fieldEntry.value)
 
-  override def bindFromRequest(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
-    val messageNode = form.bindFromRequest(data).get
-    Seq(
-      UpdateCandidate(messageNode.fieldKey, messageNode)
-    )
+  override def bindFromRequest(using data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
+   (for {
+     fieldKey <- EditHandler.fieldKey
+     ids <- EditHandler.str("ids")
+   } yield {
+     val strings: Array[String] = ids.split(',')
+     val messageNode = MessageNode(fieldKey.key, strings.map(_.toInt))
+     UpdateCandidate(fieldKey, messageNode)
+   }).toSeq
 
 
 

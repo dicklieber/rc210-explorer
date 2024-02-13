@@ -10,6 +10,7 @@ import play.twirl.api.Html
 
 /**
  * This defined the behavior for a [[KeyKind]].
+ *
  * @tparam T
  */
 trait EditHandler[T <: FieldValue]:
@@ -45,7 +46,8 @@ trait EditHandler[T <: FieldValue]:
     Seq(
       UpdateCandidate(in.fieldKey, in)
     )
-  def bindOne(in:String, fieldKey: FieldKey): Seq[UpdateCandidate] =
+
+  def bindOne(in: String, fieldKey: FieldKey): Seq[UpdateCandidate] =
     Seq(
       UpdateCandidate(fieldKey, in)
     )
@@ -53,4 +55,19 @@ trait EditHandler[T <: FieldValue]:
   //  def saveOkResult(): Result
   def saveOp(): Result =
     Results.Redirect(routes.EditController.index(keyKind))
+
+/**
+ * Helpers to pick apart form data.
+ */
+object EditHandler:
+  def str(name: String)(implicit data: Map[String, Seq[String]]): Option[String] =
+    for {
+      s: Seq[String] <- data.get(name)
+      h <- s.headOption
+    } yield {
+      h
+    }
+
+  def fieldKey(using data: Map[String, Seq[String]]): Option[FieldKey] =
+    str("fieldKey")( data).map(FieldKey(_))
 
