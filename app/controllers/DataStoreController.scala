@@ -19,6 +19,7 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.{DataStore, DataTransferJson}
+import net.wa9nnn.rc210.ui.nav.TabKind
 import play.api.libs.Files
 import play.api.libs.json.Json
 import play.api.mvc.*
@@ -61,7 +62,7 @@ class DataStoreController @Inject()(dataStore: DataStore)
         dataStore(dataTransferJson)
         
       }
-    Redirect(routes.MacroController.index)
+    Redirect(routes.NavigationController.selectTabKind(TabKind.Fields))
   }
 
 }

@@ -1,6 +1,6 @@
 package net.wa9nnn.rc210.data.macros
 
-import com.wa9nnn.wa9nnnutil.tableui.{Header, KvTable, Row, Table, TableSection}
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, KvTable, Row, Table, TableInACell, TableSection}
 import net.wa9nnn.rc210.data.Dtmf.Dtmf
 import net.wa9nnn.rc210.data.{EditHandler, Node}
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
@@ -8,7 +8,7 @@ import net.wa9nnn.rc210.data.field.MessageNode.{form, keyKind}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.Functions
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.EditButtonCell
+import net.wa9nnn.rc210.ui.EditFlowButtonCell
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Forms.*
 import play.api.data.{Form, FormError}
@@ -16,10 +16,11 @@ import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.*
 import play.twirl.api.Html
-import views.html.{fieldIndex, macroEditor, messageEditor}
+import views.html.{fieldIndex, flowChartButton, macroEditor, messageEditor}
 
 import java.util.concurrent.atomic.AtomicInteger
 import scala.annotation.tailrec
+import scala.xml.Elem
 
 /**
  * This RC-210 Macro
@@ -28,10 +29,9 @@ import scala.annotation.tailrec
  * @param functions that this macro invokes.
  * @param dtmf      that can invoke this macro.
  */
-case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dtmf] = None) extends ComplexFieldValue() with Node {
+case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dtmf] = None) extends ComplexFieldValue() with Node:
 
-//  def enabled: Boolean = functions.nonEmpty
-
+  //  def enabled: Boolean = functions.nonEmpty
 
   //  override val commandStringValue: String = "*4002 10 * 162 * 187 * 122 * 347" // todo
 
@@ -63,34 +63,32 @@ case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dt
 
   override def table(fieldKey: FieldKey): Table = {
     throw new NotImplementedError() //todo
-//    val value: Seq[Row] = functions.map { functionKey =>
-//      val name = functionKey.rc210Value.toString
-//      Row(name, FunctionsProvider(functionKey).description): _*
-//    }
-//    KvTable(s"Macro ${key.keyWithName}",
-//      TableSection("Functions", value)
-//    )
+    //    val value: Seq[Row] = functions.map { functionKey =>
+    //      val name = functionKey.rc210Value.toString
+    //      Row(name, FunctionsProvider(functionKey).description): _*
+    //    }
+    //    KvTable(s"Macro ${key.keyWithName}",
+    //      TableSection("Functions", value)
+    //    )
   }
 
   override def toRow: Row = Row(
-    EditButtonCell(fieldKey),
-    functions.map(_.rc210Value).mkString(",")
-  )
-}
+    EditFlowButtonCell(fieldKey),
 
-object MacroNode extends ComplexExtractor[MacroNode] :
+    TableInACell(Table(Seq.empty,
+      functions.map { fKey =>
+        Row.ofAny(
+          s"${Functions.description(fKey)} (${fKey.rc210Value})"
+        )
+      }).withCssClass("functionsTable")
+    ))
+
+object MacroNode extends ComplexExtractor[MacroNode]:
   override val keyKind: KeyKind = KeyKind.Macro
 
   def unapply(u: MacroNode): Option[(Key, Seq[Key], Option[Dtmf])] = Some((u.key, u.functions, u.dtmf))
 
   implicit val fmtMacro: Format[MacroNode] = Json.format[MacroNode]
-
-  val macroForm: Form[MacroNode] = Form[MacroNode](
-    mapping(
-      "key" -> of[Key],
-      "functions" -> seq(of[Key]),
-      "dtmf" -> optional(text)
-    )(MacroNode.apply)(MacroNode.unapply))
 
   override def positions: Seq[FieldOffset] = Seq(
     FieldOffset(1985, this),
@@ -173,14 +171,16 @@ object MacroNode extends ComplexExtractor[MacroNode] :
   override def parse(jsValue: JsValue): FieldValue = {
     jsValue.as[MacroNode]
   }
-  
+
   override def form: Form[MacroNode] = throw new NotImplementedError("Forms not used with macros") //todo
 
   override def index(values: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    val table = Table(Header(s"Messages  (${values.length})",
+    val topHeader = s"Macros  (${values.length})"
+    val header = Header(topHeader,
       "",
-      "todo"
-    ),
+      "Functions"
+    )
+    val table = Table(header,
       values.map(_.value.toRow)
     )
     fieldIndex(keyKind, table)
@@ -195,7 +195,7 @@ object MacroNode extends ComplexExtractor[MacroNode] :
       ids <- EditHandler.str("ids")
     } yield {
       val strings: Array[String] = ids.split(',').filter(_.nonEmpty)
-      val messageNode = MacroNode(fieldKey.key, strings.map(s =>Key(KeyKind.Function,s.toInt)))
+      val messageNode = MacroNode(fieldKey.key, strings.map(s => Key(KeyKind.Function, s.toInt)))
       UpdateCandidate(fieldKey, messageNode)
     }).toSeq
 

@@ -3,8 +3,6 @@
 @import net.wa9nnn.rc210.ui.Tab
 @import net.wa9nnn.rc210.KeyKind
 @(keyKind: KeyKind, tables: Table*)
-
-<h1>@keyKind.entryName</h1>
     @for(table <- tables) {
         @renderTable(table)
     }

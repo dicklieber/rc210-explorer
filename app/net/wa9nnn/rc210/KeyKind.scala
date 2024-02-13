@@ -48,8 +48,7 @@ object KeyKind extends PlayEnum[KeyKind]:
 
   case object Function extends KeyKind(1005)
 
-  case object Macro extends KeyKind(105, MacroNode):
-    override def indexUrl: String = routes.MacroController.index.url
+  case object Macro extends KeyKind(105, MacroNode)
 
   case object Message extends KeyKind(70, MessageNode) // 40 (in Main) + 30 (in RTC)
 

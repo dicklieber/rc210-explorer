@@ -1,4 +1,3 @@
-GET         /macros                                   controllers.MacroController.index
 GET         /index/:keyKind                           controllers.EditController.index(keyKind:KeyKind)
 GET         /edit/:fieldKey                           controllers.EditController.edit(fieldKey:FieldKey)
 POST        /save                                     controllers.EditController.save()
