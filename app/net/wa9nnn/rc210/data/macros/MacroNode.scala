@@ -192,7 +192,7 @@ object MacroNode extends ComplexExtractor[MacroNode]:
 
     (for {
       fieldKey <- EditHandler.fieldKey
-      ids <- EditHandler.str("ids")
+      ids <- EditHandler.str("1,2,3")
     } yield {
       val strings: Array[String] = ids.split(',').filter(_.nonEmpty)
       val messageNode = MacroNode(fieldKey.key, strings.map(s => Key(KeyKind.Function, s.toInt)))

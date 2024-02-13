@@ -21,8 +21,10 @@ class DataStoreIsolatedTests extends WithTestConfiguration {
       "Timer as trigger" in {
         val timerKey = Key.timerKeys.head
         val macroKey = Key.macroKeys(80)
-
-        dataStore.update(CandidateAndNames(UpdateCandidate(TimerNode(timerKey, 123, macroKey))))
+  
+        val timerNode = TimerNode(timerKey, 123, macroKey)
+        val fieldKey = timerNode.fieldKey
+        dataStore.update(CandidateAndNames(UpdateCandidate(fieldKey, timerNode)))
 
         val fieldsTriggerByMacro: Seq[FieldEntry] = dataStore.triggerNodes(macroKey)
         fieldsTriggerByMacro .foreach{ fieldEntry =>

@@ -17,24 +17,23 @@
 
 package net.wa9nnn.rc210.data.functions
 
-import net.wa9nnn.rc210.{Key, KeyKind, RcSpec}
+import net.wa9nnn.rc210.{Functions, Key, KeyKind, RcSpec}
 
-class FunctionsProviderTest extends RcSpec {
-  val fp = new FunctionsProvider()
-  "FunctionsProviderTest" should {
+class FunctionsTest extends RcSpec {
+  "FunctionsTest" should {
 
     "size" in {
-      fp.size mustBe(872)
+      Functions.size mustBe(872)
     }
 
 
     "happy path" in {
-      val maybeNode = fp.apply(Key(KeyKind.Function, 3))
+      val maybeNode = Functions.maybeFunctionNode(Key(KeyKind.Function, 3))
       maybeNode
     }
     "wrong key type" in {
       assertThrows[IllegalArgumentException] { // Result type: Assertion
-        fp.apply(Key(KeyKind.Meter, 3))
+        Functions.maybeFunctionNode(Key(KeyKind.Meter, 3))
       }
     }
   }
