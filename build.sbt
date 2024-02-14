@@ -1,4 +1,4 @@
-import play.sbt.routes.RoutesKeys.routesImport
+import play.sbt.routes.RoutesKeys.{routesGenerator, routesImport}
 
 name := """rc210-explorer"""
 organization := "net.wa9nnn"
@@ -24,8 +24,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
       BuildInfoOption.ToJson
     ),
     buildInfoPackage := "net.wa9nnn.rc210explorer",
-    //    docusaurDir := (ThisBuild / baseDirectory).value / "website",
-    //    docusaurBuildDir := docusaurDir.value / "build",
+    versionScheme := Some("early-semver"),
 
     routesGenerator := InjectedRoutesGenerator,
 
