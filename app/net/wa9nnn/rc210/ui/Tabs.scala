@@ -61,7 +61,10 @@ object Tabs:
 
 
   val tabs: Seq[Tab] =
-    KeyKind.values.sortBy(_.entryName) :++ Seq(
+    KeyKind
+      .values
+      .filterNot(_ == KeyKind.Function )
+      .sortBy(_.entryName) :++ Seq(
       rc210Tab,
       memory,
       changes,

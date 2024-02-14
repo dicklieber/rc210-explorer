@@ -1,11 +1,10 @@
 import play.sbt.routes.RoutesKeys.{routesGenerator, routesImport}
-import sbt.Credentials
 
 name := """rc210-explorer"""
 organization := "net.wa9nnn"
 maintainer := "dick@u50.com"
 
-enablePlugins(JavaServerAppPackaging)
+enablePlugins(JavaServerAppPackaging, DockerPlugin)
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
   .settings(
@@ -43,15 +42,13 @@ Compile / unmanagedResourceDirectories += baseDirectory.value / "resources"
 Test / logBuffered := false
 Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-h", "target/scalatest.html")
 
-resolvers +=
-  ("reposilite-repository-releases" at "http://repo.wa9nnn.tech:8080/releases").withAllowInsecureProtocol(true)
 
 val logbackVersion = "1.4.11"
 libraryDependencies ++= Seq(
   guice,
   "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.0" % Test,
   "com.vladsch.flexmark" % "flexmark-all" % "0.64.8" % Test,
-  "com.wa9nnn" %% "wa9nnnutil" % "3.0.0.5",
+  "com.wa9nnn" %% "wa9nnnutil" % "3.0.0.7",
 
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
   "ch.qos.logback" % "logback-classic" % logbackVersion,
@@ -65,13 +62,17 @@ libraryDependencies ++= Seq(
   "com.beachape" %% "enumeratum" % "1.7.3",
   "com.beachape" %% "enumeratum-play" % "1.8.0",
 )
-publishTo := {
-  if (isSnapshot.value)
-    Some(("Reposilite Repository" at "http://repo.wa9nnn.tech:8080/snapshots").withAllowInsecureProtocol(true))
-  else
-    Some(("Reposilite Repository" at "http://repo.wa9nnn.tech:8080/releases").withAllowInsecureProtocol(true))
-}
+//publishTo := {
+//  if (isSnapshot.value)
+//    Some(("Reposilite Repository" at "http://repo.wa9nnn.tech:8080/snapshots").withAllowInsecureProtocol(true))
+//  else
+//    Some(("Reposilite Repository" at "http://repo.wa9nnn.tech:8080/releases").withAllowInsecureProtocol(true))
+//}
 
+//resolvers += "Nexus" at "http://localhost:8081/nexus/content/groups/public"
+//resolvers += "Nexus" at "https://s01.oss.sonatype.org/"
+resolvers +=
+  "Sonatype OSS Snapshots" at "https://s01.oss.sonatype.org/content/repositories/snapshots"
 
 routesImport += "net.wa9nnn.rc210.Binders._"
 routesImport += "net.wa9nnn.rc210.FieldKey"
