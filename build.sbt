@@ -1,4 +1,5 @@
 import play.sbt.routes.RoutesKeys.{routesGenerator, routesImport}
+import sbt.Credentials
 
 name := """rc210-explorer"""
 organization := "net.wa9nnn"
