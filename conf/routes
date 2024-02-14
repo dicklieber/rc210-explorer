@@ -23,8 +23,6 @@ POST        /download/start                           controllers.DownloadContro
 GET         /download/ws                              controllers.DownloadController.ws()
 GET         /download/results                         controllers.DownloadController.results
 GET         /download                                 controllers.DownloadController.index
-POST        /remote/save                              controllers.RemoteBaseController.save()
-GET         /remote                                   controllers.RemoteBaseController.index
 GET         /names                                    controllers.NamesController.index
 GET         /editUser/:id                             controllers.UsersController.editUser(id:String)
 GET         /users                                    controllers.UsersController.users()

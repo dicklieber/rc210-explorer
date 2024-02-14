@@ -1,13 +1,16 @@
-@import net.wa9nnn.rc210.ui.MyHelpers.*
-@import views.html.helper.{FieldConstructor, form}
-@import views.html.helper._
-@import views.html.input.selectOptions
-@import net.wa9nnn.rc210.ui.Tabs
-@import net.wa9nnn.rc210.data.remotebase._
 @import net.wa9nnn.rc210.KeyKind
+@import net.wa9nnn.rc210.data.remotebase.*
+@import net.wa9nnn.rc210.ui.MyHelpers.*
+@import net.wa9nnn.rc210.ui.Tabs
+@import views.html.helper.{FieldConstructor, form, *}
+@import views.html.input.selectOptions
+@import net.wa9nnn.rc210.FieldKey
+@import net.wa9nnn.rc210.Key
 @(f: Form[RemoteBaseNode])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
-@form(routes.RemoteBaseController.save()) {
+@form(routes.EditController.save()) {
+    <input type="hidden" name="fieldKey" value="@RemoteBaseNode.fieldKey">
+
     <table>
         <tr>
             <td>Radio:</td>

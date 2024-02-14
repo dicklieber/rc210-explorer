@@ -26,6 +26,7 @@ import net.wa9nnn.rc210.data.courtesy.CourtesyToneNode
 import net.wa9nnn.rc210.data.field.{FieldValue, LogicAlarmNode, MessageNode}
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.meter.{MeterAlarmNode, MeterNode}
+import net.wa9nnn.rc210.data.remotebase.RemoteBaseNode
 import net.wa9nnn.rc210.data.schedules.ScheduleNode
 import net.wa9nnn.rc210.data.timers.TimerNode
 import net.wa9nnn.rc210.ui.{Tab, Tabs}
@@ -65,6 +66,5 @@ object KeyKind extends PlayEnum[KeyKind]:
   case object Common extends KeyKind(1):
     override def indexUrl: String = routes.CommonController.index.url
 
-  case object RemoteBase extends KeyKind(1):
-    override def indexUrl: String = routes.RemoteBaseController.index.url
+  case object RemoteBase extends KeyKind(1, RemoteBaseNode)
 

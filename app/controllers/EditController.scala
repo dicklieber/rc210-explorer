@@ -72,7 +72,6 @@ class EditController @Inject()(navMain: NavMain)
 
       try
         val fieldKey: FieldKey = ExtractField("fieldKey", (value) => FieldKey(value))
-        val name: String = ExtractField("name", (value) => value)
         val handler: EditHandler[?] = fieldKey.key.keyKind.handler
         val updateCandidates: Seq[UpdateCandidate] = handler.bindFromRequest(data)
         val namedKeys: Option[NamedKey] = data.get("name").map(name => NamedKey(fieldKey.key, name.head))
