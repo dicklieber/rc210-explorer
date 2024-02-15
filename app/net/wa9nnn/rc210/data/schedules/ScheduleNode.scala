@@ -197,11 +197,10 @@ object ScheduleNode extends LazyLogging with ComplexExtractor[ScheduleNode]:
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[ScheduleNode]
 
-  override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html = {
+  override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     val rows: Seq[Row] = fieldEntries.map(_.value.toRow)
     val table = Table(header(fieldEntries.length), rows)
     fieldIndex(keyKind, table)
-  }
 
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html = {
     val value = form.fill(fieldEntry.value)

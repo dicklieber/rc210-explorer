@@ -6,10 +6,13 @@
 
 @import net.wa9nnn.rc210.ui.FormField
 @import net.wa9nnn.rc210.KeyKind
-@(rows: Seq[Row])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+@import net.wa9nnn.rc210.PortRow
+@import net.wa9nnn.rc210.FieldKey
+@( rows: Seq[PortRow])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
-    @form(action = routes.PortsController.save()) {
+    @form(action = routes.EditController.save()) {
         @submitButton()
+        <input type="hidden" name="fieldKey" value="@FieldKey(Key.portKeys.head)">
         <table class="table table-bordered table-sm  w-auto rc210-table headeredTable   ">
             <thead class="table-primary">
                 <tr>

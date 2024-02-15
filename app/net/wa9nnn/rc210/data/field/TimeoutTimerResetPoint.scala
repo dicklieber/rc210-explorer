@@ -46,7 +46,7 @@ case class TimeoutTimerResetPoint(value: TotReset = TotReset.values.head) extend
 
   override def tableSection(fieldKey: FieldKey): TableSection =
     TableSectionButtons(fieldKey,
-      routes.PortsController.index,
+      routes.EditController.index(fieldKey.key.keyKind),
       "TotReset" -> value)
 
   override def toRow: Row = Row(

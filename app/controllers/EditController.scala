@@ -33,6 +33,7 @@ import play.twirl.api.Html
 import views.html.{NavMain, fieldIndex}
 
 import javax.inject.{Inject, Singleton}
+import scala.collection.immutable
 import scala.concurrent.ExecutionContext
 
 @Singleton()
@@ -72,10 +73,18 @@ class EditController @Inject()(navMain: NavMain)
 
       try
         val fieldKey: FieldKey = ExtractField("fieldKey", (value) => FieldKey(value))
-        val handler: EditHandler[?] = fieldKey.key.keyKind.handler
+        val handler: EditHandler = fieldKey.key.keyKind.handler
         val updateCandidates: Seq[UpdateCandidate] = handler.bindFromRequest(data)
-        val namedKeys: Option[NamedKey] = data.get("name").map(name => NamedKey(fieldKey.key, name.head))
-        val candidateAndNames: CandidateAndNames = CandidateAndNames(updateCandidates, namedKeys.toSeq)
+        val namedKeys: Seq[NamedKey] = (for{
+          (sfKey: String, values: Seq[String]) <- data
+          fieldKey = FieldKey(sfKey)
+          if fieldKey.fieldName == "name"
+          name <- values.headOption
+        }yield{
+          NamedKey(fieldKey.key, name)
+        }).toSeq
+
+        val candidateAndNames: CandidateAndNames = CandidateAndNames(updateCandidates, namedKeys)
         dataStore.update(candidateAndNames)
         handler.saveOp()
       catch

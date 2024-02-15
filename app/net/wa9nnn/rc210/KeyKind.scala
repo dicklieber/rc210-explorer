@@ -31,7 +31,7 @@ import net.wa9nnn.rc210.data.schedules.ScheduleNode
 import net.wa9nnn.rc210.data.timers.TimerNode
 import net.wa9nnn.rc210.ui.{Tab, Tabs}
 
-sealed trait KeyKind(val maxN: Int, val handler: EditHandler[?] = null) extends EnumEntry
+sealed trait KeyKind(val maxN: Int, val handler: EditHandler = null) extends EnumEntry
   with CapitalWords with Tab:
   override def indexUrl: String = routes.EditController.index(this).url
 
@@ -55,8 +55,7 @@ object KeyKind extends PlayEnum[KeyKind]:
 
   case object Clock extends KeyKind(1, ClockNode)
 
-  case object Port extends KeyKind(3):
-    override def indexUrl: String = routes.PortsController.index.url
+  case object Port extends KeyKind(3, PortsNode)
 
   case object Schedule extends KeyKind(40, ScheduleNode)
 

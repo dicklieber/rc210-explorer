@@ -13,7 +13,7 @@ import play.twirl.api.Html
  *
  * @tparam T
  */
-trait EditHandler[T <: FieldValue]:
+trait EditHandler:
   /**
    * Allows overriding where  [[controllers.EditController]] will go for index request.
    *

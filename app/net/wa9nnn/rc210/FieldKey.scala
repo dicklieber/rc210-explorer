@@ -42,7 +42,7 @@ case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey] {
 
   override def toString: String = s"${key.toString}:$fieldName"
 
-  val editHandler: EditHandler[?] =
+  val editHandler: EditHandler=
     key.keyKind.handler
 }
 

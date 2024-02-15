@@ -38,7 +38,7 @@ class PortsController @Inject()(implicit dataStore: DataStore, cc: MessagesContr
   private var simpleValuesHandler: Option[SimpleValuesHandler] = None
 
   def index: Action[AnyContent] = Action {
-    implicit request => {
+    implicit request => /*{
       val fieldEntries = dataStore.apply(KeyKind.Port)
       if (simpleValuesHandler.isEmpty)
         simpleValuesHandler = Some(new SimpleValuesHandler(fieldEntries))
@@ -51,11 +51,13 @@ class PortsController @Inject()(implicit dataStore: DataStore, cc: MessagesContr
           Row(name, portEntries.sortBy(_.fieldKey.key.rc210Value))
         }
       Ok(views.html.ports(  rows))
-    }
+    }*/
+      throw new NotImplementedError() //todo
   }
 
-  def save(): Action[AnyContent] = Action {
-    implicit request: MessagesRequest[AnyContent] =>
+//  def save(): Action[AnyContent] = Action {
+//    throw new NotImplementedError() //todo
+/*    implicit request: MessagesRequest[AnyContent] =>
       val collect: CandidateAndNames = simpleValuesHandler.get.collect
       val candidateAndNames = ProcessResult(collect)
 
@@ -63,7 +65,9 @@ class PortsController @Inject()(implicit dataStore: DataStore, cc: MessagesContr
 
       dataStore.update(candidateAndNames)
       Redirect(routes.PortsController.index)
-  }
+*/  
+//  throw new NotImplementedError() //todo
+//  }
 }
 
 /**
@@ -72,11 +76,11 @@ class PortsController @Inject()(implicit dataStore: DataStore, cc: MessagesContr
  * @param name        row header 
  * @param portEntries remaining td elements. 
  */
-case class Row(name: String, portEntries: Seq[FieldEntry]) {
-  def cells: Seq[String] = {
-    portEntries.map { fe =>
-      val v: FieldValue = fe.value
-      v.toHtmlField(fe.fieldKey)
-    }
-  }
-}
+//case class Row(name: String, portEntries: Seq[FieldEntry]) {
+//  def cells: Seq[String] = {
+//    portEntries.map { fe =>
+//      val v: FieldValue = fe.value
+//      v.toHtmlField(fe.fieldKey)
+//    }
+//  }
+//}

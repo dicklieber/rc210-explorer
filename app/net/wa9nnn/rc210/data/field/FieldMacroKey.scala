@@ -18,8 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.{KvTable, Row, Table, TableSection}
-import controllers.routes
-import controllers.routes.PortsController
+import controllers.{EditController, routes}
 import net.wa9nnn.rc210.ui.{FormField, TableSectionButtons}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.libs.json.{Format, JsResult, JsSuccess, JsValue, Json}
@@ -32,7 +31,7 @@ case class FieldMacroKey(key: Key) extends SimpleFieldValue(key):
   
 
   override def tableSection(fieldKey: FieldKey): TableSection =
-    TableSectionButtons(fieldKey, PortsController.index, "Macro" -> key.keyWithName)
+    TableSectionButtons(fieldKey, routes.EditController.index(fieldKey.key.keyKind), "Macro" -> key.keyWithName)
 
   def displayHtml: String = key.toString
 

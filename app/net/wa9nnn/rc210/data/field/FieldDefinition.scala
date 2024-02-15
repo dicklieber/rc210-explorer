@@ -84,7 +84,7 @@ case class SimpleField(offset: Int,
   override def positions: Seq[FieldOffset] = Seq(FieldOffset(offset, this))
 }
 
-trait ComplexExtractor[T <: ComplexFieldValue] extends FieldExtractor with FieldDefinition with EditHandler[T] {
+trait ComplexExtractor[T <: ComplexFieldValue] extends FieldExtractor with FieldDefinition with EditHandler {
   def fieldKey(key: Key): FieldKey = FieldKey(key)
 
   override def fieldName: String = keyKind.entryName
