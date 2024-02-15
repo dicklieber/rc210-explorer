@@ -29,40 +29,41 @@
         <appender-ref ref="STDOUT"/>
     </appender>
 
-    <logger name="play" level="INFO"/>
-    <logger name="application" level="DEBUG"/>
 
-    <logger name="net.wa9nnn.rc210.data.datastore.MemoryFileLoader" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.command.CommandParser" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.command.CommandSpecBase" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.data.Rc210Data" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.data.field.DtmfExtractor" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.data.named.NamedManager" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.data.schedules.ScheduleNode" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.serial.RC210IO" level="INFO"/>
-    <logger name="controllers.ScheduleController" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.data.courtesy.Segment" level="INFO"/>
-    <logger name="controllers.CourtesyToneController" level="INFO"/>
-    <logger name="controllers.IOController" level="INFO"/>
-    <logger name="net.wa9nnmacroNn.rc210.data.datastore.DataStore" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.data.field.FieldDtmf" level="INFO"/>
-    <logger name="controllers.CommandsController" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.data.macros.MacroNode" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.security.authentication.SessionStore" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.security.authorzation.AuthFilter" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.serial.DataCollector" level="TRACE"/>
-    <logger name="net.wa9nnn.rc210.serial.Rc210.RcOperationImpl" level="INFO"/>
-    <logger name="controllers.CommonController" level="INFO"/>
-    <logger name="controllers.LogicAlarmEditorController" level="INFO"/>
-    <logger name="controllers.MacroEditorController" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.ui.SimpleValuesHandler" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.serial.comm.RcStreamBased" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.serial.comm.RcSerialPort" level="TRACE"/>
-    <logger name="controllers.MacroController" level="INFO"/>
 
     <logger name="actors" level="INFO" />
     <logger name="akka" level="INFO" />
+    <logger name="application" level="INFO"/>
+    <logger name="controllers.CommandsController" level="INFO"/>
+    <logger name="controllers.CommonController" level="INFO"/>
+    <logger name="controllers.CourtesyToneController" level="INFO"/>
+    <logger name="controllers.EditController" level="INFO"/>
+    <logger name="controllers.IOController" level="INFO"/>
+    <logger name="controllers.LogicAlarmEditorController" level="INFO"/>
+    <logger name="controllers.MacroController" level="INFO"/>
+    <logger name="controllers.MacroEditorController" level="INFO"/>
+    <logger name="controllers.ScheduleController" level="INFO"/>
+    <logger name="net.wa9nnmacroNn.rc210.data.datastore.DataStore" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.command.CommandParser" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.command.CommandSpecBase" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.data.Rc210Data" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.data.courtesy.Segment" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.data.datastore.MemoryFileLoader" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.data.field.DtmfExtractor" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.data.field.FieldDtmf" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.data.macros.MacroNode" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.data.named.NamedManager" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.data.schedules.ScheduleNode" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.security.authentication.SessionStore" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.security.authorzation.AuthFilter" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.serial.DataCollector" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.serial.RC210IO" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.serial.Rc210.RcOperationImpl" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.serial.comm.RcSerialPort" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.serial.comm.RcStreamBased" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.ui.SimpleValuesHandler" level="INFO"/>
     <logger name="play" level="INFO" />
+    <logger name="play" level="INFO"/>
 
     <root level="INFO">
         <appender-ref ref="ASYNCFILE"/>

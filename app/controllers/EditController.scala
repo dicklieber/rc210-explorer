@@ -18,47 +18,60 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.wa9nnnutil.tableui.Table
 import net.wa9nnn.rc210
 import net.wa9nnn.rc210.data.EditHandler
 import net.wa9nnn.rc210.data.datastore.*
-import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
+import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 import net.wa9nnn.rc210.ui.NavMainController
 import net.wa9nnn.rc210.{FieldKey, KeyKind, NamedKey}
-import play.api.i18n.MessagesProvider
 import play.api.mvc.*
-import play.twirl.api.Html
-import views.html.{NavMain, fieldIndex}
+import views.html.NavMain
 
 import javax.inject.{Inject, Singleton}
 import scala.collection.immutable
-import scala.concurrent.ExecutionContext
 
+/**
+ * Handles editing for all things stored in the [[DataStore]].
+ * @param navMain twirl template that provides navigation, menus. A top level frame for any page (except login)
+ * @param dataStore where rc-210 info lives.
+ * @param components lots of stuff needed for play.
+ */
 @Singleton()
 class EditController @Inject()(navMain: NavMain)
                               (implicit dataStore: DataStore,
-                               ec: ExecutionContext, components: ControllerComponents)
+                                components: ControllerComponents)
   extends NavMainController(components) with LazyLogging {
-
+  /**
+   * A landing page for all data associated with a [[KeyKind]].
+   * @param keyKind present all vales for this [[KeyKind]].
+   * @return the Http response to send back to the browser.
+   */
   def index(keyKind: KeyKind): Action[AnyContent] = Action {
     implicit request => {
-      val value: Seq[FieldEntry] = dataStore(keyKind)
-      val content: Html = keyKind.handler.index(value)
-      Ok(navMain(keyKind, content))
+      val fieldEntries: Seq[FieldEntry] = dataStore(keyKind)
+      Ok(navMain(keyKind, keyKind.handler.index(fieldEntries)))
     }
   }
 
+  /**
+   * Edit date for one [[FieldKey]].
+   * @param fieldKey edit this one.
+   * @return the Http response to send back to the browser.
+   */
   def edit(fieldKey: FieldKey): Action[AnyContent] = Action {
     implicit request =>
       val entry: FieldEntry = dataStore.apply(fieldKey)
-      val editHandler = fieldKey.editHandler
-      val html: Html = editHandler.edit(entry)
-      Ok(navMain(fieldKey.key.keyKind, html))
+      Ok(navMain(fieldKey.key.keyKind, fieldKey.editHandler.edit(entry)))
   }
 
+  /**
+   * Save the submitted form data to the [[DataStore]].
+   * @return the Http response to send back to the browser.
+   */
   def save(): Action[AnyContent] = Action{
+
     implicit request: Request[AnyContent] =>
 
       given data: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
@@ -67,22 +80,15 @@ class EditController @Inject()(navMain: NavMain)
 
       logger.whenDebugEnabled {
         data.foreach { (name, values) =>
-          println(s"$name: ${values.mkString(", ")}")
+          logger.debug(s"$name: ${values.mkString(", ")}")
         }
       }
 
       try
-        val fieldKey: FieldKey = ExtractField("fieldKey", (value) => FieldKey(value))
+        val fieldKey: FieldKey = ExtractField("fieldKey", value => FieldKey(value))
         val handler: EditHandler = fieldKey.key.keyKind.handler
-        val updateCandidates: Seq[UpdateCandidate] = handler.bindFromRequest(data)
-        val namedKeys: Seq[NamedKey] = (for{
-          (sfKey: String, values: Seq[String]) <- data
-          fieldKey = FieldKey(sfKey)
-          if fieldKey.fieldName == "name"
-          name <- values.headOption
-        }yield{
-          NamedKey(fieldKey.key, name)
-        }).toSeq
+        val updateCandidates: Seq[UpdateCandidate] = handler.bind(data)
+        val namedKeys: Seq[NamedKey] = extractNamedKeys(data)
 
         val candidateAndNames: CandidateAndNames = CandidateAndNames(updateCandidates, namedKeys)
         dataStore.update(candidateAndNames)
@@ -92,10 +98,28 @@ class EditController @Inject()(navMain: NavMain)
           logger.error(s"save: ${e.getMessage}", e)
           InternalServerError(s"request.toString $e.getMessage")
   }
+
+  /**
+   * Get all the [[NamedKey]] data from the submitted form.
+   * @param data submitted form data fields.
+   * @return zero or more named keys. 
+   */
+  private def extractNamedKeys(data: Map[String, Seq[String]]) = 
+    val namedKeys: Seq[NamedKey] = (for {
+      (sfKey: String, values: Seq[String]) <- data
+      if sfKey != "fieldKey"
+      fieldKey = FieldKey(sfKey)
+      if fieldKey.fieldName == "name"
+      name <- values.headOption
+    } yield {
+      NamedKey(fieldKey.key, name)
+    }).toSeq
+    namedKeys
+
 }
 
 object ExtractField:
-  def apply[T](name: String, f: (String) => T)(using encoded: Map[String, Seq[String]]): T =
+  def apply[T](name: String, f: String => T)(using encoded: Map[String, Seq[String]]): T =
     (for {
       e <- encoded.get(name)
       v <- e.headOption
