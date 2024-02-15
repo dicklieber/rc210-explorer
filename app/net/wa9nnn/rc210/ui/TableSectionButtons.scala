@@ -45,7 +45,7 @@ class TableSectionButtons(sectionName: String, buttons: Html*)(newRows: (Row | (
 object TableSectionButtons:
 
   def apply(fieldKey: FieldKey, edit: Call, newRows: Row | (String, Any)*): TableSection =
-//    val flowChart = flowChartButton(fieldKey.key)
+//    val flowChart = flowChartButton(fieldKeyStuff.key)
 
     new TableSectionButtons(fieldKey.toString,
       editButton(edit))(newRows: _*)

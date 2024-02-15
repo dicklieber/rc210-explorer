@@ -44,8 +44,8 @@ object Binders {
       }
     }
 
-    override def unbind(key: String, fieldKey: FieldKey): String =
-      fieldKey.toString
+    override def unbind(key: String, fieldKeyStuff: FieldKey): String =
+      fieldKeyStuff.toString
   }*/
 
 

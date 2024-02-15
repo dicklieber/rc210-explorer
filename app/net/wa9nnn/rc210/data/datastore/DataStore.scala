@@ -61,7 +61,7 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
       case Some(fieldEntry: FieldEntry) =>
         fieldEntry.value.asInstanceOf[T]
       case None =>
-        throw new IllegalArgumentException(s"No editValue for fieldKey: $fieldKey")
+        throw new IllegalArgumentException(s"No editValue for fieldKeyStuff: $fieldKey")
 
   def apply(keyKind: KeyKind): Seq[FieldEntry] =
     all.filter(_.fieldKey.key.keyKind == keyKind)
@@ -80,10 +80,10 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
       case Some(fieldEntry) =>
         fieldEntry
       case None =>
-        throw new IllegalArgumentException(s"No value for fieldKey: $fieldKey")
+        throw new IllegalArgumentException(s"No value for fieldKeyStuff: $fieldKey")
 
 //  def apply(keyKind: KeyKind): Seq[FieldEntry] =
-//    all.filter(_.fieldKey.key.keyKind == keyKind).sorted
+//    all.filter(_.fieldKeyStuff.key.keyKind == keyKind).sorted
 
   def apply(key: Key): Seq[FieldEntry] =
     all.filter(_.fieldKey.key == key).sorted

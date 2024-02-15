@@ -145,16 +145,17 @@ object ClockNode extends ComplexExtractor[ClockNode] {
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     val r: Html = fieldEntries.headOption match
       case Some(fe) =>
-        views.html.clock(form.fill(fe.value))
+        views.html.clock(fe.fieldKey, form.fill(fe.value))
       case None =>
         throw new IllegalArgumentException("No ClockNode")
       r
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html = {
-    views.html.clock(form.fill(fieldEntry.value))
+    views.html.clock(fieldKey, form.fill(fieldEntry.value))
   }
 
   override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
-    val clockNode: ClockNode = form.bindFromRequest(data).get
+    val value: Form[ClockNode] = form.bindFromRequest(data)
+    val clockNode: ClockNode = value.get
     Seq(UpdateCandidate(clockNode.fieldKey, clockNode))
 }
 

@@ -20,7 +20,7 @@ abstract class SimpleFieldNode(val keyKind: KeyKind) extends EditHandler with La
 
     val valueSet: immutable.Iterable[UpdateCandidate] = (for {
       (sfKey: String, values: Seq[String]) <- data
-      if sfKey != "fieldKey" // this was only present for ComplexFielda
+      if sfKey != "fieldKeyStuff" // this was only present for ComplexFielda
       fieldKey = FieldKey(sfKey)
       if fieldKey.fieldName != "name"
       str <- values.headOption

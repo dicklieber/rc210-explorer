@@ -68,6 +68,7 @@ case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends Order
 }
 
 object Key:
+  val keyName: String = "key"
   private val kparser = """(\D+)(\d*)""".r
 
   def apply(maybeSKey: Option[String]): Option[Key] =

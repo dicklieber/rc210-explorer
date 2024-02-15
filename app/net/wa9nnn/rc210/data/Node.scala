@@ -24,7 +24,7 @@ import net.wa9nnn.rc210.ui.flow.D3Node
 trait Node:
   val key: Key
 
-  //  def table(fieldKey: FieldKey, includeMacroKey:Boolean = false): Table =
+  //  def table(fieldKeyStuff: FieldKey, includeMacroKey:Boolean = false): Table =
   def table(fieldKey: FieldKey): Table =
     Table.empty(s"todo: $key")
 

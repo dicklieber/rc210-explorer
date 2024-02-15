@@ -25,7 +25,7 @@ import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 import net.wa9nnn.rc210.ui.NavMainController
-import net.wa9nnn.rc210.{FieldKey, KeyKind, NamedKey}
+import net.wa9nnn.rc210.*
 import play.api.mvc.*
 import views.html.NavMain
 
@@ -85,7 +85,7 @@ class EditController @Inject()(navMain: NavMain)
       }
 
       try
-        val fieldKey: FieldKey = ExtractField("fieldKey", value => FieldKey(value))
+        val fieldKey: FieldKey = EditHandler.fieldKey.get
         val handler: EditHandler = fieldKey.key.keyKind.handler
         val updateCandidates: Seq[UpdateCandidate] = handler.bind(data)
         val namedKeys: Seq[NamedKey] = extractNamedKeys(data)
@@ -104,12 +104,11 @@ class EditController @Inject()(navMain: NavMain)
    * @param data submitted form data fields.
    * @return zero or more named keys. 
    */
-  private def extractNamedKeys(data: Map[String, Seq[String]]) = 
+  private def extractNamedKeys(data: Map[String, Seq[String]]) =
     val namedKeys: Seq[NamedKey] = (for {
-      (sfKey: String, values: Seq[String]) <- data
-      if sfKey != "fieldKey"
-      fieldKey = FieldKey(sfKey)
-      if fieldKey.fieldName == "name"
+      (inputName: String, values: Seq[String]) <- data
+      if inputName.startsWith(NamedKey.fieldName)
+      fieldKey = FieldKey(inputName)
       name <- values.headOption
     } yield {
       NamedKey(fieldKey.key, name)
@@ -126,5 +125,4 @@ object ExtractField:
     } yield {
       f(v)
     }).getOrElse(throw new IllegalArgumentException(s"No $name in body!"))
-
 

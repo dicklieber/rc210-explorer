@@ -8,7 +8,7 @@ class TimerNodeTest extends RcSpec {
   "TimerNode" when {
     val triggeredMacroKey = Key.macroKeys(3)
     val timerNode = TimerNode(Key.timerKeys.head, 42, triggeredMacroKey)
-    "fieldKey" should {
+    "fieldKeyStuff" should {
       val fieldKey = timerNode.fieldKey
       "string" in {
         fieldKey.toString mustBe ("Timer1:Timer")

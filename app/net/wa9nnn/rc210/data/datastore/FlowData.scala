@@ -86,13 +86,13 @@ class FlowData(val macroFieldEntry: FieldEntry, val triggers: Seq[FieldEntry], v
     val fNodes: Seq[D3Node] = macroNode.functions.map(functionKey => FunctionsProvider(functionKey).d3Node(functionKey.toString))
     val tNodes: Seq[D3Node] = triggers.map { fe =>
       val n: TriggerNode = fe.value
-      n.d3Node(fe.fieldKey.toString)
+      n.d3Node(fe.fieldKeyStuff.toString)
     }
     val nodes: Seq[D3Node] = (fNodes ++ tNodes).+:(macroNode.d3Node(macroFieldKey.toString))
 
     val linkBuilder = Seq.newBuilder[D3Link]
     triggers.foreach { tn =>
-      linkBuilder += D3Link(macroFieldKey.toString, tn.fieldKey.toString)
+      linkBuilder += D3Link(macroFieldKey.toString, tn.fieldKeyStuff.toString)
     }
 
     D3Data(

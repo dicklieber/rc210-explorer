@@ -70,18 +70,18 @@ class CommandsController @Inject()(dataStore: DataStore,
   //  /**
   //   * Send command for one [[FieldKey]] to the RC210.
   //   *
-  //   * @param fieldKey  to send
+  //   * @param fieldKeyStuff  to send
   //   * @param sendValue true to send the fieldValue's command. false to send and accept the candidate's.
   //   * @return
   //   */
-  //  def send(fieldKey: FieldKey, sendValue: Boolean = false): Action[AnyContent] = Action {
+  //  def send(fieldKeyStuff: FieldKey, sendValue: Boolean = false): Action[AnyContent] = Action {
   //    implicit request =>
-  ///*      val fieldEntry: FieldEntry = dataStore(fieldKey)
+  ///*      val fieldEntry: FieldEntry = dataStore(fieldKeyStuff)
   //      val commands: Seq[String] = fieldEntry
   //        .candidate
   //        .get
   //        .toCommands(fieldEntry)
-  //      val batchOperationsResult: BatchOperationsResult = rc210.sendBatch(fieldKey.toString, commands: _*)
+  //      val batchOperationsResult: BatchOperationsResult = rc210.sendBatch(fieldKeyStuff.toString, commands: _*)
   //      Ok(batchOpResult(batchOperationsResult))
   //*/
   //    NotImplemented("todo")

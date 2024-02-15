@@ -48,6 +48,10 @@ case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey] {
 
 object FieldKey {
   /**
+   * When used in a form.
+   */
+  val fieldKeyName: String = "fieldKey"
+  /**
    * For use field name is the [[KeyKind]] name.
    *
    * @param key whose [[KeyKind]] name is the field name.

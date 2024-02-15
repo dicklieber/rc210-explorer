@@ -9,7 +9,7 @@
 @(f: Form[RemoteBaseNode])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
 @form(routes.EditController.save()) {
-    <input type="hidden" name="fieldKey" value="@RemoteBaseNode.fieldKey">
+    <input type="hidden" name="fieldKeyStuff" value="@RemoteBaseNode.fieldKey">
 
     <table>
         <tr>

@@ -48,7 +48,7 @@ class FieldKeySpec extends RcSpec {
 /*
       val value1: JsValue = Json.parse(sJson)
       val backAgain = value1.as[FieldKey]
-      backAgain must beEqualTo (fieldKey)
+      backAgain must beEqualTo (fieldKeyStuff)
 */
     }
   }

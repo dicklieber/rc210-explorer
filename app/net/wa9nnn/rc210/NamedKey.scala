@@ -29,9 +29,11 @@ case class NamedKey(key: Key, name: String) extends Ordered[NamedKey] with RowSo
       Cell(key.toString), name
     )
   }
+  val fieldKey:FieldKey = FieldKey("keyName", key)
 }
 
 object NamedKey {
+  val fieldName: String = "keyName"
   implicit val fmtNamedKey: Format[NamedKey] = Json.format[NamedKey]
 }
 

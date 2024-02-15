@@ -59,5 +59,5 @@ object EditHandler:
     }
 
   def fieldKey(using data: Map[String, Seq[String]]): Option[FieldKey] =
-    str("fieldKey")(data).map(FieldKey(_))
+    str(FieldKey.fieldKeyName)(data).map(FieldKey(_))
 
