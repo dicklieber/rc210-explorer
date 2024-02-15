@@ -23,14 +23,18 @@ import enumeratum.EnumEntry.CapitalWords
 import net.wa9nnn.rc210.data.EditHandler
 import net.wa9nnn.rc210.data.clock.ClockNode
 import net.wa9nnn.rc210.data.courtesy.CourtesyToneNode
-import net.wa9nnn.rc210.data.field.{FieldValue, LogicAlarmNode, MessageNode}
+import net.wa9nnn.rc210.data.field.{LogicAlarmNode, MessageNode}
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.meter.{MeterAlarmNode, MeterNode}
 import net.wa9nnn.rc210.data.remotebase.RemoteBaseNode
 import net.wa9nnn.rc210.data.schedules.ScheduleNode
 import net.wa9nnn.rc210.data.timers.TimerNode
-import net.wa9nnn.rc210.ui.{Tab, Tabs}
+import net.wa9nnn.rc210.ui.Tab
 
+/**
+ * @param maxN how many keys there can be for this kind,
+ * @param handler how many keys there can be for this kind,
+ */
 sealed trait KeyKind(val maxN: Int, val handler: EditHandler = null) extends EnumEntry
   with CapitalWords with Tab:
   override def indexUrl: String = routes.EditController.index(this).url

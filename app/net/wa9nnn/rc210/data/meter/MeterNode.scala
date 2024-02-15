@@ -17,19 +17,19 @@
 
 package net.wa9nnn.rc210.data.meter
 
-import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, Table}
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
-import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.field.*
-import net.wa9nnn.rc210.data.meter.MeterAlarmNode.{bindOne, form}
+import net.wa9nnn.rc210.data.meter.MeterAlarmNode.bind
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.{EditButtonCell, EditFlowButtonCell}
+import net.wa9nnn.rc210.ui.EditFlowButtonCell
 import net.wa9nnn.rc210.ui.html.meterEditor
-import play.api.data.{Form, Mapping}
+import net.wa9nnn.rc210.{Key, KeyKind}
 import play.api.data.Forms.*
+import play.api.data.{Form, Mapping}
 import play.api.i18n.MessagesProvider
-import play.api.mvc.*
 import play.api.libs.json.{Format, JsValue, Json}
+import play.api.mvc.*
 import play.twirl.api.Html
 import views.html.fieldIndex
 
@@ -168,8 +168,8 @@ object MeterNode extends ComplexExtractor[MeterNode]:
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     meterEditor(form.fill(fieldEntry.value), fieldEntry.fieldKey)
 
-  override def bindFromRequest(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
-    bindOne(form.bindFromRequest(data).get)
+  override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
+    bind(form.bindFromRequest(data).get)
 
 /**
  *

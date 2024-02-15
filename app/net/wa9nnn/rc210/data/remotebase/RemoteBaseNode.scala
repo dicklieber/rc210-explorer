@@ -17,10 +17,9 @@
 
 package net.wa9nnn.rc210.data.remotebase
 
-import com.wa9nnn.wa9nnnutil.tableui.{Row, Table, TableSection}
+import com.wa9nnn.wa9nnnutil.tableui.{Row, TableSection}
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
-import net.wa9nnn.rc210.data.meter.MeterNode.{bindOne, form}
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.EditButtonCell
 import net.wa9nnn.rc210.util.Chunk
@@ -142,8 +141,8 @@ object RemoteBaseNode extends ComplexExtractor[RemoteBaseNode] {
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html=
     throw new NotImplementedError() //todo
 
-  override def bindFromRequest(data: Map[String, Seq[String]]): Seq[UpdateCandidate] = {
-    bindOne(form.bindFromRequest(data).get)
+  override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] = {
+    bind(form.bindFromRequest(data).get)
   }
 }
 

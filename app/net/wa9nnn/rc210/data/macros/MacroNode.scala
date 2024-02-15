@@ -1,26 +1,23 @@
 package net.wa9nnn.rc210.data.macros
 
-import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, KvTable, Row, Table, TableInACell, TableSection}
+import com.wa9nnn.wa9nnnutil.tableui.{Header, Row, Table, TableInACell}
 import net.wa9nnn.rc210.data.Dtmf.Dtmf
-import net.wa9nnn.rc210.data.{EditHandler, Node}
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
-import net.wa9nnn.rc210.data.field.MessageNode.{form, keyKind}
-import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
-import net.wa9nnn.rc210.Functions
+import net.wa9nnn.rc210.data.field.*
+import net.wa9nnn.rc210.data.{EditHandler, Node}
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.EditFlowButtonCell
-import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
+import net.wa9nnn.rc210.{FieldKey, Functions, Key, KeyKind}
+import play.api.data.Form
 import play.api.data.Forms.*
-import play.api.data.{Form, FormError}
 import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.*
 import play.twirl.api.Html
-import views.html.{fieldIndex, flowChartButton, macroEditor, messageEditor}
+import views.html.{fieldIndex, macroEditor}
 
 import java.util.concurrent.atomic.AtomicInteger
 import scala.annotation.tailrec
-import scala.xml.Elem
 
 /**
  * This RC-210 Macro
@@ -111,7 +108,7 @@ object MacroNode extends ComplexExtractor[MacroNode]:
           val functions: Seq[Key] = try {
             parseChunk(chunk.iterator)
           } catch {
-            case e: NoSuchElementException =>
+            case _: NoSuchElementException =>
               logger.error(s"macroKey: $key Ran out in chunk: $sChunk assuming no functions!")
               Seq.empty
             case e: Exception =>
@@ -174,21 +171,21 @@ object MacroNode extends ComplexExtractor[MacroNode]:
 
   override def form: Form[MacroNode] = throw new NotImplementedError("Forms not used with macros") //todo
 
-  override def index(values: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    val topHeader = s"Macros  (${values.length})"
+  override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
+    val topHeader = s"Macros  (${fieldEntries.length})"
     val header = Header(topHeader,
       "",
       "Functions"
     )
     val table = Table(header,
-      values.map(_.value.toRow)
+      fieldEntries.map(_.value.toRow)
     )
     fieldIndex(keyKind, table)
 
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     macroEditor(fieldEntry.value)
 
-  override def bindFromRequest(using data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
+  override def bind(using data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
 
     (for {
       fieldKey <- EditHandler.fieldKey

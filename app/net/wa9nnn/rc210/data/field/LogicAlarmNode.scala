@@ -136,15 +136,15 @@ object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode]:
 
   implicit val fmtLogicAlarm: OFormat[LogicAlarmNode] = Json.format[LogicAlarmNode]
 
-  override def index(values: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    val table = Table(Header(s"Logic Alarms  (${values.length})",
+  override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
+    val table = Table(Header(s"Logic Alarms  (${fieldEntries.length})",
       "",
       "Logic Alarm",
       "Enable",
       "Low Macro",
       "High Macro"
     ),
-      values.map(_.value.toRow)
+      fieldEntries.map(_.value.toRow)
     )
     fieldIndex(keyKind, table)
 
@@ -153,7 +153,7 @@ object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode]:
 
     logicAlarmEditor(filled, fieldEntry.fieldKey)
 
-  override def bindFromRequest(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
+  override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
     val courtesyTone = form.bindFromRequest(data).get
     Seq(
       UpdateCandidate(courtesyTone.fieldKey, courtesyTone)

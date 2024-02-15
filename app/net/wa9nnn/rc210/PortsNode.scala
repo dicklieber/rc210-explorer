@@ -22,7 +22,7 @@ object PortsNode extends SimpleFieldNode(KeyKind.Port):
 
   def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider) = ???
 
-  override def bindFromRequest(data: Map[String, Seq[String]]): Seq[UpdateCandidate] = {
+  override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] = {
     val value: Seq[UpdateCandidate] = collect(data)
     value
   }

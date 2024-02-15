@@ -18,22 +18,20 @@
 package net.wa9nnn.rc210.data.timers
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.wa9nnnutil.tableui.html.renderTable
-import com.wa9nnn.wa9nnnutil.tableui.{Header, KvTableSection, Row, Table, TableSection}
+import com.wa9nnn.wa9nnnutil.tableui.{Header, Row, Table, TableSection}
 import controllers.routes
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
-import net.wa9nnn.rc210.data.meter.MeterNode.{bindOne, form}
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.{EditButtonCell, EditFlowButtonCell, TableSectionButtons}
+import net.wa9nnn.rc210.ui.*
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, number, of}
 import play.api.i18n.MessagesProvider
 import play.api.libs.json.{JsValue, Json, OFormat}
-import play.api.mvc.{RequestHeader, Result, Results}
+import play.api.mvc.RequestHeader
 import play.twirl.api.Html
-import views.html.{editButton, fieldIndex, flowChartButton, logicAlarmEditor, timerEditor}
+import views.html.{fieldIndex, timerEditor}
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
@@ -139,7 +137,7 @@ object TimerNode extends ComplexExtractor[TimerNode] with LazyLogging:
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     timerEditor(form.fill(fieldEntry.value), fieldEntry.fieldKey)
 
-  override def bindFromRequest(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
-    bindOne(form.bindFromRequest(data).get)
+  override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
+    bind(form.bindFromRequest(data).get)
 
 

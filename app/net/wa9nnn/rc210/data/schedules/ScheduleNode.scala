@@ -1,25 +1,23 @@
 package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, KvTable, Row, Table, TableSection}
+import com.wa9nnn.wa9nnnutil.tableui.*
 import controllers.routes
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.field.schedule.{DayOfWeek, Week}
-import net.wa9nnn.rc210.data.meter.MeterNode.{bindOne, form}
 import net.wa9nnn.rc210.data.schedules.ScheduleNode.s02
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.html.meterEditor
 import net.wa9nnn.rc210.ui.nav.checkBoxCell
-import net.wa9nnn.rc210.ui.{Display, EditButtonCell, EditFlowButtonCell, TableSectionButtons}
+import net.wa9nnn.rc210.ui.{Display, EditFlowButtonCell, TableSectionButtons}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json}
-import play.api.mvc.{RequestHeader, Result, Results}
+import play.api.mvc.RequestHeader
 import play.twirl.api.Html
-import views.html.{editButton, fieldIndex, scheduleEdit}
+import views.html.{fieldIndex, scheduleEdit}
 
 /**
  *
@@ -207,8 +205,8 @@ object ScheduleNode extends LazyLogging with ComplexExtractor[ScheduleNode]:
     scheduleEdit(value, fieldEntry.fieldKey)
   }
 
-  override def bindFromRequest(data: Map[String, Seq[String]]): Seq[UpdateCandidate] = {
-    bindOne(form.bindFromRequest(data).get)
+  override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] = {
+    bind(form.bindFromRequest(data).get)
   }
 
 

@@ -204,8 +204,8 @@ object MeterAlarmNode extends ComplexExtractor[MeterAlarmNode]:
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     meterAlarmEditor(form.fill(fieldEntry.value), fieldEntry.fieldKey)
 
-  override def bindFromRequest(data: Map[String, Seq[String]]): Seq[UpdateCandidate] = {
-    bindOne(form.bindFromRequest(data).get)
+  override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] = {
+    bind(form.bindFromRequest(data).get)
   }
 
 

@@ -153,7 +153,7 @@ object ClockNode extends ComplexExtractor[ClockNode] {
     views.html.clock(form.fill(fieldEntry.value))
   }
 
-  override def bindFromRequest(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
+  override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
     val clockNode: ClockNode = form.bindFromRequest(data).get
     Seq(UpdateCandidate(clockNode.fieldKey, clockNode))
 }

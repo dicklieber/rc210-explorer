@@ -119,24 +119,24 @@ object MessageNode extends ComplexExtractor[MessageNode] with LazyLogging:
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[MessageNode]
 
-  override def index(values: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    val table = Table(Header(s"Messages  (${values.length})",
+  override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
+    val table = Table(Header(s"Messages  (${fieldEntries.length})",
       "",
       "Words"
     ),
-      values.map(_.value.toRow)
+      fieldEntries.map(_.value.toRow)
     )
     fieldIndex(keyKind, table)
 
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     messageEditor(fieldEntry.value)
 
-  override def bindFromRequest(using data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
+  override def bind(using data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
    (for {
      fieldKey <- EditHandler.fieldKey
      ids <- EditHandler.str("ids")
    } yield {
-     val strings: Array[String] = ids.split(',')
+     val strings: Seq[String] = ids.split(',').toIndexedSeq
      val messageNode = MessageNode(fieldKey.key, strings.map(_.toInt))
      UpdateCandidate(fieldKey, messageNode)
    }).toSeq
