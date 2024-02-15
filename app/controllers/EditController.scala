@@ -107,7 +107,7 @@ class EditController @Inject()(navMain: NavMain)
   private def extractNamedKeys(data: Map[String, Seq[String]]) =
     val namedKeys: Seq[NamedKey] = (for {
       (inputName: String, values: Seq[String]) <- data
-      if inputName.startsWith(NamedKey.fieldName)
+      if inputName.endsWith(NamedKey.fieldName)
       fieldKey = FieldKey(inputName)
       name <- values.headOption
     } yield {

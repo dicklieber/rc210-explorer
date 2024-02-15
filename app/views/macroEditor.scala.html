@@ -17,11 +17,10 @@
 
 @form(action = routes.EditController.save(), Symbol("id") -> "form") {
     <input type="hidden" name="ids" id="ids">
-    @keyStuff(macroNode.fieldKey)
+
     <div class="row">
         <div class="col">
-            <h1>Metadata</h1>
-            @nameEdit(macroNode.key)
+            @keyStuff(macroNode.fieldKey)
             <div><label for="dtmf">DTMF: </label>
                 <input id="dtmf" name="dtmf" value="@macroNode.dtmf">
             </div>

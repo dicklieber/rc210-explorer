@@ -26,7 +26,7 @@ import net.wa9nnn.rc210.data.field.LogicAlarmNode.{form, keyKind}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.vocabulary.{Word, Words}
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.{EditButtonCell, EditFlowButtonCell}
+import net.wa9nnn.rc210.ui.{EditButtonCell, EditFlowButtonCell, NameEditCell}
 import net.wa9nnn.rc210.util.Chunk
 import org.apache.pekko.http.scaladsl.model.HttpHeader.ParsingResult.Ok
 import play.api.data.Form
@@ -68,6 +68,7 @@ case class MessageNode(key: Key, words: Seq[Int]) extends ComplexFieldValue() {
   override def toRow: Row = {
     Row(
       EditFlowButtonCell(fieldKey),
+      key.keyWithName,
       toWords.map(_.string).mkString(" ")
     )
   }
@@ -122,6 +123,7 @@ object MessageNode extends ComplexExtractor[MessageNode] with LazyLogging:
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     val table = Table(Header(s"Messages  (${fieldEntries.length})",
       "",
+      "Name",
       "Words"
     ),
       fieldEntries.map(_.value.toRow)

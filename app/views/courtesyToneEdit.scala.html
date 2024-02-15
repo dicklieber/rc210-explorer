@@ -9,7 +9,7 @@
 <div>
     <form action="@routes.EditController.save()" method="post">
         @inputText(f("key"), Symbol("type") -> "hidden")
-        @keyStuff(fieldKey)
+        @keysAndName(fieldKey)
         <table class="headeredTable">
             @defining("<th>Duration<br>Tone1<br>Tone2</th>") { DTT =>
                 <thead>
