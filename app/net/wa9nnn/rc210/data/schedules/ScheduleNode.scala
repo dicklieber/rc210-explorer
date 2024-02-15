@@ -8,7 +8,7 @@ import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.field.schedule.{DayOfWeek, Week}
 import net.wa9nnn.rc210.data.schedules.ScheduleNode.s02
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.nav.checkBoxCell
+import net.wa9nnn.rc210.ui.nav.CheckBoxCell
 import net.wa9nnn.rc210.ui.{Display, EditFlowButtonCell, TableSectionButtons}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
@@ -17,7 +17,7 @@ import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.RequestHeader
 import play.twirl.api.Html
-import views.html.{fieldIndex, scheduleEdit}
+import views.html.{fieldIndex, scheduleEdit, schedules}
 
 /**
  *
@@ -38,16 +38,21 @@ case class ScheduleNode(override val key: Key,
                         macroKey: Key = Key(KeyKind.Macro, 1),
                         override val enabled: Boolean = false) extends ComplexFieldValue(macroKey):
 
-  override def toRow: Row = Row(
-    EditFlowButtonCell(fieldKey),
-    key.keyWithName,
-    checkBoxCell(enabled),
-    dow,
-    week,
-    monthOfYear,
-    f"$hour%02d:$minute%02d",
-    macroKey.keyWithName
-  )
+  val time: String = f"$hour%02d:$minute%02d"
+
+  override def toRow: Row = {
+    val enableCell: Cell = CheckBoxCell(enabled)
+    Row(
+      EditFlowButtonCell(fieldKey),
+      key.keyWithName,
+      enableCell,
+      dow,
+      week,
+      monthOfYear,
+      f"$hour%02d:$minute%02d",
+      macroKey.keyWithName
+    )
+  }
 
   private val rows: Seq[Row] = Seq(
     "Day Of Week" -> dow,
@@ -196,9 +201,7 @@ object ScheduleNode extends LazyLogging with ComplexExtractor[ScheduleNode]:
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[ScheduleNode]
 
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    val rows: Seq[Row] = fieldEntries.map(_.value.toRow)
-    val table = Table(header(fieldEntries.length), rows)
-    fieldIndex(keyKind, table)
+    schedules(fieldEntries.map(_.value[ScheduleNode]))
 
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html = {
     val value = form.fill(fieldEntry.value)

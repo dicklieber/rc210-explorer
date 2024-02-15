@@ -1,0 +1,51 @@
+@import net.wa9nnn.rc210.{FieldKey, KeyKind}
+@import net.wa9nnn.rc210.data.schedules.ScheduleNode
+@import views.html.input.checkBox
+@(schedules: Seq[ScheduleNode])
+<table class="table table-bordered w-auto table-sm">
+    <thead class="table-primary">
+        <tr>
+            <th colspan="8">Message Macros (@schedules.length)</th>
+        </tr>
+        <tr>
+            <th>&nbsp;</th>
+            <th>Schedule</th>
+            <th>Enabled</th>
+            <th>Day in Week</th>
+            <th>Month</th>
+            <th>Week</th>
+            <th>Time</th>
+            <th>Macro to Run</th>
+        </tr>
+    </thead>
+    <tbody>
+    @for(schedule <- schedules) {
+        <tr>
+            <td>
+            @editFlowButtions(schedule.fieldKey)
+            </td >
+            <td>
+            @schedule.key.keyWithName
+            </td>
+            <td class="checkbox">
+            @boolean(schedule.enabled)
+            </td>
+            <td>
+            @(schedule.dow)
+            </td>
+            <td>
+            @(schedule.monthOfYear)
+            </td>
+            <td>
+            @(schedule.week)
+            </td>
+            <td>
+            @(schedule.time)
+            </td>
+            <td>
+            @(schedule.macroKey.keyWithName)
+            </td>
+        </tr >
+    }
+    </tbody>
+</table>

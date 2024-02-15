@@ -7,7 +7,7 @@ import play.api.mvc.Call
 import play.twirl.api.Html
 import views.html.editButton
 
-object checkBoxCell:
+object CheckBoxCell:
   def apply(boolean: Boolean): Cell =
     val ck: String = if (boolean)
       """checked="checked"""
