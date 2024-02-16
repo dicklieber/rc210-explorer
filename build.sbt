@@ -46,6 +46,7 @@ Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-h", "target/sca
 val logbackVersion = "1.4.11"
 libraryDependencies ++= Seq(
   guice,
+  "org.scalatest" %% "scalatest" % "latest.integration" % Test,
   "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.0" % Test,
   "com.vladsch.flexmark" % "flexmark-all" % "0.64.8" % Test,
   "com.wa9nnn" %% "wa9nnnutil" % "3.0.0.8-SNAPSHOT",

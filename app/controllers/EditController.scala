@@ -24,7 +24,7 @@ import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
-import net.wa9nnn.rc210.ui.NavMainController
+import net.wa9nnn.rc210.ui.{NamedKeyExtractor, NavMainController}
 import net.wa9nnn.rc210.*
 import play.api.mvc.*
 import views.html.NavMain
@@ -88,7 +88,7 @@ class EditController @Inject()(navMain: NavMain)
         val fieldKey: FieldKey = EditHandler.fieldKey.get
         val handler: EditHandler = fieldKey.key.keyKind.handler
         val updateCandidates: Seq[UpdateCandidate] = handler.bind(data)
-        val namedKeys: Seq[NamedKey] = extractNamedKeys(data)
+        val namedKeys: Seq[NamedKey] = NamedKeyExtractor(data)
 
         val candidateAndNames: CandidateAndNames = CandidateAndNames(updateCandidates, namedKeys)
         dataStore.update(candidateAndNames)
@@ -99,21 +99,6 @@ class EditController @Inject()(navMain: NavMain)
           InternalServerError(s"request.toString $e.getMessage")
   }
 
-  /**
-   * Get all the [[NamedKey]] data from the submitted form.
-   * @param data submitted form data fields.
-   * @return zero or more named keys. 
-   */
-  private def extractNamedKeys(data: Map[String, Seq[String]]) =
-    val namedKeys: Seq[NamedKey] = (for {
-      (inputName: String, values: Seq[String]) <- data
-      if inputName.endsWith(NamedKey.fieldName)
-      fieldKey = FieldKey(inputName)
-      name <- values.headOption
-    } yield {
-      NamedKey(fieldKey.key, name)
-    }).toSeq
-    namedKeys
 
 }
 

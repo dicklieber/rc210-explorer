@@ -1,0 +1,118 @@
+fieldKey:Port1:Port
+Port1:name: this is p1
+Port2:name: 22ggg
+Port3:name: 333
+Port1:CTCSS Decode: on
+Port2:CTCSS Decode: on
+Port3:CTCSS Decode: on
+Port1:CTCSS During ID: false
+Port2:CTCSS During ID: false
+Port3:CTCSS During ID: on
+Port1:CTCSS Encode Polarity: false
+Port2:CTCSS Encode Polarity: false
+Port3:CTCSS Encode Polarity: false
+Port1:CTCSS Encode Timer: 35
+Port2:CTCSS Encode Timer: 35
+Port3:CTCSS Encode Timer: 1
+Port1:CWS Speed: 23
+Port2:CWS Speed: 20
+Port3:CWS Speed: 20
+Port1:DTMF COS Control: on
+Port2:DTMF COS Control: false
+Port3:DTMF COS Control: false
+Port1:DTMF Cover Tone: on
+Port2:DTMF Cover Tone: on
+Port3:DTMF Cover Tone: on
+Port1:DTMF Mute: on
+Port2:DTMF Mute: on
+Port3:DTMF Mute: on
+Port1:DTMF Mute Timer: 5130
+Port2:DTMF Mute Timer: 62720
+Port3:DTMF Mute Timer: 16053504
+Port1:DTMF Require Tone: false
+Port2:DTMF Require Tone: false
+Port3:DTMF Require Tone: false
+Port1:Enable Speech ID: false
+Port2:Enable Speech ID: on
+Port3:Enable Speech ID: on
+Port1:Guest Macro Enable: false
+Port2:Guest Macro Enable: on
+Port3:Guest Macro Enable: false
+Port1:Hang Time 1: 4
+Port2:Hang Time 1: 40
+Port3:Hang Time 1: 31
+Port1:Hang Time 2: 12
+Port2:Hang Time 2: 2
+Port3:Hang Time 2: 32
+Port1:Hang Time 3: 13
+Port2:Hang Time 3: 40
+Port3:Hang Time 3: 3
+Port1:Inactivity Timeout: 0
+Port2:Inactivity Timeout: 0
+Port3:Inactivity Timeout: 0
+Port1:Initial ID Timer  : 11
+Port2:Initial ID Timer  : 22
+Port3:Initial ID Timer  : 33
+Port1:Kerchunk: false
+Port2:Kerchunk: false
+Port3:Kerchunk: false
+Port1:Kerchunk Timer: 128500
+Port2:Kerchunk Timer: 756
+Port3:Kerchunk Timer: 256
+Port1:Monitor Mix: on
+Port2:Monitor Mix: on
+Port3:Monitor Mix: on
+Port1:P1 Tail Message: Macro1
+Port2:P1 Tail Message: Macro1
+Port3:P1 Tail Message: Macro1
+Port1:P2 Tail Message: Macro1
+Port2:P2 Tail Message: Macro1
+Port3:P2 Tail Message: Macro1
+Port1:P3 Tail Message: Macro1
+Port2:P3 Tail Message: Macro1
+Port3:P3 Tail Message: Macro1
+Port1:Pending ID Timer  : 10
+Port2:Pending ID Timer  : 10
+Port3:Pending ID Timer  : 10
+Port1:Repeat Mode: on
+Port2:Repeat Mode: on
+Port3:Repeat Mode: false
+Port1:Rx Rcv Macro Active: Macro90
+Port2:Rx Rcv Macro Active: Macro90
+Port3:Rx Rcv Macro Active: Macro90
+Port1:Rx Rcv Macro Low: Macro90
+Port2:Rx Rcv Macro Low: Macro90
+Port3:Rx Rcv Macro Low: Macro90
+Port1:Speak Pending ID Timer: 82129
+Port2:Speak Pending ID Timer: 79361
+Port3:Speak Pending ID Timer: 13569
+Port1:Speech ID Override: on
+Port2:Speech ID Override: on
+Port3:Speech ID Override: on
+Port1:Speech Override: on
+Port2:Speech Override: on
+Port3:Speech Override: on
+Port1:Tail Counter: 3238144
+Port2:Tail Counter: 3238708
+Port3:Tail Counter: 3224117
+Port1:Tail Message Number: 0
+Port2:Tail Message Number: 0
+Port3:Tail Message Number: 0
+Port1:Tail Timer: 0
+Port2:Tail Timer: 3433728
+Port3:Tail Timer: 3433781
+Port1:Timeout Reset Select: AfterCOS
+Port2:Timeout Reset Select: AfterCTSegment2
+Port3:Timeout Reset Select: AfterCOS
+Port1:Timeout Timer: 174376
+Port2:Timeout Timer: 66092
+Port3:Timeout Timer: 1
+Port1:Tx Enable: on
+Port2:Tx Enable: on
+Port3:Tx Enable: on
+Port1:Unlock: 35281
+Port2:Unlock: 25281
+Port3:Unlock: 35281
+Port1:Use DR1: false
+Port2:Use DR1: false
+Port3:Use DR1: false
