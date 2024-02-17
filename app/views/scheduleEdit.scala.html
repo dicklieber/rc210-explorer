@@ -13,7 +13,7 @@
     @form(action = routes.EditController.save()) {
         @inputText(f("key"), Symbol("type") -> "hidden")
         <div class="col-">
-            @keyStuff(fieldKey)
+            @keysAndName(fieldKey)
             <table class="table table-bordered table-sm  w-auto rc210-table">
                 <thead class="table-primary">
                     <tr>

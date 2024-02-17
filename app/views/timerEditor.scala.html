@@ -9,7 +9,7 @@
 @(f: Form[TimerNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
     @form(routes.EditController.save()) {
-        @keyStuff(fieldKey)
+        @keysAndName(fieldKey)
         <table>
             <thead>
                 <tr>

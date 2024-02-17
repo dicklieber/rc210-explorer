@@ -42,7 +42,7 @@ Compile / unmanagedResourceDirectories += baseDirectory.value / "resources"
 Test / logBuffered := false
 Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-h", "target/scalatest.html")
 
-
+logBuffered in Test := false
 val logbackVersion = "1.4.11"
 libraryDependencies ++= Seq(
   guice,
@@ -50,7 +50,7 @@ libraryDependencies ++= Seq(
   "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.0" % Test,
   "com.vladsch.flexmark" % "flexmark-all" % "0.64.8" % Test,
   "com.wa9nnn" %% "wa9nnnutil" % "3.0.0.8-SNAPSHOT",
-
+  "org.commonmark" % "commonmark" % "0.21.0",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
   "ch.qos.logback" % "logback-classic" % logbackVersion,
   "ch.qos.logback" % "logback-core" % logbackVersion,

@@ -9,7 +9,7 @@
 @(meterAlarm: Form[MeterAlarmNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
 @form(routes.EditController.save()) {
-    @keyStuff(fieldKey)
+    @keysAndName(fieldKey)
     <div class="col-">
         <table class="table table-bordered table-sm  w-auto rc210-table">
             <thead>

@@ -1,7 +1,7 @@
 fieldKey:Port1:Port
-Port1:name: this is p1
-Port2:name: 22ggg
-Port3:name: 333
+Port1:keyName: this is p1
+Port2:keyName: 22ggg
+Port3:keyName: 333
 Port1:CTCSS Decode: on
 Port2:CTCSS Decode: on
 Port3:CTCSS Decode: on
