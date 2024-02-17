@@ -42,7 +42,6 @@ Compile / unmanagedResourceDirectories += baseDirectory.value / "resources"
 Test / logBuffered := false
 Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-h", "target/scalatest.html")
 
-logBuffered in Test := false
 val logbackVersion = "1.4.11"
 libraryDependencies ++= Seq(
   guice,
