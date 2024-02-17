@@ -12,29 +12,14 @@ object NamedKeyExtractor:
    * @return zero or more named keys.
    */
   def apply(data: Map[String, Seq[String]]): Seq[NamedKey] =
-    val namedKeys: Seq[NamedKey] = data.flatMap { fieldData =>
-      val inputName: String = fieldData._1
-      val isforFieldName = inputName.endsWith(NamedKey.fieldName)
-      if (isforFieldName)
-        val inputName: String = fieldData._1
-        val fieldKey = FieldKey(inputName)
-        val values: Seq[String] = fieldData._2
-        val namedKey = NamedKey(fieldKey.key, values.headOption.getOrElse(""))
-        Seq(namedKey)
-      else
-        Seq.empty
-    }.toSeq
-
-
-    //    val namedKeys: Seq[NamedKey] = (for {
-    //      tuple <- data
-    //      inputName: String = tuple._1
-    //      if iii(inputName)
-    //      fieldKey = FieldKey(inputName)
-    //      values: Seq[String] = tuple._2
-    //      keyName <- values.headOption
-    //    } yield {
-    //      NamedKey(fieldKey.key, keyName)
-    //    }).toSeq
-    namedKeys
+    (for {
+      tuple <- data
+      inputName: String = tuple._1
+      if inputName.endsWith(NamedKey.fieldName)
+      fieldKey = FieldKey(inputName)
+      values: Seq[String] = tuple._2
+      keyName <- values.headOption
+    } yield {
+      NamedKey(fieldKey.key, keyName)
+    }).toSeq
 

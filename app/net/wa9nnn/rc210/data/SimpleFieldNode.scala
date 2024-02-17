@@ -22,7 +22,7 @@ abstract class SimpleFieldNode(val keyKind: KeyKind) extends EditHandler with La
       (sfKey: String, values: Seq[String]) <- data
       if sfKey != "fieldKey" // this was only present for ComplexFielda
       fieldKey = FieldKey(sfKey)
-      if fieldKey.fieldName != "name"
+      if fieldKey.fieldName != NamedKey.fieldName
       str <- values.headOption
     } yield {
       UpdateCandidate(fieldKey, str)
