@@ -1,4 +1,5 @@
 import play.sbt.routes.RoutesKeys.{routesGenerator, routesImport}
+import sbtrelease.ReleaseStateTransformations.{checkSnapshotDependencies, commitNextVersion, commitReleaseVersion, inquireVersions, publishArtifacts, pushChanges, runClean, runTest, setNextVersion, setReleaseVersion, tagRelease}
 
 name := """rc210-explorer"""
 organization := "net.wa9nnn"
@@ -70,6 +71,7 @@ libraryDependencies ++= Seq(
 //  else
 //    Some(("Reposilite Repository" at "http://repo.wa9nnn.tech:8080/releases").withAllowInsecureProtocol(true))
 //}
+publishTo := Some(Resolver.file("file", new File(Path.userHome.absolutePath + "/.m2/repository")))
 
 //resolvers += "Nexus" at "http://localhost:8081/nexus/content/groups/public"
 //resolvers += "Nexus" at "https://s01.oss.sonatype.org/"
@@ -84,3 +86,17 @@ routesImport += "net.wa9nnn.rc210.KeyKind"
 routesImport += "net.wa9nnn.rc210.Key"
 routesImport += "net.wa9nnn.rc210.ui.nav.TabKind"
 routesImport += "net.wa9nnn.rc210.serial.SendField"
+
+releaseProcess := Seq[ReleaseStep](
+checkSnapshotDependencies,              // : ReleaseStep
+  inquireVersions,                        // : ReleaseStep
+  runClean,                               // : ReleaseStep
+  runTest,                                // : ReleaseStep
+  setReleaseVersion,                      // : ReleaseStep
+  commitReleaseVersion,                   // : ReleaseStep, performs the initial git checks
+  tagRelease,                             // : ReleaseStep
+  publishArtifacts,                       // : ReleaseStep, checks whether `publishTo` is properly set up
+  setNextVersion,                         // : ReleaseStep
+  commitNextVersion,                      // : ReleaseStep
+  pushChanges                             // : ReleaseStep, also checks that an upstream branch is properly configured
+)
