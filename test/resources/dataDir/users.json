@@ -1,0 +1,18 @@
+{
+  "who" : {
+    "callsign" : "WA9NNN",
+    "id" : "q0Prm1eAInaxYPVliIsLhw==",
+    "email" : ""
+  },
+  "stamp" : "2024-01-07T18:34:22.409836Z",
+  "users" : [ {
+    "callsign" : "",
+    "hash" : "$2a$10$L5MwIFuAgqXnpBvGTWHT4uHQsKVAiKy2mytyVNpfH79rWXLCcE.Xy",
+    "id" : "LkI1EEeU6pgB7afWnZSYrQ==",
+    "email" : "wa9nnn"
+  }, {
+    "callsign" : "WA9NNN",
+    "hash" : "$2a$10$KDtWk5dsyK/efzDzIAvj3uCEr3mTGhzhLbJgMRBsxsKFQjo4YwQue",
+    "id" : "q0Prm1eAInaxYPVliIsLhw=="
+  } ]
+}

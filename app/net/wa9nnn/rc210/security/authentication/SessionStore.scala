@@ -2,19 +2,20 @@ package net.wa9nnn.rc210.security.authentication
 
 import com.typesafe.config.*
 import com.typesafe.scalalogging.LazyLogging
+import os.Path
 import net.wa9nnn.rc210.security.authentication.RcSession.SessionId
-import net.wa9nnn.rc210.util.Configs.*
-import net.wa9nnn.rc210.util.{Configs, JsonIoWithBackup}
+import net.wa9nnn.rc210.util.Configs.fileOsPath
+import net.wa9nnn.rc210.util.JsonIoWithBackup
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.Cookie
 
 import java.io.FileNotFoundException
-import java.nio.file.Path
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.{Timer, TimerTask}
 import javax.inject.{Inject, Singleton}
 import scala.collection.concurrent.TrieMap
+import com.github.andyglow.config.*
 
 /**
  * Creates and manages [[RcSession]] objects.
@@ -24,7 +25,7 @@ import scala.collection.concurrent.TrieMap
  */
 @Singleton()
 class SessionStore @Inject()(implicit config: Config) extends LazyLogging {
-  private val sessionFile = path("vizRc210.sessionFile")
+  private val sessionFile: os.Path = config.get[os.Path]("vizRc210.sessionFile")
   private val purgeTask = new TimerTask:
     override def run(): Unit = tick()
   private val purgeTimer = new Timer("purge", true)
@@ -114,7 +115,7 @@ class SessionStore @Inject()(implicit config: Config) extends LazyLogging {
     if (dirty) {
       val sessions = RcSessions(sessionMap.values.toList)
       JsonIoWithBackup(sessionFile, Json.toJson(sessions))
-      logger.debug("Wrote {} RcSessions to {}", sessions.size, sessionFile.toFile.toURI.toString)
+      logger.debug("Wrote {} RcSessions to {}", sessions.size, sessionFile.toString)
       dirty = false
     }
   }

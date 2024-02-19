@@ -31,6 +31,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
     scalacOptions ++= Seq(
       "-feature",
       " - language: implicitConversions",
+      "-explain",
       //      "-deprecation",
       //      "-Xfatal-warnings",
       //      "-Ymacro-annotations",
@@ -45,6 +46,7 @@ Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-h", "target/sca
 val logbackVersion = "1.4.11"
 libraryDependencies ++= Seq(
   guice,
+  "com.lihaoyi" %% "os-lib" % "0.9.3",
   "org.scalatest" %% "scalatest" % "3.2.18" % "test",
   "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.0" % Test,
   "com.vladsch.flexmark" % "flexmark-all" % "0.64.8" % Test,
@@ -58,7 +60,7 @@ libraryDependencies ++= Seq(
   "org.fusesource.jansi" % "jansi" % "2.4.0",
   "org.apache.commons" % "commons-text" % "1.10.0",
   "org.mindrot" % "jbcrypt" % "0.4",
-  "com.github.andyglow" %% "typesafe-config-scala" % "2.0.0" % Compile,
+  "com.github.andyglow" %% "typesafe-config-scala" % "2.0.0",
   "com.beachape" %% "enumeratum" % "1.7.3",
   "com.beachape" %% "enumeratum-play" % "1.8.0",
 )

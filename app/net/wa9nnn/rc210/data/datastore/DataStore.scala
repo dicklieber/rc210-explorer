@@ -130,7 +130,7 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
     loadFromMemory()
 
   private def save(session: RcSession): Unit =
-    val dto = toJson.copy(who = Some(session.user.who))
+    val dto: DataTransferJson = toJson.copy(who = Some(session.user.who))
     persistence.save(dto)
 
   def loadFromJson(): Unit = {

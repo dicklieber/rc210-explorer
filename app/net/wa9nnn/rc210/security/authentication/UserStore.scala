@@ -1,30 +1,30 @@
 package net.wa9nnn.rc210.security.authentication
 
+import com.github.andyglow.config.*
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import controllers.UserEditDTO
 import net.wa9nnn.rc210.security.UserId.UserId
 import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.*
-import net.wa9nnn.rc210.util.Configs.*
 import net.wa9nnn.rc210.util.JsonIoWithBackup
 import play.api.libs.json.Json
+import com.github.andyglow.config.*
 
-import java.nio.file.Path
 import javax.inject.{Inject, Singleton}
 import scala.collection.concurrent.TrieMap
-
+import net.wa9nnn.rc210.util.Configs.*
+import os.Path
 /**
  * In-memory data store for [[Users]].
  * Handles persistence of [[User]]s
  *
  */
 @Singleton()
-class UserStore @Inject()(implicit config: Config, defaultNoUsersLogin: DefaultNoUsersLogin) extends LazyLogging {
-  private[authentication] val usersFile: Path = path("vizRc210.usersFile")
+class UserStore @Inject()(config: Config, defaultNoUsersLogin: DefaultNoUsersLogin) extends LazyLogging {
+  private[authentication] val usersFile: Path = config.get[Path]("vizRc210.usersFile")
 
   private var userMap: TrieMap[UserId, User] = TrieMap.empty
-
 
   private[authentication] def readJson = {
     JsonIoWithBackup(usersFile).as[UserRecords]
@@ -42,7 +42,7 @@ class UserStore @Inject()(implicit config: Config, defaultNoUsersLogin: DefaultN
       userMap = builder.result()
     } catch {
       case _: Exception =>
-        logger.error(s"No ${usersFile.toFile}")
+        logger.error(s"No $usersFile")
     }
 
   def validate(credentials: Credentials): Option[User] =
@@ -91,6 +91,5 @@ class UserStore @Inject()(implicit config: Config, defaultNoUsersLogin: DefaultN
     val userRecords: UserRecords = UserRecords(who = who, users = userMap.values.toSeq.sorted)
     val jsValue = Json.toJson(userRecords)
     JsonIoWithBackup(usersFile, jsValue)
-
 
 }

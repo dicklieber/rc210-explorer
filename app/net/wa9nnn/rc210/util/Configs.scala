@@ -17,12 +17,23 @@
 
 package net.wa9nnn.rc210.util
 
+import com.github.andyglow.config
+import com.github.andyglow.config.FromConf
 import com.typesafe.config.Config
-
-import java.nio.file.{Path, Paths}
+import os.*
+import java.nio.file.{Paths, Path as JavaPath}
 
 object Configs:
-  def path(configPath: String)(using config: Config): Path = {
+  def path(configPath: String)(using config: Config): JavaPath = {
     val str = config.getString(configPath)
     Paths.get(str)
   }
+
+  implicit val fileOsPath: FromConf[os.Path] = new FromConf[Path] {
+    def apply(config: Config, path: String): Path =
+      val str = config.getString(path)
+      val path1: Path = os.Path(str)
+      path1
+  }
+
+  

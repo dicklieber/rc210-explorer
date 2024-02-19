@@ -22,8 +22,8 @@ import com.typesafe.config.Config
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DefaultNoUsersLogin @Inject()(config: Config) {
-  val login = Credentials(
+class DefaultNoUsersLogin @Inject()( config: Config) {
+  val login: Credentials = Credentials(
     callsign = config.getString("vizRc210.authentication.defaultAdmin.callsign"),
     password = config.getString("vizRc210.authentication.defaultAdmin.password")
   )

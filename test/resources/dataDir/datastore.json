@@ -1,0 +1,2533 @@
+{
+  "values" : [ {
+    "fieldKey" : "Common1:Speech Delay",
+    "fieldValue" : 1233
+  }, {
+    "fieldKey" : "Port3:Tx Enable",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Schedule13:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule13",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Timer3:Timer",
+    "fieldValue" : {
+      "key" : "Timer3",
+      "seconds" : 0,
+      "macroKey" : "Macro3"
+    }
+  }, {
+    "fieldKey" : "Macro55:Macro",
+    "fieldValue" : {
+      "key" : "Macro55",
+      "functions" : [ "Function163", "Function129" ]
+    }
+  }, {
+    "fieldKey" : "Port3:Tail Counter",
+    "fieldValue" : 3224117
+  }, {
+    "fieldKey" : "Logic Alarm1:Logic Alarm",
+    "fieldValue" : {
+      "key" : "Logic Alarm1",
+      "enabled" : false,
+      "lowMacro" : "Macro1",
+      "highMacro" : "Macro1"
+    },
+    "candidate" : {
+      "key" : "Logic Alarm1",
+      "enabled" : true,
+      "lowMacro" : "Macro1",
+      "highMacro" : "Macro1"
+    }
+  }, {
+    "fieldKey" : "Macro6:Macro",
+    "fieldValue" : {
+      "key" : "Macro6",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port3:Enable Speech ID",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Port3:Timeout Timer",
+    "fieldValue" : 1
+  }, {
+    "fieldKey" : "Message39:Message",
+    "fieldValue" : {
+      "key" : "Message39",
+      "words" : [ 190, 211 ]
+    }
+  }, {
+    "fieldKey" : "Port3:P1 Tail Message",
+    "fieldValue" : "Macro0",
+    "candidate" : "Macro1"
+  }, {
+    "fieldKey" : "Port2:Use DR1",
+    "fieldValue" : false
+  }, {
+    "fieldKey" : "Macro66:Macro",
+    "fieldValue" : {
+      "key" : "Macro66",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port2:CTCSS Encode Polarity",
+    "fieldValue" : false
+  }, {
+    "fieldKey" : "Message11:Message",
+    "fieldValue" : {
+      "key" : "Message11",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port2:Kerchunk Timer",
+    "fieldValue" : 756
+  }, {
+    "fieldKey" : "Port1:CTCSS Decode",
+    "fieldValue" : false,
+    "candidate" : true
+  }, {
+    "fieldKey" : "Schedule32:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule32",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Port1:Pending ID Timer  ",
+    "fieldValue" : 10
+  }, {
+    "fieldKey" : "Meter Alarm6:Meter Alarm",
+    "fieldValue" : {
+      "macroKey" : "Macro90",
+      "meter" : "Meter1",
+      "alarmType" : "LowAlarm",
+      "key" : "Meter Alarm6",
+      "tripPoint" : 42
+    }
+  }, {
+    "fieldKey" : "Port1:Speech ID Override",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Schedule30:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule30",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Macro54:Macro",
+    "fieldValue" : {
+      "key" : "Macro54",
+      "functions" : [ "Function163", "Function128" ]
+    }
+  }, {
+    "fieldKey" : "Schedule40:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule40",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Message20:Message",
+    "fieldValue" : {
+      "key" : "Message20",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Schedule27:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule27",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Port3:P3 Tail Message",
+    "fieldValue" : "Macro0",
+    "candidate" : "Macro1"
+  }, {
+    "fieldKey" : "Macro61:Macro",
+    "fieldValue" : {
+      "key" : "Macro61",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Schedule26:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule26",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Port1:DTMF Cover Tone",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Port1:P1 Tail Message",
+    "fieldValue" : "Macro0",
+    "candidate" : "Macro1"
+  }, {
+    "fieldKey" : "Schedule37:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule37",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Macro31:Macro",
+    "fieldValue" : {
+      "key" : "Macro31",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Schedule22:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule22",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Macro85:Macro",
+    "fieldValue" : {
+      "key" : "Macro85",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro57:Macro",
+    "fieldValue" : {
+      "key" : "Macro57",
+      "functions" : [ "Function163", "Function130" ]
+    }
+  }, {
+    "fieldKey" : "Message30:Message",
+    "fieldValue" : {
+      "key" : "Message30",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port3:Kerchunk Timer",
+    "fieldValue" : 256
+  }, {
+    "fieldKey" : "Message12:Message",
+    "fieldValue" : {
+      "key" : "Message12",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Schedule38:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule38",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Message1:Message",
+    "fieldValue" : {
+      "key" : "Message1",
+      "words" : [ ]
+    },
+    "candidate" : {
+      "key" : "Message1",
+      "words" : [ 9, 11, 16, 13, 7 ]
+    }
+  }, {
+    "fieldKey" : "Schedule20:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule20",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Macro76:Macro",
+    "fieldValue" : {
+      "key" : "Macro76",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro74:Macro",
+    "fieldValue" : {
+      "key" : "Macro74",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro80:Macro",
+    "fieldValue" : {
+      "key" : "Macro80",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port3:Repeat Mode",
+    "fieldValue" : false
+  }, {
+    "fieldKey" : "Meter Alarm3:Meter Alarm",
+    "fieldValue" : {
+      "macroKey" : "Macro90",
+      "meter" : "Meter1",
+      "alarmType" : "LowAlarm",
+      "key" : "Meter Alarm3",
+      "tripPoint" : 42
+    },
+    "candidate" : {
+      "macroKey" : "Macro90",
+      "meter" : "Meter4",
+      "alarmType" : "LowAlarm",
+      "key" : "Meter Alarm3",
+      "tripPoint" : 42
+    }
+  }, {
+    "fieldKey" : "Macro51:Macro",
+    "fieldValue" : {
+      "key" : "Macro51",
+      "functions" : [ "Function163", "Function116" ]
+    }
+  }, {
+    "fieldKey" : "Macro22:Macro",
+    "fieldValue" : {
+      "key" : "Macro22",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Logic Alarm2:Logic Alarm",
+    "fieldValue" : {
+      "key" : "Logic Alarm2",
+      "enabled" : false,
+      "lowMacro" : "Macro1",
+      "highMacro" : "Macro1"
+    }
+  }, {
+    "fieldKey" : "Port2:CTCSS Encode Timer",
+    "fieldValue" : 35
+  }, {
+    "fieldKey" : "Common1:Site Prefix",
+    "fieldValue" : "ABC"
+  }, {
+    "fieldKey" : "Message36:Message",
+    "fieldValue" : {
+      "key" : "Message36",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Message21:Message",
+    "fieldValue" : {
+      "key" : "Message21",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port2:Enable Speech ID",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Port2:DTMF Mute",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Port1:Repeat Mode",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Port3:Hang Time 2",
+    "fieldValue" : 32
+  }, {
+    "fieldKey" : "Macro53:Macro",
+    "fieldValue" : {
+      "key" : "Macro53",
+      "functions" : [ "Function163", "Function127" ]
+    }
+  }, {
+    "fieldKey" : "Macro24:Macro",
+    "fieldValue" : {
+      "key" : "Macro24",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro50:Macro",
+    "fieldValue" : {
+      "key" : "Macro50",
+      "functions" : [ "Function162", "Function181" ]
+    }
+  }, {
+    "fieldKey" : "Message8:Message",
+    "fieldValue" : {
+      "key" : "Message8",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro49:Macro",
+    "fieldValue" : {
+      "key" : "Macro49",
+      "functions" : [ "Function162", "Function190", "Function195", "Function16" ]
+    }
+  }, {
+    "fieldKey" : "Schedule12:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule12",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Port1:DTMF Mute Timer",
+    "fieldValue" : 5130
+  }, {
+    "fieldKey" : "Macro59:Macro",
+    "fieldValue" : {
+      "key" : "Macro59",
+      "functions" : [ "Function163", "Function191", "Function195", "Function17" ]
+    }
+  }, {
+    "fieldKey" : "Common1:Lock Code",
+    "fieldValue" : "#"
+  }, {
+    "fieldKey" : "Schedule25:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule25",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Port1:DTMF Mute",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Common1:TT PadTest",
+    "fieldValue" : "12"
+  }, {
+    "fieldKey" : "Port1:Hang Time 1",
+    "fieldValue" : 4
+  }, {
+    "fieldKey" : "Port2:DTMF Require Tone",
+    "fieldValue" : false
+  }, {
+    "fieldKey" : "Schedule4:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 0,
+      "key" : "Schedule4",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    },
+    "candidate" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : true,
+      "hour" : 0,
+      "key" : "Schedule4",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Courtesy Tone3:Courtesy Tone",
+    "fieldValue" : {
+      "key" : "Courtesy Tone3",
+      "segments" : [ {
+        "delayMs" : 250,
+        "durationMs" : 100,
+        "tone1Hz" : 1000,
+        "tone2Hz" : 0
+      }, {
+        "delayMs" : 100,
+        "durationMs" : 100,
+        "tone1Hz" : 1000,
+        "tone2Hz" : 0
+      }, {
+        "delayMs" : 0,
+        "durationMs" : 0,
+        "tone1Hz" : 0,
+        "tone2Hz" : 0
+      }, {
+        "delayMs" : 0,
+        "durationMs" : 0,
+        "tone1Hz" : 0,
+        "tone2Hz" : 0
+      } ]
+    }
+  }, {
+    "fieldKey" : "Port1:Timeout Reset Select",
+    "fieldValue" : "AfterCOS"
+  }, {
+    "fieldKey" : "Port3:Inactivity Timeout",
+    "fieldValue" : 0
+  }, {
+    "fieldKey" : "Port2:Hang Time 3",
+    "fieldValue" : 40
+  }, {
+    "fieldKey" : "Macro36:Macro",
+    "fieldValue" : {
+      "key" : "Macro36",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro78:Macro",
+    "fieldValue" : {
+      "key" : "Macro78",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port1:Kerchunk Timer",
+    "fieldValue" : 128500
+  }, {
+    "fieldKey" : "Port3:Kerchunk",
+    "fieldValue" : false
+  }, {
+    "fieldKey" : "Port2:P1 Tail Message",
+    "fieldValue" : "Macro0",
+    "candidate" : "Macro1"
+  }, {
+    "fieldKey" : "Schedule6:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule6",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    },
+    "candidate" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 23,
+      "key" : "Schedule6",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Schedule18:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule18",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Macro38:Macro",
+    "fieldValue" : {
+      "key" : "Macro38",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Timer2:Timer",
+    "fieldValue" : {
+      "key" : "Timer2",
+      "seconds" : 0,
+      "macroKey" : "Macro3"
+    }
+  }, {
+    "fieldKey" : "Message6:Message",
+    "fieldValue" : {
+      "key" : "Message6",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Remote Base0:Remote Base",
+    "fieldValue" : {
+      "radio" : "Kenwood",
+      "yaesu" : "FT817_857_897",
+      "prefix" : "5",
+      "memories" : [ {
+        "ctssCode" : 9,
+        "offset" : "simplex",
+        "mode" : "FM",
+        "frequency" : "144715",
+        "ctcssMode" : "None"
+      }, {
+        "ctssCode" : 10,
+        "offset" : "simplex",
+        "mode" : "FM",
+        "frequency" : "146580",
+        "ctcssMode" : "None"
+      }, {
+        "ctssCode" : 10,
+        "offset" : "simplex",
+        "mode" : "FM",
+        "frequency" : "146520",
+        "ctcssMode" : "None"
+      }, {
+        "ctssCode" : 10,
+        "offset" : "simplex",
+        "mode" : "FM",
+        "frequency" : "146520",
+        "ctcssMode" : "None"
+      }, {
+        "ctssCode" : 10,
+        "offset" : "simplex",
+        "mode" : "FM",
+        "frequency" : "146520",
+        "ctcssMode" : "None"
+      }, {
+        "ctssCode" : 10,
+        "offset" : "simplex",
+        "mode" : "FM",
+        "frequency" : "146520",
+        "ctcssMode" : "None"
+      }, {
+        "ctssCode" : 10,
+        "offset" : "simplex",
+        "mode" : "FM",
+        "frequency" : "146520",
+        "ctcssMode" : "None"
+      }, {
+        "ctssCode" : 10,
+        "offset" : "simplex",
+        "mode" : "FM",
+        "frequency" : "146520",
+        "ctcssMode" : "None"
+      }, {
+        "ctssCode" : 10,
+        "offset" : "simplex",
+        "mode" : "FM",
+        "frequency" : "146520",
+        "ctcssMode" : "None"
+      }, {
+        "ctssCode" : 10,
+        "offset" : "simplex",
+        "mode" : "FM",
+        "frequency" : "146520",
+        "ctcssMode" : "None"
+      } ]
+    },
+    "candidate" : {
+      "radio" : "Kenwood",
+      "yaesu" : "FT817_857_897",
+      "prefix" : "5",
+      "memories" : [ {
+        "ctssCode" : 9,
+        "offset" : "simplex",
+        "mode" : "FM",
+        "frequency" : "1",
+        "ctcssMode" : "None"
+      }, {
+        "ctssCode" : 10,
+        "offset" : "simplex",
+        "mode" : "FM",
+        "frequency" : "2",
+        "ctcssMode" : "None"
+      }, {
+        "ctssCode" : 10,
+        "offset" : "simplex",
+        "mode" : "FM",
+        "frequency" : "3",
+        "ctcssMode" : "None"
+      }, {
+        "ctssCode" : 10,
+        "offset" : "simplex",
+        "mode" : "FM",
+        "frequency" : "146520",
+        "ctcssMode" : "None"
+      }, {
+        "ctssCode" : 10,
+        "offset" : "simplex",
+        "mode" : "FM",
+        "frequency" : "146520",
+        "ctcssMode" : "None"
+      }, {
+        "ctssCode" : 10,
+        "offset" : "simplex",
+        "mode" : "FM",
+        "frequency" : "146520",
+        "ctcssMode" : "None"
+      }, {
+        "ctssCode" : 10,
+        "offset" : "simplex",
+        "mode" : "FM",
+        "frequency" : "146520",
+        "ctcssMode" : "None"
+      }, {
+        "ctssCode" : 10,
+        "offset" : "simplex",
+        "mode" : "FM",
+        "frequency" : "8",
+        "ctcssMode" : "None"
+      }, {
+        "ctssCode" : 10,
+        "offset" : "simplex",
+        "mode" : "FM",
+        "frequency" : "9",
+        "ctcssMode" : "None"
+      }, {
+        "ctssCode" : 10,
+        "offset" : "simplex",
+        "mode" : "FM",
+        "frequency" : "0",
+        "ctcssMode" : "None"
+      } ]
+    }
+  }, {
+    "fieldKey" : "Port1:Rx Rcv Macro Low",
+    "fieldValue" : "Macro90"
+  }, {
+    "fieldKey" : "Timer5:Timer",
+    "fieldValue" : {
+      "key" : "Timer5",
+      "seconds" : 0,
+      "macroKey" : "Macro92"
+    }
+  }, {
+    "fieldKey" : "Meter Alarm5:Meter Alarm",
+    "fieldValue" : {
+      "macroKey" : "Macro90",
+      "meter" : "Meter1",
+      "alarmType" : "LowAlarm",
+      "key" : "Meter Alarm5",
+      "tripPoint" : 42
+    }
+  }, {
+    "fieldKey" : "Meter1:Meter",
+    "fieldValue" : {
+      "key" : "Meter1",
+      "meterFaceName" : "Off",
+      "low" : {
+        "hundredthVolt" : 1,
+        "reading" : 2
+      },
+      "high" : {
+        "hundredthVolt" : 3,
+        "reading" : 4
+      }
+    }
+  }, {
+    "fieldKey" : "Logic Alarm4:Logic Alarm",
+    "fieldValue" : {
+      "key" : "Logic Alarm4",
+      "enabled" : false,
+      "lowMacro" : "Macro1",
+      "highMacro" : "Macro1"
+    }
+  }, {
+    "fieldKey" : "Macro3:Macro",
+    "fieldValue" : {
+      "key" : "Macro3",
+      "functions" : [ ]
+    },
+    "candidate" : {
+      "key" : "Macro3",
+      "functions" : [ "Function77" ]
+    }
+  }, {
+    "fieldKey" : "Port2:Guest Macro Enable",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Port1:Guest Macro Enable",
+    "fieldValue" : false
+  }, {
+    "fieldKey" : "Macro32:Macro",
+    "fieldValue" : {
+      "key" : "Macro32",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro63:Macro",
+    "fieldValue" : {
+      "key" : "Macro63",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Schedule19:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule19",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Port2:DTMF Mute Timer",
+    "fieldValue" : 62720
+  }, {
+    "fieldKey" : "Courtesy Tone5:Courtesy Tone",
+    "fieldValue" : {
+      "key" : "Courtesy Tone5",
+      "segments" : [ {
+        "delayMs" : 250,
+        "durationMs" : 100,
+        "tone1Hz" : 330,
+        "tone2Hz" : 0
+      }, {
+        "delayMs" : 0,
+        "durationMs" : 100,
+        "tone1Hz" : 495,
+        "tone2Hz" : 0
+      }, {
+        "delayMs" : 0,
+        "durationMs" : 100,
+        "tone1Hz" : 660,
+        "tone2Hz" : 0
+      }, {
+        "delayMs" : 0,
+        "durationMs" : 0,
+        "tone1Hz" : 0,
+        "tone2Hz" : 0
+      } ]
+    }
+  }, {
+    "fieldKey" : "Port2:Pending ID Timer  ",
+    "fieldValue" : 10
+  }, {
+    "fieldKey" : "Courtesy Tone4:Courtesy Tone",
+    "fieldValue" : {
+      "key" : "Courtesy Tone4",
+      "segments" : [ {
+        "delayMs" : 250,
+        "durationMs" : 100,
+        "tone1Hz" : 697,
+        "tone2Hz" : 1477
+      }, {
+        "delayMs" : 100,
+        "durationMs" : 100,
+        "tone1Hz" : 770,
+        "tone2Hz" : 1477
+      }, {
+        "delayMs" : 100,
+        "durationMs" : 100,
+        "tone1Hz" : 880,
+        "tone2Hz" : 1477
+      }, {
+        "delayMs" : 100,
+        "durationMs" : 100,
+        "tone1Hz" : 941,
+        "tone2Hz" : 1477
+      } ]
+    }
+  }, {
+    "fieldKey" : "Port2:Tx Enable",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Macro25:Macro",
+    "fieldValue" : {
+      "key" : "Macro25",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro83:Macro",
+    "fieldValue" : {
+      "key" : "Macro83",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port1:Monitor Mix",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Message34:Message",
+    "fieldValue" : {
+      "key" : "Message34",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Common1:Timeout Ports",
+    "fieldValue" : false
+  }, {
+    "fieldKey" : "Meter Alarm2:Meter Alarm",
+    "fieldValue" : {
+      "macroKey" : "Macro90",
+      "meter" : "Meter1",
+      "alarmType" : "LowAlarm",
+      "key" : "Meter Alarm2",
+      "tripPoint" : 42
+    }
+  }, {
+    "fieldKey" : "Schedule8:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule8",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Logic Alarm5:Logic Alarm",
+    "fieldValue" : {
+      "key" : "Logic Alarm5",
+      "enabled" : false,
+      "lowMacro" : "Macro1",
+      "highMacro" : "Macro1"
+    }
+  }, {
+    "fieldKey" : "Port1:Guest Macro Range",
+    "fieldValue" : {
+      "value" : [ 48, 48 ]
+    }
+  }, {
+    "fieldKey" : "Schedule33:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule33",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Port1:P3 Tail Message",
+    "fieldValue" : "Macro0",
+    "candidate" : "Macro1"
+  }, {
+    "fieldKey" : "Schedule5:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro5",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 23,
+      "key" : "Schedule5",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Macro64:Macro",
+    "fieldValue" : {
+      "key" : "Macro64",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Common1:vRef",
+    "fieldValue" : 503
+  }, {
+    "fieldKey" : "Timer4:Timer",
+    "fieldValue" : {
+      "key" : "Timer4",
+      "seconds" : 0,
+      "macroKey" : "Macro92"
+    }
+  }, {
+    "fieldKey" : "Macro87:Macro",
+    "fieldValue" : {
+      "key" : "Macro87",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Message14:Message",
+    "fieldValue" : {
+      "key" : "Message14",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port2:CTCSS Decode",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Port2:Hang Time 2",
+    "fieldValue" : 2
+  }, {
+    "fieldKey" : "Meter8:Meter",
+    "fieldValue" : {
+      "key" : "Meter8",
+      "meterFaceName" : "Off",
+      "low" : {
+        "hundredthVolt" : 0,
+        "reading" : 0
+      },
+      "high" : {
+        "hundredthVolt" : 0,
+        "reading" : 0
+      }
+    }
+  }, {
+    "fieldKey" : "Port3:Use DR1",
+    "fieldValue" : false
+  }, {
+    "fieldKey" : "Port3:Initial ID Timer  ",
+    "fieldValue" : 33
+  }, {
+    "fieldKey" : "Schedule15:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule15",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Schedule1:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : true,
+      "hour" : 23,
+      "key" : "Schedule1",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    },
+    "candidate" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 23,
+      "key" : "Schedule1",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Port3:Timeout Reset Select",
+    "fieldValue" : "AfterCOS"
+  }, {
+    "fieldKey" : "Message27:Message",
+    "fieldValue" : {
+      "key" : "Message27",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port3:Guest Macro Range",
+    "fieldValue" : {
+      "value" : [ 48, 48 ]
+    }
+  }, {
+    "fieldKey" : "Message24:Message",
+    "fieldValue" : {
+      "key" : "Message24",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Courtesy Tone2:Courtesy Tone",
+    "fieldValue" : {
+      "key" : "Courtesy Tone2",
+      "segments" : [ {
+        "delayMs" : 1200,
+        "durationMs" : 200,
+        "tone1Hz" : 400,
+        "tone2Hz" : 0
+      }, {
+        "delayMs" : 100,
+        "durationMs" : 200,
+        "tone1Hz" : 600,
+        "tone2Hz" : 0
+      }, {
+        "delayMs" : 0,
+        "durationMs" : 0,
+        "tone1Hz" : 0,
+        "tone2Hz" : 0
+      }, {
+        "delayMs" : 0,
+        "durationMs" : 0,
+        "tone1Hz" : 0,
+        "tone2Hz" : 0
+      } ]
+    }
+  }, {
+    "fieldKey" : "Port1:CWS Speed",
+    "fieldValue" : 20,
+    "candidate" : 23
+  }, {
+    "fieldKey" : "Port2:DTMF Cover Tone",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Message3:Message",
+    "fieldValue" : {
+      "key" : "Message3",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro45:Macro",
+    "fieldValue" : {
+      "key" : "Macro45",
+      "functions" : [ "Function162", "Function129" ]
+    }
+  }, {
+    "fieldKey" : "Port2:Initial ID Timer  ",
+    "fieldValue" : 22
+  }, {
+    "fieldKey" : "Macro16:Macro",
+    "fieldValue" : {
+      "key" : "Macro16",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port3:Rx Rcv Macro Active",
+    "fieldValue" : "Macro90"
+  }, {
+    "fieldKey" : "Schedule36:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule36",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Message32:Message",
+    "fieldValue" : {
+      "key" : "Message32",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro68:Macro",
+    "fieldValue" : {
+      "key" : "Macro68",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro11:Macro",
+    "fieldValue" : {
+      "key" : "Macro11",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Clock0:Clock",
+    "fieldValue" : {
+      "endDST" : {
+        "monthOfYearDST" : "December",
+        "occurrence" : "First"
+      },
+      "key" : "Clock0",
+      "enableDST" : false,
+      "say24Hours" : false,
+      "hourDST" : 2,
+      "startDST" : {
+        "monthOfYearDST" : "December",
+        "occurrence" : "First"
+      }
+    },
+    "candidate" : {
+      "endDST" : {
+        "monthOfYearDST" : "December",
+        "occurrence" : "First"
+      },
+      "key" : "Clock0",
+      "enableDST" : false,
+      "say24Hours" : true,
+      "hourDST" : 2,
+      "startDST" : {
+        "monthOfYearDST" : "December",
+        "occurrence" : "Fifth"
+      }
+    }
+  }, {
+    "fieldKey" : "Timer1:Timer",
+    "fieldValue" : {
+      "key" : "Timer1",
+      "seconds" : 4,
+      "macroKey" : "Macro2"
+    },
+    "candidate" : {
+      "key" : "Timer1",
+      "seconds" : 123,
+      "macroKey" : "Macro81"
+    }
+  }, {
+    "fieldKey" : "Port3:CWS Speed",
+    "fieldValue" : 20
+  }, {
+    "fieldKey" : "Message28:Message",
+    "fieldValue" : {
+      "key" : "Message28",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Courtesy Tone8:Courtesy Tone",
+    "fieldValue" : {
+      "key" : "Courtesy Tone8",
+      "segments" : [ {
+        "delayMs" : 250,
+        "durationMs" : 100,
+        "tone1Hz" : 440,
+        "tone2Hz" : 660
+      }, {
+        "delayMs" : 0,
+        "durationMs" : 0,
+        "tone1Hz" : 0,
+        "tone2Hz" : 0
+      }, {
+        "delayMs" : 0,
+        "durationMs" : 0,
+        "tone1Hz" : 0,
+        "tone2Hz" : 0
+      }, {
+        "delayMs" : 0,
+        "durationMs" : 0,
+        "tone1Hz" : 0,
+        "tone2Hz" : 0
+      } ]
+    }
+  }, {
+    "fieldKey" : "Port3:P2 Tail Message",
+    "fieldValue" : "Macro0",
+    "candidate" : "Macro1"
+  }, {
+    "fieldKey" : "Macro27:Macro",
+    "fieldValue" : {
+      "key" : "Macro27",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Message40:Message",
+    "fieldValue" : {
+      "key" : "Message40",
+      "words" : [ 190, 211, 82 ]
+    }
+  }, {
+    "fieldKey" : "Common1:DTMF Duration",
+    "fieldValue" : 256,
+    "candidate" : 2
+  }, {
+    "fieldKey" : "Macro19:Macro",
+    "fieldValue" : {
+      "key" : "Macro19",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port2:Hang Time 1",
+    "fieldValue" : 40
+  }, {
+    "fieldKey" : "Port1:Kerchunk",
+    "fieldValue" : false
+  }, {
+    "fieldKey" : "Macro13:Macro",
+    "fieldValue" : {
+      "key" : "Macro13",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Message13:Message",
+    "fieldValue" : {
+      "key" : "Message13",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro41:Macro",
+    "fieldValue" : {
+      "key" : "Macro41",
+      "functions" : [ "Function162", "Function116" ]
+    }
+  }, {
+    "fieldKey" : "Port3:Hang Time 1",
+    "fieldValue" : 31
+  }, {
+    "fieldKey" : "Message29:Message",
+    "fieldValue" : {
+      "key" : "Message29",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro10:Macro",
+    "fieldValue" : {
+      "key" : "Macro10",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Schedule28:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule28",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Schedule31:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule31",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Macro90:Macro",
+    "fieldValue" : {
+      "key" : "Macro90",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port1:DTMF COS Control",
+    "fieldValue" : false,
+    "candidate" : true
+  }, {
+    "fieldKey" : "Port2:Speech Override",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Port2:Unlock",
+    "fieldValue" : "25281"
+  }, {
+    "fieldKey" : "Message35:Message",
+    "fieldValue" : {
+      "key" : "Message35",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port3:Unlock",
+    "fieldValue" : "35281"
+  }, {
+    "fieldKey" : "Port2:Repeat Mode",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Meter4:Meter",
+    "fieldValue" : {
+      "key" : "Meter4",
+      "meterFaceName" : "Off",
+      "low" : {
+        "hundredthVolt" : 0,
+        "reading" : 0
+      },
+      "high" : {
+        "hundredthVolt" : 0,
+        "reading" : 0
+      }
+    }
+  }, {
+    "fieldKey" : "Macro5:Macro",
+    "fieldValue" : {
+      "key" : "Macro5",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port1:DTMF Require Tone",
+    "fieldValue" : false
+  }, {
+    "fieldKey" : "Macro12:Macro",
+    "fieldValue" : {
+      "key" : "Macro12",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port2:Guest Macro Range",
+    "fieldValue" : {
+      "value" : [ 48, 48 ]
+    }
+  }, {
+    "fieldKey" : "Port2:CTCSS During ID",
+    "fieldValue" : false
+  }, {
+    "fieldKey" : "Port3:DTMF COS Control",
+    "fieldValue" : false
+  }, {
+    "fieldKey" : "Macro4:Macro",
+    "fieldValue" : {
+      "key" : "Macro4",
+      "functions" : [ "Function10", "Function17" ],
+      "dtmf" : "1234"
+    }
+  }, {
+    "fieldKey" : "Schedule17:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule17",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Port3:CTCSS During ID",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Port1:Enable Speech ID",
+    "fieldValue" : true,
+    "candidate" : false
+  }, {
+    "fieldKey" : "Macro77:Macro",
+    "fieldValue" : {
+      "key" : "Macro77",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro1:Macro",
+    "fieldValue" : {
+      "key" : "Macro1",
+      "functions" : [ "Function165", "Function85", "Function27", "Function60", "Function196" ]
+    },
+    "candidate" : {
+      "key" : "Macro1",
+      "functions" : [ "Function165", "Function85", "Function27", "Function22", "Function60", "Function196" ]
+    }
+  }, {
+    "fieldKey" : "Macro86:Macro",
+    "fieldValue" : {
+      "key" : "Macro86",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Schedule7:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule7",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Schedule3:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule3",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    },
+    "candidate" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : true,
+      "hour" : 23,
+      "key" : "Schedule3",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Port3:Speech ID Override",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Common1:Program Prefix",
+    "fieldValue" : "1DC2"
+  }, {
+    "fieldKey" : "Macro47:Macro",
+    "fieldValue" : {
+      "key" : "Macro47",
+      "functions" : [ "Function162", "Function130" ]
+    }
+  }, {
+    "fieldKey" : "Port3:DTMF Mute",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Macro29:Macro",
+    "fieldValue" : {
+      "key" : "Macro29",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro28:Macro",
+    "fieldValue" : {
+      "key" : "Macro28",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro58:Macro",
+    "fieldValue" : {
+      "key" : "Macro58",
+      "functions" : [ "Function163", "Function14", "Function191", "Function194" ]
+    }
+  }, {
+    "fieldKey" : "Port1:Speech Override",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Port1:Tail Message Number",
+    "fieldValue" : 0
+  }, {
+    "fieldKey" : "Macro18:Macro",
+    "fieldValue" : {
+      "key" : "Macro18",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Common1:Fan Select",
+    "fieldValue" : false
+  }, {
+    "fieldKey" : "Macro39:Macro",
+    "fieldValue" : {
+      "key" : "Macro39",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Schedule35:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule35",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Schedule29:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule29",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Port2:Speech ID Override",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Port2:Speak Pending ID Timer",
+    "fieldValue" : 79361
+  }, {
+    "fieldKey" : "Logic Alarm3:Logic Alarm",
+    "fieldValue" : {
+      "key" : "Logic Alarm3",
+      "enabled" : false,
+      "lowMacro" : "Macro1",
+      "highMacro" : "Macro1"
+    }
+  }, {
+    "fieldKey" : "Message19:Message",
+    "fieldValue" : {
+      "key" : "Message19",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port3:CTCSS Encode Timer",
+    "fieldValue" : 1
+  }, {
+    "fieldKey" : "Courtesy Tone10:Courtesy Tone",
+    "fieldValue" : {
+      "key" : "Courtesy Tone10",
+      "segments" : [ {
+        "delayMs" : 1200,
+        "durationMs" : 100,
+        "tone1Hz" : 660,
+        "tone2Hz" : 880
+      }, {
+        "delayMs" : 0,
+        "durationMs" : 0,
+        "tone1Hz" : 0,
+        "tone2Hz" : 0
+      }, {
+        "delayMs" : 0,
+        "durationMs" : 0,
+        "tone1Hz" : 0,
+        "tone2Hz" : 0
+      }, {
+        "delayMs" : 0,
+        "durationMs" : 0,
+        "tone1Hz" : 0,
+        "tone2Hz" : 0
+      } ]
+    }
+  }, {
+    "fieldKey" : "Port1:CTCSS Encode Polarity",
+    "fieldValue" : false
+  }, {
+    "fieldKey" : "Port3:DTMF Require Tone",
+    "fieldValue" : false
+  }, {
+    "fieldKey" : "Schedule14:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule14",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Macro82:Macro",
+    "fieldValue" : {
+      "key" : "Macro82",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Courtesy Tone7:Courtesy Tone",
+    "fieldValue" : {
+      "key" : "Courtesy Tone7",
+      "segments" : [ {
+        "delayMs" : 250,
+        "durationMs" : 100,
+        "tone1Hz" : 1000,
+        "tone2Hz" : 880
+      }, {
+        "delayMs" : 0,
+        "durationMs" : 0,
+        "tone1Hz" : 0,
+        "tone2Hz" : 0
+      }, {
+        "delayMs" : 0,
+        "durationMs" : 0,
+        "tone1Hz" : 0,
+        "tone2Hz" : 0
+      }, {
+        "delayMs" : 0,
+        "durationMs" : 0,
+        "tone1Hz" : 0,
+        "tone2Hz" : 0
+      } ]
+    }
+  }, {
+    "fieldKey" : "Macro21:Macro",
+    "fieldValue" : {
+      "key" : "Macro21",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port3:DTMF Cover Tone",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Port1:Hang Time 2",
+    "fieldValue" : 12
+  }, {
+    "fieldKey" : "Port2:CWS Speed",
+    "fieldValue" : 20
+  }, {
+    "fieldKey" : "Macro34:Macro",
+    "fieldValue" : {
+      "key" : "Macro34",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro84:Macro",
+    "fieldValue" : {
+      "key" : "Macro84",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Message16:Message",
+    "fieldValue" : {
+      "key" : "Message16",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Timer6:Timer",
+    "fieldValue" : {
+      "key" : "Timer6",
+      "seconds" : 142,
+      "macroKey" : "Macro5"
+    }
+  }, {
+    "fieldKey" : "Macro9:Macro",
+    "fieldValue" : {
+      "key" : "Macro9",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro15:Macro",
+    "fieldValue" : {
+      "key" : "Macro15",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Meter Alarm7:Meter Alarm",
+    "fieldValue" : {
+      "macroKey" : "Macro90",
+      "meter" : "Meter1",
+      "alarmType" : "LowAlarm",
+      "key" : "Meter Alarm7",
+      "tripPoint" : 42
+    }
+  }, {
+    "fieldKey" : "Meter5:Meter",
+    "fieldValue" : {
+      "key" : "Meter5",
+      "meterFaceName" : "Off",
+      "low" : {
+        "hundredthVolt" : 0,
+        "reading" : 0
+      },
+      "high" : {
+        "hundredthVolt" : 0,
+        "reading" : 0
+      }
+    }
+  }, {
+    "fieldKey" : "Port2:Monitor Mix",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Message33:Message",
+    "fieldValue" : {
+      "key" : "Message33",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Courtesy Tone9:Courtesy Tone",
+    "fieldValue" : {
+      "key" : "Courtesy Tone9",
+      "segments" : [ {
+        "delayMs" : 250,
+        "durationMs" : 75,
+        "tone1Hz" : 232,
+        "tone2Hz" : 0
+      }, {
+        "delayMs" : 75,
+        "durationMs" : 75,
+        "tone1Hz" : 1000,
+        "tone2Hz" : 0
+      }, {
+        "delayMs" : 75,
+        "durationMs" : 75,
+        "tone1Hz" : 1000,
+        "tone2Hz" : 0
+      }, {
+        "delayMs" : 0,
+        "durationMs" : 0,
+        "tone1Hz" : 0,
+        "tone2Hz" : 0
+      } ]
+    }
+  }, {
+    "fieldKey" : "Schedule11:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule11",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Port3:CTCSS Encode Polarity",
+    "fieldValue" : false
+  }, {
+    "fieldKey" : "Port1:Speak Pending ID Timer",
+    "fieldValue" : 82129
+  }, {
+    "fieldKey" : "Macro46:Macro",
+    "fieldValue" : {
+      "key" : "Macro46",
+      "functions" : [ "Function162", "Function187", "Function189" ]
+    }
+  }, {
+    "fieldKey" : "Macro73:Macro",
+    "fieldValue" : {
+      "key" : "Macro73",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro8:Macro",
+    "fieldValue" : {
+      "key" : "Macro8",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro81:Macro",
+    "fieldValue" : {
+      "key" : "Macro81",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Schedule34:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule34",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Port1:Hang Time 3",
+    "fieldValue" : 13
+  }, {
+    "fieldKey" : "Port1:P2 Tail Message",
+    "fieldValue" : "Macro0",
+    "candidate" : "Macro1"
+  }, {
+    "fieldKey" : "Common1:Terminator",
+    "fieldValue" : "D"
+  }, {
+    "fieldKey" : "Common1:DTMF Pause",
+    "fieldValue" : true,
+    "candidate" : false
+  }, {
+    "fieldKey" : "Port2:Tail Message Number",
+    "fieldValue" : 0
+  }, {
+    "fieldKey" : "Message2:Message",
+    "fieldValue" : {
+      "key" : "Message2",
+      "words" : [ ]
+    },
+    "candidate" : {
+      "key" : "Message2",
+      "words" : [ 0, 1, 15, 2 ]
+    }
+  }, {
+    "fieldKey" : "Port2:Inactivity Timeout",
+    "fieldValue" : 0
+  }, {
+    "fieldKey" : "Message25:Message",
+    "fieldValue" : {
+      "key" : "Message25",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Meter Alarm4:Meter Alarm",
+    "fieldValue" : {
+      "macroKey" : "Macro90",
+      "meter" : "Meter1",
+      "alarmType" : "LowAlarm",
+      "key" : "Meter Alarm4",
+      "tripPoint" : 42
+    }
+  }, {
+    "fieldKey" : "Macro26:Macro",
+    "fieldValue" : {
+      "key" : "Macro26",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro42:Macro",
+    "fieldValue" : {
+      "key" : "Macro42",
+      "functions" : [ "Function162", "Function126" ]
+    }
+  }, {
+    "fieldKey" : "Macro20:Macro",
+    "fieldValue" : {
+      "key" : "Macro20",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port3:DTMF Mute Timer",
+    "fieldValue" : 16053504
+  }, {
+    "fieldKey" : "Macro75:Macro",
+    "fieldValue" : {
+      "key" : "Macro75",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Meter3:Meter",
+    "fieldValue" : {
+      "key" : "Meter3",
+      "meterFaceName" : "Off",
+      "low" : {
+        "hundredthVolt" : 0,
+        "reading" : 0
+      },
+      "high" : {
+        "hundredthVolt" : 0,
+        "reading" : 0
+      }
+    }
+  }, {
+    "fieldKey" : "Macro70:Macro",
+    "fieldValue" : {
+      "key" : "Macro70",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Meter6:Meter",
+    "fieldValue" : {
+      "key" : "Meter6",
+      "meterFaceName" : "Off",
+      "low" : {
+        "hundredthVolt" : 255,
+        "reading" : 0
+      },
+      "high" : {
+        "hundredthVolt" : 0,
+        "reading" : 0
+      }
+    }
+  }, {
+    "fieldKey" : "Port2:P2 Tail Message",
+    "fieldValue" : "Macro0",
+    "candidate" : "Macro1"
+  }, {
+    "fieldKey" : "Macro48:Macro",
+    "fieldValue" : {
+      "key" : "Macro48",
+      "functions" : [ "Function162", "Function13", "Function190", "Function194" ]
+    }
+  }, {
+    "fieldKey" : "Schedule16:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule16",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Macro71:Macro",
+    "fieldValue" : {
+      "key" : "Macro71",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Meter7:Meter",
+    "fieldValue" : {
+      "key" : "Meter7",
+      "meterFaceName" : "Off",
+      "low" : {
+        "hundredthVolt" : 0,
+        "reading" : 0
+      },
+      "high" : {
+        "hundredthVolt" : 0,
+        "reading" : 0
+      }
+    }
+  }, {
+    "fieldKey" : "Macro33:Macro",
+    "fieldValue" : {
+      "key" : "Macro33",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Courtesy Tone1:Courtesy Tone",
+    "fieldValue" : {
+      "key" : "Courtesy Tone1",
+      "segments" : [ {
+        "delayMs" : 1234,
+        "durationMs" : 100,
+        "tone1Hz" : 660,
+        "tone2Hz" : 880
+      }, {
+        "delayMs" : 15,
+        "durationMs" : 2,
+        "tone1Hz" : 22,
+        "tone2Hz" : 222
+      }, {
+        "delayMs" : 0,
+        "durationMs" : 0,
+        "tone1Hz" : 0,
+        "tone2Hz" : 0
+      }, {
+        "delayMs" : 0,
+        "durationMs" : 0,
+        "tone1Hz" : 0,
+        "tone2Hz" : 0
+      } ]
+    },
+    "candidate" : {
+      "key" : "Courtesy Tone1",
+      "segments" : [ {
+        "delayMs" : 422,
+        "durationMs" : 100,
+        "tone1Hz" : 660,
+        "tone2Hz" : 880
+      }, {
+        "delayMs" : 15,
+        "durationMs" : 2,
+        "tone1Hz" : 22,
+        "tone2Hz" : 222
+      }, {
+        "delayMs" : 0,
+        "durationMs" : 0,
+        "tone1Hz" : 0,
+        "tone2Hz" : 0
+      }, {
+        "delayMs" : 0,
+        "durationMs" : 0,
+        "tone1Hz" : 0,
+        "tone2Hz" : 0
+      } ]
+    }
+  }, {
+    "fieldKey" : "Port2:Tail Timer",
+    "fieldValue" : 3433728
+  }, {
+    "fieldKey" : "Port1:Unlock",
+    "fieldValue" : "35281"
+  }, {
+    "fieldKey" : "Port3:Guest Macro Enable",
+    "fieldValue" : false
+  }, {
+    "fieldKey" : "Message31:Message",
+    "fieldValue" : {
+      "key" : "Message31",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Message17:Message",
+    "fieldValue" : {
+      "key" : "Message17",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Schedule10:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule10",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Macro7:Macro",
+    "fieldValue" : {
+      "key" : "Macro7",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro65:Macro",
+    "fieldValue" : {
+      "key" : "Macro65",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Message22:Message",
+    "fieldValue" : {
+      "key" : "Message22",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port3:Speech Override",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Port2:Rx Rcv Macro Active",
+    "fieldValue" : "Macro90"
+  }, {
+    "fieldKey" : "Port2:Rx Rcv Macro Low",
+    "fieldValue" : "Macro90"
+  }, {
+    "fieldKey" : "Macro14:Macro",
+    "fieldValue" : {
+      "key" : "Macro14",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Common1:Fan Timeout",
+    "fieldValue" : 2
+  }, {
+    "fieldKey" : "Port3:Monitor Mix",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Common1:Allow Terminator Speech",
+    "fieldValue" : false
+  }, {
+    "fieldKey" : "Meter Alarm1:Meter Alarm",
+    "fieldValue" : {
+      "macroKey" : "Macro90",
+      "meter" : "Meter1",
+      "alarmType" : "LowAlarm",
+      "key" : "Meter Alarm1",
+      "tripPoint" : 42
+    },
+    "candidate" : {
+      "macroKey" : "Macro1",
+      "meter" : "Meter1",
+      "alarmType" : "LowAlarm",
+      "key" : "Meter Alarm1",
+      "tripPoint" : 42
+    }
+  }, {
+    "fieldKey" : "Message37:Message",
+    "fieldValue" : {
+      "key" : "Message37",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port1:CTCSS Encode Timer",
+    "fieldValue" : 35
+  }, {
+    "fieldKey" : "Macro88:Macro",
+    "fieldValue" : {
+      "key" : "Macro88",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port1:Initial ID Timer  ",
+    "fieldValue" : 11
+  }, {
+    "fieldKey" : "Macro69:Macro",
+    "fieldValue" : {
+      "key" : "Macro69",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port3:Tail Message Number",
+    "fieldValue" : 0
+  }, {
+    "fieldKey" : "Message7:Message",
+    "fieldValue" : {
+      "key" : "Message7",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro52:Macro",
+    "fieldValue" : {
+      "key" : "Macro52",
+      "functions" : [ "Function163", "Function126" ]
+    }
+  }, {
+    "fieldKey" : "Port1:Tail Timer",
+    "fieldValue" : 0
+  }, {
+    "fieldKey" : "Macro2:Macro",
+    "fieldValue" : {
+      "key" : "Macro2",
+      "functions" : [ "Function165", "Function85", "Function197", "Function198", "Function42" ]
+    },
+    "candidate" : {
+      "key" : "Macro2",
+      "functions" : [ "Function165", "Function85", "Function197", "Function8", "Function198", "Function42", "Function1", "Function17" ]
+    }
+  }, {
+    "fieldKey" : "Port3:Pending ID Timer  ",
+    "fieldValue" : 10
+  }, {
+    "fieldKey" : "Port1:Rx Rcv Macro Active",
+    "fieldValue" : "Macro90"
+  }, {
+    "fieldKey" : "Message18:Message",
+    "fieldValue" : {
+      "key" : "Message18",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port1:Tx Enable",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Macro40:Macro",
+    "fieldValue" : {
+      "key" : "Macro40",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port3:Speak Pending ID Timer",
+    "fieldValue" : 13569
+  }, {
+    "fieldKey" : "Port1:Inactivity Timeout",
+    "fieldValue" : 0
+  }, {
+    "fieldKey" : "Macro60:Macro",
+    "fieldValue" : {
+      "key" : "Macro60",
+      "functions" : [ "Function163", "Function182" ]
+    }
+  }, {
+    "fieldKey" : "Message15:Message",
+    "fieldValue" : {
+      "key" : "Message15",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port1:CTCSS During ID",
+    "fieldValue" : false
+  }, {
+    "fieldKey" : "Schedule24:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule24",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Macro62:Macro",
+    "fieldValue" : {
+      "key" : "Macro62",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Common1:Say Year",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Port1:Timeout Timer",
+    "fieldValue" : 174376
+  }, {
+    "fieldKey" : "Schedule9:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule9",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Message4:Message",
+    "fieldValue" : {
+      "key" : "Message4",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro67:Macro",
+    "fieldValue" : {
+      "key" : "Macro67",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Meter2:Meter",
+    "fieldValue" : {
+      "key" : "Meter2",
+      "meterFaceName" : "Off",
+      "low" : {
+        "hundredthVolt" : 0,
+        "reading" : 0
+      },
+      "high" : {
+        "hundredthVolt" : 0,
+        "reading" : 0
+      }
+    }
+  }, {
+    "fieldKey" : "Macro35:Macro",
+    "fieldValue" : {
+      "key" : "Macro35",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Message10:Message",
+    "fieldValue" : {
+      "key" : "Message10",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port3:Tail Timer",
+    "fieldValue" : 3433781
+  }, {
+    "fieldKey" : "Macro89:Macro",
+    "fieldValue" : {
+      "key" : "Macro89",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port2:DTMF COS Control",
+    "fieldValue" : false
+  }, {
+    "fieldKey" : "Macro43:Macro",
+    "fieldValue" : {
+      "key" : "Macro43",
+      "functions" : [ "Function162", "Function127" ]
+    }
+  }, {
+    "fieldKey" : "Port2:Timeout Reset Select",
+    "fieldValue" : "AfterCOS",
+    "candidate" : "AfterCTSegment2"
+  }, {
+    "fieldKey" : "Message5:Message",
+    "fieldValue" : {
+      "key" : "Message5",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro17:Macro",
+    "fieldValue" : {
+      "key" : "Macro17",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro37:Macro",
+    "fieldValue" : {
+      "key" : "Macro37",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Message23:Message",
+    "fieldValue" : {
+      "key" : "Message23",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Courtesy Tone6:Courtesy Tone",
+    "fieldValue" : {
+      "key" : "Courtesy Tone6",
+      "segments" : [ {
+        "delayMs" : 250,
+        "durationMs" : 75,
+        "tone1Hz" : 330,
+        "tone2Hz" : 0
+      }, {
+        "delayMs" : 0,
+        "durationMs" : 75,
+        "tone1Hz" : 495,
+        "tone2Hz" : 0
+      }, {
+        "delayMs" : 0,
+        "durationMs" : 75,
+        "tone1Hz" : 660,
+        "tone2Hz" : 0
+      }, {
+        "delayMs" : 0,
+        "durationMs" : 0,
+        "tone1Hz" : 0,
+        "tone2Hz" : 0
+      } ]
+    }
+  }, {
+    "fieldKey" : "Schedule2:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule2",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    },
+    "candidate" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 22,
+      "key" : "Schedule2",
+      "week" : "Every",
+      "dow" : "Wednesday",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Port2:Timeout Timer",
+    "fieldValue" : 66092
+  }, {
+    "fieldKey" : "Message26:Message",
+    "fieldValue" : {
+      "key" : "Message26",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Common1:Say Hours",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Macro72:Macro",
+    "fieldValue" : {
+      "key" : "Macro72",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Schedule21:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule21",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Port1:Use DR1",
+    "fieldValue" : false
+  }, {
+    "fieldKey" : "Port2:P3 Tail Message",
+    "fieldValue" : "Macro0",
+    "candidate" : "Macro1"
+  }, {
+    "fieldKey" : "Port3:Hang Time 3",
+    "fieldValue" : 3
+  }, {
+    "fieldKey" : "Port3:Rx Rcv Macro Low",
+    "fieldValue" : "Macro90"
+  }, {
+    "fieldKey" : "Meter Alarm8:Meter Alarm",
+    "fieldValue" : {
+      "macroKey" : "Macro90",
+      "meter" : "Meter1",
+      "alarmType" : "LowAlarm",
+      "key" : "Meter Alarm8",
+      "tripPoint" : 42
+    }
+  }, {
+    "fieldKey" : "Macro56:Macro",
+    "fieldValue" : {
+      "key" : "Macro56",
+      "functions" : [ "Function163", "Function188", "Function189" ]
+    }
+  }, {
+    "fieldKey" : "Macro30:Macro",
+    "fieldValue" : {
+      "key" : "Macro30",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Schedule23:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule23",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Port2:Kerchunk",
+    "fieldValue" : false
+  }, {
+    "fieldKey" : "Message9:Message",
+    "fieldValue" : {
+      "key" : "Message9",
+      "words" : [ ]
+    }
+  }, {
+    "fieldKey" : "Macro44:Macro",
+    "fieldValue" : {
+      "key" : "Macro44",
+      "functions" : [ "Function162", "Function128" ]
+    }
+  }, {
+    "fieldKey" : "Port2:Tail Counter",
+    "fieldValue" : 3238708
+  }, {
+    "fieldKey" : "Port1:Tail Counter",
+    "fieldValue" : 3238144
+  }, {
+    "fieldKey" : "Schedule39:Schedule",
+    "fieldValue" : {
+      "macroKey" : "Macro3",
+      "minute" : 0,
+      "enabled" : false,
+      "hour" : 25,
+      "key" : "Schedule39",
+      "week" : "Every",
+      "dow" : "EveryDay",
+      "monthOfYear" : "Every"
+    }
+  }, {
+    "fieldKey" : "Macro79:Macro",
+    "fieldValue" : {
+      "key" : "Macro79",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Port3:CTCSS Decode",
+    "fieldValue" : true
+  }, {
+    "fieldKey" : "Macro23:Macro",
+    "fieldValue" : {
+      "key" : "Macro23",
+      "functions" : [ ]
+    }
+  }, {
+    "fieldKey" : "Message38:Message",
+    "fieldValue" : {
+      "key" : "Message38",
+      "words" : [ ]
+    }
+  } ],
+  "namedKeys" : [ {
+    "key" : "Macro2",
+    "name" : "macro 2"
+  }, {
+    "key" : "Meter Alarm1",
+    "name" : "alarm 1"
+  }, {
+    "key" : "Port3",
+    "name" : "3x3"
+  }, {
+    "key" : "Meter1",
+    "name" : "meter #1"
+  }, {
+    "key" : "Logic Alarm1",
+    "name" : "LA1"
+  }, {
+    "key" : "Courtesy Tone1",
+    "name" : "ct1"
+  }, {
+    "key" : "Macro1",
+    "name" : "n1"
+  }, {
+    "key" : "Message1",
+    "name" : "m1changedxyzzy"
+  }, {
+    "key" : "Port2",
+    "name" : "2is2"
+  }, {
+    "key" : "Schedule1",
+    "name" : "s1"
+  }, {
+    "key" : "Timer6",
+    "name" : "t6"
+  }, {
+    "key" : "Port1",
+    "name" : "01new"
+  } ],
+  "who" : {
+    "callsign" : "WA9NNN",
+    "id" : "u0u9PyIn9weFdQRZ2rl1qw==",
+    "email" : ""
+  }
+}

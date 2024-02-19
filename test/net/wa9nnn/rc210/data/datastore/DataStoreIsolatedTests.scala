@@ -1,7 +1,6 @@
 package net.wa9nnn.rc210.data.datastore
 
-import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.{WithMemory, WithTestConfiguration}
+import net.wa9nnn.rc210.{Key, WithMemory, WithTestConfiguration}
 import net.wa9nnn.rc210.data.field.{FieldDefinitions, FieldEntry}
 import net.wa9nnn.rc210.data.timers.TimerNode
 import net.wa9nnn.rc210.security.authentication.{RcSession, User}
@@ -14,6 +13,7 @@ class DataStoreIsolatedTests extends WithTestConfiguration {
 
   "DataStore" when {
     "FlowData" should {
+      os.list(dataDirectory).foreach(println(_))
       val definitions: FieldDefinitions = new FieldDefinitions
       val memoryFileLoader: MemoryFileLoader = new MemoryFileLoader(definitions)
       val dataStorePersistence: DataStorePersistence = new DataStorePersistence()

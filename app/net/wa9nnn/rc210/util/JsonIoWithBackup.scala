@@ -1,14 +1,7 @@
 package net.wa9nnn.rc210.util
 
-import com.wa9nnn.wa9nnnutil.TimeConverters._
-import org.apache.commons.io.{FileUtils, FilenameUtils}
-import org.apache.commons.io.file.PathUtils
-import play.api.libs.json.{JsValue, Json}
-
-import java.nio.file._
-import java.nio.file.attribute.FileTime
-import java.util.UUID
-import scala.util.Try
+import os.*
+import play.api.libs.json.*
 
 /**
  * reads/write json files with backup of previous file.
@@ -16,24 +9,23 @@ import scala.util.Try
  */
 object JsonIoWithBackup {
 
-  def apply(baseFile: Path, jsValue: JsValue): Unit = {
-    val parent = baseFile.getParent
-    Files.createDirectories(parent)
-    val backup: Path = baseFile.resolveSibling(baseFile.getFileName.toFile.getName + ".backup")
-    val temp: Path = baseFile.resolveSibling(baseFile.getFileName.toFile.getName + ".temp")
-    Files.deleteIfExists(temp)
+  def apply(baseFile: os.Path, jsValue: JsValue): Unit = {
+    val parent: os.Path = baseFile / os.up
+    os.makeDir.all(parent)
+    val baseFilerName = baseFile.baseName
+    val temp: os.Path = parent / (baseFilerName + ".temp")
+    val backup: os.Path = parent / (baseFilerName + ".backup")
+    os.remove(temp)
 
     val sJson = Json.prettyPrint(jsValue)
-    Files.writeString(temp, sJson)
-    Files.deleteIfExists(backup)
-    if (Files.exists(baseFile))
-      Files.move(baseFile, backup)
-    Files.move(temp, baseFile)
+    os.write(temp, sJson)
+    os.move(baseFile, backup, replaceExisting = true)
+    os.move(temp, baseFile)
   }
 
-
-  def apply(baseFile: Path): JsValue = {
-      Json.parse(Files.readString(baseFile))
+  def apply(baseFile: os.Path): JsValue = {
+    val str: String = os.read(baseFile)
+    Json.parse(str)
   }
 }
 

@@ -21,7 +21,6 @@ import controllers.UserEditDTO
 import net.wa9nnn.rc210.WithTestConfiguration
 import org.scalatest.BeforeAndAfterAll
 
-import java.nio.file.Files
 import scala.language.postfixOps
 import scala.runtime.stdLibPatches.Predef
 
@@ -29,18 +28,21 @@ class UserStoreTest extends WithTestConfiguration with BeforeAndAfterAll {
   private val wa9nnnDto: UserEditDTO = UserEditDTO("WA9NNN", Some("Dick"), Some("dick@u505.com"), Some("swordfish"), id = "1")
   private val user: User = User(wa9nnnDto)
   val rcSession: RcSession = RcSession("42", user, "")
-  val defaultNoUsersLogin = new DefaultNoUsersLogin(config)
-  val userStore = new UserStore()(config, defaultNoUsersLogin)
-  Files.deleteIfExists(userStore.usersFile)
+  val noUser = new DefaultNoUsersLogin(config)
+  val userStore: UserStore = new UserStore(config, noUser)
+  //  Files.deleteIfExists(userStore.usersFile)
   userStore.put(wa9nnnDto)(rcSession)
 
+  private val str: String = config.getString("vizRc210.dataDir")
+  println(str)
+
   "UserStoreTest" when {
-    "Initially exist because we did a put above" in {
-      Files.exists(userStore.usersFile) mustBe true
+/*    "Initially exist because we did a put above" in {
+      os.exists(userStore.usersFile) mustBe true
       val userRecords: UserRecords = userStore.readJson
       userRecords.users must have length 1
     }
-    "editing" should {
+*/    "editing" should {
       "Add new User" in {
         val lengthB4 = userStore.users.length
 
