@@ -17,30 +17,23 @@
 
 package net.wa9nnn.rc210
 
-import com.typesafe.config.{Config, ConfigFactory}
-import net.wa9nnn.rc210.util.Configs
-import org.apache.commons.io.FileUtils
+import com.typesafe.config.*
+import os.*
 
-import java.io.File
-import java.nio.file.Files
+class WithTestConfiguration extends RcSpec:
+  val dataDirectory: Path = createTempDataDirectory()
 
-class WithTestConfiguration extends RcSpec {
+  private val dataDirectoryConfigValue: ConfigValue = ConfigValueFactory.fromAnyRef(dataDirectory.toString)
 
-  implicit val config: Config = ConfigFactory.parseResources("test.conf")
-    .withFallback(ConfigFactory.load())
+  private val applicationConfig: Config = ConfigFactory.defaultApplication()
+  val config: Config = ConfigFactory
+    .parseResources("test.conf")
+    .withFallback(applicationConfig)
+    .withValue("vizRc210.dataDir", dataDirectoryConfigValue)
     .resolve()
-  try
 
-    if (config.getString("configfile") != "test.conf")
-      throw new IllegalStateException("Must be using test.conf")
-  catch {
-    case e: Exception =>
-      e.printStackTrace()
-  }
+  given Config = config
 
-  def cleanDirectory(): Unit = {
-    val datadir = Configs.path("vizRc210.dataDir")
-    if (Files.exists(datadir))
-      FileUtils.cleanDirectory(datadir.toFile)
-  }
-}
+  def cleanDirectory(): Unit =
+    remove.all(dataDirectory)
+
