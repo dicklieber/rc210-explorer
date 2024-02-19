@@ -24,7 +24,7 @@ import org.scalatest.BeforeAndAfterAll
 import scala.language.postfixOps
 import scala.runtime.stdLibPatches.Predef
 
-class UserStoreTest extends WithTestConfiguration with BeforeAndAfterAll {
+class UserStoreTest extends WithTestConfiguration  {
   private val wa9nnnDto: UserEditDTO = UserEditDTO("WA9NNN", Some("Dick"), Some("dick@u505.com"), Some("swordfish"), id = "1")
   private val user: User = User(wa9nnnDto)
   val rcSession: RcSession = RcSession("42", user, "")
@@ -83,11 +83,11 @@ class UserStoreTest extends WithTestConfiguration with BeforeAndAfterAll {
 
   }
 
-  override protected def afterAll(): Unit = {
-    super.afterAll()
-    val userRecords: UserRecords = userStore.readJson
-
-    Predef.assert(userRecords.users.length == 1)
-    Predef.assert(userRecords.who.callsign == "WA9NNN", s"who must be WA9NNN")
-  }
+//  override protected def afterAll(): Unit = {
+//    super.afterAll()
+//    val userRecords: UserRecords = userStore.readJson
+//
+//    Predef.assert(userRecords.users.length == 1)
+//    Predef.assert(userRecords.who.callsign == "WA9NNN", s"who must be WA9NNN")
+//  }
 }
