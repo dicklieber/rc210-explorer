@@ -3,8 +3,6 @@ import sbt.Keys.packageBin
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations.*
 import sbtrelease.ReleaseStateTransformations.commitReleaseVersion
 
-import scala.math.Equiv.universal
-
 name := """rc210-explorer"""
 organization := "net.wa9nnn"
 maintainer := "dick@u50.com"
@@ -88,6 +86,8 @@ routesImport += "net.wa9nnn.rc210.KeyKind"
 routesImport += "net.wa9nnn.rc210.Key"
 routesImport += "net.wa9nnn.rc210.ui.nav.TabKind"
 routesImport += "net.wa9nnn.rc210.serial.SendField"
+
+Artifact("myproject", "zip", "zip")
 
 releaseProcess := Seq[ReleaseStep](
   checkSnapshotDependencies,              // : ReleaseStep
