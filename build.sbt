@@ -1,5 +1,7 @@
 import play.sbt.routes.RoutesKeys.{routesGenerator, routesImport}
 
+import scala.Seq
+
 name := """rc210-explorer"""
 organization := "net.wa9nnn"
 maintainer := "dick@u50.com"
@@ -27,6 +29,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
     versionScheme := Some("early-semver"),
 
     routesGenerator := InjectedRoutesGenerator,
+    githubWorkflowJavaVersions += JavaSpec.temurin("17"),
 
     scalacOptions ++= Seq(
       "-feature",
@@ -86,4 +89,3 @@ routesImport += "net.wa9nnn.rc210.Key"
 routesImport += "net.wa9nnn.rc210.ui.nav.TabKind"
 routesImport += "net.wa9nnn.rc210.serial.SendField"
 
-ThisBuild / githubWorkflowJavaVersions += JavaSpec.temurin("17")
