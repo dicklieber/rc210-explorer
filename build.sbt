@@ -7,7 +7,7 @@ name := """rc210-explorer"""
 organization := "net.wa9nnn"
 maintainer := "dick@u50.com"
 
-enablePlugins(JavaServerAppPackaging, DockerPlugin)
+enablePlugins(UniversalPlugin)
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
   .settings(
