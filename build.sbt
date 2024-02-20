@@ -1,6 +1,9 @@
 import play.sbt.routes.RoutesKeys.{routesGenerator, routesImport}
+import sbt.Keys.packageBin
+import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations.*
+import sbtrelease.ReleaseStateTransformations.commitReleaseVersion
 
-import scala.Seq
+import scala.math.Equiv.universal
 
 name := """rc210-explorer"""
 organization := "net.wa9nnn"
@@ -86,3 +89,42 @@ routesImport += "net.wa9nnn.rc210.Key"
 routesImport += "net.wa9nnn.rc210.ui.nav.TabKind"
 routesImport += "net.wa9nnn.rc210.serial.SendField"
 
+//val buildRpm = (ref: ProjectRef) => ReleaseStep(
+//  action = releaseStepTaskAggregated(universal:packageBin )
+//)
+
+
+// ...
+
+releaseProcess := Seq[ReleaseStep](
+//  checkSnapshotDependencies,              // : ReleaseStep
+  inquireVersions,                        // : ReleaseStep
+  runClean,                               // : ReleaseStep
+  runTest,                                // : ReleaseStep
+  setReleaseVersion,                      // : ReleaseStep
+//  releaseStepTaskAggregated(universal:packageBin),
+  ReleaseStep(releaseStepTask(Universal / packageBin)),
+  commitReleaseVersion,                   // : ReleaseStep, performs the initial git checks
+  tagRelease,                             // : ReleaseStep
+  publishArtifacts,                       // : ReleaseStep, checks whether `publishTo` is properly set up
+  setNextVersion,                         // : ReleaseStep
+  commitNextVersion,                      // : ReleaseStep
+  pushChanges                             // : ReleaseStep, also checks that an upstream branch is properly configured
+)
+//releaseProcess := thisProjectRef apply { ref =>
+//  import sbtrelease.ReleaseStateTransformations._
+//  Seq[ReleaseStep](
+//    checkSnapshotDependencies, // : ReleaseStep
+//    inquireVersions, // : ReleaseStep
+//  runClean,                               // : ReleaseStep
+//    runTest, // : ReleaseStep
+//    setReleaseVersion, // : ReleaseStep
+//    buildRpm(ref),
+//    commitReleaseVersion, // : ReleaseStep, performs the initial git checks
+//    tagRelease, // : ReleaseStep
+//    publishArtifacts, // : ReleaseStep, checks whether `publishTo` is properly set up
+//    setNextVersion, // : ReleaseStep
+//    commitNextVersion, // : ReleaseStep
+//    pushChanges // : ReleaseStep, also checks that an upstream branch is properly configured
+//  )
+//}
