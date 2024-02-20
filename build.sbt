@@ -86,3 +86,4 @@ routesImport += "net.wa9nnn.rc210.Key"
 routesImport += "net.wa9nnn.rc210.ui.nav.TabKind"
 routesImport += "net.wa9nnn.rc210.serial.SendField"
 
+ThisBuild / githubWorkflowJavaVersions += JavaSpec.temurin("17")
