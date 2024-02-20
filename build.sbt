@@ -89,20 +89,12 @@ routesImport += "net.wa9nnn.rc210.Key"
 routesImport += "net.wa9nnn.rc210.ui.nav.TabKind"
 routesImport += "net.wa9nnn.rc210.serial.SendField"
 
-//val buildRpm = (ref: ProjectRef) => ReleaseStep(
-//  action = releaseStepTaskAggregated(universal:packageBin )
-//)
-
-
-// ...
-
 releaseProcess := Seq[ReleaseStep](
-//  checkSnapshotDependencies,              // : ReleaseStep
+  checkSnapshotDependencies,              // : ReleaseStep
   inquireVersions,                        // : ReleaseStep
   runClean,                               // : ReleaseStep
   runTest,                                // : ReleaseStep
   setReleaseVersion,                      // : ReleaseStep
-//  releaseStepTaskAggregated(universal:packageBin),
   ReleaseStep(releaseStepTask(Universal / packageBin)),
   commitReleaseVersion,                   // : ReleaseStep, performs the initial git checks
   tagRelease,                             // : ReleaseStep
