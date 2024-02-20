@@ -10,9 +10,6 @@ enablePlugins(JavaServerAppPackaging, DockerPlugin)
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
   .settings(
-    //    Compile / mappings := Seq(),
-    //    packageDoc / mappings := Seq(),
-    //    scalaVersion := "2.13.10",
     scalaVersion := "3.3.1",
     buildInfoKeys :=
       Seq[BuildInfoKey](
