@@ -2,10 +2,9 @@ import play.sbt.routes.RoutesKeys.{routesGenerator, routesImport}
 import sbt.Keys.packageBin
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations.*
 import sbtrelease.ReleaseStateTransformations.commitReleaseVersion
-
 name := """rc210-explorer"""
 organization := "net.wa9nnn"
-maintainer := "dick@u50.com"
+maintainer := "dick@u505.com"
 
 enablePlugins(UniversalPlugin)
 
@@ -87,22 +86,35 @@ routesImport += "net.wa9nnn.rc210.Key"
 routesImport += "net.wa9nnn.rc210.ui.nav.TabKind"
 routesImport += "net.wa9nnn.rc210.serial.SendField"
 
-Artifact("myproject", "zip", "zip")
+// first define a task key
+lazy val ghRelease = taskKey[Unit]("Publish tpo GitHub release")
+
+// then implement the task key
+ghRelease := {
+  val p: os.Path = os.root / "hello"
+  val dirs = (sourceDirectories in Test).value
+  println(dirs)
+}
+
+// gh release create v1.1.7 --generate-notes /Users/dlieber/devlocal/github/rc210-explorer/target/universal/rc210-explorer-1.1.7.zip
 
 releaseProcess := Seq[ReleaseStep](
-  checkSnapshotDependencies,              // : ReleaseStep
-  inquireVersions,                        // : ReleaseStep
-  runClean,                               // : ReleaseStep
-  runTest,                                // : ReleaseStep
-  setReleaseVersion,                      // : ReleaseStep
+  checkSnapshotDependencies, // : ReleaseStep
+  inquireVersions, // : ReleaseStep
+  runClean, // : ReleaseStep
+  runTest, // : ReleaseStep
+  setReleaseVersion, // : ReleaseStep
   ReleaseStep(releaseStepTask(Universal / packageBin)),
-  commitReleaseVersion,                   // : ReleaseStep, performs the initial git checks
-  tagRelease,                             // : ReleaseStep
-  publishArtifacts,                       // : ReleaseStep, checks whether `publishTo` is properly set up
-  setNextVersion,                         // : ReleaseStep
-  commitNextVersion,                      // : ReleaseStep
-  pushChanges                             // : ReleaseStep, also checks that an upstream branch is properly configured
+  commitReleaseVersion, // : ReleaseStep, performs the initial git checks
+  tagRelease, // : ReleaseStep
+  publishArtifacts, // : ReleaseStep, checks whether `publishTo` is properly set up
+  setNextVersion, // : ReleaseStep
+  commitNextVersion, // : ReleaseStep
+  pushChanges // : ReleaseStep, also checks that an upstream branch is properly configured
 )
+
+
+//ghreleaseAssets :=
 //releaseProcess := thisProjectRef apply { ref =>
 //  import sbtrelease.ReleaseStateTransformations._
 //  Seq[ReleaseStep](
