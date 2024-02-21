@@ -1,7 +1,6 @@
 import play.sbt.routes.RoutesKeys.{routesGenerator, routesImport}
 import sbt.Keys.packageBin
-import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations.*
-import sbtrelease.ReleaseStateTransformations.commitReleaseVersion
+import sbtrelease.ReleaseStateTransformations.{checkSnapshotDependencies, commitNextVersion, commitReleaseVersion, inquireVersions, publishArtifacts, pushChanges, runClean, runTest, setNextVersion, setReleaseVersion, tagRelease}
 name := """rc210-explorer"""
 organization := "net.wa9nnn"
 maintainer := "dick@u505.com"
@@ -91,7 +90,9 @@ lazy val ghRelease = taskKey[Unit]("Publish tpo GitHub release")
 
 // then implement the task key
 ghRelease := {
-  val p: os.Path = os.root / "hello"
+//  val p: os.Path = os.root / "hello"
+  println("XYZZY-XYZZY")
+
   val dirs = (sourceDirectories in Test).value
   println(dirs)
 }
