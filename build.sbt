@@ -1,11 +1,9 @@
-import sbt.*
-import sbt.Keys.*
 import play.sbt.routes.RoutesKeys.{routesGenerator, routesImport}
-import sbt.Keys.packageBin
+import sbt.*
+import sbt.Keys.{packageBin, *}
 import sbt.internal.util.ManagedLogger
-import sbtrelease.ReleaseStateTransformations.{commitReleaseVersion, *}
+import sbtrelease.ReleaseStateTransformations.*
 
-import scala.collection.immutable
 import scala.sys.process.*
 
 name := """rc210-explorer"""
