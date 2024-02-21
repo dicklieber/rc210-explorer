@@ -1,6 +1,13 @@
+import sbt.*
+import sbt.Keys.*
 import play.sbt.routes.RoutesKeys.{routesGenerator, routesImport}
 import sbt.Keys.packageBin
-import sbtrelease.ReleaseStateTransformations.{checkSnapshotDependencies, commitNextVersion, commitReleaseVersion, inquireVersions, publishArtifacts, pushChanges, runClean, runTest, setNextVersion, setReleaseVersion, tagRelease}
+import sbt.internal.util.ManagedLogger
+import sbtrelease.ReleaseStateTransformations.{commitReleaseVersion, *}
+
+import scala.collection.immutable
+import scala.sys.process.*
+
 name := """rc210-explorer"""
 organization := "net.wa9nnn"
 maintainer := "dick@u505.com"
@@ -25,7 +32,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
     versionScheme := Some("early-semver"),
 
     routesGenerator := InjectedRoutesGenerator,
-    githubWorkflowJavaVersions += JavaSpec.temurin("17"),
+    //    githubWorkflowJavaVersions += JavaSpec.temurin("17"),
 
     scalacOptions ++= Seq(
       "-feature",
@@ -86,18 +93,16 @@ routesImport += "net.wa9nnn.rc210.ui.nav.TabKind"
 routesImport += "net.wa9nnn.rc210.serial.SendField"
 
 // first define a task key
-lazy val ghRelease = taskKey[Unit]("Publish tpo GitHub release")
+lazy val ghRelease = taskKey[Unit]("Publish zip to GitHub release")
 
 // then implement the task key
 ghRelease := {
-//  val p: os.Path = os.root / "hello"
-  println("XYZZY-XYZZY")
-
-  val dirs = (sourceDirectories in Test).value
-  println(dirs)
+  val ver = version.value
+  val cmd = s"gh release create v$ver --generate-notes /Users/dlieber/devlocal/github/rc210-explorer/target/universal/rc210-explorer-$ver.zip"
+  val log: ManagedLogger = streams.value.log
+  val i: Int = cmd ! (log)
+  val value = s"cmd: $cmd returned $i"
 }
-
-// gh release create v1.1.7 --generate-notes /Users/dlieber/devlocal/github/rc210-explorer/target/universal/rc210-explorer-1.1.7.zip
 
 releaseProcess := Seq[ReleaseStep](
   checkSnapshotDependencies, // : ReleaseStep
@@ -106,6 +111,7 @@ releaseProcess := Seq[ReleaseStep](
   runTest, // : ReleaseStep
   setReleaseVersion, // : ReleaseStep
   ReleaseStep(releaseStepTask(Universal / packageBin)),
+  releaseStepTask(ghRelease),
   commitReleaseVersion, // : ReleaseStep, performs the initial git checks
   tagRelease, // : ReleaseStep
   publishArtifacts, // : ReleaseStep, checks whether `publishTo` is properly set up
@@ -113,23 +119,3 @@ releaseProcess := Seq[ReleaseStep](
   commitNextVersion, // : ReleaseStep
   pushChanges // : ReleaseStep, also checks that an upstream branch is properly configured
 )
-
-
-//ghreleaseAssets :=
-//releaseProcess := thisProjectRef apply { ref =>
-//  import sbtrelease.ReleaseStateTransformations._
-//  Seq[ReleaseStep](
-//    checkSnapshotDependencies, // : ReleaseStep
-//    inquireVersions, // : ReleaseStep
-//  runClean,                               // : ReleaseStep
-//    runTest, // : ReleaseStep
-//    setReleaseVersion, // : ReleaseStep
-//    buildRpm(ref),
-//    commitReleaseVersion, // : ReleaseStep, performs the initial git checks
-//    tagRelease, // : ReleaseStep
-//    publishArtifacts, // : ReleaseStep, checks whether `publishTo` is properly set up
-//    setNextVersion, // : ReleaseStep
-//    commitNextVersion, // : ReleaseStep
-//    pushChanges // : ReleaseStep, also checks that an upstream branch is properly configured
-//  )
-//}
