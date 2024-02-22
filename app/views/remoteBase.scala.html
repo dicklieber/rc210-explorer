@@ -9,9 +9,9 @@
 @(f: Form[RemoteBaseNode])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
 @form(routes.EditController.save()) {
-    <input type="hidden" name="fieldKeyStuff" value="@RemoteBaseNode.fieldKey">
+    <input type="hidden" name="fieldKey" value="@RemoteBaseNode.fieldKey">
 
-    <table>
+    <table >
         <tr>
             <td>Radio:</td>
             <td>@select(f("radio"), Radio.options)</td>
@@ -26,7 +26,7 @@
         </tr>
     </table>
 
-    <table>
+    <table class="headeredTable">
         <thead>
             <tr>
                 <th>Number</th>
