@@ -56,7 +56,7 @@
     <logger name="net.wa9nnn.rc210.data.schedules.ScheduleNode" level="INFO"/>
     <logger name="net.wa9nnn.rc210.security.authentication.SessionStore" level="INFO"/>
     <logger name="net.wa9nnn.rc210.security.authorzation.AuthFilter" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.serial.DataCollector" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.serial.DataCollector" level="TRACE"/>
     <logger name="net.wa9nnn.rc210.serial.RC210IO" level="INFO"/>
     <logger name="net.wa9nnn.rc210.serial.Rc210.RcOperationImpl" level="INFO"/>
     <logger name="net.wa9nnn.rc210.serial.comm.RcSerialPort" level="INFO"/>

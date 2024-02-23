@@ -19,8 +19,10 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.serial.Rc210
+import net.wa9nnn.rc210.ui.Tabs
 import org.apache.pekko.util.Timeout
 import play.api.mvc.*
+import views.html.NavMain
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
@@ -28,7 +30,7 @@ import scala.language.postfixOps
 
 @Singleton
 class IOController @Inject()(implicit val controllerComponents: ControllerComponents,
-                             rc210: Rc210,
+                             rc210: Rc210, navMain: NavMain
                             ) extends BaseController with LazyLogging {
   implicit val timeout: Timeout = 5.seconds
 
@@ -45,7 +47,7 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
 
   def listSerialPorts: Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      Ok(views.html.RC210SerialPorts(rc210))
+      Ok(navMain(Tabs.rc210Tab, views.html.RC210SerialPorts(rc210)))
   }
 }
 

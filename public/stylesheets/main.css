@@ -390,11 +390,10 @@ article {
     border: #9c27b0 3px dot-dash;
 }
 footer {
-    background-color: #0d6efd;
-    border: 3px solid forestgreen;
+    /*background-color: #0d6efd;*/
+    /*border: 3px solid forestgreen;*/
     padding: 10px;
     text-align: center;
-    color: white;
 }
 
 .checkbox{

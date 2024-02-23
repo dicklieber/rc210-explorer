@@ -1,18 +1,18 @@
 @import views.html.helper.form
 @import net.wa9nnn.rc210.ui.Tabs
-@import net.wa9nnn.rc210.serial.comm.RcSerialPort
-@(serialPort: RcSerialPort)
+@import com.fazecast.jSerialComm.SerialPort
+@(selectedSerialPort: String)
 @form(action = routes.DownloadController.startDownload()) {
-    <table class="table table-bordered w-auto">
-        <thead class="table-primary">
+    <table class="headeredTable">
+        <thead>
             <tr>
                 <th colspan="2">Download From RC210</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>ComPort:</td>
-                <td>@serialPort</td>
+                <td>Serial Port:</td>
+                <td>@selectedSerialPort</td>
             </tr>
             <tr>
                 <td>Comment:</td>

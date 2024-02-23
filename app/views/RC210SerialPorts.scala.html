@@ -8,7 +8,7 @@
     <table class="headeredTable">
         <thead>
             <tr>
-                <th colspan="3">Seral Ports</th>
+                <th colspan="3">Serial Ports</th>
             </tr>
             <tr>
                 <th>Selected</th>
@@ -20,10 +20,11 @@
 
             @for(serialPort <- rc210.listPorts()) {
                 <tr>
+                @defining(rc210.isSelected(serialPort)) { selected =>
                     <td style="text-align: center">
                         <input type="radio"
-                        name="selectedPort" @rc210.checkedFlag(serialPort)
-                        onclick="window.location.href = '@routes.IOController.select(serialPort.getSystemPortName)'">
+                        name="selectedPort" @if(selected) { checked }
+                    onclick="window.location.href = '@routes.IOController.select(serialPort.getSystemPortName)'">
                     </td>
                     <td>
                     @serialPort.getSystemPortName
@@ -31,11 +32,17 @@
                     <td>
                     @serialPort.getDescriptivePortName
                     </td>
+                }
                 </tr>
 
             }
         </tbody>
     </table>
-@for(rcSerialPort <- rc210.rcSerialPortOption) {
-    @triedString(s"Selected: $rcSerialPort.", rcSerialPort.version)
-}
+
+    @if(rc210.portAndVersion.version.isDefined) {
+        <p class="happyCell">@rc210.selectedPortInfo</p>
+    } else {
+        <p>@rc210.selectedPortInfo</p>
+    }
+
+</div>

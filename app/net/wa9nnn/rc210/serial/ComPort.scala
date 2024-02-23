@@ -37,7 +37,7 @@ case class WriteFailed(serialPort: SerialPort, request:String) extends ComPortEx
 
 case class NoVersion(comPort: SerialPort) extends ComPortException(comPort.toString)
 
-case class Timeout(serialPort: SerialPort) extends ComPortException(serialPort.toString)
+case class Timeout(name:String) extends ComPortException(name)
 
 
 

@@ -74,7 +74,7 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
 
     eventBased.addDataListener(new SerialPortMessageListenerWithExceptions {
       // These overriden methods are the asynchronous callbacks invoked by jSerialComm.
-      override def catchException(e: Exception): Unit = logger.error(s"comPort: ${eventBased.serialPort}", e)
+      override def catchException(e: Exception): Unit = logger.error(s"comPort: ${eventBased.toString}", e)
 
       override def getMessageDelimiter: Array[Byte] = Array('\n')
 
@@ -104,7 +104,7 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
             logger.debug("\tEEPROM Done")
             progressApi.finish() 
           case "Timeout" =>
-            progressApi.fatalError(Timeout(eventBased.serialPort))
+            progressApi.fatalError(Timeout(eventBased.toString))
             cleanup("timeout")
           case response =>
             try {

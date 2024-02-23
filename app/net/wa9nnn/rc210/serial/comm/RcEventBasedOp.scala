@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.serial.comm
 
-import com.fazecast.jSerialComm.SerialPortDataListener
+import com.fazecast.jSerialComm.{SerialPort, SerialPortDataListener}
 
 import scala.concurrent.duration.Duration
 
@@ -27,15 +27,13 @@ import scala.concurrent.duration.Duration
  *
  * @param rcSerialPort provides access to the serial port.
  */
-class RcEventBasedOp(rcSerialPort: RcSerialPort) extends RcOp(rcSerialPort) with AutoCloseable {
+class RcEventBasedOp(serialPort: SerialPort) extends RcOp(serialPort):
   serialPort.flushIOBuffers() // get rid of any left over crap.
 
-  def addDataListener(serialPortDataListener: SerialPortDataListener): Unit = serialPort.addDataListener(serialPortDataListener)
+  def addDataListener(serialPortDataListener: SerialPortDataListener): Unit =
+    serialPort.addDataListener(serialPortDataListener)
 
-
-
-  override def close(): Unit = {
-    serialPort.removeDataListener()
-    rcSerialPort.close()
+  def send(string: String): Unit = {
+    val bytes = string.getBytes
+    serialPort.writeBytes(bytes, bytes.length)
   }
-}

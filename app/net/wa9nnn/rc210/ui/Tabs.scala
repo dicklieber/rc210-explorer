@@ -51,6 +51,7 @@ case class Tabx(override val entryName: String,
 object Tabs:
 
   val rc210Tab: Tabx = Tabx("RC-210", routes.IOController.listSerialPorts.url, "RC-210 Operations", Rc210Io)
+  val rc210Download: Tabx = Tabx("RC-210 Download", routes.DownloadController.index.url, "Download from RC-210", Rc210Io)
   val memory: Tab = Tab("Memory", routes.MemoryController.index.url, Debug, "View raw data received from the RC-210 controller.")
   val viewJson: Tab = Tab("Json", routes.DataStoreController.viewJson().url, Debug, "View data as JSON.")
   val changes: Tabx = Tabx("Changes", routes.CommandsController.index.url, "Pending changes that need to be sent to the RC-210.", Rc210Io)
@@ -66,6 +67,7 @@ object Tabs:
       .filterNot(_ == KeyKind.Function )
       .sortBy(_.entryName) :++ Seq(
       rc210Tab,
+      rc210Download,
       memory,
       changes,
       fileUpload,

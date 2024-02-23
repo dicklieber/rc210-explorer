@@ -18,45 +18,39 @@
 package net.wa9nnn.rc210.serial
 
 import com.fazecast.jSerialComm.{SerialPort, SerialPortDataListener}
+import com.github.andyglow.config.*
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.serial.comm.*
 import net.wa9nnn.rc210.util.Configs
+import net.wa9nnn.rc210.util.Configs.*
+import os.*
 
-import java.nio.file.{Files, Path}
 import java.time.Duration
 import javax.inject.{Inject, Singleton}
 import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Try, Using}
 
 @Singleton
-class Rc210 @Inject()(implicit config: Config) extends LazyLogging:
+class Rc210 @Inject()(config: Config, serialPortsSource: SerialPortsSource) extends LazyLogging:
+  private var _portAndVersion: PortAndVersion = PortAndVersion()
 
-  //  def maybeSelectedComPort: ComPort = maybeRcSerialPort.map(_.comPort).get
-
-  private val serialConfig = SerialConfig(config)
-
-  private val serialPortsSource = new SerialPortsSource()
-
-  private val file: Path = Configs.path("vizRc210.serialPortsFile")
-
-  Files.createDirectories(file.getParent)
-  private var maybeRcSerialPort: Option[RcSerialPort] = None
-  if (Files.exists(file))
-    selectPort(Files.readString(file))
+  private val file: Path = config.get[Path]("vizRc210.serialPortsFile")
+  if (os.exists(file))
+    selectPort(os.read(file))
 
   def openStreamBased: RcStreamBased = {
-    new RcStreamBased(rcSerialPort())
+    _portAndVersion.selectedSerialPort.map { serialPort =>
+      new RcStreamBased(serialPort)
+    }.getOrElse(throw new IllegalStateException("No serial port selected!"))
   }
 
-  def rcSerialPortOption: Option[RcSerialPort] = maybeRcSerialPort
-
-  def rcSerialPort(): RcSerialPort =
-    maybeRcSerialPort.getOrElse(throw new IllegalStateException("No serial port selected!"))
-
   def openEventBased(): RcEventBasedOp = {
-    new RcEventBasedOp(rcSerialPort())
+    _portAndVersion.selectedSerialPort.map { serialPort =>
+      new RcEventBasedOp(serialPort)
+    }.getOrElse(throw new IllegalStateException("No serial port selected!"))
+
   }
 
   def sendOne(request: String): RcOperationResult = {
@@ -72,35 +66,46 @@ class Rc210 @Inject()(implicit config: Config) extends LazyLogging:
       }
     }
 
-  def checkedFlag(candidate: SerialPort): String =
+  def isSelected(candidate: SerialPort): Boolean =
     (for {
-      rcSerialPort <- maybeRcSerialPort
-      bool = rcSerialPort.serialPort.getSystemPortName == candidate.getSystemPortName
-      if bool
-    }
-    yield
-      logger.info("checked")
-      "checked"
-      ).getOrElse("")
+      port <- _portAndVersion.selectedSerialPort
+      systemPortName = port.getSystemPortName
+      if candidate.getSystemPortName == systemPortName
+    } yield {
+      true
+    }).getOrElse(false)
 
   def selectPort(candidate: String): Unit =
-    try {
-      serialPortsSource.apply().find(_.getSystemPortName == candidate)
-        .foreach { serialPort =>
-          Files.writeString(file, serialPort.getSystemPortName)
-          val rcSerialPort = RcSerialPort(serialPort)
-          try {
-            maybeRcSerialPort = Option(rcSerialPort)
-          } catch {
-            case e: Exception =>
-              logger.error(s"Getting Version from RC210", e)
-          }
-        }
-    } catch {
-      case e: Exception =>
-        logger.error(s"Selecting $candidate", e)
-    }
+    serialPortsSource()
+      .find(_.getSystemPortName == candidate)
+      .foreach((serialPort: SerialPort) =>
+        val ver: Option[String] = Version(serialPort).toOption
+        _portAndVersion = PortAndVersion(Option(serialPort), ver))
 
   def listPorts(): Seq[SerialPort] =
     serialPortsSource()
+
+  def selectedPortInfo: String =
+    _portAndVersion.selectedInfo
+
+  def portAndVersion: PortAndVersion =
+    _portAndVersion
+
+  object PortAndVersion:
+    def apply(serialPort: SerialPort): PortAndVersion =
+      new PortAndVersion(Option(serialPort))
+
+  case class PortAndVersion(
+                             selectedSerialPort: Option[SerialPort] = None,
+                             version: Option[String] = None):
+
+    def selectedInfo: String =
+      selectedSerialPort.map { serialPort =>
+        s"${serialPort.getDescriptivePortName} v:${version.getOrElse("?")}"
+      }.getOrElse("No port selected!")
+
+
+
+
+
 

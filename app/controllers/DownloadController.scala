@@ -21,20 +21,23 @@ import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.*
 import net.wa9nnn.rc210.serial.*
+import net.wa9nnn.rc210.ui.Tabs
 import org.apache.pekko.stream.Materializer
 import play.api.mvc.*
+import views.html.NavMain
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton()
-class DownloadController @Inject()(config: Config, dataCollector: DataCollector, rc210: Rc210)
+class DownloadController @Inject()(config: Config, dataCollector: DataCollector,
+                                   rc210: Rc210, navMain: NavMain)
                                   (implicit ec: ExecutionContext, mat: Materializer, components: MessagesControllerComponents)
   extends MessagesAbstractController(components) with LazyLogging {
   private val expectedLines: Int = config.getInt("vizRc210.expectedRcLines")
 
   def index: Action[AnyContent] = Action {
-    Ok(views.html.download(rc210.rcSerialPort()))
+    Ok(navMain(Tabs.rc210Download, views.html.download(rc210.selectedPortInfo)))
   }
 
   def startDownload: Action[AnyContent] = Action {
@@ -50,14 +53,14 @@ class DownloadController @Inject()(config: Config, dataCollector: DataCollector,
       })
 
       val requestTable = Table(Header("Download from RC210", "Field", "Value"), Seq(
-        Row.ofAny("SerialPort", rc210.rcSerialPort()),
+        Row.ofAny("SerialPort", rc210.selectedPortInfo),
         Row.ofAny("Comment", comment),
         Row.ofAny("Expecting", expectedLines),
       ))
       dataCollector.newDownload(requestTable)
       val webSocketURL: String = controllers.routes.DownloadController.ws().webSocketURL()
 
-      Ok(views.html.progress(webSocketURL, requestTable, routes.DownloadController.results.url))
+      Ok(navMain(Tabs.rc210Download, views.html.progress(webSocketURL, requestTable, routes.DownloadController.results.url)))
   }
 
   def ws(): WebSocket =

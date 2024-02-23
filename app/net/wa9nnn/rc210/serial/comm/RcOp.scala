@@ -19,7 +19,6 @@ package net.wa9nnn.rc210.serial.comm
 
 import com.fazecast.jSerialComm.SerialPort
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.serial.comm.RcSerialPort
 import java.io.PrintWriter
 
 /**
@@ -27,17 +26,21 @@ import java.io.PrintWriter
  *
  * @param rcSerialPort provides access to the serial port.
  */
-abstract class RcOp(rcSerialPort: RcSerialPort) extends LazyLogging {
-  val serialPort: SerialPort = rcSerialPort.serialPort
+abstract class RcOp(serialPort: SerialPort) extends LazyLogging with AutoCloseable {
+  override def toString: String = serialPort.getDescriptivePortName
 
-  def send(request: String): Unit = {
-    val bytes = request.getBytes
-    rcSerialPort.serialPort.writeBytes(bytes, bytes.length)
-  }
-  
-//  private  val printWriter = new PrintWriter(serialPort.getOutputStream)
-//  def send(request:String): Unit = {
-//    printWriter.print(request + '\r')
-//    printWriter.flush()
-//  }
+  serialPort.setBaudRate(19200)
+
+  openAndDrain()
+
+  def openAndDrain(): Unit =
+    serialPort.openPort()
+    val available = serialPort.bytesAvailable()
+    if (available > 0)
+      logger.info("Draining {} bytes from buffer.", available)
+      val buffer = new Array[Byte](available)
+      serialPort.readBytes(buffer, available)
+
+  def close(): Unit = 
+    serialPort.closePort()
 }
