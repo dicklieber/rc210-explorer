@@ -22,8 +22,9 @@ import net.wa9nnn.rc210.security.UserId.UserId
 import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.security.Who.*
 import net.wa9nnn.rc210.security.authentication.*
+import net.wa9nnn.rc210.ui.Tabs
 import play.api.mvc.*
-import views.html.userEditor
+import views.html.{NavMain, userEditor}
 
 import javax.inject.{Inject, Singleton}
 import scala.language.implicitConversions
@@ -37,18 +38,18 @@ import scala.language.implicitConversions
  * Handle create/edit/list users/
  */
 @Singleton
-class UsersController @Inject()(userStore: UserStore)(implicit cc: MessagesControllerComponents)
+class UsersController @Inject()(userStore: UserStore, navMain: NavMain)(implicit cc: MessagesControllerComponents)
   extends MessagesAbstractController(cc) with LazyLogging {
 
   def users: Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
-    Ok(views.html.users(userStore.users))
+    Ok(navMain(Tabs.security, views.html.users(userStore.users)))
   }
 
   def editUser(id: UserId): Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] =>
       userStore.get(id) match
         case Some(user: User) =>
-          Ok(userEditor(UserEditDTO.form.fill(user.userEditDTO)))
+          Ok(navMain(Tabs.security, userEditor(UserEditDTO.form.fill(user.userEditDTO))))
         case None =>
           NotFound(s"UserId: $id not found!")
   }
