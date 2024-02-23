@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.serial.comm
 
 import com.fazecast.jSerialComm.{SerialPort, SerialPortDataListener}
+import os.read.bytes
 
 import scala.concurrent.duration.Duration
 
@@ -34,6 +35,7 @@ class RcEventBasedOp(serialPort: SerialPort) extends RcOp(serialPort):
     serialPort.addDataListener(serialPortDataListener)
 
   def send(string: String): Unit = {
-    val bytes = string.getBytes
+    val s: String = s"\r${string}\r"
+    val bytes = s.getBytes
     serialPort.writeBytes(bytes, bytes.length)
   }
