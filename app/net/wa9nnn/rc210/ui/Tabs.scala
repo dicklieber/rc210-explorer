@@ -50,12 +50,13 @@ case class Tabx(override val entryName: String,
 
 object Tabs:
 
-  val rc210Tab: Tabx = Tabx("RC-210", routes.IOController.listSerialPorts.url, "RC-210 Operations", Rc210Io)
-  val rc210Download: Tabx = Tabx("RC-210 Download", routes.DownloadController.index.url, "Download from RC-210", Rc210Io)
+  val rc210Tab: Tabx = Tabx("Serial Port", routes.IOController.listSerialPorts.url, "Configure serial port.", Rc210Io)
+  val rc210Download: Tabx = Tabx("Download", routes.DownloadController.index.url, "Download from RC-210", Rc210Io)
   val memory: Tab = Tab("Memory", routes.MemoryController.index.url, Debug, "View raw data received from the RC-210 controller.")
-  val viewJson: Tab = Tab("Json", routes.DataStoreController.viewJson().url, Debug, "View data as JSON.")
+  val viewJson: Tab = Tab("Json", routes.DataStoreController.viewJson.url, Debug, "View data as JSON.")
   val changes: Tabx = Tabx("Changes", routes.CommandsController.index.url, "Pending changes that need to be sent to the RC-210.", Rc210Io)
-  val fileUpload: Tabx = Tabx("Upload", routes.DataStoreController.upload.url, "Upload a saved JSON file.", Rc210Io)
+  val fileUpload: Tabx = Tabx("Upload", routes.DataStoreController.upload().url, "Upload a saved JSON file.", Disk)
+  val jsonDownload: Tabx = Tabx("Save", routes.DataStoreController.downloadJson.url, "Save RC210 data in JSON.", Disk)
   val security: Tabx = Tabx("Users", routes.UsersController.users().url, "Edit Users", Settings)
   val names: Tabx = Tabx("Names", routes.NamesController.index.url, "User supplied names for varous fields.")
   val logout: Tab = Tab("Logout", routes.LoginController.logout().url, Settings, "Finish this session")
@@ -70,6 +71,7 @@ object Tabs:
       rc210Download,
       memory,
       changes,
+      jsonDownload,
       fileUpload,
       security,
       names,

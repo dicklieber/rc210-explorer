@@ -37,18 +37,18 @@ class DataStoreController @Inject()(dataStore: DataStore)
     val dto: DataTransferJson = dataStore.toJson
     Json.prettyPrint(Json.toJson(dto))
 
-  def downloadJson(): Action[AnyContent] = Action {
+  def downloadJson: Action[AnyContent] = Action {
     Ok(sJson).withHeaders(
       "Content-Type" -> "text/json",
       "Content-Disposition" -> s"""attachment; filename="rc210.json""""
     )
   }
 
-  def viewJson(): Action[AnyContent] = Action {
+  def viewJson: Action[AnyContent] = Action {
     Ok(sJson)
   }
 
-  def upload: Action[AnyContent] = Action {
+  def upload(): Action[AnyContent] = Action {
     Ok(views.html.fileUpload())
   }
 

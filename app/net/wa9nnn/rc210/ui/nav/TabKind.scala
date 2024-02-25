@@ -13,7 +13,8 @@ object TabKind extends PlayEnum[TabKind] {
 
   case object Fields extends TabKind("bi-database", "Edit RC-210 fields.")
 
-  case object Rc210Io extends TabKind("bi-arrow-down-up", "Deal with RC-210. e.g. upload, dpwnload, clock etc.")
+  case object Rc210Io extends TabKind("bi-arrow-down-up", "Input/Output with RC-210. e.g. Upload, Download, Clock etc.")
+  case object Disk extends TabKind("bi-hdd", "Save, load files.")
 
   case object Settings extends TabKind("bi-gear-wide-connected", "Users")
 

@@ -20,14 +20,15 @@ package controllers
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.datastore.MemoryFileLoader
 import net.wa9nnn.rc210.data.field.{FieldDefinition, FieldDefinitions, FieldOffset}
-import net.wa9nnn.rc210.ui.nav.TabKind.Rc210Io
 import net.wa9nnn.rc210.ui.Tabs
 import play.api.mvc.*
+import views.html.NavMain
 
 import javax.inject.Inject
 import scala.util.{Failure, Success}
 
-class MemoryController @Inject()(memoryFileLoader: MemoryFileLoader, fieldDefinitions: FieldDefinitions)(implicit val controllerComponents: ControllerComponents)
+class MemoryController @Inject()(memoryFileLoader: MemoryFileLoader, fieldDefinitions: FieldDefinitions, navMain: NavMain)
+                                (implicit val controllerComponents: ControllerComponents)
   extends BaseController {
 
   private lazy val offsetToField: Map[Int, Seq[Cell]] =
@@ -61,7 +62,7 @@ class MemoryController @Inject()(memoryFileLoader: MemoryFileLoader, fieldDefini
           val header = Header("RC-210 Memory Map", "Offset", "Value", "Kind", "Field Name", "Field", "Command Template")
           val table = Table(header, rows)
 
-          Ok(views.html.justdat(Tabs.memory, Seq(table)))
+          Ok(navMain(Tabs.memory, views.html.justdat(Tabs.memory, Seq(table))))
 
       }
   }

@@ -96,7 +96,7 @@
                 <ul>
                     @for(tab <- Tabs.releventTabs(activeTab)) {
                         <li>
-                            <a class=" @if(tab == activeTab) { active }" href="@tab.indexUrl" >@tab.entryName</a>
+                            <a class=" @if(tab == activeTab) { active }" href="@tab.indexUrl" title="@tab.toolTip" >@tab.entryName</a>
                         </li>
                     }
                 </ul>

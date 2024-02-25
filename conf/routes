@@ -2,9 +2,9 @@ GET         /index/:keyKind                           controllers.EditController
 GET         /edit/:fieldKey                           controllers.EditController.edit(fieldKey:FieldKey)
 POST        /save                                     controllers.EditController.save()
 GET         /landing/:tabKind                         controllers.NavigationController.selectTabKind(tabKind:TabKind)
-GET         /datastore/download                       controllers.DataStoreController.downloadJson()
-GET         /datastore/view                           controllers.DataStoreController.viewJson()
-GET         /datastore/upload                         controllers.DataStoreController.upload
+GET         /datastore/download                       controllers.DataStoreController.downloadJson
+GET         /datastore/view                           controllers.DataStoreController.viewJson
+GET         /datastore/upload                         controllers.DataStoreController.upload()
 POST        /datastore/save                           controllers.DataStoreController.save()
 GET         /rc210/select/:portDescriptor             controllers.IOController.select(portDescriptor:String)
 GET         /rc210/result                             controllers.IOController.downloadResult
