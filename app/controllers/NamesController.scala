@@ -25,7 +25,8 @@ import net.wa9nnn.rc210.data.remotebase.RemoteBaseNode
 import net.wa9nnn.rc210.security.Who.request2Session
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
-import net.wa9nnn.rc210.ui.{EditButtonCell, Tabs}
+import net.wa9nnn.rc210.ui.TabE.Names
+import net.wa9nnn.rc210.ui.{EditButtonCell, TabE, Tabs}
 import play.api.data.Forms.*
 import play.api.data.{Field, Form, Mapping}
 import play.api.mvc.*
@@ -63,7 +64,7 @@ class NamesController @Inject()(dataStore: DataStore,
       )
       val table = Table(header, rows)
 
-      Ok(navMain(Tabs.names, views.html.names(table)))
+      Ok(navMain(Names, views.html.names(table)))
   }
 
 

@@ -1,13 +1,12 @@
 @import com.wa9nnn.wa9nnnutil.tableui.Table
 @import com.wa9nnn.wa9nnnutil.tableui.html.renderTable
-@import net.wa9nnn.rc210.ui.Tabs
 
 @import net.wa9nnn.rc210.ui.nav.TabKind.Settings
 @import net.wa9nnn.rc210.ui.Tab
-@(tab: Tab, tables: Seq[Table])
-@for(table <- tables) {
-    @renderTable(table
-            //                .withCssClass("tablesorter")
-    .withCssClass("table table-bordered table-sm  w-auto rc210-table")
-    )
-}
+@(tables: Seq[Table])
+    @for(table <- tables) {
+        @renderTable(table
+                //                .withCssClass("tablesorter")
+        .withCssClass("table table-bordered table-sm  w-auto rc210-table")
+        )
+    }

@@ -21,7 +21,13 @@ import controllers.routes
 import net.wa9nnn.rc210.KeyKind
 import net.wa9nnn.rc210.ui.nav.TabKind
 import net.wa9nnn.rc210.ui.nav.TabKind.*
+import org.apache.pekko.actor.typed.SupervisorStrategy.restart
 
+/**
+ * A [[Tab]] is something shown in the left side navigation menu. 
+ * Tab instances are either a [[KeyKind]] that is a member of a [[Key]] or a [[TabE]] which is
+ * an enum of individually defined [[Tabs]].
+ */
 trait Tab:
   def toolTip: String = ""
 
@@ -31,63 +37,42 @@ trait Tab:
 
   def tabKind: TabKind = TabKind.Fields
 
-object Tab:
-  def apply(entryName: String, indexUrl: String, tabKind: TabKind, toolTip: String = ""): Tab =
-    Tabx(entryName, indexUrl, toolTip, tabKind)
-end Tab
 
-/**
- *
- * @param entryName show to users
- * @param indexUrl  how
- * @param toolTip
- * @param tabKind
- */
-case class Tabx(override val entryName: String,
-                override val indexUrl: String,
-                override val toolTip: String,
-                override val tabKind: TabKind = Fields) extends Tab
+
+enum TabE(override val entryName: String,
+          override val indexUrl: String,
+          override val toolTip: String,
+          override val tabKind: TabKind = Fields) extends Tab:
+  case SetClock extends TabE("Set Clock", routes.Rc210Controller.setClock().url, "Set RC210 time from server clock.", Rc210Io)
+
+  case Restart extends TabE("Restart", routes.Rc210Controller.restart().url, "Restart RC210 controller.", Rc210Io)
+  case SerialPort extends TabE("Serial Port", routes.IOController.listSerialPorts.url, "Configure serial port.", Rc210Io)
+  case RC210Download extends TabE("Download", routes.DownloadController.index.url, "Download from RC-210", Rc210Io)
+  case Memory extends TabE("Memory", routes.MemoryController.index.url,  "View raw data received from the RC-210 controller.", Debug)
+  case ViewJson extends TabE("Json", routes.DataStoreController.viewJson.url, "View data as JSON.", Debug)
+  case Changes extends TabE("Changes", routes.CommandsController.index.url, "Pending changes that need to be sent to the RC-210.", Rc210Io)
+  case FileUpload extends TabE("Upload", routes.DataStoreController.upload().url, "Upload a saved JSON file.", Disk)
+  case JsonDownload extends TabE("Save", routes.DataStoreController.downloadJson.url, "Save RC210 data in JSON.", Disk)
+  case UserManager extends TabE("Users", routes.UsersController.users().url, "Edit Users", Settings)
+  case Names extends TabE("Names", routes.NamesController.index.url, "User supplied names for varous fields.")
+  case Logout extends TabE("Logout", routes.LoginController.logout().url, "Finish this session", Settings)
 
 object Tabs:
-
-  val setClock: Tabx = Tabx("Set Clock", routes.Rc210Controller.setClock().url, "Set RC210 time from server clock.", Rc210Io)
-  val restart: Tabx = Tabx("Restart", routes.Rc210Controller.restart().url, "Restart RC210 controller.", Rc210Io)
-  val rc210Tab: Tabx = Tabx("Serial Port", routes.IOController.listSerialPorts.url, "Configure serial port.", Rc210Io)
-  val rc210Download: Tabx = Tabx("Download", routes.DownloadController.index.url, "Download from RC-210", Rc210Io)
-  val memory: Tab = Tab("Memory", routes.MemoryController.index.url, Debug, "View raw data received from the RC-210 controller.")
-  val viewJson: Tab = Tab("Json", routes.DataStoreController.viewJson.url, Debug, "View data as JSON.")
-  val changes: Tabx = Tabx("Changes", routes.CommandsController.index.url, "Pending changes that need to be sent to the RC-210.", Rc210Io)
-  val fileUpload: Tabx = Tabx("Upload", routes.DataStoreController.upload().url, "Upload a saved JSON file.", Disk)
-  val jsonDownload: Tabx = Tabx("Save", routes.DataStoreController.downloadJson.url, "Save RC210 data in JSON.", Disk)
-  val security: Tabx = Tabx("Users", routes.UsersController.users().url, "Edit Users", Settings)
-  val names: Tabx = Tabx("Names", routes.NamesController.index.url, "User supplied names for varous fields.")
-  val logout: Tab = Tab("Logout", routes.LoginController.logout().url, Settings, "Finish this session")
-
 
   val tabs: Seq[Tab] =
     KeyKind
       .values
-      .filterNot(_ == KeyKind.Function )
-      .sortBy(_.entryName) :++ Seq(
-      rc210Tab,
-      rc210Download,
-      memory,
-      changes,
-      jsonDownload,
-      fileUpload,
-      setClock,
-      restart,
-      security,
-      names,
-      viewJson,
-      logout
-    )
-
-  def releventTabs(tab: Tab): Seq[Tab] = {
-    val desired = tab.tabKind
-    tabs
-      .filter(_.tabKind == desired)
+      .filterNot(_ == KeyKind.Function)
+      .appendedAll(TabE.values)
       .sortBy(_.entryName)
+
+  def releventTabs(tabKind: TabKind): Seq[Tab] = {
+    tabs
+      .filter(_.tabKind == tabKind)
   }
+  val noTab = new Tab:
+    def entryName = "none"
+
+    def indexUrl = null
 
 

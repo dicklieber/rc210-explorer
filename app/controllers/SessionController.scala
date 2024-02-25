@@ -20,12 +20,12 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.Table
 import net.wa9nnn.rc210.security.authentication.{RcSession, SessionStore}
-import net.wa9nnn.rc210.ui.Tabs
+import net.wa9nnn.rc210.ui.TabE.UserManager
 import org.apache.pekko.actor.typed.scaladsl.AskPattern.Askable
 import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
 import org.apache.pekko.util.Timeout
 import play.api.mvc.*
-import views.html.justdat
+import views.html.{NavMain, justdat}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
@@ -35,13 +35,13 @@ import scala.concurrent.{ExecutionContext, Future}
  * View Sessions
  */
 @Singleton
-class SessionController @Inject()(sessionStore: SessionStore, components: MessagesControllerComponents)
+class SessionController @Inject()(sessionStore: SessionStore, components: MessagesControllerComponents, navMain: NavMain)
   extends MessagesAbstractController(components) with LazyLogging {
 
   def index: Action[AnyContent] = Action {
     val sessions = sessionStore.sessions
     val rows = sessions.map(_.toRow)
     val table: Table = Table(RcSession.header(rows.length), rows)
-    Ok(justdat(Tabs.security,  Seq(table)))
+    Ok(navMain(UserManager, justdat(Seq(table))))
   }
 }

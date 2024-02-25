@@ -19,7 +19,7 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.serial.Rc210
-import net.wa9nnn.rc210.ui.Tabs
+import net.wa9nnn.rc210.ui.TabE.SerialPort
 import org.apache.pekko.util.Timeout
 import play.api.mvc.*
 import views.html.NavMain
@@ -47,7 +47,7 @@ class IOController @Inject()(implicit val controllerComponents: ControllerCompon
 
   def listSerialPorts: Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-      Ok(navMain(Tabs.rc210Tab, views.html.RC210SerialPorts(rc210)))
+      Ok(navMain(SerialPort, views.html.RC210SerialPorts(rc210)))
   }
 }
 

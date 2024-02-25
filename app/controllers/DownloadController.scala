@@ -21,7 +21,8 @@ import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.*
 import net.wa9nnn.rc210.serial.*
-import net.wa9nnn.rc210.ui.Tabs
+import net.wa9nnn.rc210.ui.TabE.RC210Download
+import net.wa9nnn.rc210.ui.{TabE, Tabs, rc210Download}
 import org.apache.pekko.stream.Materializer
 import play.api.mvc.*
 import views.html.NavMain
@@ -37,7 +38,7 @@ class DownloadController @Inject()(config: Config, dataCollector: DataCollector,
   private val expectedLines: Int = config.getInt("vizRc210.expectedRcLines")
 
   def index: Action[AnyContent] = Action {
-    Ok(navMain(Tabs.rc210Download, views.html.download(rc210.selectedPortInfo)))
+    Ok(navMain(RC210Download, views.html.download(rc210.selectedPortInfo)))
   }
 
   def startDownload: Action[AnyContent] = Action {
@@ -60,7 +61,7 @@ class DownloadController @Inject()(config: Config, dataCollector: DataCollector,
       dataCollector.newDownload(requestTable)
       val webSocketURL: String = controllers.routes.DownloadController.ws().webSocketURL()
 
-      Ok(navMain(Tabs.rc210Download, views.html.progress(webSocketURL, requestTable, routes.DownloadController.results.url)))
+      Ok(navMain(RC210Download, views.html.progress(webSocketURL, requestTable, routes.DownloadController.results.url)))
   }
 
   def ws(): WebSocket =

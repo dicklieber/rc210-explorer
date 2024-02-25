@@ -20,7 +20,8 @@ package controllers
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.datastore.MemoryFileLoader
 import net.wa9nnn.rc210.data.field.{FieldDefinition, FieldDefinitions, FieldOffset}
-import net.wa9nnn.rc210.ui.Tabs
+import net.wa9nnn.rc210.ui.TabE.Memory
+import net.wa9nnn.rc210.ui.{TabE, Tabs}
 import play.api.mvc.*
 import views.html.NavMain
 
@@ -62,7 +63,7 @@ class MemoryController @Inject()(memoryFileLoader: MemoryFileLoader, fieldDefini
           val header = Header("RC-210 Memory Map", "Offset", "Value", "Kind", "Field Name", "Field", "Command Template")
           val table = Table(header, rows)
 
-          Ok(navMain(Tabs.memory, views.html.justdat(Tabs.memory, Seq(table))))
+          Ok(navMain(Memory, views.html.justdat(Seq(table))))
 
       }
   }

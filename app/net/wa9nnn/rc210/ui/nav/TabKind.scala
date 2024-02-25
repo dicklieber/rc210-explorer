@@ -1,11 +1,16 @@
 package net.wa9nnn.rc210.ui.nav
 
 import enumeratum.{EnumEntry, PlayEnum}
-import net.wa9nnn.rc210.ui.{Tab, Tabx}
+import net.wa9nnn.rc210.ui.{Tab, TabE}
 
 sealed trait TabKind(val iconName: String, val toolTip: String) extends EnumEntry:
   val noTab: Tab =
-    Tabx("none", "", "", this)
+    new Tab:
+      def entryName = "None"
+
+      def indexUrl = null
+
+      override def tabKind = TabKind.Fields
 
 object TabKind extends PlayEnum[TabKind] {
 
