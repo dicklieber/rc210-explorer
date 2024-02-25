@@ -37,7 +37,7 @@ class NavigationController @Inject()(implicit dataStore: DataStore, ec: Executio
   def selectTabKind(tabKind: TabKind): Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] => {
       logger.debug(tabKind.toString)
-      Ok(navMain(tabKind.noTab,landing()))
+      Ok(navMain(tabKind))
     }
   }
 }
