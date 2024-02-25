@@ -50,6 +50,8 @@ case class Tabx(override val entryName: String,
 
 object Tabs:
 
+  val setClock: Tabx = Tabx("Set Clock", routes.Rc210Controller.setClock().url, "Set RC210 time from server clock.", Rc210Io)
+  val restart: Tabx = Tabx("Restart", routes.Rc210Controller.restart().url, "Restart RC210 controller.", Rc210Io)
   val rc210Tab: Tabx = Tabx("Serial Port", routes.IOController.listSerialPorts.url, "Configure serial port.", Rc210Io)
   val rc210Download: Tabx = Tabx("Download", routes.DownloadController.index.url, "Download from RC-210", Rc210Io)
   val memory: Tab = Tab("Memory", routes.MemoryController.index.url, Debug, "View raw data received from the RC-210 controller.")
@@ -73,6 +75,8 @@ object Tabs:
       changes,
       jsonDownload,
       fileUpload,
+      setClock,
+      restart,
       security,
       names,
       viewJson,

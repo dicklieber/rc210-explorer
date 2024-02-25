@@ -17,6 +17,7 @@ GET         /datastore/dump                           controllers.CommandsContro
 GET         /candidates/ws/:commandSendRequest        controllers.CommandsController.ws(commandSendRequest:CommandSendRequest)
 GET         /memory                                   controllers.MemoryController.index
 GET         /restart                                  controllers.Rc210Controller.restart()
+GET         /setClock                                 controllers.Rc210Controller.setClock()
 POST        /download/start                           controllers.DownloadController.startDownload()
 GET         /download/ws                              controllers.DownloadController.ws()
 GET         /download/results                         controllers.DownloadController.results

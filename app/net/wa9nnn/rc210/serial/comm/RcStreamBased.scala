@@ -49,6 +49,8 @@ class RcStreamBased(serialPort: SerialPort) extends RcOp(serialPort) with AutoCl
   def perform(request: String): RcResponse = {
     logger.trace("perform: {}", request)
     outputStream.write(request.getBytes)
+    outputStream.write('\r'.toByte)
+    outputStream.flush()
     val resultBuilder = Seq.newBuilder[String]
 
     var line = ""
