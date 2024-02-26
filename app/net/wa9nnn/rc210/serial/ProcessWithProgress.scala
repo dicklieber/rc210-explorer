@@ -54,7 +54,6 @@ class ProcessWithProgress[T <: ProgressItem](mod: Int, resultTableColumns: Int)(
   /**
    * Contains HTML string to show to user when finished.
    */
-  private var maybeResultHtml: Option[String] = None
   private val itemsBuilder = Seq.newBuilder[T]
 
   setDaemon(true)
@@ -87,7 +86,7 @@ class ProcessWithProgress[T <: ProgressItem](mod: Int, resultTableColumns: Int)(
 
   private def buildProgressMessage: Progress = {
     val double = soFar * 100.0 / expected
-    new Progress(percent = f"$double%2.0f%%", maybeResultHtml)
+    new Progress(percent = f"$double%2.0f%%") //todo add result html
   }
 
   def finish(): Unit = {
