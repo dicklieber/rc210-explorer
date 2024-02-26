@@ -80,7 +80,9 @@ class Rc210 @Inject()(config: Config, serialPortsSource: SerialPortsSource) exte
       .find(_.getSystemPortName == candidate)
       .foreach((serialPort: SerialPort) =>
         val ver: Option[String] = Version(serialPort).toOption
-        _portAndVersion = PortAndVersion(Option(serialPort), ver))
+        _portAndVersion = PortAndVersion(Option(serialPort), ver)
+        os.write.over(file, serialPort.getSystemPortName)
+      )
 
   def listPorts(): Seq[SerialPort] =
     serialPortsSource()
