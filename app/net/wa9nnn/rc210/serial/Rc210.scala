@@ -103,7 +103,7 @@ class Rc210 @Inject()(config: Config, serialPortsSource: SerialPortsSource) exte
 
     def selectedInfo: String =
       selectedSerialPort.map { serialPort =>
-        s"${serialPort.getDescriptivePortName} v:${version.getOrElse("?")}"
+        s"${serialPort.getSystemPortName} (${serialPort.getDescriptivePortName}) v:${version.getOrElse("?")}"
       }.getOrElse("No port selected!")
 
 
