@@ -25,9 +25,10 @@ import net.wa9nnn.rc210.ui.{TabE, Tabs}
 import play.api.mvc.*
 import views.html.NavMain
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.util.{Failure, Success}
 
+@Singleton
 class MemoryController @Inject()(memoryFileLoader: MemoryFileLoader, fieldDefinitions: FieldDefinitions, navMain: NavMain)
                                 (implicit val controllerComponents: ControllerComponents)
   extends BaseController {
@@ -53,19 +54,22 @@ class MemoryController @Inject()(memoryFileLoader: MemoryFileLoader, fieldDefini
       memoryFileLoader.memory match {
         case Failure(exception) =>
           NotFound("No Saved RC-210 memory. DownloadActor from RC-210.")
-        case Success(memory) => val rows: Seq[Row] = memory.data.zipWithIndex.toIndexedSeq.map { case (int, index) =>
-          val row = Row(Cell(index.toString), Cell(f"$int 0x${int.toHexString}"))
-          offsetToField.get(index).map { extraCells =>
-            row.copy(cells = row.cells :++ extraCells)
-          }.getOrElse(row)
-
-        }
+        case Success(memory) =>
+          val rows: Seq[Row] =
+            memory.data.zipWithIndex.toIndexedSeq.map { case (int, index) =>
+              val row = Row(Cell(index.toString), Cell(f"$int 0x${int.toHexString}"))
+              offsetToField.get(index).map { extraCells =>
+                row.copy(cells = row.cells :++ extraCells)
+              }.getOrElse(row)
+            }
           val header = Header("RC-210 Memory Map", "Offset", "Value", "Kind", "Field Name", "Field", "Command Template")
           val table = Table(header, rows)
-
-          Ok(navMain(Memory, views.html.justdat(Seq(table))))
-
+          val fileTable = Table(Header.singleRow("File", "Downloaded"),
+            Seq(
+              Row.ofAny(memory.url.getFile, memory.stamp)
+            )
+          )
+          Ok(navMain(Memory, views.html.memory(fileTable, table)))
       }
   }
-
 }

@@ -35,7 +35,7 @@ import scala.util.{Try, Using}
  *
  * @param data mutable array. The 1st 4097 ints are main memory the last
  */
-class Memory(val data: Array[Int] = Array.empty) {
+case class Memory(val data: Array[Int] = Array.empty, url:URL, stamp:Instant) {
   def bool(offset: Int): Boolean = data(offset) == 1
 
   def apply(offset: Int): Int = data(offset)
@@ -148,7 +148,7 @@ object Memory extends LazyLogging {
           case e: Exception =>
             logger.error(s"Processing line: $s", e)
       }
-      new Memory(builder.result())
+      new Memory(builder.result(), url, stamp)
     }
   }
 }
