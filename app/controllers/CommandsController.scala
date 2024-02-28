@@ -24,6 +24,7 @@ import net.wa9nnn.rc210.FieldKey
 import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.serial.*
+import net.wa9nnn.rc210.serial.comm.RcResponse
 import net.wa9nnn.rc210.util.Configs.path
 import org.apache.pekko.stream.Materializer
 import org.apache.pekko.stream.scaladsl.Flow
@@ -90,7 +91,7 @@ class CommandsController @Inject()(dataStore: DataStore,
   def ws(commandSendRequest: CommandSendRequest): WebSocket =
     //todo handle authorization See https://www.playframework.com/documentation/3.0.x/ScalaWebSockets
 
-    new ProcessWithProgress[RcOperationResult](1, 1)(
+    new ProcessWithProgress[RcResponse](1)(
       progressApi =>
         commandsSender(commandSendRequest, progressApi)
     ).webSocket

@@ -17,9 +17,17 @@
 
 package net.wa9nnn.rc210.serial.comm
 
-import net.wa9nnn.rc210.serial.comm.RcStreamBased.isOk
+import com.wa9nnn.wa9nnnutil.tableui.Row
+import net.wa9nnn.rc210.serial.ProgressItem
+import net.wa9nnn.rc210.serial.comm.RcStreamBased.terminalPrefaces
+import os.read.lines
 
-case class RcResponse(lines: Seq[String]) {
-  def head:String = lines.head
-  def isError: Boolean = isOk(lines.last)
-}
+import scala.util.Try
+
+case class RcResponse(in: String, tried: Try[String]) extends ProgressItem:
+  def toRow: Row = Row(
+    in, tried.failed.map(_.getMessage)
+  )
+
+
+

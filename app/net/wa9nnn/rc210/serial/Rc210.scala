@@ -53,16 +53,15 @@ class Rc210 @Inject()(config: Config, serialPortsSource: SerialPortsSource) exte
 
   }
 
-  def sendOne(request: String): RcOperationResult = {
-    RcOperationResult(request, Using(openStreamBased) { rcOp =>
+  def sendOne(request: String): RcResponse =
+    Using.resource(openStreamBased) { rcOp =>
       rcOp.perform(request)
-    })
-  }
+    }
 
-  def sendBatch(requests: String*): Seq[RcOperationResult] =
-    Using.resource(openStreamBased) { (rcOp: RcStreamBased) =>
+  def sendBatch(requests: String*): Seq[RcResponse] =
+    Using.resource(openStreamBased) { rcOp =>
       requests.map { request =>
-        RcOperationResult(request, Try(rcOp.perform(request)))
+        rcOp.perform(request)
       }
     }
 

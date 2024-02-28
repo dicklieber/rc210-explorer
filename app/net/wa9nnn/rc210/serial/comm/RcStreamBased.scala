@@ -19,10 +19,10 @@ package net.wa9nnn.rc210.serial.comm
 
 import com.fazecast.jSerialComm.{SerialPort, SerialPortTimeoutException}
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.serial.RcOperationResult
 import net.wa9nnn.rc210.serial.comm.RcStreamBased.isTerminal
 
 import java.io.OutputStream
+import scala.compiletime.ops.string
 import scala.concurrent.duration.Duration
 import scala.io.BufferedSource
 import scala.util.{Try, Using}
@@ -33,12 +33,10 @@ import scala.util.{Try, Using}
  * @param rcSerialPort provides access to the serial port.
  */
 class RcStreamBased(serialPort: SerialPort) extends RcOp(serialPort) with AutoCloseable with LazyLogging {
- 
+
   serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 2000, 0)
   private val source = new BufferedSource(serialPort.getInputStream, 50)
   private val outputStream: OutputStream = serialPort.getOutputStream
-
-  private val lines: Iterator[String] = source.getLines()
 
   /**
    * This drains anything waiting in from [[BufferedSource]].
@@ -46,32 +44,36 @@ class RcStreamBased(serialPort: SerialPort) extends RcOp(serialPort) with AutoCl
    * @param request sends a request to the RC210
    * @return lines received up to a line starting with a [[terminalPrefaces]].
    * */
-  def perform(request: String): RcResponse = {
+  def perform(request: String): RcResponse =
     logger.trace("perform: {}", request)
+
     outputStream.write(request.getBytes)
     outputStream.write('\r'.toByte)
     outputStream.flush()
-    val resultBuilder = Seq.newBuilder[String]
+    val inLines: Iterator[String] = source.getLines()
+
+    val linesBuilder = Seq.newBuilder[String]
 
     var line = ""
-    while
-      !isTerminal(line)
-    do {
-      line = lines.next()
-      logger.trace("\tline: {}", line)
-      resultBuilder += line
+    while (!isTerminal(line)) {
+      line = inLines.next()
+      linesBuilder += line
     }
 
-    val result = resultBuilder.result()
-    RcResponse(result)
-  }
+    val rlines: Seq[String] = linesBuilder.result()
+    val tried: Try[String] = Try {
+      val last = rlines.last
+      if (last.startsWith("-")) {
+        throw IllegalArgumentException(last)
+      }
+      rlines.head
+    }
+    RcResponse(request, tried)
 
-  def perform(requests: Seq[String]): Seq[RcOperationResult] = {
+  def perform(requests: Seq[String]): Seq[RcResponse] =
     requests.map(request => {
-      val response: Try[RcResponse] = Try(perform(request))
-      RcOperationResult(request, response)
+      perform(request)
     })
-  }
 
   override def close(): Unit = {
     serialPort.removeDataListener()
@@ -84,8 +86,9 @@ object RcStreamBased {
   def isTerminal(line: String): Boolean =
     line.nonEmpty && terminalPrefaces.contains(line.head)
 
-  def isOk(string: String): Boolean =
-    string.head == terminalPrefaces.head
+  //  def isOk(string: String): Try[String] =
 
   private val terminalPrefaces: String = "+-"
+
 }
+

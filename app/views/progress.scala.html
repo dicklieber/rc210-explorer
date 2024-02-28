@@ -4,7 +4,7 @@
 @import java.net.URL
 @import net.wa9nnn.rc210.ui.Tabs
 
-@(webSocketUrl: String, requestTable: Table, finishUrl: String)(implicit request: RequestHeader)
+@(webSocketUrl: String, requestTable: Table)(implicit request: RequestHeader)
 <script>
         // Use s WebSocket to update the progress bar.
         webSocket = new WebSocket("@webSocketUrl");

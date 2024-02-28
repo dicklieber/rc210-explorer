@@ -20,34 +20,38 @@ package net.wa9nnn.rc210.serial
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.DurationHelpers
 import com.wa9nnn.wa9nnnutil.DurationHelpers.given
-import com.wa9nnn.wa9nnnutil.tableui.{CellProvider, Table}
+import com.wa9nnn.wa9nnnutil.tableui.{CellProvider, Header, Row, RowSource, Table}
 import org.apache.pekko.stream.scaladsl.{Flow, Sink, Source, SourceQueueWithComplete}
 import org.apache.pekko.stream.{Materializer, OverflowStrategy}
 import org.apache.pekko.{Done, NotUsed}
 import play.api.mvc.{RequestHeader, WebSocket}
+import play.twirl.api.Html
+import views.html.downloadResult
 
 import java.io.PrintWriter
 import java.nio.file.{Files, Path}
 import java.time.{Instant, LocalTime}
 import java.util.concurrent.atomic.AtomicInteger
+import scala.compiletime.ops.double
 import scala.concurrent.Future
 import scala.language.implicitConversions
+import scala.util.Try
 
 /**
  * Run a long running process that can report it's progress using the [[ProgressApi]]
  * This runs the process in a new Thread and handles developer logging and send [[Progress]] message to the client.
  *
- * @param mod           send progress every.
- * @param callback      what to do to do. With ProgressApi for reporting status.
- * @param mat           needed to Akka streams use by Play WebSocket.
+ * @param mod                  send progress every.
+ * @param inputTable           a table to show in the results.
+ * @param callback             what to do. With ProgressApi for reporting status.
+ * @param mat                  needed to Akka streams use by Play WebSocket.
  */
-class ProcessWithProgress[T <: ProgressItem](mod: Int, resultTableColumns: Int)(callback: ProgressApi[T] => Unit)(implicit mat: Materializer)
+class ProcessWithProgress[T <: ProgressItem](mod: Int)(callback: ProgressApi[T] => Unit)(implicit mat: Materializer)
   extends Thread with Runnable with LazyLogging with ProgressApi[T]:
 
   val (queue: SourceQueueWithComplete[Progress], source: Source[Progress, NotUsed]) = Source.queue[Progress](250, OverflowStrategy.dropHead).preMaterialize()
 
   private val began = Instant.now()
-  private var running = true
   private var soFar = 0
   private var expected: Int = 0
   private var fatalError: Option[Throwable] = None
@@ -90,11 +94,12 @@ class ProcessWithProgress[T <: ProgressItem](mod: Int, resultTableColumns: Int)(
   }
 
   def finish(): Unit = {
-    running = false
+    soFar = expected // gets us to 100%
+    val duration = DurationHelpers.between(began)
     var successCount = 0
     var errorCount = 0
-    val value: Seq[T] = itemsBuilder.result()
-    value
+    val items: Seq[T] = itemsBuilder.result()
+    items
       .foreach { (progresssItem: T) =>
         if (progresssItem.success)
           successCount += 1
@@ -102,8 +107,25 @@ class ProcessWithProgress[T <: ProgressItem](mod: Int, resultTableColumns: Int)(
           errorCount += 1
       }
 
-    val detailTable: Table = Table.empty("todo")
-    sendProgress()
+    val detailTable: Table = Table(Header("Download Result", "Field", "Value"),
+      Seq(Row("Duration", duration),
+        Row("Success", successCount),
+        Row("Errors", errorCount)
+      )
+    )
+    val errorRows: Seq[Row] = (for {
+      failedItem <- items.filterNot(_.success)
+    } yield {
+      failedItem.toRow
+    })
+
+    val maybeErrorTable: Option[Table] = Option.when(errorRows.nonEmpty) {
+      Table(Header("Errors", "In", "Error"), errorRows)
+    }
+    val html: Html = downloadResult(detailTable, maybeErrorTable)
+    val progress = new Progress("100%", html.body)
+
+    queue.offer(progress)
   }
 
   override def fatalError(exception: Throwable): Unit = {
@@ -124,5 +146,8 @@ class ProcessWithProgress[T <: ProgressItem](mod: Int, resultTableColumns: Int)(
 
   override def expectedCount(count: Int): Unit = expected = count
 
-trait ProgressItem extends CellProvider:
-  def success: Boolean = true
+trait ProgressItem extends RowSource:
+  val in: String
+  val tried: Try[String]
+
+  def success: Boolean = tried.isSuccess

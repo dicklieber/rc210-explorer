@@ -30,6 +30,8 @@ import java.io.PrintWriter
 import java.nio.file.{Files, Path}
 import java.time.Instant
 import javax.inject.{Inject, Singleton}
+import scala.util.Try
+import scala.util.parsing.input.NoPosition.line
 
 /**
  * Reads eeprom from RC210 using the "1SendEram" command
@@ -63,11 +65,11 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
     progressApi.expectedCount(expectedLines)
 
     val eventBased: RcEventBasedOp = rc210.openEventBased()
-    val temMemoryFileWriter = new PrintWriter(Files.newOutputStream(tempFile))
-    temMemoryFileWriter.println(s"stamp: ${Instant.now()}")
+    val itemMemoryFileWriter = new PrintWriter(Files.newOutputStream(tempFile))
+    itemMemoryFileWriter.println(s"stamp: ${Instant.now()}")
 
     def cleanup(error: String = ""): Unit =
-      temMemoryFileWriter.close()
+      itemMemoryFileWriter.close()
       eventBased.close()
       if (error.isBlank)
         dataStore.reload()
@@ -86,7 +88,6 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
         val receivedData: Array[Byte] = event.getReceivedData
         val response = new String(receivedData).trim
 
-        logger.trace("reponse: {}", response)
         response match {
           // Handle the vaarious responses from the RC-210.
           case "Complete" =>
@@ -102,22 +103,18 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
           case "EEPROM Done" =>
             eventBased.send("OK")
             logger.debug("\tEEPROM Done")
-            progressApi.finish() 
+            progressApi.finish()
           case "Timeout" =>
             progressApi.fatalError(Timeout(eventBased.toString))
             cleanup("timeout")
           case response =>
-            try {
-              val tokens: Array[String] = response.split(',')
-              val line = f"${tokens.head.toInt}%04d:${tokens(1).toInt}"
-              temMemoryFileWriter.println(line)
-              
-              progressApi.doOne(DownloadOp(line))
-              logger.trace("\t{}", line)
-            } catch {
-              case e: Exception =>
-                logger.error(s"response: $response", e)
-            }
+            val tokens: Array[String] = response.split(',')
+            val line: String = f"${tokens.head.toInt}%04d:${tokens(1).toInt}"
+            logger.trace("response: {} line: {}", response, line)
+            itemMemoryFileWriter.println(line)
+            val downloadOp = DownloadOp(line, Try(line))
+            progressApi.doOne(downloadOp)
+            logger.trace("\t{}", line)
             eventBased.send("OK")
         }
       }

@@ -20,7 +20,6 @@ GET         /restart                                  controllers.Rc210Controlle
 GET         /setClock                                 controllers.Rc210Controller.setClock()
 POST        /download/start                           controllers.DownloadController.startDownload()
 GET         /download/ws                              controllers.DownloadController.ws()
-GET         /download/results                         controllers.DownloadController.results
 GET         /download                                 controllers.DownloadController.index
 GET         /names                                    controllers.NamesController.index
 GET         /editUser/:id                             controllers.UsersController.editUser(id:String)

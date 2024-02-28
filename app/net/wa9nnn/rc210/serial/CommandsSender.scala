@@ -23,13 +23,11 @@ import net.wa9nnn.rc210.FieldKey
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.serial.CommandsSender.init
-import net.wa9nnn.rc210.serial.comm.RcStreamBased
-//import org.apache.pekko.actor.typed.{ActorRef, Scheduler}
+import net.wa9nnn.rc210.serial.comm.{RcResponse, RcStreamBased}
 import org.apache.pekko.stream.Materializer
 
 import java.time.Instant
 import javax.inject.{Inject, Singleton}
-import scala.language.postfixOps
 
 @Singleton
 
@@ -55,7 +53,7 @@ class CommandsSender @Inject()(dataStore: DataStore, rc210: Rc210)
    * @param field       None to send all fields. Of just the one.
    * @param progressApi where to report whats going on.
    */
-  def apply(commandSendRequest: CommandSendRequest, progressApi: ProgressApi[RcOperationResult]): Unit = {
+  def apply(commandSendRequest: CommandSendRequest, progressApi: ProgressApi[RcResponse]): Unit = {
     val start = Instant.now()
     val streamBased: RcStreamBased = rc210.openStreamBased
 
@@ -67,7 +65,7 @@ class CommandsSender @Inject()(dataStore: DataStore, rc210: Rc210)
         dataStore.candidates
       case SendField.TestVCandidates =>
         throw new NotImplementedError() //todo
-        
+
     progressApi.expectedCount(fieldEntries.length)
 
     var errorEncountered = false
