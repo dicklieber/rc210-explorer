@@ -5,7 +5,6 @@ import net.wa9nnn.rc210.FieldKey
 import org.checkerframework.checker.units.qual.s
 import play.api.mvc.Call
 import play.twirl.api.Html
-import views.html.editButton
 
 object CheckBoxCell:
   def apply(boolean: Boolean): Cell =

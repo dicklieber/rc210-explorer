@@ -34,7 +34,7 @@
     <logger name="actors" level="INFO" />
     <logger name="akka" level="INFO" />
     <logger name="application" level="INFO"/>
-    <logger name="controllers.CommandsController" level="INFO"/>
+    <logger name="controllers.CandidatesController" level="INFO"/>
     <logger name="controllers.CommonController" level="INFO"/>
     <logger name="controllers.CourtesyToneController" level="INFO"/>
     <logger name="controllers.EditController" level="INFO"/>

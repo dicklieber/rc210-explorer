@@ -50,7 +50,7 @@ enum TabE(override val entryName: String,
   case RC210Download extends TabE("Download", routes.DownloadController.index.url, "Download from RC-210", Rc210Io)
   case Memory extends TabE("Memory", routes.MemoryController.index.url,  "View raw data received from the RC-210 controller.", Debug)
   case ViewJson extends TabE("Json", routes.DataStoreController.viewJson.url, "View data as JSON.", Debug)
-  case Changes extends TabE("Changes", routes.CommandsController.index.url, "Pending changes that need to be sent to the RC-210.", Rc210Io)
+  case Changes extends TabE("Changes", routes.CandidatesController.index.url, "Pending changes that need to be sent to the RC-210.", Rc210Io)
   case FileUpload extends TabE("Upload", routes.DataStoreController.upload().url, "Upload a saved JSON file.", Disk)
   case JsonDownload extends TabE("Save", routes.DataStoreController.downloadJson.url, "Save RC210 data in JSON.", Disk)
   case UserManager extends TabE("Users", routes.UsersController.users().url, "Edit Users", Settings)

@@ -1,42 +1,12 @@
-@import net.wa9nnn.rc210.ui.Tabs
-
-@import net.wa9nnn.rc210.data.field.FieldEntry
+@import com.wa9nnn.wa9nnnutil.tableui.Table
+@import com.wa9nnn.wa9nnnutil.tableui.html.renderTable
 @import net.wa9nnn.rc210.serial.CommandSendRequest
 @import net.wa9nnn.rc210.serial.SendField
-@(candidates: Seq[FieldEntry])
+@(table: Table)
 
 <div class="container">
-    <a href="@routes.CommandsController.ws(CommandSendRequest(SendField.CandidatesOnly))" title="Send all to RC-210" class="w3-btn w3-round w3-blue">Send All XYZZY</a>
-    <table class="headeredTable">
-    <thead class="table-primary">
-    <tr>
-    <th colspan="5">Candidate Changes ( @candidates.length
-            )</th>
-    </tr>
-        <tr>
-            <th>Key</th>
-            <th>Field</th>
-            <th>Was</th>
-            <th>New</th>
-            <th>Commands</th>
-        </tr>
-    </thead>
-        <tbody>
-        @for(fieldEntry <- candidates) {
-            <tr>
-                <td>@fieldEntry.fieldKey.key</td>
-                <td>@fieldEntry.fieldKey.fieldName</td>
-                <td>@Html(fieldEntry.fieldValue.displayHtml)</td>
-                <td>@Html(fieldEntry.candidate.get.displayHtml)</td>
-                <td>
-                    <ul>
-                    @for(command <- fieldEntry.commands) {
-                        <li>@command</li>
-                    }
-                    </ul>
-            </tr>
-        }
-        </tbody>
-    </table>
+    <a href="@routes.CandidatesController.ws(CommandSendRequest(SendField.CandidatesOnly))"
+    title="Send all to RC-210" class="w3-btn w3-round w3-blue">Send All </a>
+    @renderTable(table)
 </div>
 

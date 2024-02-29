@@ -7,13 +7,9 @@ import play.twirl.api.Html
 import views.html.editButton
 
 object EditButtonCell:
-  def apply(fieldKey: FieldKey): Cell = {
-    val keyKind = fieldKey.key.keyKind
-    val html = if(keyKind == KeyKind.Port)
-       editButton(controllers.routes.EditController.index(keyKind)).toString
-    else
-      editButton(controllers.routes.EditController.edit(fieldKey)).toString
-    Cell.rawHtml(html)
-  }
+  def apply(call: Call): Cell =
+    val html: Html = editButton(call)
+    Cell.rawHtml(html.toString)
+
 
 

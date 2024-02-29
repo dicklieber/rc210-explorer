@@ -27,24 +27,28 @@ import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 import net.wa9nnn.rc210.ui.{NamedKeyExtractor, NavMainController}
 import net.wa9nnn.rc210.*
 import play.api.mvc.*
+import play.api.mvc.Results.Ok
 import views.html.NavMain
 
 import javax.inject.{Inject, Singleton}
 import scala.collection.immutable
+import scala.language.postfixOps
 
 /**
  * Handles editing for all things stored in the [[DataStore]].
- * @param navMain twirl template that provides navigation, menus. A top level frame for any page (except login)
- * @param dataStore where rc-210 info lives.
+ *
+ * @param navMain    twirl template that provides navigation, menus. A top level frame for any page (except login)
+ * @param dataStore  where rc-210 info lives.
  * @param components lots of stuff needed for play.
  */
 @Singleton()
 class EditController @Inject()(navMain: NavMain)
                               (implicit dataStore: DataStore,
-                                components: ControllerComponents)
+                               components: ControllerComponents)
   extends NavMainController(components) with LazyLogging {
   /**
    * A landing page for all data associated with a [[KeyKind]].
+   *
    * @param keyKind present all vales for this [[KeyKind]].
    * @return the Http response to send back to the browser.
    */
@@ -57,6 +61,7 @@ class EditController @Inject()(navMain: NavMain)
 
   /**
    * Edit date for one [[FieldKey]].
+   *
    * @param fieldKey edit this one.
    * @return the Http response to send back to the browser.
    */
@@ -68,9 +73,10 @@ class EditController @Inject()(navMain: NavMain)
 
   /**
    * Save the submitted form data to the [[DataStore]].
+   *
    * @return the Http response to send back to the browser.
    */
-  def save(): Action[AnyContent] = Action{
+  def save(): Action[AnyContent] = Action {
 
     implicit request: Request[AnyContent] =>
 
@@ -94,11 +100,10 @@ class EditController @Inject()(navMain: NavMain)
         dataStore.update(candidateAndNames)
         handler.saveOp()
       catch
-        case e:Exception =>
+        case e: Exception =>
           logger.error(s"save: ${e.getMessage}", e)
           InternalServerError(s"request.toString $e.getMessage")
   }
-
 
 }
 

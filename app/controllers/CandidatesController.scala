@@ -19,17 +19,19 @@ package controllers
 
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.wa9nnnutil.tableui.Cell
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.FieldKey
 import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.serial.*
 import net.wa9nnn.rc210.serial.comm.RcResponse
+import net.wa9nnn.rc210.ui.{TabE, Tabs}
 import net.wa9nnn.rc210.util.Configs.path
 import org.apache.pekko.stream.Materializer
 import org.apache.pekko.stream.scaladsl.Flow
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.*
+import views.html.NavMain
 
 import java.nio.file.Path
 import javax.inject.{Inject, Singleton}
@@ -39,24 +41,43 @@ import scala.util.matching.Regex
  * Sends commands to the RC-210.
  */
 @Singleton()
-class CommandsController @Inject()(dataStore: DataStore,
-                                   commandsSender: CommandsSender,
-                                   rc210: Rc210)
-                                  (implicit config: Config, mat: Materializer, cc: MessagesControllerComponents)
+class CandidatesController @Inject()(dataStore: DataStore,
+                                     commandsSender: CommandsSender,
+                                     rc210: Rc210, navMain: NavMain)
+                                    (implicit config: Config, mat: Materializer, cc: MessagesControllerComponents)
   extends MessagesAbstractController(cc) with LazyLogging {
   private val sendLogFile: Path = path("vizRc210.sendLog")
-  //  private val stopOnError: Boolean = config.getBoolean("vizRc210.stopSendOnError")
-
-  /*  def index(): Action[AnyContent] = Action.async { implicit request =>
-      dataStoreActor.ask(Candidates.apply).map { candidates =>
-        Ok(views.html.candidates(candidates))
-      }
-    }*/
 
   def index: Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] => {
       val fieldEntries: Seq[FieldEntry] = dataStore.candidates
-      Ok(views.html.candidates(fieldEntries))
+      val table =  Table(
+        Header(s"Candidate Changes ($fieldEntries.length)",
+          "Key",
+          "Field",
+          "Was",
+          "New",
+          "Commands",
+        ),
+        fieldEntries.map{fieldEntry =>
+          val fieldKey = fieldEntry.fieldKey
+          Row(
+            fieldKey.editButtonCell,
+            fieldKey.key,
+            fieldKey.fieldName,
+            Cell.rawHtml{
+              <ul>
+                {fieldEntry.commands.foreach {cmd =>
+                <li>{cmd}</li>
+              }}
+              </ul>.toString
+            }
+          )
+        }
+      )
+
+
+      Ok(navMain(TabE.Changes, views.html.candidates(table)))
     }
   }
 

@@ -61,7 +61,7 @@ case class CourtesyToneNode(override val key: Key, segments: Seq[Segment]) exten
   override def toJsValue: JsValue = Json.toJson(this)
 
   override def toRow: Row = Row(
-    EditButtonCell(fieldKey),
+    fieldKey.editButtonCell,
     named(key),
 
   )

@@ -47,12 +47,32 @@ case class RemoteBaseNode(radio: Radio, yaesu: Yaesu, prefix: String, memories: 
 
   override def toJsValue: JsValue = Json.toJson(this)
 
-  override def displayHtml: String = toString
+  override def displayHtml: String =
+    <table class="tagValuetable">
+      <tr>
+        <td>Radio</td>
+        <td>
+          {radio}
+        </td>
+      </tr>
+      <tr>
+        <td>Yeasu</td>
+        <td>
+          {yaesu}
+        </td>
+      </tr>
+      <tr>
+        <td>Prefix</td>
+        <td>
+          {prefix}
+        </td>
+      </tr>
+    </table>.toString
 
   override def tableSection(fieldKey: FieldKey): TableSection = ???
 
   override def toRow: Row = Row(
-    EditButtonCell(fieldKey),
+    fieldKey.editButtonCell,
     radio,
     yaesu,
     prefix,

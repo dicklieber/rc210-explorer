@@ -34,7 +34,7 @@ import play.api.i18n.MessagesProvider
 import play.api.libs.json.*
 import play.api.mvc.*
 import play.twirl.api.Html
-import views.html.{courtesyToneEdit, editButton, fieldIndex, logicAlarmEditor}
+import views.html.{courtesyToneEdit, fieldIndex, logicAlarmEditor}
 
 case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, lowMacro: Key, highMacro: Key) extends ComplexFieldValue(lowMacro, highMacro) {
   key.check(KeyKind.LogicAlarm)
@@ -48,9 +48,10 @@ case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, 
   ).map(Row(_))
 
   override def tableSection(fieldKey: FieldKey): TableSection =
-    TableSectionButtons(fieldKey, routes.EditController.edit(fieldKey),
-      "Low" -> lowMacro, "High" -> highMacro)
-
+    TableSectionButtons(fieldKey,
+      Row("Low" -> lowMacro),
+      Row("High" -> highMacro)
+    )
   override def displayHtml: String =
     <table>
       <tr>

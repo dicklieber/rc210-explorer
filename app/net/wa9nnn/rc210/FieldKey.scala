@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210
 
+import com.wa9nnn.wa9nnnutil.tableui.Cell
 import net.wa9nnn.rc210.data.EditHandler
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.libs.json.*
@@ -40,9 +41,11 @@ case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey] {
     ret
   }
 
+  def editButtonCell: Cell = key.keyKind.handler.editButtonCell(this)
+
   override def toString: String = s"${key.toString}:$fieldName"
 
-  val editHandler: EditHandler=
+  val editHandler: EditHandler =
     key.keyKind.handler
 }
 
@@ -51,6 +54,7 @@ object FieldKey {
    * When used in a form.
    */
   val fieldKeyName: String = "fieldKey"
+
   /**
    * For use field name is the [[KeyKind]] name.
    *
@@ -67,7 +71,6 @@ object FieldKey {
       })
     }
   }
-
 
   def opt(maybeSFieldKey: Option[String]): Option[FieldKey] =
     maybeSFieldKey.map(FieldKey(_))

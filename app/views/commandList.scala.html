@@ -11,7 +11,7 @@
         </a>
     </ul>
     @for(fieldKey <- maybeFieldKey) {
-        <a href="@routes.CommandsController.ws(CommandSendRequest(SendField.CandidatesOnly, maybeFieldKey))" title="Send to RC-210">
+        <a href="@routes.CandidatesController.ws(CommandSendRequest(SendField.CandidatesOnly, maybeFieldKey))" title="Send to RC-210">
         <i class="bi bi-send"></i>
         </a>
         }

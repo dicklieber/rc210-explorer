@@ -50,8 +50,10 @@ class NamesController @Inject()(dataStore: DataStore,
       val rows: Seq[Row] = dataStore.namedKeys.map { namedKey =>
         val key = namedKey.key
         val fieldKey = FieldKey(key)
+        val keyKind = key.keyKind
+        val editCell = keyKind.handler.editButtonCell(fieldKey)
         Row(
-          EditButtonCell(fieldKey),
+          editCell,
           Cell(key),
           namedKey.name
         )

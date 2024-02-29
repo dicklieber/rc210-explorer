@@ -12,9 +12,9 @@ GET         /rc210                                    controllers.IOController.l
 GET         /select/:name                             controllers.IOController.select(name:String)
 GET         /common/index                             controllers.CommonController.index
 POST        /common/save                              controllers.CommonController.save()
-GET         /candidates                               controllers.CommandsController.index
-GET         /datastore/dump                           controllers.CommandsController.dump()
-GET         /candidates/ws/:commandSendRequest        controllers.CommandsController.ws(commandSendRequest:CommandSendRequest)
+GET         /candidates                               controllers.CandidatesController.index
+GET         /datastore/dump                           controllers.CandidatesController.dump()
+GET         /candidates/ws/:commandSendRequest        controllers.CandidatesController.ws(commandSendRequest:CommandSendRequest)
 GET         /memory                                   controllers.MemoryController.index
 GET         /restart                                  controllers.Rc210Controller.restart()
 GET         /setClock                                 controllers.Rc210Controller.setClock()

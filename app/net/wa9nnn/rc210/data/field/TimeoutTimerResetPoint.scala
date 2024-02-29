@@ -23,7 +23,6 @@ import net.wa9nnn.rc210.FieldKey
 import net.wa9nnn.rc210.ui.{FormField, TableSectionButtons}
 import net.wa9nnn.rc210.util.{FieldSelect, SelectOption}
 import play.api.libs.json.{JsValue, Json}
-import views.html.editButton
 
 /**
  * An enumeration with behaviour.
@@ -46,8 +45,8 @@ case class TimeoutTimerResetPoint(value: TotReset = TotReset.values.head) extend
 
   override def tableSection(fieldKey: FieldKey): TableSection =
     TableSectionButtons(fieldKey,
-      routes.EditController.index(fieldKey.key.keyKind),
-      "TotReset" -> value)
+      Row("TotReset" -> value)
+    )
 
   override def toRow: Row = Row(
     "TimeoutTimerResetPoint",

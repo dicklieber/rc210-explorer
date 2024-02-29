@@ -4,7 +4,7 @@ import com.wa9nnn.wa9nnnutil.tableui.Cell
 import net.wa9nnn.rc210.FieldKey
 import play.api.mvc.Call
 import play.twirl.api.Html
-import views.html.{editButton, editFlowButtions}
+import views.html.editFlowButtions
 
 object EditFlowButtonCell:
   def apply(fieldKey: FieldKey): Cell = {

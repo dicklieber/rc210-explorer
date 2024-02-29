@@ -1,12 +1,13 @@
 package net.wa9nnn.rc210
 
-import com.wa9nnn.wa9nnnutil.tableui.Row
-import net.wa9nnn.rc210.data.{EditHandler, SimpleFieldNode}
+import com.wa9nnn.wa9nnnutil.tableui.Cell
+import net.wa9nnn.rc210.data.SimpleFieldNode
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
+import net.wa9nnn.rc210.ui.EditButtonCell
 import play.api.i18n.MessagesProvider
 import play.api.mvc.RequestHeader
-import play.twirl.api.{Html, HtmlFormat}
+import play.twirl.api.Html
 
 object PortsNode extends SimpleFieldNode(KeyKind.Port):
 
@@ -20,7 +21,11 @@ object PortsNode extends SimpleFieldNode(KeyKind.Port):
       }
     views.html.ports(rows)
 
-  def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider) = ???
+  def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
+    throw new NotImplementedError() //not used
+
+  override def editButtonCell(fieldKey: FieldKey): Cell =
+    EditButtonCell(controllers.routes.EditController.index(KeyKind.Port))
 
   override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] = {
     val value: Seq[UpdateCandidate] = collect(data)

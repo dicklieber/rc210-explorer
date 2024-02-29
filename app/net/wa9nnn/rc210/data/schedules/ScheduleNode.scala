@@ -90,7 +90,7 @@ case class ScheduleNode(override val key: Key,
   }
 
   override def tableSection(fieldKey: FieldKey): TableSection =
-    TableSectionButtons(fieldKey, routes.EditController.edit(fieldKey), rows: _*)
+    TableSectionButtons(fieldKey, rows: _*)
 
   override def displayHtml: String =
     <table class="tagValuetable">

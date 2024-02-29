@@ -28,7 +28,6 @@ import net.wa9nnn.rc210.ui.TableSectionButtons
 import net.wa9nnn.rc210.ui.flow.{D3Data, D3Link, D3Node}
 import play.api.mvc.Call
 import play.twirl.api.{Html, StringInterpolation}
-import views.html.editButton
 
 import scala.language.postfixOps
 
@@ -58,7 +57,7 @@ class FlowData(val macroFieldEntry: FieldEntry, val triggers: Seq[FieldEntry], v
 
   def macroSection: Table =
     val table = Table(Seq.empty, Seq.empty)
-    val edit: Html = editButton(routes.EditController.edit(macroFieldEntry.fieldKey))
+    val edit: Cell = macroFieldEntry.fieldKey.key.keyKind.handler.editButtonCell(macroFieldEntry.fieldKey)
     val ts = new TableSectionButtons("Macro", edit)(
       "DTMF" -> macroFieldEntry.value[MacroNode].dtmf
     )

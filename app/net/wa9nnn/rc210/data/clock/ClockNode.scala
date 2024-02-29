@@ -81,7 +81,7 @@ case class ClockNode(key: Key,
   override def toJsValue: JsValue = Json.toJson(this)
 
   override def toRow: Row = Row(
-    EditButtonCell(fieldKey),
+    fieldKey.editButtonCell,
     key.keyWithName,
     enableDST,
     hourDST,

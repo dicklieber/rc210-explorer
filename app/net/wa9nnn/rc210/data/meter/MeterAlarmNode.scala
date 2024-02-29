@@ -18,11 +18,9 @@
 package net.wa9nnn.rc210.data.meter
 
 import com.wa9nnn.wa9nnnutil.tableui.*
-import controllers.routes
 import net.wa9nnn.rc210.KeyKind.{Macro, Meter, MeterAlarm}
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
-import net.wa9nnn.rc210.data.timers.TimerNode
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.html.meterAlarmEditor
 import net.wa9nnn.rc210.ui.{EditButtonCell, TableSectionButtons}
@@ -31,9 +29,9 @@ import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json}
-import play.api.mvc.{RequestHeader, Result, Results}
+import play.api.mvc.RequestHeader
 import play.twirl.api.Html
-import views.html.{editButton, fieldIndex}
+import views.html.fieldIndex
 
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -49,7 +47,7 @@ case class MeterAlarmNode(val key: Key, meter: Key, alarmType: AlarmType, tripPo
   ).map(Row(_))
 
   override def toRow: Row = Row(
-    EditButtonCell(fieldKey),
+    fieldKey.editButtonCell,
     key.keyWithName,
     meter.keyWithName,
     alarmType,
@@ -58,7 +56,7 @@ case class MeterAlarmNode(val key: Key, meter: Key, alarmType: AlarmType, tripPo
   )
 
   override def tableSection(fieldKey: FieldKey): TableSection =
-    TableSectionButtons(fieldKey, routes.EditController.edit(fieldKey), rows: _*)
+    TableSectionButtons(fieldKey, rows: _*)
 
   override def displayHtml: String =
     <table class="tagValuetable">

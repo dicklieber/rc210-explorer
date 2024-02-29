@@ -46,7 +46,7 @@ case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends ComplexField
   )
 
   override def tableSection(fieldKey: FieldKey): TableSection = {
-    TableSectionButtons(fieldKey, routes.EditController.edit(fieldKey), "Duration" -> duration)
+    TableSectionButtons(fieldKey, Row("Duration" -> duration))
   }
 
   override def displayHtml: String =

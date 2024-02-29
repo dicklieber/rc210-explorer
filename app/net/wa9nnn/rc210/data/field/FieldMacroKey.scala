@@ -22,16 +22,15 @@ import controllers.{EditController, routes}
 import net.wa9nnn.rc210.ui.{FormField, TableSectionButtons}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.libs.json.{Format, JsResult, JsSuccess, JsValue, Json}
-import views.html.{editButton, flowChartButton}
+import views.html.flowChartButton
 
 case class FieldMacroKey(key: Key) extends SimpleFieldValue(key):
   def update(paramValue: String): SimpleFieldValue =
     val key = Key(paramValue)
     FieldMacroKey(key)
-  
 
   override def tableSection(fieldKey: FieldKey): TableSection =
-    TableSectionButtons(fieldKey, routes.EditController.index(fieldKey.key.keyKind), "Macro" -> key.keyWithName)
+    TableSectionButtons(fieldKey, Row("Macro", fieldKey.key.keyWithName))
 
   def displayHtml: String = key.toString
 

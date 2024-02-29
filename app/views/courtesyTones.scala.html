@@ -36,7 +36,7 @@
             <tbody>
             @for(courtesyTone <- courtesyTones) {
                 <tr>
-                    <td rowspan="3">@editButton(routes.EditController.edit(courtesyTone.fieldKey))</td>
+                    <td rowspan="3">@courtesyTone.fieldKey.editButtonCell</td>
                     <td rowspan="3"> @courtesyTone.key.keyWithName</td>
                     @for(segment <- 0 to 3) {
                         <td rowspan="3">@courtesyTone.segments(segment).delayMs</td>

@@ -1,8 +1,10 @@
 package net.wa9nnn.rc210.data
 
+import com.wa9nnn.wa9nnnutil.tableui.Cell
 import controllers.routes
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry}
+import net.wa9nnn.rc210.ui.EditButtonCell
 import net.wa9nnn.rc210.{FieldKey, KeyKind}
 import play.api.i18n.MessagesProvider
 import play.api.mvc.{RequestHeader, Result, Results}
@@ -14,6 +16,9 @@ import play.twirl.api.Html
 trait EditHandler:
 
   val keyKind: KeyKind
+  
+  def editButtonCell(fieldKey: FieldKey):Cell =
+    EditButtonCell(routes.EditController.edit(fieldKey))
 
   /**
    * The landing page for a [[KeyKind]]. This may have the edit behavior from some [[KeyKind]]s.
