@@ -82,7 +82,9 @@
     background-color: #bac9e7;
 }
 
-
+.commandsUl{
+    list-style-type: none;
+}
 
 .tagValuetable {
     border-collapse: collapse;

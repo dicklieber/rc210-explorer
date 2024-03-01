@@ -20,10 +20,11 @@ package controllers
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
+import controllers.CandidatesController.commandsCell
 import io.jsonwebtoken.Jwts.header
 import net.wa9nnn.rc210.FieldKey
 import net.wa9nnn.rc210.data.datastore.*
-import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.serial.*
 import net.wa9nnn.rc210.serial.comm.RcResponse
 import net.wa9nnn.rc210.ui.{TabE, Tabs}
@@ -52,22 +53,18 @@ class CandidatesController @Inject()(dataStore: DataStore,
   def index: Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] => {
       val fieldEntries: Seq[FieldEntry] = dataStore.candidates
-      val rows: Seq[Row] = fieldEntries.map { fieldEntry =>
-        val fieldKey = fieldEntry.fieldKey
-        Row(
-          fieldKey.editButtonCell,
-          fieldKey.key,
-          fieldKey.fieldName,
-          Cell.rawHtml {
-            <ul>
-              {fieldEntry.commands.foreach { cmd =>
-              <li>
-                {cmd}
-              </li>
-            }}
-            </ul>.toString
-          }
-        )
+      val rows: Seq[Row] = fieldEntries.map {
+        fieldEntry =>
+          val fieldKey = fieldEntry.fieldKey
+          val row = Row(
+            fieldKey.editButtonCell,
+            fieldKey.key,
+            fieldKey.fieldName,
+            fieldEntry.fieldValue.displayHtml,
+            fieldEntry.value[FieldValue].displayHtml,
+            commandsCell(fieldEntry.commands)
+          )
+          row
       }
       val table = Table(
         CandidatesController.header(fieldEntries.length),
@@ -125,8 +122,22 @@ class CandidatesController @Inject()(dataStore: DataStore,
 }
 
 object CandidatesController:
+  def commandsCell(commands: Seq[String]): Cell =
+    val x = (<ul class="commandsUl">
+      {commands.map { cmd =>
+        <li>
+          {cmd}
+        </li>
+      }}
+    </ul>)
+    val string = x.toString
+    Cell
+      .rawHtml(string)
+      .withCssClass("commandsUl")
+
   def header(count: Int): Header =
     Header(s"Candidate Changes ($count)",
+      "",
       "Key",
       "Field",
       "Was",
