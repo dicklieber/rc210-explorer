@@ -43,7 +43,11 @@ case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey] {
 
   def editButtonCell: Cell = key.keyKind.handler.editButtonCell(this)
 
-  override def toString: String = s"${key.toString}:$fieldName"
+  override def toString: String =
+    if(key.rc210Value == 0)
+      fieldName
+    else
+      s"${key.toString}:$fieldName"
 
   val editHandler: EditHandler =
     key.keyKind.handler
@@ -81,7 +85,11 @@ object FieldKey {
         val key = Key(sKey)
         FieldKey(fieldName, key)
       case s: String =>
-        throw new IllegalArgumentException(s"$s is not a valid param name for a FieldKey!")
+        val keyKind = KeyKind.withName(s)
+        val key = Key(keyKind)
+        val fk=FieldKey(key)
+        fk
+
   }
 
   private val r = """(.+):(.*)""".r
