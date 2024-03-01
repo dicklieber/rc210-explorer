@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.timers
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.wa9nnnutil.tableui.{Header, Row, Table, TableSection}
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, KvTable, Row, Table, TableSection}
 import controllers.routes
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
@@ -45,25 +45,18 @@ case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends ComplexField
     macroKey.keyWithName
   )
 
+  private val rows: Seq[Row] = Seq(
+    "Key" -> key.keyWithName,
+    "Duration" -> duration,
+    "Macro" -> macroKey.keyWithName,
+  ).map(Row(_))
+
   override def tableSection(fieldKey: FieldKey): TableSection = {
-    TableSectionButtons(fieldKey, Row("Duration" -> duration))
+    TableSectionButtons(fieldKey, rows: _*)
   }
 
-  override def displayHtml: String =
-    <table class="tagValuetable">
-      <tr>
-        <td>Timer</td>
-        <td>
-          {key.keyWithName}
-        </td>
-      </tr>
-      <tr>
-        <td>time</td>
-        <td>
-          {duration}
-        </td>
-      </tr>
-    </table>.toString
+  override def displayCell: Cell =
+    KvTable.inACell(rows:_*)
 
   /**
    * Render this value as an RD-210 command string.

@@ -39,7 +39,7 @@ case class FieldInt(value: Int) extends SimpleFieldValue():
 
   }
 
-  override def displayHtml: String = value.toString
+  override def displayCell: Cell = Cell(value)
 
   override def update(paramValue: String): FieldInt = {
     FieldInt(paramValue.toInt)

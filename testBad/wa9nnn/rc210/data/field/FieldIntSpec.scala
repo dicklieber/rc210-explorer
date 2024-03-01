@@ -49,7 +49,7 @@ implicit val macroKey: MacroKey = MacroKey(3)
 
   "display" in {
     val fieldInt = FieldInt(42)
-    fieldInt.displayHtml should equal ("42")
+    fieldInt.displayCell should equal ("42")
   }
   "json" in {
     val fieldInt = FieldInt(42)

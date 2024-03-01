@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.data.remotebase
 
-import com.wa9nnn.wa9nnnutil.tableui.{Row, TableSection}
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, KvTable, Row, TableSection}
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
@@ -47,29 +47,14 @@ case class RemoteBaseNode(radio: Radio, yaesu: Yaesu, prefix: String, memories: 
 
   override def toJsValue: JsValue = Json.toJson(this)
 
-  override def displayHtml: String =
-    <table class="tagValuetable">
-      <tr>
-        <td>Radio</td>
-        <td>
-          {radio}
-        </td>
-      </tr>
-      <tr>
-        <td>Yeasu</td>
-        <td>
-          {yaesu}
-        </td>
-      </tr>
-      <tr>
-        <td>Prefix</td>
-        <td>
-          {prefix}
-        </td>
-      </tr>
-    </table>.toString
+  override def displayCell: Cell =
+    KvTable.inACell(
+      "Radio" -> radio,
+      "Yeasu" -> yaesu,
+      "Prefix" -> prefix,
+      "Prefix" -> prefix,
+    )
 
-  override def tableSection(fieldKey: FieldKey): TableSection = ???
 
   override def toRow: Row = Row(
     fieldKey.editButtonCell,

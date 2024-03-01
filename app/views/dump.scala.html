@@ -24,7 +24,7 @@
                     <tr>
                         <td>@fieldEntry.fieldKey.key</td>
                         <td>@fieldEntry.fieldKey.fieldName</td>
-                        <td>@fieldEntry.fieldValue.displayHtml</td>
+                        <td>@fieldEntry.fieldValue.displayCell</td>
                         <td>
                             <a href="@routes.CandidatesController.ws(CommandSendRequest(SendField.AllFields, fieldEntry.fieldKey))" title="Send to RC-210">
                             <i class="bi bi-send"></i>
@@ -35,7 +35,7 @@
                         </td>
 
                         @for(candidate <- fieldEntry.candidate) {
-                            <td>@candidate.displayHtml</td>
+                            <td>@candidate.displayCell</td>
                             <td >
                             @views.html.commandList(candidate.toCommands(fieldEntry), Option(fieldEntry.fieldKey))
                             </td>

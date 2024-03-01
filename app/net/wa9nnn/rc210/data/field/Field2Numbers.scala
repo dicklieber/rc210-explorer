@@ -48,7 +48,8 @@ case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue() {
 
   override def toJsValue: JsValue = Json.toJson(this)
 
-  override def displayHtml: String = value.map(_.toString).mkString(" ")
+  override def displayCell: Cell =
+    Cell(value.map(_.toString).mkString(" "))  
 
   override def toEditCell(fieldKey: FieldKey): Cell = FormField(fieldKey, value)
 

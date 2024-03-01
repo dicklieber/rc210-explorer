@@ -58,34 +58,13 @@ case class MeterAlarmNode(val key: Key, meter: Key, alarmType: AlarmType, tripPo
   override def tableSection(fieldKey: FieldKey): TableSection =
     TableSectionButtons(fieldKey, rows: _*)
 
-  override def displayHtml: String =
-    <table class="tagValuetable">
-      <tr>
-        <td>Meter</td>
-        <td>
-          {meter.namedKey}
-        </td>
-      </tr>
-      <tr>
-        <td>AlarmType</td>
-        <td>
-          {alarmType}
-        </td>
-      </tr>
-      <tr>
-        <td>Trip Point</td>
-        <td>
-          {tripPoint}
-        </td>
-      </tr>
-      <tr>
-        <td>Macro</td>
-        <td>
-          {macroKey}
-        </td>
-      </tr>
-    </table>
-      .toString
+  override def displayCell: Cell =
+    KvTable.inACell(
+      "Meter" -> meter.namedKey,
+      "AlarmType" -> alarmType,
+      "Trip Point" -> tripPoint,
+      "Macro" -> macroKey.keyWithName,
+    )
 
   /**
    * Render this value as an RD-210 command string.

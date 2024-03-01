@@ -55,11 +55,13 @@ case class ScheduleNode(override val key: Key,
   }
 
   private val rows: Seq[Row] = Seq(
+    "Key" -> key.keyWithName,
     "Day Of Week" -> dow,
     "Week" -> week,
     "Month" -> monthOfYear,
     "Hour" -> hour,
     "Minute" -> minute,
+    "Macro" -> macroKey.keyWithName
   ).map(Row(_))
 
   val description: String = {
@@ -92,52 +94,10 @@ case class ScheduleNode(override val key: Key,
   override def tableSection(fieldKey: FieldKey): TableSection =
     TableSectionButtons(fieldKey, rows: _*)
 
-  override def displayHtml: String =
-    <table class="tagValuetable">
-      <tr>
-        <td>Day Of Week</td>
-        <td>
-          {dow}
-        </td>
-      </tr>
-      <tr>
-        <td>Week</td>
-        <td>
-          {week}
-        </td>
-      </tr>
-      <tr>
-        <td>Month</td>
-        <td>
-          {monthOfYear}
-        </td>
-      </tr>
-      <tr>
-        <td>Hour</td>
-        <td>
-          {hour}
-        </td>
-      </tr>
-      <tr>
-        <td>Minute</td>
-        <td>
-          {minute}
-        </td>
-      </tr>
-      <tr>
-        <td>Macro</td>
-        <td>
-          {macroKey}
-        </td>
-      </tr>
-      <tr>
-        <td>Enabled</td>
-        <td>
-          {Display(enabled)}
-        </td>
-      </tr>
-    </table>
-      .toString
+  override def displayCell: Cell =
+    KvTable.inACell(
+      rows:_*
+    )
 
   override def toJsValue: JsValue = Json.toJson(this)
 

@@ -32,7 +32,7 @@ case class FieldMacroKey(key: Key) extends SimpleFieldValue(key):
   override def tableSection(fieldKey: FieldKey): TableSection =
     TableSectionButtons(fieldKey, Row("Macro", fieldKey.key.keyWithName))
 
-  def displayHtml: String = key.toString
+  override def displayCell: Cell = Cell(key.keyWithName)
 
   def toCommands(fieldEntry: FieldEntryBase): Seq[String] = Seq.empty //todo
 

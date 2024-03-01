@@ -20,6 +20,7 @@ package net.wa9nnn.rc210.data.field
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row}
 import net.wa9nnn.rc210.{FieldKey, Key}
 import net.wa9nnn.rc210.ui.FormField
+import net.wa9nnn.rc210.ui.nav.CheckBoxCell
 import play.api.libs.json.*
 
 case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue() {
@@ -40,12 +41,8 @@ case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue() {
     )
   }
 
-  override def displayHtml: String = value.toString
-
-//  override def toCell(renderMetadata: RenderMetadata): Cell = {
-//    super.toCell(renderMetadata)
-//  }
-
+  override def displayCell: Cell = CheckBoxCell(value)
+  
   override def update(paramValue: String): FieldBoolean = FieldBoolean(paramValue == "on")
 
   override def toJsValue: JsValue = Json.toJson(this)

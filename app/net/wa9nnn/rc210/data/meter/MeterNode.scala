@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.data.meter
 
-import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, Table}
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, KvTable, Row, Table}
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.meter.MeterAlarmNode.bind
@@ -44,27 +44,13 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 case class MeterNode(key: Key, meterFaceName: MeterFaceName, low: VoltToReading, high: VoltToReading) extends ComplexFieldValue():
 
-  override def displayHtml: String =
-    <table class="tagValuetable">
-      <tr>
-        <td>Face</td>
-        <td>
-          {meterFaceName}
-        </td>
-      </tr>
-      <tr>
-        <td>Low</td>
-        <td>
-          {low}
-        </td>
-      </tr>
-      <tr>
-        <td>High</td>
-        <td>
-          {high}
-        </td>
-      </tr>
-    </table>.toString
+  override def displayCell: Cell =
+    KvTable.inACell(
+      "Key" -> key.keyWithName,
+      "Face" -> meterFaceName,
+      "Low" -> low,
+      "High" -> high,
+    )
 
   /**
    * Render this value as an RD-210 command string.

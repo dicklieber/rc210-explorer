@@ -52,8 +52,7 @@ class FlowData(val macroFieldEntry: FieldEntry, val triggers: Seq[FieldEntry], v
     val f: Seq[(String, String)] = macroNode.functions.map { functionKey =>
       functionKey.rc210Value.toString -> Functions.description(functionKey)
     }
-
-    KvTable(f: _*)
+    KvTable.noHeader(f: _*)
 
   def macroSection: Table =
     val table = Table(Seq.empty, Seq.empty)

@@ -44,7 +44,7 @@ case class FieldDtmf(value: String) extends SimpleFieldValue() with LazyLogging:
     )
   }
 
-  override def displayHtml: String = value
+  override def displayCell: Cell = Cell(value)
 
   override def update(paramValue: String): FieldDtmf = {
     FieldDtmf(paramValue)

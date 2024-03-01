@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.wa9nnnutil.tableui.{Header, Row, Table}
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
 import controllers.ExtractField
 import net.wa9nnn.rc210.data.EditHandler
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
@@ -52,7 +52,7 @@ case class MessageNode(key: Key, words: Seq[Int]) extends ComplexFieldValue() {
 
   def toWords: Seq[Word] = words.map(Word(_))
 
-  override def displayHtml: String = words.map(id => Word(id).string).mkString(", ")
+  override def displayCell: Cell = Cell(words.map(id => Word(id).string).mkString(", "))
 
   /**
    * Render this value as an RD-210 command string.
@@ -134,14 +134,14 @@ object MessageNode extends ComplexExtractor[MessageNode] with LazyLogging:
     messageEditor(fieldEntry.value)
 
   override def bind(using data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
-   (for {
-     fieldKey <- EditHandler.fieldKey
-     ids <- EditHandler.str("ids")
-   } yield {
-     val strings: Seq[String] = ids.split(',').toIndexedSeq
-     val messageNode = MessageNode(fieldKey.key, strings.map(_.toInt))
-     UpdateCandidate(fieldKey, messageNode)
-   }).toSeq
+    (for {
+      fieldKey <- EditHandler.fieldKey
+      ids <- EditHandler.str("ids")
+    } yield {
+      val strings: Seq[String] = ids.split(',').toIndexedSeq
+      val messageNode = MessageNode(fieldKey.key, strings.map(_.toInt))
+      UpdateCandidate(fieldKey, messageNode)
+    }).toSeq
 
 
 

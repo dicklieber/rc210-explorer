@@ -60,8 +60,8 @@ class CandidatesController @Inject()(dataStore: DataStore,
             fieldKey.editButtonCell,
             fieldKey.key,
             fieldKey.fieldName,
-            fieldEntry.fieldValue.displayHtml,
-            fieldEntry.value[FieldValue].displayHtml,
+            fieldEntry.fieldValue.displayCell,
+            fieldEntry.value[FieldValue].displayCell,
             commandsCell(fieldEntry.commands)
           )
           row

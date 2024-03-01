@@ -54,7 +54,7 @@ sealed trait FieldValue extends LazyLogging with RowSource {
   /**
    * Read only HTML display
    */
-  def displayHtml: String
+  def displayCell: Cell
 
   /**
    * A form input field

@@ -27,6 +27,7 @@ import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.*
+import net.wa9nnn.rc210.ui.nav.CheckBoxCell
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Forms.*
 import play.api.data.*
@@ -52,28 +53,15 @@ case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, 
       Row("Low" -> lowMacro),
       Row("High" -> highMacro)
     )
-  override def displayHtml: String =
-    <table>
-      <tr>
-        <td>Enabled</td>
-        <td>
-          {Display(enabled)}
-        </td>
-      </tr>
-      <tr>
-        <td>Low</td>
-        <td>
-          {lowMacro}
-        </td>
-      </tr>
-      <tr>
-        <td>High</td>
-        <td>
-          {highMacro}
-        </td>
-      </tr>
-    </table>
-      .toString
+
+  override def displayCell: Cell =
+    val none: Header = Header.none
+    KvTable.inACell(
+      "Key" -> key.keyWithName,
+      "Enabled" -> CheckBoxCell(enabled),
+      "Low Macro" -> lowMacro.keyWithName,
+      "Low Macro" -> highMacro.keyWithName
+    )
 
   /**
    * Render this value as an RD-210 command string.
@@ -96,7 +84,6 @@ case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, 
 object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode]:
   override val keyKind: KeyKind = KeyKind.LogicAlarm
 
-
   def unapply(u: LogicAlarmNode): Option[(Key, Boolean, Key, Key)] = Some((u.key, u.enabled, u.lowMacro, u.highMacro))
 
   val form: Form[LogicAlarmNode] = Form(
@@ -107,7 +94,6 @@ object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode]:
       "highMacro" -> of[Key]
     )(LogicAlarmNode.apply)(LogicAlarmNode.unapply)
   )
-
 
   /**
    *

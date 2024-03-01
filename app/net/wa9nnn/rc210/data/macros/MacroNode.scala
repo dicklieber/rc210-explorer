@@ -1,6 +1,6 @@
 package net.wa9nnn.rc210.data.macros
 
-import com.wa9nnn.wa9nnnutil.tableui.{Header, Row, Table, TableInACell}
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table, TableInACell}
 import net.wa9nnn.rc210.data.Dtmf.Dtmf
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
@@ -54,7 +54,7 @@ case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dt
     )
   }
 
-  override def displayHtml: String = functions.map(_.rc210Value).mkString(" ")
+  override def displayCell: Cell = Cell(functions.map(_.rc210Value).mkString(" "))
 
   override def toJsValue: JsValue = Json.toJson(this)
 

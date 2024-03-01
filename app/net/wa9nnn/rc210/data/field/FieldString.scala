@@ -44,7 +44,7 @@ case class FieldString(value: String) extends SimpleFieldValue():
 
   }
 
-  override def displayHtml: String = value
+  override def displayCell: Cell = Cell(value)
 
   override def update(paramValue: String): FieldString = {
     FieldString(paramValue)

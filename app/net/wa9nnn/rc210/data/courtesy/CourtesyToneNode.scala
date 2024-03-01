@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.courtesy
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.wa9nnnutil.tableui.{Header, Row, Table}
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
 import controllers.routes
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
@@ -31,7 +31,7 @@ import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json, OFormat}
 import play.api.mvc.{RequestHeader, Result, Results}
 import play.twirl.api.Html
-import views.html.{courtesyToneEdit, courtesyTones, fieldIndex, named}
+import views.html.{courtesyToneCell, courtesyToneEdit, courtesyTones, fieldIndex, named}
 
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -43,7 +43,11 @@ import java.util.concurrent.atomic.AtomicInteger
 case class CourtesyToneNode(override val key: Key, segments: Seq[Segment]) extends ComplexFieldValue() {
   assert(segments.length == 4, s"Must have four segemnts but only have: $segments")
 
-  override def displayHtml: String = s"$key"
+  override def displayCell: Cell =
+    given CourtesyToneNode = this
+
+    val html = courtesyToneCell(this)
+    Cell.rawHtml(html.body)
 
   implicit val k: Key = key
   implicit val s: Seq[Segment] = segments

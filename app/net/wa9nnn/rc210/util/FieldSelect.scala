@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.util
 
+import com.wa9nnn.wa9nnnutil.tableui.Cell
 import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.field.{FieldEntryBase, SimpleFieldValue}
 import play.api.libs.json.{JsString, JsValue}
@@ -29,7 +30,7 @@ trait FieldSelect[T] extends SimpleFieldValue {
   val name: String
   val value: T
 
-  override def displayHtml: String = value.toString
+  override def displayCell: Cell = Cell(value)
 
   /**
    * Render this value as an RC-210 command string.
@@ -55,7 +56,7 @@ trait FieldSelect[T] extends SimpleFieldValue {
   }
 
 
-  override def toJsValue: JsValue = JsString(displayHtml)
+  override def toJsValue: JsValue = JsString(value.toString)
 
 //  /**
 //   *
@@ -77,7 +78,6 @@ trait FieldSelect[T] extends SimpleFieldValue {
 //    """.stripMargin
 //  }
 
-  override def toString: String = displayHtml
 }
 
 

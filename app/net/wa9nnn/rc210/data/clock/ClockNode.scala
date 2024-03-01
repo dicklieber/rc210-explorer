@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.clock
 
 import com.wa9nnn.wa9nnnutil.JsonFormatUtils.javaEnumFormat
-import com.wa9nnn.wa9nnnutil.tableui.{Row, Table}
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table, TableInACell}
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
@@ -39,7 +39,18 @@ case class ClockNode(key: Key,
                      say24Hours: Boolean = false,
                     ) extends ComplexFieldValue():
 
-  override def displayHtml: String = "todo"
+  override def displayCell: Cell =
+    val table = Table(Header(Seq.empty),
+      Seq(
+        "enableDST" -> enableDST,
+        "hourDST" -> hourDST,
+        "startDST" -> startDST,
+        "endDST" -> endDST,
+        "say24Hours" -> say24Hours
+      )
+    )
+
+    TableInACell(table)
 
   /**
    * Render this value as an RD-210 command string.
@@ -148,7 +159,8 @@ object ClockNode extends ComplexExtractor[ClockNode] {
         views.html.clock(fe.fieldKey, form.fill(fe.value))
       case None =>
         throw new IllegalArgumentException("No ClockNode")
-      r
+    r
+
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html = {
     views.html.clock(fieldKey, form.fill(fieldEntry.value))
   }
