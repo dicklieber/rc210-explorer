@@ -22,7 +22,7 @@ import net.wa9nnn.rc210.data.datastore.{DataStore, DataTransferJson}
 import net.wa9nnn.rc210.ui.nav.TabKind
 import play.api.libs.Files
 import play.api.libs.json.Json
-import play.api.mvc.*
+import play.api.mvc.{Action, *}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -64,5 +64,8 @@ class DataStoreController @Inject()(dataStore: DataStore)
       }
     Redirect(routes.NavigationController.selectTabKind(TabKind.Fields))
   }
-
+  def rollback(): Action[AnyContent] = Action {
+    dataStore.rollback()
+    Redirect(routes.NavigationController.selectTabKind(TabKind.Fields))
+  }
 }

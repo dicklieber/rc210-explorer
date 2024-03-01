@@ -55,6 +55,7 @@ enum TabE(override val entryName: String,
   case JsonDownload extends TabE("Save", routes.DataStoreController.downloadJson.url, "Save RC210 data in JSON.", Disk)
   case UserManager extends TabE("Users", routes.UsersController.users().url, "Edit Users", Settings)
   case Names extends TabE("Names", routes.NamesController.index.url, "User supplied names for varous fields.")
+  case Rollback extends TabE("Rollback", routes.DataStoreController.rollback().url, "Remove all candidates.", Debug)
   case Logout extends TabE("Logout", routes.LoginController.logout().url, "Finish this session", Settings)
 
 object Tabs:
