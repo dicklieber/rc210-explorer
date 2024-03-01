@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.data.field
 
-import com.wa9nnn.wa9nnnutil.tableui.{Row, TableSection}
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, TableSection}
 import controllers.routes
 import net.wa9nnn.rc210.FieldKey
 import net.wa9nnn.rc210.ui.{FormField, TableSectionButtons}
@@ -39,7 +39,7 @@ case class TimeoutTimerResetPoint(value: TotReset = TotReset.values.head) extend
     TimeoutTimerResetPoint(TotReset.withName(paramValue))
   }
 
-  override def toHtmlField(fieldKey: FieldKey): String = FormField(fieldKey, value)
+  override def toEditCell(fieldKey: FieldKey): Cell = FormField(fieldKey, value)
 
   override def toJsValue: JsValue = Json.toJson(value)
 

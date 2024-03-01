@@ -61,7 +61,7 @@ sealed trait FieldValue extends LazyLogging with RowSource {
    *
    * @param fieldKey
    */
-  def toHtmlField(fieldKey: FieldKey): String =
+  def toEditCell(fieldKey: FieldKey): Cell =
     throw new NotImplementedError() //todo
 
   def toJsValue: JsValue

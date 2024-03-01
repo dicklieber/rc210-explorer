@@ -10,8 +10,6 @@ GET         /rc210/select/:portDescriptor             controllers.IOController.s
 GET         /rc210/result                             controllers.IOController.downloadResult
 GET         /rc210                                    controllers.IOController.listSerialPorts
 GET         /select/:name                             controllers.IOController.select(name:String)
-GET         /common/index                             controllers.CommonController.index
-POST        /common/save                              controllers.CommonController.save()
 GET         /candidates                               controllers.CandidatesController.index
 GET         /datastore/dump                           controllers.CandidatesController.dump()
 GET         /candidates/ws/:commandSendRequest        controllers.CandidatesController.ws(commandSendRequest:CommandSendRequest)

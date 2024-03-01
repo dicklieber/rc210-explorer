@@ -20,7 +20,7 @@ package net.wa9nnn.rc210
 import controllers.routes
 import enumeratum.*
 import enumeratum.EnumEntry.CapitalWords
-import net.wa9nnn.rc210.data.EditHandler
+import net.wa9nnn.rc210.data.{CommonNode, EditHandler}
 import net.wa9nnn.rc210.data.clock.ClockNode
 import net.wa9nnn.rc210.data.courtesy.CourtesyToneNode
 import net.wa9nnn.rc210.data.field.{LogicAlarmNode, MessageNode}
@@ -66,8 +66,7 @@ object KeyKind extends PlayEnum[KeyKind]:
 
   case object Timer extends KeyKind(6, TimerNode)
 
-  case object Common extends KeyKind(1):
-    override def indexUrl: String = routes.CommonController.index.url
+  case object Common extends KeyKind(1, CommonNode)
 
   case object RemoteBase extends KeyKind(1, RemoteBaseNode)
 

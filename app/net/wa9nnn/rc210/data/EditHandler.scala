@@ -35,7 +35,9 @@ trait EditHandler:
    */
   def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html
 
-  def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate]
+  def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate]=
+    throw new NotImplementedError() 
+  
 
   def bind(in: ComplexFieldValue): Seq[UpdateCandidate] =
     Seq(

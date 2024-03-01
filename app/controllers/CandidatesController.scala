@@ -20,6 +20,7 @@ package controllers
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
+import io.jsonwebtoken.Jwts.header
 import net.wa9nnn.rc210.FieldKey
 import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.FieldEntry
@@ -51,31 +52,27 @@ class CandidatesController @Inject()(dataStore: DataStore,
   def index: Action[AnyContent] = Action {
     implicit request: MessagesRequest[AnyContent] => {
       val fieldEntries: Seq[FieldEntry] = dataStore.candidates
-      val table =  Table(
-        Header(s"Candidate Changes ($fieldEntries.length)",
-          "Key",
-          "Field",
-          "Was",
-          "New",
-          "Commands",
-        ),
-        fieldEntries.map{fieldEntry =>
-          val fieldKey = fieldEntry.fieldKey
-          Row(
-            fieldKey.editButtonCell,
-            fieldKey.key,
-            fieldKey.fieldName,
-            Cell.rawHtml{
-              <ul>
-                {fieldEntry.commands.foreach {cmd =>
-                <li>{cmd}</li>
-              }}
-              </ul>.toString
-            }
-          )
-        }
+      val rows: Seq[Row] = fieldEntries.map { fieldEntry =>
+        val fieldKey = fieldEntry.fieldKey
+        Row(
+          fieldKey.editButtonCell,
+          fieldKey.key,
+          fieldKey.fieldName,
+          Cell.rawHtml {
+            <ul>
+              {fieldEntry.commands.foreach { cmd =>
+              <li>
+                {cmd}
+              </li>
+            }}
+            </ul>.toString
+          }
+        )
+      }
+      val table = Table(
+        CandidatesController.header(fieldEntries.length),
+        rows
       )
-
 
       Ok(navMain(TabE.Changes, views.html.candidates(table)))
     }
@@ -126,4 +123,14 @@ class CandidatesController @Inject()(dataStore: DataStore,
   }
 
 }
+
+object CandidatesController:
+  def header(count: Int): Header =
+    Header(s"Candidate Changes ($count)",
+      "Key",
+      "Field",
+      "Was",
+      "New",
+      "Commands",
+    )
 

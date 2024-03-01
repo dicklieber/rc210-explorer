@@ -17,7 +17,7 @@
 
 package net.wa9nnn.rc210.data.field
 
-import com.wa9nnn.wa9nnnutil.tableui.{KvTable, Row, Table, TableSection}
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, KvTable, Row, Table, TableSection}
 import controllers.{EditController, routes}
 import net.wa9nnn.rc210.ui.{FormField, TableSectionButtons}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
@@ -38,7 +38,7 @@ case class FieldMacroKey(key: Key) extends SimpleFieldValue(key):
 
   def toJsValue: JsValue = Json.toJson(key)
 
-  override def toHtmlField(fieldKey: FieldKey): String = FormField(fieldKey, key)
+  override def toEditCell(fieldKey: FieldKey): Cell = FormField(fieldKey, key)
 
   override def toRow: Row = Row(
     "FieldMacroKey", toString

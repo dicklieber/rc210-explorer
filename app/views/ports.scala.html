@@ -8,31 +8,35 @@
 @import net.wa9nnn.rc210.KeyKind
 @import net.wa9nnn.rc210.PortRow
 @import net.wa9nnn.rc210.FieldKey
-@( rows: Seq[PortRow])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+@import com.wa9nnn.wa9nnnutil.tableui.Table
+@import com.wa9nnn.wa9nnnutil.tableui.html.renderTable
+@( table:Table)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
     @form(action = routes.EditController.save()) {
+        
         @submitButton()
+        @renderTable(table)
         <input type="hidden" name="fieldKey" value="@FieldKey(Key.portKeys.head)">
-        <table class="table table-bordered table-sm  w-auto rc210-table headeredTable   ">
-            <thead class="table-primary">
-                <tr>
-                    <th>Field</th>
-                    @for(key <- Key.portKeys) {
-                        <th>@nameEditKey(key)
-                        </th>
-                    }
-                </tr>
-            </thead>
-            <tbody>
-            @for(row <- rows) {
-                <tr>
-                    <td class ="RowHeader">@row.name</td>
-                    @for(cell <- row.cells) {
-                        <td>@Html(cell)</td>
-                    }
-                </tr>
-            }
-            </tbody>
-        </table>
+@*        <table class="table table-bordered table-sm  w-auto rc210-table headeredTable   ">*@
+@*            <thead class="table-primary">*@
+@*                <tr>*@
+@*                    <th>Field</th>*@
+@*                    @for(key <- Key.portKeys) {*@
+@*                        <th>@nameEditKey(key)*@
+@*                        </th>*@
+@*                    }*@
+@*                </tr>*@
+@*            </thead>*@
+@*            <tbody>*@
+@*            @for(row <- rows) {*@
+@*                <tr>*@
+@*                    <td class ="RowHeader">@row.name</td>*@
+@*                    @for(cell <- row.cells) {*@
+@*                        <td>@Html(cell)</td>*@
+@*                    }*@
+@*                </tr>*@
+@*            }*@
+@*            </tbody>*@
+@*        </table>*@
         @submitButton()
     }

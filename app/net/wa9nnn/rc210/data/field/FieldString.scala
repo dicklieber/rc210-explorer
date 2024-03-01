@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.wa9nnnutil.tableui.Row
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row}
 import net.wa9nnn.rc210.{FieldKey, Key}
 import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.*
@@ -32,7 +32,7 @@ case class FieldString(value: String) extends SimpleFieldValue():
    * @return
    */
 
-  override def toHtmlField(fieldKey: FieldKey): String =
+  override def toEditCell(fieldKey: FieldKey): Cell =
     FormField(fieldKey, value)
 
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {

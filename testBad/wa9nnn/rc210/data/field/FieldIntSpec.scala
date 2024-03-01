@@ -24,7 +24,7 @@ implicit val macroKey: MacroKey = MacroKey(3)
       val fieldInt = FieldInt(42)
       fieldInt.value should equal (42)
 
-      val html: String = fieldInt.toHtmlField(RenderMetadata("groucho", units = "cigars"))
+      val html: String = fieldInt.toEditCell(RenderMetadata("groucho", units = "cigars"))
       html.dropWhile(_ != '<') should equal ("""<div class="valueCell">
                                                  |            <input id="groucho:macroKey3"  name="groucho:macroKey3" value="42" title="">
                                                  |            <span class="units">cigars</span>

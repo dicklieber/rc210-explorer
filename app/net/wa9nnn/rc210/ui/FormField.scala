@@ -17,7 +17,9 @@
 
 package net.wa9nnn.rc210.ui
 
+import com.wa9nnn.wa9nnnutil.tableui.Cell
 import net.wa9nnn.rc210.FieldKey
+
 import java.time.LocalTime
 import scala.xml.*
 
@@ -30,13 +32,13 @@ import scala.xml.*
  * @deprecated use play form stuff.
  */
 object FormField:
-  def apply(fieldKey: FieldKey, value: Any): String =
-    apply(fieldKey.toString, value)
+  //  def apply(fieldKey: FieldKey, value: Any): String =
+  //    apply(fieldKey.toString, value)
 
-  def apply(name: String, value: Any, range: Option[Range] = None): String =
+  def apply(fieldKey: FieldKey, value: Any, range: Option[Range] = None): Cell =
     val elem: Elem = value match {
       case enumValue: EnumEntryValue =>
-        <select name ={name}>
+        <select name={fieldKey.fieldName}>
           {enumValue.options map { choice =>
           <option value={choice._1} selected={if (enumValue.entryName == choice._1) "selected" else null}>
             {choice._2}
@@ -61,13 +63,22 @@ object FormField:
       case localTime: LocalTime =>
         <input type="time" class="timepicker" value={localTime.toString}></input>
 
+      case s: Selections =>
+        <select>
+          {s.options.map { (value, display) =>
+          <option value={value}>
+            {display}
+          </option>
+        }}
+        </select>
+
       case x =>
         <span>
           {x.toString}
         </span>
     }
     // These get added to any generated html.
-
+    val name = fieldKey.fieldName
     val r: Elem = elem
       % Attribute(None, "id", Text(name), Null)
       % Attribute(None, "name", Text(name), Null)
@@ -79,7 +90,8 @@ object FormField:
 
     }.getOrElse(r)
 
-    rr.toString
+    val html = rr.toString
+    Cell.rawHtml(html)
 
 
 
