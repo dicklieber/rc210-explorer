@@ -24,75 +24,93 @@ import play.api.libs.json.Json
 class FieldKeyTest extends RcSpec {
 
   "FieldKey" should {
+    val clockKey: Key = Key(KeyKind.Clock)
+    val clock: FieldKey = FieldKey(clockKey)
+
+    val commonKey: Key = Key(KeyKind.Common)
+    val aCommon: FieldKey = FieldKey(commonKey, "aCommonfield")
+
+    val logicAlarm: FieldKey = FieldKey(Key(KeyKind.LogicAlarm))
+
     "round trip" when {
       "name is key" in {
-      val key = Key.portKeys.head
-      val fieldKey = FieldKey(key)
-      val string = fieldKey.toString
-      string mustBe "Port1:Port"
-      val backAgain = FieldKey(string)
-      backAgain.key mustBe key
-      backAgain.fieldName mustBe KeyKind.Port.toString
+        val key = Key.portKeys.head
+        val fieldKey = FieldKey(key, "Port Color")
+        val string = fieldKey.toString
+        string mustBe "Port1:Port Color"
+        val backAgain = FieldKey(string)
+        backAgain.key mustBe key
+        backAgain.fieldName mustBe "Port Color"
 
-    }
-    "none 0 name is not key " in {
-      val key = Key(KeyKind.Port, 2)
-      val fname = "fname"
-      val fieldKey = FieldKey(fname, key)
-      val string = fieldKey.toString
-      string mustBe "Port2:fname"
-      val backAgain = FieldKey(string)
-      backAgain.key mustBe key
-      backAgain.fieldName mustBe fname
+      }
+      "name same as key name" in {
+        val key = Key(KeyKind.LogicAlarm, 5)
+        val fieldKey = FieldKey(key)
+        val string = fieldKey.toString
+        string mustBe "Logic Alarm5"
+        val backAgain = FieldKey(string)
+        backAgain.key mustBe key
+        backAgain.fieldName mustBe "Logic Alarm"
 
-    }
-    "0 rcNumber e.g. Clock, RemoteBase etc." in {
-      val key = ClockNode.key
-      val fieldKey = FieldKey(key)
-      val string = fieldKey.toString
-      string mustBe ("Clock")
-      val backAgain = FieldKey(string)
-      backAgain.key mustBe key
-      backAgain.fieldName mustBe "Clock"
+      }
+      "none 0 name is not key " in {
+        val key = Key(KeyKind.Port, 2)
+        val fname = "fname"
+        val fieldKey = FieldKey(key, fname)
+        val string = fieldKey.toString
+        string mustBe "Port2:fname"
+        val backAgain = FieldKey(string)
+        backAgain.key mustBe key
+        backAgain.fieldName mustBe fname
 
+      }
+      "0 rcNumber e.g. Clock, RemoteBase etc." in {
+        val key = ClockNode.key
+        val fieldKey = FieldKey(key)
+        val string = fieldKey.toString
+        string mustBe ("Clock")
+        val backAgain = FieldKey(string)
+        backAgain.key mustBe key
+        backAgain.fieldName mustBe "Clock"
+
+      }
     }
-  }
     "compare" when {
       "same" in {
-        val fk1 = FieldKey("f1", Key.portKeys.head)
-        val fk2 = FieldKey("f1", Key(KeyKind.Port, 1))
+        val fk1 = FieldKey(Key.portKeys.head, "f1")
+        val fk2 = FieldKey(Key(KeyKind.Port, 1), "f1")
         fk1 compareTo (fk2) mustBe (0)
       }
     }
-    "round trip JSON" when{
+    "round trip JSON" when {
       "port" in {
-        val fk1 = FieldKey("f1", Key.portKeys.head)
+        val fk1 = FieldKey(Key.portKeys.head, "f1")
         val string = Json.toJson(fk1).toString
-        string mustEqual(""""Port1:f1"""")
+        string mustEqual (""""Port1:f1"""")
         val backAgain = Json.parse(string).as[FieldKey]
-        backAgain mustEqual(fk1)
+        backAgain mustEqual (fk1)
       }
       "Clock" in {
-        val fk1 = FieldKey(Key(KeyKind.Clock))
+        val fk1 = FieldKey(clockKey)
         val string = Json.toJson(fk1).toString
-        string mustEqual(""""Clock"""")
+        string mustEqual (""""Clock"""")
         val backAgain = Json.parse(string).as[FieldKey]
-        backAgain mustEqual(fk1)
+        backAgain mustEqual (fk1)
       }
 
     }
-    "Cell" in  {
-      val fieldKey = FieldKey(Key(KeyKind.Clock))
+    "Cell" in {
+      val fieldKey = FieldKey(clockKey)
       val cell = fieldKey.editButtonCell
       val value1 = cell.value
-      value1 mustBe("""<button type="button" class="bi bi-pencil-square btn p-0" onclick="window.location.href='/edit/Clock'">
-                      |      </button>
-                      |""".stripMargin)
+      value1 mustBe ("""<button type="button" class="bi bi-pencil-square btn p-0" onclick="window.location.href='/edit/Clock'">
+                       |      </button>
+                       |""".stripMargin)
     }
-    "opt" in  {
-      val fieldKey = FieldKey(Key(KeyKind.Clock))
+    "opt" in {
+      val fieldKey = FieldKey(clockKey)
       val backAgain = FieldKey.opt(Option("Clock"))
-      backAgain.get mustEqual(fieldKey)
+      backAgain.get mustEqual (fieldKey)
     }
   }
 }

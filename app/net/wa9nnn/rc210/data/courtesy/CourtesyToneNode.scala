@@ -121,7 +121,7 @@ object CourtesyToneNode extends ComplexExtractor[CourtesyToneNode] with LazyLogg
       CourtesyToneNode(key, segments)
     }
     courtesyTones.map { ct =>
-      FieldEntry(this, FieldKey(fieldName, ct.key), ct)
+      FieldEntry(this, FieldKey(ct.key, fieldName), ct)
     }
   }
 

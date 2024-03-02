@@ -113,7 +113,7 @@ object MessageNode extends ComplexExtractor[MessageNode] with LazyLogging:
       val message: MessageNode = MessageNode(key, chunk.ints
         .takeWhile(_ != 0)
       )
-      val fieldKey = FieldKey(fieldName, key)
+      val fieldKey = FieldKey(key, fieldName)
       FieldEntry(this, fieldKey, message)
     }
   }

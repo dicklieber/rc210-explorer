@@ -58,8 +58,7 @@ class CandidatesController @Inject()(dataStore: DataStore,
           val fieldKey = fieldEntry.fieldKey
           val row = Row(
             fieldKey.editButtonCell,
-            fieldKey.key,
-            fieldKey.fieldName,
+            fieldKey.toString,
             fieldEntry.fieldValue.displayCell,
             fieldEntry.value[FieldValue].displayCell,
             commandsCell(fieldEntry.commands)
@@ -139,7 +138,6 @@ object CandidatesController:
     Header(s"Candidate Changes ($count)",
       "",
       "Key",
-      "Field",
       "Was",
       "New",
       "Commands",

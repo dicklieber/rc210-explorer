@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210
 
 import com.wa9nnn.wa9nnnutil.tableui.Cell
+import net.wa9nnn.rc210.FieldKey.fieldKeyName
 import net.wa9nnn.rc210.data.EditHandler
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.libs.json.*
@@ -30,7 +31,7 @@ import scala.util.Try
  * @param fieldName name of rc2input. Shown in UIs
  * @param key       qualifier for the rc2input.
  */
-case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey] {
+case class FieldKey(key: Key, fieldName: String) extends Ordered[FieldKey] {
 
   override def compare(that: FieldKey): Int = {
     var ret = key.keyKind.toString compareTo that.key.keyKind.toString
@@ -46,6 +47,8 @@ case class FieldKey(fieldName: String, key: Key) extends Ordered[FieldKey] {
   override def toString: String =
     if(key.rc210Value == 0)
       fieldName
+    else if(key.keyKind.entryName == fieldName)
+      key.toString
     else
       s"${key.toString}:$fieldName"
 
@@ -64,14 +67,16 @@ object FieldKey {
    *
    * @param key whose [[KeyKind]] name is the field name.
    */
-  def apply(key: Key): FieldKey = new FieldKey(key.keyKind.entryName, key)
+  def apply(key: Key): FieldKey =
+    new FieldKey(key, key.keyKind.entryName)
 
   implicit val fmtFieldKey: Format[FieldKey] = new Format[FieldKey] {
     override def writes(o: FieldKey) = JsString(o.toString)
 
     override def reads(json: JsValue): JsResult[FieldKey] = {
       JsResult.fromTry(Try {
-        FieldKey(json.as[String])
+        val sFieldKey = json.as[String]
+        FieldKey(sFieldKey)
       })
     }
   }
@@ -81,9 +86,12 @@ object FieldKey {
 
   def apply(param: String): FieldKey = {
     param match
+      case justKey(sKey) =>
+        val key = Key(sKey)
+        FieldKey(key)
       case r(sKey, fieldName) =>
         val key = Key(sKey)
-        FieldKey(fieldName, key)
+        FieldKey(key, fieldName)
       case s: String =>
         val keyKind = KeyKind.withName(s)
         val key = Key(keyKind)
@@ -92,5 +100,6 @@ object FieldKey {
 
   }
 
-  private val r = """(.+):(.*)""".r
+  private val r = """(.+\d):(.*)""".r
+  private val justKey = """([ \w]+\d+)""".r
 }

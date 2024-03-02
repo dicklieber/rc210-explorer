@@ -29,7 +29,7 @@ case class NamedKey(key: Key, name: String) extends Ordered[NamedKey] with RowSo
       Cell(key.toString), name
     )
   }
-  val fieldKey:FieldKey = FieldKey("keyName", key)
+  val fieldKey:FieldKey = FieldKey(key, "keyName")
 }
 
 object NamedKey {
