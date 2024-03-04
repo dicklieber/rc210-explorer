@@ -6,7 +6,7 @@ import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.{EditHandler, Node}
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.EditFlowButtonCell
+import net.wa9nnn.rc210.ui.{EditFlowButtonCell, NameEditCell}
 import net.wa9nnn.rc210.{FieldKey, Functions, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.*
@@ -71,6 +71,7 @@ case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dt
 
   override def toRow: Row = Row(
     EditFlowButtonCell(fieldKey),
+    fieldKey.key.keyWithName,
 
     TableInACell(Table(Seq.empty,
       functions.map { fKey =>
@@ -79,6 +80,8 @@ case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dt
         )
       }).withCssClass("functionsTable")
     ))
+
+
 
 object MacroNode extends ComplexExtractor[MacroNode]:
   override val keyKind: KeyKind = KeyKind.Macro
@@ -175,6 +178,7 @@ object MacroNode extends ComplexExtractor[MacroNode]:
     val topHeader = s"Macros  (${fieldEntries.length})"
     val header = Header(topHeader,
       "",
+      "Key",
       "Functions"
     )
     val table = Table(header,
