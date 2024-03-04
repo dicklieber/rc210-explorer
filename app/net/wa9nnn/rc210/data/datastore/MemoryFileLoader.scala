@@ -19,6 +19,7 @@ package net.wa9nnn.rc210.data.datastore
 
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.KeyKind
 import net.wa9nnn.rc210.data.datastore.MemoryFileLoader.notInitialized
 import net.wa9nnn.rc210.data.field.{FieldDefinitions, FieldEntry}
 import net.wa9nnn.rc210.serial.Memory
@@ -62,7 +63,11 @@ class MemoryFileLoader @Inject()( fieldDefinitions: FieldDefinitions)(implicit c
         number <- 1 to fieldDefinition.keyKind.maxN
         fieldValue <- fieldDefinition.extractFromInts(it).toOption
       } yield {
-        val fieldKey = fieldDefinition.fieldKey(number)
+        val n = if(fieldDefinition.keyKind == KeyKind.Common)
+          0 // todo this ids a hack, maybe handle in KeyKind definition or get rid of 0 as a magic number
+        else
+          number
+        val fieldKey = fieldDefinition.fieldKey(n)
         val fieldEntry = FieldEntry(fieldDefinition, fieldKey, fieldValue)
         logger.trace("FieldEntry: offset: {} fieldEntry: {})", fieldDefinition.offset, fieldEntry.toString)
         fieldEntry

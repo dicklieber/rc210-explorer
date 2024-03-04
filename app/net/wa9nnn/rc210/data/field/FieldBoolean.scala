@@ -47,13 +47,15 @@ case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue() {
 
   override def toJsValue: JsValue = Json.toJson(this)
 
-  override def toEditCell(fieldKey: FieldKey): Cell = FormField(fieldKey, value)
+  override def toEditCell(fieldKey: FieldKey): Cell =
+    FormField(fieldKey, value)
 }
 
 
 object FieldBoolean extends SimpleExtractor:
 
-  override def extractFromInts(itr: Iterator[Int], fieldDefinition: SimpleField): FieldValue = FieldBoolean(itr.next() > 0)
+  override def extractFromInts(itr: Iterator[Int], fieldDefinition: SimpleField): FieldValue =
+    FieldBoolean(itr.next() > 0)
 
 
   implicit val fmtFieldBoolean: Format[FieldBoolean] = new Format[FieldBoolean] {

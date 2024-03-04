@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data.datastore
 
 import com.github.andyglow.config.*
+import com.google.inject.ImplementedBy
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.NamedKey
@@ -27,15 +28,15 @@ import play.api.libs.json.{Format, Json}
 
 import java.io.InputStream
 import java.nio.file.{Files, Path}
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.collection.immutable.Seq
 import scala.util.{Failure, Success, Try, Using}
 
 /**
  * Parses JSON saved from [[DataStore]]
  */
-
-class DataStorePersistence @Inject()(implicit config: Config) extends LazyLogging {
+@Singleton
+class DataStorePersistenceImpl @Inject() (implicit config: Config) extends DataStorePersistence with LazyLogging {
   def save(dataTransferJson: DataTransferJson): Unit = {
     Files.writeString(path,
       toJson(dataTransferJson))
@@ -61,6 +62,12 @@ class DataStorePersistence @Inject()(implicit config: Config) extends LazyLoggin
     r
   }
 }
+
+@ImplementedBy(classOf[DataStorePersistenceImpl])
+trait DataStorePersistence:
+  def load(): Try[DataTransferJson]
+
+  def save(dataTransferJson: DataTransferJson): Unit
 
 /**
  * Data transfer between [[DataStorePersistence]] and [[DataStore]].

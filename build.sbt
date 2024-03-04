@@ -53,6 +53,7 @@ libraryDependencies ++= Seq(
   "com.lihaoyi" %% "os-lib" % "0.9.3",
   "org.scalatest" %% "scalatest" % "3.2.18" % "test",
   "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.0" % Test,
+  "org.scalatestplus" %% "mockito-5-10" % "3.2.18.0" % Test,
   "com.vladsch.flexmark" % "flexmark-all" % "0.64.8" % Test,
   "com.wa9nnn" %% "wa9nnnutil" % "3.0.0.9-SNAPSHOT",
   "org.commonmark" % "commonmark" % "0.21.0",

@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210
 
+import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.Key.nameForKey
 import net.wa9nnn.rc210.KeyKind.*
 import net.wa9nnn.rc210.{NamedKey, NamedKeySource}
@@ -67,7 +68,7 @@ case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends Order
   override def options: Seq[(String, String)] = MacroSelect.options
 }
 
-object Key:
+object Key extends LazyLogging:
   val keyName: String = "key"
   private val kparser = """(\D+)(\d*)""".r
 
@@ -87,7 +88,8 @@ object Key:
         throw e
 
   def setNamedSource(namedSource: NamedKeySource): Unit = {
-    if (_namedSource.isDefined) throw new IllegalStateException("NamedSource already set.")
+    if (_namedSource.isDefined)
+      logger.warn("NamedSource already set. Bad if not in test.")
     _namedSource = Option(namedSource)
   }
 
