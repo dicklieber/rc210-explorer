@@ -23,7 +23,7 @@ import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.html.meterAlarmEditor
-import net.wa9nnn.rc210.ui.{EditButtonCell, TableSectionButtons}
+import net.wa9nnn.rc210.ui.{EditButtonCell, EditFlowButtonCell, TableSectionButtons}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.*
@@ -47,7 +47,7 @@ case class MeterAlarmNode(val key: Key, meter: Key, alarmType: AlarmType, tripPo
   ).map(Row(_))
 
   override def toRow: Row = Row(
-    fieldKey.editButtonCell,
+    EditFlowButtonCell(fieldKey),
     key.keyWithName,
     meter.keyWithName,
     alarmType.entryName,
