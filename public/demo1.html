@@ -1,102 +1,7850 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-	<meta content="text/html; charset=UTF-8">
-	<title>DualSelectList example</title>
-<!--	<link rel="stylesheet" type="text/css" href="bala.DualSelectList/css/bala.DualSelectList.css">-->
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<!--	<script type="text/javascript" src="bala.DualSelectList/js/bala.DualSelectList.jquery.js"></script>-->
 
 
-
-	<link rel="stylesheet" media="screen" href="/assets/stylesheets/bala.DualSelectList.css")">
-
-	<script src="/assets/javascripts/bala.DualSelectList.jquery.js" type="text/javascript"></script>
+<form action="/save" method="POST" >
 
 
-	<script type="text/javascript">
-		$(document).ready(function(){
-			var dsl = $('#dualSelectExample').DualSelectList({
+	<button type="submit" class="btn btn-primary" value="Save">
+		<i class="bi bi-send-check"></i> Save
+	</button>
+	<table
 
-				// Change Item from pure String to an Json Object.
-				// the "value" rc2input will be displayed on the list.
-				'candidateItems' : [{'id':0, 'value':'Item 01'},
-									{'id':1, 'value':'Item 02'},
-									{'id':2, 'value':'Item 03'},
-									{'id':3, 'value':'Item 04'},
-									{'id':4, 'value':'Item 05'} ],
-				'selectionItems' : [{'id':5, 'value':'Item 06'},
-									{'id':6, 'value':'Item 07'},
-									{'id':7, 'value':'Item 08'} ],
-				'colors' : {
-					'itemText' : 'white',
-					'itemBackground' : 'rgb(0, 51, 204)',
-					'itemHoverBackground' : '#0066ff'
-				}
-			});
 
-			$('#getSel').click(function(){
-				var strOnly = $('#strOnly').prop("checked");
-				var res = dsl.getSelection(strOnly);
-				var str = '';
-				for (var n=0; n<res.length; ++n) str += JSON.stringify(res[n]) + '\n';
-				$('#selResult').val(str);
-			});
 
-			$('#addSel').click(function(){
-				var items = $('#addIterms').val().split('\n');
-				var res = dsl.setCandidate(items);
-				$('#addIterms').val('');
-			});
 
-			$('#setColor').click(function(){
-				var clrName = $('#colorSelector').val();
-				var clrValue = $('#colorValue').val();
-				dsl.setColor(clrName, clrValue);
-			});
+			class = 'headeredTable'
 
-			$('#resetColor').click(function(){
-				var clrName = $('#colorSelector').val();
-				dsl.resetColor(clrName);
-			});
-		});
-	</script>
-</head>
 
-<body>
-	<div>This is the example of jQuery plugin Dual-Select-List, which provids multiple-select function through 2 List-Boxes.</div><br>
+	>
+		<thead>
 
-	<div id="dualSelectExample" style="width:500px; height:300px; background-color:#F0F0F0; padding:10px;"></div><br>
+		<tr>
 
-	<div style="padding-bottom:20px;">
-		Set Color:
-		<select id="colorSelector">
-			<option value="panelBackground">panelBackground</option>
-			<option value="filterText">filterText</option>
-			<option value="itemText">itemText</option>
-			<option value="itemBackground">itemBackground</option>
-			<option value="itemHoverBackground">itemHoverBackground</option>
-			<option value="itemPlaceholderBackground">itemPlaceholderBackground</option>
-			<option value="itemPlaceholderBorder">itemPlaceholderBorder</option>
-			<option value="">All Objects</option>
-		</select>
-		<input id="colorValue" value="" style="width:130px; margin-right:20px;" />
-		<input type="button" id="setColor" value="Set" />
-		<input type="button" id="resetColor" value="Reset" />
-	</div>
+			<th
 
-	<div style="float:left; margin-right:5px;">
-		<div id="addSel" style="background-color:lightgray; color:black; padding:5px; text-align:center; cursor:pointer; width:150px;">Add Candidate</div>
-		<textarea id="addIterms" rows="5" type="textarea" style="width:250px; height:100px; margin-top:5px;"></textarea>
-	</div>
-	<div style="float:left;">
-		<div id="getSel" style="background-color:lightgray; color:black; padding:5px; text-align:center; cursor:pointer; width:150px; float:left;">Get Selection</div>
-		<div style="background-color:none; margin-left: 10px; margin-top: 5px; width:100px; float:left;">
-			<input id="strOnly" type="checkbox">String Only</input>
-		</div><br>
-		<textarea id="selResult" rows="5" type="textarea" style="width:250px; height:100px; margin-top:5px;"></textarea>
-	</div>
-</body>
 
-</html>
+
+
+
+
+
+
+
+
+
+			>Field
+			</th>
+
+			<th
+
+
+
+
+
+
+
+
+
+
+
+			>&lt;div class=&quot;nameEditor&quot;&gt;
+
+				1:
+				&lt;label&gt;
+				Name:
+				&lt;input name=&quot;Port1:keyName&quot; value=&quot;&quot;&gt;
+				&lt;/label&gt;
+
+				&lt;/div&gt;
+			</th>
+
+			<th
+
+
+
+
+
+
+
+
+
+
+
+			>&lt;div class=&quot;nameEditor&quot;&gt;
+
+				2:
+				&lt;label&gt;
+				Name:
+				&lt;input name=&quot;Port2:keyName&quot; value=&quot;&quot;&gt;
+				&lt;/label&gt;
+
+				&lt;/div&gt;
+			</th>
+
+			<th
+
+
+
+
+
+
+
+
+
+
+
+			>&lt;div class=&quot;nameEditor&quot;&gt;
+
+				3:
+				&lt;label&gt;
+				Name:
+				&lt;input name=&quot;Port3:keyName&quot; value=&quot;&quot;&gt;
+				&lt;/label&gt;
+
+				&lt;/div&gt;
+			</th>
+
+		</tr>
+
+		</thead>
+		<tbody>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				CTCSS Decode
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:CTCSS Decode" id="Port1:CTCSS Decode" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:CTCSS Decode" id="Port2:CTCSS Decode" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:CTCSS Decode" id="Port3:CTCSS Decode" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				CTCSS During ID
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:CTCSS During ID" id="Port1:CTCSS During ID" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:CTCSS During ID" id="Port2:CTCSS During ID" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:CTCSS During ID" id="Port3:CTCSS During ID" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				CTCSS Encode Polarity
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:CTCSS Encode Polarity" id="Port1:CTCSS Encode Polarity" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:CTCSS Encode Polarity" id="Port2:CTCSS Encode Polarity" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:CTCSS Encode Polarity" id="Port3:CTCSS Encode Polarity" type="checkbox"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				CTCSS Encode Timer
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:CTCSS Encode Timer" id="Port1:CTCSS Encode Timer" type="number" value="35"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:CTCSS Encode Timer" id="Port2:CTCSS Encode Timer" type="number" value="35"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:CTCSS Encode Timer" id="Port3:CTCSS Encode Timer" type="number" value="1"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				CWS Speed
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:CWS Speed" id="Port1:CWS Speed" type="number" value="20"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:CWS Speed" id="Port2:CWS Speed" type="number" value="20"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:CWS Speed" id="Port3:CWS Speed" type="number" value="20"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				DTMF COS Control
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:DTMF COS Control" id="Port1:DTMF COS Control" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:DTMF COS Control" id="Port2:DTMF COS Control" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:DTMF COS Control" id="Port3:DTMF COS Control" type="checkbox"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				DTMF Cover Tone
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:DTMF Cover Tone" id="Port1:DTMF Cover Tone" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:DTMF Cover Tone" id="Port2:DTMF Cover Tone" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:DTMF Cover Tone" id="Port3:DTMF Cover Tone" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				DTMF Mute
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:DTMF Mute" id="Port1:DTMF Mute" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:DTMF Mute" id="Port2:DTMF Mute" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:DTMF Mute" id="Port3:DTMF Mute" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				DTMF Mute Timer
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:DTMF Mute Timer" id="Port1:DTMF Mute Timer" type="number" value="5130"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:DTMF Mute Timer" id="Port2:DTMF Mute Timer" type="number" value="62720"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:DTMF Mute Timer" id="Port3:DTMF Mute Timer" type="number" value="16053504"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				DTMF Require Tone
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:DTMF Require Tone" id="Port1:DTMF Require Tone" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:DTMF Require Tone" id="Port2:DTMF Require Tone" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:DTMF Require Tone" id="Port3:DTMF Require Tone" type="checkbox"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Enable Speech ID
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:Enable Speech ID" id="Port1:Enable Speech ID" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:Enable Speech ID" id="Port2:Enable Speech ID" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:Enable Speech ID" id="Port3:Enable Speech ID" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Guest Macro Enable
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:Guest Macro Enable" id="Port1:Guest Macro Enable" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:Guest Macro Enable" id="Port2:Guest Macro Enable" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:Guest Macro Enable" id="Port3:Guest Macro Enable" type="checkbox"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Guest Macro Range
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+                    <span name="Port1:Guest Macro Range" id="Port1:Guest Macro Range">
+          List(48, 48)
+        </span>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+                    <span name="Port2:Guest Macro Range" id="Port2:Guest Macro Range">
+          List(48, 48)
+        </span>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+                    <span name="Port3:Guest Macro Range" id="Port3:Guest Macro Range">
+          List(48, 48)
+        </span>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Hang Time 1
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:Hang Time 1" id="Port1:Hang Time 1" type="number" value="4"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:Hang Time 1" id="Port2:Hang Time 1" type="number" value="40"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:Hang Time 1" id="Port3:Hang Time 1" type="number" value="31"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Hang Time 2
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:Hang Time 2" id="Port1:Hang Time 2" type="number" value="12"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:Hang Time 2" id="Port2:Hang Time 2" type="number" value="2"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:Hang Time 2" id="Port3:Hang Time 2" type="number" value="32"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Hang Time 3
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:Hang Time 3" id="Port1:Hang Time 3" type="number" value="13"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:Hang Time 3" id="Port2:Hang Time 3" type="number" value="40"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:Hang Time 3" id="Port3:Hang Time 3" type="number" value="3"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Inactivity Timeout
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:Inactivity Timeout" id="Port1:Inactivity Timeout" type="number" value="0"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:Inactivity Timeout" id="Port2:Inactivity Timeout" type="number" value="0"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:Inactivity Timeout" id="Port3:Inactivity Timeout" type="number" value="0"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Initial ID Timer
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:Initial ID Timer  " id="Port1:Initial ID Timer  " type="number" value="11"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:Initial ID Timer  " id="Port2:Initial ID Timer  " type="number" value="22"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:Initial ID Timer  " id="Port3:Initial ID Timer  " type="number" value="33"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Kerchunk
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:Kerchunk" id="Port1:Kerchunk" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:Kerchunk" id="Port2:Kerchunk" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:Kerchunk" id="Port3:Kerchunk" type="checkbox"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Kerchunk Timer
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:Kerchunk Timer" id="Port1:Kerchunk Timer" type="number" value="128500"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:Kerchunk Timer" id="Port2:Kerchunk Timer" type="number" value="756"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:Kerchunk Timer" id="Port3:Kerchunk Timer" type="number" value="256"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Monitor Mix
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:Monitor Mix" id="Port1:Monitor Mix" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:Monitor Mix" id="Port2:Monitor Mix" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:Monitor Mix" id="Port3:Monitor Mix" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				P1 Tail Message
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<select name="Port1:P1 Tail Message" id="Port1:P1 Tail Message">
+					<option value="Macro1" selected="selected">
+						1:
+					</option><option value="Macro2">
+					2:
+				</option><option value="Macro3">
+					3:
+				</option><option value="Macro4">
+					4:
+				</option><option value="Macro5">
+					5:
+				</option><option value="Macro6">
+					6:
+				</option><option value="Macro7">
+					7:
+				</option><option value="Macro8">
+					8:
+				</option><option value="Macro9">
+					9:
+				</option><option value="Macro10">
+					10:
+				</option><option value="Macro11">
+					11:
+				</option><option value="Macro12">
+					12:
+				</option><option value="Macro13">
+					13:
+				</option><option value="Macro14">
+					14:
+				</option><option value="Macro15">
+					15:
+				</option><option value="Macro16">
+					16:
+				</option><option value="Macro17">
+					17:
+				</option><option value="Macro18">
+					18:
+				</option><option value="Macro19">
+					19:
+				</option><option value="Macro20">
+					20:
+				</option><option value="Macro21">
+					21:
+				</option><option value="Macro22">
+					22:
+				</option><option value="Macro23">
+					23:
+				</option><option value="Macro24">
+					24:
+				</option><option value="Macro25">
+					25:
+				</option><option value="Macro26">
+					26:
+				</option><option value="Macro27">
+					27:
+				</option><option value="Macro28">
+					28:
+				</option><option value="Macro29">
+					29:
+				</option><option value="Macro30">
+					30:
+				</option><option value="Macro31">
+					31:
+				</option><option value="Macro32">
+					32:
+				</option><option value="Macro33">
+					33:
+				</option><option value="Macro34">
+					34:
+				</option><option value="Macro35">
+					35:
+				</option><option value="Macro36">
+					36:
+				</option><option value="Macro37">
+					37:
+				</option><option value="Macro38">
+					38:
+				</option><option value="Macro39">
+					39:
+				</option><option value="Macro40">
+					40:
+				</option><option value="Macro41">
+					41:
+				</option><option value="Macro42">
+					42:
+				</option><option value="Macro43">
+					43:
+				</option><option value="Macro44">
+					44:
+				</option><option value="Macro45">
+					45:
+				</option><option value="Macro46">
+					46:
+				</option><option value="Macro47">
+					47:
+				</option><option value="Macro48">
+					48:
+				</option><option value="Macro49">
+					49:
+				</option><option value="Macro50">
+					50:
+				</option><option value="Macro51">
+					51:
+				</option><option value="Macro52">
+					52:
+				</option><option value="Macro53">
+					53:
+				</option><option value="Macro54">
+					54:
+				</option><option value="Macro55">
+					55:
+				</option><option value="Macro56">
+					56:
+				</option><option value="Macro57">
+					57:
+				</option><option value="Macro58">
+					58:
+				</option><option value="Macro59">
+					59:
+				</option><option value="Macro60">
+					60:
+				</option><option value="Macro61">
+					61:
+				</option><option value="Macro62">
+					62:
+				</option><option value="Macro63">
+					63:
+				</option><option value="Macro64">
+					64:
+				</option><option value="Macro65">
+					65:
+				</option><option value="Macro66">
+					66:
+				</option><option value="Macro67">
+					67:
+				</option><option value="Macro68">
+					68:
+				</option><option value="Macro69">
+					69:
+				</option><option value="Macro70">
+					70:
+				</option><option value="Macro71">
+					71:
+				</option><option value="Macro72">
+					72:
+				</option><option value="Macro73">
+					73:
+				</option><option value="Macro74">
+					74:
+				</option><option value="Macro75">
+					75:
+				</option><option value="Macro76">
+					76:
+				</option><option value="Macro77">
+					77:
+				</option><option value="Macro78">
+					78:
+				</option><option value="Macro79">
+					79:
+				</option><option value="Macro80">
+					80:
+				</option><option value="Macro81">
+					81:
+				</option><option value="Macro82">
+					82:
+				</option><option value="Macro83">
+					83:
+				</option><option value="Macro84">
+					84:
+				</option><option value="Macro85">
+					85:
+				</option><option value="Macro86">
+					86:
+				</option><option value="Macro87">
+					87:
+				</option><option value="Macro88">
+					88:
+				</option><option value="Macro89">
+					89:
+				</option><option value="Macro90">
+					90:
+				</option><option value="Macro91">
+					91:
+				</option><option value="Macro92">
+					92:
+				</option><option value="Macro93">
+					93:
+				</option><option value="Macro94">
+					94:
+				</option><option value="Macro95">
+					95:
+				</option><option value="Macro96">
+					96:
+				</option><option value="Macro97">
+					97:
+				</option><option value="Macro98">
+					98:
+				</option><option value="Macro99">
+					99:
+				</option><option value="Macro100">
+					100:
+				</option><option value="Macro101">
+					101:
+				</option><option value="Macro102">
+					102:
+				</option><option value="Macro103">
+					103:
+				</option><option value="Macro104">
+					104:
+				</option><option value="Macro105">
+					105:
+				</option>
+				</select>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<select name="Port2:P1 Tail Message" id="Port2:P1 Tail Message">
+					<option value="Macro1" selected="selected">
+						1:
+					</option><option value="Macro2">
+					2:
+				</option><option value="Macro3">
+					3:
+				</option><option value="Macro4">
+					4:
+				</option><option value="Macro5">
+					5:
+				</option><option value="Macro6">
+					6:
+				</option><option value="Macro7">
+					7:
+				</option><option value="Macro8">
+					8:
+				</option><option value="Macro9">
+					9:
+				</option><option value="Macro10">
+					10:
+				</option><option value="Macro11">
+					11:
+				</option><option value="Macro12">
+					12:
+				</option><option value="Macro13">
+					13:
+				</option><option value="Macro14">
+					14:
+				</option><option value="Macro15">
+					15:
+				</option><option value="Macro16">
+					16:
+				</option><option value="Macro17">
+					17:
+				</option><option value="Macro18">
+					18:
+				</option><option value="Macro19">
+					19:
+				</option><option value="Macro20">
+					20:
+				</option><option value="Macro21">
+					21:
+				</option><option value="Macro22">
+					22:
+				</option><option value="Macro23">
+					23:
+				</option><option value="Macro24">
+					24:
+				</option><option value="Macro25">
+					25:
+				</option><option value="Macro26">
+					26:
+				</option><option value="Macro27">
+					27:
+				</option><option value="Macro28">
+					28:
+				</option><option value="Macro29">
+					29:
+				</option><option value="Macro30">
+					30:
+				</option><option value="Macro31">
+					31:
+				</option><option value="Macro32">
+					32:
+				</option><option value="Macro33">
+					33:
+				</option><option value="Macro34">
+					34:
+				</option><option value="Macro35">
+					35:
+				</option><option value="Macro36">
+					36:
+				</option><option value="Macro37">
+					37:
+				</option><option value="Macro38">
+					38:
+				</option><option value="Macro39">
+					39:
+				</option><option value="Macro40">
+					40:
+				</option><option value="Macro41">
+					41:
+				</option><option value="Macro42">
+					42:
+				</option><option value="Macro43">
+					43:
+				</option><option value="Macro44">
+					44:
+				</option><option value="Macro45">
+					45:
+				</option><option value="Macro46">
+					46:
+				</option><option value="Macro47">
+					47:
+				</option><option value="Macro48">
+					48:
+				</option><option value="Macro49">
+					49:
+				</option><option value="Macro50">
+					50:
+				</option><option value="Macro51">
+					51:
+				</option><option value="Macro52">
+					52:
+				</option><option value="Macro53">
+					53:
+				</option><option value="Macro54">
+					54:
+				</option><option value="Macro55">
+					55:
+				</option><option value="Macro56">
+					56:
+				</option><option value="Macro57">
+					57:
+				</option><option value="Macro58">
+					58:
+				</option><option value="Macro59">
+					59:
+				</option><option value="Macro60">
+					60:
+				</option><option value="Macro61">
+					61:
+				</option><option value="Macro62">
+					62:
+				</option><option value="Macro63">
+					63:
+				</option><option value="Macro64">
+					64:
+				</option><option value="Macro65">
+					65:
+				</option><option value="Macro66">
+					66:
+				</option><option value="Macro67">
+					67:
+				</option><option value="Macro68">
+					68:
+				</option><option value="Macro69">
+					69:
+				</option><option value="Macro70">
+					70:
+				</option><option value="Macro71">
+					71:
+				</option><option value="Macro72">
+					72:
+				</option><option value="Macro73">
+					73:
+				</option><option value="Macro74">
+					74:
+				</option><option value="Macro75">
+					75:
+				</option><option value="Macro76">
+					76:
+				</option><option value="Macro77">
+					77:
+				</option><option value="Macro78">
+					78:
+				</option><option value="Macro79">
+					79:
+				</option><option value="Macro80">
+					80:
+				</option><option value="Macro81">
+					81:
+				</option><option value="Macro82">
+					82:
+				</option><option value="Macro83">
+					83:
+				</option><option value="Macro84">
+					84:
+				</option><option value="Macro85">
+					85:
+				</option><option value="Macro86">
+					86:
+				</option><option value="Macro87">
+					87:
+				</option><option value="Macro88">
+					88:
+				</option><option value="Macro89">
+					89:
+				</option><option value="Macro90">
+					90:
+				</option><option value="Macro91">
+					91:
+				</option><option value="Macro92">
+					92:
+				</option><option value="Macro93">
+					93:
+				</option><option value="Macro94">
+					94:
+				</option><option value="Macro95">
+					95:
+				</option><option value="Macro96">
+					96:
+				</option><option value="Macro97">
+					97:
+				</option><option value="Macro98">
+					98:
+				</option><option value="Macro99">
+					99:
+				</option><option value="Macro100">
+					100:
+				</option><option value="Macro101">
+					101:
+				</option><option value="Macro102">
+					102:
+				</option><option value="Macro103">
+					103:
+				</option><option value="Macro104">
+					104:
+				</option><option value="Macro105">
+					105:
+				</option>
+				</select>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<select name="Port3:P1 Tail Message" id="Port3:P1 Tail Message">
+					<option value="Macro1" selected="selected">
+						1:
+					</option><option value="Macro2">
+					2:
+				</option><option value="Macro3">
+					3:
+				</option><option value="Macro4">
+					4:
+				</option><option value="Macro5">
+					5:
+				</option><option value="Macro6">
+					6:
+				</option><option value="Macro7">
+					7:
+				</option><option value="Macro8">
+					8:
+				</option><option value="Macro9">
+					9:
+				</option><option value="Macro10">
+					10:
+				</option><option value="Macro11">
+					11:
+				</option><option value="Macro12">
+					12:
+				</option><option value="Macro13">
+					13:
+				</option><option value="Macro14">
+					14:
+				</option><option value="Macro15">
+					15:
+				</option><option value="Macro16">
+					16:
+				</option><option value="Macro17">
+					17:
+				</option><option value="Macro18">
+					18:
+				</option><option value="Macro19">
+					19:
+				</option><option value="Macro20">
+					20:
+				</option><option value="Macro21">
+					21:
+				</option><option value="Macro22">
+					22:
+				</option><option value="Macro23">
+					23:
+				</option><option value="Macro24">
+					24:
+				</option><option value="Macro25">
+					25:
+				</option><option value="Macro26">
+					26:
+				</option><option value="Macro27">
+					27:
+				</option><option value="Macro28">
+					28:
+				</option><option value="Macro29">
+					29:
+				</option><option value="Macro30">
+					30:
+				</option><option value="Macro31">
+					31:
+				</option><option value="Macro32">
+					32:
+				</option><option value="Macro33">
+					33:
+				</option><option value="Macro34">
+					34:
+				</option><option value="Macro35">
+					35:
+				</option><option value="Macro36">
+					36:
+				</option><option value="Macro37">
+					37:
+				</option><option value="Macro38">
+					38:
+				</option><option value="Macro39">
+					39:
+				</option><option value="Macro40">
+					40:
+				</option><option value="Macro41">
+					41:
+				</option><option value="Macro42">
+					42:
+				</option><option value="Macro43">
+					43:
+				</option><option value="Macro44">
+					44:
+				</option><option value="Macro45">
+					45:
+				</option><option value="Macro46">
+					46:
+				</option><option value="Macro47">
+					47:
+				</option><option value="Macro48">
+					48:
+				</option><option value="Macro49">
+					49:
+				</option><option value="Macro50">
+					50:
+				</option><option value="Macro51">
+					51:
+				</option><option value="Macro52">
+					52:
+				</option><option value="Macro53">
+					53:
+				</option><option value="Macro54">
+					54:
+				</option><option value="Macro55">
+					55:
+				</option><option value="Macro56">
+					56:
+				</option><option value="Macro57">
+					57:
+				</option><option value="Macro58">
+					58:
+				</option><option value="Macro59">
+					59:
+				</option><option value="Macro60">
+					60:
+				</option><option value="Macro61">
+					61:
+				</option><option value="Macro62">
+					62:
+				</option><option value="Macro63">
+					63:
+				</option><option value="Macro64">
+					64:
+				</option><option value="Macro65">
+					65:
+				</option><option value="Macro66">
+					66:
+				</option><option value="Macro67">
+					67:
+				</option><option value="Macro68">
+					68:
+				</option><option value="Macro69">
+					69:
+				</option><option value="Macro70">
+					70:
+				</option><option value="Macro71">
+					71:
+				</option><option value="Macro72">
+					72:
+				</option><option value="Macro73">
+					73:
+				</option><option value="Macro74">
+					74:
+				</option><option value="Macro75">
+					75:
+				</option><option value="Macro76">
+					76:
+				</option><option value="Macro77">
+					77:
+				</option><option value="Macro78">
+					78:
+				</option><option value="Macro79">
+					79:
+				</option><option value="Macro80">
+					80:
+				</option><option value="Macro81">
+					81:
+				</option><option value="Macro82">
+					82:
+				</option><option value="Macro83">
+					83:
+				</option><option value="Macro84">
+					84:
+				</option><option value="Macro85">
+					85:
+				</option><option value="Macro86">
+					86:
+				</option><option value="Macro87">
+					87:
+				</option><option value="Macro88">
+					88:
+				</option><option value="Macro89">
+					89:
+				</option><option value="Macro90">
+					90:
+				</option><option value="Macro91">
+					91:
+				</option><option value="Macro92">
+					92:
+				</option><option value="Macro93">
+					93:
+				</option><option value="Macro94">
+					94:
+				</option><option value="Macro95">
+					95:
+				</option><option value="Macro96">
+					96:
+				</option><option value="Macro97">
+					97:
+				</option><option value="Macro98">
+					98:
+				</option><option value="Macro99">
+					99:
+				</option><option value="Macro100">
+					100:
+				</option><option value="Macro101">
+					101:
+				</option><option value="Macro102">
+					102:
+				</option><option value="Macro103">
+					103:
+				</option><option value="Macro104">
+					104:
+				</option><option value="Macro105">
+					105:
+				</option>
+				</select>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				P2 Tail Message
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<select name="Port1:P2 Tail Message" id="Port1:P2 Tail Message">
+					<option value="Macro1" selected="selected">
+						1:
+					</option><option value="Macro2">
+					2:
+				</option><option value="Macro3">
+					3:
+				</option><option value="Macro4">
+					4:
+				</option><option value="Macro5">
+					5:
+				</option><option value="Macro6">
+					6:
+				</option><option value="Macro7">
+					7:
+				</option><option value="Macro8">
+					8:
+				</option><option value="Macro9">
+					9:
+				</option><option value="Macro10">
+					10:
+				</option><option value="Macro11">
+					11:
+				</option><option value="Macro12">
+					12:
+				</option><option value="Macro13">
+					13:
+				</option><option value="Macro14">
+					14:
+				</option><option value="Macro15">
+					15:
+				</option><option value="Macro16">
+					16:
+				</option><option value="Macro17">
+					17:
+				</option><option value="Macro18">
+					18:
+				</option><option value="Macro19">
+					19:
+				</option><option value="Macro20">
+					20:
+				</option><option value="Macro21">
+					21:
+				</option><option value="Macro22">
+					22:
+				</option><option value="Macro23">
+					23:
+				</option><option value="Macro24">
+					24:
+				</option><option value="Macro25">
+					25:
+				</option><option value="Macro26">
+					26:
+				</option><option value="Macro27">
+					27:
+				</option><option value="Macro28">
+					28:
+				</option><option value="Macro29">
+					29:
+				</option><option value="Macro30">
+					30:
+				</option><option value="Macro31">
+					31:
+				</option><option value="Macro32">
+					32:
+				</option><option value="Macro33">
+					33:
+				</option><option value="Macro34">
+					34:
+				</option><option value="Macro35">
+					35:
+				</option><option value="Macro36">
+					36:
+				</option><option value="Macro37">
+					37:
+				</option><option value="Macro38">
+					38:
+				</option><option value="Macro39">
+					39:
+				</option><option value="Macro40">
+					40:
+				</option><option value="Macro41">
+					41:
+				</option><option value="Macro42">
+					42:
+				</option><option value="Macro43">
+					43:
+				</option><option value="Macro44">
+					44:
+				</option><option value="Macro45">
+					45:
+				</option><option value="Macro46">
+					46:
+				</option><option value="Macro47">
+					47:
+				</option><option value="Macro48">
+					48:
+				</option><option value="Macro49">
+					49:
+				</option><option value="Macro50">
+					50:
+				</option><option value="Macro51">
+					51:
+				</option><option value="Macro52">
+					52:
+				</option><option value="Macro53">
+					53:
+				</option><option value="Macro54">
+					54:
+				</option><option value="Macro55">
+					55:
+				</option><option value="Macro56">
+					56:
+				</option><option value="Macro57">
+					57:
+				</option><option value="Macro58">
+					58:
+				</option><option value="Macro59">
+					59:
+				</option><option value="Macro60">
+					60:
+				</option><option value="Macro61">
+					61:
+				</option><option value="Macro62">
+					62:
+				</option><option value="Macro63">
+					63:
+				</option><option value="Macro64">
+					64:
+				</option><option value="Macro65">
+					65:
+				</option><option value="Macro66">
+					66:
+				</option><option value="Macro67">
+					67:
+				</option><option value="Macro68">
+					68:
+				</option><option value="Macro69">
+					69:
+				</option><option value="Macro70">
+					70:
+				</option><option value="Macro71">
+					71:
+				</option><option value="Macro72">
+					72:
+				</option><option value="Macro73">
+					73:
+				</option><option value="Macro74">
+					74:
+				</option><option value="Macro75">
+					75:
+				</option><option value="Macro76">
+					76:
+				</option><option value="Macro77">
+					77:
+				</option><option value="Macro78">
+					78:
+				</option><option value="Macro79">
+					79:
+				</option><option value="Macro80">
+					80:
+				</option><option value="Macro81">
+					81:
+				</option><option value="Macro82">
+					82:
+				</option><option value="Macro83">
+					83:
+				</option><option value="Macro84">
+					84:
+				</option><option value="Macro85">
+					85:
+				</option><option value="Macro86">
+					86:
+				</option><option value="Macro87">
+					87:
+				</option><option value="Macro88">
+					88:
+				</option><option value="Macro89">
+					89:
+				</option><option value="Macro90">
+					90:
+				</option><option value="Macro91">
+					91:
+				</option><option value="Macro92">
+					92:
+				</option><option value="Macro93">
+					93:
+				</option><option value="Macro94">
+					94:
+				</option><option value="Macro95">
+					95:
+				</option><option value="Macro96">
+					96:
+				</option><option value="Macro97">
+					97:
+				</option><option value="Macro98">
+					98:
+				</option><option value="Macro99">
+					99:
+				</option><option value="Macro100">
+					100:
+				</option><option value="Macro101">
+					101:
+				</option><option value="Macro102">
+					102:
+				</option><option value="Macro103">
+					103:
+				</option><option value="Macro104">
+					104:
+				</option><option value="Macro105">
+					105:
+				</option>
+				</select>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<select name="Port2:P2 Tail Message" id="Port2:P2 Tail Message">
+					<option value="Macro1" selected="selected">
+						1:
+					</option><option value="Macro2">
+					2:
+				</option><option value="Macro3">
+					3:
+				</option><option value="Macro4">
+					4:
+				</option><option value="Macro5">
+					5:
+				</option><option value="Macro6">
+					6:
+				</option><option value="Macro7">
+					7:
+				</option><option value="Macro8">
+					8:
+				</option><option value="Macro9">
+					9:
+				</option><option value="Macro10">
+					10:
+				</option><option value="Macro11">
+					11:
+				</option><option value="Macro12">
+					12:
+				</option><option value="Macro13">
+					13:
+				</option><option value="Macro14">
+					14:
+				</option><option value="Macro15">
+					15:
+				</option><option value="Macro16">
+					16:
+				</option><option value="Macro17">
+					17:
+				</option><option value="Macro18">
+					18:
+				</option><option value="Macro19">
+					19:
+				</option><option value="Macro20">
+					20:
+				</option><option value="Macro21">
+					21:
+				</option><option value="Macro22">
+					22:
+				</option><option value="Macro23">
+					23:
+				</option><option value="Macro24">
+					24:
+				</option><option value="Macro25">
+					25:
+				</option><option value="Macro26">
+					26:
+				</option><option value="Macro27">
+					27:
+				</option><option value="Macro28">
+					28:
+				</option><option value="Macro29">
+					29:
+				</option><option value="Macro30">
+					30:
+				</option><option value="Macro31">
+					31:
+				</option><option value="Macro32">
+					32:
+				</option><option value="Macro33">
+					33:
+				</option><option value="Macro34">
+					34:
+				</option><option value="Macro35">
+					35:
+				</option><option value="Macro36">
+					36:
+				</option><option value="Macro37">
+					37:
+				</option><option value="Macro38">
+					38:
+				</option><option value="Macro39">
+					39:
+				</option><option value="Macro40">
+					40:
+				</option><option value="Macro41">
+					41:
+				</option><option value="Macro42">
+					42:
+				</option><option value="Macro43">
+					43:
+				</option><option value="Macro44">
+					44:
+				</option><option value="Macro45">
+					45:
+				</option><option value="Macro46">
+					46:
+				</option><option value="Macro47">
+					47:
+				</option><option value="Macro48">
+					48:
+				</option><option value="Macro49">
+					49:
+				</option><option value="Macro50">
+					50:
+				</option><option value="Macro51">
+					51:
+				</option><option value="Macro52">
+					52:
+				</option><option value="Macro53">
+					53:
+				</option><option value="Macro54">
+					54:
+				</option><option value="Macro55">
+					55:
+				</option><option value="Macro56">
+					56:
+				</option><option value="Macro57">
+					57:
+				</option><option value="Macro58">
+					58:
+				</option><option value="Macro59">
+					59:
+				</option><option value="Macro60">
+					60:
+				</option><option value="Macro61">
+					61:
+				</option><option value="Macro62">
+					62:
+				</option><option value="Macro63">
+					63:
+				</option><option value="Macro64">
+					64:
+				</option><option value="Macro65">
+					65:
+				</option><option value="Macro66">
+					66:
+				</option><option value="Macro67">
+					67:
+				</option><option value="Macro68">
+					68:
+				</option><option value="Macro69">
+					69:
+				</option><option value="Macro70">
+					70:
+				</option><option value="Macro71">
+					71:
+				</option><option value="Macro72">
+					72:
+				</option><option value="Macro73">
+					73:
+				</option><option value="Macro74">
+					74:
+				</option><option value="Macro75">
+					75:
+				</option><option value="Macro76">
+					76:
+				</option><option value="Macro77">
+					77:
+				</option><option value="Macro78">
+					78:
+				</option><option value="Macro79">
+					79:
+				</option><option value="Macro80">
+					80:
+				</option><option value="Macro81">
+					81:
+				</option><option value="Macro82">
+					82:
+				</option><option value="Macro83">
+					83:
+				</option><option value="Macro84">
+					84:
+				</option><option value="Macro85">
+					85:
+				</option><option value="Macro86">
+					86:
+				</option><option value="Macro87">
+					87:
+				</option><option value="Macro88">
+					88:
+				</option><option value="Macro89">
+					89:
+				</option><option value="Macro90">
+					90:
+				</option><option value="Macro91">
+					91:
+				</option><option value="Macro92">
+					92:
+				</option><option value="Macro93">
+					93:
+				</option><option value="Macro94">
+					94:
+				</option><option value="Macro95">
+					95:
+				</option><option value="Macro96">
+					96:
+				</option><option value="Macro97">
+					97:
+				</option><option value="Macro98">
+					98:
+				</option><option value="Macro99">
+					99:
+				</option><option value="Macro100">
+					100:
+				</option><option value="Macro101">
+					101:
+				</option><option value="Macro102">
+					102:
+				</option><option value="Macro103">
+					103:
+				</option><option value="Macro104">
+					104:
+				</option><option value="Macro105">
+					105:
+				</option>
+				</select>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<select name="Port3:P2 Tail Message" id="Port3:P2 Tail Message">
+					<option value="Macro1" selected="selected">
+						1:
+					</option><option value="Macro2">
+					2:
+				</option><option value="Macro3">
+					3:
+				</option><option value="Macro4">
+					4:
+				</option><option value="Macro5">
+					5:
+				</option><option value="Macro6">
+					6:
+				</option><option value="Macro7">
+					7:
+				</option><option value="Macro8">
+					8:
+				</option><option value="Macro9">
+					9:
+				</option><option value="Macro10">
+					10:
+				</option><option value="Macro11">
+					11:
+				</option><option value="Macro12">
+					12:
+				</option><option value="Macro13">
+					13:
+				</option><option value="Macro14">
+					14:
+				</option><option value="Macro15">
+					15:
+				</option><option value="Macro16">
+					16:
+				</option><option value="Macro17">
+					17:
+				</option><option value="Macro18">
+					18:
+				</option><option value="Macro19">
+					19:
+				</option><option value="Macro20">
+					20:
+				</option><option value="Macro21">
+					21:
+				</option><option value="Macro22">
+					22:
+				</option><option value="Macro23">
+					23:
+				</option><option value="Macro24">
+					24:
+				</option><option value="Macro25">
+					25:
+				</option><option value="Macro26">
+					26:
+				</option><option value="Macro27">
+					27:
+				</option><option value="Macro28">
+					28:
+				</option><option value="Macro29">
+					29:
+				</option><option value="Macro30">
+					30:
+				</option><option value="Macro31">
+					31:
+				</option><option value="Macro32">
+					32:
+				</option><option value="Macro33">
+					33:
+				</option><option value="Macro34">
+					34:
+				</option><option value="Macro35">
+					35:
+				</option><option value="Macro36">
+					36:
+				</option><option value="Macro37">
+					37:
+				</option><option value="Macro38">
+					38:
+				</option><option value="Macro39">
+					39:
+				</option><option value="Macro40">
+					40:
+				</option><option value="Macro41">
+					41:
+				</option><option value="Macro42">
+					42:
+				</option><option value="Macro43">
+					43:
+				</option><option value="Macro44">
+					44:
+				</option><option value="Macro45">
+					45:
+				</option><option value="Macro46">
+					46:
+				</option><option value="Macro47">
+					47:
+				</option><option value="Macro48">
+					48:
+				</option><option value="Macro49">
+					49:
+				</option><option value="Macro50">
+					50:
+				</option><option value="Macro51">
+					51:
+				</option><option value="Macro52">
+					52:
+				</option><option value="Macro53">
+					53:
+				</option><option value="Macro54">
+					54:
+				</option><option value="Macro55">
+					55:
+				</option><option value="Macro56">
+					56:
+				</option><option value="Macro57">
+					57:
+				</option><option value="Macro58">
+					58:
+				</option><option value="Macro59">
+					59:
+				</option><option value="Macro60">
+					60:
+				</option><option value="Macro61">
+					61:
+				</option><option value="Macro62">
+					62:
+				</option><option value="Macro63">
+					63:
+				</option><option value="Macro64">
+					64:
+				</option><option value="Macro65">
+					65:
+				</option><option value="Macro66">
+					66:
+				</option><option value="Macro67">
+					67:
+				</option><option value="Macro68">
+					68:
+				</option><option value="Macro69">
+					69:
+				</option><option value="Macro70">
+					70:
+				</option><option value="Macro71">
+					71:
+				</option><option value="Macro72">
+					72:
+				</option><option value="Macro73">
+					73:
+				</option><option value="Macro74">
+					74:
+				</option><option value="Macro75">
+					75:
+				</option><option value="Macro76">
+					76:
+				</option><option value="Macro77">
+					77:
+				</option><option value="Macro78">
+					78:
+				</option><option value="Macro79">
+					79:
+				</option><option value="Macro80">
+					80:
+				</option><option value="Macro81">
+					81:
+				</option><option value="Macro82">
+					82:
+				</option><option value="Macro83">
+					83:
+				</option><option value="Macro84">
+					84:
+				</option><option value="Macro85">
+					85:
+				</option><option value="Macro86">
+					86:
+				</option><option value="Macro87">
+					87:
+				</option><option value="Macro88">
+					88:
+				</option><option value="Macro89">
+					89:
+				</option><option value="Macro90">
+					90:
+				</option><option value="Macro91">
+					91:
+				</option><option value="Macro92">
+					92:
+				</option><option value="Macro93">
+					93:
+				</option><option value="Macro94">
+					94:
+				</option><option value="Macro95">
+					95:
+				</option><option value="Macro96">
+					96:
+				</option><option value="Macro97">
+					97:
+				</option><option value="Macro98">
+					98:
+				</option><option value="Macro99">
+					99:
+				</option><option value="Macro100">
+					100:
+				</option><option value="Macro101">
+					101:
+				</option><option value="Macro102">
+					102:
+				</option><option value="Macro103">
+					103:
+				</option><option value="Macro104">
+					104:
+				</option><option value="Macro105">
+					105:
+				</option>
+				</select>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				P3 Tail Message
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<select name="Port1:P3 Tail Message" id="Port1:P3 Tail Message">
+					<option value="Macro1" selected="selected">
+						1:
+					</option><option value="Macro2">
+					2:
+				</option><option value="Macro3">
+					3:
+				</option><option value="Macro4">
+					4:
+				</option><option value="Macro5">
+					5:
+				</option><option value="Macro6">
+					6:
+				</option><option value="Macro7">
+					7:
+				</option><option value="Macro8">
+					8:
+				</option><option value="Macro9">
+					9:
+				</option><option value="Macro10">
+					10:
+				</option><option value="Macro11">
+					11:
+				</option><option value="Macro12">
+					12:
+				</option><option value="Macro13">
+					13:
+				</option><option value="Macro14">
+					14:
+				</option><option value="Macro15">
+					15:
+				</option><option value="Macro16">
+					16:
+				</option><option value="Macro17">
+					17:
+				</option><option value="Macro18">
+					18:
+				</option><option value="Macro19">
+					19:
+				</option><option value="Macro20">
+					20:
+				</option><option value="Macro21">
+					21:
+				</option><option value="Macro22">
+					22:
+				</option><option value="Macro23">
+					23:
+				</option><option value="Macro24">
+					24:
+				</option><option value="Macro25">
+					25:
+				</option><option value="Macro26">
+					26:
+				</option><option value="Macro27">
+					27:
+				</option><option value="Macro28">
+					28:
+				</option><option value="Macro29">
+					29:
+				</option><option value="Macro30">
+					30:
+				</option><option value="Macro31">
+					31:
+				</option><option value="Macro32">
+					32:
+				</option><option value="Macro33">
+					33:
+				</option><option value="Macro34">
+					34:
+				</option><option value="Macro35">
+					35:
+				</option><option value="Macro36">
+					36:
+				</option><option value="Macro37">
+					37:
+				</option><option value="Macro38">
+					38:
+				</option><option value="Macro39">
+					39:
+				</option><option value="Macro40">
+					40:
+				</option><option value="Macro41">
+					41:
+				</option><option value="Macro42">
+					42:
+				</option><option value="Macro43">
+					43:
+				</option><option value="Macro44">
+					44:
+				</option><option value="Macro45">
+					45:
+				</option><option value="Macro46">
+					46:
+				</option><option value="Macro47">
+					47:
+				</option><option value="Macro48">
+					48:
+				</option><option value="Macro49">
+					49:
+				</option><option value="Macro50">
+					50:
+				</option><option value="Macro51">
+					51:
+				</option><option value="Macro52">
+					52:
+				</option><option value="Macro53">
+					53:
+				</option><option value="Macro54">
+					54:
+				</option><option value="Macro55">
+					55:
+				</option><option value="Macro56">
+					56:
+				</option><option value="Macro57">
+					57:
+				</option><option value="Macro58">
+					58:
+				</option><option value="Macro59">
+					59:
+				</option><option value="Macro60">
+					60:
+				</option><option value="Macro61">
+					61:
+				</option><option value="Macro62">
+					62:
+				</option><option value="Macro63">
+					63:
+				</option><option value="Macro64">
+					64:
+				</option><option value="Macro65">
+					65:
+				</option><option value="Macro66">
+					66:
+				</option><option value="Macro67">
+					67:
+				</option><option value="Macro68">
+					68:
+				</option><option value="Macro69">
+					69:
+				</option><option value="Macro70">
+					70:
+				</option><option value="Macro71">
+					71:
+				</option><option value="Macro72">
+					72:
+				</option><option value="Macro73">
+					73:
+				</option><option value="Macro74">
+					74:
+				</option><option value="Macro75">
+					75:
+				</option><option value="Macro76">
+					76:
+				</option><option value="Macro77">
+					77:
+				</option><option value="Macro78">
+					78:
+				</option><option value="Macro79">
+					79:
+				</option><option value="Macro80">
+					80:
+				</option><option value="Macro81">
+					81:
+				</option><option value="Macro82">
+					82:
+				</option><option value="Macro83">
+					83:
+				</option><option value="Macro84">
+					84:
+				</option><option value="Macro85">
+					85:
+				</option><option value="Macro86">
+					86:
+				</option><option value="Macro87">
+					87:
+				</option><option value="Macro88">
+					88:
+				</option><option value="Macro89">
+					89:
+				</option><option value="Macro90">
+					90:
+				</option><option value="Macro91">
+					91:
+				</option><option value="Macro92">
+					92:
+				</option><option value="Macro93">
+					93:
+				</option><option value="Macro94">
+					94:
+				</option><option value="Macro95">
+					95:
+				</option><option value="Macro96">
+					96:
+				</option><option value="Macro97">
+					97:
+				</option><option value="Macro98">
+					98:
+				</option><option value="Macro99">
+					99:
+				</option><option value="Macro100">
+					100:
+				</option><option value="Macro101">
+					101:
+				</option><option value="Macro102">
+					102:
+				</option><option value="Macro103">
+					103:
+				</option><option value="Macro104">
+					104:
+				</option><option value="Macro105">
+					105:
+				</option>
+				</select>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<select name="Port2:P3 Tail Message" id="Port2:P3 Tail Message">
+					<option value="Macro1" selected="selected">
+						1:
+					</option><option value="Macro2">
+					2:
+				</option><option value="Macro3">
+					3:
+				</option><option value="Macro4">
+					4:
+				</option><option value="Macro5">
+					5:
+				</option><option value="Macro6">
+					6:
+				</option><option value="Macro7">
+					7:
+				</option><option value="Macro8">
+					8:
+				</option><option value="Macro9">
+					9:
+				</option><option value="Macro10">
+					10:
+				</option><option value="Macro11">
+					11:
+				</option><option value="Macro12">
+					12:
+				</option><option value="Macro13">
+					13:
+				</option><option value="Macro14">
+					14:
+				</option><option value="Macro15">
+					15:
+				</option><option value="Macro16">
+					16:
+				</option><option value="Macro17">
+					17:
+				</option><option value="Macro18">
+					18:
+				</option><option value="Macro19">
+					19:
+				</option><option value="Macro20">
+					20:
+				</option><option value="Macro21">
+					21:
+				</option><option value="Macro22">
+					22:
+				</option><option value="Macro23">
+					23:
+				</option><option value="Macro24">
+					24:
+				</option><option value="Macro25">
+					25:
+				</option><option value="Macro26">
+					26:
+				</option><option value="Macro27">
+					27:
+				</option><option value="Macro28">
+					28:
+				</option><option value="Macro29">
+					29:
+				</option><option value="Macro30">
+					30:
+				</option><option value="Macro31">
+					31:
+				</option><option value="Macro32">
+					32:
+				</option><option value="Macro33">
+					33:
+				</option><option value="Macro34">
+					34:
+				</option><option value="Macro35">
+					35:
+				</option><option value="Macro36">
+					36:
+				</option><option value="Macro37">
+					37:
+				</option><option value="Macro38">
+					38:
+				</option><option value="Macro39">
+					39:
+				</option><option value="Macro40">
+					40:
+				</option><option value="Macro41">
+					41:
+				</option><option value="Macro42">
+					42:
+				</option><option value="Macro43">
+					43:
+				</option><option value="Macro44">
+					44:
+				</option><option value="Macro45">
+					45:
+				</option><option value="Macro46">
+					46:
+				</option><option value="Macro47">
+					47:
+				</option><option value="Macro48">
+					48:
+				</option><option value="Macro49">
+					49:
+				</option><option value="Macro50">
+					50:
+				</option><option value="Macro51">
+					51:
+				</option><option value="Macro52">
+					52:
+				</option><option value="Macro53">
+					53:
+				</option><option value="Macro54">
+					54:
+				</option><option value="Macro55">
+					55:
+				</option><option value="Macro56">
+					56:
+				</option><option value="Macro57">
+					57:
+				</option><option value="Macro58">
+					58:
+				</option><option value="Macro59">
+					59:
+				</option><option value="Macro60">
+					60:
+				</option><option value="Macro61">
+					61:
+				</option><option value="Macro62">
+					62:
+				</option><option value="Macro63">
+					63:
+				</option><option value="Macro64">
+					64:
+				</option><option value="Macro65">
+					65:
+				</option><option value="Macro66">
+					66:
+				</option><option value="Macro67">
+					67:
+				</option><option value="Macro68">
+					68:
+				</option><option value="Macro69">
+					69:
+				</option><option value="Macro70">
+					70:
+				</option><option value="Macro71">
+					71:
+				</option><option value="Macro72">
+					72:
+				</option><option value="Macro73">
+					73:
+				</option><option value="Macro74">
+					74:
+				</option><option value="Macro75">
+					75:
+				</option><option value="Macro76">
+					76:
+				</option><option value="Macro77">
+					77:
+				</option><option value="Macro78">
+					78:
+				</option><option value="Macro79">
+					79:
+				</option><option value="Macro80">
+					80:
+				</option><option value="Macro81">
+					81:
+				</option><option value="Macro82">
+					82:
+				</option><option value="Macro83">
+					83:
+				</option><option value="Macro84">
+					84:
+				</option><option value="Macro85">
+					85:
+				</option><option value="Macro86">
+					86:
+				</option><option value="Macro87">
+					87:
+				</option><option value="Macro88">
+					88:
+				</option><option value="Macro89">
+					89:
+				</option><option value="Macro90">
+					90:
+				</option><option value="Macro91">
+					91:
+				</option><option value="Macro92">
+					92:
+				</option><option value="Macro93">
+					93:
+				</option><option value="Macro94">
+					94:
+				</option><option value="Macro95">
+					95:
+				</option><option value="Macro96">
+					96:
+				</option><option value="Macro97">
+					97:
+				</option><option value="Macro98">
+					98:
+				</option><option value="Macro99">
+					99:
+				</option><option value="Macro100">
+					100:
+				</option><option value="Macro101">
+					101:
+				</option><option value="Macro102">
+					102:
+				</option><option value="Macro103">
+					103:
+				</option><option value="Macro104">
+					104:
+				</option><option value="Macro105">
+					105:
+				</option>
+				</select>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<select name="Port3:P3 Tail Message" id="Port3:P3 Tail Message">
+					<option value="Macro1" selected="selected">
+						1:
+					</option><option value="Macro2">
+					2:
+				</option><option value="Macro3">
+					3:
+				</option><option value="Macro4">
+					4:
+				</option><option value="Macro5">
+					5:
+				</option><option value="Macro6">
+					6:
+				</option><option value="Macro7">
+					7:
+				</option><option value="Macro8">
+					8:
+				</option><option value="Macro9">
+					9:
+				</option><option value="Macro10">
+					10:
+				</option><option value="Macro11">
+					11:
+				</option><option value="Macro12">
+					12:
+				</option><option value="Macro13">
+					13:
+				</option><option value="Macro14">
+					14:
+				</option><option value="Macro15">
+					15:
+				</option><option value="Macro16">
+					16:
+				</option><option value="Macro17">
+					17:
+				</option><option value="Macro18">
+					18:
+				</option><option value="Macro19">
+					19:
+				</option><option value="Macro20">
+					20:
+				</option><option value="Macro21">
+					21:
+				</option><option value="Macro22">
+					22:
+				</option><option value="Macro23">
+					23:
+				</option><option value="Macro24">
+					24:
+				</option><option value="Macro25">
+					25:
+				</option><option value="Macro26">
+					26:
+				</option><option value="Macro27">
+					27:
+				</option><option value="Macro28">
+					28:
+				</option><option value="Macro29">
+					29:
+				</option><option value="Macro30">
+					30:
+				</option><option value="Macro31">
+					31:
+				</option><option value="Macro32">
+					32:
+				</option><option value="Macro33">
+					33:
+				</option><option value="Macro34">
+					34:
+				</option><option value="Macro35">
+					35:
+				</option><option value="Macro36">
+					36:
+				</option><option value="Macro37">
+					37:
+				</option><option value="Macro38">
+					38:
+				</option><option value="Macro39">
+					39:
+				</option><option value="Macro40">
+					40:
+				</option><option value="Macro41">
+					41:
+				</option><option value="Macro42">
+					42:
+				</option><option value="Macro43">
+					43:
+				</option><option value="Macro44">
+					44:
+				</option><option value="Macro45">
+					45:
+				</option><option value="Macro46">
+					46:
+				</option><option value="Macro47">
+					47:
+				</option><option value="Macro48">
+					48:
+				</option><option value="Macro49">
+					49:
+				</option><option value="Macro50">
+					50:
+				</option><option value="Macro51">
+					51:
+				</option><option value="Macro52">
+					52:
+				</option><option value="Macro53">
+					53:
+				</option><option value="Macro54">
+					54:
+				</option><option value="Macro55">
+					55:
+				</option><option value="Macro56">
+					56:
+				</option><option value="Macro57">
+					57:
+				</option><option value="Macro58">
+					58:
+				</option><option value="Macro59">
+					59:
+				</option><option value="Macro60">
+					60:
+				</option><option value="Macro61">
+					61:
+				</option><option value="Macro62">
+					62:
+				</option><option value="Macro63">
+					63:
+				</option><option value="Macro64">
+					64:
+				</option><option value="Macro65">
+					65:
+				</option><option value="Macro66">
+					66:
+				</option><option value="Macro67">
+					67:
+				</option><option value="Macro68">
+					68:
+				</option><option value="Macro69">
+					69:
+				</option><option value="Macro70">
+					70:
+				</option><option value="Macro71">
+					71:
+				</option><option value="Macro72">
+					72:
+				</option><option value="Macro73">
+					73:
+				</option><option value="Macro74">
+					74:
+				</option><option value="Macro75">
+					75:
+				</option><option value="Macro76">
+					76:
+				</option><option value="Macro77">
+					77:
+				</option><option value="Macro78">
+					78:
+				</option><option value="Macro79">
+					79:
+				</option><option value="Macro80">
+					80:
+				</option><option value="Macro81">
+					81:
+				</option><option value="Macro82">
+					82:
+				</option><option value="Macro83">
+					83:
+				</option><option value="Macro84">
+					84:
+				</option><option value="Macro85">
+					85:
+				</option><option value="Macro86">
+					86:
+				</option><option value="Macro87">
+					87:
+				</option><option value="Macro88">
+					88:
+				</option><option value="Macro89">
+					89:
+				</option><option value="Macro90">
+					90:
+				</option><option value="Macro91">
+					91:
+				</option><option value="Macro92">
+					92:
+				</option><option value="Macro93">
+					93:
+				</option><option value="Macro94">
+					94:
+				</option><option value="Macro95">
+					95:
+				</option><option value="Macro96">
+					96:
+				</option><option value="Macro97">
+					97:
+				</option><option value="Macro98">
+					98:
+				</option><option value="Macro99">
+					99:
+				</option><option value="Macro100">
+					100:
+				</option><option value="Macro101">
+					101:
+				</option><option value="Macro102">
+					102:
+				</option><option value="Macro103">
+					103:
+				</option><option value="Macro104">
+					104:
+				</option><option value="Macro105">
+					105:
+				</option>
+				</select>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Pending ID Timer
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:Pending ID Timer  " id="Port1:Pending ID Timer  " type="number" value="10"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:Pending ID Timer  " id="Port2:Pending ID Timer  " type="number" value="10"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:Pending ID Timer  " id="Port3:Pending ID Timer  " type="number" value="10"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Repeat Mode
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:Repeat Mode" id="Port1:Repeat Mode" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:Repeat Mode" id="Port2:Repeat Mode" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:Repeat Mode" id="Port3:Repeat Mode" type="checkbox"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Rx Rcv Macro Active
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<select name="Port1:Rx Rcv Macro Active" id="Port1:Rx Rcv Macro Active">
+					<option value="Macro1">
+						1:
+					</option><option value="Macro2">
+					2:
+				</option><option value="Macro3">
+					3:
+				</option><option value="Macro4">
+					4:
+				</option><option value="Macro5">
+					5:
+				</option><option value="Macro6">
+					6:
+				</option><option value="Macro7">
+					7:
+				</option><option value="Macro8">
+					8:
+				</option><option value="Macro9">
+					9:
+				</option><option value="Macro10">
+					10:
+				</option><option value="Macro11">
+					11:
+				</option><option value="Macro12">
+					12:
+				</option><option value="Macro13">
+					13:
+				</option><option value="Macro14">
+					14:
+				</option><option value="Macro15">
+					15:
+				</option><option value="Macro16">
+					16:
+				</option><option value="Macro17">
+					17:
+				</option><option value="Macro18">
+					18:
+				</option><option value="Macro19">
+					19:
+				</option><option value="Macro20">
+					20:
+				</option><option value="Macro21">
+					21:
+				</option><option value="Macro22">
+					22:
+				</option><option value="Macro23">
+					23:
+				</option><option value="Macro24">
+					24:
+				</option><option value="Macro25">
+					25:
+				</option><option value="Macro26">
+					26:
+				</option><option value="Macro27">
+					27:
+				</option><option value="Macro28">
+					28:
+				</option><option value="Macro29">
+					29:
+				</option><option value="Macro30">
+					30:
+				</option><option value="Macro31">
+					31:
+				</option><option value="Macro32">
+					32:
+				</option><option value="Macro33">
+					33:
+				</option><option value="Macro34">
+					34:
+				</option><option value="Macro35">
+					35:
+				</option><option value="Macro36">
+					36:
+				</option><option value="Macro37">
+					37:
+				</option><option value="Macro38">
+					38:
+				</option><option value="Macro39">
+					39:
+				</option><option value="Macro40">
+					40:
+				</option><option value="Macro41">
+					41:
+				</option><option value="Macro42">
+					42:
+				</option><option value="Macro43">
+					43:
+				</option><option value="Macro44">
+					44:
+				</option><option value="Macro45">
+					45:
+				</option><option value="Macro46">
+					46:
+				</option><option value="Macro47">
+					47:
+				</option><option value="Macro48">
+					48:
+				</option><option value="Macro49">
+					49:
+				</option><option value="Macro50">
+					50:
+				</option><option value="Macro51">
+					51:
+				</option><option value="Macro52">
+					52:
+				</option><option value="Macro53">
+					53:
+				</option><option value="Macro54">
+					54:
+				</option><option value="Macro55">
+					55:
+				</option><option value="Macro56">
+					56:
+				</option><option value="Macro57">
+					57:
+				</option><option value="Macro58">
+					58:
+				</option><option value="Macro59">
+					59:
+				</option><option value="Macro60">
+					60:
+				</option><option value="Macro61">
+					61:
+				</option><option value="Macro62">
+					62:
+				</option><option value="Macro63">
+					63:
+				</option><option value="Macro64">
+					64:
+				</option><option value="Macro65">
+					65:
+				</option><option value="Macro66">
+					66:
+				</option><option value="Macro67">
+					67:
+				</option><option value="Macro68">
+					68:
+				</option><option value="Macro69">
+					69:
+				</option><option value="Macro70">
+					70:
+				</option><option value="Macro71">
+					71:
+				</option><option value="Macro72">
+					72:
+				</option><option value="Macro73">
+					73:
+				</option><option value="Macro74">
+					74:
+				</option><option value="Macro75">
+					75:
+				</option><option value="Macro76">
+					76:
+				</option><option value="Macro77">
+					77:
+				</option><option value="Macro78">
+					78:
+				</option><option value="Macro79">
+					79:
+				</option><option value="Macro80">
+					80:
+				</option><option value="Macro81">
+					81:
+				</option><option value="Macro82">
+					82:
+				</option><option value="Macro83">
+					83:
+				</option><option value="Macro84">
+					84:
+				</option><option value="Macro85">
+					85:
+				</option><option value="Macro86">
+					86:
+				</option><option value="Macro87">
+					87:
+				</option><option value="Macro88">
+					88:
+				</option><option value="Macro89">
+					89:
+				</option><option value="Macro90" selected="selected">
+					90:
+				</option><option value="Macro91">
+					91:
+				</option><option value="Macro92">
+					92:
+				</option><option value="Macro93">
+					93:
+				</option><option value="Macro94">
+					94:
+				</option><option value="Macro95">
+					95:
+				</option><option value="Macro96">
+					96:
+				</option><option value="Macro97">
+					97:
+				</option><option value="Macro98">
+					98:
+				</option><option value="Macro99">
+					99:
+				</option><option value="Macro100">
+					100:
+				</option><option value="Macro101">
+					101:
+				</option><option value="Macro102">
+					102:
+				</option><option value="Macro103">
+					103:
+				</option><option value="Macro104">
+					104:
+				</option><option value="Macro105">
+					105:
+				</option>
+				</select>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<select name="Port2:Rx Rcv Macro Active" id="Port2:Rx Rcv Macro Active">
+					<option value="Macro1">
+						1:
+					</option><option value="Macro2">
+					2:
+				</option><option value="Macro3">
+					3:
+				</option><option value="Macro4">
+					4:
+				</option><option value="Macro5">
+					5:
+				</option><option value="Macro6">
+					6:
+				</option><option value="Macro7">
+					7:
+				</option><option value="Macro8">
+					8:
+				</option><option value="Macro9">
+					9:
+				</option><option value="Macro10">
+					10:
+				</option><option value="Macro11">
+					11:
+				</option><option value="Macro12">
+					12:
+				</option><option value="Macro13">
+					13:
+				</option><option value="Macro14">
+					14:
+				</option><option value="Macro15">
+					15:
+				</option><option value="Macro16">
+					16:
+				</option><option value="Macro17">
+					17:
+				</option><option value="Macro18">
+					18:
+				</option><option value="Macro19">
+					19:
+				</option><option value="Macro20">
+					20:
+				</option><option value="Macro21">
+					21:
+				</option><option value="Macro22">
+					22:
+				</option><option value="Macro23">
+					23:
+				</option><option value="Macro24">
+					24:
+				</option><option value="Macro25">
+					25:
+				</option><option value="Macro26">
+					26:
+				</option><option value="Macro27">
+					27:
+				</option><option value="Macro28">
+					28:
+				</option><option value="Macro29">
+					29:
+				</option><option value="Macro30">
+					30:
+				</option><option value="Macro31">
+					31:
+				</option><option value="Macro32">
+					32:
+				</option><option value="Macro33">
+					33:
+				</option><option value="Macro34">
+					34:
+				</option><option value="Macro35">
+					35:
+				</option><option value="Macro36">
+					36:
+				</option><option value="Macro37">
+					37:
+				</option><option value="Macro38">
+					38:
+				</option><option value="Macro39">
+					39:
+				</option><option value="Macro40">
+					40:
+				</option><option value="Macro41">
+					41:
+				</option><option value="Macro42">
+					42:
+				</option><option value="Macro43">
+					43:
+				</option><option value="Macro44">
+					44:
+				</option><option value="Macro45">
+					45:
+				</option><option value="Macro46">
+					46:
+				</option><option value="Macro47">
+					47:
+				</option><option value="Macro48">
+					48:
+				</option><option value="Macro49">
+					49:
+				</option><option value="Macro50">
+					50:
+				</option><option value="Macro51">
+					51:
+				</option><option value="Macro52">
+					52:
+				</option><option value="Macro53">
+					53:
+				</option><option value="Macro54">
+					54:
+				</option><option value="Macro55">
+					55:
+				</option><option value="Macro56">
+					56:
+				</option><option value="Macro57">
+					57:
+				</option><option value="Macro58">
+					58:
+				</option><option value="Macro59">
+					59:
+				</option><option value="Macro60">
+					60:
+				</option><option value="Macro61">
+					61:
+				</option><option value="Macro62">
+					62:
+				</option><option value="Macro63">
+					63:
+				</option><option value="Macro64">
+					64:
+				</option><option value="Macro65">
+					65:
+				</option><option value="Macro66">
+					66:
+				</option><option value="Macro67">
+					67:
+				</option><option value="Macro68">
+					68:
+				</option><option value="Macro69">
+					69:
+				</option><option value="Macro70">
+					70:
+				</option><option value="Macro71">
+					71:
+				</option><option value="Macro72">
+					72:
+				</option><option value="Macro73">
+					73:
+				</option><option value="Macro74">
+					74:
+				</option><option value="Macro75">
+					75:
+				</option><option value="Macro76">
+					76:
+				</option><option value="Macro77">
+					77:
+				</option><option value="Macro78">
+					78:
+				</option><option value="Macro79">
+					79:
+				</option><option value="Macro80">
+					80:
+				</option><option value="Macro81">
+					81:
+				</option><option value="Macro82">
+					82:
+				</option><option value="Macro83">
+					83:
+				</option><option value="Macro84">
+					84:
+				</option><option value="Macro85">
+					85:
+				</option><option value="Macro86">
+					86:
+				</option><option value="Macro87">
+					87:
+				</option><option value="Macro88">
+					88:
+				</option><option value="Macro89">
+					89:
+				</option><option value="Macro90" selected="selected">
+					90:
+				</option><option value="Macro91">
+					91:
+				</option><option value="Macro92">
+					92:
+				</option><option value="Macro93">
+					93:
+				</option><option value="Macro94">
+					94:
+				</option><option value="Macro95">
+					95:
+				</option><option value="Macro96">
+					96:
+				</option><option value="Macro97">
+					97:
+				</option><option value="Macro98">
+					98:
+				</option><option value="Macro99">
+					99:
+				</option><option value="Macro100">
+					100:
+				</option><option value="Macro101">
+					101:
+				</option><option value="Macro102">
+					102:
+				</option><option value="Macro103">
+					103:
+				</option><option value="Macro104">
+					104:
+				</option><option value="Macro105">
+					105:
+				</option>
+				</select>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<select name="Port3:Rx Rcv Macro Active" id="Port3:Rx Rcv Macro Active">
+					<option value="Macro1">
+						1:
+					</option><option value="Macro2">
+					2:
+				</option><option value="Macro3">
+					3:
+				</option><option value="Macro4">
+					4:
+				</option><option value="Macro5">
+					5:
+				</option><option value="Macro6">
+					6:
+				</option><option value="Macro7">
+					7:
+				</option><option value="Macro8">
+					8:
+				</option><option value="Macro9">
+					9:
+				</option><option value="Macro10">
+					10:
+				</option><option value="Macro11">
+					11:
+				</option><option value="Macro12">
+					12:
+				</option><option value="Macro13">
+					13:
+				</option><option value="Macro14">
+					14:
+				</option><option value="Macro15">
+					15:
+				</option><option value="Macro16">
+					16:
+				</option><option value="Macro17">
+					17:
+				</option><option value="Macro18">
+					18:
+				</option><option value="Macro19">
+					19:
+				</option><option value="Macro20">
+					20:
+				</option><option value="Macro21">
+					21:
+				</option><option value="Macro22">
+					22:
+				</option><option value="Macro23">
+					23:
+				</option><option value="Macro24">
+					24:
+				</option><option value="Macro25">
+					25:
+				</option><option value="Macro26">
+					26:
+				</option><option value="Macro27">
+					27:
+				</option><option value="Macro28">
+					28:
+				</option><option value="Macro29">
+					29:
+				</option><option value="Macro30">
+					30:
+				</option><option value="Macro31">
+					31:
+				</option><option value="Macro32">
+					32:
+				</option><option value="Macro33">
+					33:
+				</option><option value="Macro34">
+					34:
+				</option><option value="Macro35">
+					35:
+				</option><option value="Macro36">
+					36:
+				</option><option value="Macro37">
+					37:
+				</option><option value="Macro38">
+					38:
+				</option><option value="Macro39">
+					39:
+				</option><option value="Macro40">
+					40:
+				</option><option value="Macro41">
+					41:
+				</option><option value="Macro42">
+					42:
+				</option><option value="Macro43">
+					43:
+				</option><option value="Macro44">
+					44:
+				</option><option value="Macro45">
+					45:
+				</option><option value="Macro46">
+					46:
+				</option><option value="Macro47">
+					47:
+				</option><option value="Macro48">
+					48:
+				</option><option value="Macro49">
+					49:
+				</option><option value="Macro50">
+					50:
+				</option><option value="Macro51">
+					51:
+				</option><option value="Macro52">
+					52:
+				</option><option value="Macro53">
+					53:
+				</option><option value="Macro54">
+					54:
+				</option><option value="Macro55">
+					55:
+				</option><option value="Macro56">
+					56:
+				</option><option value="Macro57">
+					57:
+				</option><option value="Macro58">
+					58:
+				</option><option value="Macro59">
+					59:
+				</option><option value="Macro60">
+					60:
+				</option><option value="Macro61">
+					61:
+				</option><option value="Macro62">
+					62:
+				</option><option value="Macro63">
+					63:
+				</option><option value="Macro64">
+					64:
+				</option><option value="Macro65">
+					65:
+				</option><option value="Macro66">
+					66:
+				</option><option value="Macro67">
+					67:
+				</option><option value="Macro68">
+					68:
+				</option><option value="Macro69">
+					69:
+				</option><option value="Macro70">
+					70:
+				</option><option value="Macro71">
+					71:
+				</option><option value="Macro72">
+					72:
+				</option><option value="Macro73">
+					73:
+				</option><option value="Macro74">
+					74:
+				</option><option value="Macro75">
+					75:
+				</option><option value="Macro76">
+					76:
+				</option><option value="Macro77">
+					77:
+				</option><option value="Macro78">
+					78:
+				</option><option value="Macro79">
+					79:
+				</option><option value="Macro80">
+					80:
+				</option><option value="Macro81">
+					81:
+				</option><option value="Macro82">
+					82:
+				</option><option value="Macro83">
+					83:
+				</option><option value="Macro84">
+					84:
+				</option><option value="Macro85">
+					85:
+				</option><option value="Macro86">
+					86:
+				</option><option value="Macro87">
+					87:
+				</option><option value="Macro88">
+					88:
+				</option><option value="Macro89">
+					89:
+				</option><option value="Macro90" selected="selected">
+					90:
+				</option><option value="Macro91">
+					91:
+				</option><option value="Macro92">
+					92:
+				</option><option value="Macro93">
+					93:
+				</option><option value="Macro94">
+					94:
+				</option><option value="Macro95">
+					95:
+				</option><option value="Macro96">
+					96:
+				</option><option value="Macro97">
+					97:
+				</option><option value="Macro98">
+					98:
+				</option><option value="Macro99">
+					99:
+				</option><option value="Macro100">
+					100:
+				</option><option value="Macro101">
+					101:
+				</option><option value="Macro102">
+					102:
+				</option><option value="Macro103">
+					103:
+				</option><option value="Macro104">
+					104:
+				</option><option value="Macro105">
+					105:
+				</option>
+				</select>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Rx Rcv Macro Low
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<select name="Port1:Rx Rcv Macro Low" id="Port1:Rx Rcv Macro Low">
+					<option value="Macro1">
+						1:
+					</option><option value="Macro2">
+					2:
+				</option><option value="Macro3">
+					3:
+				</option><option value="Macro4">
+					4:
+				</option><option value="Macro5">
+					5:
+				</option><option value="Macro6">
+					6:
+				</option><option value="Macro7">
+					7:
+				</option><option value="Macro8">
+					8:
+				</option><option value="Macro9">
+					9:
+				</option><option value="Macro10">
+					10:
+				</option><option value="Macro11">
+					11:
+				</option><option value="Macro12">
+					12:
+				</option><option value="Macro13">
+					13:
+				</option><option value="Macro14">
+					14:
+				</option><option value="Macro15">
+					15:
+				</option><option value="Macro16">
+					16:
+				</option><option value="Macro17">
+					17:
+				</option><option value="Macro18">
+					18:
+				</option><option value="Macro19">
+					19:
+				</option><option value="Macro20">
+					20:
+				</option><option value="Macro21">
+					21:
+				</option><option value="Macro22">
+					22:
+				</option><option value="Macro23">
+					23:
+				</option><option value="Macro24">
+					24:
+				</option><option value="Macro25">
+					25:
+				</option><option value="Macro26">
+					26:
+				</option><option value="Macro27">
+					27:
+				</option><option value="Macro28">
+					28:
+				</option><option value="Macro29">
+					29:
+				</option><option value="Macro30">
+					30:
+				</option><option value="Macro31">
+					31:
+				</option><option value="Macro32">
+					32:
+				</option><option value="Macro33">
+					33:
+				</option><option value="Macro34">
+					34:
+				</option><option value="Macro35">
+					35:
+				</option><option value="Macro36">
+					36:
+				</option><option value="Macro37">
+					37:
+				</option><option value="Macro38">
+					38:
+				</option><option value="Macro39">
+					39:
+				</option><option value="Macro40">
+					40:
+				</option><option value="Macro41">
+					41:
+				</option><option value="Macro42">
+					42:
+				</option><option value="Macro43">
+					43:
+				</option><option value="Macro44">
+					44:
+				</option><option value="Macro45">
+					45:
+				</option><option value="Macro46">
+					46:
+				</option><option value="Macro47">
+					47:
+				</option><option value="Macro48">
+					48:
+				</option><option value="Macro49">
+					49:
+				</option><option value="Macro50">
+					50:
+				</option><option value="Macro51">
+					51:
+				</option><option value="Macro52">
+					52:
+				</option><option value="Macro53">
+					53:
+				</option><option value="Macro54">
+					54:
+				</option><option value="Macro55">
+					55:
+				</option><option value="Macro56">
+					56:
+				</option><option value="Macro57">
+					57:
+				</option><option value="Macro58">
+					58:
+				</option><option value="Macro59">
+					59:
+				</option><option value="Macro60">
+					60:
+				</option><option value="Macro61">
+					61:
+				</option><option value="Macro62">
+					62:
+				</option><option value="Macro63">
+					63:
+				</option><option value="Macro64">
+					64:
+				</option><option value="Macro65">
+					65:
+				</option><option value="Macro66">
+					66:
+				</option><option value="Macro67">
+					67:
+				</option><option value="Macro68">
+					68:
+				</option><option value="Macro69">
+					69:
+				</option><option value="Macro70">
+					70:
+				</option><option value="Macro71">
+					71:
+				</option><option value="Macro72">
+					72:
+				</option><option value="Macro73">
+					73:
+				</option><option value="Macro74">
+					74:
+				</option><option value="Macro75">
+					75:
+				</option><option value="Macro76">
+					76:
+				</option><option value="Macro77">
+					77:
+				</option><option value="Macro78">
+					78:
+				</option><option value="Macro79">
+					79:
+				</option><option value="Macro80">
+					80:
+				</option><option value="Macro81">
+					81:
+				</option><option value="Macro82">
+					82:
+				</option><option value="Macro83">
+					83:
+				</option><option value="Macro84">
+					84:
+				</option><option value="Macro85">
+					85:
+				</option><option value="Macro86">
+					86:
+				</option><option value="Macro87">
+					87:
+				</option><option value="Macro88">
+					88:
+				</option><option value="Macro89">
+					89:
+				</option><option value="Macro90" selected="selected">
+					90:
+				</option><option value="Macro91">
+					91:
+				</option><option value="Macro92">
+					92:
+				</option><option value="Macro93">
+					93:
+				</option><option value="Macro94">
+					94:
+				</option><option value="Macro95">
+					95:
+				</option><option value="Macro96">
+					96:
+				</option><option value="Macro97">
+					97:
+				</option><option value="Macro98">
+					98:
+				</option><option value="Macro99">
+					99:
+				</option><option value="Macro100">
+					100:
+				</option><option value="Macro101">
+					101:
+				</option><option value="Macro102">
+					102:
+				</option><option value="Macro103">
+					103:
+				</option><option value="Macro104">
+					104:
+				</option><option value="Macro105">
+					105:
+				</option>
+				</select>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<select name="Port2:Rx Rcv Macro Low" id="Port2:Rx Rcv Macro Low">
+					<option value="Macro1">
+						1:
+					</option><option value="Macro2">
+					2:
+				</option><option value="Macro3">
+					3:
+				</option><option value="Macro4">
+					4:
+				</option><option value="Macro5">
+					5:
+				</option><option value="Macro6">
+					6:
+				</option><option value="Macro7">
+					7:
+				</option><option value="Macro8">
+					8:
+				</option><option value="Macro9">
+					9:
+				</option><option value="Macro10">
+					10:
+				</option><option value="Macro11">
+					11:
+				</option><option value="Macro12">
+					12:
+				</option><option value="Macro13">
+					13:
+				</option><option value="Macro14">
+					14:
+				</option><option value="Macro15">
+					15:
+				</option><option value="Macro16">
+					16:
+				</option><option value="Macro17">
+					17:
+				</option><option value="Macro18">
+					18:
+				</option><option value="Macro19">
+					19:
+				</option><option value="Macro20">
+					20:
+				</option><option value="Macro21">
+					21:
+				</option><option value="Macro22">
+					22:
+				</option><option value="Macro23">
+					23:
+				</option><option value="Macro24">
+					24:
+				</option><option value="Macro25">
+					25:
+				</option><option value="Macro26">
+					26:
+				</option><option value="Macro27">
+					27:
+				</option><option value="Macro28">
+					28:
+				</option><option value="Macro29">
+					29:
+				</option><option value="Macro30">
+					30:
+				</option><option value="Macro31">
+					31:
+				</option><option value="Macro32">
+					32:
+				</option><option value="Macro33">
+					33:
+				</option><option value="Macro34">
+					34:
+				</option><option value="Macro35">
+					35:
+				</option><option value="Macro36">
+					36:
+				</option><option value="Macro37">
+					37:
+				</option><option value="Macro38">
+					38:
+				</option><option value="Macro39">
+					39:
+				</option><option value="Macro40">
+					40:
+				</option><option value="Macro41">
+					41:
+				</option><option value="Macro42">
+					42:
+				</option><option value="Macro43">
+					43:
+				</option><option value="Macro44">
+					44:
+				</option><option value="Macro45">
+					45:
+				</option><option value="Macro46">
+					46:
+				</option><option value="Macro47">
+					47:
+				</option><option value="Macro48">
+					48:
+				</option><option value="Macro49">
+					49:
+				</option><option value="Macro50">
+					50:
+				</option><option value="Macro51">
+					51:
+				</option><option value="Macro52">
+					52:
+				</option><option value="Macro53">
+					53:
+				</option><option value="Macro54">
+					54:
+				</option><option value="Macro55">
+					55:
+				</option><option value="Macro56">
+					56:
+				</option><option value="Macro57">
+					57:
+				</option><option value="Macro58">
+					58:
+				</option><option value="Macro59">
+					59:
+				</option><option value="Macro60">
+					60:
+				</option><option value="Macro61">
+					61:
+				</option><option value="Macro62">
+					62:
+				</option><option value="Macro63">
+					63:
+				</option><option value="Macro64">
+					64:
+				</option><option value="Macro65">
+					65:
+				</option><option value="Macro66">
+					66:
+				</option><option value="Macro67">
+					67:
+				</option><option value="Macro68">
+					68:
+				</option><option value="Macro69">
+					69:
+				</option><option value="Macro70">
+					70:
+				</option><option value="Macro71">
+					71:
+				</option><option value="Macro72">
+					72:
+				</option><option value="Macro73">
+					73:
+				</option><option value="Macro74">
+					74:
+				</option><option value="Macro75">
+					75:
+				</option><option value="Macro76">
+					76:
+				</option><option value="Macro77">
+					77:
+				</option><option value="Macro78">
+					78:
+				</option><option value="Macro79">
+					79:
+				</option><option value="Macro80">
+					80:
+				</option><option value="Macro81">
+					81:
+				</option><option value="Macro82">
+					82:
+				</option><option value="Macro83">
+					83:
+				</option><option value="Macro84">
+					84:
+				</option><option value="Macro85">
+					85:
+				</option><option value="Macro86">
+					86:
+				</option><option value="Macro87">
+					87:
+				</option><option value="Macro88">
+					88:
+				</option><option value="Macro89">
+					89:
+				</option><option value="Macro90" selected="selected">
+					90:
+				</option><option value="Macro91">
+					91:
+				</option><option value="Macro92">
+					92:
+				</option><option value="Macro93">
+					93:
+				</option><option value="Macro94">
+					94:
+				</option><option value="Macro95">
+					95:
+				</option><option value="Macro96">
+					96:
+				</option><option value="Macro97">
+					97:
+				</option><option value="Macro98">
+					98:
+				</option><option value="Macro99">
+					99:
+				</option><option value="Macro100">
+					100:
+				</option><option value="Macro101">
+					101:
+				</option><option value="Macro102">
+					102:
+				</option><option value="Macro103">
+					103:
+				</option><option value="Macro104">
+					104:
+				</option><option value="Macro105">
+					105:
+				</option>
+				</select>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<select name="Port3:Rx Rcv Macro Low" id="Port3:Rx Rcv Macro Low">
+					<option value="Macro1">
+						1:
+					</option><option value="Macro2">
+					2:
+				</option><option value="Macro3">
+					3:
+				</option><option value="Macro4">
+					4:
+				</option><option value="Macro5">
+					5:
+				</option><option value="Macro6">
+					6:
+				</option><option value="Macro7">
+					7:
+				</option><option value="Macro8">
+					8:
+				</option><option value="Macro9">
+					9:
+				</option><option value="Macro10">
+					10:
+				</option><option value="Macro11">
+					11:
+				</option><option value="Macro12">
+					12:
+				</option><option value="Macro13">
+					13:
+				</option><option value="Macro14">
+					14:
+				</option><option value="Macro15">
+					15:
+				</option><option value="Macro16">
+					16:
+				</option><option value="Macro17">
+					17:
+				</option><option value="Macro18">
+					18:
+				</option><option value="Macro19">
+					19:
+				</option><option value="Macro20">
+					20:
+				</option><option value="Macro21">
+					21:
+				</option><option value="Macro22">
+					22:
+				</option><option value="Macro23">
+					23:
+				</option><option value="Macro24">
+					24:
+				</option><option value="Macro25">
+					25:
+				</option><option value="Macro26">
+					26:
+				</option><option value="Macro27">
+					27:
+				</option><option value="Macro28">
+					28:
+				</option><option value="Macro29">
+					29:
+				</option><option value="Macro30">
+					30:
+				</option><option value="Macro31">
+					31:
+				</option><option value="Macro32">
+					32:
+				</option><option value="Macro33">
+					33:
+				</option><option value="Macro34">
+					34:
+				</option><option value="Macro35">
+					35:
+				</option><option value="Macro36">
+					36:
+				</option><option value="Macro37">
+					37:
+				</option><option value="Macro38">
+					38:
+				</option><option value="Macro39">
+					39:
+				</option><option value="Macro40">
+					40:
+				</option><option value="Macro41">
+					41:
+				</option><option value="Macro42">
+					42:
+				</option><option value="Macro43">
+					43:
+				</option><option value="Macro44">
+					44:
+				</option><option value="Macro45">
+					45:
+				</option><option value="Macro46">
+					46:
+				</option><option value="Macro47">
+					47:
+				</option><option value="Macro48">
+					48:
+				</option><option value="Macro49">
+					49:
+				</option><option value="Macro50">
+					50:
+				</option><option value="Macro51">
+					51:
+				</option><option value="Macro52">
+					52:
+				</option><option value="Macro53">
+					53:
+				</option><option value="Macro54">
+					54:
+				</option><option value="Macro55">
+					55:
+				</option><option value="Macro56">
+					56:
+				</option><option value="Macro57">
+					57:
+				</option><option value="Macro58">
+					58:
+				</option><option value="Macro59">
+					59:
+				</option><option value="Macro60">
+					60:
+				</option><option value="Macro61">
+					61:
+				</option><option value="Macro62">
+					62:
+				</option><option value="Macro63">
+					63:
+				</option><option value="Macro64">
+					64:
+				</option><option value="Macro65">
+					65:
+				</option><option value="Macro66">
+					66:
+				</option><option value="Macro67">
+					67:
+				</option><option value="Macro68">
+					68:
+				</option><option value="Macro69">
+					69:
+				</option><option value="Macro70">
+					70:
+				</option><option value="Macro71">
+					71:
+				</option><option value="Macro72">
+					72:
+				</option><option value="Macro73">
+					73:
+				</option><option value="Macro74">
+					74:
+				</option><option value="Macro75">
+					75:
+				</option><option value="Macro76">
+					76:
+				</option><option value="Macro77">
+					77:
+				</option><option value="Macro78">
+					78:
+				</option><option value="Macro79">
+					79:
+				</option><option value="Macro80">
+					80:
+				</option><option value="Macro81">
+					81:
+				</option><option value="Macro82">
+					82:
+				</option><option value="Macro83">
+					83:
+				</option><option value="Macro84">
+					84:
+				</option><option value="Macro85">
+					85:
+				</option><option value="Macro86">
+					86:
+				</option><option value="Macro87">
+					87:
+				</option><option value="Macro88">
+					88:
+				</option><option value="Macro89">
+					89:
+				</option><option value="Macro90" selected="selected">
+					90:
+				</option><option value="Macro91">
+					91:
+				</option><option value="Macro92">
+					92:
+				</option><option value="Macro93">
+					93:
+				</option><option value="Macro94">
+					94:
+				</option><option value="Macro95">
+					95:
+				</option><option value="Macro96">
+					96:
+				</option><option value="Macro97">
+					97:
+				</option><option value="Macro98">
+					98:
+				</option><option value="Macro99">
+					99:
+				</option><option value="Macro100">
+					100:
+				</option><option value="Macro101">
+					101:
+				</option><option value="Macro102">
+					102:
+				</option><option value="Macro103">
+					103:
+				</option><option value="Macro104">
+					104:
+				</option><option value="Macro105">
+					105:
+				</option>
+				</select>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Speak Pending ID Timer
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:Speak Pending ID Timer" id="Port1:Speak Pending ID Timer" type="number" value="82129"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:Speak Pending ID Timer" id="Port2:Speak Pending ID Timer" type="number" value="79361"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:Speak Pending ID Timer" id="Port3:Speak Pending ID Timer" type="number" value="13569"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Speech ID Override
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:Speech ID Override" id="Port1:Speech ID Override" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:Speech ID Override" id="Port2:Speech ID Override" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:Speech ID Override" id="Port3:Speech ID Override" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Speech Override
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:Speech Override" id="Port1:Speech Override" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:Speech Override" id="Port2:Speech Override" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:Speech Override" id="Port3:Speech Override" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Tail Counter
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:Tail Counter" id="Port1:Tail Counter" type="number" value="3238144"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:Tail Counter" id="Port2:Tail Counter" type="number" value="3238708"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:Tail Counter" id="Port3:Tail Counter" type="number" value="3224117"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Tail Message Number
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:Tail Message Number" id="Port1:Tail Message Number" type="number" value="0"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:Tail Message Number" id="Port2:Tail Message Number" type="number" value="0"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:Tail Message Number" id="Port3:Tail Message Number" type="number" value="0"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Tail Timer
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:Tail Timer" id="Port1:Tail Timer" type="number" value="0"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:Tail Timer" id="Port2:Tail Timer" type="number" value="3433728"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:Tail Timer" id="Port3:Tail Timer" type="number" value="3433781"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Timeout Reset Select
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<select name="Port1:Timeout Reset Select" id="Port1:Timeout Reset Select">
+					<option value="AfterCOS" selected="selected">
+						AfterCOS
+					</option><option value="AfterCTSegment1">
+					AfterCTSegment1
+				</option><option value="AfterCTSegment2">
+					AfterCTSegment2
+				</option><option value="AfterCTSegment3">
+					AfterCTSegment3
+				</option><option value="AfterCTSegment4">
+					AfterCTSegment4
+				</option>
+				</select>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<select name="Port2:Timeout Reset Select" id="Port2:Timeout Reset Select">
+					<option value="AfterCOS" selected="selected">
+						AfterCOS
+					</option><option value="AfterCTSegment1">
+					AfterCTSegment1
+				</option><option value="AfterCTSegment2">
+					AfterCTSegment2
+				</option><option value="AfterCTSegment3">
+					AfterCTSegment3
+				</option><option value="AfterCTSegment4">
+					AfterCTSegment4
+				</option>
+				</select>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<select name="Port3:Timeout Reset Select" id="Port3:Timeout Reset Select">
+					<option value="AfterCOS" selected="selected">
+						AfterCOS
+					</option><option value="AfterCTSegment1">
+					AfterCTSegment1
+				</option><option value="AfterCTSegment2">
+					AfterCTSegment2
+				</option><option value="AfterCTSegment3">
+					AfterCTSegment3
+				</option><option value="AfterCTSegment4">
+					AfterCTSegment4
+				</option>
+				</select>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Timeout Timer
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:Timeout Timer" id="Port1:Timeout Timer" type="number" value="174376"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:Timeout Timer" id="Port2:Timeout Timer" type="number" value="66092"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:Timeout Timer" id="Port3:Timeout Timer" type="number" value="1"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Tx Enable
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:Tx Enable" id="Port1:Tx Enable" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:Tx Enable" id="Port2:Tx Enable" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:Tx Enable" id="Port3:Tx Enable" checked="checked" type="checkbox"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Unlock
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:Unlock" id="Port1:Unlock" type="text" value="35281"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:Unlock" id="Port2:Unlock" type="text" value="25281"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:Unlock" id="Port3:Unlock" type="text" value="35281"></input>
+
+
+			</td>
+
+		</tr>
+
+		<tr
+
+
+
+
+
+
+
+
+		>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+
+				Use DR1
+
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port1:Use DR1" id="Port1:Use DR1" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port2:Use DR1" id="Port2:Use DR1" type="checkbox"></input>
+
+
+			</td>
+
+			<td
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			>
+
+
+
+				<input name="Port3:Use DR1" id="Port3:Use DR1" type="checkbox"></input>
+
+
+			</td>
+
+		</tr>
+
+
+		</tbody>
+	</table>
+
+
+	<input type="hidden" name="fieldKey" value="Port1">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<button type="submit" class="btn btn-primary" value="Save">
+		<i class="bi bi-send-check"></i> Save
+	</button>
+
+</form>
+

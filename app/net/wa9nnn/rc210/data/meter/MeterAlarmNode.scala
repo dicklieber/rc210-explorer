@@ -50,7 +50,7 @@ case class MeterAlarmNode(val key: Key, meter: Key, alarmType: AlarmType, tripPo
     fieldKey.editButtonCell,
     key.keyWithName,
     meter.keyWithName,
-    alarmType,
+    alarmType.entryName,
     tripPoint,
     macroKey.keyWithName
   )

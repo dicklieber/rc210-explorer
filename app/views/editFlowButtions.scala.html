@@ -1,8 +1,8 @@
 @import net.wa9nnn.rc210.FieldKey
+@import net.wa9nnn.rc210.ui.EditButton
 @(fieldKey: FieldKey)
-<button type="button" onclick="window.location.href = '@routes.EditController.edit(fieldKey).url'" title="Edit this field.">
-&#9998;
-</button>
-<button type="button" onclick="window.location.href = '@routes.FlowController.flowChart(fieldKey.key).url'  " title="Show in flow page..">
-&#10199;
-</button>
+
+    @EditButton(fieldKey)
+    <button type="button" onclick="window.location.href = '@routes.FlowController.flowChart(fieldKey.key).url'  " title="Show in flow page..">
+    &#10199;
+    </button>

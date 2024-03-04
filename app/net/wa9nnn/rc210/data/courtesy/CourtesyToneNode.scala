@@ -127,8 +127,10 @@ object CourtesyToneNode extends ComplexExtractor[CourtesyToneNode] with LazyLogg
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[CourtesyToneNode]
 
-  override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    courtesyTones(fieldEntries.map(_.value[CourtesyToneNode]))
+  override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html = {
+    val html = courtesyTones(fieldEntries.map(_.value[CourtesyToneNode]))
+    html
+  }
 
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     given Form[CourtesyToneNode] = form.fill(fieldEntry.value)

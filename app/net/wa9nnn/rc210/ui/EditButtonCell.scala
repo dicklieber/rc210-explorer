@@ -11,5 +11,10 @@ object EditButtonCell:
     val html: Html = editButton(call)
     Cell.rawHtml(html.toString)
 
+object EditButton:
+  def apply(fieldKey: FieldKey): Html =
+    val call = controllers.routes.EditController.edit(fieldKey)
+    val html: Html = editButton(call)
+    html
 
 

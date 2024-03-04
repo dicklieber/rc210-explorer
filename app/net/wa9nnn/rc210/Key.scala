@@ -83,7 +83,7 @@ object Key:
         case _ =>
           throw new IllegalArgumentException(s"""Can't parse "$sKey"!""")
     catch
-      case e:Exception =>
+      case e: Exception =>
         throw e
 
   def setNamedSource(namedSource: NamedKeySource): Unit = {
@@ -122,6 +122,7 @@ object Key:
   lazy val portKeys: Seq[Key] = keys(Port)
   lazy val macroKeys: Seq[Key] = keys(Macro)
   lazy val timerKeys: Seq[Key] = keys(Timer)
+  val commonkey: Key = Key(KeyKind.Common)
 
   /**
    * Codec to allow non-string types i routes.conf definitions.
