@@ -65,6 +65,8 @@ object EditHandler:
       h
     }
 
-  def fieldKey(using data: Map[String, Seq[String]]): Option[FieldKey] =
-    str(FieldKey.fieldKeyName)(data).map(FieldKey(_))
+  def fieldKey(using data: Map[String, Seq[String]]): Option[FieldKey] = {
+    val fieldKeyName: Option[String] = str(FieldKey.fieldKeyName)
+    fieldKeyName.map(FieldKey.fromId)
+  }
 

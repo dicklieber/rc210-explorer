@@ -18,15 +18,16 @@ import scala.collection.immutable
 abstract class SimpleFieldNode(val keyKind: KeyKind) extends EditHandler with LazyLogging:
   def collect(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
 
-    val valueSet: immutable.Iterable[UpdateCandidate] = (for {
-      (sfKey: String, values: Seq[String]) <- data
-      if sfKey != "fieldKey" // this is only present for ComplexFields
-      fieldKey = FieldKey(sfKey)
-      if fieldKey.fieldName != NamedKey.fieldName
-      str <- values.headOption
-    } yield {
-      UpdateCandidate(fieldKey, str)
-    }
+    val valueSet: immutable.Iterable[UpdateCandidate] = (
+      for {
+        (id: String, values: Seq[String]) <- data
+        if id != "fieldKey" // this is only present for ComplexFields
+        fieldKey = FieldKey.fromId(id)
+        if fieldKey.fieldName != NamedKey.fieldName
+        str <- values.headOption
+      } yield {
+        UpdateCandidate(fieldKey, str)
+      }
       ).toSeq
 
     valueSet.toSeq

@@ -28,29 +28,44 @@ import scala.util.Try
 /**
  * Identifies a rc2input value
  *
- * @param fieldName name of rc2input. Shown in UIs
- * @param key       qualifier for the rc2input.
+ * @param fieldName name of rc2input
+ * @param key            qualifier for the rc2input.
  */
-case class FieldKey(key: Key, fieldName: String) extends Ordered[FieldKey] {
+case class FieldKey(key: Key, fieldName: String = "") extends Ordered[FieldKey] {
+  if (key.keyKind == KeyKind.Common)
+    assert(fieldName.nonEmpty, "Command must have a fieldName")
 
-  override def compare(that: FieldKey): Int = {
-    var ret = key.keyKind.toString compareTo that.key.keyKind.toString
+  override def compare(that: FieldKey): Int =
+    var ret: Int = key.keyKind.toString compareTo that.key.keyKind.toString
     if (ret == 0)
       ret = key.rc210Value.compareTo(that.key.rc210Value)
     if (ret == 0)
-      ret = fieldName.compareTo(that.fieldName)
+      fieldName.compare(that.fieldName)
     ret
-  }
 
   def editButtonCell: Cell = key.keyKind.handler.editButtonCell(this)
 
+  /**
+   * | Example | Comment |
+   * | :---:  | --- |
+   * | '''Port1:DTMF Cover Tone''' |
+   * | Clock | Complex [[net.wa9nnn.rc210.data.field.FieldValue]]
+   * | Site Prefix | Associated with a [[KeyKind.Common]]
+   */
   override def toString: String =
-    if(key.rc210Value == 0)
+    if (key.keyKind == KeyKind.Common)
       fieldName
-    else if(key.keyKind.entryName == fieldName)
-      key.toString
+    else if (key.keyKind.maxN == 1)
+      key.keyKind.entryName
     else
-      s"${key.toString}:$fieldName"
+      // Everything else e.g. Port
+      s"${key.entryName}: ${fieldName}"
+
+  /**
+   * Used for things and JSON and HTML field names.
+   */
+  val id: String =
+    s"${key.toString}:$fieldName"
 
   val editHandler: EditHandler =
     key.keyKind.handler
@@ -62,44 +77,32 @@ object FieldKey {
    */
   val fieldKeyName: String = "fieldKey"
 
-  /**
-   * For use field name is the [[KeyKind]] name.
-   *
-   * @param key whose [[KeyKind]] name is the field name.
-   */
-  def apply(key: Key): FieldKey =
-    new FieldKey(key, key.keyKind.entryName)
-
   implicit val fmtFieldKey: Format[FieldKey] = new Format[FieldKey] {
-    override def writes(o: FieldKey) = JsString(o.toString)
+    override def writes(o: FieldKey) = JsString(o.id)
 
     override def reads(json: JsValue): JsResult[FieldKey] = {
       JsResult.fromTry(Try {
-        val sFieldKey = json.as[String]
-        FieldKey(sFieldKey)
+        val id = json.as[String]
+        FieldKey.fromId(id)
       })
     }
   }
-
-  def opt(maybeSFieldKey: Option[String]): Option[FieldKey] =
-    maybeSFieldKey.map(FieldKey(_))
-
-  def apply(param: String): FieldKey = {
-    param match
-      case justKey(sKey) =>
-        val key = Key(sKey)
-        FieldKey(key)
+  
+  /**
+   *
+   * @param id from [[FieldKey.id]]
+   * @return
+   */
+  def fromId(id: String): FieldKey =
+    id match
       case r(sKey, fieldName) =>
         val key = Key(sKey)
         FieldKey(key, fieldName)
+      case r(sKey, _) =>
+        val key = Key(sKey)
+        FieldKey(key)
       case s: String =>
-        val keyKind = KeyKind.withName(s)
-        val key = Key(keyKind)
-        val fk=FieldKey(key)
-        fk
+        throw new scala.IllegalArgumentException(s"Can't parse: $id")
 
-  }
-
-  private val r = """(.+\d):(.*)""".r
-  private val justKey = """([ \w]+\d+)""".r
+  private val r = """(\w+):(.*)""".r
 }

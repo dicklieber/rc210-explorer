@@ -52,7 +52,7 @@ class SimpleValuesHandler(fieldEntries: Seq[FieldEntry]) extends LazyLogging:
         }
         val sKey = name
         try
-          val fieldKeykey: FieldKey = FieldKey(sKey)
+          val fieldKeykey: FieldKey = FieldKey.fromId(sKey)
           fieldKeykey -> values.headOption.getOrElse("")
         catch
           case e: Exception =>

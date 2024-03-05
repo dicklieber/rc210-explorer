@@ -34,11 +34,11 @@ case class FieldEntryJson(fieldKey: FieldKey, fieldValue: JsValue, candidate: Op
 /**
  * Helper to transfer values from an html form to the [[DataStore]].
  *
- * @param sFieldKey  <input name=??> from a form.
+ * @param id  <input name=??> from a form.
  * @param sFormValue PUT value from the submitted form.
  */
-case class FormValue(sFieldKey: String, sFormValue: String) {
-  val fieldKey: FieldKey = FieldKey(sFieldKey)
+case class FormValue(id: String, sFormValue: String) {
+  val fieldKey: FieldKey = FieldKey.fromId(id)
 }
 
 object FieldEntryJson {

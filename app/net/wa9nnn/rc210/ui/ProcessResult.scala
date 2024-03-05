@@ -49,7 +49,7 @@ object ProcessResult {
       .body
       .asFormUrlEncoded
       .get
-      .map(t => FieldKey(t._1) -> t._2.head)
+      .map(t => FieldKey.fromId(t._1) -> t._2.head)
     val named: Map[FieldKey, String] = data.filter(_._1.fieldName == "name")
     val namedKeys = named.map { (fieldKey, name) =>
       NamedKey(fieldKey.key, name)

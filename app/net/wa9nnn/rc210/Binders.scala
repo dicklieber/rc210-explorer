@@ -50,17 +50,17 @@ object Binders {
 
 
   implicit def fieldKeyBinder: PathBindable[FieldKey] = new PathBindable[FieldKey] {
-    override def bind(key: String, value: String): Either[String, FieldKey] =
+    override def bind(key: String, id: String): Either[String, FieldKey] =
 
       try {
-        Right(FieldKey(value))
+        Right(FieldKey.fromId(id))
       } catch {
         case e: Exception =>
           Left(e.getMessage)
       }
 
     override def unbind(key: String, fieldKey: FieldKey): String =
-      fieldKey.toString
+      fieldKey.id
   }
 //  implicit def tabKeyBinder: PathBindable[TabKind] = new PathBindable[TabKind] {
 //    override def bind(key: String, value: String): Either[String, TabKind] =

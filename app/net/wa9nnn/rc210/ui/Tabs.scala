@@ -37,8 +37,6 @@ trait Tab:
 
   def tabKind: TabKind = TabKind.Fields
 
-
-
 enum TabE(override val entryName: String,
           override val indexUrl: String,
           override val toolTip: String,

@@ -14,9 +14,9 @@ object NamedKeyExtractor:
   def apply(data: Map[String, Seq[String]]): Seq[NamedKey] =
     (for {
       tuple <- data
-      inputName: String = tuple._1
-      if inputName.endsWith(NamedKey.fieldName)
-      fieldKey = FieldKey(inputName)
+      id: String = tuple._1
+      if id.endsWith(NamedKey.fieldName)
+      fieldKey = FieldKey.fromId(id)
       values: Seq[String] = tuple._2
       keyName <- values.headOption
     } yield {

@@ -17,64 +17,37 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.data.clock.ClockNode
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, Link}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind, RcSpec}
+import org.scalatest.prop.{TableDrivenPropertyChecks, TableFor2}
 import play.api.libs.json.Json
+
+class FieldKeyToString extends RcSpec with TableDrivenPropertyChecks:
+  val fieldKeyStrings: TableFor2[FieldKey, String] =
+    Table(
+      ("FieldKey", "string"), // First tuple defines column names
+      (FieldKey(Key.portKeys.head, "Color of port"), "Port1: Color of port"), // Subsequent tuples define the data
+      (FieldKey(Key.clockKey), "Clock"),
+      (FieldKey(Key.commonkey, "some fieldName"), "some fieldName"),
+    )
+
+  forAll(fieldKeyStrings) { (kk: FieldKey, string: String) =>
+    println(kk)
+    println(string)
+    val toString1 = kk.toString
+    toString1 must be(string)
+  }
 
 class FieldKeyTest extends RcSpec {
 
   "FieldKey" should {
-    val clockKey: Key = Key(KeyKind.Clock)
-    val clock: FieldKey = FieldKey(clockKey)
+    val clock: FieldKey = FieldKey(Key.clockKey)
 
     val commonKey: Key = Key(KeyKind.Common)
     val aCommon: FieldKey = FieldKey(commonKey, "aCommonfield")
 
     val logicAlarm: FieldKey = FieldKey(Key(KeyKind.LogicAlarm))
 
-    "round trip" when {
-      "name is key" in {
-        val key = Key.portKeys.head
-        val fieldKey = FieldKey(key, "Port Color")
-        val string = fieldKey.toString
-        string mustBe "Port1:Port Color"
-        val backAgain = FieldKey(string)
-        backAgain.key mustBe key
-        backAgain.fieldName mustBe "Port Color"
-
-      }
-      "name same as key name" in {
-        val key = Key(KeyKind.LogicAlarm, 5)
-        val fieldKey = FieldKey(key)
-        val string = fieldKey.toString
-        string mustBe "Logic Alarm5"
-        val backAgain = FieldKey(string)
-        backAgain.key mustBe key
-        backAgain.fieldName mustBe "Logic Alarm"
-
-      }
-      "none 0 name is not key " in {
-        val key = Key(KeyKind.Port, 2)
-        val fname = "fname"
-        val fieldKey = FieldKey(key, fname)
-        val string = fieldKey.toString
-        string mustBe "Port2:fname"
-        val backAgain = FieldKey(string)
-        backAgain.key mustBe key
-        backAgain.fieldName mustBe fname
-
-      }
-      "0 rcNumber e.g. Clock, RemoteBase etc." in {
-        val key = ClockNode.key
-        val fieldKey = FieldKey(key)
-        val string = fieldKey.toString
-        string mustBe ("Clock")
-        val backAgain = FieldKey(string)
-        backAgain.key mustBe key
-        backAgain.fieldName mustBe "Clock"
-
-      }
-    }
     "compare" when {
       "same" in {
         val fk1 = FieldKey(Key.portKeys.head, "f1")
@@ -82,35 +55,44 @@ class FieldKeyTest extends RcSpec {
         fk1 compareTo (fk2) mustBe (0)
       }
     }
-    "round trip JSON" when {
-      "port" in {
-        val fk1 = FieldKey(Key.portKeys.head, "f1")
-        val string = Json.toJson(fk1).toString
-        string mustEqual (""""Port1:f1"""")
-        val backAgain = Json.parse(string).as[FieldKey]
-        backAgain mustEqual (fk1)
+    "id round trip for id" when {
+      "Port" in {
+        val fieldKey = FieldKey(Key.portKeys.head, "f1")
+        val id = fieldKey.id
+        id mustBe ("Port1:f1")
+        val backAgain = FieldKey.fromId(id)
+        backAgain mustBe (fieldKey)
       }
       "Clock" in {
-        val fk1 = FieldKey(clockKey)
-        val string = Json.toJson(fk1).toString
-        string mustEqual (""""Clock"""")
-        val backAgain = Json.parse(string).as[FieldKey]
-        backAgain mustEqual (fk1)
+        val fieldKey = FieldKey(Key.clockKey)
+        val id = fieldKey.id
+        id mustBe ("Clock0:")
+        val backAgain = FieldKey.fromId(id)
+        backAgain mustBe (fieldKey)
+        backAgain.toString mustBe ("Clock")
       }
-
+      "Common" in {
+        val fieldKey = FieldKey(Key.commonkey, "f1")
+        val id = fieldKey.id
+        id mustBe ("Common0:f1")
+        val backAgain = FieldKey.fromId(id)
+        backAgain mustBe (fieldKey)
+        backAgain.toString mustBe ("f1")
+      }
     }
-    "Cell" in {
-      val fieldKey = FieldKey(clockKey)
-      val cell = fieldKey.editButtonCell
-      val value1 = cell.value
-      value1 mustBe ("""<button type="button" class="bi bi-pencil-square btn p-0" onclick="window.location.href='/edit/Clock'">
-                       |      </button>
-                       |""".stripMargin)
+    "round trip JSON" in {
+      val fk1 = FieldKey(Key.portKeys.head, "f1")
+      val string = Json.toJson(fk1).toString
+      string mustEqual (""""Port1:f1"""")
+      val backAgain = Json.parse(string).as[FieldKey]
+      backAgain mustEqual (fk1)
     }
-    "opt" in {
-      val fieldKey = FieldKey(clockKey)
-      val backAgain = FieldKey.opt(Option("Clock"))
-      backAgain.get mustEqual (fieldKey)
+    "tocell" in {
+      val cell: Cell = FieldKey(Key.portKeys.head, "f1").editButtonCell
+      val value: String = cell.value
+      value mustBe("""<button type="button" class="bi bi-pencil-square btn p-0" onclick="window.location.href='/index/Port'">
+                     |      </button>""".stripMargin)
     }
   }
 }
+

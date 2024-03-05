@@ -32,7 +32,7 @@ import net.wa9nnn.rc210.data.timers.TimerNode
 import net.wa9nnn.rc210.ui.Tab
 
 /**
- * @param maxN how many keys there can be for this kind,
+ * @param maxN    how many keys there can be for this kind,
  * @param handler how many keys there can be for this kind,
  */
 sealed trait KeyKind(val maxN: Int, val handler: EditHandler = null) extends EnumEntry
@@ -62,7 +62,6 @@ object KeyKind extends PlayEnum[KeyKind]:
   case object Port extends KeyKind(3, PortsNode)
 
   case object Schedule extends KeyKind(40, ScheduleNode)
-
 
   case object Timer extends KeyKind(6, TimerNode)
 

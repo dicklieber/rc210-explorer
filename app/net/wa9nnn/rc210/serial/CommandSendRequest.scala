@@ -40,7 +40,7 @@ object CommandSendRequest:
     s match
       case r(sf, fk) =>
         val sendField = SendField.withName(sf)
-        val maybeFieldKey:Option[FieldKey] = Option(fk).map(FieldKey(_))
+        val maybeFieldKey:Option[FieldKey] = Option(fk).map(FieldKey.fromId)
         CommandSendRequest(sendField, maybeFieldKey)
       case x =>
         throw  new IllegalArgumentException(s"Can't parse $x")

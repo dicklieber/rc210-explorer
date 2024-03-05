@@ -26,6 +26,7 @@ import play.api.data.FormError
 import play.api.data.format.Formatter
 import play.api.libs.json.*
 import play.api.mvc.PathBindable
+import sun.jvm.hotspot.HelloWorld.e
 
 /**
  * Identifies various RC210 objects.
@@ -51,7 +52,11 @@ case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends Order
   def keyWithName: String =
     val name = Key.nameForKey(this)
     s"$rc210Value: $name"
-
+    if (keyKind.maxN > 1)
+      s"$entryName:"
+    else
+      entryName
+//
   /**
    * Replaces 'n' in the template with the number (usually a port number).
    *
@@ -124,7 +129,8 @@ object Key extends LazyLogging:
   lazy val portKeys: Seq[Key] = keys(Port)
   lazy val macroKeys: Seq[Key] = keys(Macro)
   lazy val timerKeys: Seq[Key] = keys(Timer)
-  val commonkey: Key = Key(KeyKind.Common)
+  lazy val commonkey: Key = Key(KeyKind.Common)
+  lazy val clockKey: Key = Key(KeyKind.Clock)
 
   /**
    * Codec to allow non-string types i routes.conf definitions.
