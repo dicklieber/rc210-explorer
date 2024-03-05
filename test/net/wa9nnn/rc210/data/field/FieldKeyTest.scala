@@ -23,18 +23,32 @@ import org.scalatest.prop.{TableDrivenPropertyChecks, TableFor2}
 import play.api.libs.json.Json
 
 class FieldKeyToString extends RcSpec with TableDrivenPropertyChecks:
+  val fieldKeyDisplay: TableFor2[FieldKey, String] =
+    Table(
+      ("FieldKey", "string"), // First tuple defines column names
+      (FieldKey(Key.clockKey), "Clock0"),
+      (FieldKey(Key.portKeys.head, "Color of port"), "Port1: Color of port"), // Subsequent tuples define the data
+      (FieldKey(Key.commonkey, "some fieldName"), "some fieldName"),
+    )
+
+  forAll(fieldKeyDisplay) { (kk: FieldKey, string: String) =>
+    println(kk)
+    println(string)
+    val display = kk.display
+    display must be(string)
+  }
   val fieldKeyStrings: TableFor2[FieldKey, String] =
     Table(
       ("FieldKey", "string"), // First tuple defines column names
-      (FieldKey(Key.portKeys.head, "Color of port"), "Port1: Color of port"), // Subsequent tuples define the data
+      (FieldKey(Key.portKeys.head, "Color of port"), "Port1$Color of port"), // Subsequent tuples define the data
       (FieldKey(Key.clockKey), "Clock"),
-      (FieldKey(Key.commonkey, "some fieldName"), "some fieldName"),
+      (FieldKey(Key.commonkey, "some fieldName"), "Common0$some fieldName"),
     )
 
   forAll(fieldKeyStrings) { (kk: FieldKey, string: String) =>
     println(kk)
     println(string)
-    val toString1 = kk.toString
+    val toString1 = kk.id
     toString1 must be(string)
   }
 
@@ -59,31 +73,47 @@ class FieldKeyTest extends RcSpec {
       "Port" in {
         val fieldKey = FieldKey(Key.portKeys.head, "f1")
         val id = fieldKey.id
-        id mustBe ("Port1:f1")
+        id mustBe ("Port1$f1")
         val backAgain = FieldKey.fromId(id)
         backAgain mustBe (fieldKey)
       }
       "Clock" in {
         val fieldKey = FieldKey(Key.clockKey)
         val id = fieldKey.id
-        id mustBe ("Clock0:")
+        id mustBe ("Clock0$")
         val backAgain = FieldKey.fromId(id)
         backAgain mustBe (fieldKey)
-        backAgain.toString mustBe ("Clock")
+        val display = backAgain.display
+        display mustBe ("Clock0")
       }
       "Common" in {
         val fieldKey = FieldKey(Key.commonkey, "f1")
         val id = fieldKey.id
-        id mustBe ("Common0:f1")
+        id mustBe ("Common0$f1")
         val backAgain = FieldKey.fromId(id)
         backAgain mustBe (fieldKey)
-        backAgain.toString mustBe ("f1")
+        backAgain.display mustBe ("f1")
+      }
+      "Courtesy Tone" in {
+        val fieldKey = FieldKey(Key(KeyKind.CourtesyTone, 3))
+        val id = fieldKey.id
+        id mustBe ("Courtesy Tone3$")
+        val backAgain = FieldKey.fromId(id)
+        backAgain mustBe (fieldKey)
+        val string = backAgain.toString
+        string mustBe ("FieldKey(Courtesy Tone3,)")
+        val display = backAgain.display
+        display mustBe ("Courtesy Tone3")
       }
     }
     "round trip JSON" in {
-      val fk1 = FieldKey(Key.portKeys.head, "f1")
+      val key = Key.portKeys.head
+      val fk1 = FieldKey(key, "f1")
       val string = Json.toJson(fk1).toString
-      string mustEqual (""""Port1:f1"""")
+      string mustEqual (""""Port1$f1"""")
+      fk1.key mustEqual  (key)
+      fk1.fieldName mustEqual("f1")
+
       val backAgain = Json.parse(string).as[FieldKey]
       backAgain mustEqual (fk1)
     }
@@ -91,7 +121,8 @@ class FieldKeyTest extends RcSpec {
       val cell: Cell = FieldKey(Key.portKeys.head, "f1").editButtonCell
       val value: String = cell.value
       value mustBe("""<button type="button" class="bi bi-pencil-square btn p-0" onclick="window.location.href='/index/Port'">
-                     |      </button>""".stripMargin)
+                     |      </button>
+                     |""".stripMargin)
     }
   }
 }

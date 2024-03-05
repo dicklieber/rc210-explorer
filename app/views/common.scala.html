@@ -11,7 +11,7 @@
 @(table:Table)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
 @form(action = routes.EditController.save()) {
-    <input type="hidden" name="fieldKey" value="@FieldKey(Key.commonkey)">
+    @fieldKeyStuff(FieldKey(Key.commonkey, "for routing"))
     @renderTable(table)
     @submitButton()
 }

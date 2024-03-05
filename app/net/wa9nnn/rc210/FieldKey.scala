@@ -18,9 +18,7 @@
 package net.wa9nnn.rc210
 
 import com.wa9nnn.wa9nnnutil.tableui.Cell
-import net.wa9nnn.rc210.FieldKey.fieldKeyName
 import net.wa9nnn.rc210.data.EditHandler
-import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.libs.json.*
 
 import scala.util.Try
@@ -33,7 +31,7 @@ import scala.util.Try
  */
 case class FieldKey(key: Key, fieldName: String = "") extends Ordered[FieldKey] {
   if (key.keyKind == KeyKind.Common)
-    assert(fieldName.nonEmpty, "Command must have a fieldName")
+    assert(fieldName.nonEmpty, "Common must have a fieldName")
 
   override def compare(that: FieldKey): Int =
     var ret: Int = key.keyKind.toString compareTo that.key.keyKind.toString
@@ -50,22 +48,21 @@ case class FieldKey(key: Key, fieldName: String = "") extends Ordered[FieldKey] 
    * | :---:  | --- |
    * | '''Port1:DTMF Cover Tone''' |
    * | Clock | Complex [[net.wa9nnn.rc210.data.field.FieldValue]]
-   * | Site Prefix | Associated with a [[KeyKind.Common]]
+   * | Site Pref  ix | Associated with a [[KeyKind.Common]]
    */
-  override def toString: String =
+  def display: String =
     if (key.keyKind == KeyKind.Common)
       fieldName
-    else if (key.keyKind.maxN == 1)
-      key.keyKind.entryName
+    else if (fieldName.nonEmpty)
+      key.entryName + ": " + fieldName
     else
-      // Everything else e.g. Port
-      s"${key.entryName}: ${fieldName}"
+      key.toString
 
   /**
    * Used for things and JSON and HTML field names.
    */
   val id: String =
-    s"${key.toString}:$fieldName"
+    s"${key.toString}$$$fieldName"
 
   val editHandler: EditHandler =
     key.keyKind.handler
@@ -87,7 +84,7 @@ object FieldKey {
       })
     }
   }
-  
+
   /**
    *
    * @param id from [[FieldKey.id]]
@@ -98,11 +95,8 @@ object FieldKey {
       case r(sKey, fieldName) =>
         val key = Key(sKey)
         FieldKey(key, fieldName)
-      case r(sKey, _) =>
-        val key = Key(sKey)
-        FieldKey(key)
       case s: String =>
         throw new scala.IllegalArgumentException(s"Can't parse: $id")
 
-  private val r = """(\w+):(.*)""".r
+  private val r = """([\w ]+)\$(.*)""".r
 }

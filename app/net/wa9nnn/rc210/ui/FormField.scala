@@ -78,7 +78,7 @@ object FormField:
         </span>
     }
     // These get added to any generated html.
-    val name = fieldKey.toString
+    val name = fieldKey.id
     val r: Elem = elem
       % Attribute(None, "id", Text(name), Null)
       % Attribute(None, "name", Text(name), Null)
