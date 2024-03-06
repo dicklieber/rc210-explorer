@@ -98,7 +98,8 @@ class FieldKeyTest extends RcSpec {
         backAgain.display mustBe ("f1")
       }
       "Courtesy Tone" in {
-        val fieldKey = FieldKey(Key(KeyKind.CourtesyTone, 3))
+        val key1 = Key(KeyKind.CourtesyTone, 3)
+        val fieldKey = FieldKey(key1)
         val id = fieldKey.id
         id mustBe ("Courtesy Tone3$")
         val backAgain = FieldKey.fromId(id)

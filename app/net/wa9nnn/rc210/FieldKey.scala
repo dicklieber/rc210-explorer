@@ -30,8 +30,11 @@ import scala.util.Try
  * @param key            qualifier for the rc2input.
  */
 case class FieldKey(key: Key, fieldName: String = "") extends Ordered[FieldKey] {
-  if (key.keyKind == KeyKind.Common)
+  if(key.keyKind.needsFieldName)
     assert(fieldName.nonEmpty, "Common must have a fieldName")
+  else {
+    assert(fieldName.isEmpty, s"Can't have a fieldName for a ${key.keyKind.entryName}")
+  }
 
   override def compare(that: FieldKey): Int =
     var ret: Int = key.keyKind.toString compareTo that.key.keyKind.toString

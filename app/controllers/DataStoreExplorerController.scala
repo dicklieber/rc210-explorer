@@ -19,6 +19,7 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
+import net.wa9nnn.rc210.KeyKind
 import net.wa9nnn.rc210.data.datastore.{DataStore, DataTransferJson}
 import net.wa9nnn.rc210.ui.{EditButtonCell, TabE, Tabs}
 import net.wa9nnn.rc210.ui.nav.TabKind
@@ -36,7 +37,8 @@ class DataStoreExplorerController @Inject()(dataStore: DataStore, navMain: NavMa
   extends MessagesAbstractController(cc) with LazyLogging {
 
   def index: Action[AnyContent] = Action {
-    val rows = dataStore.all.map { fieldEntry =>
+    val all = dataStore.apply(KeyKind.CourtesyTone)
+    val rows = all.map { fieldEntry =>
       Row(
         EditButtonCell(fieldEntry.fieldKey),
         Cell(fieldEntry.fieldKey.display)
