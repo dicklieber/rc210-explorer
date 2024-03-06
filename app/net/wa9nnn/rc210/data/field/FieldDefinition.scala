@@ -87,7 +87,8 @@ case class SimpleField(offset: Int,
 trait ComplexExtractor[T <: ComplexFieldValue] extends FieldExtractor with FieldDefinition with EditHandler {
   def fieldKey(key: Key): FieldKey = FieldKey(key)
 
-  override def fieldName: String = keyKind.entryName
+  override def fieldName: String =
+    throw new Exception("Complex FieldValues don't have field Names.")
 
   /**
    *

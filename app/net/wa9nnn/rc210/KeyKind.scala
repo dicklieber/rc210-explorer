@@ -51,7 +51,7 @@ object KeyKind extends PlayEnum[KeyKind]:
 
   case object CourtesyTone extends KeyKind(10, CourtesyToneNode)
 
-  case object Function extends KeyKind(1005)
+  case object Function extends KeyKind(1005, needsFieldName = true)
 
   case object Macro extends KeyKind(105, MacroNode)
 

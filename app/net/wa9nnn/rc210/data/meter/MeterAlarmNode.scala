@@ -60,7 +60,7 @@ case class MeterAlarmNode(val key: Key, meter: Key, alarmType: AlarmType, tripPo
 
   override def displayCell: Cell =
     KvTable.inACell(
-      "Meter" -> meter.namedKey,
+      "Meter" -> meter.keyWithName,
       "AlarmType" -> alarmType,
       "Trip Point" -> tripPoint,
       "Macro" -> macroKey.keyWithName,

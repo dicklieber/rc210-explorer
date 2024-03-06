@@ -78,7 +78,7 @@ class MemoryFileLoader @Inject()( fieldDefinitions: FieldDefinitions)(implicit c
           memoryExtractor.extract(memory)
         } catch {
           case e: Throwable =>
-            logger.error(s"loading: ${memoryExtractor.fieldName}", e)
+            logger.error(s"loading: ${memoryExtractor}", e)
             Seq.empty
         }
       }

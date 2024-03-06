@@ -37,7 +37,7 @@ class DataStoreExplorerController @Inject()(dataStore: DataStore, navMain: NavMa
   extends MessagesAbstractController(cc) with LazyLogging {
 
   def index: Action[AnyContent] = Action {
-    val all = dataStore.apply(KeyKind.CourtesyTone)
+    val all = dataStore.all
     val rows = all.map { fieldEntry =>
       Row(
         EditButtonCell(fieldEntry.fieldKey),
