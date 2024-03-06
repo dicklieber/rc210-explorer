@@ -7,6 +7,7 @@ GET         /datastore/view                           controllers.DataStoreContr
 GET         /datastore/upload                         controllers.DataStoreController.upload()
 POST        /datastore/save                           controllers.DataStoreController.save()
 GET         /datastore/rollback                       controllers.DataStoreController.rollback()
+GET         /datastore/explore                        controllers.DataStoreExplorerController.index
 GET         /rc210/select/:portDescriptor             controllers.IOController.select(portDescriptor:String)
 GET         /rc210/result                             controllers.IOController.downloadResult
 GET         /rc210                                    controllers.IOController.listSerialPorts

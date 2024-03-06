@@ -11,7 +11,9 @@ class TimerNodeTest extends RcSpec {
     "fieldKeyStuff" should {
       val fieldKey = timerNode.fieldKey
       "string" in {
-        fieldKey.toString mustBe ("Timer1")
+        fieldKey.toString mustBe ("FieldKey(Timer1,)")
+        fieldKey.display mustBe ("Timer1")
+        fieldKey.id mustBe ("Timer1$")
       }
     }
 

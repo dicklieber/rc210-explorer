@@ -50,13 +50,19 @@ case class FieldKey(key: Key, fieldName: String = "") extends Ordered[FieldKey] 
    * | Clock | Complex [[net.wa9nnn.rc210.data.field.FieldValue]]
    * | Site Pref  ix | Associated with a [[KeyKind.Common]]
    */
-  def display: String =
-    if (key.keyKind == KeyKind.Common)
+  val display: String =
+    val r = if (key.keyKind == KeyKind.Common)
       fieldName
     else if (fieldName.nonEmpty)
       key.entryName + ": " + fieldName
-    else
-      key.toString
+    else {
+      val bool = key.keyKind.maxN == 1
+      if (bool)
+        key.keyKind.entryName
+      else
+        key.toString
+    }
+    r
 
   /**
    * Used for things and JSON and HTML field names.

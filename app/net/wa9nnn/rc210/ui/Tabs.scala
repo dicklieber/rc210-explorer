@@ -46,6 +46,7 @@ enum TabE(override val entryName: String,
   case Restart extends TabE("Restart", routes.Rc210Controller.restart().url, "Restart RC210 controller.", Rc210Io)
   case SerialPort extends TabE("Serial Port", routes.IOController.listSerialPorts.url, "Configure serial port.", Rc210Io)
   case RC210Download extends TabE("Download", routes.DownloadController.index.url, "Download from RC-210", Rc210Io)
+  case Explore extends TabE("Explore", routes.DataStoreExplorerController.index.url, "View the DataStore", Debug)
   case Memory extends TabE("Memory", routes.MemoryController.index.url,  "View raw data received from the RC-210 controller.", Debug)
   case ViewJson extends TabE("Json", routes.DataStoreController.viewJson.url, "View data as JSON.", Debug)
   case Changes extends TabE("Changes", routes.CandidatesController.index.url, "Pending changes that need to be sent to the RC-210.", Rc210Io)

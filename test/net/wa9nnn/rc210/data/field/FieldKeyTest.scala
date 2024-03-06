@@ -26,30 +26,30 @@ class FieldKeyToString extends RcSpec with TableDrivenPropertyChecks:
   val fieldKeyDisplay: TableFor2[FieldKey, String] =
     Table(
       ("FieldKey", "string"), // First tuple defines column names
-      (FieldKey(Key.clockKey), "Clock0"),
+      (FieldKey(Key.clockKey), "Clock"),
       (FieldKey(Key.portKeys.head, "Color of port"), "Port1: Color of port"), // Subsequent tuples define the data
       (FieldKey(Key.commonkey, "some fieldName"), "some fieldName"),
     )
 
-  forAll(fieldKeyDisplay) { (kk: FieldKey, string: String) =>
-    println(kk)
+  forAll(fieldKeyDisplay) { (fieldKey: FieldKey, string: String) =>
+    println(fieldKey)
     println(string)
-    val display = kk.display
+    val display = fieldKey.display
     display must be(string)
   }
   val fieldKeyStrings: TableFor2[FieldKey, String] =
     Table(
       ("FieldKey", "string"), // First tuple defines column names
-      (FieldKey(Key.portKeys.head, "Color of port"), "Port1$Color of port"), // Subsequent tuples define the data
+      (FieldKey(Key.portKeys.head, "Color of port"), "Port1: Color of port"), // Subsequent tuples define the data
       (FieldKey(Key.clockKey), "Clock"),
-      (FieldKey(Key.commonkey, "some fieldName"), "Common0$some fieldName"),
+      (FieldKey(Key.commonkey, "some fieldName"), "some fieldName"),
     )
 
   forAll(fieldKeyStrings) { (kk: FieldKey, string: String) =>
     println(kk)
     println(string)
-    val toString1 = kk.id
-    toString1 must be(string)
+    val display = kk.display
+    display must be(string)
   }
 
 class FieldKeyTest extends RcSpec {
@@ -61,6 +61,9 @@ class FieldKeyTest extends RcSpec {
     val aCommon: FieldKey = FieldKey(commonKey, "aCommonfield")
 
     val logicAlarm: FieldKey = FieldKey(Key(KeyKind.LogicAlarm))
+    "clock" in {
+      clock.display mustBe("Clock")
+    }
 
     "compare" when {
       "same" in {
@@ -84,7 +87,7 @@ class FieldKeyTest extends RcSpec {
         val backAgain = FieldKey.fromId(id)
         backAgain mustBe (fieldKey)
         val display = backAgain.display
-        display mustBe ("Clock0")
+        display mustBe ("Clock")
       }
       "Common" in {
         val fieldKey = FieldKey(Key.commonkey, "f1")

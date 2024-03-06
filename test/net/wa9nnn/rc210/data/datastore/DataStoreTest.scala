@@ -1,10 +1,8 @@
 package net.wa9nnn.rc210.data.datastore
 
-import net.wa9nnn.rc210.{FieldKey, Key, KeyKind, WithMemory, WithTestConfiguration}
 import net.wa9nnn.rc210.data.field.{FieldDefinitions, FieldEntry}
-import net.wa9nnn.rc210.data.timers.TimerNode
 import net.wa9nnn.rc210.security.authentication.{RcSession, User}
-import org.mockito.Mockito.mock
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind, WithTestConfiguration}
 
 import scala.util.Failure
 
