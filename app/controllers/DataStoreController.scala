@@ -18,6 +18,7 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.FieldKey
 import net.wa9nnn.rc210.data.datastore.{DataStore, DataTransferJson}
 import net.wa9nnn.rc210.ui.nav.TabKind
 import play.api.libs.Files
@@ -60,12 +61,17 @@ class DataStoreController @Inject()(dataStore: DataStore)
         val sJson = java.nio.file.Files.readString(jsonFile.ref.path)
         val dataTransferJson: DataTransferJson = Json.parse(sJson).as[DataTransferJson]
         dataStore(dataTransferJson)
-        
       }
     Redirect(routes.NavigationController.selectTabKind(TabKind.Fields))
   }
+
   def rollback(): Action[AnyContent] = Action {
     dataStore.rollback()
     Redirect(routes.NavigationController.selectTabKind(TabKind.Fields))
+  }
+
+  def rollbackOne(fieldKey: FieldKey): Action[AnyContent] = Action {
+    dataStore.rollback(fieldKey)
+    Redirect(routes.DataStoreExplorerController.index)
   }
 }

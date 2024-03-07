@@ -21,11 +21,12 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.KeyKind
 import net.wa9nnn.rc210.data.datastore.{DataStore, DataTransferJson}
-import net.wa9nnn.rc210.ui.{EditButtonCell, TabE, Tabs}
+import net.wa9nnn.rc210.ui.{EditButtonCell, RollbackButton, TabE, Tabs}
 import net.wa9nnn.rc210.ui.nav.TabKind
 import play.api.libs.Files
 import play.api.libs.json.Json
 import play.api.mvc.*
+import play.api.mvc.Results.Ok
 import views.html.{NavMain, justdat}
 
 import javax.inject.{Inject, Singleton}
@@ -37,18 +38,34 @@ class DataStoreExplorerController @Inject()(dataStore: DataStore, navMain: NavMa
   extends MessagesAbstractController(cc) with LazyLogging {
 
   def index: Action[AnyContent] = Action {
-    val all = dataStore.all
+    val all = dataStore
+      .all
+      .sortBy(_.fieldKey.display)
     val rows = all.map { fieldEntry =>
       Row(
         EditButtonCell(fieldEntry.fieldKey),
         Cell(fieldEntry.fieldKey.display)
           .withToolTip(fieldEntry.fieldKey.toString),
         fieldEntry.fieldValue.displayCell,
+        RollbackButton(fieldEntry.fieldKey),
         fieldEntry.candidate.map(_.displayCell).getOrElse("-")
       )
     }
+    val header = Header(Seq(
+      Seq(Cell(s"DataStore(${rows.length})")
+        .withColSpan(5)),
+      Seq(
+        Cell(""),
+        Cell("FieldKey"),
+        Cell("Value"),
+        Cell("Candidate")
+          .withColSpan(2)
+      )
+    )
+    )
 
-    val table = Table(Header(s"DataStore(${rows.length})","", "FieldKey", "Value", "Candidate"), rows)
+    val table = Table(header, rows)
+
     Ok(navMain(TabE.Explore, justdat(Seq(table))))
   }
 

@@ -80,7 +80,7 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
       case Some(fieldEntry) =>
         fieldEntry
       case None =>
-        throw new IllegalArgumentException(s"No value for fieldKeyStuff: $fieldKey")
+        throw new Exception(s"No value for fieldKey: $fieldKey")
 
   //  def apply(keyKind: KeyKind): Seq[FieldEntry] =
   //    all.filter(_.fieldKeyStuff.key.keyKind == keyKind).sorted
@@ -131,6 +131,11 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
       val updated = fieldEntry.copy(candidate = None)
       keyFieldMap.put(fieldEntry.fieldKey, updated)
     }
+
+  def rollback(fieldKey: FieldKey): Unit =
+    val fieldEntry = apply(fieldKey)
+    val updated = fieldEntry.copy(candidate = None)
+    keyFieldMap.put(fieldEntry.fieldKey, updated)
 
   def reload(): Unit =
     loadFromMemory()

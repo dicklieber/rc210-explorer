@@ -6,6 +6,7 @@ GET         /datastore/download                       controllers.DataStoreContr
 GET         /datastore/view                           controllers.DataStoreController.viewJson
 GET         /datastore/upload                         controllers.DataStoreController.upload()
 POST        /datastore/save                           controllers.DataStoreController.save()
+GET         /datastore/rollback/:fieldKey             controllers.DataStoreController.rollbackOne(fieldKey:FieldKey)
 GET         /datastore/rollback                       controllers.DataStoreController.rollback()
 GET         /datastore/explore                        controllers.DataStoreExplorerController.index
 GET         /rc210/select/:portDescriptor             controllers.IOController.select(portDescriptor:String)
