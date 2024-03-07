@@ -47,7 +47,8 @@ case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends Order
       ret = rc210Value compareTo that.rc210Value
     ret
 
-  def namedKey: NamedKey = NamedKey(this, nameForKey(this))
+  def namedKey: NamedKey = 
+    NamedKey(this, nameForKey(this))
 
   def keyWithName: String =
     val name = Key.nameForKey(this)

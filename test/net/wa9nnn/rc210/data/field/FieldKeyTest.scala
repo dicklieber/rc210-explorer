@@ -76,14 +76,14 @@ class FieldKeyTest extends RcSpec {
       "Port" in {
         val fieldKey = FieldKey(Key.portKeys.head, "f1")
         val id = fieldKey.id
-        id mustBe ("Port1$f1")
+        id mustBe ("$Port1$f1")
         val backAgain = FieldKey.fromId(id)
         backAgain mustBe (fieldKey)
       }
       "Clock" in {
         val fieldKey = FieldKey(Key.clockKey)
         val id = fieldKey.id
-        id mustBe ("Clock0$")
+        id mustBe ("$Clock0$")
         val backAgain = FieldKey.fromId(id)
         backAgain mustBe (fieldKey)
         val display = backAgain.display
@@ -92,7 +92,7 @@ class FieldKeyTest extends RcSpec {
       "Common" in {
         val fieldKey = FieldKey(Key.commonkey, "f1")
         val id = fieldKey.id
-        id mustBe ("Common0$f1")
+        id mustBe ("$Common0$f1")
         val backAgain = FieldKey.fromId(id)
         backAgain mustBe (fieldKey)
         backAgain.display mustBe ("f1")
@@ -101,7 +101,7 @@ class FieldKeyTest extends RcSpec {
         val key1 = Key(KeyKind.CourtesyTone, 3)
         val fieldKey = FieldKey(key1)
         val id = fieldKey.id
-        id mustBe ("Courtesy Tone3$")
+        id mustBe ("$Courtesy Tone3$")
         val backAgain = FieldKey.fromId(id)
         backAgain mustBe (fieldKey)
         val string = backAgain.toString
@@ -114,7 +114,7 @@ class FieldKeyTest extends RcSpec {
       val key = Key.portKeys.head
       val fk1 = FieldKey(key, "f1")
       val string = Json.toJson(fk1).toString
-      string mustEqual (""""Port1$f1"""")
+      string mustEqual (""""$Port1$f1"""")
       fk1.key mustEqual  (key)
       fk1.fieldName mustEqual("f1")
 

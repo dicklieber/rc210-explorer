@@ -4,7 +4,7 @@ import com.wa9nnn.wa9nnnutil.tableui.Cell
 import controllers.routes
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry}
-import net.wa9nnn.rc210.ui.EditButtonCell
+import net.wa9nnn.rc210.ui.EditButton
 import net.wa9nnn.rc210.{FieldKey, KeyKind}
 import play.api.i18n.MessagesProvider
 import play.api.mvc.{RequestHeader, Result, Results}
@@ -18,7 +18,7 @@ trait EditHandler:
   val keyKind: KeyKind
   
   def editButtonCell(fieldKey: FieldKey):Cell =
-    EditButtonCell(routes.EditController.edit(fieldKey))
+    EditButton.cell(fieldKey)
 
   /**
    * The landing page for a [[KeyKind]]. This may have the edit behavior from some [[KeyKind]]s.
@@ -67,6 +67,10 @@ object EditHandler:
 
   def fieldKey(using data: Map[String, Seq[String]]): Option[FieldKey] = {
     val fieldKeyName: Option[String] = str(FieldKey.fieldKeyName)
-    fieldKeyName.map(FieldKey.fromId)
+
+    fieldKeyName.map {
+      val fieldKey = FieldKey.fromId
+      fieldKey
+    }
   }
 

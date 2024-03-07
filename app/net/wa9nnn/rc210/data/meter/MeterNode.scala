@@ -22,7 +22,7 @@ import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.meter.MeterAlarmNode.bind
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.{EditButton, EditButtonCell, EditFlowButtonCell}
+import net.wa9nnn.rc210.ui.EditButton
 import net.wa9nnn.rc210.ui.html.meterEditor
 import net.wa9nnn.rc210.{Key, KeyKind}
 import play.api.data.Forms.*
@@ -75,7 +75,7 @@ case class MeterNode(key: Key, meterFaceName: MeterFaceName, low: VoltToReading,
   override def toJsValue: JsValue = Json.toJson(this)
 
   override def toRow: Row = Row(
-    EditButtonCell(fieldKey),
+    EditButton.cell(fieldKey),
     fieldKey.key.keyWithName,
     meterFaceName,
     low.hundredthVolt,

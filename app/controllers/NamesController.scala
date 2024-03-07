@@ -26,7 +26,7 @@ import net.wa9nnn.rc210.security.Who.request2Session
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 import net.wa9nnn.rc210.ui.TabE.Names
-import net.wa9nnn.rc210.ui.{EditButtonCell, TabE, Tabs}
+import net.wa9nnn.rc210.ui.{EditButton, TabE, Tabs}
 import play.api.data.Forms.*
 import play.api.data.{Field, Form, Mapping}
 import play.api.mvc.*

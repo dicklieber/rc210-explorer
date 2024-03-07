@@ -37,7 +37,7 @@
     <logger name="controllers.CandidatesController" level="INFO"/>
     <logger name="controllers.CommonController" level="INFO"/>
     <logger name="controllers.CourtesyToneController" level="INFO"/>
-    <logger name="controllers.EditController" level="INFO"/>
+    <logger name="controllers.EditController" level="TRACE"/>
     <logger name="controllers.IOController" level="INFO"/>
     <logger name="controllers.LogicAlarmEditorController" level="INFO"/>
     <logger name="controllers.MacroController" level="INFO"/>
@@ -56,7 +56,7 @@
     <logger name="net.wa9nnn.rc210.data.schedules.ScheduleNode" level="INFO"/>
     <logger name="net.wa9nnn.rc210.security.authentication.SessionStore" level="INFO"/>
     <logger name="net.wa9nnn.rc210.security.authorzation.AuthFilter" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.serial.DataCollector" level="TRACE"/>
+    <logger name="net.wa9nnn.rc210.serial.DataCollector" level="INFO"/>
     <logger name="net.wa9nnn.rc210.serial.RC210IO" level="INFO"/>
     <logger name="net.wa9nnn.rc210.serial.Rc210.RcOperationImpl" level="INFO"/>
     <logger name="net.wa9nnn.rc210.serial.comm.RcSerialPort" level="INFO"/>

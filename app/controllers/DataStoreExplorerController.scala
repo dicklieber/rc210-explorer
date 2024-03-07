@@ -21,7 +21,7 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.KeyKind
 import net.wa9nnn.rc210.data.datastore.{DataStore, DataTransferJson}
-import net.wa9nnn.rc210.ui.{EditButtonCell, RollbackButton, TabE, Tabs}
+import net.wa9nnn.rc210.ui.{EditButton, RollbackButton, TabE, Tabs}
 import net.wa9nnn.rc210.ui.nav.TabKind
 import play.api.libs.Files
 import play.api.libs.json.Json
@@ -43,7 +43,7 @@ class DataStoreExplorerController @Inject()(dataStore: DataStore, navMain: NavMa
       .sortBy(_.fieldKey.display)
     val rows = all.map { fieldEntry =>
       Row(
-        EditButtonCell(fieldEntry.fieldKey),
+        EditButton.cell(fieldEntry.fieldKey),
         Cell(fieldEntry.fieldKey.display)
           .withToolTip(fieldEntry.fieldKey.toString),
         fieldEntry.fieldValue.displayCell,

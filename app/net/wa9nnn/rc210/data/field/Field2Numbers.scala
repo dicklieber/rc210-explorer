@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row}
 import net.wa9nnn.rc210.{FieldKey, Key}
-import net.wa9nnn.rc210.ui.{EditButtonCell, FormField}
+import net.wa9nnn.rc210.ui.{EditButton, FormField}
 import play.api.libs.json.*
 
 case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue() {

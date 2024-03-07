@@ -23,7 +23,7 @@ import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.html.meterAlarmEditor
-import net.wa9nnn.rc210.ui.{EditButtonCell, EditFlowButtonCell, TableSectionButtons}
+import net.wa9nnn.rc210.ui.{EditButton, EditFlowButtonCell, TableSectionButtons}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.*

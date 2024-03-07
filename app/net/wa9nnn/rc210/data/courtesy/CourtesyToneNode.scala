@@ -24,7 +24,7 @@ import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.EditButtonCell
+import net.wa9nnn.rc210.ui.EditButton
 import play.api.data.*
 import play.api.data.Forms.*
 import play.api.i18n.MessagesProvider

@@ -22,7 +22,7 @@ import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table, TableInACell}
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.EditButtonCell
+import net.wa9nnn.rc210.ui.EditButton
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.*
 import play.api.data.Forms.*

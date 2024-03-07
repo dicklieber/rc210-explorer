@@ -3,7 +3,7 @@ package net.wa9nnn.rc210.data
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.{FieldEntry, SimpleFieldValue}
-import net.wa9nnn.rc210.ui.{EditButtonCell, TabE}
+import net.wa9nnn.rc210.ui.{EditButton, TabE}
 import net.wa9nnn.rc210.{FieldKey, KeyKind}
 import org.apache.pekko.http.scaladsl.model.HttpHeader.ParsingResult.Ok
 import play.api.i18n.MessagesProvider
@@ -32,7 +32,7 @@ case object CommonNode extends SimpleFieldNode(KeyKind.Common):
     Header(s"Common ($count)", "field", "Value")
 
   override def editButtonCell(fieldKey: FieldKey): Cell =
-    EditButtonCell(controllers.routes.EditController.index(KeyKind.Common))
+    EditButton.cell(fieldKey)
 
   def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
 

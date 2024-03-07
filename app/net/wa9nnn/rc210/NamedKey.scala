@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210
 
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, RowSource}
-import controllers.routes
+import net.wa9nnn.rc210.NamedKey.fieldName
 import play.api.libs.json.{Format, Json}
 
 case class NamedKey(key: Key, name: String) extends Ordered[NamedKey] with RowSource {
@@ -29,15 +29,18 @@ case class NamedKey(key: Key, name: String) extends Ordered[NamedKey] with RowSo
       Cell(key.toString), name
     )
   }
-  val fieldKey:FieldKey = FieldKey(key, "keyName")
+
+  val fieldKey: FieldKey = FieldKey(key, fieldName)
 }
 
 object NamedKey {
-  val fieldName: String = "keyName"
+  val fieldName = "keyName"
   implicit val fmtNamedKey: Format[NamedKey] = Json.format[NamedKey]
+  
 }
 
 trait NamedKeySource {
+
   def nameForKey(key: Key): String
 
   def namedKey(key: Key): NamedKey =
