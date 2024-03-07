@@ -68,8 +68,8 @@ object EditHandler:
   def fieldKey(using data: Map[String, Seq[String]]): Option[FieldKey] = {
     val fieldKeyName: Option[String] = str(FieldKey.fieldKeyName)
 
-    fieldKeyName.map {
-      val fieldKey = FieldKey.fromId
+    fieldKeyName.map {s =>
+      val fieldKey = FieldKey.fromId(s)
       fieldKey
     }
   }

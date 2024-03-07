@@ -9,7 +9,7 @@ import net.wa9nnn.rc210.data.field.schedule.{DayOfWeek, Week}
 import net.wa9nnn.rc210.data.schedules.ScheduleNode.s02
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.nav.CheckBoxCell
-import net.wa9nnn.rc210.ui.{Display, EditFlowButtonCell, TableSectionButtons}
+import net.wa9nnn.rc210.ui.{Display, EditFlowButtons, TableSectionButtons}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.*
@@ -43,7 +43,7 @@ case class ScheduleNode(override val key: Key,
   override def toRow: Row = {
     val enableCell: Cell = CheckBoxCell(enabled)
     Row(
-      EditFlowButtonCell(fieldKey),
+      EditFlowButtons.cell(fieldKey),
       key.keyWithName,
       enableCell,
       dow,

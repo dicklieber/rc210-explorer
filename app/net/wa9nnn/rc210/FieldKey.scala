@@ -72,7 +72,7 @@ case class FieldKey(key: Key, fieldName: String = "") extends Ordered[FieldKey] 
    * Used for things and JSON and HTML field names.
    */
   val id: String =
-    s"${key.toString}$$$fieldName"
+    s"$$${key.toString}$$$fieldName"
 
   val editHandler: EditHandler =
     key.keyKind.handler

@@ -1,6 +1,7 @@
 @import net.wa9nnn.rc210.{FieldKey, KeyKind}
 @import net.wa9nnn.rc210.data.schedules.ScheduleNode
 @import views.html.input.checkBox
+@import net.wa9nnn.rc210.ui.EditFlowButtons
 @(schedules: Seq[ScheduleNode])
 <table class="table table-bordered w-auto table-sm">
     <thead class="table-primary">
@@ -22,7 +23,7 @@
     @for(schedule <- schedules) {
         <tr>
             <td>
-            @editFlowButtions(schedule.fieldKey)
+            @EditFlowButtons(schedule.fieldKey)
             </td >
             <td>
             @schedule.key.keyWithName

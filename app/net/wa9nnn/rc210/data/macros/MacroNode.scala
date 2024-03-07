@@ -6,7 +6,7 @@ import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.{EditHandler, Node}
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.{EditFlowButtonCell}
+import net.wa9nnn.rc210.ui.EditFlowButtons
 import net.wa9nnn.rc210.{FieldKey, Functions, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.*
@@ -70,7 +70,7 @@ case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dt
   }
 
   override def toRow: Row = Row(
-    EditFlowButtonCell(fieldKey),
+    EditFlowButtons.cell(fieldKey),
     fieldKey.key.keyWithName,
 
     TableInACell(Table(Seq.empty,
@@ -193,7 +193,7 @@ object MacroNode extends ComplexExtractor[MacroNode]:
 
     (for {
       fieldKey <- EditHandler.fieldKey
-      ids <- EditHandler.str("1,2,3")
+      ids <- EditHandler.str("ids")
     } yield {
       val strings: Array[String] = ids.split(',').filter(_.nonEmpty)
       val messageNode = MacroNode(fieldKey.key, strings.toIndexedSeq.map(s => Key(KeyKind.Function, s.toInt)))

@@ -73,7 +73,7 @@ case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, 
   override def toJsValue: JsValue = Json.toJson(this)
 
   override def toRow: Row = Row(
-    EditFlowButtonCell(fieldKey),
+    EditFlowButtons.cell(fieldKey),
     key.keyWithName,
     enabled,
     lowMacro,
