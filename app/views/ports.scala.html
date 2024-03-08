@@ -16,27 +16,6 @@
         
         @submitButton()
         @renderTable(table)
-        <input type="hidden" name="fieldKey" value="@FieldKey(Key.portKeys.head)">
-@*        <table class="table table-bordered table-sm  w-auto rc210-table headeredTable   ">*@
-@*            <thead class="table-primary">*@
-@*                <tr>*@
-@*                    <th>Field</th>*@
-@*                    @for(key <- Key.portKeys) {*@
-@*                        <th>@nameEditKey(key)*@
-@*                        </th>*@
-@*                    }*@
-@*                </tr>*@
-@*            </thead>*@
-@*            <tbody>*@
-@*            @for(row <- rows) {*@
-@*                <tr>*@
-@*                    <td class ="RowHeader">@row.name</td>*@
-@*                    @for(cell <- row.cells) {*@
-@*                        <td>@Html(cell)</td>*@
-@*                    }*@
-@*                </tr>*@
-@*            }*@
-@*            </tbody>*@
-@*        </table>*@
+        @fieldKeyStuff(FieldKey(Key.portKeys.head, "unused"))
         @submitButton()
     }
