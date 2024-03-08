@@ -47,16 +47,13 @@ case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends Order
       ret = rc210Value compareTo that.rc210Value
     ret
 
-  def namedKey: NamedKey = 
+  def namedKey: NamedKey =
     NamedKey(this, nameForKey(this))
 
   def keyWithName: String =
     val name = Key.nameForKey(this)
     s"$rc210Value: $name"
-    if (keyKind.maxN > 1)
-      s"$entryName:"
-    else
-      entryName
+
 //
   /**
    * Replaces 'n' in the template with the number (usually a port number).

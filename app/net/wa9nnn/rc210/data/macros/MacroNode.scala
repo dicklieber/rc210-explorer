@@ -72,7 +72,7 @@ case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dt
   override def toRow: Row = Row(
     EditFlowButtons.cell(fieldKey),
     fieldKey.key.keyWithName,
-
+    dtmf,
     TableInACell(Table(Seq.empty,
       functions.map { fKey =>
         Row.ofAny(
@@ -179,6 +179,7 @@ object MacroNode extends ComplexExtractor[MacroNode]:
     val header = Header(topHeader,
       "",
       "Key",
+      "DTMF",
       "Functions"
     )
     val table = Table(header,
@@ -196,7 +197,11 @@ object MacroNode extends ComplexExtractor[MacroNode]:
       ids <- EditHandler.str("ids")
     } yield {
       val strings: Array[String] = ids.split(',').filter(_.nonEmpty)
-      val messageNode = MacroNode(fieldKey.key, strings.toIndexedSeq.map(s => Key(KeyKind.Function, s.toInt)))
+      val functions: Seq[Key] = strings.toIndexedSeq.map(s => Key(KeyKind.Function, s.toInt))
+      val messageNode = MacroNode(fieldKey.key,
+        functions,
+        EditHandler.str("dtmf")
+      )
       UpdateCandidate(fieldKey, messageNode)
     }).toSeq
 
