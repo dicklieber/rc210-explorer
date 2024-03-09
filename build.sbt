@@ -51,8 +51,10 @@ val logbackVersion = "1.4.11"
 libraryDependencies ++= Seq(
   guice,
   "com.lihaoyi" %% "os-lib" % "0.9.3",
-  "org.scalatest" %% "scalatest" % "3.2.18" % "test",
-  "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.0" % Test,
+  "org.scalatest" %% "scalatest" % "latest.integration" % Test,
+
+  "org.scalatest" %% "scalatest" % "latest.integration" % "test",
+  "org.scalatestplus.play" %% "scalatestplus-play" % "latest.integration" % Test,
   "org.scalatestplus" %% "mockito-5-10" % "3.2.18.0" % Test,
   "com.vladsch.flexmark" % "flexmark-all" % "0.64.8" % Test,
   "com.wa9nnn" %% "wa9nnnutil" % "3.0.0.9-SNAPSHOT",
