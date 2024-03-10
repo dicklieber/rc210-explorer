@@ -62,7 +62,7 @@ object Tabs:
   val tabs: Seq[Tab] =
     KeyKind
       .values
-      .filterNot(_ == KeyKind.Function)
+      .filter(_.includeInNav)
       .appendedAll(TabE.values)
       .sortBy(_.entryName)
 

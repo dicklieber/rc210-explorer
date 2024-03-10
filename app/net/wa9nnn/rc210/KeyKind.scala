@@ -21,7 +21,7 @@ import controllers.routes
 import enumeratum.*
 import enumeratum.EnumEntry.CapitalWords
 import net.wa9nnn.rc210.data.{CommonNode, EditHandler}
-import net.wa9nnn.rc210.data.clock.ClockNode
+import net.wa9nnn.rc210.data.clock.{ClockNode, Occurrence}
 import net.wa9nnn.rc210.data.courtesy.CourtesyToneNode
 import net.wa9nnn.rc210.data.field.{LogicAlarmNode, MessageNode}
 import net.wa9nnn.rc210.data.macros.MacroNode
@@ -29,19 +29,27 @@ import net.wa9nnn.rc210.data.meter.{MeterAlarmNode, MeterNode}
 import net.wa9nnn.rc210.data.remotebase.RemoteBaseNode
 import net.wa9nnn.rc210.data.schedules.ScheduleNode
 import net.wa9nnn.rc210.data.timers.TimerNode
-import net.wa9nnn.rc210.ui.Tab
+import net.wa9nnn.rc210.ui.{EnumEntryValue, Tab}
 
 /**
  * @param maxN    how many keys there can be for this kind,
  * @param handler how many keys there can be for this kind,
  */
-sealed trait KeyKind(val maxN: Int, val handler: EditHandler = null, val needsFieldName:Boolean = false) extends EnumEntry
+sealed trait KeyKind(val maxN: Int, val handler: EditHandler = null, 
+                     val needsFieldName: Boolean = false,
+                     val includeInNav:Boolean = true) extends EnumEntryValue
   with CapitalWords with Tab:
   override def indexUrl: String = routes.EditController.index(this).url
+
+  override def values: IndexedSeq[EnumEntryValue] = KeyKind.values
+
+  val rc210Value: Int = -1 // not needed for KeyKind
 
 object KeyKind extends PlayEnum[KeyKind]:
 
   override def values: IndexedSeq[KeyKind] = findValues
+
+  case object All extends KeyKind(1, null, includeInNav = false)
 
   case object LogicAlarm extends KeyKind(5, LogicAlarmNode)
 
@@ -51,7 +59,7 @@ object KeyKind extends PlayEnum[KeyKind]:
 
   case object CourtesyTone extends KeyKind(10, CourtesyToneNode)
 
-  case object Function extends KeyKind(1005, needsFieldName = true)
+  case object Function extends KeyKind(1005, needsFieldName = true, includeInNav = false)
 
   case object Macro extends KeyKind(105, MacroNode)
 

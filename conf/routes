@@ -8,7 +8,8 @@ GET         /datastore/upload                         controllers.DataStoreContr
 POST        /datastore/save                           controllers.DataStoreController.save()
 GET         /datastore/rollback/:fieldKey             controllers.DataStoreController.rollbackOne(fieldKey:FieldKey)
 GET         /datastore/rollback                       controllers.DataStoreController.rollback()
-GET         /datastore/explore                        controllers.DataStoreExplorerController.index
+POST         /datastore/exploreFiltered                controllers.DataStoreExplorerController.filtered()
+GET         /datastore/exploreAll                     controllers.DataStoreExplorerController.index
 GET         /rc210/select/:portDescriptor             controllers.IOController.select(portDescriptor:String)
 GET         /rc210/result                             controllers.IOController.downloadResult
 GET         /rc210                                    controllers.IOController.listSerialPorts

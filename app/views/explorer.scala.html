@@ -1,0 +1,23 @@
+@import com.wa9nnn.wa9nnnutil.tableui.Table
+@import com.wa9nnn.wa9nnnutil.tableui.html.renderTable
+@import net.wa9nnn.rc210.{FieldKey, Key, KeyKind, preferences}
+@import net.wa9nnn.rc210.ui.{FormField, Tab}
+@import net.wa9nnn.rc210.ui.nav.TabKind.Settings
+@import views.html.helper.*
+
+@(table: Table, keyKind: KeyKind)
+@form(action = routes.DataStoreExplorerController.filtered()) {
+    <div class="filter">
+        <label for="filterSelect">Filter by: </label>
+        <select name="filterKeyKind" id="filterSelect" onchange="this.form.submit()" >
+        @for(choice <- KeyKind.values.filterNot(_ == KeyKind.Function)) {
+            <option
+            @if(keyKind == choice) { selected }>@choice.entryName </option>
+        }
+        </select>
+    </div>
+}
+@renderTable(table)
+.withCssClass("tablesorter")
+.withCssClass("table table-bordered table-sm  w-auto rc210-table")
+)

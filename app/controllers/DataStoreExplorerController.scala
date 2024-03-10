@@ -21,13 +21,15 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.KeyKind
 import net.wa9nnn.rc210.data.datastore.{DataStore, DataTransferJson}
+import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.ui.{EditButton, RollbackButton, TabE, Tabs}
 import net.wa9nnn.rc210.ui.nav.TabKind
 import play.api.libs.Files
 import play.api.libs.json.Json
 import play.api.mvc.*
 import play.api.mvc.Results.Ok
-import views.html.{NavMain, justdat}
+import play.twirl.api.Html
+import views.html.{NavMain, explorer, justdat}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -37,20 +39,37 @@ import scala.concurrent.duration.DurationInt
 class DataStoreExplorerController @Inject()(dataStore: DataStore, navMain: NavMain)(implicit cc: MessagesControllerComponents)
   extends MessagesAbstractController(cc) with LazyLogging {
 
+  def filtered(): Action[AnyContent] = Action {
+    implicit request: Request[AnyContent] =>
+
+      val data: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
+      val value: String = data("filterKeyKind").head
+      val keyKind = KeyKind.withName(value)
+      val fieldEntries = dataStore(keyKind)
+      val table: Table = process(fieldEntries)
+      val html = explorer(table, keyKind)
+      Ok(navMain(TabE.Explore, html))
+  }
+
   def index: Action[AnyContent] = Action {
-    val all = dataStore
-      .all
+    val table = process(dataStore.all)
+    val html = explorer(table, KeyKind.All)
+    Ok(navMain(TabE.Explore, html))
+  }
+
+  def process(fieldEntries: Seq[FieldEntry]): Table = {
+    val rows = fieldEntries
       .sortBy(_.fieldKey.display)
-    val rows = all.map { fieldEntry =>
-      Row(
-        EditButton.cell(fieldEntry.fieldKey),
-        Cell(fieldEntry.fieldKey.display)
-          .withToolTip(fieldEntry.fieldKey.toString),
-        fieldEntry.fieldValue.displayCell,
-        RollbackButton(fieldEntry.fieldKey),
-        fieldEntry.candidate.map(_.displayCell).getOrElse("-")
-      )
-    }
+      .map { fieldEntry =>
+        Row(
+          EditButton.cell(fieldEntry.fieldKey),
+          Cell(fieldEntry.fieldKey.display)
+            .withToolTip(fieldEntry.fieldKey.toString),
+          fieldEntry.fieldValue.displayCell,
+          RollbackButton(fieldEntry.fieldKey),
+          fieldEntry.candidate.map(_.displayCell).getOrElse("-")
+        )
+      }
     val header = Header(Seq(
       Seq(Cell(s"DataStore(${rows.length})")
         .withColSpan(5)),
@@ -64,9 +83,7 @@ class DataStoreExplorerController @Inject()(dataStore: DataStore, navMain: NavMa
     )
     )
 
-    val table = Table(header, rows)
-
-    Ok(navMain(TabE.Explore, justdat(Seq(table))))
+    Table(header, rows)
   }
-
 }
+

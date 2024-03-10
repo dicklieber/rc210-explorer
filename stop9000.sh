@@ -8,4 +8,5 @@ then
   echo "No pid listening to port 9000"
 else
   kill $pid
+  echo "Killed $pid"
 fi

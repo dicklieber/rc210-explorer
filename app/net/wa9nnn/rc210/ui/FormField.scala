@@ -19,6 +19,7 @@ package net.wa9nnn.rc210.ui
 
 import com.wa9nnn.wa9nnnutil.tableui.Cell
 import net.wa9nnn.rc210.FieldKey
+import play.twirl.api.Html
 
 import java.time.LocalTime
 import scala.xml.*
@@ -32,13 +33,13 @@ import scala.xml.*
  * @deprecated use play form stuff.
  */
 object FormField:
-  //  def apply(fieldKey: FieldKey, value: Any): String =
-  //    apply(fieldKey.toString, value)
-
   def apply(fieldKey: FieldKey, value: Any, range: Option[Range] = None): Cell =
+    Cell.rawHtml(html(fieldKey.id, value, range).body)
+
+  def html(name:String, value: Any, range: Option[Range] = None): Html =
     val elem: Elem = value match {
       case enumValue: EnumEntryValue =>
-        <select name={fieldKey.fieldName}>
+        <select name={name}>
           {enumValue.options map { choice =>
           <option value={choice._1} selected={if (enumValue.entryName == choice._1) "selected" else null}>
             {choice._2}
@@ -78,7 +79,6 @@ object FormField:
         </span>
     }
     // These get added to any generated html.
-    val name = fieldKey.id
     val r: Elem = elem
       % Attribute(None, "id", Text(name), Null)
       % Attribute(None, "name", Text(name), Null)
@@ -90,8 +90,7 @@ object FormField:
 
     }.getOrElse(r)
 
-    val html = rr.toString
-    Cell.rawHtml(html)
+    Html(rr.toString)
 
 
 

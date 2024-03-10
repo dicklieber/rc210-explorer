@@ -6,42 +6,9 @@ import net.wa9nnn.rc210.{FieldKey, Key, KeyKind, WithTestConfiguration}
 
 import scala.util.Failure
 
-class DataStoreTest extends WithTestConfiguration {
-  given RcSession = {
-    val user = User(callsign = "WA9NNN", hash = "xyzzy")
-    RcSession("foxtrot", user, "127.0.0.1")
-  }
+class DataStoreTest extends WithDataStore {
 
-  private val commonkey: Key = Key.commonkey
 
-  def newDataStore: DataStore = {
-    val definitions: FieldDefinitions = new FieldDefinitions
-    val memoryFileLoader: MemoryFileLoader = new MemoryFileLoader(definitions)
-    val dataStorePersistence: DataStorePersistence = new DataStorePersistence:
-      def load() =
-        Failure(new NotImplementedError())
-
-      def save(dataTransferJson: DataTransferJson): Unit =
-        println(dataTransferJson)
-
-    val dataStore = new DataStore(dataStorePersistence, memoryFileLoader)
-    val all: Seq[FieldEntry] = dataStore.all
-    val commonOnes = all.filter { fe =>
-      fe.fieldKey.key.keyKind == KeyKind.Common
-    }
-    commonOnes.foreach{fe =>
-      println(fe.fieldKey)
-    }
-    val fieldKey: FieldKey = FieldKey(commonkey, "Say Hours")
-    val value1: Seq[FieldEntry] = commonOnes.filter(fe => fe.fieldKey == fieldKey)
-    dataStore
-  }
-
-  //    val dataStorePersistence = mock[DataStorePersistence]
-  //    val fieldDefinitions = new FieldDefinitions()
-  //    val memoryFileLoader = new MemoryFileLoader(fieldDefinitions)
-  //    val builder = new DataStore(dataStorePersistence, memoryFileLoader)
-  //    builder
 
   "DataStore" when {
     /*    "FlowData" should {
@@ -74,7 +41,7 @@ class DataStoreTest extends WithTestConfiguration {
     "update" when {
       "simple field" in {
         val dataStore = newDataStore
-        val fieldKey = FieldKey(commonkey, "Say Hours")
+        val fieldKey = FieldKey(Key.commonkey, "Say Hours")
         val b4: FieldEntry = dataStore(fieldKey)
         val candidate = UpdateCandidate(fieldKey, "true")
         val candidateAndNames = CandidateAndNames(candidate)

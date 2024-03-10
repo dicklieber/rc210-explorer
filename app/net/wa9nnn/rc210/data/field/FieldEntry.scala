@@ -30,6 +30,7 @@ import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
  */
 case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fieldValue: FieldValue, candidate: Option[FieldValue] = None)
   extends Ordered[FieldEntry] with FieldEntryBase {
+  override def toString: String = fieldKey.display
 
   def value[F <: FieldValue]: F = {
     candidate.getOrElse(fieldValue).asInstanceOf[F]

@@ -20,6 +20,7 @@ package net.wa9nnn.rc210.data.datastore
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210
 import net.wa9nnn.rc210.*
+import net.wa9nnn.rc210.data.datastore.DataStore.inTest
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.security.Who
@@ -36,8 +37,7 @@ import scala.util.{Failure, Success, Try}
  * This is the in-memory source of all RC-210 and NamedKey data.
  */
 @Singleton
-class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: MemoryFileLoader)
-  extends NamedKeySource with LazyLogging:
+class DataStore @Inject() (persistence: DataStorePersistence, memoryFileLoader: MemoryFileLoader) extends NamedKeySource with LazyLogging:
 
   /**
    * This is all the data tht a user can edit that can be sent or received from an RC-210.
@@ -47,7 +47,14 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
    * This is the user-suplied metadata about a [[Key]].
    */
   private val keyNameMap = new TrieMap[Key, String]
-  rc210.Key.setNamedSource(this) // so any Key can get it's user-supplied name.
+  try
+    rc210.Key.setNamedSource(this)
+  catch
+    case e: IllegalStateException =>
+      if (!inTest)
+        logger.error("setNamedSource", e)
+
+  // so any Key can get it's user-supplied name.
 
   loadFromMemory()
   loadFromJson()
@@ -219,5 +226,8 @@ class DataStore @Inject()(persistence: DataStorePersistence, memoryFileLoader: M
           val key: Key = entry.runableMacros.head
           flowData(key).get
     }
+
+object DataStore:
+  var inTest: Boolean = false
 
 

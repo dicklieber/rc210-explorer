@@ -92,8 +92,8 @@ object Key extends LazyLogging:
 
   def setNamedSource(namedSource: NamedKeySource): Unit = {
     if (_namedSource.isDefined)
-      logger.warn("NamedSource already set. Bad if not in test.")
-    _namedSource = Option(namedSource)
+      throw new IllegalStateException("NamedSource already set. Bad if not in test.")
+      _namedSource = Option(namedSource)
   }
 
   implicit val fmtKey: Format[Key] = new Format[Key] {
