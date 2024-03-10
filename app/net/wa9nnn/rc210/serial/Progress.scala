@@ -59,7 +59,7 @@ trait ProgressApi[T <: ProgressItem]:
  * @param percent    drives the progress bar.
  * @param resultHtml empty when running, HTML for the result <div> when finshed.
  */
-case class Progress(percent: String = "", resultHtml: String = "")
+case class Progress(percent: String = "", duration:String, soFar:Int, resultHtml: String = "")
 
 object Progress:
   implicit val fmtProgress: Format[Progress] = Json.format[Progress]

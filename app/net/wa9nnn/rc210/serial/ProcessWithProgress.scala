@@ -90,7 +90,11 @@ class ProcessWithProgress[T <: ProgressItem](mod: Int)(callback: ProgressApi[T] 
 
   private def buildProgressMessage: Progress = {
     val double = soFar * 100.0 / expected
-    new Progress(percent = f"$double%2.0f%%") //todo add result html
+    val percent = f"$double%2.0f%%"
+    new Progress(percent = percent, 
+      soFar = soFar,
+      duration = DurationHelpers.between(began)
+    ) 
   }
 
   def finish(): Unit = {
@@ -123,7 +127,10 @@ class ProcessWithProgress[T <: ProgressItem](mod: Int)(callback: ProgressApi[T] 
       Table(Header("Errors", "In", "Error"), errorRows)
     }
     val html: Html = downloadResult(detailTable, maybeErrorTable)
-    val progress = new Progress("100%", html.body)
+    val progress = new Progress("100%",
+      soFar = soFar,
+      duration = DurationHelpers.between(began),
+      html.body)
 
     queue.offer(progress)
   }

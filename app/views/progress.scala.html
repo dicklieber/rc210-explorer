@@ -6,19 +6,20 @@
 
 @(webSocketUrl: String, requestTable: Table)(implicit request: RequestHeader)
 <script>
-        // Use s WebSocket to update the progress bar.
+        // Uses a WebSocket to update the progress bar.
         webSocket = new WebSocket("@webSocketUrl");
         webSocket.onmessage = (event) => {
             console.log("data" + event.data);
             const progress = JSON.parse(event.data);
 
             if (progress.resultHtml !== "") {
-                alert(`progress: percent: ${progress.percent} resultHtml: ${progress.resultHtml}`)
                 document.getElementById('result').innerHTML = progress.resultHtml;
             } else {
                 const $progress = $('.progress-bar');
                 $progress.css("width", progress.percent);
-                $progress.text(progress.percent)
+                $progress.text(progress.percent);
+                $("#duration").text(progress.duration);
+                $("#soFar").text(progress.soFar);
             }
         };
         webSocket.onopen = (event) => {

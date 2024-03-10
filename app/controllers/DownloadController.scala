@@ -57,6 +57,14 @@ class DownloadController @Inject()(config: Config, dataCollector: DataCollector,
         Row.ofAny("SerialPort", rc210.selectedPortInfo),
         Row.ofAny("Comment", comment),
         Row.ofAny("Expecting", expectedLines),
+        Row("Duration", Cell("?")
+          .withId("duration")
+          .withCssClass("tableNumber")
+        ),
+        Row("So Far", Cell("?")
+          .withId("soFar")
+          .withCssClass("tableNumber")
+        )
       ))
       dataCollector.newDownload(requestTable)
       val webSocketURL: String = controllers.routes.DownloadController.ws().webSocketURL()
