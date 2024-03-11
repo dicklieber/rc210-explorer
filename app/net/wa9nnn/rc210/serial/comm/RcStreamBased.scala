@@ -43,9 +43,8 @@ class RcStreamBased(serialPort: SerialPort) extends RcOp(serialPort) with AutoCl
    * @return lines received up to a line starting with a [[terminalPrefaces]].
    * */
   def perform(request: String): RcResponse =
-
-    outputStream.write(request.getBytes)
-    outputStream.write('\r'.toByte)
+    val requestWithCr: String = request :+ '\r'
+    outputStream.write(requestWithCr.getBytes)
     outputStream.flush()
     val inLines: Iterator[String] = source.getLines()
 
@@ -57,21 +56,7 @@ class RcStreamBased(serialPort: SerialPort) extends RcOp(serialPort) with AutoCl
       linesBuilder += line
     }
 
-    val rlines: Seq[String] = linesBuilder.result()
-    val tried: Try[String] = Try {
-      val last = rlines.last
-      if (last.startsWith("-")) {
-        throw IllegalArgumentException(last)
-      }
-      rlines.head
-    }
-    logger.trace("perform request: {} \tresponse: {}", request.padTo(15, ' '), tried match
-      case Failure(exception) =>
-        exception.getMessage
-      case Success(value) =>
-        rlines.last
-    )
-    RcResponse(request, tried)
+    RcResponse(requestWithCr, linesBuilder.result())
 
   def perform(requests: Seq[String]): Seq[RcResponse] =
     requests.map(request => {

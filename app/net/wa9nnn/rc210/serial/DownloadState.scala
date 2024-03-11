@@ -49,25 +49,14 @@ case class DownloadState(requestTable: Table, start: Instant = Instant.now(), op
 object DownloadState:
   val neverStarted: DownloadState = new DownloadState(Table("Not Started", Seq.empty))
 
-case class DownloadOp(in: String, tried: Try[String]) extends ProgressItem:
+case class DownloadOp(response:String) extends ProgressItem:
 
   import net.wa9nnn.rc210.serial.DownloadOp.parser
 
-  def toRow: Row = Row(
-    in,
-    tried match
-      case Failure(exception) =>
-        exception.getMessage
-      case Success(value) =>
-        value
-  )
+  def toRow: Row = Row.ofAny(response)
 
-//  override def toCell: Cell = in match
-//    case parser(n: String, value: String) =>
-//      val int = n.toInt
-//      val nValue = value.toInt
-//      Cell(f"$int%04d: $nValue%d")
-//        .withCssClass("downloadOp")
+  val in: String = "OK"
+  val ok: Boolean = true
 
 object DownloadOp:
   val parser: Regex = """(\d+),(\d+)""".r

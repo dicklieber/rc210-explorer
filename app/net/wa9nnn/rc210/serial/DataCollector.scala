@@ -109,12 +109,10 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
             cleanup("timeout")
           case response =>
             val tokens: Array[String] = response.split(',')
-            val line: String = f"${tokens.head.toInt}%04d:${tokens(1).toInt}"
-            logger.trace("response: {} line: {}", response, line)
-            itemMemoryFileWriter.println(line)
-            val downloadOp = DownloadOp(line, Try(line))
+            val memoryFileLine: String = f"${tokens.head.toInt}%04d:${tokens(1).toInt}"
+            itemMemoryFileWriter.println(memoryFileLine)
+            val downloadOp = DownloadOp(response)
             progressApi.doOne(downloadOp)
-            logger.trace("\t{}", line)
             eventBased.send("OK")
         }
       }

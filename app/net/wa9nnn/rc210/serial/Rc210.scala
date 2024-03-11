@@ -40,18 +40,16 @@ class Rc210 @Inject()(config: Config, serialPortsSource: SerialPortsSource) exte
   if (os.exists(file))
     selectPort(os.read(file))
 
-  def openStreamBased: RcStreamBased = {
+  def openStreamBased: RcStreamBased =
     _portAndVersion.selectedSerialPort.map { serialPort =>
       new RcStreamBased(serialPort)
     }.getOrElse(throw new IllegalStateException("No serial port selected!"))
-  }
 
-  def openEventBased(): RcEventBasedOp = {
+  def openEventBased(): RcEventBasedOp =
     _portAndVersion.selectedSerialPort.map { serialPort =>
       new RcEventBasedOp(serialPort)
     }.getOrElse(throw new IllegalStateException("No serial port selected!"))
 
-  }
 
   def sendOne(request: String): RcResponse =
     Using.resource(openStreamBased) { rcOp =>

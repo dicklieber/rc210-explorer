@@ -17,17 +17,37 @@
 
 package net.wa9nnn.rc210.serial.comm
 
-import com.wa9nnn.wa9nnnutil.tableui.Row
+import com.typesafe.scalalogging.LazyLogging
+import com.wa9nnn.wa9nnnutil.tableui.*
 import net.wa9nnn.rc210.serial.ProgressItem
 import net.wa9nnn.rc210.serial.comm.RcStreamBased.terminalPrefaces
-import os.read.lines
+import net.wa9nnn.rc210.util.expandControlChars
 
-import scala.util.Try
+import scala.util.parsing.input.NoPosition.line
+import scala.util.{Failure, Try}
 
-case class RcResponse(in: String, tried: Try[String]) extends ProgressItem:
-  def toRow: Row = Row(
-    in, tried.failed.map(_.getMessage)
-  )
+case class RcResponse(in: String, lines: Seq[String]) extends ProgressItem with LazyLogging:
+  val ok: Boolean = lines.nonEmpty && RcStreamBased.isTerminal(lines.last)
+  lazy val sOk = if (ok) "ok" else "failed"
+  logger.whenTraceEnabled {
+    val sLines: String = lines.map(expandControlChars).mkString(" ")
+    val value = s"in: ${expandControlChars(in)} response: $sLines $sOk"
+    logger.trace(value)
+  }
+
+  def head: String = lines.headOption.getOrElse("empty")
+
+  def toRow: Row =
+    Row(Seq(Cell.rawHtml(<ul>
+      {lines.foreach(line =>
+        <li>
+          {line}
+        </li>
+      )}
+    </ul>.toString
+    )
+    )
+    )
 
 
 

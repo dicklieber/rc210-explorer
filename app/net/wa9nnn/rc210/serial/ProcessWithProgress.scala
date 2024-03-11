@@ -105,7 +105,7 @@ class ProcessWithProgress[T <: ProgressItem](mod: Int)(callback: ProgressApi[T] 
     val items: Seq[T] = itemsBuilder.result()
     items
       .foreach { (progresssItem: T) =>
-        if (progresssItem.success)
+        if (progresssItem.ok)
           successCount += 1
         else
           errorCount += 1
@@ -118,7 +118,7 @@ class ProcessWithProgress[T <: ProgressItem](mod: Int)(callback: ProgressApi[T] 
       )
     )
     val errorRows: Seq[Row] = (for {
-      failedItem <- items.filterNot(_.success)
+      failedItem <- items.filterNot(_.ok)
     } yield {
       failedItem.toRow
     })
@@ -155,6 +155,5 @@ class ProcessWithProgress[T <: ProgressItem](mod: Int)(callback: ProgressApi[T] 
 
 trait ProgressItem extends RowSource:
   val in: String
-  val tried: Try[String]
-
-  def success: Boolean = tried.isSuccess
+  val ok: Boolean
+  

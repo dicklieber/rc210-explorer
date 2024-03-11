@@ -60,8 +60,9 @@
     <logger name="net.wa9nnn.rc210.serial.RC210IO" level="INFO"/>
     <logger name="net.wa9nnn.rc210.serial.Rc210.RcOperationImpl" level="INFO"/>
     <logger name="net.wa9nnn.rc210.serial.comm.RcSerialPort" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.serial.comm.RcStreamBased" level="TRACE"/>
+    <logger name="net.wa9nnn.rc210.serial.comm.RcStreamBased" level="INFO"/>
     <logger name="net.wa9nnn.rc210.ui.SimpleValuesHandler" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.serial.comm.RcResponse" level="TRACE"/>
     <logger name="play" level="INFO" />
     <logger name="play" level="INFO"/>
 

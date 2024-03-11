@@ -10,8 +10,8 @@ object Version extends LazyLogging:
   def apply(serialPort: SerialPort): Try[String] =
 
     Using(RcStreamBased(serialPort)){rcStreamBased =>
-      val response: RcResponse = rcStreamBased.perform("\r\r1GetVersion\r")
-      val versionLine = response.tried.get
+      val response: RcResponse = rcStreamBased.perform("\r\r1GetVersion")
+      val versionLine = response.lines.head
       
       val left = versionLine.head
       val right: String = versionLine.drop(1)
