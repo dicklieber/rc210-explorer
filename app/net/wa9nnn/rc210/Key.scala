@@ -61,9 +61,12 @@ case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends Order
    * @param template in
    * @return with 'n' replaced by the port number.
    */
-  def replaceN(template: String): String = {
-    template.replaceAll("n", rc210Value.toString)
-  }
+  def replaceN(template: String): String =
+    val number = if(rc210Value == 0)
+      1
+    else
+      rc210Value
+    template.replaceAll("n", number.toString)
 
   override def values: IndexedSeq[EnumEntryValue] =
     throw new NotImplementedError() //Not needed as we override options
