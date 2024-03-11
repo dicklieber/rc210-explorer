@@ -17,15 +17,13 @@
 
 package net.wa9nnn.rc210.serial.comm
 
-import com.fazecast.jSerialComm.{SerialPort, SerialPortTimeoutException}
+import com.fazecast.jSerialComm.SerialPort
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.serial.comm.RcStreamBased.isTerminal
 
 import java.io.OutputStream
-import scala.compiletime.ops.string
-import scala.concurrent.duration.Duration
 import scala.io.BufferedSource
-import scala.util.{Try, Using}
+import scala.util.{Failure, Success, Try}
 
 /**
  * Used for sending commands to the RC-210. Nicely handles multiple lines of response.
@@ -45,7 +43,6 @@ class RcStreamBased(serialPort: SerialPort) extends RcOp(serialPort) with AutoCl
    * @return lines received up to a line starting with a [[terminalPrefaces]].
    * */
   def perform(request: String): RcResponse =
-    logger.trace("perform: {}", request)
 
     outputStream.write(request.getBytes)
     outputStream.write('\r'.toByte)
@@ -68,6 +65,12 @@ class RcStreamBased(serialPort: SerialPort) extends RcOp(serialPort) with AutoCl
       }
       rlines.head
     }
+    logger.trace("perform request: {} \tresponse: {}", request.padTo(15, ' '), tried match
+      case Failure(exception) =>
+        exception.getMessage
+      case Success(value) =>
+        rlines.last
+    )
     RcResponse(request, tried)
 
   def perform(requests: Seq[String]): Seq[RcResponse] =
