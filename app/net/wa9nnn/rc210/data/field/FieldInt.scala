@@ -31,19 +31,19 @@ case class FieldInt(value: Int) extends SimpleFieldValue():
 
   override def toEditCell(fieldKey: FieldKey): Cell = FormField(fieldKey, value)
 
-  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
+  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = 
     val fieldKey = fieldEntry.fieldKey
 
-    Seq(fieldKey.key.replaceN(fieldEntry.template)
-      .replaceAll("v", value.toString))
+    Seq(
+      fieldKey.key.replaceN(fieldEntry.template)
+      .replaceAll("v", value.toString)
+    )
 
-  }
 
   override def displayCell: Cell = Cell(value)
 
-  override def update(paramValue: String): FieldInt = {
+  override def update(paramValue: String): FieldInt = 
     FieldInt(paramValue.toInt)
-  }
 
   override def toJsValue: JsValue = Json.toJson(this)
 

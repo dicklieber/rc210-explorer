@@ -91,7 +91,7 @@ class FieldDefinitions @Inject()() {
     SimpleField(1177, "Fan Timeout", Common, "n*1004v", FieldInt) max 255 units "Minutes",
     //DTMFRegenPrefix1 - 1179-1185 need  special handling. part of IRLP stuff.
     SimpleField(1187, "Fan Select", Common, "n*2119b", FieldBoolean),
-    SimpleField(1188, "DTMF Duration", Common, "n*2106b", FieldInt) max 256 units "Ms",
+    SimpleField(1188, "DTMF Duration", Common, "n*2106v", FieldInt) max 256 units "Ms",
     SimpleField(1189, "DTMF Pause", Common, "n*2107b", FieldBoolean),
     //DTMFStrings - 1190-1409 special handling
     //DVRSecondLow - 1410-1473
