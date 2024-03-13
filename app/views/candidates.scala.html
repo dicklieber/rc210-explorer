@@ -1,11 +1,11 @@
 @import com.wa9nnn.wa9nnnutil.tableui.Table
 @import com.wa9nnn.wa9nnnutil.tableui.html.renderTable
-@import net.wa9nnn.rc210.serial.CommandSendRequest
+@import net.wa9nnn.rc210.serial.UploadRequest
 @import net.wa9nnn.rc210.serial.SendField
 @(table: Table)
 
 <div class="container">
-    <a href="@routes.CandidatesController.ws(CommandSendRequest(SendField.CandidatesOnly))"
+    <a href="@routes.UploadController.start(UploadRequest(SendField.CandidatesOnly))"
     title="Send all to RC-210" class="w3-btn w3-round w3-blue">Send All </a>
     @renderTable(table)
 </div>

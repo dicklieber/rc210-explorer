@@ -19,6 +19,7 @@ package net.wa9nnn.rc210.serial
 
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table, TableInACell}
 import net.wa9nnn.rc210.FieldKey
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
@@ -32,7 +33,7 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 
 /**
- * Sends Comands tp RC-210 in a batch with Prigress UI.
+ * Sends Commands to RC-210 in a batch with Progress UI.
  *
  * @param dataStore
  * @param rc210
@@ -41,7 +42,8 @@ import javax.inject.{Inject, Singleton}
  */
 class CommandsSender @Inject()(dataStore: DataStore, rc210: Rc210)
                               (implicit config: Config, mat: Materializer)
-  extends LazyLogging {
+  extends LazyLogging:
+  private var _uploadState: UploadState = UploadState.neverStarted
 
   /**
    * Send commands for fields
@@ -49,37 +51,28 @@ class CommandsSender @Inject()(dataStore: DataStore, rc210: Rc210)
    *
    * Results will live in [[LastSendBatch]]
    *
-   * @param sendField   what to send for. all of just candiates.
-   * @param field       None to send all fields. Of just the one.
-   * @param progressApi where to report whats going on.
+   * @param commandSendRequest   what user wants top upoad.
    */
-  def apply(commandSendRequest: CommandSendRequest, progressApi: ProgressApi[RcResponse]): Unit = {
-    val start = Instant.now()
+  //  def newUpload(commandSendRequest: CommandSendRequest, progressApi: ProgressApi[RcResponse]): Unit = {
+  def newUpload(uploadRequest: UploadRequest): Unit =
+    _uploadState = UploadState(uploadRequest)
+
+  def startDownload(progressApi: ProgressApi[FieldResult]): Unit =
+    val uploadDatas: Seq[UploadData] = _uploadState.uploadRequest.filter(dataStore)
+    progressApi.expectedCount(uploadDatas.length)
     val streamBased: RcStreamBased = rc210.openStreamBased
 
     streamBased.perform(init)
-    val fieldEntries: Seq[FieldEntry] = commandSendRequest.sendField match
-      case SendField.AllFields =>
-        dataStore.all
-      case SendField.CandidatesOnly =>
-        dataStore.candidates
-      case SendField.TestVCandidates =>
-        throw new NotImplementedError() //todo
-
-    progressApi.expectedCount(fieldEntries.length)
-
     var errorEncountered = false
-    for {
-      fieldEntry <- fieldEntries
-      fieldValue = fieldEntry.value.asInstanceOf[FieldValue]
-      rcOperationResult <- streamBased.perform(fieldValue.toCommands(fieldEntry))
-    } yield {
-      progressApi.doOne(rcOperationResult)
+
+    uploadDatas.map { uploadData =>
+      val fieldEntry = uploadData.fieldEntry
+      val commands: Seq[String] = uploadData.fieldValue.toCommands(fieldEntry)
+      val responses: Seq[RcResponse] = streamBased.perform(commands)
+      val fieldResult = FieldResult(uploadData.fieldEntry.fieldKey, responses)
+      progressApi.doOne(fieldResult)
     }
     progressApi.finish()
-  }
-
-}
 
 object CommandsSender:
   val init: Seq[String] = Seq(
@@ -89,3 +82,20 @@ object CommandsSender:
     "1GetRTCVersion",
   )
 
+case class FieldResult(fieldKey: FieldKey, responses: Seq[RcResponse]) extends ProgressItem:
+  val ok: Boolean =
+    val errorCount: Int = responses.foldLeft(0)((accum, rcResponse) =>
+      if (!rcResponse.ok)
+        accum + 1
+      else
+        accum
+    )
+    errorCount == 0
+
+  def toRow: Row = {
+    val rows = responses.map(_.toRow)
+    Row(
+      fieldKey.display,
+      TableInACell(Table(Header.none, rows))
+    )
+  }

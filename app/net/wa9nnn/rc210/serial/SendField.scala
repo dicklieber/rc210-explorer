@@ -18,19 +18,32 @@
 package net.wa9nnn.rc210.serial
 
 import enumeratum.{EnumEntry, PlayEnum}
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.data.remotebase.CtcssMode.findValues
 import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
 
-sealed trait SendField extends EnumEntry
+sealed trait SendField extends EnumEntry:
+  def select(fieldEntry: FieldEntry): Option[UploadData]
 
 object SendField extends PlayEnum[SendField]:
 
   override val values: IndexedSeq[SendField] = findValues
 
-  case object AllFields extends SendField
+  case object AllFields extends SendField:
+    def select(fieldEntry: FieldEntry): Option[UploadData] =
+      Option(
+        UploadData(fieldEntry, fieldEntry.value))
 
-  case object CandidatesOnly extends SendField
+  case object CandidatesOnly extends SendField:
+    def select(fieldEntry: FieldEntry): Option[UploadData] =
+      for {
+        candidateValue <- fieldEntry.candidate
+      } yield {
+        UploadData(fieldEntry, candidateValue)
+      }
 
-  case object TestVCandidates extends SendField
+
+
+
 
 

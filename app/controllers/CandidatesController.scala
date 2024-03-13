@@ -102,22 +102,7 @@ class CandidatesController @Inject()(dataStore: DataStore,
   //    NotImplemented("todo")
   //  }
 
-  def ws(commandSendRequest: CommandSendRequest): WebSocket =
-    //todo handle authorization See https://www.playframework.com/documentation/3.0.x/ScalaWebSockets
-
-    new ProcessWithProgress[RcResponse](1)(
-      progressApi =>
-        commandsSender(commandSendRequest, progressApi)
-    ).webSocket
-
-  def socket: WebSocket = WebSocket.accept[String, String] { request =>
-    // log the message to stdout and send response back to client
-    Flow[String].map { msg =>
-      println(msg)
-      "I received your message: " + msg
-    }
-  }
-
+  
 }
 
 object CandidatesController:

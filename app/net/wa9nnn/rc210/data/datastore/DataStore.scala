@@ -229,5 +229,3 @@ class DataStore @Inject() (persistence: DataStorePersistence, memoryFileLoader: 
 
 object DataStore:
   var inTest: Boolean = false
-
-

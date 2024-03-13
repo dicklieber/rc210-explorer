@@ -86,8 +86,8 @@ resolvers +=
 
 routesImport += "net.wa9nnn.rc210.Binders._"
 routesImport += "net.wa9nnn.rc210.FieldKey"
-routesImport += "net.wa9nnn.rc210.serial.CommandSendRequest"
-routesImport += "net.wa9nnn.rc210.serial.CommandSendRequest.pathBinder"
+routesImport += "net.wa9nnn.rc210.serial.UploadRequest"
+routesImport += "net.wa9nnn.rc210.serial.UploadRequest.pathBinder"
 routesImport += "net.wa9nnn.rc210.KeyKind"
 routesImport += "net.wa9nnn.rc210.Key"
 routesImport += "net.wa9nnn.rc210.ui.nav.TabKind"

@@ -1,7 +1,7 @@
 @import net.wa9nnn.rc210.ui.Tabs
 
 @import net.wa9nnn.rc210.data.field.FieldEntry
-@import net.wa9nnn.rc210.serial.CommandSendRequest
+@import net.wa9nnn.rc210.serial.UploadRequest
 @import net.wa9nnn.rc210.serial.SendField
 @(fieldEntries: Seq[FieldEntry])
 
@@ -11,10 +11,10 @@
             <th>Key</th>
             <th>Field Name</th>
             <th>Field Value</th>
-            <th><a href="@routes.CandidatesController.ws(CommandSendRequest(SendField.AllFields))" title="Send all candidates"><i class="bi bi-send-plus"></i></a></th>
+            <th><a href="@routes.UploadController.start(UploadRequest(SendField.AllFields))" title="Send all candidates"><i class="bi bi-send-plus"></i></a></th>
             <th>Command</th>
             <th>Candidate Value</th>
-            <th><a href=" @routes.CandidatesController.ws(CommandSendRequest(SendField.CandidatesOnly)) " title="Send and clear all candidates.">
+            <th><a href=" @routes.UploadController.start(UploadRequest(SendField.CandidatesOnly)) " title="Send and clear all candidates.">
             <i class="bi bi-send-plus"></i></a></th>
             <th>Candidate Command</th>
             </tr>
@@ -26,7 +26,7 @@
                         <td>@fieldEntry.fieldKey.fieldName</td>
                         <td>@fieldEntry.fieldValue.displayCell</td>
                         <td>
-                            <a href="@routes.CandidatesController.ws(CommandSendRequest(SendField.AllFields, fieldEntry.fieldKey))" title="Send to RC-210">
+                            <a href="@routes.UploadController.start(UploadRequest(SendField.AllFields, fieldEntry.fieldKey))" title="Send to RC-210">
                             <i class="bi bi-send"></i>
                             </a>
                             </td>

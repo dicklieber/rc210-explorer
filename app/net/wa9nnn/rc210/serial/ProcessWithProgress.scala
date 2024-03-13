@@ -154,6 +154,6 @@ class ProcessWithProgress[T <: ProgressItem](mod: Int)(callback: ProgressApi[T] 
   override def expectedCount(count: Int): Unit = expected = count
 
 trait ProgressItem extends RowSource:
-  val in: String
-  val ok: Boolean
+//  val in: String
+  def ok: Boolean
   

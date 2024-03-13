@@ -73,7 +73,7 @@ class DownloadController @Inject()(config: Config, dataCollector: DataCollector,
   }
 
   def ws(): WebSocket =
-    new ProcessWithProgress[DownloadOp](1)(progressApi =>
+    new ProcessWithProgress[DownloadOp](10)(progressApi =>
       dataCollector.startDownload(progressApi)).webSocket
 
 }
