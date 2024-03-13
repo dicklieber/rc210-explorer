@@ -58,7 +58,7 @@ class CandidatesController @Inject()(dataStore: DataStore,
           val fieldKey = fieldEntry.fieldKey
           val row = Row(
             fieldKey.editButtonCell,
-            fieldKey.toString,
+            fieldKey.display,
             fieldEntry.fieldValue.displayCell,
             fieldEntry.value[FieldValue].displayCell,
             commandsCell(fieldEntry.commands)
@@ -79,30 +79,6 @@ class CandidatesController @Inject()(dataStore: DataStore,
       val fieldEntries = dataStore.candidates
       Ok(views.html.dump(fieldEntries))
   }
-
-
-
-  //  /**
-  //   * Send command for one [[FieldKey]] to the RC210.
-  //   *
-  //   * @param fieldKeyStuff  to send
-  //   * @param sendValue true to send the fieldValue's command. false to send and accept the candidate's.
-  //   * @return
-  //   */
-  //  def send(fieldKeyStuff: FieldKey, sendValue: Boolean = false): Action[AnyContent] = Action {
-  //    implicit request =>
-  ///*      val fieldEntry: FieldEntry = dataStore(fieldKeyStuff)
-  //      val commands: Seq[String] = fieldEntry
-  //        .candidate
-  //        .get
-  //        .toCommands(fieldEntry)
-  //      val batchOperationsResult: BatchOperationsResult = rc210.sendBatch(fieldKeyStuff.toString, commands: _*)
-  //      Ok(batchOpResult(batchOperationsResult))
-  //*/
-  //    NotImplemented("todo")
-  //  }
-
-  
 }
 
 object CandidatesController:
