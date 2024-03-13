@@ -37,17 +37,24 @@ case class RcResponse(in: String, lines: Seq[String]) extends ProgressItem with 
 
   def head: String = lines.headOption.getOrElse("empty")
 
+  def responeLines: String = lines.mkString(" ")
+
+  def detailCells: Seq[Cell] =
+    val cssClass = if(ok)
+      "happyCell"
+    else
+      "sadCell"
+    Seq(
+    Cell(expandControlChars(in)), 
+    Cell(responeLines)
+      .withCssClass(cssClass)
+    )
+
   def toRow: Row =
-    Row(Seq(Cell.rawHtml(<ul>
-      {lines.foreach(line =>
-        <li>
-          {line}
-        </li>
-      )}
-    </ul>.toString
-    )
-    )
-    )
+    Row.ofAny(in, responeLines)
+
+  def buildResultTable(items: Seq[ProgressItem]): Table =
+    throw new NotImplementedError() //todo
 
 
 

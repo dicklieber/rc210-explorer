@@ -111,22 +111,25 @@ class ProcessWithProgress[T <: ProgressItem](mod: Int)(callback: ProgressApi[T] 
           errorCount += 1
       }
 
-    val detailTable: Table = Table(Header("Download Result", "Field", "Value"),
-      Seq(Row("Duration", duration),
-        Row("Success", successCount),
-        Row("Errors", errorCount)
+      val detailTable: Table = Table(Header("Download Result", "Field", "Value"),
+        Seq(Row("Duration", duration),
+          Row("Success", successCount),
+          Row("Errors", errorCount)
+        )
       )
-    )
-    val errorRows: Seq[Row] = (for {
-      failedItem <- items.filterNot(_.ok)
-    } yield {
-      failedItem.toRow
-    })
+//    val errorRows: Seq[Row] = (for {
+//      failedItem <- items.filterNot(_.ok)
+//    } yield {
+//      failedItem.toRow
+//    })
+//
+//    val maybeErrorTable: Option[Table] = Option.when(errorRows.nonEmpty) {
+//      Table(Header("Errors", "In", "Error"), errorRows)
+//    }
+    val itemTable: Table = items.head.buildResultTable(items)
 
-    val maybeErrorTable: Option[Table] = Option.when(errorRows.nonEmpty) {
-      Table(Header("Errors", "In", "Error"), errorRows)
-    }
-    val html: Html = downloadResult(detailTable, maybeErrorTable)
+    val html: Html = downloadResult(detailTable, Option(itemTable))
+//    val html: Html = downloadResult(detailTable, maybeErrorTable)
     val progress = new Progress("100%",
       soFar = soFar,
       duration = DurationHelpers.between(began),
@@ -156,4 +159,7 @@ class ProcessWithProgress[T <: ProgressItem](mod: Int)(callback: ProgressApi[T] 
 trait ProgressItem extends RowSource:
 //  val in: String
   def ok: Boolean
+  def toRows: Seq[Row] = Seq(toRow)
+  def buildResultTable(items:Seq[ProgressItem]):Table
+  
   

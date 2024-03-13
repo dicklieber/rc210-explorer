@@ -21,6 +21,7 @@ import com.wa9nnn.wa9nnnutil.DurationHelpers
 import com.wa9nnn.wa9nnnutil.tableui.*
 
 import java.time.Instant
+import scala.collection.immutable.Seq
 import scala.util.{Failure, Success, Try}
 import scala.util.matching.Regex
 
@@ -49,7 +50,7 @@ case class DownloadState(requestTable: Table, start: Instant = Instant.now(), op
 object DownloadState:
   val neverStarted: DownloadState = new DownloadState(Table("Not Started", Seq.empty))
 
-case class DownloadOp(response:String) extends ProgressItem:
+case class DownloadOp(response: String) extends ProgressItem:
 
   import net.wa9nnn.rc210.serial.DownloadOp.parser
 
@@ -57,6 +58,22 @@ case class DownloadOp(response:String) extends ProgressItem:
 
   val in: String = "OK"
   val ok: Boolean = true
+
+  def buildResultTable(items: Seq[ProgressItem]): Table =
+    //    val detailTable: Table = Table(Header("Errors", "Field", "Value"),
+    //      Seq(Row("Duration", duration),
+    //        Row("Success", successCount),
+    //        Row("Errors", errorCount)
+    //      )
+    //    )
+
+    val errorRows: Seq[Row] = (for {
+      failedItem <- items.filterNot(_.ok)
+    } yield {
+      failedItem.toRow
+    })
+
+    Table(Header("Errors", "In", "Error"), errorRows)
 
 object DownloadOp:
   val parser: Regex = """(\d+),(\d+)""".r

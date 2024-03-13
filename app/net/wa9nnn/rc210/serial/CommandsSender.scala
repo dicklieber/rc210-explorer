@@ -19,16 +19,12 @@ package net.wa9nnn.rc210.serial
 
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table, TableInACell}
-import net.wa9nnn.rc210.FieldKey
 import net.wa9nnn.rc210.data.datastore.DataStore
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.serial.CommandsSender.init
 import net.wa9nnn.rc210.serial.comm.{RcResponse, RcStreamBased}
 import org.apache.pekko.stream.Materializer
 
-import java.time.Instant
-import javax.inject.{Inject, Singleton}
+import javax.inject.*
 
 @Singleton
 
@@ -63,9 +59,8 @@ class CommandsSender @Inject()(dataStore: DataStore, rc210: Rc210)
     val streamBased: RcStreamBased = rc210.openStreamBased
 
     streamBased.perform(init)
-    var errorEncountered = false
 
-    uploadDatas.map { uploadData =>
+    uploadDatas.foreach { uploadData =>
       val fieldEntry = uploadData.fieldEntry
       val commands: Seq[String] = uploadData.fieldValue.toCommands(fieldEntry)
       val responses: Seq[RcResponse] = streamBased.perform(commands)
@@ -81,21 +76,3 @@ object CommandsSender:
     "1GetVersion",
     "1GetRTCVersion",
   )
-
-case class FieldResult(fieldKey: FieldKey, responses: Seq[RcResponse]) extends ProgressItem:
-  val ok: Boolean =
-    val errorCount: Int = responses.foldLeft(0)((accum, rcResponse) =>
-      if (!rcResponse.ok)
-        accum + 1
-      else
-        accum
-    )
-    errorCount == 0
-
-  def toRow: Row = {
-    val rows = responses.map(_.toRow)
-    Row(
-      fieldKey.display,
-      TableInACell(Table(Header.none, rows))
-    )
-  }
