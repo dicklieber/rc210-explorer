@@ -13,6 +13,7 @@ import java.math.BigInteger
 import java.security.SecureRandom
 import java.time.{Duration, Instant}
 import java.util.Base64
+import scala.reflect.ScalaLongSignature
 
 /**
  *
@@ -64,6 +65,12 @@ case class RcSession(sessionId: SessionId,
 object RcSession extends LazyLogging {
   type SessionId = String
 
+  val noSession:RcSession = RcSession(
+    sessionId = "none",
+    user = User(callsign = "", hash = ""),
+    remoteIp = ""
+    )
+  
   def apply(user: User, remoteIp:String): RcSession = {
     val lSession = sessionIdGenerator.nextLong()
     val bytes: Array[Byte] = Base64.getEncoder.encode(BigInteger.valueOf(lSession).toByteArray)
@@ -79,7 +86,7 @@ object RcSession extends LazyLogging {
     Header(s"Sessions ($count)", "Callsign", "Name", "Started", "Touched", "Age")
   }
 
-  private val sessionIdGenerator = new SecureRandom()
+  private  val sessionIdGenerator = new SecureRandom()
   val playSessionName: String = "rcSession"
 
 }

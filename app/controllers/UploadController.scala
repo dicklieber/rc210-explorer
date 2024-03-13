@@ -20,6 +20,8 @@ package controllers
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.*
+import net.wa9nnn.rc210.security.authentication.RcSession
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 import net.wa9nnn.rc210.serial.*
 import net.wa9nnn.rc210.ui.TabE.RC210Download
 import net.wa9nnn.rc210.ui.{TabE, Tabs}
@@ -41,7 +43,7 @@ class UploadController @Inject()(config: Config, commandsSender: CommandsSender,
   
   def start(commandSendRequest: UploadRequest): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] =>
-
+      given RcSession = request.attrs(sessionKey)
       commandsSender.newUpload(commandSendRequest)
       
       val webSocketURL: String = controllers.routes.UploadController.ws().webSocketURL()

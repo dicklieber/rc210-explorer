@@ -111,9 +111,9 @@ class FieldDefinitions @Inject()() {
     SimpleField(3536, "Terminator", Common, "1*9020v", FieldDtmf) max 1,
     //ClockCorrection - 3538-3539 Humm, only two bytes but doc shows:  Docs shows this as *5105! Not *5101! In any event needs some special handling.
     SimpleField(3540, "Say Year", Common, "n*5102b", FieldBoolean),
-    SimpleField(3541, "P1 Tail Message", Port, "n*21101v", MacroKeyExtractor),
-    SimpleField(3544, "P2 Tail Message", Port, "n*21102v", MacroKeyExtractor),
-    SimpleField(3547, "P3 Tail Message", Port, "n*21103v", MacroKeyExtractor),
+    SimpleField(3541, "Tail Message", Port, "n*21101v", MacroKeyExtractor),
+    SimpleField(3544, "Tail Message", Port, "n*21102v", MacroKeyExtractor),
+    SimpleField(3547, "Tail Message", Port, "n*21103v", MacroKeyExtractor),
     SimpleField(3550, "Tail Message Number", Port, "n*2111v", FieldInt),
     SimpleField(3553, "Tail Timer", Port, "n*1020v", FieldInt) max 999 units "tails" tooltip "0 disables",
     SimpleField(3559, "Tail Counter", Port, "n*2112v", FieldInt) max 999 units "tails" tooltip "0 disables",

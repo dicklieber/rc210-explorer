@@ -20,6 +20,7 @@ package net.wa9nnn.rc210.serial
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.DataStore
+import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.serial.CommandsSender.init
 import net.wa9nnn.rc210.serial.comm.{RcResponse, RcStreamBased}
 import org.apache.pekko.stream.Materializer
@@ -50,10 +51,11 @@ class CommandsSender @Inject()(dataStore: DataStore, rc210: Rc210)
    * @param commandSendRequest   what user wants top upoad.
    */
   //  def newUpload(commandSendRequest: CommandSendRequest, progressApi: ProgressApi[RcResponse]): Unit = {
-  def newUpload(uploadRequest: UploadRequest): Unit =
-    _uploadState = UploadState(uploadRequest)
+  def newUpload(uploadRequest: UploadRequest)(using rcSession:RcSession): Unit =
+    _uploadState = UploadState(uploadRequest, rcSession)
 
   def startDownload(progressApi: ProgressApi[FieldResult]): Unit =
+    given RcSession = _uploadState.rcSession
     val uploadDatas: Seq[UploadData] = _uploadState.uploadRequest.filter(dataStore)
     progressApi.expectedCount(uploadDatas.length)
     val streamBased: RcStreamBased = rc210.openStreamBased
@@ -64,7 +66,9 @@ class CommandsSender @Inject()(dataStore: DataStore, rc210: Rc210)
       val fieldEntry = uploadData.fieldEntry
       val commands: Seq[String] = uploadData.fieldValue.toCommands(fieldEntry)
       val responses: Seq[RcResponse] = streamBased.perform(commands)
-      val fieldResult = FieldResult(uploadData.fieldEntry.fieldKey, responses)
+      val fieldKey = uploadData.fieldEntry.fieldKey
+      dataStore.acceptCandidate(fieldKey)
+      val fieldResult = FieldResult(fieldKey, responses)
       progressApi.doOne(fieldResult)
     }
     progressApi.finish()

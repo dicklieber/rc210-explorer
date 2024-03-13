@@ -19,6 +19,7 @@ package net.wa9nnn.rc210.serial
 
 import com.wa9nnn.wa9nnnutil.DurationHelpers
 import com.wa9nnn.wa9nnnutil.tableui.*
+import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.serial.comm.RcResponse
 
 import java.time.Instant
@@ -32,7 +33,11 @@ import scala.util.{Failure, Success, Try}
  * @param operations   each item downloaded. Empty before invoking complete.
  * @param finish       when this was complete.
  */
-case class UploadState(uploadRequest: UploadRequest, start: Instant = Instant.now(), operations: Seq[RcResponse] = Seq.empty, finish: Instant = Instant.EPOCH):
+case class UploadState(uploadRequest: UploadRequest,
+                       rcSession:RcSession,
+                       start: Instant = Instant.now(), 
+                       operations: Seq[RcResponse] = Seq.empty, 
+                       finish: Instant = Instant.EPOCH):
   def start(requestTable: Table): DownloadState = new DownloadState(requestTable)
 
   def complete(operations: Seq[RcResponse]): UploadState = copy(operations = operations, finish = Instant.now)
@@ -42,6 +47,6 @@ case class UploadState(uploadRequest: UploadRequest, start: Instant = Instant.no
     MultiColumn(operations, 10, "Detail")
 
 object UploadState:
-  val neverStarted: UploadState = new UploadState(UploadRequest(SendField.CandidatesOnly))
+  val neverStarted: UploadState = new UploadState(UploadRequest(SendField.CandidatesOnly), rcSession = RcSession.noSession)
 
 
