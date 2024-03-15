@@ -20,41 +20,72 @@ package net.wa9nnn.rc210.serial.comm
 import com.fazecast.jSerialComm.SerialPort
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.serial.comm.RealStreamBased.isTerminal
+import net.wa9nnn.rc210.util.expandControlChars
 
-import java.io.OutputStream
+import java.io.{InputStream, OutputStream}
+import java.nio.charset.MalformedInputException
+import scala.collection.mutable
 import scala.io.BufferedSource
-import scala.util.{Failure, Success, Try}
+import scala.util.*
 
 /**
  * Used for sending commands to the RC-210. Nicely handles multiple lines of response.
  *
  * @param rcSerialPort provides access to the serial port.
  */
-class RealStreamBased(serialPort: SerialPort) extends RcOp(serialPort) with StreamBased with AutoCloseable with LazyLogging {
+class RealStreamBased(serialPort: SerialPort) extends RcOp(serialPort) with StreamBased with AutoCloseable with LazyLogging:
 
-  serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 2000, 0)
-  private val source = new BufferedSource(serialPort.getInputStream, 50)
+  serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0)
+  val inputStream: InputStream = serialPort.getInputStream
   private val outputStream: OutputStream = serialPort.getOutputStream
+
+  private def readLine: String =
+    val lineBuilder: mutable.Builder[Byte, Seq[Byte]] = Seq.newBuilder[Byte]
+    boundary:
+      while (true) {
+        inputStream.read() match
+          case -1 =>
+            boundary.break(lineBuilder.result())
+          case 0xfe=>
+
+          case 0xa =>
+            boundary.break(lineBuilder.result())
+          case b =>
+            lineBuilder.addOne(b.toByte)
+      }
+    val bytes: Array[Byte] = lineBuilder.result().toArray
+    val chars: Array[Char] = bytes.map(_.toChar)
+    String(chars)
 
   /**
    * This drains anything waiting in from [[BufferedSource]].
    *
    * @param request sends a request to the RC210
-   * @return lines received up to a line starting with a [[terminalPrefaces]].
+   * @return what we got.
    * */
   def perform(request: String): RcResponse =
     val requestWithCr: String = request :+ '\r'
     outputStream.write(requestWithCr.getBytes)
     outputStream.flush()
-    val inLines: Iterator[String] = source.getLines()
+    //    val inLines: Iterator[String] = source.getLines()
 
     val linesBuilder = Seq.newBuilder[String]
-
-    var line = ""
-    while (!isTerminal(line)) {
-      line = inLines.next()
-      linesBuilder += line
+    try {
+      var line: String = ""
+      while (!isTerminal(line)) {
+        try {
+          line = readLine
+          logger.trace("line: {}", line)
+          linesBuilder += line
+        }
+        catch
+          case e: MalformedInputException =>
+            logger.warn("IllformedInput probably startup non-sense", e)
+      }
     }
+    catch
+      case e: Exception =>
+        logger.error(s"Reading response for ${expandControlChars(requestWithCr)}", e)
 
     RcResponse(requestWithCr, linesBuilder.result())
 
@@ -63,20 +94,12 @@ class RealStreamBased(serialPort: SerialPort) extends RcOp(serialPort) with Stre
       perform(request)
     })
 
-  override def close(): Unit = {
+  override def close(): Unit =
     serialPort.removeDataListener()
     serialPort.closePort()
-  }
-}
 
-object RealStreamBased {
-
+object RealStreamBased:
   def isTerminal(line: String): Boolean =
     line.nonEmpty && terminalPrefaces.contains(line.head)
 
-  //  def isOk(string: String): Try[String] =
-
-  private val terminalPrefaces: String = "+-"
-
-}
-
+  val terminalPrefaces: String = "+-"

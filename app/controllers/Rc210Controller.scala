@@ -22,9 +22,16 @@ package controllers
 
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
+import com.wa9nnn.wa9nnnutil.DurationHelpers
+import com.wa9nnn.wa9nnnutil.tableui.{Header, Row, Table}
 import net.wa9nnn.rc210.serial.{DataCollector, Rc210}
+import net.wa9nnn.rc210.ui.TabE
 import org.apache.pekko.util.Timeout
 import play.api.mvc.MessagesAbstractController
+import views.html.{NavMain, justdat}
+
+import java.time.Instant
+import scala.concurrent.duration.Duration
 //import configs.syntax._
 import play.api.mvc.*
 
@@ -34,7 +41,9 @@ import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
 
 @Singleton
-class Rc210Controller @Inject()(rc210: Rc210, dataCollector: DataCollector, config: Config, cc: MessagesControllerComponents)
+class Rc210Controller @Inject()(rc210: Rc210, dataCollector: DataCollector,
+                                navMain: NavMain,
+                                config: Config, cc: MessagesControllerComponents)
   extends MessagesAbstractController(cc) with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 
@@ -56,8 +65,13 @@ class Rc210Controller @Inject()(rc210: Rc210, dataCollector: DataCollector, conf
   }
 
   def restart(): Action[AnyContent] = Action { implicit request =>
+    val start: Instant = Instant.now()
     val batchOperationsResult = rc210.sendBatch("1*21999")
-    Redirect(routes.IOController.listSerialPorts.url)
+    val rows = batchOperationsResult.head.lines.map(line => Row("Line" -> line))
+    val table = Table(Header("Startup", "Response"),
+      rows.appended(Row("Startup in" -> DurationHelpers.between(start)))
+    )
+    Ok(navMain(TabE.Restart, justdat(Seq(table))))
   }
 
   /**
