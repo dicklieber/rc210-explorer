@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.serial.comm
 
 import com.fazecast.jSerialComm.SerialPort
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.serial.comm.RcStreamBased.isTerminal
+import net.wa9nnn.rc210.serial.comm.RealStreamBased.isTerminal
 
 import java.io.OutputStream
 import scala.io.BufferedSource
@@ -30,7 +30,7 @@ import scala.util.{Failure, Success, Try}
  *
  * @param rcSerialPort provides access to the serial port.
  */
-class RcStreamBased(serialPort: SerialPort) extends RcOp(serialPort) with AutoCloseable with LazyLogging {
+class RealStreamBased(serialPort: SerialPort) extends RcOp(serialPort) with StreamBased with AutoCloseable with LazyLogging {
 
   serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 2000, 0)
   private val source = new BufferedSource(serialPort.getInputStream, 50)
@@ -69,7 +69,7 @@ class RcStreamBased(serialPort: SerialPort) extends RcOp(serialPort) with AutoCl
   }
 }
 
-object RcStreamBased {
+object RealStreamBased {
 
   def isTerminal(line: String): Boolean =
     line.nonEmpty && terminalPrefaces.contains(line.head)

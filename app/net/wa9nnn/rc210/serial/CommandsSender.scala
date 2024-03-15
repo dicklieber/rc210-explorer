@@ -22,7 +22,7 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.serial.CommandsSender.init
-import net.wa9nnn.rc210.serial.comm.{RcResponse, RcStreamBased}
+import net.wa9nnn.rc210.serial.comm.{RcResponse, RealStreamBased, StreamBased}
 import org.apache.pekko.stream.Materializer
 
 import javax.inject.*
@@ -58,7 +58,7 @@ class CommandsSender @Inject()(dataStore: DataStore, rc210: Rc210)
     given RcSession = _uploadState.rcSession
     val uploadDatas: Seq[UploadData] = _uploadState.uploadRequest.filter(dataStore)
     progressApi.expectedCount(uploadDatas.length)
-    val streamBased: RcStreamBased = rc210.openStreamBased
+    val streamBased: StreamBased = rc210.openStreamBased
 
     streamBased.perform(init)
 

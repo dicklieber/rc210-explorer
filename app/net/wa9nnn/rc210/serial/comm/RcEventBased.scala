@@ -28,7 +28,7 @@ import scala.concurrent.duration.Duration
  *
  * @param rcSerialPort provides access to the serial port.
  */
-class RcEventBasedOp(serialPort: SerialPort) extends RcOp(serialPort):
+class RealEventBased(serialPort: SerialPort) extends RcOp(serialPort) with EventBased:
   serialPort.flushIOBuffers() // get rid of any left over crap.
 
   def addDataListener(serialPortDataListener: SerialPortDataListener): Unit =
@@ -39,3 +39,9 @@ class RcEventBasedOp(serialPort: SerialPort) extends RcOp(serialPort):
     val bytes = s.getBytes
     serialPort.writeBytes(bytes, bytes.length)
   }
+
+trait RcEventBasedApi:
+
+  def addDataListener(serialPortDataListener: SerialPortDataListener): Unit
+
+  def send(string: String): Unit

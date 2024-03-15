@@ -20,14 +20,14 @@ package net.wa9nnn.rc210.serial.comm
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.*
 import net.wa9nnn.rc210.serial.ProgressItem
-import net.wa9nnn.rc210.serial.comm.RcStreamBased.terminalPrefaces
+import net.wa9nnn.rc210.serial.comm.RealStreamBased.terminalPrefaces
 import net.wa9nnn.rc210.util.expandControlChars
 
 import scala.util.parsing.input.NoPosition.line
 import scala.util.{Failure, Try}
 
 case class RcResponse(in: String, lines: Seq[String]) extends ProgressItem with LazyLogging:
-  val ok: Boolean = lines.nonEmpty && RcStreamBased.isTerminal(lines.last)
+  val ok: Boolean = lines.nonEmpty && RealStreamBased.isTerminal(lines.last)
   lazy val sOk = if (ok) "ok" else "failed"
   logger.whenTraceEnabled {
     val sLines: String = lines.map(expandControlChars).mkString(" ")

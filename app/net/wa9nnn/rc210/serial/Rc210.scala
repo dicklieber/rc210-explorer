@@ -34,27 +34,22 @@ import scala.util.{Try, Using}
 
 @Singleton
 class Rc210 @Inject()(config: Config, serialPortsSource: SerialPortsSource) extends LazyLogging:
+  var operationFactory: OperationFactory = new RealOperationFactory()
   private var _portAndVersion: PortAndVersion = PortAndVersion()
 
   private val file: Path = config.get[Path]("vizRc210.serialPortsFile")
   if (os.exists(file))
     selectPort(os.read(file))
 
-  def openStreamBased: RcStreamBased =
+  def openStreamBased: StreamBased =
     _portAndVersion.selectedSerialPort.map { serialPort =>
-      new RcStreamBased(serialPort)
+      operationFactory.openStreamBased(serialPort)
     }.getOrElse(throw new IllegalStateException("No serial port selected!"))
 
-  def openEventBased(): RcEventBasedOp =
+  def openEventBased(): EventBased =
     _portAndVersion.selectedSerialPort.map { serialPort =>
-      new RcEventBasedOp(serialPort)
+      operationFactory.openEventBased(serialPort)
     }.getOrElse(throw new IllegalStateException("No serial port selected!"))
-
-
-  def sendOne(request: String): RcResponse =
-    Using.resource(openStreamBased) { rcOp =>
-      rcOp.perform(request)
-    }
 
   def sendBatch(requests: String*): Seq[RcResponse] =
     Using.resource(openStreamBased) { rcOp =>

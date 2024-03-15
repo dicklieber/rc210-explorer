@@ -9,7 +9,7 @@ import scala.util.{Try, Using}
 object Version extends LazyLogging:
   def apply(serialPort: SerialPort): Try[String] =
 
-    Using(RcStreamBased(serialPort)){rcStreamBased =>
+    Using(RealStreamBased(serialPort)){ rcStreamBased =>
       val response: RcResponse = rcStreamBased.perform("\r\r1GetVersion")
       val versionLine = response.lines.head
       

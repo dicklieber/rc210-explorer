@@ -23,7 +23,7 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.Table
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.serial
-import net.wa9nnn.rc210.serial.comm.RcEventBasedOp
+import net.wa9nnn.rc210.serial.comm.*
 import net.wa9nnn.rc210.util.Configs
 
 import java.io.PrintWriter
@@ -64,7 +64,7 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
   def startDownload(progressApi: ProgressApi[DownloadOp]): Unit =
     progressApi.expectedCount(expectedLines)
 
-    val eventBased: RcEventBasedOp = rc210.openEventBased()
+    val eventBased: EventBased = rc210.openEventBased()
     val itemMemoryFileWriter = new PrintWriter(Files.newOutputStream(tempFile))
     itemMemoryFileWriter.println(s"stamp: ${Instant.now()}")
 
