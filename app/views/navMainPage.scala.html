@@ -7,9 +7,10 @@
 @import java.time.ZoneId
 @import java.time.ZoneId._
 @import net.wa9nnn.rc210.KeyKind
-@import net.wa9nnn.rc210.ui.nav.TabKind
-@import net.wa9nnn.rc210.ui.nav.TabManager
-@this(tabManager: TabManager)
+@import net.wa9nnn.rc210.ui.nav.*
+@import net.wa9nnn.rc210.serial.Rc210
+@import com.wa9nnn.wa9nnnutil.tableui.html.renderTable
+@this(tabManager: TabManager, rc210: Rc210)
 @(keyKind: TabKind, activeTab: Tab, content: Html)
 <!doctype html>
 <html lang="en">
@@ -61,7 +62,7 @@
 
                 #topNav {
                     /*justify-content: flex-end;*/
-                    border: 3px solid hotpink;
+                    /*border: 3px solid hotpink;*/
                     text-align: right;
                     vertical-align: bottom;
                     white-space: nowrap;
@@ -80,6 +81,9 @@
     <body>
         <header>
             <h1 >RC210</h1>
+            <div>
+                @renderTable(rc210.portAndVersion.table)
+            </div>
             <div id="topNav">
                 @for(tabKind <- TabKind.values) {
                     <div class="topNavItem">

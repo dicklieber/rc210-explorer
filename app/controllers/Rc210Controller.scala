@@ -47,15 +47,7 @@ class Rc210Controller @Inject()(rc210: Rc210, dataCollector: DataCollector,
   extends MessagesAbstractController(cc) with LazyLogging {
   implicit val timeout: Timeout = 3 seconds
 
-  //  *21999
-
-
-
   def setClock(): Action[AnyContent] = Action { implicit request =>
-
-    //    serialPortsActor
-    //   clock:  *5100 12 12 23
-    // calendar:   *5101 06 11 03 Set June 11, 2003 as the current date
     val dt = LocalDateTime.now()
     val clock = s"1*5100${dt.getHour}${dt.getMinute}${dt.getSecond}"
     val calendar = s"1*5101${dt.getMonthValue}${dt.getDayOfMonth}${dt.getYear - 2000}"

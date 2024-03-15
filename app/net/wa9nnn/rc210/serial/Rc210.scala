@@ -85,18 +85,6 @@ class Rc210 @Inject()(config: Config, serialPortsSource: SerialPortsSource) exte
   def portAndVersion: PortAndVersion =
     _portAndVersion
 
-  object PortAndVersion:
-    def apply(serialPort: SerialPort): PortAndVersion =
-      new PortAndVersion(Option(serialPort))
-
-  case class PortAndVersion(
-                             selectedSerialPort: Option[SerialPort] = None,
-                             version: Option[String] = None):
-
-    def selectedInfo: String =
-      selectedSerialPort.map { serialPort =>
-        s"${serialPort.getSystemPortName} (${serialPort.getDescriptivePortName}) v:${version.getOrElse("?")}"
-      }.getOrElse("No port selected!")
 
 
 
