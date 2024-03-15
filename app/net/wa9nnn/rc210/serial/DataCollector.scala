@@ -109,6 +109,10 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
             cleanup("timeout")
           case response =>
             val tokens: Array[String] = response.split(',')
+            if(tokens.length != 2)
+              {
+                logger.error(s"""Illformed response from RC-210, expecting something like "xxx,yyy" but got: "$response" """)
+              }
             val memoryFileLine: String = f"${tokens.head.toInt}%04d:${tokens(1).toInt}"
             itemMemoryFileWriter.println(memoryFileLine)
             val downloadOp = DownloadOp(response)

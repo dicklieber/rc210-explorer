@@ -14,6 +14,7 @@
 
             if (progress.resultHtml !== "") {
                 document.getElementById('result').innerHTML = progress.resultHtml;
+                webSocket.close(0, "done")
             } else {
                 const $progress = $('.progress-bar');
                 $progress.css("width", progress.percent);
