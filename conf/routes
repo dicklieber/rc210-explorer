@@ -15,7 +15,6 @@ GET         /rc210/result                        controllers.IOController.downlo
 GET         /rc210                               controllers.IOController.listSerialPorts
 GET         /select/:name                        controllers.IOController.select(name:String)
 GET         /candidates                          controllers.CandidatesController.index
-GET         /datastore/dump                      controllers.CandidatesController.dump()
 GET         /upload/start/:uploadRequest         controllers.UploadController.start(uploadRequest:UploadRequest)
 GET         /upload/ws/                          controllers.UploadController.ws()
 GET         /memory                              controllers.MemoryController.index

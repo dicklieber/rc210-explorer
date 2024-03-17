@@ -24,29 +24,61 @@ import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.PathBindable
 
-import scala.util.matching.Regex
-
-case class UploadRequest(sendField: SendField, fieldKey: Option[FieldKey] = None, acceptCandidate: Boolean = true):
+/**
+ *
+ * @param doCandidate        true to upload the candidate. False to upload the fieldValue
+ * @param acceptCandidate   true to set the fieldValue to the candidate, if present. Clears the candidate.
+ * @param maybeFieldKey      if Some then just upload this field. None uploads all fields as conditioned by [[doCandidate]].
+ */
+case class UploadRequest(doCandidate: Boolean = true,
+                         acceptCandidate: Boolean = true,
+                         maybeFieldKey: Option[FieldKey] = None):
   override def toString: String =
-    s"$sendField~${fieldKey.map(_.toString).getOrElse("")}"
+    val prefix: String = maybeFieldKey match
+      case Some(fieldKey: FieldKey) =>
+        s"Send ${fieldKey.display}"
+      case None =>
+        if(doCandidate)
+          "Send all candidate fields"
+        else
+          "Send all values; candidate or current field value"
+    if(acceptCandidate)
+      prefix + " and accept candidate."
+    else
+      prefix
+    
 
   def filter(dataStore: DataStore): Seq[UploadData] =
-    fieldKey match
+    maybeFieldKey match
       case Some(fieldKey) =>
         val fieldEntry: FieldEntry = dataStore(fieldKey)
-        Seq(UploadData(fieldEntry, fieldEntry.value))
+        Seq(UploadData(fieldEntry, fieldEntry.value, acceptCandidate))
       case None =>
-        dataStore
-          .all
-          .flatMap { fieldEntry =>
-            sendField.select(fieldEntry)
-          }
+        for {
+          fieldEntry <- dataStore.all
+          if (fieldEntry.candidate.isDefined || !doCandidate)
+        } yield {
+          UploadData(
+            fieldEntry = fieldEntry,
+            fieldValue = if (doCandidate)
+              fieldEntry.value
+            else
+              fieldEntry.fieldValue,
+            accept = acceptCandidate
+          )
+        }
   
   def table: Table =
     Table(Header("Upload Request"),
       Seq(
-        Row("Send Field", sendField),
-        Row("FieldKey", fieldKey)
+        Row("Upload", if (doCandidate) "Candidate" else "Field Value"),
+        Row("Accept", if (acceptCandidate) "Candidate to Field Value" else "Keep Candidate"),
+        Row("FieldKey", maybeFieldKey match
+          case Some(fieldKey) =>
+            fieldKey.display
+          case None =>
+            "All fields"
+        )
       )
     )
 
@@ -55,37 +87,29 @@ case class UploadRequest(sendField: SendField, fieldKey: Option[FieldKey] = None
  *
  * @param fieldEntry
  * @param fieldValue candiate ot fieldValue
+ * @param accept     true to make fieldValue to candidate, clearing existing candidate.
  */
-case class UploadData(fieldEntry: FieldEntry, fieldValue: FieldValue)
+case class UploadData(fieldEntry: FieldEntry, fieldValue: FieldValue, accept: Boolean)
 
 object UploadRequest:
-  def apply(sendField: SendField, fieldKey: FieldKey): UploadRequest =
-    UploadRequest(sendField, Option(fieldKey))
+  implicit val fmtUploadRequest: Format[UploadRequest] = Json.format[UploadRequest]
 
-  private val r: Regex = """(\S+)~(\S+)?""".r
+    def apply(fieldKey: FieldKey): UploadRequest =
+      UploadRequest(maybeFieldKey =  Option(fieldKey))
 
-  def apply(s: String): UploadRequest = {
-    s match
-      case r(sf, fk) =>
-        val sendField = SendField.withName(sf)
-        val maybeFieldKey: Option[FieldKey] = Option(fk).map(FieldKey.fromId)
-        UploadRequest(sendField, maybeFieldKey)
-      case x =>
-        throw new IllegalArgumentException(s"Can't parse $x")
-  }
-
-  implicit val fmtCommandSendRequest: Format[UploadRequest] = Json.format[UploadRequest]
 
   implicit def pathBinder: PathBindable[UploadRequest] = new PathBindable[UploadRequest] {
     override def bind(key: String, value: String): Either[String, UploadRequest] =
 
       try {
-        Right(UploadRequest(value))
+        Right(Json.parse(value).as[UploadRequest])
       } catch {
         case e: Exception =>
           Left(e.getMessage)
       }
 
-    override def unbind(key: String, commandSendRequest: UploadRequest): String =
-      commandSendRequest.toString
+    override def unbind(key: String, uploadRequest: UploadRequest): String = {
+      val jsValue = Json.toJson(uploadRequest)
+      jsValue.toString
+    }
   }

@@ -19,6 +19,7 @@ package net.wa9nnn.rc210.ui
 
 import controllers.routes
 import net.wa9nnn.rc210.KeyKind
+import net.wa9nnn.rc210.serial.{SendField, UploadRequest}
 import net.wa9nnn.rc210.ui.nav.TabKind
 import net.wa9nnn.rc210.ui.nav.TabKind.*
 import org.apache.pekko.actor.typed.SupervisorStrategy.restart
@@ -54,7 +55,8 @@ enum TabE(override val entryName: String,
   case JsonDownload extends TabE("Save", routes.DataStoreController.downloadJson.url, "Save RC210 data in JSON.", Disk)
   case UserManager extends TabE("Users", routes.UsersController.users().url, "Edit Users", Settings)
   case Names extends TabE("Names", routes.NamesController.index.url, "User supplied names for varous fields.")
-  case Rollback extends TabE("Rollback", routes.DataStoreController.rollback().url, "Remove all candidates.", Debug)
+  case Rollback extends TabE("Rollback", routes.DataStoreController.rollback().url, "Remove all candidates.", Rc210Io)
+  case FullUpload extends TabE("Upload All", routes.UploadController.start(UploadRequest(doCandidate = false)).url, "Upload all fields.", Rc210Io)
   case Logout extends TabE("Logout", routes.LoginController.logout().url, "Finish this session", Settings)
 
 object Tabs:

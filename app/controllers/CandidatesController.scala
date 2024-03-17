@@ -73,12 +73,6 @@ class CandidatesController @Inject()(dataStore: DataStore,
       Ok(navMain(TabE.Changes, views.html.candidates(table)))
     }
   }
-
-  def dump(): Action[AnyContent] = Action {
-    implicit request: MessagesRequest[AnyContent] =>
-      val fieldEntries = dataStore.candidates
-      Ok(views.html.dump(fieldEntries))
-  }
 }
 
 object CandidatesController:

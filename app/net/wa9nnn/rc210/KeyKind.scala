@@ -35,15 +35,17 @@ import net.wa9nnn.rc210.ui.{EnumEntryValue, Tab}
  * @param maxN    how many keys there can be for this kind,
  * @param handler how many keys there can be for this kind,
  */
-sealed trait KeyKind(val maxN: Int, val handler: EditHandler = null, 
+sealed trait KeyKind(val maxN: Int, val handler: EditHandler = null,
                      val needsFieldName: Boolean = false,
-                     val includeInNav:Boolean = true) extends EnumEntryValue
-  with CapitalWords with Tab:
+                     val includeInNav: Boolean = true) extends EnumEntryValue
+  with CapitalWords with Tab with Ordered[KeyKind]:
   override def indexUrl: String = routes.EditController.index(this).url
 
   override def values: IndexedSeq[EnumEntryValue] = KeyKind.values
 
-  val rc210Value: Int = -1 // not needed for KeyKind
+  val rc210Value: Int = -1
+
+  def compare(that: KeyKind): Int = this.entryName.compareTo (that.entryName)
 
 object KeyKind extends PlayEnum[KeyKind]:
 

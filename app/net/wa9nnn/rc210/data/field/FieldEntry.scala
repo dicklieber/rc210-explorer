@@ -69,7 +69,7 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
 
   def acceptCandidate(): FieldEntry = copy(
     candidate = None,
-    fieldValue = candidate.getOrElse(throw new IllegalStateException(s"No candidate to accept!")))
+    fieldValue = candidate.getOrElse(fieldValue))
 
   def commands: Seq[String] = {
     candidate

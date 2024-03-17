@@ -5,16 +5,18 @@
 @import net.wa9nnn.rc210.ui.nav.TabKind.Settings
 @import views.html.helper.*
 
+@import net.wa9nnn.rc210.ui.RollbackButton
 @(table: Table, keyKind: KeyKind)
 @form(action = routes.DataStoreExplorerController.filtered()) {
     <div class="filter">
         <label for="filterSelect">Filter by: </label>
         <select name="filterKeyKind" id="filterSelect" onchange="this.form.submit()" >
-        @for(choice <- KeyKind.values.filterNot(_ == KeyKind.Function)) {
+        @for(choice <- KeyKind.values.sorted.filterNot(_ == KeyKind.Function)) {
             <option
             @if(keyKind == choice) { selected }>@choice.entryName </option>
         }
         </select>
+        
     </div>
 }
 @renderTable(table)

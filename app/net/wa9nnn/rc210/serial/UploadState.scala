@@ -47,6 +47,6 @@ case class UploadState(uploadRequest: UploadRequest,
     MultiColumn(operations, 10, "Detail")
 
 object UploadState:
-  val neverStarted: UploadState = new UploadState(UploadRequest(SendField.CandidatesOnly), rcSession = RcSession.noSession)
+  val neverStarted: UploadState = new UploadState(UploadRequest(), rcSession = RcSession.noSession)
 
 

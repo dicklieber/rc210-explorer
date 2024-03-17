@@ -32,6 +32,7 @@ import play.twirl.api.Html
 import views.html.{NavMain, explorer, justdat}
 
 import javax.inject.{Inject, Singleton}
+import scala.Seq
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationInt
 
@@ -46,19 +47,19 @@ class DataStoreExplorerController @Inject()(dataStore: DataStore, navMain: NavMa
       val value: String = data("filterKeyKind").head
       val keyKind = KeyKind.withName(value)
       val fieldEntries = dataStore(keyKind)
-      val table: Table = process(fieldEntries)
+      val table: Table = buildTable(fieldEntries)
       val html = explorer(table, keyKind)
       Ok(navMain(TabE.Explore, html))
   }
 
   def index: Action[AnyContent] = Action {
-    val table = process(dataStore.all)
+    val table = buildTable(dataStore.all)
     val html = explorer(table, KeyKind.All)
     Ok(navMain(TabE.Explore, html))
   }
 
-  def process(fieldEntries: Seq[FieldEntry]): Table = {
-    val rows = fieldEntries
+  def buildTable(fieldEntries: Seq[FieldEntry]): Table = {
+    val rows: Seq[Row] = fieldEntries
       .sortBy(_.fieldKey.display)
       .map { fieldEntry =>
         Row(
@@ -66,22 +67,26 @@ class DataStoreExplorerController @Inject()(dataStore: DataStore, navMain: NavMa
           Cell(fieldEntry.fieldKey.display)
             .withToolTip(fieldEntry.fieldKey.toString),
           fieldEntry.fieldValue.displayCell,
-          RollbackButton(fieldEntry.fieldKey),
+          RollbackButton.cell(fieldEntry.fieldKey),
           fieldEntry.candidate.map(_.displayCell).getOrElse("-")
         )
       }
-    val header = Header(Seq(
+    val rollbackAllButton = RollbackButton.cell()
+    val header: Header = Header(Seq(
       Seq(Cell(s"DataStore(${rows.length})")
         .withColSpan(5)),
       Seq(
-        Cell(""),
-        Cell("FieldKey"),
-        Cell("Value"),
+        Cell("").withRowSpan(2),
+        Cell("FieldKey").withRowSpan(2),
+        Cell("Value").withRowSpan(2),
         Cell("Candidate")
           .withColSpan(2)
+      ),
+      Seq(
+        rollbackAllButton,
+        Cell("")
       )
-    )
-    )
+    ))
 
     Table(header, rows)
   }

@@ -2,11 +2,18 @@
 @import com.wa9nnn.wa9nnnutil.tableui.html.renderTable
 @import net.wa9nnn.rc210.serial.UploadRequest
 @import net.wa9nnn.rc210.serial.SendField
+@import net.wa9nnn.rc210.ui.UploadButton
 @(table: Table)
 
 <div class="container">
+    @UploadButton(UploadRequest())
+
+@*
     <a href="@routes.UploadController.start(UploadRequest(SendField.CandidatesOnly))"
-    title="Send all to RC-210" class="w3-btn w3-round w3-blue">Send All </a>
+    title="Send Changes to RC-210" class="w3-btn w3-round w3-blue">Upload Changes </a>
+    <a href="@routes.UploadController.start(UploadRequest(SendField.AllFields))"
+    title="Send all to RC-210" class="w3-btn w3-round w3-blue">Send All</a>
+*@
     @renderTable(table)
 </div>
 

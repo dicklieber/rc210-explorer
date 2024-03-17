@@ -36,7 +36,17 @@
 .headeredTable th {
     text-align: center;
     vertical-align: top;
-    /*font-weight: bold;*/
+    font-weight: normal;
+    background-color: #cfe2ff;
+    border-width: 1px;
+    border-color: black;
+    border-style: solid;
+    white-space: nowrap;
+}
+.headeredTable thead td {
+    text-align: center;
+    vertical-align: top;
+    font-weight: normal;
     background-color: #cfe2ff;
     border-width: 1px;
     border-color: black;
@@ -78,7 +88,6 @@
 
 .headeredTable td.subHeader {
     text-align: center;
-    font-weight: bold;
     background-color: #bac9e7;
 }
 
@@ -333,6 +342,9 @@ nav {
     /*background-color: #555;*/
 }
 
+.button {
+
+}
 section {
     display: flex; /* or inline-flex */
     border: #FFCC00 2px ;
