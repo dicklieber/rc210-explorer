@@ -56,7 +56,7 @@ enum TabE(override val entryName: String,
   case UserManager extends TabE("Users", routes.UsersController.users().url, "Edit Users", Settings)
   case Names extends TabE("Names", routes.NamesController.index.url, "User supplied names for varous fields.")
   case Rollback extends TabE("Rollback", routes.DataStoreController.rollback().url, "Remove all candidates.", Rc210Io)
-  case FullUpload extends TabE("Upload All", routes.UploadController.start(UploadRequest(doCandidate = false)).url, "Upload all fields.", Rc210Io)
+  case FullUpload extends TabE("Upload All", routes.UploadController.start(UploadRequest(doCandidateOnly = false)).url, "Upload all fields.", Rc210Io)
   case Logout extends TabE("Logout", routes.LoginController.logout().url, "Finish this session", Settings)
 
 object Tabs:

@@ -10,8 +10,9 @@ import net.wa9nnn.rc210.ui.*
  */
 object ButtonCell:
 
-  def editFlow(fieldKey: FieldKey): Cell = buttonBuilder(
+  def editUploadFlow(fieldKey: FieldKey): Cell = buttonBuilder(
     Button.edit(fieldKey),
+    Button.upload(fieldKey),
     Button.flow(fieldKey)
   )
 
@@ -23,16 +24,26 @@ object ButtonCell:
     Button.edit(fieldKey)
   )
 
-  def upload(fieldKey: FieldKey): Cell = buttonBuilder(
+  def upload(fieldKey: FieldKey, doCandidateOnly:Boolean): Cell = buttonBuilder(
     Button.upload(fieldKey)
   )
-  def upload(): Cell = buttonBuilder(
-    Button.upload()
+
+  def upload(doCandidateOnly:Boolean): Cell = buttonBuilder(
+    Button.upload(doCandidateOnly)
   )
 
-  def uploadEdit(fieldKey: FieldKey): Cell = buttonBuilder(
+  def editFlow(fieldKey: FieldKey): Cell = buttonBuilder(
+    Button.edit(fieldKey),
+    Button.flow(fieldKey),
+  )
+
+  def rollbackUpload(doCandidateOnly:Boolean): Cell = buttonBuilder(
+    Button.upload(doCandidateOnly),
+    Button.rollback()
+  )
+  def uploadRollback(fieldKey: FieldKey): Cell = buttonBuilder(
     Button.upload(fieldKey),
-    Button.edit(fieldKey)
+    Button.rollback(fieldKey)
   )
 
   def editHtml(fieldKey: FieldKey): String = Button.edit(fieldKey)

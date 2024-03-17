@@ -7,7 +7,7 @@ import net.wa9nnn.rc210.ui.Button.button
 import play.api.mvc.Call
 
 /**
- * Create the html for some kind of button.
+ * Create the html for variopus buttons.
  */
 object Button:
 
@@ -19,13 +19,13 @@ object Button:
    * @return raw html.
    */
   def button(icon: String, call: Call, toolTip: String): String =
-    val cl = s"bi {icon}} btn ${icon} btn-sm p-0"
-    <a href={call.url} class="bi {icon}} btn btn-sm p-0" title={toolTip}></a>
+    val cssClass = s"bi {icon}} btn ${icon} btn-sm p-0"
+    <a href={call.url} class={cssClass} title={toolTip}></a>
       .toString
 
   def flow(fieldKey: FieldKey): String =
     button(
-      icon = "bi-arrow-counterclockwise",
+      icon = "bi-link-45deg",
       call = routes.FlowController.flowChart(fieldKey.key),
       toolTip = "Show in flow page.")
 
@@ -56,13 +56,13 @@ object Button:
           routes.DataStoreController.rollback(),
           "Rollback all fields.")
 
-  def upload(): String =
-    buildUpload(None)
+  def upload(doCandidateOnly:Boolean = true): String =
+    buildUpload(None, doCandidateOnly)
 
   def upload(fieldKey: FieldKey): String =
     buildUpload(Option(fieldKey))
 
-  def buildUpload(fieldKey: Option[FieldKey]): String =
+  def buildUpload(fieldKey: Option[FieldKey], doCandidateOnly:Boolean = true): String =
     val icon = "bi-upload"
     fieldKey match
       case Some(fieldKey) =>
@@ -71,5 +71,5 @@ object Button:
           s"Upload ${fieldKey.display} and accept the candidate.")
       case None =>
         button(icon,
-          routes.UploadController.start(UploadRequest(doCandidate = true)),
+          routes.UploadController.start(UploadRequest(doCandidateOnly = doCandidateOnly)),
           s"Upload all fields")

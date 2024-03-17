@@ -3,10 +3,11 @@
 @import net.wa9nnn.rc210.serial.UploadRequest
 @import net.wa9nnn.rc210.serial.SendField
 @import net.wa9nnn.rc210.ui.ButtonCell
+@import net.wa9nnn.rc210.ui.Button
 @(table: Table)
 
 <div class="container">
-    @ButtonCell.upload())
+    @Html(Button.upload(true))
 
 @*
     <a href="@routes.UploadController.start(UploadRequest(SendField.CandidatesOnly))"

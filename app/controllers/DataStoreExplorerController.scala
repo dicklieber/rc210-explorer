@@ -22,7 +22,6 @@ import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.KeyKind
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.serial.UploadRequest
 import net.wa9nnn.rc210.ui.{ButtonCell, TabE}
 import play.api.mvc.*
 import play.api.mvc.Results.Ok
@@ -31,6 +30,11 @@ import views.html.{NavMain, explorer}
 import javax.inject.{Inject, Singleton}
 import scala.Seq
 
+/**
+ * Shows all data. Allows upload, rollback and edit
+ * @param dataStore where RC-210 data is stored..
+ * @param navMain common UI frame.
+ */
 @Singleton
 class DataStoreExplorerController @Inject()(dataStore: DataStore, navMain: NavMain)(implicit cc: MessagesControllerComponents)
   extends MessagesAbstractController(cc) with LazyLogging {
@@ -59,11 +63,11 @@ class DataStoreExplorerController @Inject()(dataStore: DataStore, navMain: NavMa
       .map { fieldEntry =>
         val fieldKey = fieldEntry.fieldKey
         Row(
-          ButtonCell.editFlow(fieldKey),
+          ButtonCell.editUploadFlow(fieldKey),
           Cell(fieldKey.display)
             .withToolTip(fieldKey.toString),
           fieldEntry.fieldValue.displayCell,
-          ButtonCell.uploadEdit(fieldKey),
+          ButtonCell.uploadRollback(fieldKey),
           fieldEntry.candidate.map(_.displayCell).getOrElse("-")
         )
       }
@@ -71,16 +75,15 @@ class DataStoreExplorerController @Inject()(dataStore: DataStore, navMain: NavMa
       Seq(Cell(s"DataStore(${rows.length})")
         .withColSpan(5)),
       Seq(
-
-        ButtonCell.upload(),
+        ButtonCell.upload(false)
+        .withRowSpan(2),
         Cell("FieldKey").withRowSpan(2),
         Cell("Value").withRowSpan(2),
         Cell("Candidate")
           .withColSpan(2)
       ),
       Seq(
-        ButtonCell.rollback(),
-        Cell("")
+        ButtonCell.rollbackUpload(true)
       )
     ))
 

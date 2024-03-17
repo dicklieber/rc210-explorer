@@ -26,11 +26,11 @@ import play.api.mvc.PathBindable
 
 /**
  *
- * @param doCandidate        true to upload the candidate. False to upload the fieldValue
- * @param acceptCandidate   true to set the fieldValue to the candidate, if present. Clears the candidate.
- * @param maybeFieldKey      if Some then just upload this field. None uploads all fields as conditioned by [[doCandidate]].
+ * @param doCandidateOnly        true to upload the candidate. False to upload the fieldValue
+ * @param acceptCandidate        true to set the fieldValue to the candidate, if present. Clears the candidate.
+ * @param maybeFieldKey          if Some then just upload this field. None uploads all fields as conditioned by [[doCandidateOnly]].
  */
-case class UploadRequest(doCandidate: Boolean = true,
+case class UploadRequest(doCandidateOnly: Boolean = true,
                          acceptCandidate: Boolean = true,
                          maybeFieldKey: Option[FieldKey] = None):
   override def toString: String =
@@ -38,7 +38,7 @@ case class UploadRequest(doCandidate: Boolean = true,
       case Some(fieldKey: FieldKey) =>
         s"Send ${fieldKey.display}"
       case None =>
-        if(doCandidate)
+        if(doCandidateOnly)
           "Send all candidate fields"
         else
           "Send all values; candidate or current field value"
@@ -56,11 +56,11 @@ case class UploadRequest(doCandidate: Boolean = true,
       case None =>
         for {
           fieldEntry <- dataStore.all
-          if (fieldEntry.candidate.isDefined || !doCandidate)
+          if (fieldEntry.candidate.isDefined || !doCandidateOnly)
         } yield {
           UploadData(
             fieldEntry = fieldEntry,
-            fieldValue = if (doCandidate)
+            fieldValue = if (doCandidateOnly)
               fieldEntry.value
             else
               fieldEntry.fieldValue,
@@ -71,7 +71,7 @@ case class UploadRequest(doCandidate: Boolean = true,
   def table: Table =
     Table(Header("Upload Request"),
       Seq(
-        Row("Upload", if (doCandidate) "Candidate" else "Field Value"),
+        Row("Upload", if (doCandidateOnly) "Candidate" else "Field Value"),
         Row("Accept", if (acceptCandidate) "Candidate to Field Value" else "Keep Candidate"),
         Row("FieldKey", maybeFieldKey match
           case Some(fieldKey) =>
