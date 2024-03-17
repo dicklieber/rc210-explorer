@@ -24,7 +24,7 @@ import net.wa9nnn.rc210.data.Node
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.Functions
 import net.wa9nnn.rc210.data.macros.MacroNode
-import net.wa9nnn.rc210.ui.TableSectionButtons
+import net.wa9nnn.rc210.ui.{ButtonCell, TableSectionButtons}
 import net.wa9nnn.rc210.ui.flow.{D3Data, D3Link, D3Node}
 import play.api.mvc.Call
 import play.twirl.api.{Html, StringInterpolation}
@@ -56,8 +56,7 @@ class FlowData(val macroFieldEntry: FieldEntry, val triggers: Seq[FieldEntry], v
 
   def macroSection: Table =
     val table = Table(Seq.empty, Seq.empty)
-    val edit: Cell = macroFieldEntry.fieldKey.key.keyKind.handler.editButtonCell(macroFieldEntry.fieldKey)
-    val ts = new TableSectionButtons("Macro", edit)(
+    val ts = new TableSectionButtons("Macro", ButtonCell.edit(macroFieldEntry.fieldKey))(
       "DTMF" -> macroFieldEntry.value[MacroNode].dtmf
     )
     table.append(ts)

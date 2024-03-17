@@ -26,7 +26,7 @@ import net.wa9nnn.rc210.data.field.LogicAlarmNode.{form, keyKind}
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.vocabulary.{Word, Words}
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.{EditButton, EditFlowButtons}
+import net.wa9nnn.rc210.ui.ButtonCell
 import net.wa9nnn.rc210.util.Chunk
 import org.apache.pekko.http.scaladsl.model.HttpHeader.ParsingResult.Ok
 import play.api.data.Form
@@ -67,7 +67,7 @@ case class MessageNode(key: Key, words: Seq[Int]) extends ComplexFieldValue() {
 
   override def toRow: Row = {
     Row(
-      EditFlowButtons.cell(fieldKey),
+      ButtonCell.editFlow(fieldKey),
       key.keyWithName,
       toWords.map(_.string).mkString(" ")
     )

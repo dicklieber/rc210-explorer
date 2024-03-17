@@ -2,11 +2,11 @@
 @import com.wa9nnn.wa9nnnutil.tableui.html.renderTable
 @import net.wa9nnn.rc210.serial.UploadRequest
 @import net.wa9nnn.rc210.serial.SendField
-@import net.wa9nnn.rc210.ui.UploadButton
+@import net.wa9nnn.rc210.ui.ButtonCell
 @(table: Table)
 
 <div class="container">
-    @UploadButton(UploadRequest())
+    @ButtonCell.upload())
 
 @*
     <a href="@routes.UploadController.start(UploadRequest(SendField.CandidatesOnly))"

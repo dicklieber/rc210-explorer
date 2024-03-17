@@ -6,7 +6,7 @@ import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.{EditHandler, Node}
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.EditFlowButtons
+import net.wa9nnn.rc210.ui.ButtonCell
 import net.wa9nnn.rc210.{FieldKey, Functions, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.*
@@ -70,7 +70,7 @@ case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dt
   }
 
   override def toRow: Row = Row(
-    EditFlowButtons.cell(fieldKey),
+    ButtonCell.edit(fieldKey),
     fieldKey.key.keyWithName,
     dtmf,
     TableInACell(Table(Seq.empty,

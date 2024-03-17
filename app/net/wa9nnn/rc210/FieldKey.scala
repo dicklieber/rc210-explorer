@@ -19,6 +19,7 @@ package net.wa9nnn.rc210
 
 import com.wa9nnn.wa9nnnutil.tableui.Cell
 import net.wa9nnn.rc210.data.EditHandler
+import net.wa9nnn.rc210.ui.ButtonCell
 import play.api.libs.json.*
 
 import scala.util.Try
@@ -45,7 +46,7 @@ case class FieldKey(key: Key, fieldName: String = "") extends Ordered[FieldKey] 
       fieldName.compare(that.fieldName)
     ret
 
-  def editButtonCell: Cell = key.keyKind.handler.editButtonCell(this)
+  def editButtonCell: Cell = ButtonCell.edit(this)
 
   /**
    * | Example | Comment |

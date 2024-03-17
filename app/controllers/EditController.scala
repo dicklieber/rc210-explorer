@@ -60,7 +60,7 @@ class EditController @Inject()(navMain: NavMain)
   }
 
   /**
-   * Edit date for one [[FieldKey]].
+   * Edit data for one [[FieldKey]].
    *
    * @param fieldKey edit this one.
    * @return the Http response to send back to the browser.

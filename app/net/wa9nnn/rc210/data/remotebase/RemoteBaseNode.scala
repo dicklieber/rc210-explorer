@@ -21,7 +21,6 @@ import com.wa9nnn.wa9nnnutil.tableui.{Cell, KvTable, Row, TableSection}
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.EditButton
 import net.wa9nnn.rc210.util.Chunk
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import play.api.data.Forms.*

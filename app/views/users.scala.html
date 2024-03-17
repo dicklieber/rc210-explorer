@@ -1,6 +1,6 @@
 @import net.wa9nnn.rc210.security.authentication.User
 @import net.wa9nnn.rc210.ui.Tabs
-@import net.wa9nnn.rc210.ui.EditButton
+@import net.wa9nnn.rc210.ui.Button
 @(users: Seq[User])
 
 <table class="headeredTable">
@@ -19,8 +19,7 @@
     @for(user <- users) {
         <tr>
             <td>
-            @EditButton(routes.UsersController.editUser(user.id))
-            </td>
+            @Html(Button.button(Button.editIcon, routes.UsersController.editUser(user.id), "Edit User"))
             <td>
             @user.callsign
             </td>

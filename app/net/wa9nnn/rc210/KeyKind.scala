@@ -33,9 +33,11 @@ import net.wa9nnn.rc210.ui.{EnumEntryValue, Tab}
 
 /**
  * @param maxN    how many keys there can be for this kind,
- * @param handler how many keys there can be for this kind,
+ * @param needsFieldName
+ * @param includeInNav
  */
-sealed trait KeyKind(val maxN: Int, val handler: EditHandler = null,
+sealed trait KeyKind(val maxN: Int,
+                     val handler: EditHandler = null,
                      val needsFieldName: Boolean = false,
                      val includeInNav: Boolean = true) extends EnumEntryValue
   with CapitalWords with Tab with Ordered[KeyKind]:
@@ -45,7 +47,7 @@ sealed trait KeyKind(val maxN: Int, val handler: EditHandler = null,
 
   val rc210Value: Int = -1
 
-  def compare(that: KeyKind): Int = this.entryName.compareTo (that.entryName)
+  def compare(that: KeyKind): Int = this.entryName.compareTo(that.entryName)
 
 object KeyKind extends PlayEnum[KeyKind]:
 

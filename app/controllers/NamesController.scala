@@ -19,16 +19,10 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.*
-import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
-import net.wa9nnn.rc210.data.datastore.{CandidateAndNames, DataStore, UpdateCandidate}
-import net.wa9nnn.rc210.data.remotebase.RemoteBaseNode
-import net.wa9nnn.rc210.security.Who.request2Session
-import net.wa9nnn.rc210.security.authentication.RcSession
-import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
+import net.wa9nnn.rc210.FieldKey
+import net.wa9nnn.rc210.data.datastore.DataStore
+import net.wa9nnn.rc210.ui.{ButtonCell, TabE}
 import net.wa9nnn.rc210.ui.TabE.Names
-import net.wa9nnn.rc210.ui.{EditButton, TabE, Tabs}
-import play.api.data.Forms.*
-import play.api.data.{Field, Form, Mapping}
 import play.api.mvc.*
 import views.html.NavMain
 
@@ -51,9 +45,8 @@ class NamesController @Inject()(dataStore: DataStore,
         val key = namedKey.key
         val fieldKey = FieldKey(key)
         val keyKind = key.keyKind
-        val editCell = keyKind.handler.editButtonCell(fieldKey)
         Row(
-          editCell,
+          ButtonCell.edit(fieldKey),
           Cell(key),
           namedKey.name
         )

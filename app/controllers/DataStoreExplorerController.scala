@@ -20,21 +20,16 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.KeyKind
-import net.wa9nnn.rc210.data.datastore.{DataStore, DataTransferJson}
+import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.FieldEntry
-import net.wa9nnn.rc210.ui.{EditButton, RollbackButton, TabE, Tabs}
-import net.wa9nnn.rc210.ui.nav.TabKind
-import play.api.libs.Files
-import play.api.libs.json.Json
+import net.wa9nnn.rc210.serial.UploadRequest
+import net.wa9nnn.rc210.ui.{ButtonCell, TabE}
 import play.api.mvc.*
 import play.api.mvc.Results.Ok
-import play.twirl.api.Html
-import views.html.{NavMain, explorer, justdat}
+import views.html.{NavMain, explorer}
 
 import javax.inject.{Inject, Singleton}
 import scala.Seq
-import scala.concurrent.ExecutionContext
-import scala.concurrent.duration.DurationInt
 
 @Singleton
 class DataStoreExplorerController @Inject()(dataStore: DataStore, navMain: NavMain)(implicit cc: MessagesControllerComponents)
@@ -58,32 +53,33 @@ class DataStoreExplorerController @Inject()(dataStore: DataStore, navMain: NavMa
     Ok(navMain(TabE.Explore, html))
   }
 
-  def buildTable(fieldEntries: Seq[FieldEntry]): Table = {
+  private def buildTable(fieldEntries: Seq[FieldEntry]): Table = {
     val rows: Seq[Row] = fieldEntries
       .sortBy(_.fieldKey.display)
       .map { fieldEntry =>
+        val fieldKey = fieldEntry.fieldKey
         Row(
-          EditButton.cell(fieldEntry.fieldKey),
-          Cell(fieldEntry.fieldKey.display)
-            .withToolTip(fieldEntry.fieldKey.toString),
+          ButtonCell.editFlow(fieldKey),
+          Cell(fieldKey.display)
+            .withToolTip(fieldKey.toString),
           fieldEntry.fieldValue.displayCell,
-          RollbackButton.cell(fieldEntry.fieldKey),
+          ButtonCell.uploadEdit(fieldKey),
           fieldEntry.candidate.map(_.displayCell).getOrElse("-")
         )
       }
-    val rollbackAllButton = RollbackButton.cell()
     val header: Header = Header(Seq(
       Seq(Cell(s"DataStore(${rows.length})")
         .withColSpan(5)),
       Seq(
-        Cell("").withRowSpan(2),
+
+        ButtonCell.upload(),
         Cell("FieldKey").withRowSpan(2),
         Cell("Value").withRowSpan(2),
         Cell("Candidate")
           .withColSpan(2)
       ),
       Seq(
-        rollbackAllButton,
+        ButtonCell.rollback(),
         Cell("")
       )
     ))

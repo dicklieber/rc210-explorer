@@ -39,7 +39,7 @@ case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends ComplexField
   val duration: FiniteDuration = Duration(seconds, "seconds")
 
   override def toRow: Row = Row(
-    EditFlowButtons.cell(fieldKey),
+    ButtonCell.edit(fieldKey),
     key.keyWithName,
     seconds,
     macroKey.keyWithName
