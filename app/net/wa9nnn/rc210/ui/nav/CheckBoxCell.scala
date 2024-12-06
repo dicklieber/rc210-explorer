@@ -15,3 +15,4 @@ object CheckBoxCell:
     val s = s"""<input class="form-check-input" type="checkbox" disabled="disabled" $ck>"""
     Cell.rawHtml(s)
       .withCssClass("checkbox")
+
