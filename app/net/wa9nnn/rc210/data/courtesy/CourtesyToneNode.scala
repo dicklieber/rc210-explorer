@@ -24,6 +24,7 @@ import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.ui.ButtonCell
 import play.api.data.*
 import play.api.data.Forms.*
 import play.api.i18n.MessagesProvider
@@ -64,7 +65,7 @@ case class CourtesyToneNode(override val key: Key, segments: Seq[Segment]) exten
   override def toJsValue: JsValue = Json.toJson(this)
 
   override def toRow: Row = Row(
-    fieldKey.editButtonCell,
+    ButtonCell.edit(fieldKey),
     named(key),
 
   )
