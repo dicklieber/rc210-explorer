@@ -121,5 +121,5 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
         }
       }
     })
-    eventBased.send("1SendEram")
+    eventBased.send("\r\r\r1SendEram")
 

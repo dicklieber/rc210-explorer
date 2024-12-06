@@ -3,7 +3,6 @@ import sbt.*
 import sbt.Keys.{packageBin, *}
 import sbt.internal.util.ManagedLogger
 import sbtrelease.ReleaseStateTransformations.*
-
 import scala.sys.process.*
 
 name := """rc210-explorer"""

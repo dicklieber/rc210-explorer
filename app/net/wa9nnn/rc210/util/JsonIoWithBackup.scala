@@ -19,7 +19,9 @@ object JsonIoWithBackup {
 
     val sJson = Json.prettyPrint(jsValue)
     os.write(temp, sJson)
-    os.move(baseFile, backup, replaceExisting = true)
+    if os.exists(baseFile)  then 
+      os.move(baseFile, backup, replaceExisting = true)
+    
     os.move(temp, baseFile)
   }
 

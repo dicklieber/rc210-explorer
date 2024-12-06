@@ -31,6 +31,11 @@ class UserStore @Inject()(config: Config, defaultNoUsersLogin: DefaultNoUsersLog
   }
 
   load()
+  if userMap.isEmpty then
+    val defaultCallsign = config.get[String]("vizRc210.authentication.defaultAdmin.callsign")
+    val defaultpassword = config.get[String]("vizRc210.authentication.defaultAdmin.password")
+    logger.error(s"""No users are configured. Use callsign: "$defaultCallsign" password: "$defaultpassword" to login. """)
+    logger.error(s"""Then setup a user.""")
 
   def load(): Unit =
     try {

@@ -1,5 +1,5 @@
 <!-- https://www.playframework.com/documentation/latest/SettingsLogger -->
-<configuration debug="false">
+<configuration>
 
     <conversionRule conversionWord="coloredLevel" converterClass="play.api.libs.logback.ColoredLevel"/>
 
