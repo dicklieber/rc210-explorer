@@ -29,7 +29,7 @@ import play.api.libs.json.JsValue
  */
 sealed trait FieldValue extends LazyLogging with RowSource {
   /**
-   * Nodes that actuall have an eneabled field should override this.
+   * Nodes that actually have an enabled field should override this.
    *
    * @return
    */

@@ -17,8 +17,8 @@
 
 package net.wa9nnn.rc210.util
 
-case class Chunk(ints: Seq[Int]){
-  def size = ints.length
+
+case class Chunk(ints: Seq[Int]) extends Iterable[Int]:
 
   def apply(n: Int) = ints(n)
 
@@ -31,4 +31,7 @@ case class Chunk(ints: Seq[Int]){
   }
 
   def iterator:Iterator[Int] = ints.iterator
-}
+
+
+  
+

@@ -84,10 +84,10 @@ case class Memory(val data: Array[Int] = Array.empty, url:URL, stamp:Instant) {
    */
   def chunks(offset: Int, chunkLength: Int, nChunks: Int): Seq[Chunk] = {
     val size = chunkLength * nChunks
-    data.slice(offset, offset + size)
-      .grouped(chunkLength)
-      .map(a => Chunk(a.toIndexedSeq)).toIndexedSeq
-
+    val slice = data.slice(offset, offset + size)
+    val grouped: Seq[Array[Int]] =  slice.grouped(chunkLength).toSeq
+    val r = grouped.map(a => Chunk(a.toIndexedSeq)).toIndexedSeq
+    r  
   }
 
   //  /**
