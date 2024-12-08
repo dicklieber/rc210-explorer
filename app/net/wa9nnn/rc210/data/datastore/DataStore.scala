@@ -155,6 +155,10 @@ class DataStore @Inject() (persistence: DataStorePersistence, memoryFileLoader: 
     // update values from datastore.json
     try
       persistence.load().foreach { dto => {
+        // update namedKeys from datastore.json
+        keyNameMap.clear()
+        keyNameMap.addAll(dto.namedKeys.map(namedKey => namedKey.key -> namedKey.name))
+
         dto.values.foreach { fieldEntryJson =>
           val fieldKey = fieldEntryJson.fieldKey
           keyFieldMap.get(fieldKey).foreach { fieldEntry =>
@@ -165,10 +169,7 @@ class DataStore @Inject() (persistence: DataStorePersistence, memoryFileLoader: 
             keyFieldMap.put(fieldKey, updated)
           }
         }
-        // update namedKeys from datastore.json
-        keyNameMap.clear()
-        keyNameMap.addAll(dto.namedKeys.map(namedKey => namedKey.key -> namedKey.name))
-      }
+    }
       }
     catch
       case e: Exception =>
