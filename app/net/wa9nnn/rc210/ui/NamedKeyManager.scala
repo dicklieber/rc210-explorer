@@ -18,31 +18,41 @@
 
 package net.wa9nnn.rc210.ui
 
+import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import jakarta.inject.Singleton
+import jakarta.inject.{Inject, Singleton}
 import net.wa9nnn.rc210
-import net.wa9nnn.rc210.ui.NamedKeyManager.inTest
+import net.wa9nnn.rc210.util.Configs
 import net.wa9nnn.rc210.{Key, NamedKey, NamedKeySource}
+import play.api.libs.json.{JsValue, Json}
 
+import java.io.FileNotFoundException
+import java.nio.file.{Files, Path}
 import scala.collection.concurrent.TrieMap
 
 @Singleton
-class NamedKeyManager extends NamedKeySource with LazyLogging:
+class NamedKeyManager @Inject()(implicit config: Config) extends NamedKeySource with LazyLogging:
   private val keyNameMap = new TrieMap[Key, String]
+  Key.setNamedSource(this)
+
+  private val path: Path = Configs.path("vizRc210.namedKeysFile")
+  // load last saved data.
   try
-    Key.setNamedSource(this)
+    val str: String = Files.readString(path)
+    val jsValue1: JsValue = Json.parse(str)
+    val loadedKeys: Seq[NamedKey] = jsValue1.as[Seq[NamedKey]]
+    keyNameMap.addAll(loadedKeys.map(namedKey => namedKey.key -> namedKey.name))
   catch
-    case e: IllegalStateException =>
-      if (!inTest)
-        logger.error("setNamedSource", e)
-
-  /**
-   * @param namedKeys These come from [[DataTransferJson]] managed by the [[DataStore]].
-   */
-  def load(namedKeys: Seq[NamedKey]): Unit =
-    keyNameMap.clear()
-    keyNameMap.addAll(namedKeys.map(namedKey => namedKey.key -> namedKey.name))
-
+    case e: FileNotFoundException =>
+      logger.debug(s"No named keys file found at $path")
+    case e: Exception =>
+      logger.error(s"Error loading named keys from $path", e)
+  
+  private def save(): Unit =
+    val jsValue = Json.toJson(namedKeys)
+    val sJson = Json.prettyPrint(jsValue)
+    Files.writeString(path, sJson)
+  
   /**
    * Adds or removes name keys.
    *
@@ -56,6 +66,7 @@ class NamedKeyManager extends NamedKeySource with LazyLogging:
       else
         keyNameMap.put(key, namedKey.name)
     }
+    save()
 
   def update(namedKey: NamedKey): Unit =
     update(Seq(namedKey))
@@ -67,7 +78,6 @@ class NamedKeyManager extends NamedKeySource with LazyLogging:
 
 //  keyNameMap.addAll(dto.namedKeys.map(namedKey => namedKey.key -> namedKey.name))
 object NamedKeyManager:
-  var inTest: Boolean = false
   val NoNamedKeySource: NamedKeySource = new NamedKeySource:
     override def nameForKey(key: Key) =
       throw new NotImplementedError() //todo

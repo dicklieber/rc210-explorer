@@ -101,9 +101,8 @@ object Key extends LazyLogging:
       case e: Exception =>
         throw e
 
-  def setNamedSource(namedSource: NamedKeySource): Unit = {
+  def setNamedSource(namedSource: NamedKeySource): Unit =
       _namedSource = namedSource
-  }
 
   implicit val fmtKey: Format[Key] = new Format[Key] {
     override def reads(json: JsValue): JsResult[Key] = {

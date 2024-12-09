@@ -23,15 +23,12 @@ import net.wa9nnn.rc210.*
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.security.Who
-import net.wa9nnn.rc210.security.Who.given
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.ui.NamedKeyManager
-import play.api.mvc.{AnyContent, Request}
 
 import javax.inject.{Inject, Singleton}
 import scala.collection.concurrent.TrieMap
-import scala.collection.mutable
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Success}
 
 /**
  * This is the in-memory source of all RC-210 and NamedKey data.
@@ -157,7 +154,6 @@ class DataStore @Inject()(persistence: DataStorePersistence,
             keyFieldMap.put(fieldKey, updated)
           }
         }
-        namedKeyManager.load(dto.namedKeys)
       }
 
     catch

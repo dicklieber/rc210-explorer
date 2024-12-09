@@ -18,10 +18,9 @@
 
 package net.wa9nnn.rc210.ui
 
-import net.wa9nnn.rc210.{Key, NamedKey, RcSpec}
+import net.wa9nnn.rc210.{Key, NamedKey, RcSpec, WithTestConfiguration}
 
-class NamedKeyManagerTest extends RcSpec {
-  NamedKeyManager.inTest = true
+class NamedKeyManagerTest extends WithTestConfiguration {
 
   private val aMacroKey: Key = Key.macroKeys.head
   private val startupMacro = NamedKey(aMacroKey, "startup Macro")
@@ -30,19 +29,19 @@ class NamedKeyManagerTest extends RcSpec {
     {
       "save/load" in
         {
-          val namedKeyManager = new NamedKeyManager()
+          val namedKeyManager = new NamedKeyManager(using config)
           namedKeyManager.update(startupMacro)
           val saved = namedKeyManager.namedKeys
           saved must have size 1
-          val loaded = new NamedKeyManager()
-          loaded.load(saved)
+          val loaded = new NamedKeyManager(using config)
+          
           val namedKeys = loaded.namedKeys
           namedKeys must have size 1
         }
 
       "namedKey" in
         {
-          val namedKeyManager = new NamedKeyManager()
+          val namedKeyManager = new NamedKeyManager(using config)
           namedKeyManager.update(startupMacro)
 
           val str = namedKeyManager.nameForKey(aMacroKey)

@@ -17,7 +17,6 @@
 
 package net.wa9nnn.rc210.data.datastore
 
-import com.github.andyglow.config.*
 import com.google.inject.ImplementedBy
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
@@ -26,11 +25,10 @@ import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.util.Configs
 import play.api.libs.json.{Format, Json}
 
-import java.io.InputStream
 import java.nio.file.{Files, Path}
 import javax.inject.{Inject, Singleton}
 import scala.collection.immutable.Seq
-import scala.util.{Failure, Success, Try, Using}
+import scala.util.{Failure, Try, Using}
 
 /**
  * Parses JSON saved from [[DataStore]]
