@@ -40,7 +40,7 @@ case class MeterAlarmNode(val key: Key, meter: Key, alarmType: AlarmType, tripPo
   meter.check(Meter)
   macroKey.check(KeyKind.Macro)
 
-  private val rows: Seq[Row] = Seq(
+  private def rows: Seq[Row] = Seq(
     "Meter" -> meter.keyWithName,
     "Alarm Type" -> alarmType,
     "Trip Point" -> tripPoint,

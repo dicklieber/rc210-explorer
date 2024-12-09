@@ -21,7 +21,7 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.*
 import net.wa9nnn.rc210.FieldKey
 import net.wa9nnn.rc210.data.datastore.DataStore
-import net.wa9nnn.rc210.ui.{ButtonCell, TabE}
+import net.wa9nnn.rc210.ui.{ButtonCell, NamedKeyManager, TabE}
 import net.wa9nnn.rc210.ui.TabE.Names
 import play.api.mvc.*
 import views.html.NavMain
@@ -30,7 +30,7 @@ import javax.inject.{Inject, Singleton}
 import scala.language.postfixOps
 
 @Singleton()
-class NamesController @Inject()(dataStore: DataStore,
+class NamesController @Inject()(namedKeyManager:NamedKeyManager,
                                 navMain: NavMain,                               
                                 components: MessagesControllerComponents)
   extends MessagesAbstractController(components) with LazyLogging:
@@ -41,7 +41,7 @@ class NamesController @Inject()(dataStore: DataStore,
    */
   def index: Action[AnyContent] = Action {
     implicit request =>
-      val rows: Seq[Row] = dataStore.namedKeys.map { namedKey =>
+      val rows: Seq[Row] = namedKeyManager.namedKeys.map { namedKey =>
         val key = namedKey.key
         val fieldKey = FieldKey(key)
         val keyKind = key.keyKind

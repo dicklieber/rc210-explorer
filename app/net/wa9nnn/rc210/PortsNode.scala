@@ -13,7 +13,7 @@ import play.twirl.api.Html
 object PortsNode extends SimpleFieldNode(KeyKind.Port):
 
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    val rows: Seq[Row] = fieldEntries
+    def rows: Seq[Row] = fieldEntries
       .groupBy(_.fieldKey.fieldName)
       .toSeq
       .sortBy(_._1)

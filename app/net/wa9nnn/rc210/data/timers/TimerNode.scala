@@ -45,7 +45,7 @@ case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends ComplexField
     macroKey.keyWithName
   )
 
-  private val rows: Seq[Row] = Seq(
+  private def rows: Seq[Row] = Seq(
     "Key" -> key.keyWithName,
     "Duration" -> duration,
     "Macro" -> macroKey.keyWithName,

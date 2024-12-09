@@ -20,12 +20,12 @@ package net.wa9nnn.rc210.data.datastore
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210
 import net.wa9nnn.rc210.*
-import net.wa9nnn.rc210.data.datastore.DataStore.inTest
 import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.security.Who.given
 import net.wa9nnn.rc210.security.authentication.RcSession
+import net.wa9nnn.rc210.ui.NamedKeyManager
 import play.api.mvc.{AnyContent, Request}
 
 import javax.inject.{Inject, Singleton}
@@ -37,24 +37,18 @@ import scala.util.{Failure, Success, Try}
  * This is the in-memory source of all RC-210 and NamedKey data.
  */
 @Singleton
-class DataStore @Inject() (persistence: DataStorePersistence, memoryFileLoader: MemoryFileLoader) extends NamedKeySource with LazyLogging:
+class DataStore @Inject()(persistence: DataStorePersistence,
+                          memoryFileLoader: MemoryFileLoader,
+                          namedKeyManager: NamedKeyManager) extends LazyLogging:
 
   /**
    * This is all the data tht a user can edit that can be sent or received from an RC-210.
    */
   private implicit val keyFieldMap: TrieMap[FieldKey, FieldEntry] = new TrieMap[FieldKey, FieldEntry]()
+
   /**
    * This is the user-suplied metadata about a [[Key]].
    */
-  private val keyNameMap = new TrieMap[Key, String]
-  try
-    rc210.Key.setNamedSource(this)
-  catch
-    case e: IllegalStateException =>
-      if (!inTest)
-        logger.error("setNamedSource", e)
-
-  // so any Key can get it's user-supplied name.
 
   loadFromMemory()
   loadFromJson()
@@ -100,11 +94,13 @@ class DataStore @Inject() (persistence: DataStorePersistence, memoryFileLoader: 
 
   def triggerNodes(macroKey: Key): Seq[FieldEntry] =
     assert(macroKey.keyKind == KeyKind.Macro, "Must have a MacroKey!")
-    (for {
+    (for
+    {
       fieldEntry <- keyFieldMap.values
       fieldValue: FieldValue = fieldEntry.value[FieldValue]
       if fieldValue.canRunMacro(macroKey)
-    } yield {
+    } yield
+    {
       fieldEntry
     }).toIndexedSeq
 
@@ -119,13 +115,7 @@ class DataStore @Inject() (persistence: DataStorePersistence, memoryFileLoader: 
           current.setCandidate(value))
     }
 
-    candidateAndNames.namedKeys foreach { nammedKey =>
-      val key = nammedKey.key
-      if (nammedKey.name.isBlank)
-        keyNameMap.remove(key)
-      else
-        keyNameMap.put(key, nammedKey.name)
-    }
+    namedKeyManager.update(candidateAndNames.namedKeys)
 
     save(rcSession)
 
@@ -151,14 +141,12 @@ class DataStore @Inject() (persistence: DataStorePersistence, memoryFileLoader: 
     val dto: DataTransferJson = toJson.copy(who = Some(session.user.who))
     persistence.save(dto)
 
-  def loadFromJson(): Unit = {
-    // update values from datastore.json
+  /**
+   * Update values from datastore.json
+   */
+  def loadFromJson(): Unit =
     try
-      persistence.load().foreach { dto => {
-        // update namedKeys from datastore.json
-        keyNameMap.clear()
-        keyNameMap.addAll(dto.namedKeys.map(namedKey => namedKey.key -> namedKey.name))
-
+      persistence.load().foreach { dto =>
         dto.values.foreach { fieldEntryJson =>
           val fieldKey = fieldEntryJson.fieldKey
           keyFieldMap.get(fieldKey).foreach { fieldEntry =>
@@ -169,12 +157,11 @@ class DataStore @Inject() (persistence: DataStorePersistence, memoryFileLoader: 
             keyFieldMap.put(fieldKey, updated)
           }
         }
-    }
       }
+
     catch
       case e: Exception =>
         logger.error("Loading", e)
-  }
 
   private def loadFromMemory(): Unit =
     memoryFileLoader.load match
@@ -188,25 +175,24 @@ class DataStore @Inject() (persistence: DataStorePersistence, memoryFileLoader: 
   def toJson: DataTransferJson =
     DataTransferJson(values =
       keyFieldMap.values.map(FieldEntryJson(_)).toSeq,
-      namedKeys = keyNameMap.map { case (key, name) => NamedKey(key, name) }.toSeq)
-
-  override def nameForKey(key: Key): String = keyNameMap.getOrElse(key, "")
-
-  override def namedKeys: Seq[NamedKey] =
-    keyNameMap.map((key, name) => NamedKey(key, name)).toIndexedSeq.sorted
+      namedKeys = namedKeyManager.save
+    )
 
   def triggers: Seq[FieldEntry] =
-    (for {
+    (for
+    {
       fieldEntry <- keyFieldMap.values
       value: FieldValue = fieldEntry.value
       if value.canRunAny
-    } yield {
+    } yield
+    {
       fieldEntry
     }).toIndexedSeq
 
   def flowData(search: Key): Option[FlowData] =
     def buildFlowData(MacroEntry: FieldEntry): FlowData =
       assert(MacroEntry.fieldKey.key.keyKind == KeyKind.Macro, s"Must be an Macro entry!  But got: $MacroEntry")
+
       // find triggers
       val Macro: MacroNode = MacroEntry.value
       val key = Macro.key
@@ -228,5 +214,3 @@ class DataStore @Inject() (persistence: DataStorePersistence, memoryFileLoader: 
           flowData(key).get
     }
 
-object DataStore:
-  var inTest: Boolean = false

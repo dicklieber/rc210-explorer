@@ -48,7 +48,7 @@ case class ScheduleNode(override val key: Key,
     )
   }
 
-  private val rows: Seq[Row] = Seq(
+  private def rows(): Seq[Row] = Seq(
     "Key" -> key.keyWithName,
     "Day Of Week" -> dow,
     "Month" -> monthOfYear,
@@ -73,11 +73,11 @@ case class ScheduleNode(override val key: Key,
   }
 
   override def tableSection(fieldKey: FieldKey): TableSection =
-    TableSectionButtons(fieldKey, rows: _*)
+    TableSectionButtons(fieldKey, rows(): _*)
 
   override def displayCell: Cell =
     KvTable.inACell(
-      rows:_*
+      rows():_*
     )
 
   override def toJsValue: JsValue = Json.toJson(this)
