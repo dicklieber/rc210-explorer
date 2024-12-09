@@ -21,7 +21,7 @@ import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, RowSource}
 import net.wa9nnn.rc210.NamedKey.fieldName
 import play.api.libs.json.{Format, Json}
 
-case class NamedKey(key: Key, name: String) extends Ordered[NamedKey] with RowSource {
+case class NamedKey(key: Key, name: String) extends Ordered[NamedKey] with RowSource :
   override def compare(that: NamedKey): Int = key compareTo that.key
 
   override def toRow: Row = {
@@ -31,15 +31,17 @@ case class NamedKey(key: Key, name: String) extends Ordered[NamedKey] with RowSo
   }
 
   val fieldKey: FieldKey = FieldKey(key, fieldName)
-}
 
-object NamedKey {
+  override def toString: String =
+    s"${key.rc210Value}: $key."
+
+object NamedKey:
   val fieldName = "keyName"
   implicit val fmtNamedKey: Format[NamedKey] = Json.format[NamedKey]
-  
-}
 
-trait NamedKeySource {
+
+
+trait NamedKeySource :
 
   def nameForKey(key: Key): String
 
@@ -47,6 +49,6 @@ trait NamedKeySource {
     NamedKey(key, nameForKey(key))
 
   def namedKeys: Seq[NamedKey]
-}
+
 
 

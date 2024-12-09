@@ -1,7 +1,6 @@
 package net.wa9nnn.rc210
 
 import com.wa9nnn.wa9nnnutil.tableui.*
-import net.wa9nnn.rc210.Key.nameForKey
 import net.wa9nnn.rc210.data.SimpleFieldNode
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
@@ -29,7 +28,7 @@ object PortsNode extends SimpleFieldNode(KeyKind.Port):
 
     val header = Header.singleRow(colHeaders: _*)
     val namesRow: Row = Row(Key.portKeys.map { key =>
-      FormField(FieldKey(key, NamedKey.fieldName), nameForKey(key))
+      FormField(FieldKey(key, NamedKey.fieldName), key.name)
     }.prepended(Cell("Name")))
     val table = Table(
       header,

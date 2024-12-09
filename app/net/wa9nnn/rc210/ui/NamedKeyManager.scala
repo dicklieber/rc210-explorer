@@ -20,10 +20,9 @@ package net.wa9nnn.rc210.ui
 
 import com.typesafe.scalalogging.LazyLogging
 import jakarta.inject.Singleton
-import net.wa9nnn.rc210.{Key, NamedKey, NamedKeySource}
 import net.wa9nnn.rc210
-import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.ui.NamedKeyManager.inTest
+import net.wa9nnn.rc210.{Key, NamedKey, NamedKeySource}
 
 import scala.collection.concurrent.TrieMap
 
@@ -31,13 +30,11 @@ import scala.collection.concurrent.TrieMap
 class NamedKeyManager extends NamedKeySource with LazyLogging:
   private val keyNameMap = new TrieMap[Key, String]
   try
-    rc210.Key.setNamedSource(this)
+    Key.setNamedSource(this)
   catch
     case e: IllegalStateException =>
       if (!inTest)
         logger.error("setNamedSource", e)
-
-  // so any Key can get it's user-supplied name.
 
   /**
    * @param namedKeys These come from [[DataTransferJson]] managed by the [[DataStore]].
@@ -46,12 +43,11 @@ class NamedKeyManager extends NamedKeySource with LazyLogging:
     keyNameMap.clear()
     keyNameMap.addAll(namedKeys.map(namedKey => namedKey.key -> namedKey.name))
 
-  def save: Seq[NamedKey] =
-    // update namedKeys from datastore.json
-    keyNameMap.map { case (key, name) =>
-      NamedKey(key, name)
-    }.toSeq
-
+  /**
+   * Adds or removes name keys.
+   *
+   * @param namedKey If the [[NamedKey.name]] is blank it is removed, otherwise updated.
+   */
   def update(namedKey: Seq[NamedKey]): Unit =
     namedKey.foreach { namedKey =>
       val key = namedKey.key
@@ -61,6 +57,9 @@ class NamedKeyManager extends NamedKeySource with LazyLogging:
         keyNameMap.put(key, namedKey.name)
     }
 
+  def update(namedKey: NamedKey): Unit =
+    update(Seq(namedKey))
+
   override def nameForKey(key: Key): String = keyNameMap.getOrElse(key, "")
 
   override def namedKeys: Seq[NamedKey] =
@@ -69,5 +68,11 @@ class NamedKeyManager extends NamedKeySource with LazyLogging:
 //  keyNameMap.addAll(dto.namedKeys.map(namedKey => namedKey.key -> namedKey.name))
 object NamedKeyManager:
   var inTest: Boolean = false
+  val NoNamedKeySource: NamedKeySource = new NamedKeySource:
+    override def nameForKey(key: Key) =
+      throw new NotImplementedError() //todo
+
+    override def namedKeys: Seq[NamedKey] =
+      throw new NotImplementedError() //todo
 
 

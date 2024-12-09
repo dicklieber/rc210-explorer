@@ -31,12 +31,14 @@ import scala.util.Try
  * @param key            qualifier for the rc2input.
  */
 case class FieldKey(key: Key, fieldName: String = "") extends Ordered[FieldKey] {
+/*
   fieldName match
     case _ if key.keyKind.needsFieldName =>
       assert(fieldName.nonEmpty, "Requires a fieldname!  (Port or Common)")
     case _ if fieldName == NamedKey.fieldName =>
     case _ =>
       assert(fieldName.isEmpty, s"Can't have a fieldName for a ${key.keyKind.entryName}")
+*/
 
   override def compare(that: FieldKey): Int =
     var ret: Int = key.keyKind.toString compareTo that.key.keyKind.toString

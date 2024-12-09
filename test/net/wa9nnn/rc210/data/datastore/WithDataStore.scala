@@ -3,6 +3,7 @@ package net.wa9nnn.rc210.data.datastore
 import net.wa9nnn.rc210.{Key, WithTestConfiguration}
 import net.wa9nnn.rc210.data.field.FieldDefinitions
 import net.wa9nnn.rc210.security.authentication.{RcSession, User}
+import net.wa9nnn.rc210.ui.NamedKeyManager
 
 import scala.util.Failure
 
@@ -19,13 +20,13 @@ trait WithDataStore extends WithTestConfiguration {
   def newDataStore: DataStore = {
     val definitions: FieldDefinitions = new FieldDefinitions
     val memoryFileLoader: MemoryFileLoader = new MemoryFileLoader(definitions)
+    val namedKeyManager = new  NamedKeyManager()
     val dataStorePersistence: DataStorePersistence = new DataStorePersistence:
       def load() =
         Failure(new NotImplementedError())
 
       def save(dataTransferJson: DataTransferJson): Unit =
         println(dataTransferJson)
-    DataStore.inTest = true
-    new DataStore(dataStorePersistence, memoryFileLoader)
+    new DataStore(dataStorePersistence, memoryFileLoader, namedKeyManager)
   }
 }

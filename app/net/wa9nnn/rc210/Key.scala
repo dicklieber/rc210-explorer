@@ -18,15 +18,15 @@
 package net.wa9nnn.rc210
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.Key.nameForKey
+import net.wa9nnn.rc210.Key._namedSource
 import net.wa9nnn.rc210.KeyKind.*
+import net.wa9nnn.rc210.ui.NamedKeyManager.NoNamedKeySource
 import net.wa9nnn.rc210.{NamedKey, NamedKeySource}
 import net.wa9nnn.rc210.ui.{EnumEntryValue, MacroSelect}
 import play.api.data.FormError
 import play.api.data.format.Formatter
 import play.api.libs.json.*
 import play.api.mvc.PathBindable
-import sun.jvm.hotspot.HelloWorld.e
 
 /**
  * Identifies various RC210 objects.
@@ -40,6 +40,8 @@ case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends Order
   assert(rc210Value <= keyKind.maxN, s"Max number for $keyKind is ${keyKind.maxN}")
 
   override def toString: String = s"${keyKind.entryName}$rc210Value"
+  def withNumberAndName:String =
+    f"$rc210Value%2d: $name"
 
   override def compare(that: Key): Int =
     var ret = keyKind.toString compare that.keyKind.toString
@@ -48,10 +50,16 @@ case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends Order
     ret
 
   def namedKey: NamedKey =
-    NamedKey(this, nameForKey(this))
+    NamedKey(this, name)
+
+  /**
+   *
+   * @return current name for this key
+   */
+  def name:String =
+    _namedSource.nameForKey(this)
 
   def keyWithName: String =
-    val name = Key.nameForKey(this)
     s"$rc210Value: $name"
 
 //
@@ -94,9 +102,7 @@ object Key extends LazyLogging:
         throw e
 
   def setNamedSource(namedSource: NamedKeySource): Unit = {
-    if (_namedSource.isDefined)
-      throw new IllegalStateException("NamedSource already set. Bad if not in test.")
-      _namedSource = Option(namedSource)
+      _namedSource = namedSource
   }
 
   implicit val fmtKey: Format[Key] = new Format[Key] {
@@ -115,10 +121,7 @@ object Key extends LazyLogging:
     }
   }
 
-  private var _namedSource: Option[NamedKeySource] = None
-
-  def nameForKey(key: Key): String =
-    _namedSource.map(_.nameForKey(key)).getOrElse("")
+  private var _namedSource: NamedKeySource = NoNamedKeySource
 
   private def keys(keyKind: KeyKind): Seq[Key] =
     for {

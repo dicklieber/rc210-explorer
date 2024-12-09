@@ -124,9 +124,7 @@ class FieldKeyTest extends RcSpec {
     "tocell" in {
       val cell: Cell = FieldKey(Key.portKeys.head, "f1").editButtonCell
       val value: String = cell.value
-      value mustBe("""<button type="button" class="bi bi-pencil-square btn p-0" onclick="window.location.href='/index/Port'">
-                     |      </button>
-                     |""".stripMargin)
+      value mustBe("""<a href="/edit/$Port1$f1" class="bi {icon}} btn bi-pencil-square btn-sm p-0" title="Edit this field."></a>""".stripMargin)
     }
   }
 }

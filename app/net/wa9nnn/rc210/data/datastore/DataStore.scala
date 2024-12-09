@@ -157,6 +157,7 @@ class DataStore @Inject()(persistence: DataStorePersistence,
             keyFieldMap.put(fieldKey, updated)
           }
         }
+        namedKeyManager.load(dto.namedKeys)
       }
 
     catch
@@ -173,9 +174,9 @@ class DataStore @Inject()(persistence: DataStorePersistence,
         }
 
   def toJson: DataTransferJson =
-    DataTransferJson(values =
-      keyFieldMap.values.map(FieldEntryJson(_)).toSeq,
-      namedKeys = namedKeyManager.save
+    DataTransferJson(
+      values = keyFieldMap.values.map(FieldEntryJson(_)).toSeq,
+      namedKeys = namedKeyManager.namedKeys
     )
 
   def triggers: Seq[FieldEntry] =

@@ -12,14 +12,14 @@ object NamedKeyExtractor:
    * @return zero or more named keys.
    */
   def apply(data: Map[String, Seq[String]]): Seq[NamedKey] =
-    (for {
+    (for
       tuple <- data
       id: String = tuple._1
       if id.endsWith(NamedKey.fieldName)
-      fieldKey = FieldKey.fromId(id)
-      values: Seq[String] = tuple._2
+      values = tuple._2
       keyName <- values.headOption
-    } yield {
+    yield
+      val fieldKey = FieldKey.fromId(id)
       NamedKey(fieldKey.key, keyName)
-    }).toSeq
+  ).toSeq
 
