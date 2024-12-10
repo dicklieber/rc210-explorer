@@ -142,8 +142,8 @@ object Memory extends LazyLogging {
             case r("size", rvalue) =>
               size = rvalue.toInt
             case line =>
-              val value = line.drop(5) // get ride of index and colon
-              builder += value.trim.toInt
+              val value = line.split(",")(1).toInt
+              builder += value
         catch
           case e: Exception =>
             logger.error(s"Processing line: $s", e)
