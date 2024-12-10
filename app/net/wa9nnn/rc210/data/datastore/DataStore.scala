@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.data.datastore
 
+import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210
 import net.wa9nnn.rc210.*
@@ -24,120 +25,39 @@ import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.security.authentication.RcSession
+import net.wa9nnn.rc210.serial.Memory.{load, r}
 import net.wa9nnn.rc210.ui.NamedKeyManager
+import net.wa9nnn.rc210.util.Configs
+import net.wa9nnn.rc210explorer.BuildInfo.toJson
 
+import java.nio.file.{Files, Path}
 import javax.inject.{Inject, Singleton}
 import scala.collection.concurrent.TrieMap
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Success, Try, Using}
 
 /**
  * This is the in-memory source of all RC-210 and NamedKey data.
  */
 @Singleton
-class DataStore @Inject()(persistence: DataStorePersistence,
+class DataStore @Inject()(config: Config,
                           memoryFileLoader: MemoryFileLoader,
-                          namedKeyManager: NamedKeyManager) extends LazyLogging:
-
-  /**
-   * This is all the data tht a user can edit that can be sent or received from an RC-210.
-   */
-  private implicit val keyFieldMap: TrieMap[FieldKey, FieldEntry] = new TrieMap[FieldKey, FieldEntry]()
-
-  /**
-   * This is the user-suplied metadata about a [[Key]].
-   */
-
-  loadFromMemory()
-  loadFromJson()
-
-  def values[T <: ComplexFieldValue](keyKind: KeyKind): Seq[T] =
-    apply(keyKind).map(_.value.asInstanceOf[T])
-
-  def editValue[T <: FieldValue](fieldKey: FieldKey): T =
-    val maybeFieldEntry: Option[FieldEntry] = all.find(_.fieldKey == fieldKey)
-    maybeFieldEntry match
-      case Some(fieldEntry: FieldEntry) =>
-        fieldEntry.value.asInstanceOf[T]
-      case None =>
-        throw new IllegalArgumentException(s"No editValue for fieldKeyStuff: $fieldKey")
-
-  def apply(keyKind: KeyKind): Seq[FieldEntry] =
-    all.filter(_.fieldKey.key.keyKind == keyKind)
-
-  def all: Seq[FieldEntry] =
-    keyFieldMap.values.toIndexedSeq.sorted
-
-  def apply(dataTransferJson: DataTransferJson): Unit =
-    throw new NotImplementedError() //todo
-
-  def indexValues[T <: FieldValue](keyKind: KeyKind): Seq[T] =
-    all.filter(_.fieldKey.key.keyKind == keyKind).map(_.value.asInstanceOf[T])
-
-  def apply(fieldKey: FieldKey): FieldEntry =
-    keyFieldMap.get(fieldKey) match
-      case Some(fieldEntry) =>
-        fieldEntry
-      case None =>
-        throw new Exception(s"No value for fieldKey: $fieldKey")
-
-  //  def apply(keyKind: KeyKind): Seq[FieldEntry] =
-  //    all.filter(_.fieldKeyStuff.key.keyKind == keyKind).sorted
-
-  def apply(key: Key): Seq[FieldEntry] =
-    all.filter(_.fieldKey.key == key).sorted
-
-  def candidates: Seq[FieldEntry] =
-    all.filter(_.candidate.nonEmpty).sorted
-
-  def triggerNodes(macroKey: Key): Seq[FieldEntry] =
-    assert(macroKey.keyKind == KeyKind.Macro, "Must have a MacroKey!")
-    (for
-    {
-      fieldEntry <- keyFieldMap.values
-      fieldValue: FieldValue = fieldEntry.value[FieldValue]
-      if fieldValue.canRunMacro(macroKey)
-    } yield
-    {
-      fieldEntry
-    }).toIndexedSeq
-
-  def update(candidateAndNames: CandidateAndNames)(using rcSession: RcSession): Unit =
-    candidateAndNames.candidates.foreach { uc =>
-      val fieldKey = uc.fieldKey
-      val current: FieldEntry = keyFieldMap(fieldKey)
-      keyFieldMap.put(fieldKey, uc.candidate match
-        case value: String =>
-          current.setCandidate(value)
-        case value: ComplexFieldValue =>
-          current.setCandidate(value))
-    }
-
+                          namedKeyManager: NamedKeyManager) extends DataStorePersistence with LazyLogging:
+  private val path: Path = Configs.path("vizRc210.dataStoreFile")(using config)
+  
+  load()
+  
+  override def update(candidateAndNames: CandidateAndNames): Unit =
     namedKeyManager.update(candidateAndNames.namedKeys)
+    super.update(candidateAndNames)
 
-    save(rcSession)
+  def load(): Unit =
+    loadFile(path)
 
-  def acceptCandidate(fieldKey: FieldKey)(using rcSession: RcSession): Unit =
-    keyFieldMap.put(fieldKey, keyFieldMap(fieldKey).acceptCandidate())
-    save(rcSession)
+//  private def save(session: RcSession): Unit =
+//    val dto: DataTransferJson = toJson.copy(who = Some(session.user.who))
+//    persistence.save(dto)
 
-  def rollback(): Unit =
-    keyFieldMap.values.foreach { fieldEntry =>
-      val updated = fieldEntry.copy(candidate = None)
-      keyFieldMap.put(fieldEntry.fieldKey, updated)
-    }
-
-  def rollback(fieldKey: FieldKey): Unit =
-    val fieldEntry = apply(fieldKey)
-    val updated = fieldEntry.copy(candidate = None)
-    keyFieldMap.put(fieldEntry.fieldKey, updated)
-
-  def reload(): Unit =
-    loadFromMemory()
-
-  private def save(session: RcSession): Unit =
-    val dto: DataTransferJson = toJson.copy(who = Some(session.user.who))
-    persistence.save(dto)
-
+/*
   /**
    * Update values from datastore.json
    */
@@ -159,55 +79,18 @@ class DataStore @Inject()(persistence: DataStorePersistence,
     catch
       case e: Exception =>
         logger.error("Loading", e)
-
-  private def loadFromMemory(): Unit =
-    memoryFileLoader.load match
-      case Failure(exception) =>
-        logger.error("Loading DataStore from Download Memory image.", exception)
-      case Success(fieldEntries: Seq[FieldEntry]) =>
-        fieldEntries.foreach { fe =>
-          keyFieldMap.put(fe.fieldKey, fe)
-        }
-
-  def toJson: DataTransferJson =
-    DataTransferJson(
-      values = keyFieldMap.values.map(FieldEntryJson(_)).toSeq,
-      namedKeys = namedKeyManager.namedKeys
-    )
-
-  def triggers: Seq[FieldEntry] =
-    (for
-    {
-      fieldEntry <- keyFieldMap.values
-      value: FieldValue = fieldEntry.value
-      if value.canRunAny
-    } yield
-    {
-      fieldEntry
-    }).toIndexedSeq
-
-  def flowData(search: Key): Option[FlowData] =
-    def buildFlowData(MacroEntry: FieldEntry): FlowData =
-      assert(MacroEntry.fieldKey.key.keyKind == KeyKind.Macro, s"Must be an Macro entry!  But got: $MacroEntry")
-
-      // find triggers
-      val Macro: MacroNode = MacroEntry.value
-      val key = Macro.key
-
-      val triggers: Seq[FieldEntry] = triggerNodes(key)
-
-      new FlowData(MacroEntry, triggers, search)
-
-    val entries: Seq[FieldEntry] = apply(search)
-    assert(entries.length == 1, s"Should only be one entry for a complex key, but got $entries")
-    entries.headOption.map { fieldEntry =>
-      fieldEntry.fieldKey.key.keyKind match
-
-        case KeyKind.Macro =>
-          buildFlowData(fieldEntry)
-        case other =>
-          val entry: FieldValue = fieldEntry.value
-          val key: Key = entry.runableMacros.head
-          flowData(key).get
-    }
-
+*/
+//
+//  private def loadFromMemory(): Unit =
+//    memoryFileLoader.load match
+//      case Failure(exception) =>
+//        logger.error("Loading DataStore from Download Memory image.", exception)
+//      case Success(fieldEntries: Seq[FieldEntry]) =>
+//        fieldEntries.foreach { fe =>
+//          keyFieldMap.put(fe.fieldKey, fe)
+//        }
+//
+//  def toJson: DataTransferJson =
+//    DataTransferJson(values = keyFieldMap.values.map(FieldEntryJson(_)).toSeq)
+//
+//

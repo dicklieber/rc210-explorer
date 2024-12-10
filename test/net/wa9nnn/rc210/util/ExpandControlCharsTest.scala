@@ -5,7 +5,7 @@ import net.wa9nnn.rc210.RcSpec
 class ExpandControlCharsTest extends RcSpec {
 
   "ExpandControlCharsTest" should {
-    "apply" when {
+    "get" when {
       "has control char" in {
         val out = expandControlChars("\rHello\nlfBeforeThis")
         out mustBe("␍Hello␊lfBeforeThis")

@@ -72,7 +72,7 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
       itemMemoryFileWriter.close()
       eventBased.close()
       if (error.isBlank)
-        dataStore.reload()
+        dataStore.load()
 
     eventBased.addDataListener(new SerialPortMessageListenerWithExceptions {
       // These overriden methods are the asynchronous callbacks invoked by jSerialComm.

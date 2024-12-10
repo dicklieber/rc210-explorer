@@ -51,7 +51,7 @@ case class UploadRequest(doCandidateOnly: Boolean = true,
   def filter(dataStore: DataStore): Seq[UploadData] =
     maybeFieldKey match
       case Some(fieldKey) =>
-        val fieldEntry: FieldEntry = dataStore(fieldKey)
+        val fieldEntry: FieldEntry = dataStore.fieldEntry(fieldKey)
         Seq(UploadData(fieldEntry, fieldEntry.value, acceptCandidate))
       case None =>
         for {

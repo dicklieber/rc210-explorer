@@ -24,7 +24,7 @@ class KeyTest extends WithMemory {
   "Happy" in {
     macroKey3.toString mustBe ("Macro3")
   }
-  "round trip toString apply" in {
+  "round trip toString get" in {
     val string = macroKey3.toString
     val backAgain = Key(string)
     backAgain mustBe (macroKey3)

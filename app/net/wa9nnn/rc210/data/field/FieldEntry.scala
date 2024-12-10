@@ -20,7 +20,9 @@ package net.wa9nnn.rc210.data.field
 import com.wa9nnn.wa9nnnutil.tableui.*
 import net.wa9nnn.rc210.data.datastore.FieldEntryJson
 import net.wa9nnn.rc210.data.Node
-import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
+import net.wa9nnn.rc210
+import net.wa9nnn.rc210.KeyKind{FieldKey, Key, KeyKind}
+import play.api.libs.json.{Format, Json, OFormat}
 
 /**
  *
@@ -36,9 +38,9 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
     candidate.getOrElse(fieldValue).asInstanceOf[F]
   }
 
-  def tableSection:TableSection=
+  def tableSection: TableSection =
     value[FieldValue].tableSection(fieldKey)
-  
+
   def table: Table =
     val value1: Node = value
     value1.table(fieldKey)
@@ -59,10 +61,12 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
     val simpleFieldValue = fieldValue.asInstanceOf[SimpleFieldValue]
     val updatedFieldValue: SimpleFieldValue = simpleFieldValue.update(formValue)
 
-    if (updatedFieldValue == fieldValue) {
+    if (updatedFieldValue == fieldValue)
+    {
       copy(candidate = None)
     }
-    else {
+    else
+    {
       copy(candidate = Option(updatedFieldValue))
     }
   }
@@ -77,7 +81,6 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
       .toCommands(this)
   }
 
-
   def toJson: FieldEntryJson = {
     FieldEntryJson(this)
   }
@@ -87,12 +90,15 @@ case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fiel
   override val template: String = fieldDefinition.template
 
   override def toRow: Row = {
-    val value1:FieldValue = value
+    val value1: FieldValue = value
     value1.toRow
   }
 }
 
+case class FieldData(fieldKey: FieldKey, fieldValue: FieldValue, candidate: Option[FieldValue] = None)
 object FieldEntry {
+  implicit val fmt: OFormat[FieldEntry] = Json.format[FieldEntry]
+
   def apply(complexExtractor: ComplexExtractor[?], complexFieldValue: ComplexFieldValue): FieldEntry = {
 
     new FieldEntry(complexExtractor, complexFieldValue.fieldKey, complexFieldValue)

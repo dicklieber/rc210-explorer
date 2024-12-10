@@ -27,7 +27,7 @@ import net.wa9nnn.rc210.{Key, NamedKey, NamedKeySource}
 import play.api.libs.json.{JsValue, Json}
 
 import java.io.FileNotFoundException
-import java.nio.file.{Files, Path}
+import java.nio.file.{Files, NoSuchFileException, Path}
 import scala.collection.concurrent.TrieMap
 
 @Singleton
@@ -43,7 +43,7 @@ class NamedKeyManager @Inject()(implicit config: Config) extends NamedKeySource 
     val loadedKeys: Seq[NamedKey] = jsValue1.as[Seq[NamedKey]]
     keyNameMap.addAll(loadedKeys.map(namedKey => namedKey.key -> namedKey.name))
   catch
-    case e: FileNotFoundException =>
+    case e:NoSuchFileException =>
       logger.debug(s"No named keys file found at $path")
     case e: Exception =>
       logger.error(s"Error loading named keys from $path", e)

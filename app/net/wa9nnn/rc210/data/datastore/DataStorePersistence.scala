@@ -21,6 +21,7 @@ import com.google.inject.ImplementedBy
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.NamedKey
+import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.util.Configs
 import play.api.libs.json.{Format, Json}
@@ -31,54 +32,21 @@ import scala.collection.immutable.Seq
 import scala.util.{Failure, Try, Using}
 
 /**
- * Parses JSON saved from [[DataStore]]
+ * Adds persistence to the [[DataStoreEngine]].
  */
-@Singleton
-class DataStorePersistenceImpl @Inject() (implicit config: Config) extends DataStorePersistence with LazyLogging {
-  def save(dataTransferJson: DataTransferJson): Unit = {
-    Files.writeString(path,
-      toJson(dataTransferJson))
-  }
+class DataStorePersistence() extends DataStoreEngine with LazyLogging:
+  def loadFile(path: Path): Unit =
+    fromJson(Files.readString(path))
+    
+  def saveFile(path: Path): Unit =
+    val sJson = toJson
+    Files.writeString(path, sJson)
 
-  def toJson(dataTransferJson: DataTransferJson): String = {
-    Json.prettyPrint(
-      Json.toJson(dataTransferJson)
-    )
-  }
+  def toJson: String = 
+    Json.prettyPrint(Json.toJson(entries))
 
-  private val path: Path = Configs.path("vizRc210.dataStoreFile")
-
-  def load(): Try[DataTransferJson] = {
-    val r = Using(Files.newInputStream(path)) { inputStream =>
-      Json.parse(inputStream).as[DataTransferJson]
-    }
-    r match
-      case Failure(exception) =>
-        logger.error(s"Failed to load: ${exception.getMessage}")
-      case _ =>
-
-    r
-  }
-}
-
-@ImplementedBy(classOf[DataStorePersistenceImpl])
-trait DataStorePersistence:
-  def load(): Try[DataTransferJson]
-
-  def save(dataTransferJson: DataTransferJson): Unit
-
-/**
- * Data transfer between [[DataStorePersistence]] and [[DataStore]].
- * Json-friendly data that is persisted or doewnloaded from the [[DataStore]].
- */
-case class DataTransferJson(values: Seq[FieldEntryJson], namedKeys: Seq[NamedKey], who: Option[Who] = None) {
-  def toPrettyJson: String = {
-    Json.prettyPrint(Json.toJson(this))
-  }
-}
-
-object DataTransferJson {
-  implicit val fmtDataTransferJson: Format[DataTransferJson] = Json.format[DataTransferJson]
-}
-
+  def fromJson(sJson: String): Unit = 
+    loadEntries(Json.parse(sJson).as[Seq[FieldEntry]])
+  
+  
 

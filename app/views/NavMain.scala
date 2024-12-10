@@ -10,7 +10,7 @@ import views.html.navMainPage
 import javax.inject.{Inject, Singleton}
 
 /**
- * A shim that allows multiple apply methods
+ * A shim that allows multiple get methods
  *
  * @param navMainPage the actual Html contins of the NavMain.
  */

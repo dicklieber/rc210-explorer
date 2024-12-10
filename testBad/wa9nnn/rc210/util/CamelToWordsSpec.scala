@@ -20,7 +20,7 @@ package net.wa9nnn.rc210.util
 class CamelToWordsSpec extends RcSpec {
 
   "CamelToWordsSpec" when {
-    "apply" in {
+    "get" in {
       val in = "GuestMacroRange"
       val words: String = CamelToWords(in)
       words should  equal ("Guest Macro Range")

@@ -20,10 +20,10 @@ package net.wa9nnn.rc210.data.datastore
 import net.wa9nnn.rc210.{RcSpec, WithTestConfiguration}
 
 class DataStorePersistenceTest extends WithTestConfiguration {
-  private val dataStorePersistence = new DataStorePersistenceImpl()
+  private val dataStorePersistence = new DataStorePersistence()
   "DataStorePersistenceTest" should {
     "roundtrip" in {
-      val triedJson = dataStorePersistence.load()
+      val triedJson = dataStorePersistence.loadFile()
       triedJson
     }
 

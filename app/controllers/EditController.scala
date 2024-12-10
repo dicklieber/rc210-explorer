@@ -67,7 +67,7 @@ class EditController @Inject()(navMain: NavMain)
    */
   def edit(fieldKey: FieldKey): Action[AnyContent] = Action {
     implicit request =>
-      val entry: FieldEntry = dataStore.apply(fieldKey)
+      val entry: FieldEntry = dataStore.fieldEntry(fieldKey)
       Ok(navMain(fieldKey.key.keyKind, fieldKey.editHandler.edit(entry)))
   }
 

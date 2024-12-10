@@ -19,7 +19,7 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.FieldKey
-import net.wa9nnn.rc210.data.datastore.{DataStore, DataTransferJson}
+import net.wa9nnn.rc210.data.datastore.{DataStore}
 import net.wa9nnn.rc210.ui.nav.TabKind
 import play.api.libs.Files
 import play.api.libs.json.Json
@@ -34,19 +34,15 @@ class DataStoreController @Inject()(dataStore: DataStore)
                                    (implicit cc: MessagesControllerComponents)
   extends MessagesAbstractController(cc) with LazyLogging {
 
-  private def sJson: String =
-    val dto: DataTransferJson = dataStore.toJson
-    Json.prettyPrint(Json.toJson(dto))
-
   def downloadJson: Action[AnyContent] = Action {
-    Ok(sJson).withHeaders(
+    Ok(dataStore.toJson).withHeaders(
       "Content-Type" -> "text/json",
       "Content-Disposition" -> s"""attachment; filename="rc210.json""""
     )
   }
 
   def viewJson: Action[AnyContent] = Action {
-    Ok(sJson)
+    Ok(dataStore.toJson)
   }
 
   def upload(): Action[AnyContent] = Action {
@@ -59,8 +55,7 @@ class DataStoreController @Inject()(dataStore: DataStore)
       .file("jsonFile")
       .foreach { jsonFile =>
         val sJson = java.nio.file.Files.readString(jsonFile.ref.path)
-        val dataTransferJson: DataTransferJson = Json.parse(sJson).as[DataTransferJson]
-        dataStore(dataTransferJson)
+        dataStore.fromJson(sJson)
       }
     Redirect(routes.NavigationController.selectTabKind(TabKind.Fields))
   }
