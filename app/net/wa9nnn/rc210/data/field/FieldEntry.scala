@@ -21,88 +21,76 @@ import com.wa9nnn.wa9nnnutil.tableui.*
 import net.wa9nnn.rc210.data.datastore.FieldEntryJson
 import net.wa9nnn.rc210.data.Node
 import net.wa9nnn.rc210
-import net.wa9nnn.rc210.KeyKind{FieldKey, Key, KeyKind}
+import net.wa9nnn.rc210.{FieldKey, KeyKind}
+import os.copy
 import play.api.libs.json.{Format, Json, OFormat}
 
 /**
  *
- * @param fieldDefinition specific to this entry. e.g. template, name etc.
- * @param fieldValue      the value.
- * @param candidate       the,potential, next value.
+ * @param fieldDefinition  specific to this entry. e.g. template, name etc.
+ * @param initialFieldData what we start with.
  */
-case class FieldEntry(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fieldValue: FieldValue, candidate: Option[FieldValue] = None)
-  extends Ordered[FieldEntry] with FieldEntryBase {
-  override def toString: String = fieldKey.display
+class FieldEntry(fieldDefinition: FieldDefinition, initialFieldData: FieldData)
+  extends Ordered[FieldEntry] with FieldEntryBase:
+  private val fieldKey = initialFieldData.fieldKey
+  private var fieldData: FieldData = initialFieldData
 
-  def value[F <: FieldValue]: F = {
-    candidate.getOrElse(fieldValue).asInstanceOf[F]
-  }
+  override def toString: String = fieldKey.display
+  def hasCandidate: Boolean = fieldData.candidate.isDefined
+  def setCandidate(fieldValue: FieldValue): Unit =
+    fieldData = fieldData.setCandidate(fieldValue)
+  def setCandidate(str:String): Unit =
+    val fv:FieldValue = try
+      FieldInt(str.toInt)
+    catch
+      case e:Throwable =>
+        FieldString(str)
+        
+    fieldData = fieldData.setCandidate(fv)
+
+  def acceptCandidate(): Unit =
+    fieldData = fieldData.acceptCandidate()
+
+  def clearCandidate(): Unit =
+    fieldData = fieldData.clearCandidate()
+
+  def setFieldData(fieldData: FieldData): Unit =
+    this.fieldData = fieldData
 
   def tableSection: TableSection =
-    value[FieldValue].tableSection(fieldKey)
+    fieldData.value.tableSection(fieldKey)
 
-  def table: Table =
-    val value1: Node = value
-    value1.table(fieldKey)
+  def valueDisplayCell: Cell =
+    fieldData.value.displayCell
 
-  /**
-   *
-   * @param newFieldValue already parsed to a [[FieldValue]]
-   * @return updated [[FieldEntry]].
-   */
-  def setCandidate(newFieldValue: ComplexFieldValue): FieldEntry = {
-    if (fieldValue == newFieldValue)
-      copy(candidate = None)
-    else
-      copy(candidate = Option(newFieldValue))
-  }
+  def candidateDisplayCell: Cell =
+    fieldData.candidate.map(_.displayCell).getOrElse(Cell(""))
 
-  def setCandidate(formValue: String): FieldEntry = {
-    val simpleFieldValue = fieldValue.asInstanceOf[SimpleFieldValue]
-    val updatedFieldValue: SimpleFieldValue = simpleFieldValue.update(formValue)
-
-    if (updatedFieldValue == fieldValue)
-    {
-      copy(candidate = None)
-    }
-    else
-    {
-      copy(candidate = Option(updatedFieldValue))
-    }
-  }
-
-  def acceptCandidate(): FieldEntry = copy(
-    candidate = None,
-    fieldValue = candidate.getOrElse(fieldValue))
-
-  def commands: Seq[String] = {
-    candidate
+  def commands: Seq[String] =
+    fieldData.candidate
       .getOrElse(throw new IllegalStateException(s"No candidate for: $fieldKey!"))
       .toCommands(this)
-  }
 
-  def toJson: FieldEntryJson = {
-    FieldEntryJson(this)
-  }
+  def toEditCell: Cell =
+    fieldData.value.toEditCell(fieldKey)
+
+  def value[T <: FieldValue]: T =
+    fieldData.value.asInstanceOf
+
+  def toJson: FieldEntryJson =
+    fieldData
 
   override def compare(that: FieldEntry): Int = fieldKey compare that.fieldKey
 
   override val template: String = fieldDefinition.template
 
-  override def toRow: Row = {
-    val value1: FieldValue = value
-    value1.toRow
-  }
-}
+  override def toRow: Row =
+    fieldData.value.toRow
 
-case class FieldData(fieldKey: FieldKey, fieldValue: FieldValue, candidate: Option[FieldValue] = None)
-object FieldEntry {
-  implicit val fmt: OFormat[FieldEntry] = Json.format[FieldEntry]
+object FieldEntry:
 
-  def apply(complexExtractor: ComplexExtractor[?], complexFieldValue: ComplexFieldValue): FieldEntry = {
-
-    new FieldEntry(complexExtractor, complexFieldValue.fieldKey, complexFieldValue)
-  }
+  def apply(complexExtractor: ComplexExtractor[?], complexFieldValue: ComplexFieldValue): FieldEntry =
+    FieldEntry(complexExtractor, complexFieldValue.fieldKey)
 
   def header(keyKind: KeyKind): Header = Header(s"$keyKind", "Number", "Field",
     Cell("Value")
@@ -113,5 +101,4 @@ object FieldEntry {
 
   def header(count: Int): Header = Header(s"Fields ($count)", "FieldName", "Key", "Value")
 
-}
 

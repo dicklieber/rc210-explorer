@@ -66,9 +66,9 @@ class DataStoreExplorerController @Inject()(dataStore: DataStore, navMain: NavMa
           ButtonCell.editUploadFlow(fieldKey),
           Cell(fieldKey.display)
             .withToolTip(fieldKey.toString),
-          fieldEntry.fieldValue.displayCell,
+          fieldEntry.valueDisplayCell,
           ButtonCell.uploadRollback(fieldKey),
-          fieldEntry.candidate.map(_.displayCell).getOrElse("-")
+          fieldEntry.candidateDisplayCell
         )
       }
     val header: Header = Header(Seq(

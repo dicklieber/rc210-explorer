@@ -15,6 +15,7 @@ trait FieldDefinition extends LazyLogging:
   def tooltip: String = ""
 
   def fieldName: String
+
   val keyKind: KeyKind
   val template: String = ""
   val units: String = ""
@@ -105,10 +106,8 @@ abstract class SimpleExtractor extends FieldExtractor {
 
 }
 
-trait FieldExtractor {
-
+trait FieldExtractor:
   def parse(jsValue: JsValue): FieldValue
-}
 
 /**
  * where in the memory image

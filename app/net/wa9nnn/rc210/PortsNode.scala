@@ -54,8 +54,7 @@ object PortsNode extends SimpleFieldNode(KeyKind.Port):
 case class PortRow(name: String, portEntries: Seq[FieldEntry]) extends RowSource:
   def toRow: Row =
     Row(portEntries.map { fe =>
-      val v: FieldValue = fe.value
-      v.toEditCell(fe.fieldKey)
+      fe.toEditCell
     }.prepended(Cell(name))
     )
 

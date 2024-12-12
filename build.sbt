@@ -50,7 +50,6 @@ val logbackVersion = "1.4.11"
 libraryDependencies ++= Seq(
   guice,
   "com.lihaoyi" %% "os-lib" % "0.9.3",
-  "com.lihaoyi" %% "upickle" % "4.0.1",
   "org.scalatest" %% "scalatest" % "latest.integration" % Test,
   "org.scalatest" %% "scalatest" % "latest.integration" % "test",
   "org.scalatestplus.play" %% "scalatestplus-play" % "latest.integration" % Test,
@@ -67,8 +66,9 @@ libraryDependencies ++= Seq(
   "org.apache.commons" % "commons-text" % "1.10.0",
   "org.mindrot" % "jbcrypt" % "0.4",
   "com.github.andyglow" %% "typesafe-config-scala" % "2.0.0",
-  "com.beachape" %% "enumeratum" % "1.7.3",
-  "com.beachape" %% "enumeratum-play" % "1.8.0",
+  "com.beachape" %% "enumeratum" % "1.7.5",
+  "com.beachape" %% "enumeratum-play" % "1.8.2",
+
 )
 //publishTo := {
 //  if (isSnapshot.value)

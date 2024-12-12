@@ -100,7 +100,7 @@ case class ClockNode(key: Key,
     say24Hours
   )
 
-object ClockNode extends ComplexExtractor[ClockNode] {
+object ClockNode extends ComplexExtractor[ClockNode] :
   override val keyKind: KeyKind = KeyKind.Clock
   override val form: Form[ClockNode] = Form(
     mapping(
@@ -129,7 +129,7 @@ object ClockNode extends ComplexExtractor[ClockNode] {
 
     val clock = new ClockNode(key, enableDST, startHour, startDST, endDST, say24Hours)
     Seq(
-      FieldEntry(this, fieldKey(key), clock)
+      FieldEntry(this, clock)
     )
   }
 
@@ -154,19 +154,18 @@ object ClockNode extends ComplexExtractor[ClockNode] {
 
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     val r: Html = fieldEntries.headOption match
-      case Some(fe) =>
-        views.html.clock(fe.fieldKey, form.fill(fe.value))
+      case Some(fieldEntry) =>
+        views.html.clock(fieldEntry.fieldKey, form.fill(fieldEntry.value.asInstanceOf[ClockNode]))
       case None =>
         throw new IllegalArgumentException("No ClockNode")
     r
 
-  override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html = {
-    views.html.clock(fieldKey, form.fill(fieldEntry.value))
-  }
+  override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html = 
+    views.html.clock(fieldKey, form.fill(fieldEntry.value.asInstanceOf[ClockNode]))
 
   override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
     val value: Form[ClockNode] = form.bindFromRequest(data)
     val clockNode: ClockNode = value.get
     Seq(UpdateCandidate(clockNode.fieldKey, clockNode))
-}
+
 

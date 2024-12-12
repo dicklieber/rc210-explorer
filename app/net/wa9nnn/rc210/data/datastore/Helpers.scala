@@ -29,33 +29,27 @@ import play.api.libs.json.{Format, JsValue, Json}
  * @param fieldValue current.
  * @param candidate  next value.
  */
-case class FieldEntryJson(fieldKey: FieldKey, fieldValue: JsValue, candidate: Option[JsValue])
 
 /**
  * Helper to transfer values from an html form to the [[DataStore]].
  *
- * @param id  <input name=??> from a form.
+ * @param id         <input name=??> from a form.
  * @param sFormValue PUT value from the submitted form.
  */
 case class FormValue(id: String, sFormValue: String) {
   val fieldKey: FieldKey = FieldKey.fromId(id)
 }
 
-object FieldEntryJson {
-  def apply(fieldEntry: FieldEntry): FieldEntryJson = {
+object FieldEntryJson:
+  def apply(fieldEntry: FieldEntry): FieldEntryJson =
     val fieldKey = fieldEntry.fieldKey
     new FieldEntryJson(fieldKey, fieldEntry.fieldValue.toJsValue, fieldEntry.candidate.map(_.toJsValue))
-  }
-
-  implicit val fmtFieldEntryJson: Format[FieldEntryJson] = Json.format[FieldEntryJson]
-
-}
 
 /**
  * What is sent to the [[DataStore]] to be the new candidate and name.
  *
  * @param fieldKey   id of value.
- * @param candidate String for [[net.wa9nnn.rc210.data.field.SimpleFieldValue]] or a [[ComplexFieldValue]]
+ * @param candidate  String for [[net.wa9nnn.rc210.data.field.SimpleFieldValue]] or a [[ComplexFieldValue]]
  */
 case class UpdateCandidate(fieldKey: FieldKey, candidate: String | ComplexFieldValue)
 

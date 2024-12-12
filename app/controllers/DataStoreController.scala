@@ -19,11 +19,11 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.FieldKey
-import net.wa9nnn.rc210.data.datastore.{DataStore}
+import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.ui.nav.TabKind
 import play.api.libs.Files
 import play.api.libs.json.Json
-import play.api.mvc.{Action, *}
+import play.api.mvc.*
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext

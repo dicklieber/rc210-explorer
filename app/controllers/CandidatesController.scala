@@ -59,8 +59,8 @@ class CandidatesController @Inject()(dataStore: DataStore,
           val row = Row(
             fieldKey.editButtonCell,
             fieldKey.display,
-            fieldEntry.fieldValue.displayCell,
-            fieldEntry.value[FieldValue].displayCell,
+            fieldEntry.valueDisplayCell,
+            fieldEntry.candidateDisplayCell,
             commandsCell(fieldEntry.commands)
           )
           row

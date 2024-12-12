@@ -37,11 +37,14 @@ class DataStoreEngine extends DataStoreApi:
    * 
    * @param entries as returned by [[entries]].
    */
-  def loadEntries(entries:Iterable[FieldEntry]):Unit =
-    entries.foreach { fieldEntry =>
-      keyFieldMap.put(fieldEntry.fieldKey, fieldEntry)
+  def loadEntries(entries:Iterable[FieldData]):Unit =
+    entries.foreach{fieldData =>
+      keyFieldMap.get(fieldData.fieldKey) match
+        case Some(fieldEntry) => 
+          fieldEntry.setFieldData(fieldData)
+        case None => 
+          logger.error(s"No entry for fieldKey: ${fieldData.fieldKey}")
     }
-
   /**
    * Retrieves all `FieldEntry` objects stored in the `DataStoreEngine`, sorted by their keys.
    *
@@ -84,7 +87,7 @@ class DataStoreEngine extends DataStoreApi:
     all.filter(_.fieldKey.key == key).sorted
 
   def candidates: Seq[FieldEntry] =
-    all.filter(_.candidate.nonEmpty).sorted
+    all.filter(_.hasCandidate)
 
   def triggerNodes(macroKey: Key): Seq[FieldEntry] =
     assert(macroKey.keyKind == KeyKind.Macro, "Must have a MacroKey!")
@@ -107,12 +110,12 @@ class DataStoreEngine extends DataStoreApi:
   def update(candidateAndNames: CandidateAndNames): Unit =
     candidateAndNames.candidates.foreach { uc =>
       val fieldKey = uc.fieldKey
-      val current: FieldEntry = keyFieldMap(fieldKey)
+      val fieldEntry: FieldEntry = keyFieldMap(fieldKey)
       keyFieldMap.put(fieldKey, uc.candidate match
-        case value: String =>
-          current.setCandidate(value)
+        case str: String =>
+          fieldEntry.setCandidate(str)
         case value: ComplexFieldValue =>
-          current.setCandidate(value))
+          fieldEntry.setCandidate(value))
     }
 
   /**

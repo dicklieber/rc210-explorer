@@ -98,37 +98,41 @@ object CourtesyToneNode extends ComplexExtractor[CourtesyToneNode] with LazyLogg
    * @param memory    source of RC-210 data.
    * @return what we extracted.
    */
-  override def extract(memory: Memory): Seq[FieldEntry] = {
+  override def extract(memory: Memory): Seq[FieldEntry] =
     logger.debug("Extract CourtesyTone")
     val iterator = memory.iterator16At(856)
 
     val array = Array.ofDim[Int](10, 16)
-    for {
+    for
+    {
       part <- 0 until 16
       ct <- 0 until nCourtesyTones
-    } {
+    }
+    {
       array(ct)(part) = iterator.next()
     }
 
-    val courtesyTones: Seq[CourtesyToneNode] = for (ct <- 0 until 10) yield {
-      val key: Key = Key(KeyKind.CourtesyTone, ct + 1)
-      val segments = Seq(
-        Segment(array(ct)(8), array(ct)(12), array(ct)(0), array(ct)(1)),
-        Segment(array(ct)(9), array(ct)(13), array(ct)(2), array(ct)(3)),
-        Segment(array(ct)(10), array(ct)(14), array(ct)(4), array(ct)(5)),
-        Segment(array(ct)(11), array(ct)(15), array(ct)(6), array(ct)(7)),
-      )
-      CourtesyToneNode(key, segments)
+    val courtesyTones: Seq[CourtesyToneNode] =
+      for ct <- 0 until 10 yield
+      {
+        val key: Key = Key(KeyKind.CourtesyTone, ct + 1)
+        val segments = Seq(
+          Segment(array(ct)(8), array(ct)(12), array(ct)(0), array(ct)(1)),
+          Segment(array(ct)(9), array(ct)(13), array(ct)(2), array(ct)(3)),
+          Segment(array(ct)(10), array(ct)(14), array(ct)(4), array(ct)(5)),
+          Segment(array(ct)(11), array(ct)(15), array(ct)(6), array(ct)(7)),
+        )
+        CourtesyToneNode(key, segments)
+      }
+    courtesyTones.map { (courtesyToneNode: CourtesyToneNode) =>
+      FieldEntry(this, courtesyToneNode)
     }
-    courtesyTones.map { ct =>
-      FieldEntry(this, FieldKey(ct.key), ct)
-    }
-  }
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[CourtesyToneNode]
 
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html = {
-    val html = courtesyTones(fieldEntries.map(_.value[CourtesyToneNode]))
+    val seq1: Seq[CourtesyToneNode] = fieldEntries.map(_.value[CourtesyToneNode])
+    val html = courtesyTones(seq1)
     html
   }
 

@@ -15,7 +15,7 @@ case object CommonNode extends SimpleFieldNode(KeyKind.Common):
       fieldEntries.map { fieldEntry =>
         Row(
           fieldEntry.fieldKey.fieldName,
-          fieldEntry.value[SimpleFieldValue].toEditCell(fieldEntry.fieldKey)
+          fieldEntry.toEditCell
         )
       }
     )
@@ -35,7 +35,7 @@ case object CommonNode extends SimpleFieldNode(KeyKind.Common):
       Seq(
         Row(
           fieldEntry.fieldKey.fieldName,
-          fieldEntry.value[SimpleFieldValue].toEditCell(fieldEntry.fieldKey)
+          fieldEntry.valueDisplayCell
         )
       )
     
