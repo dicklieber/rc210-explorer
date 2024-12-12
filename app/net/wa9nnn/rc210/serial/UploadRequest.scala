@@ -56,14 +56,14 @@ case class UploadRequest(doCandidateOnly: Boolean = true,
       case None =>
         for {
           fieldEntry <- dataStore.all
-          if (fieldEntry.candidate.isDefined || !doCandidateOnly)
+          if (fieldEntry.hasCandidate || !doCandidateOnly)
         } yield {
           UploadData(
             fieldEntry = fieldEntry,
             fieldValue = if (doCandidateOnly)
               fieldEntry.value
             else
-              fieldEntry.fieldValue,
+              fieldEntry.fieldData.fieldValue,
             accept = acceptCandidate
           )
         }

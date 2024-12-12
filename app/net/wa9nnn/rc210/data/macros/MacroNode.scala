@@ -126,8 +126,8 @@ object MacroNode extends ComplexExtractor[MacroNode]:
     val macros: Seq[MacroNode] = macroBuilder(1985, 16, 40) //SlicePos("//Macro - 1985-2624"), memory, 16)
       .concat(macroBuilder(2825, 7, 50)) // SlicePos("//ShortMacro - 2825-3174"), memory, 7))
 
-    val r: Seq[FieldEntry] = macros.map { m =>
-      FieldEntry(this, m.fieldKey, m)
+    val r: Seq[FieldEntry] = macros.map { macroNode =>
+      FieldEntry(this, macroNode)
     }
     r
   }

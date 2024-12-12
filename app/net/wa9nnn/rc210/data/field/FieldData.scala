@@ -20,6 +20,8 @@ package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.*
 import play.api.libs.json.{Format, Json}
+import play.libs.F
+import net.wa9nnn.rc210.data.field.FieldValue.fmt
 
 /**
  * Immutable state for a [[FieldKey]]. 
@@ -33,8 +35,8 @@ case class FieldData(fieldKey: FieldKey, fieldValue: FieldValue, candidate: Opti
    * 
    * @return current or candidate value.
    */
-  def value: FieldValue =
-    candidate.getOrElse(fieldValue).asInstanceOf[F]
+  def value[T <: FieldValue]: FieldValue =
+    candidate.getOrElse(fieldValue).asInstanceOf[T]
 
   /**
    *
@@ -57,4 +59,6 @@ case class FieldData(fieldKey: FieldKey, fieldValue: FieldValue, candidate: Opti
     copy(candidate = None)
 
 object FieldData:
+  implicit val ordering: Ordering[FieldData] =
+    Ordering.by[FieldData, FieldKey](_.fieldKey)
   implicit val fmt: Format[FieldData] = Json.format[FieldData]

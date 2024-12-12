@@ -30,7 +30,7 @@ import scala.util.Try
  * @param fieldName      name of rc2input
  * @param key            qualifier for the rc2input.
  */
-case class FieldKey(key: Key, fieldName: String = "") extends Ordered[FieldKey] {
+case class FieldKey(key: Key, fieldName: String = "")   {
 /*
   fieldName match
     case _ if key.keyKind.needsFieldName =>
@@ -40,13 +40,6 @@ case class FieldKey(key: Key, fieldName: String = "") extends Ordered[FieldKey] 
       assert(fieldName.isEmpty, s"Can't have a fieldName for a ${key.keyKind.entryName}")
 */
 
-  override def compare(that: FieldKey): Int =
-    var ret: Int = key.keyKind.toString compareTo that.key.keyKind.toString
-    if (ret == 0)
-      ret = key.rc210Value.compareTo(that.key.rc210Value)
-    if (ret == 0)
-      fieldName.compare(that.fieldName)
-    ret
 
   def editButtonCell: Cell = ButtonCell.edit(this)
 
@@ -82,6 +75,10 @@ case class FieldKey(key: Key, fieldName: String = "") extends Ordered[FieldKey] 
 }
 
 object FieldKey {
+
+  implicit val ordering: Ordering[FieldKey] =
+    Ordering.by[FieldKey, String](_.fieldName).orElseBy(_.key)
+
   /**
    * When used in a form.
    */

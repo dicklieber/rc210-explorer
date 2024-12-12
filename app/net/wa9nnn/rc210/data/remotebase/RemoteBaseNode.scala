@@ -115,7 +115,7 @@ object RemoteBaseNode extends ComplexExtractor[RemoteBaseNode] {
     }
 
     val remoteBase = RemoteBaseNode(radio, yaesu, prefix, memories)
-    Seq(FieldEntry(this, remoteBase.fieldKey, remoteBase))
+    Seq(FieldEntry(this, remoteBase))
   }
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[RemoteBaseNode]

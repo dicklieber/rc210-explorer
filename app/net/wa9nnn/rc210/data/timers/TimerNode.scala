@@ -89,7 +89,7 @@ object TimerNode extends ComplexExtractor[TimerNode] with LazyLogging:
    * @param memory    source of RC-210 data.
    * @return what we extracted.
    */
-  override def extract(memory: Memory): Seq[FieldEntry] = {
+  override def extract(memory: Memory): Seq[FieldEntry] =
     val seconds: Iterator[Int] = memory.iterator16At(1553)
     val macroInts: Iterator[Int] = memory.iterator8At(1565)
 
@@ -97,10 +97,9 @@ object TimerNode extends ComplexExtractor[TimerNode] with LazyLogging:
       index <- 0 until KeyKind.Timer.maxN
     } yield {
       val key: Key = Key(KeyKind.Timer, index + 1)
-      FieldEntry(this, fieldKey(key), TimerNode(key, seconds.next(), Key(KeyKind.Macro, macroInts.next() + 1)))
+      FieldEntry(this, TimerNode(key, seconds.next(), Key(KeyKind.Macro, macroInts.next() + 1)))
     })
     r
-  }
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[TimerNode]
 

@@ -61,12 +61,12 @@ class DataStoreController @Inject()(dataStore: DataStore)
   }
 
   def rollback(): Action[AnyContent] = Action {
-    dataStore.rollback()
+    dataStore.clearCandidates()
     Redirect(routes.NavigationController.selectTabKind(TabKind.Fields))
   }
 
   def rollbackOne(fieldKey: FieldKey): Action[AnyContent] = Action {
-    dataStore.rollback(fieldKey)
+    dataStore.clearCandidate(fieldKey)
     Redirect(routes.DataStoreExplorerController.index)
   }
 }

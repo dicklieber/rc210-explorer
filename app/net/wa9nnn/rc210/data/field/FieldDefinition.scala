@@ -78,9 +78,8 @@ case class SimpleField(offset: Int,
 
   def tooltip(tooltip: String): SimpleField = copy(tooltip = tooltip)
 
-  override def parse(json: JsValue): FieldValue = {
+  override def parse(json: JsValue): FieldValue = 
     fieldExtractor.parse(json)
-  }
 
   override def positions: Seq[FieldOffset] = Seq(FieldOffset(offset, this))
 }
@@ -101,10 +100,9 @@ trait ComplexExtractor[T <: ComplexFieldValue] extends FieldExtractor with Field
 
 }
 
-abstract class SimpleExtractor extends FieldExtractor {
+abstract class SimpleExtractor extends FieldExtractor :
   def extractFromInts(iterator: Iterator[Int], fieldDefinition: SimpleField): FieldValue
 
-}
 
 trait FieldExtractor:
   def parse(jsValue: JsValue): FieldValue

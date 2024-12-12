@@ -104,7 +104,7 @@ object MessageNode extends ComplexExtractor[MessageNode] with LazyLogging:
    */
   override def extract(memory: Memory): Seq[FieldEntry] = {
     // the PHP code only gets the 40 from main. //Phrase - 1576-1975
-    // Have to dig for what cpomes from the RTC board.
+    // Have to dig for what comes from the RTC board.
     val mai = new AtomicInteger(1)
     for {
       chunk: Chunk <- memory.chunks(1576, 10, 40)
@@ -114,7 +114,7 @@ object MessageNode extends ComplexExtractor[MessageNode] with LazyLogging:
         .takeWhile(_ != 0)
       )
       val fieldKey = FieldKey(key)
-      FieldEntry(this, fieldKey, message)
+      FieldEntry(this, message)
     }
   }
 

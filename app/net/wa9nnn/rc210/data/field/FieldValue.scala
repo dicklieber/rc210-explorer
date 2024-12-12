@@ -20,14 +20,14 @@ package net.wa9nnn.rc210.data.field
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, RowSource, TableSection}
 import net.wa9nnn.rc210.{FieldKey, Key}
-import play.api.libs.json.JsValue
+import play.api.libs.json.{Format, JsObject, JsResult, JsValue, OFormat}
 
 /**
  * Holds the value for a rc2input.
  * Knows how to render as HTML control or string for JSON, showing to a user or RC-210 Command,
  * Has enough metadata needed yo render
  */
-sealed trait FieldValue extends LazyLogging with RowSource {
+sealed trait FieldValue extends LazyLogging with RowSource :
   /**
    * Nodes that actually have an enabled field should override this.
    *
@@ -65,7 +65,15 @@ sealed trait FieldValue extends LazyLogging with RowSource {
     throw new NotImplementedError() //todo
 
   def toJsValue: JsValue
-}
+
+object FieldValue:
+  implicit val fmt: OFormat[FieldValue] = new OFormat[FieldValue] {
+    override def writes(o: FieldValue): JsObject =
+      o.toJsValue.as[JsObject]
+
+    override def reads(json: JsValue): JsResult[FieldValue] =
+      throw new NotImplementedError() //todo
+  }
 
 /**
  * Renders itself as a [[[Cell]]
@@ -80,12 +88,10 @@ trait SimpleFieldValue(val runableMacros: Key*) extends FieldValue {
 
 }
 
-trait ComplexFieldValue(val runableMacros: Key*) extends FieldValue with LazyLogging {
+trait ComplexFieldValue(val runableMacros: Key*) extends FieldValue with LazyLogging :
   val key: Key
 
   lazy val fieldKey: FieldKey = FieldKey(key)
-
-}
 
 
 

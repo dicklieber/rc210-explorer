@@ -37,7 +37,7 @@ object SendField extends PlayEnum[SendField]:
   case object CandidatesOnly extends SendField:
     def select(fieldEntry: FieldEntry): Option[UploadData] =
       for {
-        candidateValue <- fieldEntry.candidate
+        candidateValue <- fieldEntry.fieldData.candidate
       } yield {
         UploadData(fieldEntry, candidateValue, true)
       }

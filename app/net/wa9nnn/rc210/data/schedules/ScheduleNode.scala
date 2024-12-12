@@ -126,11 +126,10 @@ object ScheduleNode extends LazyLogging with ComplexExtractor[ScheduleNode]:
     )
   }
 
-  override def extract(memory: Memory): Seq[FieldEntry] = {
+  override def extract(memory: Memory): Seq[FieldEntry] = 
     ScheduleBuilder(memory).map { schedule =>
-      FieldEntry(this, FieldKey(schedule.key), schedule)
+      FieldEntry(this, schedule)
     }
-  }
 
   def apply(setPoint: Int): ScheduleNode = new ScheduleNode(Key(KeyKind.Schedule, setPoint))
 

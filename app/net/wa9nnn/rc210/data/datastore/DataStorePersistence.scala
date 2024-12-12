@@ -60,11 +60,10 @@ class DataStorePersistence() extends DataStoreEngine with LazyLogging:
     val sJson = toJson
     Files.writeString(path, sJson)
 
-  def toJson: String = 
-    val jsValue: JsValue = Json.toJson(entries)
+  def toJson: String =
+    val jsValue: JsValue = Json.toJson(fieldDatas)
     Json.prettyPrint(jsValue)
   
-
   def fromJson(sJson: String): Unit =
     loadEntries(Json.parse(sJson).as[Seq[FieldData]])
   

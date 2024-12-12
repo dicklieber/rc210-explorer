@@ -67,8 +67,7 @@ class MemoryFileLoader @Inject()( fieldDefinitions: FieldDefinitions)(implicit c
           0 // todo this ids a hack, maybe handle in KeyKind definition or get rid of 0 as a magic number
         else
           number
-        val fieldKey = fieldDefinition.fieldKey(n)
-        val fieldEntry = FieldEntry(fieldDefinition, fieldKey, fieldValue)
+        val fieldEntry = FieldEntry(fieldDefinition, fieldValue)
         logger.trace("FieldEntry: offset: {} fieldEntry: {})", fieldDefinition.offset, fieldEntry.toString)
         fieldEntry
       }

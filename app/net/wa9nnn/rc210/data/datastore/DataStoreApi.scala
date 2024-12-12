@@ -35,6 +35,6 @@ trait DataStoreApi extends LazyLogging:
   def triggerNodes(macroKey: Key): Seq[FieldEntry]
   def update(candidateAndNames: CandidateAndNames): Unit
   def acceptCandidate(fieldKey: FieldKey): Unit
-  def rollback(): Unit
-  def rollback(fieldKey: FieldKey): Unit
+  def clearCandidates(): Unit
+  def clearCandidate(fieldKey: FieldKey): Unit
   def flowData(search: Key): Option[FlowData]

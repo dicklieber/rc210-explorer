@@ -35,7 +35,7 @@ class DataStoreEngine extends DataStoreApi:
 
   /**
    * 
-   * @param entries as returned by [[entries]].
+   * @param entries as returned by [[fieldDatas]].
    */
   def loadEntries(entries:Iterable[FieldData]):Unit =
     entries.foreach{fieldData =>
@@ -50,8 +50,8 @@ class DataStoreEngine extends DataStoreApi:
    *
    * @return a sequence of sorted `FieldEntry` instances.
    */
-  def entries: Seq[FieldEntry] =
-    keyFieldMap.values.toIndexedSeq.sorted
+  def fieldDatas: Seq[FieldData] =
+    keyFieldMap.values.map(_.fieldData).toIndexedSeq.sorted
 
   def values[T <: ComplexFieldValue](keyKind: KeyKind): Seq[T] =
     apply(keyKind).map(_.value.asInstanceOf[T])
@@ -68,7 +68,7 @@ class DataStoreEngine extends DataStoreApi:
     all.filter(_.fieldKey.key.keyKind == keyKind)
 
   def all: Seq[FieldEntry] =
-    keyFieldMap.values.toIndexedSeq.sorted
+    keyFieldMap.values.toIndexedSeq//.sorted
   
 //  def indexValues[T <: FieldValue](keyKind: KeyKind): Seq[T] =
 //    all.filter(_.fieldKey.key.keyKind == keyKind).map(_.value.asInstanceOf[T])
@@ -84,7 +84,7 @@ class DataStoreEngine extends DataStoreApi:
   //    all.filter(_.fieldKeyStuff.key.keyKind == keyKind).sorted
 
   def fieldEntry(key: Key): Seq[FieldEntry] =
-    all.filter(_.fieldKey.key == key).sorted
+    all.filter(_.fieldKey.key == key)//.sorted
 
   def candidates: Seq[FieldEntry] =
     all.filter(_.hasCandidate)
@@ -108,14 +108,14 @@ class DataStoreEngine extends DataStoreApi:
    *                          the new candidate value to be updated, as well as an optional sequence of `NamedKey`.
    */
   def update(candidateAndNames: CandidateAndNames): Unit =
-    candidateAndNames.candidates.foreach { uc =>
-      val fieldKey = uc.fieldKey
+    candidateAndNames.candidates.foreach { updateCandidate =>
+      val fieldKey = updateCandidate.fieldKey
       val fieldEntry: FieldEntry = keyFieldMap(fieldKey)
-      keyFieldMap.put(fieldKey, uc.candidate match
+      updateCandidate.candidate match
         case str: String =>
-          fieldEntry.setCandidate(str)
+          fieldEntry.setCandidate(str) //todo
         case value: ComplexFieldValue =>
-          fieldEntry.setCandidate(value))
+          fieldEntry.setCandidate(value)
     }
 
   /**
@@ -125,18 +125,15 @@ class DataStoreEngine extends DataStoreApi:
    * @param fieldKey   the key identifying the field whose candidate value is to be accepted.
    */
   def acceptCandidate(fieldKey: FieldKey): Unit =
-    keyFieldMap.put(fieldKey, keyFieldMap(fieldKey).acceptCandidate())
-  
-  def rollback(): Unit =
+    keyFieldMap(fieldKey).acceptCandidate()
+
+  def clearCandidates(): Unit =
     keyFieldMap.values.foreach { fieldEntry =>
-      val updated = fieldEntry.copy(candidate = None)
-      keyFieldMap.put(fieldEntry.fieldKey, updated)
+      fieldEntry.clearCandidate()
     }
 
-  def rollback(fieldKey: FieldKey): Unit =
-    val aFieldEntry = fieldEntry(fieldKey)
-    val updated = aFieldEntry.copy(candidate = None)
-    keyFieldMap.put(aFieldEntry.fieldKey, updated)
+  def clearCandidate(fieldKey: FieldKey): Unit =
+    fieldEntry(fieldKey).clearCandidate()
 
   def triggers: Seq[FieldEntry] =
     (for

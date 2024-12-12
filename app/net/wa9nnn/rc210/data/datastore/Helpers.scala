@@ -40,11 +40,6 @@ case class FormValue(id: String, sFormValue: String) {
   val fieldKey: FieldKey = FieldKey.fromId(id)
 }
 
-object FieldEntryJson:
-  def apply(fieldEntry: FieldEntry): FieldEntryJson =
-    val fieldKey = fieldEntry.fieldKey
-    new FieldEntryJson(fieldKey, fieldEntry.fieldValue.toJsValue, fieldEntry.candidate.map(_.toJsValue))
-
 /**
  * What is sent to the [[DataStore]] to be the new candidate and name.
  *
