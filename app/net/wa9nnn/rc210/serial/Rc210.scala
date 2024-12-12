@@ -40,6 +40,7 @@ class Rc210 @Inject()(config: Config, serialPortsSource: SerialPortsSource) exte
   private val file: Path = config.get[Path]("vizRc210.serialPortsFile")
   if (os.exists(file))
     selectPort(os.read(file))
+  logger.debug(s"Selected port: ${_portAndVersion.selectedInfo}")
 
   def openStreamBased: StreamBased =
     _portAndVersion.selectedSerialPort.map { serialPort =>
@@ -68,13 +69,18 @@ class Rc210 @Inject()(config: Config, serialPortsSource: SerialPortsSource) exte
     }).getOrElse(false)
 
   def selectPort(candidate: String): Unit =
-    serialPortsSource()
-      .find(_.getSystemPortName == candidate)
-      .foreach((serialPort: SerialPort) =>
-        val ver: Option[String] = Version(serialPort).toOption
-        _portAndVersion = PortAndVersion(Option(serialPort), ver)
-        os.write.over(file, serialPort.getSystemPortName)
-      )
+    try
+      serialPortsSource()
+        .find(_.getSystemPortName == candidate)
+        .foreach((serialPort: SerialPort) =>
+          val ver: Option[String] = Version(serialPort).toOption
+          _portAndVersion = PortAndVersion(Option(serialPort), ver)
+          os.write.over(file, serialPort.getSystemPortName)
+        )
+      logger.info(s"Selected port: ${_portAndVersion.selectedInfo}")
+    catch
+      case exception: Exception =>
+        logger.error(s"Failed to select port: $candidate", exception)
 
   def listPorts(): Seq[SerialPort] =
     serialPortsSource()

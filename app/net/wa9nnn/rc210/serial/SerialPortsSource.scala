@@ -18,24 +18,27 @@
 package net.wa9nnn.rc210.serial
 
 import com.fazecast.jSerialComm.SerialPort
+import com.typesafe.scalalogging.LazyLogging
 
 import javax.inject.Singleton
 import scala.language.postfixOps
 
 @Singleton
-class SerialPortsSource() {
+class SerialPortsSource() extends LazyLogging:
   /**
    * All the serial ports.
    *
    * @return serial portw as [[ComPort]]
    */
   def apply(): Seq[SerialPort] =
-    SerialPort.getCommPorts
+    val r = SerialPort.getCommPorts
       .filterNot { pred =>
         val systemPortName = pred.getSystemPortName
         systemPortName.startsWith("tty")
       } // just want call-in, devices. Leaves COM alone
       .toList
-}
+    logger.debug(r.toString)
+    r
+
 
 
