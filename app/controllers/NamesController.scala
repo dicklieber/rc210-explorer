@@ -20,6 +20,8 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.*
 import net.wa9nnn.rc210.FieldKey
+import net.wa9nnn.rc210.KeyKind.{Function, Port}
+import net.wa9nnn.rc210.NamedKey.fieldName
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.ui.{ButtonCell, NamedKeyManager, TabE}
 import net.wa9nnn.rc210.ui.TabE.Names
@@ -43,7 +45,10 @@ class NamesController @Inject()(namedKeyManager:NamedKeyManager,
     implicit request =>
       val rows: Seq[Row] = namedKeyManager.namedKeys.map { namedKey =>
         val key = namedKey.key
-        val fieldKey = FieldKey(key)
+        val fieldKey: FieldKey = if key.keyKind == Port then
+          FieldKey(key, "Port")
+        else
+          FieldKey(key)
         val keyKind = key.keyKind
         Row(
           ButtonCell.edit(fieldKey),

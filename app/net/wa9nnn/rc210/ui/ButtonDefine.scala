@@ -32,9 +32,13 @@ object Button:
   val editIcon = "bi-pencil-square"
 
   def edit(fieldKey: FieldKey): String = {
+    val call = if fieldKey.fieldName == "Port" then
+      routes.EditController.index(fieldKey.key.keyKind)
+    else
+      routes.EditController.edit(fieldKey)
     button(
       icon = editIcon,
-      call = routes.EditController.edit(fieldKey),
+      call = call,
       toolTip = "Edit this field.")
   }
 
@@ -56,13 +60,13 @@ object Button:
           routes.DataStoreController.rollback(),
           "Rollback all fields.")
 
-  def upload(doCandidateOnly:Boolean = true): String =
+  def upload(doCandidateOnly: Boolean = true): String =
     buildUpload(None, doCandidateOnly)
 
   def upload(fieldKey: FieldKey): String =
     buildUpload(Option(fieldKey))
 
-  def buildUpload(fieldKey: Option[FieldKey], doCandidateOnly:Boolean = true): String =
+  def buildUpload(fieldKey: Option[FieldKey], doCandidateOnly: Boolean = true): String =
     val icon = "bi-upload"
     fieldKey match
       case Some(fieldKey) =>

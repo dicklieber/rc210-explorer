@@ -27,6 +27,7 @@ import play.api.data.FormError
 import play.api.data.format.Formatter
 import play.api.libs.json.*
 import play.api.mvc.PathBindable
+import sun.jvm.hotspot.HelloWorld.e
 
 /**
  * Identifies various RC210 objects.
@@ -34,13 +35,14 @@ import play.api.mvc.PathBindable
  * @param keyKind     of the Key
  * @param rc210Value  0 is a magic number used for things like [[KeyKind.CommonKey]]
  */
-case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends Ordered[Key] with EnumEntryValue {
+case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends Ordered[Key] with EnumEntryValue :
   def check(expected: KeyKind): Unit = if (expected != keyKind) throw IllegalArgumentException(s"Expecting Key of type $expected, but got $this}")
 
   assert(rc210Value <= keyKind.maxN, s"Max number for $keyKind is ${keyKind.maxN}")
 
   override def toString: String = s"${keyKind.entryName}$rc210Value"
-  def withNumberAndName:String =
+
+  def withNumberAndName: String =
     f"$rc210Value%2d: $name"
 
   override def compare(that: Key): Int =
@@ -56,13 +58,14 @@ case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends Order
    *
    * @return current name for this key
    */
-  def name:String =
+  def name: String =
     _namedSource.nameForKey(this)
 
   def keyWithName: String =
     s"$rc210Value: $name"
 
-//
+  val entryName: String = toString //todo  this may not be right
+
   /**
    * Replaces 'n' in the template with the number (usually a port number).
    *
@@ -70,20 +73,19 @@ case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends Order
    * @return with 'n' replaced by the port number.
    */
   def replaceN(template: String): String =
-    val number = if(rc210Value == 0)
+    val number = if (rc210Value == 0)
       1
     else
       rc210Value
     template.replaceAll("n", number.toString)
 
-  override def values: IndexedSeq[EnumEntryValue] =
-    throw new NotImplementedError() //Not needed as we override options
+  //  override def values: IndexedSeq[EnumEntryValue] =
+  //    throw new NotImplementedError() //Not needed as we override options
 
   override def options: Seq[(String, String)] = MacroSelect.options
-}
 
 object Key extends LazyLogging:
-  val keyName: String = "key"
+
   private val kparser = """(\D+)(\d*)""".r
 
   def apply(maybeSKey: Option[String]): Option[Key] =
@@ -93,7 +95,7 @@ object Key extends LazyLogging:
     try
       sKey match
         case kparser(sKind, sNumber) =>
-          val keyKind = KeyKind.withName(sKind)
+          val keyKind = KeyKind.valueOf(sKind)
           new Key(keyKind, sNumber.toInt)
         case _ =>
           throw new IllegalArgumentException(s"""Can't parse "$sKey"!""")
@@ -102,30 +104,32 @@ object Key extends LazyLogging:
         throw e
 
   def setNamedSource(namedSource: NamedKeySource): Unit =
-      _namedSource = namedSource
+    _namedSource = namedSource
 
-  implicit val fmtKey: Format[Key] = new Format[Key] {
-    override def reads(json: JsValue): JsResult[Key] = {
-      val sKey = json.as[String]
-      try {
-        JsSuccess(apply(sKey))
-      }
-      catch {
-        case e: IllegalArgumentException => JsError(e.getMessage)
-      }
-    }
-
-    override def writes(sak: Key): JsValue = {
-      JsString(sak.toString)
-    }
-  }
+  //  implicit val fmtKey: Format[Key] = new Format[Key] {
+  //    override def reads(json: JsValue): JsResult[Key] = {
+  //      val sKey = json.as[String]
+  //      try {
+  //        JsSuccess(apply(sKey))
+  //      }
+  //      catch {
+  //        case e: IllegalArgumentException => JsError(e.getMessage)
+  //      }
+  //    }
+  //
+  //    override def writes(sak: Key): JsValue = {
+  //      JsString(sak.toString)
+  //    }
+  //  }
 
   private var _namedSource: NamedKeySource = NoNamedKeySource
 
   private def keys(keyKind: KeyKind): Seq[Key] =
-    for {
+    for
+    {
       number <- 1 to keyKind.maxN
-    } yield {
+    } yield
+    {
       Key(keyKind, number)
     }
 
@@ -140,7 +144,7 @@ object Key extends LazyLogging:
    */
   implicit def keyKindPathBinder: PathBindable[KeyKind] = new PathBindable[KeyKind] {
     override def bind(key: String, value: String): Either[String, KeyKind] = {
-      Right(KeyKind.withName(value))
+      Right(KeyKind.valueOf(value))
     }
 
     override def unbind(key: String, macroKey: KeyKind): String = {
