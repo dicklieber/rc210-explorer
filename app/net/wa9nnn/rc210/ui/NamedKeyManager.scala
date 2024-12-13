@@ -1,17 +1,17 @@
 /*
  * Copyright (c) 2024. Dick Lieber, WA9NNN
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
+ *                                                                      
+ * This program is free software: you can redistribute it and/or modify 
+ * it under the terms of the GNU General Public License as published by 
+ * the Free Software Foundation, either version 3 of the License, or    
+ * (at your option) any later version.                                  
+ *                                                                      
+ * This program is distributed in the hope that it will be useful,      
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        
+ * GNU General Public License for more details.                         
+ *                                                                      
+ * You should have received a copy of the GNU General Public License    
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
@@ -24,7 +24,8 @@ import jakarta.inject.{Inject, Singleton}
 import net.wa9nnn.rc210
 import net.wa9nnn.rc210.util.Configs
 import net.wa9nnn.rc210.{Key, NamedKey, NamedKeySource}
-import play.api.libs.json.{JsValue, Json}
+import os.write
+import play.api.libs.json.Json
 
 import java.io.FileNotFoundException
 import java.nio.file.{Files, NoSuchFileException, Path}
@@ -39,8 +40,8 @@ class NamedKeyManager @Inject()(implicit config: Config) extends NamedKeySource 
   // load last saved data.
   try
     val str: String = Files.readString(path)
-    val jsValue1: JsValue = Json.parse(str)
-    val loadedKeys: Seq[NamedKey] = jsValue1.as[Seq[NamedKey]]
+    val jsValue = Json.parse(str)
+    val loadedKeys:Seq[NamedKey] = jsValue.as[Seq[NamedKey]]
     keyNameMap.addAll(loadedKeys.map(namedKey => namedKey.key -> namedKey.name))
   catch
     case e:NoSuchFileException =>
@@ -49,8 +50,7 @@ class NamedKeyManager @Inject()(implicit config: Config) extends NamedKeySource 
       logger.error(s"Error loading named keys from $path", e)
   
   private def save(): Unit =
-    val jsValue = Json.toJson(namedKeys)
-    val sJson = Json.prettyPrint(jsValue)
+    val sJson = Json.prettyPrint(Json.toJson(namedKeys))
     Files.writeString(path, sJson)
   
   /**
