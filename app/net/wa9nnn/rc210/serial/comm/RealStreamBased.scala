@@ -35,7 +35,7 @@ import scala.util.*
  */
 class RealStreamBased(serialPort: SerialPort) extends RcOp(serialPort) with StreamBased with AutoCloseable with LazyLogging:
 
-  serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0)
+  serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 2000, 0)
   val inputStream: InputStream = serialPort.getInputStream
   private val outputStream: OutputStream = serialPort.getOutputStream
 
