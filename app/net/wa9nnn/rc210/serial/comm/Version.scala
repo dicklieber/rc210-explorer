@@ -19,7 +19,7 @@ object Version extends LazyLogging:
     }
     tried match
       case Failure(exception) => 
-        logger.error("Version", exception)
+        logger.error("Version timeout")
         tried
       case Success(value) => 
         tried

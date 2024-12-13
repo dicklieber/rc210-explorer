@@ -120,8 +120,10 @@ object MacroNode extends ComplexExtractor[MacroNode]:
         FieldEntry(this, FieldKey(key), macroNode)
       }
 
-    val macroNodes: Seq[FieldEntry] = readMacros(1985, 40, longMacroSlots)
-    macroNodes
+    val longMacroNodes: Seq[FieldEntry] = readMacros(1985, 40, longMacroSlots)
+    val shortMacroNodes: Seq[FieldEntry] = readMacros(2825, 50, shortMacroSlots)
+    val entries = longMacroNodes ++ shortMacroNodes
+    entries
 
 
 /*
