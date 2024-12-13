@@ -1,13 +1,14 @@
 package net.wa9nnn.rc210.data.macros
 
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table, TableInACell}
+import net.wa9nnn.rc210.Functions.functions
 import net.wa9nnn.rc210.data.Dtmf.Dtmf
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.{EditHandler, Node}
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.ButtonCell
-import net.wa9nnn.rc210.{FieldKey, Functions, Key, KeyKind}
+import net.wa9nnn.rc210.{FieldKey, FunctionNode, Functions, Key, KeyKind}
 import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.i18n.MessagesProvider
@@ -16,6 +17,7 @@ import play.api.mvc.*
 import play.twirl.api.Html
 import views.html.{fieldIndex, macroEditor}
 
+import java.time.temporal.TemporalQueries.offset
 import java.util.concurrent.atomic.AtomicInteger
 import scala.annotation.tailrec
 
@@ -27,6 +29,10 @@ import scala.annotation.tailrec
  * @param dtmf      that can invoke this macro.
  */
 case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dtmf] = None) extends ComplexFieldValue() with Node:
+  override def toString: String =
+    val seq1: Seq[Any] = functions.map(_.rc210Value)
+    val sFunctions:String = seq1.mkString(" ")
+      s"$key: dtmf: ${dtmf.getOrElse("")} functions=$sFunctions"
 
   //  def enabled: Boolean = functions.nonEmpty
 
@@ -95,11 +101,30 @@ object MacroNode extends ComplexExtractor[MacroNode]:
     FieldOffset(2825, this),
   )
 
-  override def extract(memory: Memory): Seq[FieldEntry] = {
+  private val longMacroSlots = 15
+  private val shortMacroSlots = 4
+
+  override def extract(memory: Memory): Seq[FieldEntry] =
 
     val dtmfMacros: DtmfMacros = DtmfMacroExtractor(memory)
     val mai = new AtomicInteger(1)
 
+    def readMacros(offset: Int, nMacros:Int, functionLength:Int): Seq[FieldEntry] =
+      val chunks = memory.chunks(offset, functionLength,nMacros)
+      chunks.map { chunk =>
+        val key: Key = Key(KeyKind.Macro, mai.getAndIncrement())
+        val functions: Iterable[Key] = chunk.map { functionNumber =>
+          Key.apply(KeyKind.Function, functionNumber)
+        }.takeWhile(_.rc210Value != 0)
+        val macroNode: MacroNode = MacroNode(key, functions.toSeq, dtmfMacros(key))
+        FieldEntry(this, FieldKey(key), macroNode)
+      }
+
+    val macroNodes: Seq[FieldEntry] = readMacros(1985, 40, longMacroSlots)
+    macroNodes
+
+
+/*
     def macroBuilder(offset: Int, chunkLength: Int, nChunks: Int) = {
       memory.chunks(offset, chunkLength, nChunks)
         .map { chunk =>
@@ -122,16 +147,18 @@ object MacroNode extends ComplexExtractor[MacroNode]:
           MacroNode(key, functions, dtmfMacros(key))
         }
     }
+*/
 
-    val macros: Seq[MacroNode] = macroBuilder(1985, 16, 40) //SlicePos("//Macro - 1985-2624"), memory, 16)
+/*    val macros: Seq[MacroNode] = macroBuilder(1985, 16, 40) //SlicePos("//Macro - 1985-2624"), memory, 16)
       .concat(macroBuilder(2825, 7, 50)) // SlicePos("//ShortMacro - 2825-3174"), memory, 7))
 
     val r: Seq[FieldEntry] = macros.map { macroNode =>
       FieldEntry(this, macroNode)
     }
-    r
-  }
+    r*/
 
+
+/*
   /**
    * Get all the Function key from a chunk of RC_210-210 data.
    *
@@ -147,7 +174,9 @@ object MacroNode extends ComplexExtractor[MacroNode]:
         soFar
     }
   }
+*/
 
+/*
   /**
    * Accumulate functionKey frpm ints. Handle 255s and less than 255
    *
@@ -167,6 +196,7 @@ object MacroNode extends ComplexExtractor[MacroNode]:
         parseFunction(iterator, soFar + int) // add next int, which will always be 255.
     }
   }
+*/
 
   override def parse(jsValue: JsValue): FieldValue = {
     jsValue.as[MacroNode]

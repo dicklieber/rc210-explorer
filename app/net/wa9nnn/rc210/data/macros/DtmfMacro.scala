@@ -10,7 +10,8 @@ import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * Extract Dtmf to Macro mappings.
- * These are spread out in variouos places in [[net.wa9nnn.rc210.serial.Memory]] to se get them all then build a map to macros can access them
+ * These are spread out in variouos places in [[net.wa9nnn.rc210.serial.Memory]] 
+ * to get them all then build a map to macros can access them
  */
 object DtmfMacroExtractor {
 
@@ -36,6 +37,10 @@ object DtmfMacroExtractor {
   }
 }
 
+/**
+ * DTMF strings associated with Macro Keys.
+ * @param a
+ */
 case class DtmfMacros(a: Seq[(Key, Dtmf)]) {
   private val map: Map[Key, Dtmf] = a.toMap
 

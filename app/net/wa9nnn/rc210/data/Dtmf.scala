@@ -17,9 +17,11 @@ object Dtmf {
   type Dtmf = String
 
   // Note the RC210 binary can't encode 'D'
+  // The x is int 0 which is the terminator.
   val dtmfDigits = "x1234567890*#ABC"
 
   def fromMemoryInts(in: Seq[Int]): Option[Dtmf] = {
+    assert(in.length ==5, "Must work on 5 ints!")
 
     val digits: Seq[Char] = in.flatMap { int =>
       Seq(int & 0x0f, (int & 0xf0) >> 4)
