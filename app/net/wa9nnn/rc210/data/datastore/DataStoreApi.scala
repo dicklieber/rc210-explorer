@@ -18,7 +18,6 @@
 
 package net.wa9nnn.rc210.data.datastore
 
-import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.{FieldKey, Key}
 import net.wa9nnn.rc210.data.field.FieldEntry
 
@@ -28,13 +27,13 @@ import net.wa9nnn.rc210.data.field.FieldEntry
  * entries, manage candidates, and handle rollbacks.
  * Note that persistence is not handled by this trait.
  */
-trait DataStoreApi extends LazyLogging:
+trait DataStoreApi:
   def fieldEntry(fieldKey: FieldKey): FieldEntry
   def fieldEntry(key: Key): Seq[FieldEntry]
-  def candidates: Seq[FieldEntry]
+  def candidates: Iterable[FieldEntry]
   def triggerNodes(macroKey: Key): Seq[FieldEntry]
   def update(candidateAndNames: CandidateAndNames): Unit
   def acceptCandidate(fieldKey: FieldKey): Unit
-  def clearCandidates(): Unit
-  def clearCandidate(fieldKey: FieldKey): Unit
+  def rollback(): Unit
+  def rollback(fieldKey: FieldKey): Unit
   def flowData(search: Key): Option[FlowData]

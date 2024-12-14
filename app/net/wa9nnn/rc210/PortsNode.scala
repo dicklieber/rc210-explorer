@@ -12,7 +12,7 @@ import play.twirl.api.Html
 object PortsNode extends SimpleFieldNode(KeyKind.Port):
 
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    def rows: Seq[Row] = fieldEntries
+    val rows: Seq[Row] = fieldEntries
       .groupBy(_.fieldKey.fieldName)
       .toSeq
       .sortBy(_._1)
@@ -28,7 +28,8 @@ object PortsNode extends SimpleFieldNode(KeyKind.Port):
 
     val header = Header.singleRow(colHeaders: _*)
     val namesRow: Row = Row(Key.portKeys.map { key =>
-      FormField(FieldKey(key, NamedKey.fieldName), key.name)
+      val fieldKey = FieldKey(key, NamedKey.fieldName)
+      FormField(fieldKey, key.name)
     }.prepended(Cell("Name")))
     val table = Table(
       header,
@@ -54,7 +55,8 @@ object PortsNode extends SimpleFieldNode(KeyKind.Port):
 case class PortRow(name: String, portEntries: Seq[FieldEntry]) extends RowSource:
   def toRow: Row =
     Row(portEntries.map { fe =>
-      fe.toEditCell
+      val v: FieldValue = fe.value
+      v.toEditCell(fe.fieldKey)
     }.prepended(Cell(name))
     )
 

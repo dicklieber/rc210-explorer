@@ -18,7 +18,8 @@
 package net.wa9nnn.rc210
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.Key._namedSource
+import com.wa9nnn.wa9nnnutil.tableui.CellProvider
+import net.wa9nnn.rc210.Key._namedKeySource
 import net.wa9nnn.rc210.KeyKind.*
 import net.wa9nnn.rc210.ui.NamedKeyManager.NoNamedKeySource
 import net.wa9nnn.rc210.{NamedKey, NamedKeySource}
@@ -27,7 +28,6 @@ import play.api.data.FormError
 import play.api.data.format.Formatter
 import play.api.libs.json.*
 import play.api.mvc.PathBindable
-import sun.jvm.hotspot.HelloWorld.e
 
 /**
  * Identifies various RC210 objects.
@@ -35,7 +35,8 @@ import sun.jvm.hotspot.HelloWorld.e
  * @param keyKind     of the Key
  * @param rc210Value  0 is a magic number used for things like [[KeyKind.CommonKey]]
  */
-case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends Ordered[Key] with EnumEntryValue :
+case class Key(keyKind: KeyKind, override val rc210Value: Int = 0)
+  extends CellProvider with Ordered[Key] with EnumEntryValue:
   def check(expected: KeyKind): Unit = if (expected != keyKind) throw IllegalArgumentException(s"Expecting Key of type $expected, but got $this}")
 
   assert(rc210Value <= keyKind.maxN, s"Max number for $keyKind is ${keyKind.maxN}")
@@ -59,12 +60,12 @@ case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends Order
    * @return current name for this key
    */
   def name: String =
-    _namedSource.nameForKey(this)
+    _namedKeySource.nameForKey(this)
 
   def keyWithName: String =
     s"$rc210Value: $name"
 
-  val entryName: String = toString //todo  this may not be right
+  override val entryName: String = toString //todo  this may not be right
 
   /**
    * Replaces 'n' in the template with the number (usually a port number).
@@ -84,7 +85,16 @@ case class Key(keyKind: KeyKind, override val rc210Value: Int = 0) extends Order
 
   override def options: Seq[(String, String)] = MacroSelect.options
 
+  def toCell: com.wa9nnn.wa9nnnutil.tableui.Cell = ???
+
+  def values: IndexedSeq[net.wa9nnn.rc210.ui.EnumEntryValue] = ???
+
 object Key extends LazyLogging:
+  val keyName: String = "key"
+  var _namedKeySource: NamedKeySource = NoNamedKeySource
+
+  def setNamedSource(namedKeySource: NamedKeySource): Unit =
+    _namedKeySource = namedKeySource
 
   private val kparser = """(\D+)(\d*)""".r
 
@@ -95,7 +105,7 @@ object Key extends LazyLogging:
     try
       sKey match
         case kparser(sKind, sNumber) =>
-          val keyKind = KeyKind.valueOf(sKind)
+          val keyKind = KeyKind.withName(sKind)
           new Key(keyKind, sNumber.toInt)
         case _ =>
           throw new IllegalArgumentException(s"""Can't parse "$sKey"!""")
@@ -103,24 +113,23 @@ object Key extends LazyLogging:
       case e: Exception =>
         throw e
 
-  def setNamedSource(namedSource: NamedKeySource): Unit =
-    _namedSource = namedSource
+  implicit val fmtKey: Format[Key] = new Format[Key] {
+    override def reads(json: JsValue): JsResult[Key] = {
+      val sKey = json.as[String]
+      try
+      {
+        JsSuccess(apply(sKey))
+      }
+      catch
+      {
+        case e: IllegalArgumentException => JsError(e.getMessage)
+      }
+    }
 
-  //  implicit val fmtKey: Format[Key] = new Format[Key] {
-  //    override def reads(json: JsValue): JsResult[Key] = {
-  //      val sKey = json.as[String]
-  //      try {
-  //        JsSuccess(apply(sKey))
-  //      }
-  //      catch {
-  //        case e: IllegalArgumentException => JsError(e.getMessage)
-  //      }
-  //    }
-  //
-  //    override def writes(sak: Key): JsValue = {
-  //      JsString(sak.toString)
-  //    }
-  //  }
+    override def writes(sak: Key): JsValue = {
+      JsString(sak.toString)
+    }
+  }
 
   private var _namedSource: NamedKeySource = NoNamedKeySource
 
@@ -144,7 +153,7 @@ object Key extends LazyLogging:
    */
   implicit def keyKindPathBinder: PathBindable[KeyKind] = new PathBindable[KeyKind] {
     override def bind(key: String, value: String): Either[String, KeyKind] = {
-      Right(KeyKind.valueOf(value))
+      Right(KeyKind.withName(value))
     }
 
     override def unbind(key: String, macroKey: KeyKind): String = {

@@ -18,36 +18,30 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.*
-import play.api.libs.json.{Format, Json}
-import play.libs.F
-import net.wa9nnn.rc210.data.field.FieldValue.fmt
-
+import net.wa9nnn.rc210.FieldKey
+import play.api.libs.json.{Json, OFormat}
 /**
- * Immutable state for a [[FieldKey]]. 
+ * Represents data associated with a specific field in the RC-210 system.
  *
- * @param fieldKey   what it's for.
- * @param fieldValue current value.
- * @param candidate  next value
+ * @param fieldKey   The unique identifier for the field, combining a key and field name.
+ * @param fieldValue The current value of the field.
+ * @param candidate  An optional candidate value that can replace the current field value.
+ *
+ *                   This case class provides functionality to manage and update field data, allowing for a temporary
+ *                   candidate value to be proposed and either accepted or replaced. The `value` property represents
+ *                   the active value of the field, which defaults to the candidate if present, or the `fieldValue`
+ *                   otherwise. The `display` property provides a string representation of the active value.
  */
 case class FieldData(fieldKey: FieldKey, fieldValue: FieldValue, candidate: Option[FieldValue] = None):
   /**
-   * 
-   * @return current or candidate value.
-   */
-  def value[T <: FieldValue]: FieldValue =
-    candidate.getOrElse(fieldValue).asInstanceOf[T]
-
-  /**
+   * Retrieves the active value for the current field data.
    *
-   * @param newFieldValue already parsed to a [[FieldValue]]
-   * @return updated [[FieldEntry]].
+   * This value is determined based on the presence of a candidate value.
+   * If a candidate value is defined, it is used as the active value.
+   * Otherwise, the default field value (`fieldValue`) is used.
    */
-  def setCandidate(newFieldValue: FieldValue): FieldData =
-    if fieldValue == newFieldValue then
-      copy(candidate = None)
-    else
-      copy(candidate = Option(newFieldValue))
+  val value: FieldValue = candidate.getOrElse(fieldValue)
+  val display: String = value.toString
 
   def acceptCandidate(): FieldData =
     copy(
@@ -55,10 +49,20 @@ case class FieldData(fieldKey: FieldKey, fieldValue: FieldValue, candidate: Opti
       fieldValue = candidate.getOrElse(fieldValue)
     )
 
-  def clearCandidate: FieldData =
-    copy(candidate = None)
+  def setCandidate(newFieldValue: FieldValue): FieldData =
+    if fieldValue == newFieldValue then
+      copy(candidate = None)
+    else
+      copy(candidate = Option(newFieldValue))
+  def rollBack: FieldData =
+    copy(
+      candidate = None,
+    )
 
 object FieldData:
   implicit val ordering: Ordering[FieldData] =
     Ordering.by[FieldData, FieldKey](_.fieldKey)
-  implicit val fmt: Format[FieldData] = Json.format[FieldData]
+    
+  implicit val fmt: OFormat[FieldData] = Json.format[FieldData]
+
+

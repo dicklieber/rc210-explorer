@@ -33,7 +33,7 @@ import scala.language.postfixOps
 
 @Singleton()
 class NamesController @Inject()(namedKeyManager:NamedKeyManager,
-                                navMain: NavMain,                               
+                                navMain: NavMain,
                                 components: MessagesControllerComponents)
   extends MessagesAbstractController(components) with LazyLogging:
   /**

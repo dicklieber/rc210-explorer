@@ -35,12 +35,12 @@ import views.html.fieldIndex
 
 import java.util.concurrent.atomic.AtomicInteger
 
-case class MeterAlarmNode(key: Key, meter: Key, alarmType: AlarmType, tripPoint: Int, macroKey: Key) extends ComplexFieldValue(macroKey):
+case class MeterAlarmNode(val key: Key, meter: Key, alarmType: AlarmType, tripPoint: Int, macroKey: Key) extends ComplexFieldValue(macroKey):
   key.check(KeyKind.MeterAlarm)
   meter.check(Meter)
   macroKey.check(KeyKind.Macro)
 
-  private def rows: Seq[Row] = Seq(
+  private val rows: Seq[Row] = Seq(
     "Meter" -> meter.keyWithName,
     "Alarm Type" -> alarmType,
     "Trip Point" -> tripPoint,
@@ -147,8 +147,8 @@ object MeterAlarmNode extends ComplexExtractor[MeterAlarmNode]:
     for {i <- 0 until nMeters}
       yield {
         val key: Key = Key(KeyKind.MeterAlarm, mai.incrementAndGet())
-        val meterAlarmNode = MeterAlarmNode(key, meters(i), alarmType(i), setPoint(i).toInt, macroKeys(i))
-        FieldEntry(this, meterAlarmNode)
+        val meterAlarm = MeterAlarmNode(key, meters(i), alarmType(i), setPoint(i).toInt, macroKeys(i))
+        FieldEntry(this, meterAlarm.fieldKey, meterAlarm)
       }
   }
 

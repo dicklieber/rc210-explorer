@@ -20,6 +20,7 @@ package controllers
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.FieldKey
 import net.wa9nnn.rc210.data.datastore.DataStore
+import net.wa9nnn.rc210.data.field.FieldData
 import net.wa9nnn.rc210.ui.nav.TabKind
 import play.api.libs.Files
 import play.api.libs.json.Json
@@ -34,15 +35,18 @@ class DataStoreController @Inject()(dataStore: DataStore)
                                    (implicit cc: MessagesControllerComponents)
   extends MessagesAbstractController(cc) with LazyLogging {
 
+  private def sJson: String =
+    dataStore.toJson
+
   def downloadJson: Action[AnyContent] = Action {
-    Ok(dataStore.toJson).withHeaders(
+    Ok(sJson).withHeaders(
       "Content-Type" -> "text/json",
       "Content-Disposition" -> s"""attachment; filename="rc210.json""""
     )
   }
 
   def viewJson: Action[AnyContent] = Action {
-    Ok(dataStore.toJson)
+    Ok(sJson)
   }
 
   def upload(): Action[AnyContent] = Action {
@@ -55,18 +59,19 @@ class DataStoreController @Inject()(dataStore: DataStore)
       .file("jsonFile")
       .foreach { jsonFile =>
         val sJson = java.nio.file.Files.readString(jsonFile.ref.path)
-        dataStore.fromJson(sJson)
+        val fieldDatas: Seq[FieldData] = Json.parse(sJson).as[Seq[FieldData]]
+        dataStore.set(fieldDatas)
       }
     Redirect(routes.NavigationController.selectTabKind(TabKind.Fields))
   }
 
   def rollback(): Action[AnyContent] = Action {
-    dataStore.clearCandidates()
+    dataStore.rollback()
     Redirect(routes.NavigationController.selectTabKind(TabKind.Fields))
   }
 
   def rollbackOne(fieldKey: FieldKey): Action[AnyContent] = Action {
-    dataStore.clearCandidate(fieldKey)
+    dataStore.rollback(fieldKey)
     Redirect(routes.DataStoreExplorerController.index)
   }
 }

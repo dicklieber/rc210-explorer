@@ -19,73 +19,62 @@ package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.*
 import net.wa9nnn.rc210.data.Node
-import net.wa9nnn.rc210
-import net.wa9nnn.rc210.{FieldKey, KeyKind}
-import os.copy
-import play.api.libs.json.{Format, Json, OFormat}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 
 /**
  *
- * @param fieldDefinition  specific to this entry. e.g. template, name etc.
- * @param initialFieldData what we start with.
+ * @param fieldDefinition specific to this entry. e.g. template, name etc.
+ * @param fieldData       the value. mutable
  */
-class FieldEntry(fieldDefinition: FieldDefinition, initialFieldData: FieldData)
-  extends FieldEntryBase:
-  val fieldKey = initialFieldData.fieldKey
-  private var _fieldData: FieldData = initialFieldData
-  def fieldData: FieldData = _fieldData
+class FieldEntry(val fieldDefinition: FieldDefinition, initialValue: FieldData)
+  extends FieldEntryBase :
+  val fieldKey: FieldKey = initialValue.fieldKey
+  val template: String = fieldDefinition.template
+  private var _fieldData: FieldData = initialValue
+  override val toString: String = _fieldData.display
 
-  override def toString: String = fieldKey.display
-  def hasCandidate: Boolean = _fieldData.candidate.isDefined
-  def setCandidate(fieldValue: FieldValue): Unit =
-    _fieldData = _fieldData.setCandidate(fieldValue)
-  def setCandidate(str:String): Unit =
-    val fv:FieldValue = try
-      FieldInt(str.toInt)
-    catch
-      case e:Throwable =>
-        FieldString(str)
-        
-    _fieldData = _fieldData.setCandidate(fv)
+  def set(candidate: FieldValue): Unit =
+    _fieldData = _fieldData.setCandidate(candidate)
+
+  def set(fieldData: FieldData): Unit =
+    _fieldData = fieldData
 
   def acceptCandidate(): Unit =
     _fieldData = _fieldData.acceptCandidate()
 
-  def clearCandidate(): Unit =
-    _fieldData = _fieldData.clearCandidate
+  def rollBack: Unit =
+    _fieldData = _fieldData.rollBack
 
-  def setFieldData(fieldData: FieldData): Unit =
-    this._fieldData = fieldData
+  def fieldData: FieldData = _fieldData
+
+  def value[F <: FieldValue]: F =
+    _fieldData.candidate.getOrElse(_fieldData.fieldValue).asInstanceOf[F]
 
   def tableSection: TableSection =
     _fieldData.value.tableSection(fieldKey)
 
-  def valueDisplayCell: Cell =
-    _fieldData.value.displayCell
+  def table: Table =
+    //    val value1: Node = value
+    //    value1.table(fieldKey)
+    throw new NotImplementedError() //todo
 
-  def candidateDisplayCell: Cell =
-    _fieldData.candidate.map(_.displayCell).getOrElse(Cell(""))
+  /**
+   *
+   * @param newFieldValue already parsed to a [[FieldValue]]
+   * @return updated [[FieldEntry]].
+   */
 
-  def commands: Seq[String] =
-    _fieldData.candidate
-      .getOrElse(throw new IllegalStateException(s"No candidate for: $fieldKey!"))
-      .toCommands(this)
-
-  def toEditCell: Cell =
-    _fieldData.value.toEditCell(fieldKey)
-
-  def value[T <: FieldValue]: T =
-    _fieldData.value.asInstanceOf
-
-  override val template: String = fieldDefinition.template
+  def setCandidate(formValue: String): FieldEntry =
+    throw new NotImplementedError()
 
   override def toRow: Row =
-    _fieldData.value.toRow
+    throw new NotImplementedError() //todo
 
 object FieldEntry:
+  implicit val ageOrdering: Ordering[FieldEntry] = Ordering.by[FieldEntry, Key](_.fieldKey.key)
 
-  def apply(fieldDefinition: FieldDefinition, fieldValue: FieldValue): FieldEntry =
-    FieldEntry(fieldDefinition, fieldValue)
+  def apply(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fieldValue: FieldValue): FieldEntry =
+    new FieldEntry(fieldDefinition, FieldData(fieldKey, fieldValue))
 
   def header(keyKind: KeyKind): Header = Header(s"$keyKind", "Number", "Field",
     Cell("Value")
@@ -95,5 +84,4 @@ object FieldEntry:
   )
 
   def header(count: Int): Header = Header(s"Fields ($count)", "FieldName", "Key", "Value")
-
 

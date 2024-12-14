@@ -28,7 +28,7 @@ class MacroNodeTest extends WithMemory {
       "extract" in
         {
           val entries: Seq[FieldEntry] = MacroNode.extract(memory)
-          val fe: MacroNode = entries.head.fieldValue.asInstanceOf[MacroNode]
+          val fe: MacroNode = entries.head.fieldData.fieldValue.asInstanceOf[MacroNode]
           val string = fe.toString
           string mustBe "Macro1: dtmf: 10901 functions=165 85 27 60 196"
 

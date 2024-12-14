@@ -38,15 +38,14 @@ case class UploadRequest(doCandidateOnly: Boolean = true,
       case Some(fieldKey: FieldKey) =>
         s"Send ${fieldKey.display}"
       case None =>
-        if(doCandidateOnly)
+        if (doCandidateOnly)
           "Send all candidate fields"
         else
           "Send all values; candidate or current field value"
-    if(acceptCandidate)
+    if (acceptCandidate)
       prefix + " and accept candidate."
     else
       prefix
-    
 
   def filter(dataStore: DataStore): Seq[UploadData] =
     maybeFieldKey match
@@ -54,20 +53,22 @@ case class UploadRequest(doCandidateOnly: Boolean = true,
         val fieldEntry: FieldEntry = dataStore.fieldEntry(fieldKey)
         Seq(UploadData(fieldEntry, fieldEntry.value, acceptCandidate))
       case None =>
-        for {
+        for
+        {
           fieldEntry <- dataStore.all
-          if (fieldEntry.hasCandidate || !doCandidateOnly)
-        } yield {
+          if (fieldEntry.fieldData.candidate.isDefined || !doCandidateOnly)
+        } yield
+        {
           UploadData(
             fieldEntry = fieldEntry,
             fieldValue = if (doCandidateOnly)
-              fieldEntry.value
+              fieldEntry.fieldData.value
             else
               fieldEntry.fieldData.fieldValue,
             accept = acceptCandidate
           )
         }
-  
+
   def table: Table =
     Table(Header("Upload Request"),
       Seq(
@@ -94,16 +95,17 @@ case class UploadData(fieldEntry: FieldEntry, fieldValue: FieldValue, accept: Bo
 object UploadRequest:
   implicit val fmtUploadRequest: Format[UploadRequest] = Json.format[UploadRequest]
 
-    def apply(fieldKey: FieldKey): UploadRequest =
-      UploadRequest(maybeFieldKey =  Option(fieldKey))
-
+  def apply(fieldKey: FieldKey): UploadRequest =
+    UploadRequest(maybeFieldKey = Option(fieldKey))
 
   implicit def pathBinder: PathBindable[UploadRequest] = new PathBindable[UploadRequest] {
     override def bind(key: String, value: String): Either[String, UploadRequest] =
 
-      try {
+      try
+      {
         Right(Json.parse(value).as[UploadRequest])
-      } catch {
+      } catch
+      {
         case e: Exception =>
           Left(e.getMessage)
       }

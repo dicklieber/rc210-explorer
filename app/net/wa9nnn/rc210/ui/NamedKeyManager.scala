@@ -24,10 +24,8 @@ import jakarta.inject.{Inject, Singleton}
 import net.wa9nnn.rc210
 import net.wa9nnn.rc210.util.Configs
 import net.wa9nnn.rc210.{Key, NamedKey, NamedKeySource}
-import os.write
 import play.api.libs.json.Json
 
-import java.io.FileNotFoundException
 import java.nio.file.{Files, NoSuchFileException, Path}
 import scala.collection.concurrent.TrieMap
 
@@ -36,7 +34,7 @@ class NamedKeyManager @Inject()(implicit config: Config) extends NamedKeySource 
   private val keyNameMap = new TrieMap[Key, String]
   Key.setNamedSource(this)
 
-  private val path: Path = Configs.path("vizRc210.namedKeysFile")
+  private val path: Path = Configs.path("vizRc210.namedDataFile")
   // load last saved data.
   try
     val str: String = Files.readString(path)

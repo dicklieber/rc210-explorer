@@ -97,7 +97,7 @@ object MeterNode extends ComplexExtractor[MeterNode]:
       "high" -> VoltToReading.form,
     )(MeterNode.apply)(MeterNode.unapply))
 
-  def extract(memory: Memory): Seq[FieldEntry] = 
+  def extract(memory: Memory): Seq[FieldEntry] = {
     val mai = new AtomicInteger()
     val nMeters = KeyKind.Meter.maxN
     val faceInts = memory.sub8(186, nMeters)
@@ -107,18 +107,17 @@ object MeterNode extends ComplexExtractor[MeterNode]:
     val highX: Seq[Int] = memory.iterator16At(234).take(nMeters).toSeq
     val highY: Seq[Int] = memory.iterator16At(250).take(nMeters).toSeq
 
-    val meters: Seq[FieldEntry] = for
-    {
+    val meters: Seq[FieldEntry] = for {
       i <- 0 until nMeters
-    } yield
-    {
+    } yield {
       val meterKey: Key = Key(KeyKind.Meter, mai.incrementAndGet())
       val low = VoltToReading(lowX(i), lowY(i))
       val high = VoltToReading(highX(i), highY(i))
       val meter: MeterNode = MeterNode(meterKey, faceNames(i), low, high)
-      FieldEntry(this, meter)
+      FieldEntry(this, meter.fieldKey, meter)
     }
     meters
+  }
 
   override def parse(jsValue: JsValue): FieldValue = jsValue.as[MeterNode]
 

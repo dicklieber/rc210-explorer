@@ -108,12 +108,14 @@ object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode]:
     //    SimpleField(174, "Macro Low", logicAlarmKey, "1*2101nv", MacroSelectField)
     //    SimpleField(179, "Macro High", logicAlarmKey, "1*2102nv", MacroSelectField)
 
-    for {
+    for
+    {
       i <- 0 until KeyKind.LogicAlarm.maxN
-    } yield {
+    } yield
+    {
       val logicAlarmKey = Key(KeyKind.LogicAlarm, i + 1)
-      val fieldValue: LogicAlarmNode = new LogicAlarmNode(logicAlarmKey, enables(i), lowMacros(i), highMacros(i))
-      FieldEntry(this, fieldValue)
+      val logicAlarmNode: LogicAlarmNode = new LogicAlarmNode(logicAlarmKey, enables(i), lowMacros(i), highMacros(i))
+      FieldEntry(this, logicAlarmNode.fieldKey, logicAlarmNode)
     }
   }
 

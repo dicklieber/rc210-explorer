@@ -62,13 +62,14 @@ class DataStoreExplorerController @Inject()(dataStore: DataStore, navMain: NavMa
       .sortBy(_.fieldKey.display)
       .map { fieldEntry =>
         val fieldKey = fieldEntry.fieldKey
+        val fieldData = fieldEntry.fieldData
         Row(
           ButtonCell.editUploadFlow(fieldKey),
           Cell(fieldKey.display)
             .withToolTip(fieldKey.toString),
-          fieldEntry.valueDisplayCell,
+          fieldData.fieldValue.displayCell,
           ButtonCell.uploadRollback(fieldKey),
-          fieldEntry.candidateDisplayCell
+          fieldData.candidate.map(_.displayCell).getOrElse("-")
         )
       }
     val header: Header = Header(Seq(

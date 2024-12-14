@@ -56,12 +56,13 @@ class CandidatesController @Inject()(dataStore: DataStore,
       val rows: Seq[Row] = fieldEntries.map {
         fieldEntry =>
           val fieldKey = fieldEntry.fieldKey
+          val fieldData = fieldEntry.fieldData
           val row = Row(
             fieldKey.editButtonCell,
             fieldKey.display,
-            fieldEntry.valueDisplayCell,
-            fieldEntry.candidateDisplayCell,
-            commandsCell(fieldEntry.commands)
+            fieldData.fieldValue.displayCell,
+            fieldData.candidate.map(_.displayCell).getOrElse(""),
+            commandsCell(fieldData.value.toCommands(fieldEntry))
           )
           row
       }

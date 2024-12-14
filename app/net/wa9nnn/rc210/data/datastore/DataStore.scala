@@ -21,7 +21,7 @@ import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210
 import net.wa9nnn.rc210.*
-import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry, FieldValue}
+import net.wa9nnn.rc210.data.field.{FieldValue, FieldEntry}
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.security.authentication.RcSession
@@ -51,7 +51,9 @@ class DataStore @Inject()(config: Config,
 
   def load(): Unit =
     loadFile(path)
-
+    
+    
+    
 //  private def save(session: RcSession): Unit =
 //    val dto: DataTransferJson = toJson.copy(who = Some(session.user.who))
 //    persistence.save(dto)

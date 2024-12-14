@@ -35,25 +35,31 @@ class DataStoreEngine extends DataStoreApi:
 
   /**
    * 
-   * @param entries as returned by [[fieldDatas]].
+   * @param entries as returned by [[entries]].
    */
-  def loadEntries(entries:Iterable[FieldData]):Unit =
-    entries.foreach{fieldData =>
-      keyFieldMap.get(fieldData.fieldKey) match
-        case Some(fieldEntry) => 
-          fieldEntry.setFieldData(fieldData)
-        case None => 
-          logger.error(s"No entry for fieldKey: ${fieldData.fieldKey}")
+  def loadEntries(entries:Seq[FieldEntry]):Unit =
+    entries.foreach { fieldEntry =>
+      keyFieldMap.put(fieldEntry.fieldKey, fieldEntry)
     }
+  def set(fieldDatas:Seq[FieldData]):Unit =
+    fieldDatas.foreach { fieldData =>
+      keyFieldMap.get(fieldData.fieldKey).foreach( fieldEntry =>
+        fieldEntry.set(fieldData)
+      )
+    }
+
   /**
    * Retrieves all `FieldEntry` objects stored in the `DataStoreEngine`, sorted by their keys.
    *
    * @return a sequence of sorted `FieldEntry` instances.
    */
+  def entries: Seq[FieldEntry] =
+    keyFieldMap.values.toIndexedSeq.sorted
+    
   def fieldDatas: Seq[FieldData] =
     keyFieldMap.values.map(_.fieldData).toIndexedSeq.sorted
 
-  def values[T <: ComplexFieldValue](keyKind: KeyKind): Seq[T] =
+  def values[T <: FieldValue](keyKind: KeyKind): Seq[T] =
     apply(keyKind).map(_.value.asInstanceOf[T])
 
   def editValue[T <: FieldValue](fieldKey: FieldKey): T =
@@ -68,7 +74,7 @@ class DataStoreEngine extends DataStoreApi:
     all.filter(_.fieldKey.key.keyKind == keyKind)
 
   def all: Seq[FieldEntry] =
-    keyFieldMap.values.toIndexedSeq//.sorted
+    keyFieldMap.values.toIndexedSeq.sorted
   
 //  def indexValues[T <: FieldValue](keyKind: KeyKind): Seq[T] =
 //    all.filter(_.fieldKey.key.keyKind == keyKind).map(_.value.asInstanceOf[T])
@@ -84,10 +90,10 @@ class DataStoreEngine extends DataStoreApi:
   //    all.filter(_.fieldKeyStuff.key.keyKind == keyKind).sorted
 
   def fieldEntry(key: Key): Seq[FieldEntry] =
-    all.filter(_.fieldKey.key == key)//.sorted
+    all.filter(_.fieldKey.key == key).sorted
 
   def candidates: Seq[FieldEntry] =
-    all.filter(_.hasCandidate)
+    keyFieldMap.values.filter(_.fieldData.candidate.nonEmpty).toSeq
 
   def triggerNodes(macroKey: Key): Seq[FieldEntry] =
     assert(macroKey.keyKind == KeyKind.Macro, "Must have a MacroKey!")
@@ -108,14 +114,14 @@ class DataStoreEngine extends DataStoreApi:
    *                          the new candidate value to be updated, as well as an optional sequence of `NamedKey`.
    */
   def update(candidateAndNames: CandidateAndNames): Unit =
-    candidateAndNames.candidates.foreach { updateCandidate =>
-      val fieldKey = updateCandidate.fieldKey
+    candidateAndNames.candidates.foreach { uc =>
+      val fieldKey = uc.fieldKey
       val fieldEntry: FieldEntry = keyFieldMap(fieldKey)
-      updateCandidate.candidate match
-        case str: String =>
-          fieldEntry.setCandidate(str) //todo
-        case value: ComplexFieldValue =>
+      uc.candidate match
+        case value: String =>
           fieldEntry.setCandidate(value)
+        case fieldValue: FieldValue =>
+          fieldEntry.set(fieldValue)
     }
 
   /**
@@ -126,14 +132,15 @@ class DataStoreEngine extends DataStoreApi:
    */
   def acceptCandidate(fieldKey: FieldKey): Unit =
     keyFieldMap(fieldKey).acceptCandidate()
-
-  def clearCandidates(): Unit =
+  
+  def rollback(): Unit =
     keyFieldMap.values.foreach { fieldEntry =>
-      fieldEntry.clearCandidate()
+      fieldEntry.rollBack
     }
 
-  def clearCandidate(fieldKey: FieldKey): Unit =
-    fieldEntry(fieldKey).clearCandidate()
+  def rollback(fieldKey: FieldKey): Unit =
+    val aFieldEntry = fieldEntry(fieldKey)
+    aFieldEntry.rollBack
 
   def triggers: Seq[FieldEntry] =
     (for
