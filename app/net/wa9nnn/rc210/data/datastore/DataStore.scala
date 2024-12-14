@@ -40,9 +40,13 @@ import scala.util.{Failure, Success, Try, Using}
  */
 @Singleton
 class DataStore @Inject()(config: Config,
+                          memoryFileLoader: MemoryFileLoader,
                           namedKeyManager: NamedKeyManager) extends DataStorePersistence with LazyLogging:
   private val path: Path = Configs.path("vizRc210.dataStoreFile")(using config)
-  
+
+  memoryFileLoader.load.foreach { fieldEntries =>
+    loadEntries(fieldEntries) 
+  }
   load()
   
   override def update(candidateAndNames: CandidateAndNames): Unit =

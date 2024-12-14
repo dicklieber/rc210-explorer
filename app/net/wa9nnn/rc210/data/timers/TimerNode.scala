@@ -123,7 +123,7 @@ object TimerNode extends ComplexExtractor[TimerNode] with LazyLogging:
       "Seconds",
       "Macro"
     ),
-      fieldEntries.map(_.toRow)
+      fieldEntries.map(_.fieldData.value.toRow)
     ))
 
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
