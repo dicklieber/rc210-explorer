@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210
 
 import com.typesafe.scalalogging.LazyLogging
-import com.wa9nnn.wa9nnnutil.tableui.CellProvider
+import com.wa9nnn.wa9nnnutil.tableui.{Cell, CellProvider}
 import net.wa9nnn.rc210.Key._namedKeySource
 import net.wa9nnn.rc210.KeyKind.*
 import net.wa9nnn.rc210.ui.NamedKeyManager.NoNamedKeySource
@@ -85,7 +85,8 @@ case class Key(keyKind: KeyKind, override val rc210Value: Int = 0)
 
   override def options: Seq[(String, String)] = MacroSelect.options
 
-  def toCell: com.wa9nnn.wa9nnnutil.tableui.Cell = ???
+  def toCell: Cell =
+    Cell(toString)
 
   def values: IndexedSeq[net.wa9nnn.rc210.ui.EnumEntryValue] = ???
 
