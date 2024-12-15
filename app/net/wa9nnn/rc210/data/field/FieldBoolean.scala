@@ -43,7 +43,7 @@ case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue() {
 
   override def displayCell: Cell = BooleanCell(value)
   
-  override def update(paramValue: String): FieldBoolean = FieldBoolean(paramValue == "on")
+  override def update(formFieldValue: String): FieldBoolean = FieldBoolean(formFieldValue == "on")
 
   override def toJsValue: JsValue = Json.toJson(this)
 
@@ -54,7 +54,7 @@ case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue() {
 
 object FieldBoolean extends SimpleExtractor:
 
-  override def extractFromInts(itr: Iterator[Int], fieldDefinition: SimpleField): FieldValue =
+  override def extractFromInts(itr: Iterator[Int], fieldDefinition: SimpleFieldExtractor): FieldValue =
     FieldBoolean(itr.next() > 0)
 
 

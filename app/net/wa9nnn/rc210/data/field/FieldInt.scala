@@ -42,14 +42,14 @@ case class FieldInt(value: Int) extends SimpleFieldValue():
 
   override def displayCell: Cell = Cell(value)
 
-  override def update(paramValue: String): FieldInt = 
-    FieldInt(paramValue.toInt)
+  override def update(formFieldValue: String): FieldInt = 
+    FieldInt(formFieldValue.toInt)
 
   override def toJsValue: JsValue = Json.toJson(this)
 
 object FieldInt extends SimpleExtractor:
 
-  override def extractFromInts(itr: Iterator[Int], field: SimpleField): FieldInt = {
+  override def extractFromInts(itr: Iterator[Int], field: SimpleFieldExtractor): FieldInt = {
     new FieldInt(if (field.max > 256)
       itr.next() + itr.next() * 256
     else

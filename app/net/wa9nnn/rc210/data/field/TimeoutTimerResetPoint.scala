@@ -35,8 +35,8 @@ case class TimeoutTimerResetPoint(value: TotReset = TotReset.values.head) extend
   def toCommands(fieldEntry: FieldEntryBase): Seq[String] =
     Seq(s"*2122${value.rc210Value}")
 
-  override def update(paramValue: String): TimeoutTimerResetPoint = {
-    TimeoutTimerResetPoint(TotReset.withName(paramValue))
+  override def update(formFieldValue: String): TimeoutTimerResetPoint = {
+    TimeoutTimerResetPoint(TotReset.withName(formFieldValue))
   }
 
   override def toEditCell(fieldKey: FieldKey): Cell = FormField(fieldKey, value)
@@ -60,7 +60,7 @@ object TimeoutTimerResetPoint extends SimpleExtractor {
     new TimeoutTimerResetPoint(TotReset.find(id))
   }
 
-  override def extractFromInts(itr: Iterator[Int], field: SimpleField): TimeoutTimerResetPoint = {
+  override def extractFromInts(itr: Iterator[Int], field: SimpleFieldExtractor): TimeoutTimerResetPoint = {
     val id = itr.next()
     apply(id)
   }

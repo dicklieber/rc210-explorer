@@ -46,8 +46,8 @@ case class FieldDtmf(value: String) extends SimpleFieldValue() with LazyLogging:
 
   override def displayCell: Cell = Cell(value)
 
-  override def update(paramValue: String): FieldDtmf = {
-    FieldDtmf(paramValue)
+  override def update(formFieldValue: String): FieldDtmf = {
+    FieldDtmf(formFieldValue)
   }
 
   override def toJsValue: JsValue = Json.toJson(value)
@@ -55,7 +55,7 @@ case class FieldDtmf(value: String) extends SimpleFieldValue() with LazyLogging:
 
 object FieldDtmf extends SimpleExtractor:
 
-  override def extractFromInts(itr: Iterator[Int], fieldDefinition: SimpleField): FieldValue = {
+  override def extractFromInts(itr: Iterator[Int], fieldDefinition: SimpleFieldExtractor): FieldValue = {
     val ints: Seq[Int] = for {
       _ <- 0 to fieldDefinition.max
     } yield {

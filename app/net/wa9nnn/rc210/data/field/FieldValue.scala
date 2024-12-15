@@ -27,7 +27,7 @@ import play.api.libs.json.{Format, JsResult, JsValue}
  * Knows how to render as HTML control or string for JSON, showing to a user or RC-210 Command,
  * Has enough metadata needed yo render
  */
-sealed trait FieldValue extends LazyLogging with RowSource {
+sealed trait FieldValue extends LazyLogging with RowSource:
   /**
    * Nodes that actually have an enabled field should override this.
    *
@@ -39,12 +39,12 @@ sealed trait FieldValue extends LazyLogging with RowSource {
 
   def canRunMacro(candidate: Key): Boolean =
     enabled && runableMacros.contains(candidate)
-  def canRunAny:Boolean =
+
+  def canRunAny: Boolean =
     runableMacros.nonEmpty
 
-  def tableSection(fieldKey: FieldKey):TableSection =
+  def tableSection(fieldKey: FieldKey): TableSection =
     throw new NotImplementedError() //todo
-
 
   /**
    * Render this value as an RC-210 command string.
@@ -64,8 +64,13 @@ sealed trait FieldValue extends LazyLogging with RowSource {
   def toEditCell(fieldKey: FieldKey): Cell =
     throw new NotImplementedError() //todo
 
+  /**
+   *
+   * @param formFieldValue candidate from an HTML form.
+   */
+  def update(formFieldValue: String): SimpleFieldValue
+
   def toJsValue: JsValue
-}
 
 object FieldValue:
   implicit val fmt: Format[FieldValue] = new Format[FieldValue] {
@@ -76,27 +81,18 @@ object FieldValue:
       o.toJsValue
   }
 
-
 /**
  * Renders itself as a [[[Cell]]
  */
-trait SimpleFieldValue(val runableMacros: Key*) extends FieldValue {
-  /**
-   *
-   * @param paramValue candidate from form.
-   * @return None if value has not changed, otherwise a new [[FieldValue]].
-   */
-  def update(paramValue: String): SimpleFieldValue
+trait SimpleFieldValue(val runableMacros: Key*) extends FieldValue
 
-}
+trait ComplexFieldValue(val runableMacros: Key*) extends FieldValue with LazyLogging:
+  override def update(formFieldValue: String): SimpleFieldValue =
+    throw new NotImplementedError("Not needed for a ComplexFieldValue!")
 
-trait ComplexFieldValue(val runableMacros: Key*) extends FieldValue with LazyLogging {
   val key: Key
 
   lazy val fieldKey: FieldKey = FieldKey(key)
-
-}
-
 
 
 

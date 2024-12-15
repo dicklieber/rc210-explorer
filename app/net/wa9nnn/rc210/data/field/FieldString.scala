@@ -46,8 +46,8 @@ case class FieldString(value: String) extends SimpleFieldValue():
 
   override def displayCell: Cell = Cell(value)
 
-  override def update(paramValue: String): FieldString = {
-    FieldString(paramValue)
+  override def update(formFieldValue: String): FieldString = {
+    FieldString(formFieldValue)
   }
 
   override def toJsValue: JsValue = JsString(value)
@@ -58,7 +58,7 @@ case class FieldString(value: String) extends SimpleFieldValue():
 
 object FieldString extends SimpleExtractor:
 
-  override def extractFromInts(itr: Iterator[Int], field: SimpleField): FieldString = {
+  override def extractFromInts(itr: Iterator[Int], field: SimpleFieldExtractor): FieldString = {
     new FieldString(new String(
       itr.takeWhile(_ != 0)
         .toArray

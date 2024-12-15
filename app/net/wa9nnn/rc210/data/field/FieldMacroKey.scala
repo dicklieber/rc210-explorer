@@ -25,8 +25,8 @@ import play.api.libs.json.{Format, JsResult, JsSuccess, JsValue, Json}
 import views.html.flowChartButton
 
 case class FieldMacroKey(key: Key) extends SimpleFieldValue(key):
-  def update(paramValue: String): SimpleFieldValue =
-    val key = Key(paramValue)
+  def update(formFieldValue: String): SimpleFieldValue =
+    val key = Key(formFieldValue)
     FieldMacroKey(key)
 
   override def tableSection(fieldKey: FieldKey): TableSection =
@@ -45,7 +45,7 @@ case class FieldMacroKey(key: Key) extends SimpleFieldValue(key):
   )
 
 object MacroKeyExtractor extends SimpleExtractor:
-  override def extractFromInts(iterator: Iterator[Int], fieldDefinition: SimpleField): FieldValue = {
+  override def extractFromInts(iterator: Iterator[Int], fieldDefinition: SimpleFieldExtractor): FieldValue = {
     val i: Int = iterator.next()
     val key = Key(KeyKind.Macro, i)
     FieldMacroKey(key)

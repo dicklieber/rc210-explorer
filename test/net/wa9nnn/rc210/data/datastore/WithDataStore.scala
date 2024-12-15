@@ -16,7 +16,7 @@ trait WithDataStore extends WithTestConfiguration {
    * Instantiate a new [[DataStore]] with default data for testing.
    * @return
    */
-  def newDataStore: DataStore = {
+  def newDataStore: DataStore =
     val definitions: FieldDefinitions = new FieldDefinitions
     val memoryFileLoader: MemoryFileLoader = new MemoryFileLoader(definitions)
 //     new DataStore()
@@ -29,5 +29,5 @@ trait WithDataStore extends WithTestConfiguration {
 //        println(dataTransferJson)
 //*/
 //    new DataStore(dataStorePersistence, memoryFileLoader)
-  }
+
 }

@@ -18,7 +18,6 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.*
-import net.wa9nnn.rc210.data.Node
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 
 /**
@@ -64,8 +63,9 @@ class FieldEntry(val fieldDefinition: FieldDefinition, initialValue: FieldData)
    * @return updated [[FieldEntry]].
    */
 
-  def setCandidate(formValue: String): FieldEntry =
-    throw new NotImplementedError()
+  def setCandidate(formFieldValue: String): Unit = 
+    val newCandidate: SimpleFieldValue = _fieldData.fieldValue.update(formFieldValue)
+    _fieldData = _fieldData.setCandidate(newCandidate)
 
   override def toRow: Row =
     throw new NotImplementedError() //todo

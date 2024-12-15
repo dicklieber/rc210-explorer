@@ -35,11 +35,11 @@ case class Field2Numbers(value: Seq[Int]) extends SimpleFieldValue() {
     )
   }
 
-  override def update(paramValue: String): Field2Numbers = {
-    val candidate: Seq[Int] = if (paramValue.isBlank)
+  override def update(formFieldValue: String): Field2Numbers = {
+    val candidate: Seq[Int] = if (formFieldValue.isBlank)
       Seq(0, 0)
     else
-      paramValue
+      formFieldValue
         .split(" ")
         .toIndexedSeq
         .map(_.toInt)
@@ -89,7 +89,7 @@ object Field2Numbers extends SimpleExtractor {
   //  override def jsonToField(jsValue: JsValue): FieldValue = jsValue.as[Field2Numbers]
 
 
-  override def extractFromInts(iterator: Iterator[Int], fieldDefinition: SimpleField): FieldValue = {
+  override def extractFromInts(iterator: Iterator[Int], fieldDefinition: SimpleFieldExtractor): FieldValue = {
     Field2Numbers(Seq(iterator.next(), iterator.next()))
   }
 

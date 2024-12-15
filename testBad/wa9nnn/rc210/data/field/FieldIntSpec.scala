@@ -36,7 +36,7 @@ implicit val macroKey: MacroKey = MacroKey(3)
   "command" in {
     val fieldInt = FieldInt(42)
     val candidate = FieldInt(142)
-    val fieldDefinition = SimpleField(17, "Hang Time 3", KeyKind.portKey, "n*10003v", FieldInt)
+    val fieldDefinition = SimpleFieldExtractor(17, "Hang Time 3", KeyKind.portKey, "n*10003v", FieldInt)
     val fieldKey: FieldKey = fieldDefinition.fieldKey(3)
     val fieldEntry = FieldEntry(fieldDefinition, fieldKey, fieldInt, Option(candidate))
     val command = fieldEntry.commands.head

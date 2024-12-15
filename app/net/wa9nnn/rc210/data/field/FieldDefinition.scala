@@ -10,12 +10,9 @@ import play.api.libs.json.JsValue
 import scala.util.Try
 
 trait FieldDefinition extends LazyLogging:
-  def parse(jsValue: JsValue): FieldValue
-
   def tooltip: String = ""
 
   def fieldName: String
-
   val keyKind: KeyKind
   val template: String = ""
   val units: String = ""
@@ -23,7 +20,7 @@ trait FieldDefinition extends LazyLogging:
   def positions: Seq[FieldOffset]
 
 /**
- * A [[SimpleField]] produces one RC-210 command as opposed to a complex rc2input like [[net.wa9nnn.rc210.data.schedules.ScheduleNode]] that may produce multiple commands.
+ * A [[SimpleFieldExtractor]] produces one RC-210 command as opposed to a complex rc2input like [[net.wa9nnn.rc210.data.schedules.ScheduleNode]] that may produce multiple commands.
  * And generally will be an HTML form itself to edit.
  *
  * @param offset         where in [[Memory]] this comes from.
@@ -35,16 +32,16 @@ trait FieldDefinition extends LazyLogging:
  * @param units          suffix for <input>
  * @param max            used by the extractor. e.g. max DtMF digits or max number.
  */
-case class SimpleField(offset: Int,
-                       fieldName: String,
-                       val keyKind: KeyKind,
-                       override val template: String,
-                       fieldExtractor: SimpleExtractor,
-                       override val tooltip: String = "",
-                       override val units: String = "",
-                       min: Int = 1,
-                       max: Int = 255,
-                      ) extends FieldDefinition with LazyLogging {
+case class SimpleFieldExtractor(offset: Int,
+                                fieldName: String,
+                                val keyKind: KeyKind,
+                                override val template: String,
+                                fieldExtractor: SimpleExtractor,
+                                override val tooltip: String = "",
+                                override val units: String = "",
+                                min: Int = 1,
+                                max: Int = 255,
+                      ) extends FieldDefinition with LazyLogging :
   def extractFromInts(iterator: Iterator[Int]): Try[FieldValue] = {
     val tried: Try[FieldValue] = Try {
       fieldExtractor.extractFromInts(iterator, this)
@@ -70,19 +67,17 @@ case class SimpleField(offset: Int,
     new FieldKey(Key(keyKind, number), fieldName)
   }
 
-  def units(u: String): SimpleField = copy(units = u)
+  def units(u: String): SimpleFieldExtractor = copy(units = u)
 
-  def max(max: Int): SimpleField = copy(max = max)
+  def max(max: Int): SimpleFieldExtractor = copy(max = max)
 
-  def min(min: Int): SimpleField = copy(min = min)
+  def min(min: Int): SimpleFieldExtractor = copy(min = min)
 
-  def tooltip(tooltip: String): SimpleField = copy(tooltip = tooltip)
+  def tooltip(tooltip: String): SimpleFieldExtractor = copy(tooltip = tooltip)
 
-  override def parse(json: JsValue): FieldValue = 
-    fieldExtractor.parse(json)
 
   override def positions: Seq[FieldOffset] = Seq(FieldOffset(offset, this))
-}
+
 
 trait ComplexExtractor[T <: ComplexFieldValue] extends FieldExtractor with FieldDefinition with EditHandler {
   def fieldKey(key: Key): FieldKey = FieldKey(key)
@@ -101,11 +96,13 @@ trait ComplexExtractor[T <: ComplexFieldValue] extends FieldExtractor with Field
 }
 
 abstract class SimpleExtractor extends FieldExtractor :
-  def extractFromInts(iterator: Iterator[Int], fieldDefinition: SimpleField): FieldValue
+  def extractFromInts(iterator: Iterator[Int], fieldDefinition: SimpleFieldExtractor): FieldValue
 
 
-trait FieldExtractor:
+trait FieldExtractor :
+
   def parse(jsValue: JsValue): FieldValue
+
 
 /**
  * where in the memory image
