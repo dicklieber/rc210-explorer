@@ -142,7 +142,7 @@ object Memory extends LazyLogging {
             case r("size", rvalue) =>
               size = rvalue.toInt
             case line =>
-              val tokens = line.split(",")
+              val tokens = line.split(":")
               val int = tokens(1).toInt
               builder += int
         catch

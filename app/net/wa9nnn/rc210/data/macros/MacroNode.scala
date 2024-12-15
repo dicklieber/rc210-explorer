@@ -110,7 +110,7 @@ object MacroNode extends ComplexExtractor[MacroNode]:
     val mai = new AtomicInteger(1)
 
     def readMacros(offset: Int, nMacros:Int, functionLength:Int): Seq[FieldEntry] =
-      val chunks = memory.chunks(offset, functionLength,nMacros)
+      val chunks = memory.chunks(offset, functionLength + 1,nMacros)
       chunks.map { chunk =>
         val key: Key = Key(KeyKind.Macro, mai.getAndIncrement())
         val functions: Iterable[Key] = chunk.map { functionNumber =>
@@ -125,80 +125,6 @@ object MacroNode extends ComplexExtractor[MacroNode]:
     val entries = longMacroNodes ++ shortMacroNodes
     entries
 
-
-/*
-    def macroBuilder(offset: Int, chunkLength: Int, nChunks: Int) = {
-      memory.chunks(offset, chunkLength, nChunks)
-        .map { chunk =>
-          val key: Key = Key(KeyKind.Macro, mai.getAndIncrement())
-          val sChunk = chunk.ints
-            .map(_.toString)
-            .mkString(", ")
-
-          val functions: Seq[Key] = try {
-            parseChunk(chunk.iterator)
-          } catch {
-            case _: NoSuchElementException =>
-              logger.error(s"macroKey: $key Ran out in chunk: $sChunk assuming no functions!")
-              Seq.empty
-            case e: Exception =>
-              logger.error(s"macroKey: $key Error parsing chunk: $sChunk ${e.getMessage}")
-              Seq.empty
-
-          }
-          MacroNode(key, functions, dtmfMacros(key))
-        }
-    }
-*/
-
-/*    val macros: Seq[MacroNode] = macroBuilder(1985, 16, 40) //SlicePos("//Macro - 1985-2624"), memory, 16)
-      .concat(macroBuilder(2825, 7, 50)) // SlicePos("//ShortMacro - 2825-3174"), memory, 7))
-
-    val r: Seq[FieldEntry] = macros.map { macroNode =>
-      FieldEntry(this, macroNode)
-    }
-    r*/
-
-
-/*
-  /**
-   * Get all the Function key from a chunk of RC_210-210 data.
-   *
-   * @param iterator of the chunk.
-   * @return
-   */
-  @tailrec
-  def parseChunk(iterator: Iterator[Int], soFar: Seq[Key] = Seq.empty): Seq[Key] = {
-    parseFunction(iterator) match {
-      case Some(functionKey) =>
-        parseChunk(iterator, soFar :+ functionKey)
-      case None =>
-        soFar
-    }
-  }
-*/
-
-/*
-  /**
-   * Accumulate functionKey frpm ints. Handle 255s and less than 255
-   *
-   * @param iterator within the chunk.
-   * @return
-   */
-  @tailrec
-  def parseFunction(iterator: Iterator[Int], soFar: Int = 0): Option[Key] = {
-    val int = iterator.next()
-    int match {
-      case 0 =>
-        None // Done. function numbers don't allow 255,512,767.
-      case x: Int if x < 255 =>
-        val number = soFar + x
-        Some(Key(KeyKind.Function, number))
-      case 255 =>
-        parseFunction(iterator, soFar + int) // add next int, which will always be 255.
-    }
-  }
-*/
 
   override def parse(jsValue: JsValue): FieldValue = {
     jsValue.as[MacroNode]

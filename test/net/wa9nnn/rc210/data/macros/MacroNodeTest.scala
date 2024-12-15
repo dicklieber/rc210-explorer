@@ -20,19 +20,37 @@ package net.wa9nnn.rc210.data.macros
 
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.{Key, RcSpec, WithMemory}
+import org.scalatest.matchers.must.Matchers.have
 
 class MacroNodeTest extends WithMemory {
 
   "MacroNodeTest" should
     {
-      "extract" in
+      "extract" when
         {
           val entries: Seq[FieldEntry] = MacroNode.extract(memory)
-          val fe: MacroNode = entries.head.fieldData.fieldValue.asInstanceOf[MacroNode]
-          val string = fe.toString
-          string mustBe "Macro1: dtmf: 10901 functions=165 85 27 60 196"
-
-          assert (entries.length > 40)
+          "macro1" in
+            {
+              val fe: MacroNode = entries.head.fieldData.fieldValue.asInstanceOf[MacroNode]
+              val string = fe.toString
+              string mustBe "Macro1: dtmf: 10901 functions=165 85 27 60 196"
+            }
+          "macro2" in
+            {
+              val fe: MacroNode = entries(1).fieldData.fieldValue.asInstanceOf[MacroNode]
+              val string = fe.toString
+              string mustBe "Macro2: dtmf: 10902 functions=165 85 197 198"
+            }
+          "macro90" in
+            {
+              val fe: MacroNode = entries.last.fieldData.fieldValue.asInstanceOf[MacroNode]
+              fe.dtmf.value mustBe("109090")
+              fe.functions.length mustBe(0)
+            }
+          "length" in
+            {
+              entries must have length (90)
+            }
         }
     }
 }

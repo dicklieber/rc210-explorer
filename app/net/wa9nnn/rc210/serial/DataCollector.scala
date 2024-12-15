@@ -89,7 +89,7 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
         val response = new String(receivedData).trim
 
         response match {
-          // Handle the vaarious responses from the RC-210.
+          // Handle the various responses from the RC-210.
           case "Complete" =>
             cleanup()
             Files.deleteIfExists(memoryFile)
