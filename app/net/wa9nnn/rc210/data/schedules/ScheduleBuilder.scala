@@ -20,8 +20,8 @@ object ScheduleBuilder extends LazyLogging {
     // Each chunk is one RC-210 memory setpoint rc2input. With all the setpopint's value withinb that chunk.
     implicit val chunks: Iterator[Chunk] = memory.chunks(616, KeyKind.Schedule.maxN, fieldsInRC210Schedule).iterator
 
-  
-    val dows: Seq[DayOfWeek] = chunks.next().map(DayOfWeek find _).toSeq
+    val chunk = chunks.next()
+    val dows: Seq[DayOfWeek] = chunk.map(DayOfWeek find _).toSeq
     val moys: Seq[MonthOfYearSchedule] = chunks.next().map(MonthOfYearSchedule find _).toSeq
     val hours: Seq[Int] = chunks.next().toSeq
     val minutes: Seq[Int] = chunks.next().toSeq

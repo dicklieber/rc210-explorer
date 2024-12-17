@@ -21,19 +21,11 @@ import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210
 import net.wa9nnn.rc210.*
-import net.wa9nnn.rc210.data.field.{FieldValue, FieldEntry}
-import net.wa9nnn.rc210.data.macros.MacroNode
-import net.wa9nnn.rc210.security.Who
-import net.wa9nnn.rc210.security.authentication.RcSession
-import net.wa9nnn.rc210.serial.Memory.{load, r}
 import net.wa9nnn.rc210.ui.NamedKeyManager
 import net.wa9nnn.rc210.util.Configs
-import net.wa9nnn.rc210explorer.BuildInfo.toJson
 
-import java.nio.file.{Files, Path}
+import java.nio.file.Path
 import javax.inject.{Inject, Singleton}
-import scala.collection.concurrent.TrieMap
-import scala.util.{Failure, Success, Try, Using}
 
 /**
  * This is the in-memory source of all RC-210 and NamedKey data.
