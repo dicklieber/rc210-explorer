@@ -76,7 +76,7 @@ object FieldValue:
   implicit val fmt: Format[FieldValue] = new Format[FieldValue] {
     override def reads(json: JsValue): JsResult[FieldValue] =
       throw new NotImplementedError() //todo
-
+    
     override def writes(o: FieldValue): JsValue =
       o.toJsValue
   }

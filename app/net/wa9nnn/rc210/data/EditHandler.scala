@@ -34,6 +34,7 @@ trait EditHandler:
   def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate]=
     throw new NotImplementedError() 
   
+  
 
   def bind(in: ComplexFieldValue): Seq[UpdateCandidate] =
     Seq(
@@ -45,6 +46,7 @@ trait EditHandler:
       UpdateCandidate(fieldKey, in)
     )
 
+  
   // todo May not need this in EditHandler if default is always used.
   def saveOp(): Result =
     Results.Redirect(routes.EditController.index(keyKind))

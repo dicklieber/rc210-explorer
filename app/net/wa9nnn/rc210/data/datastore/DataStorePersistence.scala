@@ -21,11 +21,12 @@ package net.wa9nnn.rc210.data.datastore
 import com.google.inject.ImplementedBy
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.NamedKey
+import net.wa9nnn.rc210.data.EditHandler
+import net.wa9nnn.rc210.{FieldKey, KeyKind, NamedKey}
 import net.wa9nnn.rc210.data.field.{FieldData, FieldEntry}
 import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.util.Configs
-import play.api.libs.json.Json
+import play.api.libs.json.{JsArray, JsLookupResult, JsObject, JsValue, Json}
 
 import java.nio.file.{Files, Path}
 import javax.inject.{Inject, Singleton}
@@ -49,6 +50,16 @@ class DataStorePersistence() extends DataStoreEngine with LazyLogging:
 
   def fromJson(sJson: String): Unit = 
     val jsValue = Json.parse(sJson)
+    val jsArray: JsArray = jsValue.as[JsArray]
+    jsArray.value.foreach { (obj: JsValue) =>
+      val value: JsLookupResult = obj \ "fieldKey"
+      println(value)
+      val str = value.as[String]
+      val fieldKey: FieldKey = FieldKey.fromId(str)
+      val keyKind: KeyKind = fieldKey.key.keyKind
+      val handler: EditHandler = keyKind.handler
+      handler.
+    }
     val datas: Seq[FieldData] = jsValue.as[Seq[FieldData]]
     set(datas)
   
