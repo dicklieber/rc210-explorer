@@ -4,7 +4,6 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.*
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
-import net.wa9nnn.rc210.data.field.schedule.DayOfWeek
 import net.wa9nnn.rc210.data.schedules.ScheduleNode.s02
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.nav.BooleanCell
@@ -21,36 +20,39 @@ import views.html.{fieldIndex, scheduleEdit}
 /**
  *
  * @param key                     for [[ScheduleKey]]
- * @param dow                     [[DayOfWeek]] or [[WeekAndDow]].
+ * @param dayOfWeek                     [[DayOfWeekField]] or [[WeekAndDow]].
  * @param monthOfYear             enumerated
  * @param hour                    when this runs on selected day.
  * @param minute                  when this runs on selected day.
  * @param macroKeys               e.g. "macro42"
  */
 case class ScheduleNode(override val key: Key,
-                        dow: DayOfWeek = DayOfWeek.EveryDay,
+                        dayOfWeek: DayOfWeek = DayOfWeek.EveryDay,
+                        weekInMonth: WeekInMonth = WeekInMonth.Every,
                         monthOfYear: MonthOfYearSchedule = MonthOfYearSchedule.Every,
-                        hour: Int = 0,
+                        hour: Hour = Hour.Every,
                         minute: Int = 0,
                         macroKey: Key = Key(KeyKind.Macro, 1)) extends ComplexFieldValue(macroKey):
 
-  val time: String = f"$hour%02d:$minute%02d"
+//  val time: String = f"$hour%02d:$minute%02d"
 
   override def toRow: Row = {
     Row(
       ButtonCell.edit(fieldKey),
       key.keyWithName,
-      BooleanCell(enabled),
-      dow,
+      dayOfWeek,
+      weekInMonth,
       monthOfYear,
-      f"$hour%02d:$minute%02d",
+      hour.entryName,
+      minute,
       macroKey.keyWithName
     )
   }
 
   private def rows(): Seq[Row] = Seq(
     "Key" -> key.keyWithName,
-    "Day Of Week" -> dow,
+    "Day Of Week" -> dayOfWeek,
+    "Week In Month" -> weekInMonth,
     "Month" -> monthOfYear,
     "Hour" -> hour,
     "Minute" -> minute,
@@ -62,12 +64,12 @@ case class ScheduleNode(override val key: Key,
    */
   override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
     val setPoint: String = key.rc210Value.toString
-    val sDow: String = dow.rc210Value.toString
+    val sDow: String = dayOfWeek.rc210Value.toString
     val moy: String = s02(monthOfYear.rc210Value)
-    val hours: String = s02(hour)
+    val hours: String = s02(hour.rc210Value)
     val minutes: String = s02(minute)
     val sMacro = s02(macroKey.rc210Value)
-
+//todo
     val command = s"1*4001$setPoint$sDow*${moy}*$hours*$minutes*$sMacro"
     Seq(command)
   }
@@ -85,15 +87,16 @@ case class ScheduleNode(override val key: Key,
 object ScheduleNode extends LazyLogging with ComplexExtractor[ScheduleNode]:
   override val keyKind: KeyKind = KeyKind.Schedule
 
-  def unapply(schedule: ScheduleNode): Option[(Key, DayOfWeek, MonthOfYearSchedule, Int, Int, Key)] =
-    Some(schedule.key, schedule.dow, schedule.monthOfYear, schedule.hour, schedule.minute, schedule.macroKey)
+  def unapply(schedule: ScheduleNode): Option[(Key, DayOfWeek, WeekInMonth, MonthOfYearSchedule, Hour, Int, Key)] =
+    Some(schedule.key, schedule.dayOfWeek, schedule.weekInMonth, schedule.monthOfYear, schedule.hour, schedule.minute, schedule.macroKey)
 
   override val form: Form[ScheduleNode] = Form[ScheduleNode](
     mapping(
       "key" -> of[Key],
       "dow" -> DayOfWeek.formField,
+      "weekInMonth" -> WeekInMonth.formField,
       "monthOfYear" -> MonthOfYearSchedule.formField,
-      "hour" -> number(0, 23),
+      "hour" -> Hour.formField,
       "minute" -> number(0, 59),
       "macroKey" -> of[Key],
     )(ScheduleNode.apply)(ScheduleNode.unapply)
@@ -147,27 +150,23 @@ object ScheduleNode extends LazyLogging with ComplexExtractor[ScheduleNode]:
       "",
       "Schedule",
       "Day in Week",
-      "Month",
       Cell("Week").withToolTip("Week in month"),
-      "Time",
-      "Macro to Run"
+      "Month",
+      "Hour",
+      "Minute",
+      Cell("Macro").withToolTip("Macro to run")
     ),
       fieldEntries.map(_.value.toRow)
     )
     fieldIndex(keyKind, table)
 
 
-
-
-
-  override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html = {
+  override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     val value = form.fill(fieldEntry.value)
     scheduleEdit(value, fieldEntry.fieldKey)
-  }
 
-  override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] = {
+  override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
     bind(form.bindFromRequest(data).get)
-  }
 
 
 

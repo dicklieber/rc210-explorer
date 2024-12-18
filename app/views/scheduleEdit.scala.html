@@ -4,11 +4,10 @@
 @import net.wa9nnn.rc210.NamedKey
 @import views.html.helper.*
 
-@import net.wa9nnn.rc210.data.field.schedule.DayOfWeek
-@import net.wa9nnn.rc210.data.field.schedule.Week
 @import net.wa9nnn.rc210.data.field.MonthOfYearSchedule
 @import net.wa9nnn.rc210.ui.MacroSelect
 @import net.wa9nnn.rc210.FieldKey
+@import net.wa9nnn.rc210.data.schedules.*
 @(f: Form[ScheduleNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
     @form(action = routes.EditController.save()) {
         @inputText(f("key"), Symbol("type") -> "hidden")
@@ -23,16 +22,12 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Enable</td>
-                        <td>@checkbox(f("enabled"))</td>
-                    </tr>
-                    <tr>
                         <td>DayOfWeek</td>
-                        <td>@select(f("dow"), DayOfWeek.options)</td>
+                        <td>@select(f("dayOfWeek"), DayOfWeek.options)</td>
                     </tr>
                     <tr>
                         <td>Week</td>
-                        <td>@select(f("week"), Week.options)</td>
+                        <td>@select(f("weekInMonth"), WeekInMonth.options)</td>
                     </tr>
                     <tr>
                         <td>Month</td>
@@ -40,12 +35,7 @@
                     </tr>
                     <tr>
                         <td>Hour</td>
-                        <td>
-                        @inputText(f("hour"),
-                            Symbol("type") -> "number",
-                            Symbol("min") -> 0,
-                            Symbol("max") -> 23)
-                        </td>
+                        <td>@select(f("hour"), Hour.options)</td>
                     </tr>
                     <tr>
                         <td>Minute</td>

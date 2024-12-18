@@ -29,7 +29,7 @@ class ScheduleBuilderSpec extends WithMemory {
     "Fields correct" in {
       val schedule3: ScheduleNode = schedules(2)
       schedule3.key.rc210Value should equal(3)
-      schedule3.dow should equal(DayOfWeek.EveryDay)
+      schedule3.dayOfWeek should equal(DayOfWeek.EveryDay)
       schedule3.hour should equal(7)
       schedule3.minute should equal(0)
       schedule3.macroKeys should equal(KeyFactory.macroKey(4))

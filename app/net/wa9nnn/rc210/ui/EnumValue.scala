@@ -31,7 +31,8 @@ import enumeratum.PlayEnum
 trait EnumValue[T <: EnumEntryValue] extends PlayEnum[T] with Selections with LazyLogging:
   val values: IndexedSeq[T]
 
-  override def options: Seq[(String, String)] = values.map((v: T) => v.toString -> v.toString)
+  override def options: Seq[(String, String)] =
+    values.map((v: T) => v.entryName -> v.entryName)
 
   override def equals(obj: Any): Boolean =
     obj match
