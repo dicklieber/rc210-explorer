@@ -18,26 +18,42 @@
 
 package net.wa9nnn.rc210.data.schedules
 
+import net.wa9nnn.rc210.KeyKind.All.rc210Value
+import net.wa9nnn.rc210.data.schedules.WeekInMonth.Every
 import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
 
 
-sealed trait WeekInMonth(val rc210Value: Int, val display: String) extends EnumEntryValue:
+sealed trait WeekInMonth(val rc210Value: Int) extends EnumEntryValue:
   override def values: IndexedSeq[EnumEntryValue] = WeekInMonth.values
 
-object WeekInMonth extends EnumValue[WeekInMonth] {
+
+object WeekInMonth extends EnumValue[WeekInMonth] :
 
   override val values: IndexedSeq[WeekInMonth] = findValues
 
-  case object Every extends WeekInMonth(1, "Every")
+  case object Every extends WeekInMonth(0)
 
-  case object first extends WeekInMonth(2, "first")
+  case object First extends WeekInMonth(1)
 
-  case object second extends WeekInMonth(3, "second")
+  case object Second extends WeekInMonth(2)
 
-  case object third extends WeekInMonth(4, "third")
+  case object Third extends WeekInMonth(3)
 
-  case object forth extends WeekInMonth(5, "forth")
+  case object Forth extends WeekInMonth(4)
 
-  case object fifth extends WeekInMonth(6, "fifth")
-}
+  case object Fifth extends WeekInMonth(5)
+  
+  /**
+   * Combine [[WeekInMonth]] and [[DayOfWeek]] into the one or two digit Dow field
+   * that goes into the RC-210 command.
+   *
+   * @param dayOfWeek
+   * @return one or two digits.
+   */
+  def translate(weekInMonth: WeekInMonth, dayOfWeek: DayOfWeek): String =
+    if weekInMonth == Every then
+      dayOfWeek.rc210Value.toString
+    else
+      s"${weekInMonth.rc210Value}${dayOfWeek.rc210Value}"
+
 

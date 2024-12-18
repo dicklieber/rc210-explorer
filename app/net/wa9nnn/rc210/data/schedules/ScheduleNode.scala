@@ -66,9 +66,13 @@ case class ScheduleNode(override val key: Key,
     val hours: String = s02(hour.rc210Value)
     val minutes: String = s02(minute)
     val sMacro = s02(macroKey.rc210Value)
+
+    val dowDigits = WeekInMonth.translate(weekInMonth, dayOfWeek)
     //todo
-    val command = s"1*4001$setPoint$sDow*$moy*$hours*$minutes*$sMacro"
+    val command = s"1*4001$setPoint*$dowDigits*$moy*$hours*$minutes*$sMacro"
     Seq(command)
+
+    //1 * 4 0 0 1 3 9 * 5 6 * 0 0 * 9 9 * 0 0 * 9 0
   }
 
   override def tableSection(fieldKey: FieldKey): TableSection =
