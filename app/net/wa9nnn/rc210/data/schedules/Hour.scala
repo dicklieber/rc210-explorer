@@ -27,16 +27,16 @@ sealed trait Hour(val rc210Value: Int, maybeName: Option[String] = None) extends
 
   override def entryName: String = maybeName.getOrElse {
     if rc210Value < 12 then
-      s"$rc210Value AM"
+      s"${rc210Value}AM"
     else
-      s"${rc210Value - 12} PM"
+      s"${rc210Value - 12}PM"
   }
 
 object Hour extends EnumValue[Hour] {
 
   override val values: IndexedSeq[Hour] = findValues
 
-  case object H0 extends Hour(0, Option("12 AM"))
+  case object H0 extends Hour(0, Option("12AM"))
 
   case object H1 extends Hour(1)
 

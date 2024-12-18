@@ -54,7 +54,7 @@ case class ScheduleNode(override val key: Key,
     "Day Of Week" -> dayOfWeek,
     "Week In Month" -> weekInMonth,
     "Month" -> monthOfYear,
-    "Hour" -> hour,
+    "Hour" -> hour.entryName,
     "Minute" -> minute,
     "Macro" -> macroKey.keyWithName
   ).map(Row(_))
@@ -93,7 +93,7 @@ object ScheduleNode extends LazyLogging with ComplexExtractor[ScheduleNode]:
   override val form: Form[ScheduleNode] = Form[ScheduleNode](
     mapping(
       "key" -> of[Key],
-      "dow" -> DayOfWeek.formField,
+      "dayOfWeek" -> DayOfWeek.formField,
       "weekInMonth" -> WeekInMonth.formField,
       "monthOfYear" -> MonthOfYearSchedule.formField,
       "hour" -> Hour.formField,
@@ -165,8 +165,10 @@ object ScheduleNode extends LazyLogging with ComplexExtractor[ScheduleNode]:
     val value = form.fill(fieldEntry.value)
     scheduleEdit(value, fieldEntry.fieldKey)
 
-  override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
-    bind(form.bindFromRequest(data).get)
+  override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] = {
+    val value = form.bindFromRequest(data)
+    bind(value.get)
+  }
 
 
 
