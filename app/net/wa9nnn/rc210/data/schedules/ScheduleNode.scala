@@ -85,7 +85,7 @@ case class ScheduleNode(override val key: Key,
 
   override def toJsValue: JsValue = Json.toJson(this)
 
-object ScheduleNode extends LazyLogging with ComplexFieldDefinition[ScheduleNode]:
+object ScheduleNode extends LazyLogging with FieldDefinitionComplex[ScheduleNode]:
   override val keyKind: KeyKind = KeyKind.Schedule
 
   def unapply(schedule: ScheduleNode): Option[(Key, DayOfWeek, WeekInMonth, MonthOfYearSchedule, Hour, Int, Key)] =

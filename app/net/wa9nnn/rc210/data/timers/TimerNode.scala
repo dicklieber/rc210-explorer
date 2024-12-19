@@ -75,7 +75,7 @@ case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends FieldValueCo
 
 }
 
-object TimerNode extends ComplexFieldDefinition[TimerNode] with LazyLogging:
+object TimerNode extends FieldDefinitionComplex[TimerNode] with LazyLogging:
 
   override def positions: Seq[FieldOffset] = {
     Seq(

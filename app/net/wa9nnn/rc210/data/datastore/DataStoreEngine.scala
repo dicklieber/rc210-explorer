@@ -85,6 +85,8 @@ class DataStoreEngine extends DataStoreApi:
         fieldEntry
       case None =>
         throw new Exception(s"No value for fieldKey: $fieldKey")
+  def fieldDefinition(fieldKey: FieldKey):Option[FieldDefinition] =
+    keyFieldMap.get(fieldKey).map(_.fieldDefinition)
 
   //  def get(keyKind: KeyKind): Seq[FieldEntry] =
   //    all.filter(_.fieldKeyStuff.key.keyKind == keyKind).sorted

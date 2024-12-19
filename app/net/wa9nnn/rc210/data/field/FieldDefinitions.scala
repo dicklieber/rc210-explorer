@@ -130,8 +130,8 @@ class FieldDefinitions @Inject()() {
     //todo finish
   )
 
-  val m:ComplexFieldDefinition[MessageNode]  = MessageNode
-  val complexFd: Seq[ComplexFieldDefinition[?]] = Seq(
+  val m:FieldDefinitionComplex[MessageNode]  = MessageNode
+  val complexFd: Seq[FieldDefinitionComplex[?]] = Seq(
     ScheduleNode,
     MacroNode,
     CourtesyToneNode,

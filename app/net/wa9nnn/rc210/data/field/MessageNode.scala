@@ -74,7 +74,7 @@ case class MessageNode(key: Key, words: Seq[Int]) extends FieldValueComplex() {
   }
 }
 
-object MessageNode extends ComplexFieldDefinition[MessageNode] with LazyLogging:
+object MessageNode extends FieldDefinitionComplex[MessageNode] with LazyLogging:
   implicit val fmtPhrase: Format[MessageNode] = Json.format[MessageNode]
 
   def apply(key: Key, kv: Map[String, String]): MessageNode = {

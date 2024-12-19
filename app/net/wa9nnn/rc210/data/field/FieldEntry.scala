@@ -21,7 +21,7 @@ import com.wa9nnn.wa9nnnutil.tableui.*
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
 
 /**
- *
+ *  There is one of these for each element in the [[net.wa9nnn.rc210.data.datastore.DataStore]]
  * @param fieldDefinition specific to this entry. e.g. template, name etc.
  * @param fieldData       the value. mutable
  */

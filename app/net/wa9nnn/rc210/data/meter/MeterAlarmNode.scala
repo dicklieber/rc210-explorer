@@ -104,7 +104,7 @@ case class MeterAlarmNode(val key: Key, meter: Key, alarmType: AlarmType, tripPo
 *
 * */
 
-object MeterAlarmNode extends ComplexFieldDefinition[MeterAlarmNode]:
+object MeterAlarmNode extends FieldDefinitionComplex[MeterAlarmNode]:
   override val keyKind: KeyKind = KeyKind.MeterAlarm
 
   def unapply(u: MeterAlarmNode): Option[(Key, Key, AlarmType, Int, Key)] = Some((u.key, u.meter, u.alarmType, u.tripPoint, u.macroKey))
