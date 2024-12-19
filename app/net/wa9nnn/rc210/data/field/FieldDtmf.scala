@@ -55,7 +55,7 @@ case class FieldDtmf(value: String) extends SimpleFieldValue() with LazyLogging:
 
 object FieldDtmf extends SimpleExtractor:
 
-  override def extractFromInts(itr: Iterator[Int], fieldDefinition: SimpleFieldExtractor): FieldValue = {
+  override def extractFromInts(itr: Iterator[Int], fieldDefinition: SimpleFieldDefinition): FieldValue = {
     val ints: Seq[Int] = for {
       _ <- 0 to fieldDefinition.max
     } yield {

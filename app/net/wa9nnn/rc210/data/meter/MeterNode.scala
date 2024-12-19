@@ -84,7 +84,7 @@ case class MeterNode(key: Key, meterFaceName: MeterFaceName, low: VoltToReading,
     high.reading,
   )
 
-object MeterNode extends ComplexExtractor[MeterNode]:
+object MeterNode extends ComplexFieldDefinition[MeterNode]:
   val keyKind = KeyKind.Meter
 
   def unapply(u: MeterNode): Option[(Key, MeterFaceName, VoltToReading, VoltToReading)] = Some((u.key, u.meterFaceName, u.low, u.high))

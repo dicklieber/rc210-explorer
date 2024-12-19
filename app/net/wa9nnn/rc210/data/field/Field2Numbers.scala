@@ -89,7 +89,7 @@ object Field2Numbers extends SimpleExtractor {
   //  override def jsonToField(jsValue: JsValue): FieldValue = jsValue.as[Field2Numbers]
 
 
-  override def extractFromInts(iterator: Iterator[Int], fieldDefinition: SimpleFieldExtractor): FieldValue = {
+  override def extractFromInts(iterator: Iterator[Int], fieldDefinition: SimpleFieldDefinition): FieldValue = {
     Field2Numbers(Seq(iterator.next(), iterator.next()))
   }
 

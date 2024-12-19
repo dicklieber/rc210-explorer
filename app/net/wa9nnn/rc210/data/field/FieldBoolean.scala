@@ -54,7 +54,7 @@ case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue() {
 
 object FieldBoolean extends SimpleExtractor:
 
-  override def extractFromInts(itr: Iterator[Int], fieldDefinition: SimpleFieldExtractor): FieldValue =
+  override def extractFromInts(itr: Iterator[Int], fieldDefinition: SimpleFieldDefinition): FieldValue =
     FieldBoolean(itr.next() > 0)
 
 

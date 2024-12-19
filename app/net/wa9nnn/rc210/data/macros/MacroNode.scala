@@ -89,7 +89,7 @@ case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dt
 
 
 
-object MacroNode extends ComplexExtractor[MacroNode]:
+object MacroNode extends ComplexFieldDefinition[MacroNode]:
   override val keyKind: KeyKind = KeyKind.Macro
 
   def unapply(u: MacroNode): Option[(Key, Seq[Key], Option[Dtmf])] = Some((u.key, u.functions, u.dtmf))

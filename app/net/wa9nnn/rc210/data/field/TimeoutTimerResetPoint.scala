@@ -60,7 +60,7 @@ object TimeoutTimerResetPoint extends SimpleExtractor {
     new TimeoutTimerResetPoint(TotReset.find(id))
   }
 
-  override def extractFromInts(itr: Iterator[Int], field: SimpleFieldExtractor): TimeoutTimerResetPoint = {
+  override def extractFromInts(itr: Iterator[Int], field: SimpleFieldDefinition): TimeoutTimerResetPoint = {
     val id = itr.next()
     apply(id)
   }

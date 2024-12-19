@@ -58,7 +58,7 @@ case class FieldString(value: String) extends SimpleFieldValue():
 
 object FieldString extends SimpleExtractor:
 
-  override def extractFromInts(itr: Iterator[Int], field: SimpleFieldExtractor): FieldString = {
+  override def extractFromInts(itr: Iterator[Int], field: SimpleFieldDefinition): FieldString = {
     new FieldString(new String(
       itr.takeWhile(_ != 0)
         .toArray

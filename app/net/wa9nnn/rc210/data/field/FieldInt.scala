@@ -49,7 +49,7 @@ case class FieldInt(value: Int) extends SimpleFieldValue():
 
 object FieldInt extends SimpleExtractor:
 
-  override def extractFromInts(itr: Iterator[Int], field: SimpleFieldExtractor): FieldInt = {
+  override def extractFromInts(itr: Iterator[Int], field: SimpleFieldDefinition): FieldInt = {
     new FieldInt(if (field.max > 256)
       itr.next() + itr.next() * 256
     else

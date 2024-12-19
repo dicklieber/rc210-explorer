@@ -28,7 +28,7 @@ class FieldEntryTest extends WithMemory {
     {
       "setCandidate" in
         {
-          val fieldExtractor = SimpleFieldExtractor(10, "Say Hours", Common, "1*5104b", FieldBoolean)
+          val fieldExtractor = SimpleFieldDefinition(10, "Say Hours", Common, "1*5104b", FieldBoolean)
           val initialFieldValue: FieldValue = fieldExtractor.extractFromInts(Seq(1).iterator).get
           val fieldKey = fieldExtractor.fieldKey(1)
 

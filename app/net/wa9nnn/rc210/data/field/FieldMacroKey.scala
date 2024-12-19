@@ -45,7 +45,7 @@ case class FieldMacroKey(key: Key) extends SimpleFieldValue(key):
   )
 
 object MacroKeyExtractor extends SimpleExtractor:
-  override def extractFromInts(iterator: Iterator[Int], fieldDefinition: SimpleFieldExtractor): FieldValue = {
+  override def extractFromInts(iterator: Iterator[Int], fieldDefinition: SimpleFieldDefinition): FieldValue = {
     val i: Int = iterator.next()
     val key = Key(KeyKind.Macro, i)
     FieldMacroKey(key)

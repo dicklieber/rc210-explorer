@@ -64,7 +64,7 @@ case class RemoteBaseNode(radio: Radio, yaesu: Yaesu, prefix: String, memories: 
   )
 }
 
-object RemoteBaseNode extends ComplexExtractor[RemoteBaseNode] {
+object RemoteBaseNode extends ComplexFieldDefinition[RemoteBaseNode] {
   override val keyKind: KeyKind = KeyKind.RemoteBase
   def unapply(u: RemoteBaseNode): Option[(Radio, Yaesu, String, Seq[RBMemory])] = Some((u.radio, u.yaesu, u.prefix, u.memories))
 

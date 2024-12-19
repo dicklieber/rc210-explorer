@@ -100,7 +100,7 @@ case class ClockNode(key: Key,
     say24Hours
   )
 
-object ClockNode extends ComplexExtractor[ClockNode] {
+object ClockNode extends ComplexFieldDefinition[ClockNode] {
   override val keyKind: KeyKind = KeyKind.Clock
   override val form: Form[ClockNode] = Form(
     mapping(

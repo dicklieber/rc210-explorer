@@ -24,7 +24,7 @@ val fieldTime = FieldTime(LocalTime.of(10, 15))
   "FieldTime" should {
     "toCommand" in {
       val candidate =  FieldTime(LocalTime.of(10, 25))
-      val fieldDefinition = SimpleFieldExtractor(17, "Hang Time 3", KeyKind.portKey, "n*40011*8*0*v*02", FieldInt)
+      val fieldDefinition = SimpleFieldDefinition(17, "Hang Time 3", KeyKind.portKey, "n*40011*8*0*v*02", FieldInt)
       val fieldKey: FieldKey = fieldDefinition.fieldKey(3)
       val fieldEntry = FieldEntry(fieldDefinition, fieldKey, fieldTime, Option(candidate))
       val command = fieldEntry.commands.head

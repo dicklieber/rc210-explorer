@@ -81,7 +81,7 @@ case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, 
   )
 }
 
-object LogicAlarmNode extends ComplexExtractor[LogicAlarmNode]:
+object LogicAlarmNode extends ComplexFieldDefinition[LogicAlarmNode]:
   override val keyKind: KeyKind = KeyKind.LogicAlarm
 
   def unapply(u: LogicAlarmNode): Option[(Key, Boolean, Key, Key)] = Some((u.key, u.enabled, u.lowMacro, u.highMacro))

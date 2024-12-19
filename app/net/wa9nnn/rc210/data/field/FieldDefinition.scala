@@ -20,7 +20,7 @@ trait FieldDefinition extends LazyLogging:
   def positions: Seq[FieldOffset]
 
 /**
- * A [[SimpleFieldExtractor]] produces one RC-210 command as opposed to a complex rc2input like [[net.wa9nnn.rc210.data.schedules.ScheduleNode]] that may produce multiple commands.
+ * A [[SimpleFieldDefinition]] produces one RC-210 command as opposed to a complex rc2input like [[net.wa9nnn.rc210.data.schedules.ScheduleNode]] that may produce multiple commands.
  * And generally will be an HTML form itself to edit.
  *
  * @param offset         where in [[Memory]] this comes from.
@@ -32,15 +32,15 @@ trait FieldDefinition extends LazyLogging:
  * @param units          suffix for <input>
  * @param max            used by the extractor. e.g. max DtMF digits or max number.
  */
-case class SimpleFieldExtractor(offset: Int,
-                                fieldName: String,
-                                val keyKind: KeyKind,
-                                override val template: String,
-                                fieldExtractor: SimpleExtractor,
-                                override val tooltip: String = "",
-                                override val units: String = "",
-                                min: Int = 1,
-                                max: Int = 255,
+case class SimpleFieldDefinition(offset: Int,
+                                 fieldName: String,
+                                 val keyKind: KeyKind,
+                                 override val template: String,
+                                 fieldExtractor: SimpleExtractor,
+                                 override val tooltip: String = "",
+                                 override val units: String = "",
+                                 min: Int = 1,
+                                 max: Int = 255,
                       ) extends FieldDefinition with LazyLogging :
   def extractFromInts(iterator: Iterator[Int]): Try[FieldValue] = {
     val tried: Try[FieldValue] = Try {
@@ -67,19 +67,19 @@ case class SimpleFieldExtractor(offset: Int,
     new FieldKey(Key(keyKind, number), fieldName)
   }
 
-  def units(u: String): SimpleFieldExtractor = copy(units = u)
+  def units(u: String): SimpleFieldDefinition = copy(units = u)
 
-  def max(max: Int): SimpleFieldExtractor = copy(max = max)
+  def max(max: Int): SimpleFieldDefinition = copy(max = max)
 
-  def min(min: Int): SimpleFieldExtractor = copy(min = min)
+  def min(min: Int): SimpleFieldDefinition = copy(min = min)
 
-  def tooltip(tooltip: String): SimpleFieldExtractor = copy(tooltip = tooltip)
+  def tooltip(tooltip: String): SimpleFieldDefinition = copy(tooltip = tooltip)
 
 
   override def positions: Seq[FieldOffset] = Seq(FieldOffset(offset, this))
 
 
-trait ComplexExtractor[T <: ComplexFieldValue] extends FieldExtractor with FieldDefinition with EditHandler {
+trait ComplexFieldDefinition[T <: ComplexFieldValue] extends FieldExtractor with FieldDefinition with EditHandler {
   def fieldKey(key: Key): FieldKey = FieldKey(key)
 
   override def fieldName: String = keyKind.entryName
@@ -96,7 +96,7 @@ trait ComplexExtractor[T <: ComplexFieldValue] extends FieldExtractor with Field
 }
 
 abstract class SimpleExtractor extends FieldExtractor :
-  def extractFromInts(iterator: Iterator[Int], fieldDefinition: SimpleFieldExtractor): FieldValue
+  def extractFromInts(iterator: Iterator[Int], fieldDefinition: SimpleFieldDefinition): FieldValue
 
 
 trait FieldExtractor :

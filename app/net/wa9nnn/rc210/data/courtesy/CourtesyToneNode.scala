@@ -22,7 +22,7 @@ import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
 import controllers.routes
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
-import net.wa9nnn.rc210.data.field.{ComplexExtractor, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
+import net.wa9nnn.rc210.data.field.{ComplexFieldDefinition, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.ButtonCell
 import play.api.data.*
@@ -75,7 +75,7 @@ case class CourtesyToneNode(override val key: Key, segments: Seq[Segment]) exten
  * [[CourtesyToneNode]] data are spread out in the [[Memory]] image.
  * This gaters all the data and produces all the [[CourtesyToneNode]]s.
  */
-object CourtesyToneNode extends ComplexExtractor[CourtesyToneNode] with LazyLogging:
+object CourtesyToneNode extends ComplexFieldDefinition[CourtesyToneNode] with LazyLogging:
   override val keyKind: KeyKind = KeyKind.CourtesyTone
   private val nCourtesyTones = keyKind.maxN
 
