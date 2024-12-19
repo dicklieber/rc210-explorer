@@ -35,7 +35,7 @@ import views.html.fieldIndex
 
 import java.util.concurrent.atomic.AtomicInteger
 
-case class MeterAlarmNode(val key: Key, meter: Key, alarmType: AlarmType, tripPoint: Int, macroKey: Key) extends ComplexFieldValue(macroKey):
+case class MeterAlarmNode(val key: Key, meter: Key, alarmType: AlarmType, tripPoint: Int, macroKey: Key) extends FieldValueComplex(macroKey):
   key.check(KeyKind.MeterAlarm)
   meter.check(Meter)
   macroKey.check(KeyKind.Macro)

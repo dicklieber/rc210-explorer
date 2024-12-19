@@ -25,7 +25,7 @@ import play.api.libs.json.{Format, JsResult, JsValue}
 /**
  * Holds the value for a rc2input.
  * Knows how to render as HTML control or string for JSON, showing to a user or RC-210 Command,
- * Has enough metadata needed yo render
+ * Has enough metadata needed to render
  */
 sealed trait FieldValue extends LazyLogging with RowSource:
   /**
@@ -68,7 +68,7 @@ sealed trait FieldValue extends LazyLogging with RowSource:
    *
    * @param formFieldValue candidate from an HTML form.
    */
-  def update(formFieldValue: String): SimpleFieldValue
+  def update(formFieldValue: String): FieldValueSimple
 
   def toJsValue: JsValue
 
@@ -84,10 +84,10 @@ object FieldValue:
 /**
  * Renders itself as a [[[Cell]]
  */
-trait SimpleFieldValue(val runableMacros: Key*) extends FieldValue
+trait FieldValueSimple(val runableMacros: Key*) extends FieldValue
 
-trait ComplexFieldValue(val runableMacros: Key*) extends FieldValue with LazyLogging:
-  override def update(formFieldValue: String): SimpleFieldValue =
+trait FieldValueComplex(val runableMacros: Key*) extends FieldValue with LazyLogging:
+  override def update(formFieldValue: String): FieldValueSimple =
     throw new NotImplementedError("Not needed for a ComplexFieldValue!")
 
   val key: Key

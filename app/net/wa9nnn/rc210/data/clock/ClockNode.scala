@@ -36,7 +36,7 @@ case class ClockNode(key: Key,
                      startDST: DSTPoint = DSTPoint(MonthOfYearDST.March, Occurrence.First),
                      endDST: DSTPoint = DSTPoint(MonthOfYearDST.November, Occurrence.Second),
                      say24Hours: Boolean = false,
-                    ) extends ComplexFieldValue():
+                    ) extends FieldValueComplex():
 
   override def displayCell: Cell =
     val table = Table(Header(Seq.empty),

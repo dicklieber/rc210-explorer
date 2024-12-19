@@ -23,7 +23,7 @@ import net.wa9nnn.rc210.ui.FormField
 import net.wa9nnn.rc210.ui.nav.{BooleanCell, CheckBoxCell}
 import play.api.libs.json.*
 
-case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue() {
+case class FieldBoolean(value: Boolean = false) extends FieldValueSimple() {
   override def toRow: Row = Row(
     "FieldBoolean",
     toString
@@ -54,7 +54,7 @@ case class FieldBoolean(value: Boolean = false) extends SimpleFieldValue() {
 
 object FieldBoolean extends SimpleExtractor:
 
-  override def extractFromInts(itr: Iterator[Int], fieldDefinition: SimpleFieldDefinition): FieldValue =
+  override def extractFromInts(itr: Iterator[Int], fieldDefinition: FieldDefinitionSimple): FieldValue =
     FieldBoolean(itr.next() > 0)
 
 

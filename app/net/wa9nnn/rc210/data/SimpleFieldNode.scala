@@ -11,7 +11,7 @@ import play.twirl.api.Html
 import scala.collection.immutable
 
 /**
- * Behavior for [[KeyKind]]s that are just a bunch of [[net.wa9nnn.rc210.data.field.SimpleFieldValue]]s.
+ * Behavior for [[KeyKind]]s that are just a bunch of [[net.wa9nnn.rc210.data.field.FieldValueSimple]]s.
  *
  * @param keyKind
  */

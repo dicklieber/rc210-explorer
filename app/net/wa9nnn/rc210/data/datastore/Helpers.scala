@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.datastore
 
 import net.wa9nnn.rc210.{FieldKey, Key}
-import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry}
+import net.wa9nnn.rc210.data.field.{FieldValueComplex, FieldEntry}
 import play.api.libs.json.{Format, JsValue, Json}
 
 
@@ -28,8 +28,8 @@ import play.api.libs.json.{Format, JsValue, Json}
  * What is sent to the [[DataStore]] to be the new candidate and name.
  *
  * @param fieldKey   id of value.
- * @param candidate String for [[net.wa9nnn.rc210.data.field.SimpleFieldValue]] or a [[ComplexFieldValue]]
+ * @param candidate  String for [[net.wa9nnn.rc210.data.field.FieldValueSimple]] or a [[FieldValueComplex]]
  */
-case class UpdateCandidate(fieldKey: FieldKey, candidate: String | ComplexFieldValue)
+case class UpdateCandidate(fieldKey: FieldKey, candidate: String | FieldValueComplex)
 
 

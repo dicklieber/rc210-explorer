@@ -19,13 +19,13 @@ package net.wa9nnn.rc210.util
 
 import com.wa9nnn.wa9nnnutil.tableui.Cell
 import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.data.field.{FieldEntryBase, SimpleFieldValue}
+import net.wa9nnn.rc210.data.field.{FieldEntryBase, FieldValueSimple}
 import play.api.libs.json.{JsString, JsValue}
 
 /**
  * An enumeration with behaviour.
  */
-trait FieldSelect[T] extends SimpleFieldValue {
+trait FieldSelect[T] extends FieldValueSimple {
   def selectOptions: Seq[SelectOption]
   val name: String
   val value: T

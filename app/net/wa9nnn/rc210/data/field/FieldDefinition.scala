@@ -19,8 +19,9 @@ trait FieldDefinition extends LazyLogging:
 
   def positions: Seq[FieldOffset]
 
+/*
 /**
- * A [[SimpleFieldDefinition]] produces one RC-210 command as opposed to a complex rc2input like [[net.wa9nnn.rc210.data.schedules.ScheduleNode]] that may produce multiple commands.
+ * A [[FieldDefinitionSimple]] produces one RC-210 command as opposed to a complex rc2input like [[net.wa9nnn.rc210.data.schedules.ScheduleNode]] that may produce multiple commands.
  * And generally will be an HTML form itself to edit.
  *
  * @param offset         where in [[Memory]] this comes from.
@@ -32,7 +33,7 @@ trait FieldDefinition extends LazyLogging:
  * @param units          suffix for <input>
  * @param max            used by the extractor. e.g. max DtMF digits or max number.
  */
-case class SimpleFieldDefinition(offset: Int,
+case class FieldDefinitionSimple(offset: Int,
                                  fieldName: String,
                                  val keyKind: KeyKind,
                                  override val template: String,
@@ -67,19 +68,20 @@ case class SimpleFieldDefinition(offset: Int,
     new FieldKey(Key(keyKind, number), fieldName)
   }
 
-  def units(u: String): SimpleFieldDefinition = copy(units = u)
+  def units(u: String): FieldDefinitionSimple = copy(units = u)
 
-  def max(max: Int): SimpleFieldDefinition = copy(max = max)
+  def max(max: Int): FieldDefinitionSimple = copy(max = max)
 
-  def min(min: Int): SimpleFieldDefinition = copy(min = min)
+  def min(min: Int): FieldDefinitionSimple = copy(min = min)
 
-  def tooltip(tooltip: String): SimpleFieldDefinition = copy(tooltip = tooltip)
+  def tooltip(tooltip: String): FieldDefinitionSimple = copy(tooltip = tooltip)
 
 
   override def positions: Seq[FieldOffset] = Seq(FieldOffset(offset, this))
+*/
 
 
-trait ComplexFieldDefinition[T <: ComplexFieldValue] extends FieldExtractor with FieldDefinition with EditHandler {
+trait ComplexFieldDefinition[T <: FieldValueComplex] extends FieldExtractor with FieldDefinition with EditHandler {
   def fieldKey(key: Key): FieldKey = FieldKey(key)
 
   override def fieldName: String = keyKind.entryName
@@ -96,7 +98,7 @@ trait ComplexFieldDefinition[T <: ComplexFieldValue] extends FieldExtractor with
 }
 
 abstract class SimpleExtractor extends FieldExtractor :
-  def extractFromInts(iterator: Iterator[Int], fieldDefinition: SimpleFieldDefinition): FieldValue
+  def extractFromInts(iterator: Iterator[Int], fieldDefinition: FieldDefinitionSimple): FieldValue
 
 
 trait FieldExtractor :

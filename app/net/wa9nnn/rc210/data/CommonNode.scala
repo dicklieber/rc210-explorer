@@ -2,7 +2,7 @@ package net.wa9nnn.rc210.data
 
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
-import net.wa9nnn.rc210.data.field.{FieldEntry, SimpleFieldValue}
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValueSimple}
 import net.wa9nnn.rc210.{FieldKey, KeyKind}
 import play.api.i18n.MessagesProvider
 import play.api.mvc.RequestHeader
@@ -15,7 +15,7 @@ case object CommonNode extends SimpleFieldNode(KeyKind.Common):
       fieldEntries.map { fieldEntry =>
         Row(
           fieldEntry.fieldKey.fieldName,
-          fieldEntry.toEditCell
+          fieldEntry.value[FieldValueSimple].toEditCell(fieldEntry.fieldKey)
         )
       }
     )
@@ -35,7 +35,7 @@ case object CommonNode extends SimpleFieldNode(KeyKind.Common):
       Seq(
         Row(
           fieldEntry.fieldKey.fieldName,
-          fieldEntry.valueDisplayCell
+          fieldEntry.value[FieldValueSimple].toEditCell(fieldEntry.fieldKey)
         )
       )
     

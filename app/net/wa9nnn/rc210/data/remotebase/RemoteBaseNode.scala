@@ -30,7 +30,7 @@ import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.*
 import play.twirl.api.Html
 
-case class RemoteBaseNode(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[RBMemory] = Seq.empty) extends ComplexFieldValue() {
+case class RemoteBaseNode(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[RBMemory] = Seq.empty) extends FieldValueComplex() {
   override val key: Key = Key(KeyKind.RemoteBase)
 
   //  override def display: String = fieldName

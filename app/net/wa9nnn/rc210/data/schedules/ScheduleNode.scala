@@ -31,7 +31,7 @@ case class ScheduleNode(override val key: Key,
                         monthOfYear: MonthOfYearSchedule = MonthOfYearSchedule.Every,
                         hour: Hour = Hour.Every,
                         minute: Int = 0,
-                        macroKey: Key = Key(KeyKind.Macro, 1)) extends ComplexFieldValue(macroKey):
+                        macroKey: Key = Key(KeyKind.Macro, 1)) extends FieldValueComplex(macroKey):
 
   override def toRow: Row = {
     Row(

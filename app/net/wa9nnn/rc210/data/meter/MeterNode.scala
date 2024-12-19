@@ -42,7 +42,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * @param low           calibrate for high.
  * @param high          calibrate for low.
  */
-case class MeterNode(key: Key, meterFaceName: MeterFaceName, low: VoltToReading, high: VoltToReading) extends ComplexFieldValue():
+case class MeterNode(key: Key, meterFaceName: MeterFaceName, low: VoltToReading, high: VoltToReading) extends FieldValueComplex():
 
   override def displayCell: Cell =
     KvTable.inACell(

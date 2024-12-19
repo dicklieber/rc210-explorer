@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.ui
 
 import net.wa9nnn.rc210.{FieldKey, Key}
 import net.wa9nnn.rc210.data.datastore.{CandidateAndNames, UpdateCandidate}
-import net.wa9nnn.rc210.data.field.ComplexFieldValue
+import net.wa9nnn.rc210.data.field.FieldValueComplex
 import net.wa9nnn.rc210.NamedKey
 import play.api.mvc.{AnyContent, AnyContentAsFormUrlEncoded, Request}
 
@@ -29,7 +29,7 @@ import scala.collection.immutable
  * Helpers that extract [[NamedKey]]s from a form request.
  */
 object ProcessResult {
-  def apply(fieldValue: ComplexFieldValue)(using request: Request[AnyContent]): CandidateAndNames =
+  def apply(fieldValue: FieldValueComplex)(using request: Request[AnyContent]): CandidateAndNames =
     val data: Map[String, String] = request
       .body
       .asFormUrlEncoded

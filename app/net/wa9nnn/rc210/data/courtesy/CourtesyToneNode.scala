@@ -22,7 +22,7 @@ import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
 import controllers.routes
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
-import net.wa9nnn.rc210.data.field.{ComplexFieldDefinition, ComplexFieldValue, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
+import net.wa9nnn.rc210.data.field.{ComplexFieldDefinition, FieldValueComplex, FieldEntry, FieldEntryBase, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.ButtonCell
 import play.api.data.*
@@ -40,7 +40,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * @param key      id
  * @param segments the four segment that mke up a courtesy tone.
  */
-case class CourtesyToneNode(override val key: Key, segments: Seq[Segment]) extends ComplexFieldValue() {
+case class CourtesyToneNode(override val key: Key, segments: Seq[Segment]) extends FieldValueComplex() {
   assert(segments.length == 4, s"Must have four segemnts but only have: $segments")
 
   override def displayCell: Cell =

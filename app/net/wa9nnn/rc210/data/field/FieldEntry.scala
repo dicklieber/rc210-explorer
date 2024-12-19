@@ -64,7 +64,7 @@ class FieldEntry(val fieldDefinition: FieldDefinition, initialValue: FieldData)
    */
 
   def setCandidate(formFieldValue: String): Unit = 
-    val newCandidate: SimpleFieldValue = _fieldData.fieldValue.update(formFieldValue)
+    val newCandidate: FieldValueSimple = _fieldData.fieldValue.update(formFieldValue)
     _fieldData = _fieldData.setCandidate(newCandidate)
 
   override def toRow: Row =

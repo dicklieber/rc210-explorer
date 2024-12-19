@@ -48,7 +48,7 @@ import scala.util.Try
  * @param key   Message key
  * @param words word numbers. Each 0 to 255. 
  */
-case class MessageNode(key: Key, words: Seq[Int]) extends ComplexFieldValue() {
+case class MessageNode(key: Key, words: Seq[Int]) extends FieldValueComplex() {
 
   def toWords: Seq[Word] = words.map(Word(_))
 

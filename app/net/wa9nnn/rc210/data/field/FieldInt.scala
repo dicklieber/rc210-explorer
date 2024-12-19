@@ -23,7 +23,7 @@ import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.*
 
-case class FieldInt(value: Int) extends SimpleFieldValue():
+case class FieldInt(value: Int) extends FieldValueSimple():
   override def toRow: Row = Row(
     "FieldDtmf",
     toString
@@ -49,7 +49,7 @@ case class FieldInt(value: Int) extends SimpleFieldValue():
 
 object FieldInt extends SimpleExtractor:
 
-  override def extractFromInts(itr: Iterator[Int], field: SimpleFieldDefinition): FieldInt = {
+  override def extractFromInts(itr: Iterator[Int], field: FieldDefinitionSimple): FieldInt = {
     new FieldInt(if (field.max > 256)
       itr.next() + itr.next() * 256
     else

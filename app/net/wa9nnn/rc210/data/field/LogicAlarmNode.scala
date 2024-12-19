@@ -37,7 +37,7 @@ import play.api.mvc.*
 import play.twirl.api.Html
 import views.html.{courtesyToneEdit, fieldIndex, logicAlarmEditor}
 
-case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, lowMacro: Key, highMacro: Key) extends ComplexFieldValue(lowMacro, highMacro) {
+case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, lowMacro: Key, highMacro: Key) extends FieldValueComplex(lowMacro, highMacro) {
   key.check(KeyKind.LogicAlarm)
   lowMacro.check(KeyKind.Macro)
   highMacro.check(KeyKind.Macro)

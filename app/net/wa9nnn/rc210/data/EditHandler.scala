@@ -3,7 +3,7 @@ package net.wa9nnn.rc210.data
 import com.wa9nnn.wa9nnnutil.tableui.Cell
 import controllers.routes
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
-import net.wa9nnn.rc210.data.field.{ComplexFieldValue, FieldEntry}
+import net.wa9nnn.rc210.data.field.{FieldValueComplex, FieldEntry}
 import net.wa9nnn.rc210.{FieldKey, KeyKind}
 import play.api.i18n.MessagesProvider
 import play.api.mvc.{RequestHeader, Result, Results}
@@ -36,7 +36,7 @@ trait EditHandler:
   
   
 
-  def bind(in: ComplexFieldValue): Seq[UpdateCandidate] =
+  def bind(in: FieldValueComplex): Seq[UpdateCandidate] =
     Seq(
       UpdateCandidate(in.fieldKey, in)
     )

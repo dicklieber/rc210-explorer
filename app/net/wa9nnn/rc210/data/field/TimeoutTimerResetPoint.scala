@@ -29,7 +29,7 @@ import play.api.libs.json.{JsValue, Json}
  *
  * @param value    one of the display values in DayOfWeek.options.
  */
-case class TimeoutTimerResetPoint(value: TotReset = TotReset.values.head) extends SimpleFieldValue() {
+case class TimeoutTimerResetPoint(value: TotReset = TotReset.values.head) extends FieldValueSimple() {
   override def displayCell: Cell = Cell(value)
 
   def toCommands(fieldEntry: FieldEntryBase): Seq[String] =
@@ -60,7 +60,7 @@ object TimeoutTimerResetPoint extends SimpleExtractor {
     new TimeoutTimerResetPoint(TotReset.find(id))
   }
 
-  override def extractFromInts(itr: Iterator[Int], field: SimpleFieldDefinition): TimeoutTimerResetPoint = {
+  override def extractFromInts(itr: Iterator[Int], field: FieldDefinitionSimple): TimeoutTimerResetPoint = {
     val id = itr.next()
     apply(id)
   }

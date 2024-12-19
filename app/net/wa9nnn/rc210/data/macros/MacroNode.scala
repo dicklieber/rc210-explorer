@@ -28,7 +28,7 @@ import scala.annotation.tailrec
  * @param functions that this macro invokes.
  * @param dtmf      that can invoke this macro.
  */
-case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dtmf] = None) extends ComplexFieldValue() with Node:
+case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dtmf] = None) extends FieldValueComplex() with Node:
   override def toString: String =
     val seq1: Seq[Any] = functions.map(_.rc210Value)
     val sFunctions:String = seq1.mkString(" ")

@@ -23,7 +23,7 @@ import net.wa9nnn.rc210.{FieldKey, Key}
 import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.*
 
-case class FieldString(value: String) extends SimpleFieldValue():
+case class FieldString(value: String) extends FieldValueSimple():
 
   /**
    * Render as HTML for this rc2input.
@@ -58,7 +58,7 @@ case class FieldString(value: String) extends SimpleFieldValue():
 
 object FieldString extends SimpleExtractor:
 
-  override def extractFromInts(itr: Iterator[Int], field: SimpleFieldDefinition): FieldString = {
+  override def extractFromInts(itr: Iterator[Int], field: FieldDefinitionSimple): FieldString = {
     new FieldString(new String(
       itr.takeWhile(_ != 0)
         .toArray

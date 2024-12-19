@@ -58,7 +58,7 @@ class DataStorePersistence() extends DataStoreEngine with LazyLogging:
       val fieldKey: FieldKey = FieldKey.fromId(str)
       val keyKind: KeyKind = fieldKey.key.keyKind
       val handler: EditHandler = keyKind.handler
-      handler.
+      //todo
     }
     val datas: Seq[FieldData] = jsValue.as[Seq[FieldData]]
     set(datas)

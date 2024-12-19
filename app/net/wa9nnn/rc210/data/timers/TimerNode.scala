@@ -35,7 +35,7 @@ import views.html.{fieldIndex, timerEditor}
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
-case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends ComplexFieldValue(macroKey) {
+case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends FieldValueComplex(macroKey) {
   val duration: FiniteDuration = Duration(seconds, "seconds")
 
   override def toRow: Row = Row(
