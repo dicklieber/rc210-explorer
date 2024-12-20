@@ -6,13 +6,13 @@
 
 @import net.wa9nnn.rc210.data.field.MonthOfYearSchedule
 @import net.wa9nnn.rc210.ui.MacroSelect
-@import net.wa9nnn.rc210.FieldKey
+@import net.wa9nnn.rc210.Key
 @import net.wa9nnn.rc210.data.schedules.*
-@(f: Form[ScheduleNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+@(f: Form[ScheduleNode], key: Key)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
     @form(action = routes.EditController.save()) {
         @inputText(f("key"), Symbol("type") -> "hidden")
         <div class="col-">
-            @keysAndName(fieldKey)
+            @keysAndName(key)
             <table class="table table-bordered table-sm  w-auto rc210-table">
                 <thead class="table-primary">
                     <tr>

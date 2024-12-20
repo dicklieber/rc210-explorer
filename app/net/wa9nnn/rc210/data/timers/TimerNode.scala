@@ -24,7 +24,7 @@ import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.*
-import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyMetadata}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, number, of}
 import play.api.i18n.MessagesProvider
@@ -45,14 +45,14 @@ case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends FieldValueCo
     macroKey.keyWithName
   )
 
-  private def rows: Seq[Row] = Seq(
+  private val rows: Seq[Row] = Seq(
     "Key" -> key.keyWithName,
     "Duration" -> duration,
     "Macro" -> macroKey.keyWithName,
   ).map(Row(_))
 
-  override def tableSection(fieldKey: FieldKey): TableSection = {
-    TableSectionButtons(fieldKey, rows: _*)
+  override def tableSection(key: Key): TableSection = {
+    TableSectionButtons(key, rows: _*)
   }
 
   override def displayCell: Cell =
@@ -61,10 +61,10 @@ case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends FieldValueCo
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
-    val timeNumber: Int = key.rc210Value
+  override def toCommands(fieldEntry: TemplateSource): Seq[String] = {
+    val timeNumber: Int = key.rc210Number
     val secs: Int = seconds
-    val macroNumber = macroKey.rc210Value
+    val macroNumber = macroKey.rc210Number
     Seq(
       s"1*1017$timeNumber$secs",
       s"1*2092$timeNumber$macroNumber"
@@ -75,7 +75,7 @@ case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends FieldValueCo
 
 }
 
-object TimerNode extends FieldDefinitionComplex[TimerNode] with LazyLogging:
+object TimerNode extends FieldDefComplex[TimerNode] with LazyLogging:
 
   override def positions: Seq[FieldOffset] = {
     Seq(
@@ -89,19 +89,18 @@ object TimerNode extends FieldDefinitionComplex[TimerNode] with LazyLogging:
    * @param memory    source of RC-210 data.
    * @return what we extracted.
    */
-  override def extract(memory: Memory): Seq[FieldEntry] =
+  override def extract(memory: Memory): Seq[FieldEntry] = {
     val seconds: Iterator[Int] = memory.iterator16At(1553)
     val macroInts: Iterator[Int] = memory.iterator8At(1565)
 
     val r: Seq[FieldEntry] = (for {
-      index <- 0 until KeyKind.Timer.maxN
+      index <- 0 until KeyMetadata.Timer.maxN
     } yield {
-      val key: Key = Key(KeyKind.Timer, index + 1)
-      FieldEntry(this, TimerNode(key, seconds.next(), Key(KeyKind.Macro, macroInts.next() + 1)))
+      val key: Key = Key(KeyMetadata.Timer, index + 1)
+      FieldEntry(this, fieldKey(key), TimerNode(key, seconds.next(), Key(KeyMetadata.Macro, macroInts.next() + 1)))
     })
     r
-
-  override def parse(jsValue: JsValue): FieldValue = jsValue.as[TimerNode]
+  }
 
   def unapply(u: TimerNode): Option[(Key, Int, Key)] = Some((u.key, u.seconds, u.macroKey))
 
@@ -113,8 +112,8 @@ object TimerNode extends FieldDefinitionComplex[TimerNode] with LazyLogging:
     )(TimerNode.apply)(TimerNode.unapply)
   )
 
-  implicit val fmtTimer: OFormat[TimerNode] = Json.format[TimerNode]
-  override val keyKind: KeyKind = KeyKind.Timer
+  implicit val fmt: OFormat[TimerNode] = Json.format[TimerNode]
+  override val keyKind: KeyMetadata = KeyMetadata.Timer
 
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     fieldIndex(keyKind, Table(Header(s"Timers  (${fieldEntries.length})",

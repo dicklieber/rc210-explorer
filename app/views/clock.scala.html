@@ -5,13 +5,13 @@
 
 @import net.wa9nnn.rc210.data.clock.Occurrence
 @import net.wa9nnn.rc210.data.clock.MonthOfYearDST
-@import net.wa9nnn.rc210.KeyKind
-@import net.wa9nnn.rc210.FieldKey
-@(fieldKey: FieldKey, clockForm: Form[ClockNode])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+@import net.wa9nnn.rc210.KeyMetadata
+@import net.wa9nnn.rc210.Key
+@(key: Key, clockForm: Form[ClockNode])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
 <div class="container">
     @form(routes.EditController.save()) {
-        @fieldKeyStuff(fieldKey)
+        @fieldKeyStuff(key)
         <table class="table table-bordered table-sm">
             <thead class="table-primary">
                 <tr>

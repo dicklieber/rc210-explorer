@@ -22,12 +22,12 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
 import controllers.CandidatesController.commandsCell
 import io.jsonwebtoken.Jwts.header
-import net.wa9nnn.rc210.FieldKey
+import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.serial.*
 import net.wa9nnn.rc210.serial.comm.RcResponse
-import net.wa9nnn.rc210.ui.{TabE, Tabs}
+import net.wa9nnn.rc210.ui.{ButtonCell, TabE, Tabs}
 import net.wa9nnn.rc210.util.Configs.path
 import org.apache.pekko.stream.Materializer
 import org.apache.pekko.stream.scaladsl.Flow
@@ -55,14 +55,14 @@ class CandidatesController @Inject()(dataStore: DataStore,
       val fieldEntries: Seq[FieldEntry] = dataStore.candidates
       val rows: Seq[Row] = fieldEntries.map {
         fieldEntry =>
-          val fieldKey = fieldEntry.fieldKey
+          val key: Key = fieldEntry.key
           val fieldData = fieldEntry.fieldData
           val row = Row(
-            fieldKey.editButtonCell,
-            fieldKey.display,
+            ButtonCell.edit(key),
+            key.display,
             fieldData.fieldValue.displayCell,
             fieldData.candidate.map(_.displayCell).getOrElse(""),
-            commandsCell(fieldData.value.toCommands(fieldEntry))
+            commandsCell(fieldData.value.toCommands(fieldEntry.fieldDefinition))
           )
           row
       }

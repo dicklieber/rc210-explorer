@@ -19,8 +19,7 @@ package net.wa9nnn.rc210.data.datastore
 
 import com.wa9nnn.wa9nnnutil.tableui.*
 import controllers.routes
-import net.wa9nnn.rc210.{FieldKey, Key}
-import net.wa9nnn.rc210.data.Node
+import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.Functions
 import net.wa9nnn.rc210.data.macros.MacroNode
@@ -35,11 +34,11 @@ import scala.language.postfixOps
  *
  * @param Macro    that this flow centers around.
  * @param triggers what this macro does.
- * @param searched what we looked for. UI should highlight this node. 
+ * @param searched what we looked for. UI should highlight this node.
  */
 class FlowData(val macroFieldEntry: FieldEntry, val triggers: Seq[FieldEntry], val searched: Key):
   private val macroNode: MacroNode = macroFieldEntry.value
-  private val macroFieldKey: FieldKey = macroFieldEntry.fieldKey
+  private val macroFieldKey: Key = macroFieldEntry.key
 
   def triggersTable: Table =
     var table: Table = KvTable("Triggers")
@@ -50,7 +49,7 @@ class FlowData(val macroFieldEntry: FieldEntry, val triggers: Seq[FieldEntry], v
 
   def functionsTable: Table =
     val f: Seq[(String, String)] = macroNode.functions.map { functionKey =>
-      functionKey.rc210Value.toString -> Functions.description(functionKey)
+      functionKey.rc210Number.toString -> Functions.description(functionKey)
     }
     KvTable.noHeader(f: _*)
 

@@ -17,9 +17,9 @@
 
 package net.wa9nnn.rc210.ui
 
-import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.{Key, KeyMetadata}
 
-abstract class KeySelect(keyKind: KeyKind) extends Selections:
+abstract class KeySelect(keyKind: KeyMetadata) extends Selections:
   override def options: Seq[(String,String)] =
     for {
       number <- 1 to keyKind.maxN

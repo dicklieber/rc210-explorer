@@ -1,12 +1,12 @@
-@import net.wa9nnn.rc210.FieldKey
+@import net.wa9nnn.rc210.Key
 @import net.wa9nnn.rc210.data.meter.{MeterFaceName, MeterNode}
 @import net.wa9nnn.rc210.ui.MyHelpers.*
 @import net.wa9nnn.rc210.ui.Tabs
 @import views.html.helper.*
 @import views.html.input.selectOptions
-@(f: Form[MeterNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+@(f: Form[MeterNode], key: Key)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 @form(action = routes.EditController.save()) {
-    @keysAndName(fieldKey)
+    @keysAndName(key)
     <div class="col-">
         <table class="table table-bordered table-sm  w-auto rc210-table">
             <thead class="table-primary">

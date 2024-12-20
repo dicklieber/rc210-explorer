@@ -19,8 +19,8 @@ package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, KvTable, Row, Table, TableSection}
 import controllers.{EditController, routes}
-import net.wa9nnn.rc210.ui.{FormField, TableSectionButtons}
-import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
+import net.wa9nnn.rc210.ui.TableSectionButtons
+import net.wa9nnn.rc210.{Key, KeyMetadata}
 import play.api.libs.json.{Format, JsResult, JsSuccess, JsValue, Json}
 import views.html.flowChartButton
 
@@ -29,25 +29,25 @@ case class FieldMacroKey(key: Key) extends FieldValueSimple(key):
     val key = Key(formFieldValue)
     FieldMacroKey(key)
 
-  override def tableSection(fieldKey: FieldKey): TableSection =
-    TableSectionButtons(fieldKey, Row("Macro", fieldKey.key.keyWithName))
+  override def tableSection(key: Key): TableSection =
+    TableSectionButtons(key, Row("Macro", key.key.keyWithName))
 
   override def displayCell: Cell = Cell(key.keyWithName)
 
-  def toCommands(fieldEntry: FieldEntryBase): Seq[String] = Seq.empty //todo
+  def toCommands(fieldEntry: TemplateSource): Seq[String] = Seq.empty //todo
 
   def toJsValue: JsValue = Json.toJson(key)
 
-  override def toEditCell(fieldKey: FieldKey): Cell = FormField(fieldKey, key)
+  override def toEditCell(key: Key): Cell = FormField(key, key)
 
   override def toRow: Row = Row(
     "FieldMacroKey", toString
   )
 
 object MacroKeyExtractor extends SimpleExtractor:
-  override def extractFromInts(iterator: Iterator[Int], fieldDefinition: FieldDefinitionSimple): FieldValue = {
+  override def extractFromInts(iterator: Iterator[Int], fieldDefinition: FieldDefSimple): FieldValue = {
     val i: Int = iterator.next()
-    val key = Key(KeyKind.Macro, i)
+    val key = Key(KeyMetadata.Macro, i)
     FieldMacroKey(key)
   }
 
@@ -61,5 +61,3 @@ object MacroKeyExtractor extends SimpleExtractor:
 
     override def writes(o: FieldMacroKey): JsValue = Json.toJson(o.key)
   }
-
-  override def parse(jsValue: JsValue): FieldValue = jsValue.as[FieldMacroKey]

@@ -5,7 +5,7 @@
 @import scala.util.Random
 @import net.wa9nnn.rc210.data.macros.MacroNode
 @import net.wa9nnn.rc210.Functions
-@import net.wa9nnn.rc210.KeyKind
+@import net.wa9nnn.rc210.KeyMetadata
 @(macroNode: MacroNode)
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
@@ -32,7 +32,7 @@
             @for(functionkey <- macroNode.functions) {
                 <li
                 class="functionSource selected"
-                data-rcnumber="@functionkey.rc210Value"
+                data-rcnumber="@functionkey.rc210Number"
                 ondblclick=dblClick(this)>
                 @Functions.description(functionkey)
                 </li>
@@ -49,7 +49,7 @@
                     @for(function <- Functions.functions) {
                         <li class="functionSource"
                         ondblclick="dblClick(this)"
-                        data-rcnumber="@function.key.rc210Value">
+                        data-rcnumber="@function.key.rc210Number">
                         @function
                         </li>
                     }

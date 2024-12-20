@@ -1,15 +1,15 @@
-@import net.wa9nnn.rc210.{FieldKey, Key, KeyKind, NamedKey}
+@import net.wa9nnn.rc210.{ Key, KeyMetadata, NamedKey}
 @import net.wa9nnn.rc210.data.courtesy.CourtesyToneNode
 @import net.wa9nnn.rc210.ui.MyHelpers.*
 @import net.wa9nnn.rc210.ui.Tabs
 @import views.html.ct.{delay, duration, tone}
 @import views.html.helper.*
-@(fieldKey: FieldKey)(implicit f: Form[CourtesyToneNode], request: RequestHeader, messagesProvider: MessagesProvider)
+@(key:Key)(implicit f: Form[CourtesyToneNode], request: RequestHeader, messagesProvider: MessagesProvider)
 
 <div>
     <form action="@routes.EditController.save()" method="post">
         @inputText(f("key"), Symbol("type") -> "hidden")
-        @keysAndName(fieldKey)
+        @keysAndName(key)
         <table class="headeredTable">
             @defining("<th>Duration<br>Tone1<br>Tone2</th>") { DTT =>
                 <thead>

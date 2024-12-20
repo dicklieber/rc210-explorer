@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row}
-import net.wa9nnn.rc210.{FieldKey, Key}
+import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue, Json}
 
@@ -36,7 +36,7 @@ case class FieldDtmf(value: String) extends FieldValueSimple() with LazyLogging:
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
+  override def toCommands(fieldEntry: TemplateSource): Seq[String] = {
     val fieldKey = fieldEntry.fieldKey
     val key: Key = fieldKey.key
     Seq(key.replaceN(fieldEntry.template)
@@ -55,7 +55,7 @@ case class FieldDtmf(value: String) extends FieldValueSimple() with LazyLogging:
 
 object FieldDtmf extends SimpleExtractor:
 
-  override def extractFromInts(itr: Iterator[Int], fieldDefinition: FieldDefinitionSimple): FieldValue = {
+  override def extractFromInts(itr: Iterator[Int], fieldDefinition: FieldDefSimple): FieldValue = {
     val ints: Seq[Int] = for {
       _ <- 0 to fieldDefinition.max
     } yield {
@@ -74,6 +74,4 @@ object FieldDtmf extends SimpleExtractor:
 
     override def writes(o: FieldDtmf): JsValue = JsString(o.value)
   }
-
-  override def parse(jsValue: JsValue): FieldValue = jsValue.as[FieldDtmf]
 

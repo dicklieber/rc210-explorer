@@ -18,7 +18,7 @@
 
 package net.wa9nnn.rc210.data.schedules
 
-import net.wa9nnn.rc210.KeyKind.All.rc210Value
+import net.wa9nnn.rc210.KeyMetadata.All.rc210Value
 import net.wa9nnn.rc210.data.schedules.WeekInMonth.Every
 import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
 

@@ -18,7 +18,7 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.FieldKey
+import net.wa9nnn.rc210.Key
 import play.api.libs.json.{Json, OFormat}
 /**
  * Represents data associated with a specific field in the RC-210 system.
@@ -32,7 +32,7 @@ import play.api.libs.json.{Json, OFormat}
  *                   the active value of the field, which defaults to the candidate if present, or the `fieldValue`
  *                   otherwise. The `display` property provides a string representation of the active value.
  */
-case class FieldData(fieldKey: FieldKey, fieldValue: FieldValue, candidate: Option[FieldValue] = None):
+case class FieldData(key:Key, fieldValue: FieldValue, candidate: Option[FieldValue] = None):
   /**
    * Retrieves the active value for the current field data.
    *
@@ -44,10 +44,7 @@ case class FieldData(fieldKey: FieldKey, fieldValue: FieldValue, candidate: Opti
   val display: String = value.toString
 
   def acceptCandidate(): FieldData =
-    copy(
-      candidate = None,
-      fieldValue = candidate.getOrElse(fieldValue)
-    )
+    copy(fieldValue = candidate.getOrElse(fieldValue), candidate = None)
 
   def setCandidate(newFieldValue: FieldValue): FieldData =
     if fieldValue == newFieldValue then
@@ -55,9 +52,7 @@ case class FieldData(fieldKey: FieldKey, fieldValue: FieldValue, candidate: Opti
     else
       copy(candidate = Option(newFieldValue))
   def rollBack: FieldData =
-    copy(
-      candidate = None,
-    )
+    copy(candidate = None)
 
 object FieldData:
   implicit val ordering: Ordering[FieldData] =

@@ -18,12 +18,12 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row}
-import net.wa9nnn.rc210.{FieldKey, Key}
+import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.ui.FormField
 import net.wa9nnn.rc210.ui.nav.{BooleanCell, CheckBoxCell}
 import play.api.libs.json.*
 
-case class FieldBoolean(value: Boolean = false) extends FieldValueSimple() {
+case class FieldBoolean(value: Boolean = false) extends FieldValueSimple() :
   override def toRow: Row = Row(
     "FieldBoolean",
     toString
@@ -32,7 +32,7 @@ case class FieldBoolean(value: Boolean = false) extends FieldValueSimple() {
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
+  override def toCommands(fieldEntry: TemplateSource): Seq[String] = {
     val fieldKey = fieldEntry.fieldKey
     val key: Key = fieldKey.key
     Seq(key.replaceN(fieldEntry.template)
@@ -49,12 +49,12 @@ case class FieldBoolean(value: Boolean = false) extends FieldValueSimple() {
 
   override def toEditCell(fieldKey: FieldKey): Cell =
     FormField(fieldKey, value)
-}
+
 
 
 object FieldBoolean extends SimpleExtractor:
 
-  override def extractFromInts(itr: Iterator[Int], fieldDefinition: FieldDefinitionSimple): FieldValue =
+  override def extractFromInts(itr: Iterator[Int], fieldDefinition: FieldDefSimple): FieldValue =
     FieldBoolean(itr.next() > 0)
 
 
@@ -66,6 +66,5 @@ object FieldBoolean extends SimpleExtractor:
   }
 
 
-  override def parse(jsValue: JsValue): FieldValue = FieldBoolean(jsValue.as[Boolean])
 
 

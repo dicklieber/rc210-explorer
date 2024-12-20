@@ -8,7 +8,7 @@ trait FunctionNode extends Ordered[FunctionNode]:
 
   override def compare(that: FunctionNode): Int = description compareTo that.description
 
-  override def toString: String = s"$description (${key.rc210Value})"
+  override def toString: String = s"$description (${key.rc210Number})"
 
 object FunctionNode {
   implicit val fmtFunction: Format[FunctionNode] = new Format[FunctionNode] {

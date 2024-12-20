@@ -22,7 +22,7 @@ import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.util.Chunk
-import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
+import net.wa9nnn.rc210.{ Key, KeyMetadata}
 import play.api.data.Forms.*
 import play.api.data.{Form, Mapping}
 import play.api.i18n.MessagesProvider
@@ -31,14 +31,14 @@ import play.api.mvc.*
 import play.twirl.api.Html
 
 case class RemoteBaseNode(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[RBMemory] = Seq.empty) extends FieldValueComplex() {
-  override val key: Key = Key(KeyKind.RemoteBase)
+  override val key: Key = Key(KeyMetadata.RemoteBase)
 
   //  override def display: String = fieldName
 
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = Seq(
+  override def toCommands(fieldEntry: TemplateSource): Seq[String] = Seq(
     s"1*2083${radio.rc210Value}",
     s"1*2084${yaesu.rc210Value}",
     s"1*2060$prefix"
@@ -55,8 +55,8 @@ case class RemoteBaseNode(radio: Radio, yaesu: Yaesu, prefix: String, memories: 
     )
 
 
-  override def toRow: Row = Row(
-    fieldKey.editButtonCell,
+  def toRow(key:Key): Row = Row(
+    Button.editButton(key),
     radio,
     yaesu,
     prefix,
@@ -64,8 +64,8 @@ case class RemoteBaseNode(radio: Radio, yaesu: Yaesu, prefix: String, memories: 
   )
 }
 
-object RemoteBaseNode extends FieldDefinitionComplex[RemoteBaseNode] {
-  override val keyKind: KeyKind = KeyKind.RemoteBase
+object RemoteBaseNode extends FieldDefComplex[RemoteBaseNode] {
+  override val keyKind: KeyMetadata = KeyMetadata.RemoteBase
   def unapply(u: RemoteBaseNode): Option[(Radio, Yaesu, String, Seq[RBMemory])] = Some((u.radio, u.yaesu, u.prefix, u.memories))
 
   override val form: Form[RemoteBaseNode] = Form(
@@ -115,11 +115,8 @@ object RemoteBaseNode extends FieldDefinitionComplex[RemoteBaseNode] {
     }
 
     val remoteBase = RemoteBaseNode(radio, yaesu, prefix, memories)
-    Seq(FieldEntry(this, remoteBase))
+    Seq(FieldEntry(this, Key(KeyMetadata.RemoteBase), remoteBase))
   }
-
-  override def parse(jsValue: JsValue): FieldValue = jsValue.as[RemoteBaseNode]
-
 
   override def positions: Seq[FieldOffset] = Seq(
     FieldOffset(1176, this, "Radio Type"),
@@ -129,14 +126,9 @@ object RemoteBaseNode extends FieldDefinitionComplex[RemoteBaseNode] {
     FieldOffset(3562, this, "Offset"),
   )
 
-  /**
-   * for various things e.g. parser name.
-   */
-  val key:Key = Key(keyKind)
-  val fieldKey: FieldKey = super.fieldKey(key)
 
   implicit val fmtRBMemory: Format[RBMemory] = Json.format[RBMemory]
-  implicit val fmtRemoteBase: Format[RemoteBaseNode] = Json.format[RemoteBaseNode]
+  implicit val fmt: Format[RemoteBaseNode] = Json.format[RemoteBaseNode]
 
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     val filledForm = form.fill(fieldEntries.head.value)

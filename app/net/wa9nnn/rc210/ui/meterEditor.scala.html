@@ -5,9 +5,9 @@
 @import views.html.input.selectOptions
 @import net.wa9nnn.rc210.NamedKey
 
-@import net.wa9nnn.rc210.FieldKey
-@import net.wa9nnn.rc210.KeyKind
-@(f: Form[MeterNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+@import net.wa9nnn.rc210.Key
+@import net.wa9nnn.rc210.KeyMetadata
+@(f: Form[MeterNode], key:Key)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 @form(action = routes.EditController.save()) {
     @keysAndName(fieldKey)
     <div class="col-">

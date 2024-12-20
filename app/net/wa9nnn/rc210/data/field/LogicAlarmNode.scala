@@ -28,7 +28,7 @@ import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.*
 import net.wa9nnn.rc210.ui.nav.CheckBoxCell
-import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
+import net.wa9nnn.rc210.{Key, KeyMetadata}
 import play.api.data.Forms.*
 import play.api.data.*
 import play.api.i18n.MessagesProvider
@@ -37,10 +37,11 @@ import play.api.mvc.*
 import play.twirl.api.Html
 import views.html.{courtesyToneEdit, fieldIndex, logicAlarmEditor}
 
-case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, lowMacro: Key, highMacro: Key) extends FieldValueComplex(lowMacro, highMacro) {
-  key.check(KeyKind.LogicAlarm)
-  lowMacro.check(KeyKind.Macro)
-  highMacro.check(KeyKind.Macro)
+case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, 
+                          lowMacro: Key, highMacro: Key) extends FieldValueComplex[LogicAlarmNode](lowMacro, highMacro) {
+  key.check(KeyMetadata.LogicAlarm)
+  lowMacro.check(KeyMetadata.Macro)
+  highMacro.check(KeyMetadata.Macro)
 
   private val tt = Seq(
     "Enabled" -> Display(enabled),
@@ -48,8 +49,8 @@ case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, 
     "High" -> highMacro,
   ).map(Row(_))
 
-  override def tableSection(fieldKey: FieldKey): TableSection =
-    TableSectionButtons(fieldKey,
+  override def tableSection(key: Key): TableSection =
+    TableSectionButtons(key,
       Row("Low" -> lowMacro),
       Row("High" -> highMacro)
     )
@@ -66,7 +67,7 @@ case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, 
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = Seq {
+  override def toCommands(fieldEntry: TemplateSource): Seq[String] = Seq {
     "todo"
   }
 
@@ -81,8 +82,8 @@ case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, 
   )
 }
 
-object LogicAlarmNode extends FieldDefinitionComplex[LogicAlarmNode]:
-  override val keyKind: KeyKind = KeyKind.LogicAlarm
+object LogicAlarmNode extends FieldDefComplex[LogicAlarmNode]:
+  override val keyKind: KeyMetadata = KeyMetadata.LogicAlarm
 
   def unapply(u: LogicAlarmNode): Option[(Key, Boolean, Key, Key)] = Some((u.key, u.enabled, u.lowMacro, u.highMacro))
 
@@ -102,28 +103,26 @@ object LogicAlarmNode extends FieldDefinitionComplex[LogicAlarmNode]:
    */
   override def extract(memory: Memory): Seq[FieldEntry] = {
     val enables = memory.sub8(169, 5).map(_ != 0)
-    val lowMacros: Seq[Key] = memory.sub8(174, 5).map(n => Key(KeyKind.Macro, n + 1))
-    val highMacros: Seq[Key] = memory.sub8(179, 5).map(n => Key(KeyKind.Macro, n + 1))
+    val lowMacros: Seq[Key] = memory.sub8(174, 5).map(n => Key(KeyMetadata.Macro, n + 1))
+    val highMacros: Seq[Key] = memory.sub8(179, 5).map(n => Key(KeyMetadata.Macro, n + 1))
     //    SimpleField(169, "Enable", logicAlarmKey, "1n91b", FieldBoolean)
     //    SimpleField(174, "Macro Low", logicAlarmKey, "1*2101nv", MacroSelectField)
     //    SimpleField(179, "Macro High", logicAlarmKey, "1*2102nv", MacroSelectField)
 
     for
     {
-      i <- 0 until KeyKind.LogicAlarm.maxN
+      i <- 0 until KeyMetadata.LogicAlarm.maxN
     } yield
     {
-      val logicAlarmKey = Key(KeyKind.LogicAlarm, i + 1)
+      val logicAlarmKey = Key(KeyMetadata.LogicAlarm, i + 1)
       val logicAlarmNode: LogicAlarmNode = new LogicAlarmNode(logicAlarmKey, enables(i), lowMacros(i), highMacros(i))
       FieldEntry(this, logicAlarmNode.fieldKey, logicAlarmNode)
     }
   }
 
-  override def parse(jsValue: JsValue): LogicAlarmNode = jsValue.as[LogicAlarmNode]
-
   override def positions: Seq[FieldOffset] = Seq()
 
-  implicit val fmtLogicAlarm: OFormat[LogicAlarmNode] = Json.format[LogicAlarmNode]
+  implicit val fmt: OFormat[LogicAlarmNode] = Json.format[LogicAlarmNode]
 
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     val table = Table(Header(s"Logic Alarms  (${fieldEntries.length})",
@@ -145,6 +144,6 @@ object LogicAlarmNode extends FieldDefinitionComplex[LogicAlarmNode]:
   override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
     val courtesyTone = form.bindFromRequest(data).get
     Seq(
-      UpdateCandidate(courtesyTone.fieldKey, courtesyTone)
+      UpdateCandidate(candidate = courtesyTone)
     )
 

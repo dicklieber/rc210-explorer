@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Link}
-import net.wa9nnn.rc210.{FieldKey, Key, KeyKind, RcSpec}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyMetadata, RcSpec}
 import org.scalatest.prop.{TableDrivenPropertyChecks, TableFor2}
 import play.api.libs.json.Json
 
@@ -57,10 +57,10 @@ class FieldKeyTest extends RcSpec {
   "FieldKey" should {
     val clock: FieldKey = FieldKey(Key.clockKey)
 
-    val commonKey: Key = Key(KeyKind.Common)
+    val commonKey: Key = Key(KeyMetadata.Common)
     val aCommon: FieldKey = FieldKey(commonKey, "aCommonfield")
 
-    val logicAlarm: FieldKey = FieldKey(Key(KeyKind.LogicAlarm))
+    val logicAlarm: FieldKey = FieldKey(Key(KeyMetadata.LogicAlarm))
     "clock" in {
       clock.display mustBe("Clock")
     }
@@ -68,7 +68,7 @@ class FieldKeyTest extends RcSpec {
     "compare" when {
       "same" in {
         val fk1 = FieldKey(Key.portKeys.head, "f1")
-        val fk2 = FieldKey(Key(KeyKind.Port, 1), "f1")
+        val fk2 = FieldKey(Key(KeyMetadata.Port, 1), "f1")
         fk1 compareTo (fk2) mustBe (0)
       }
     }
@@ -98,7 +98,7 @@ class FieldKeyTest extends RcSpec {
         backAgain.display mustBe ("f1")
       }
       "Courtesy Tone" in {
-        val key1 = Key(KeyKind.CourtesyTone, 3)
+        val key1 = Key(KeyMetadata.CourtesyTone, 3)
         val fieldKey = FieldKey(key1)
         val id = fieldKey.id
         id mustBe ("$Courtesy Tone3$")

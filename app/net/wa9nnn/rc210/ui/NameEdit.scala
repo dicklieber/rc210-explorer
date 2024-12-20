@@ -27,7 +27,7 @@ object NameEdit:
 
     val r: Elem =
       <div>
-        {namedKey.key.rc210Value}: Name:<input name={id} value={key.name}></input>
+        {namedKey.key.rc210Number}: Name:<input name={id} value={namedKey.name}></input>
       </div>
     val s = r.toString
     Html(s)

@@ -1,7 +1,7 @@
 package views.html
 
-import net.wa9nnn.rc210.KeyKind
-import net.wa9nnn.rc210.KeyKind.Port.tabKind
+import net.wa9nnn.rc210.KeyMetadata
+import net.wa9nnn.rc210.KeyMetadata.Port.tabKind
 import net.wa9nnn.rc210.ui.{Tab, Tabs}
 import net.wa9nnn.rc210.ui.nav.TabKind
 import play.twirl.api.Html

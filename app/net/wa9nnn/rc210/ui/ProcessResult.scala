@@ -29,7 +29,7 @@ import scala.collection.immutable
  * Helpers that extract [[NamedKey]]s from a form request.
  */
 object ProcessResult {
-  def apply(fieldValue: FieldValueComplex)(using request: Request[AnyContent]): CandidateAndNames =
+  def apply(fieldValue: FieldValueComplex[?])(using request: Request[AnyContent]): CandidateAndNames =
     val data: Map[String, String] = request
       .body
       .asFormUrlEncoded
@@ -40,7 +40,7 @@ object ProcessResult {
 
     val namedKeys: Option[NamedKey] = data.get("name").map(name => NamedKey(key, name))
 
-    val updateCandidate = UpdateCandidate(fieldValue.fieldKey, fieldValue)
+    val updateCandidate = UpdateCandidate(candidate = fieldValue)
 
     CandidateAndNames(updateCandidate, namedKeys)
 

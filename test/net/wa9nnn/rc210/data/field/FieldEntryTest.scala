@@ -18,7 +18,7 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.KeyKind.Common
+import net.wa9nnn.rc210.KeyMetadata.Common
 import net.wa9nnn.rc210.data.field
 import net.wa9nnn.rc210.{Key, WithMemory}
 

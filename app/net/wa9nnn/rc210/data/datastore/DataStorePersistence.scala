@@ -22,7 +22,7 @@ import com.google.inject.ImplementedBy
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.EditHandler
-import net.wa9nnn.rc210.{FieldKey, KeyKind, NamedKey}
+import net.wa9nnn.rc210.{Key, KeyMetadata, NamedKey}
 import net.wa9nnn.rc210.data.field.{FieldData, FieldEntry}
 import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.util.Configs
@@ -52,22 +52,21 @@ class DataStorePersistence() extends DataStoreEngine with LazyLogging:
     val jsValue = Json.parse(sJson)
     val jsArray: JsArray = jsValue.as[JsArray]
     jsArray.value.foreach { (obj: JsValue) =>
-      val value: JsLookupResult = obj \ "fieldKey"
-      println(value)
-      val str = value.as[String]
-      val fieldKey: FieldKey = FieldKey.fromId(str)
+      val value: JsLookupResult = obj \ "key"
+      val id = value.as[String]
+      val fieldKey: Key = Key.fromId(id)
 
-      fieldDefinition(fieldKey).foreach{fieldDefinition =>
-//        fieldDefinition.
+      fieldDefinition(fieldKey).foreach { fieldDefinition =>
+        //        fieldDefinition.
       }
 
-      val keyKind: KeyKind = fieldKey.key.keyKind
+      val keyKind: KeyMetadata = fieldKey.key.keyKind
       val handler: EditHandler = keyKind.handler
       //todo
+
+      //    val datas: Seq[FieldData] = jsValue.as[Seq[FieldData]]
+      //    set(datas)
+
     }
-//    val datas: Seq[FieldData] = jsValue.as[Seq[FieldData]]
-//    set(datas)
-  
-  
   
 

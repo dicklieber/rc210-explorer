@@ -19,32 +19,25 @@ package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, TableSection}
 import controllers.routes
-import net.wa9nnn.rc210.FieldKey
+import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.ui.{FormField, TableSectionButtons}
 import net.wa9nnn.rc210.util.{FieldSelect, SelectOption}
 import play.api.libs.json.{JsValue, Json}
 
-/**
- * An enumeration with behaviour.
- *
- * @param value    one of the display values in DayOfWeek.options.
- */
+
 case class TimeoutTimerResetPoint(value: TotReset = TotReset.values.head) extends FieldValueSimple() {
   override def displayCell: Cell = Cell(value)
 
-  def toCommands(fieldEntry: FieldEntryBase): Seq[String] =
+  def toCommands(fieldEntry: TemplateSource): Seq[String] =
     Seq(s"*2122${value.rc210Value}")
 
   override def update(formFieldValue: String): TimeoutTimerResetPoint = {
     TimeoutTimerResetPoint(TotReset.withName(formFieldValue))
   }
 
-  override def toEditCell(fieldKey: FieldKey): Cell = FormField(fieldKey, value)
 
-  override def toJsValue: JsValue = Json.toJson(value)
-
-  override def tableSection(fieldKey: FieldKey): TableSection =
-    TableSectionButtons(fieldKey,
+  override def tableSection(key: Key): TableSection =
+    TableSectionButtons(key,
       Row("TotReset" -> value)
     )
 
@@ -54,17 +47,13 @@ case class TimeoutTimerResetPoint(value: TotReset = TotReset.values.head) extend
   )
 }
 
-object TimeoutTimerResetPoint extends SimpleExtractor {
+object TimeoutTimerResetPoint extends SimpleExtractor :
 
   def apply(id: Int): TimeoutTimerResetPoint = {
     new TimeoutTimerResetPoint(TotReset.find(id))
   }
 
-  override def extractFromInts(itr: Iterator[Int], field: FieldDefinitionSimple): TimeoutTimerResetPoint = {
+  override def extractFromInts(itr: Iterator[Int], field: FieldDefSimple): TimeoutTimerResetPoint = {
     val id = itr.next()
     apply(id)
   }
-
-  override def parse(jsValue: JsValue): FieldValue = new TimeoutTimerResetPoint(jsValue.as[TotReset])
-
-}

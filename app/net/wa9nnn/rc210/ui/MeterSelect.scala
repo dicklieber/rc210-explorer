@@ -17,6 +17,6 @@
 
 package net.wa9nnn.rc210.ui
 
-import net.wa9nnn.rc210.KeyKind.Meter
+import net.wa9nnn.rc210.KeyMetadata.Meter
 
 object MeterSelect extends KeySelect(Meter)

@@ -17,6 +17,6 @@
 
 package net.wa9nnn.rc210.ui
 
-import net.wa9nnn.rc210.KeyKind.Macro
+import net.wa9nnn.rc210.KeyMetadata.Macro
 
 object MacroSelect extends KeySelect(Macro)

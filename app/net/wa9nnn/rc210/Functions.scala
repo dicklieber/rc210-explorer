@@ -26,7 +26,7 @@ object Functions extends LazyLogging:
    * @return the [[FunctionNode]]
    */
   def maybeFunctionNode(fkey: Key): Option[FunctionNode] =
-    fkey.check(KeyKind.Function)
+    fkey.check(KeyMetadata.Function)
     map.get(fkey)
 
   def description(fKey: Key): String =

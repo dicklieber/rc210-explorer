@@ -4,12 +4,12 @@
 @import net.wa9nnn.rc210.ui.MacroSelect
 @import net.wa9nnn.rc210.data.timers.TimerNode
 @import net.wa9nnn.rc210.NamedKey
-@import net.wa9nnn.rc210.FieldKey
-@import net.wa9nnn.rc210.KeyKind
-@(f: Form[TimerNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+@import net.wa9nnn.rc210.Key
+@import net.wa9nnn.rc210.KeyMetadata
+@(f: Form[TimerNode], key: Key)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
     @form(routes.EditController.save()) {
-        @keysAndName(fieldKey)
+        @keysAndName(key)
         <table>
             <thead>
                 <tr>

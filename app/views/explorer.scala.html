@@ -1,15 +1,15 @@
 @import com.wa9nnn.wa9nnnutil.tableui.Table
 @import com.wa9nnn.wa9nnnutil.tableui.html.renderTable
-@import net.wa9nnn.rc210.{FieldKey, Key, KeyKind, preferences}
+@import net.wa9nnn.rc210.{FieldKey, Key, KeyMetadata, preferences}
 @import net.wa9nnn.rc210.ui.{FormField, Tab}
 @import net.wa9nnn.rc210.ui.nav.TabKind.Settings
 @import views.html.helper.*
-@(table: Table, keyKind: KeyKind)
+@(table: Table, keyKind: KeyMetadata)
 @form(action = routes.DataStoreExplorerController.filtered()) {
     <div class="filter">
         <label for="filterSelect">Filter by: </label>
         <select name="filterKeyKind" id="filterSelect" onchange="this.form.submit()" >
-        @for(choice <- KeyKind.values.sorted.filterNot(_ == KeyKind.Function)) {
+        @for(choice <- KeyMetadata.values.sorted.filterNot(_ == KeyMetadata.Function)) {
             <option
             @if(keyKind == choice) { selected }>@choice.entryName </option>
         }

@@ -19,7 +19,7 @@ package controllers
 
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.datastore.MemoryFileLoader
-import net.wa9nnn.rc210.data.field.{FieldDefinition, FieldDefinitions, FieldOffset}
+import net.wa9nnn.rc210.data.field.{FieldDef, FieldDefinitions, FieldOffset}
 import net.wa9nnn.rc210.ui.TabE.Memory
 import net.wa9nnn.rc210.ui.{TabE, Tabs}
 import play.api.mvc.*
@@ -35,7 +35,7 @@ class MemoryController @Inject()(memoryFileLoader: MemoryFileLoader, fieldDefini
 
   private lazy val offsetToField: Map[Int, Seq[Cell]] =
     (for {
-      fd: FieldDefinition <- fieldDefinitions.allFields
+      fd: FieldDef[?] <- fieldDefinitions.allFields
       position: FieldOffset <- fd.positions
     } yield {
       val extraCells: Seq[Cell] = Seq(

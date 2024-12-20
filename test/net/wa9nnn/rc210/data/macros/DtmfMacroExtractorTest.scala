@@ -19,7 +19,7 @@
 package net.wa9nnn.rc210.data.macros
 
 import net.wa9nnn.rc210.data.Dtmf.Dtmf
-import net.wa9nnn.rc210.{Key, KeyKind, RcSpec, WithMemory}
+import net.wa9nnn.rc210.{Key, KeyMetadata, RcSpec, WithMemory}
 
 class DtmfMacroExtractorTest extends WithMemory {
 
@@ -28,7 +28,7 @@ class DtmfMacroExtractorTest extends WithMemory {
       "apply" in
         {
           val dtmfMacros = DtmfMacroExtractor.apply(memory)
-          val macro1 = Key(KeyKind.Macro, 1)
+          val macro1 = Key(KeyMetadata.Macro, 1)
           val maybeDtmf: Option[Dtmf] = dtmfMacros.apply(macro1)
           maybeDtmf.value.toString mustBe "10901"
         }

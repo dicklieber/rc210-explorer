@@ -47,12 +47,12 @@ class EditController @Inject()(navMain: NavMain)
                                components: ControllerComponents)
   extends NavMainController(components) with LazyLogging {
   /**
-   * A landing page for all data associated with a [[KeyKind]].
+   * A landing page for all data associated with a [[KeyMetadata]].
    *
-   * @param keyKind present all vales for this [[KeyKind]].
+   * @param keyKind present all vales for this [[KeyMetadata]].
    * @return the Http response to send back to the browser.
    */
-  def index(keyKind: KeyKind): Action[AnyContent] = Action {
+  def index(keyKind: KeyMetadata): Action[AnyContent] = Action {
     implicit request => {
       val fieldEntries: Seq[FieldEntry] = dataStore(keyKind)
       Ok(navMain(keyKind, keyKind.handler.index(fieldEntries)))
@@ -60,15 +60,15 @@ class EditController @Inject()(navMain: NavMain)
   }
 
   /**
-   * Edit data for one [[FieldKey]].
+   * Edit data for one [[Key]].
    *
-   * @param fieldKey edit this one.
+   * @param key edit this one.
    * @return the Http response to send back to the browser.
    */
-  def edit(fieldKey: FieldKey): Action[AnyContent] = Action {
+  def edit(key:Key): Action[AnyContent] = Action {
     implicit request =>
-      val entry: FieldEntry = dataStore.fieldEntry(fieldKey)
-      Ok(navMain(fieldKey.key.keyKind, fieldKey.editHandler.edit(entry)))
+      val fieldEntry: FieldEntry = dataStore.fieldEntry(key)
+      Ok(navMain(key.keyMetadata, key.keyMetadata.editHandler.edit(fieldEntry)))
   }
 
   /**

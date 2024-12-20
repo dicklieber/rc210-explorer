@@ -9,7 +9,7 @@ import play.api.i18n.MessagesProvider
 import play.api.mvc.RequestHeader
 import play.twirl.api.Html
 
-object PortsNode extends SimpleFieldNode(KeyKind.Port):
+object PortsNode extends SimpleFieldNode(KeyMetadata.Port):
 
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     val rows: Seq[Row] = fieldEntries
@@ -17,7 +17,7 @@ object PortsNode extends SimpleFieldNode(KeyKind.Port):
       .toSeq
       .sortBy(_._1)
       .map { (name, portEntries) =>
-        PortRow(name, portEntries.sortBy(_.fieldKey.key.rc210Value)).toRow
+        PortRow(name, portEntries.sortBy(_.fieldKey.key.rc210Number)).toRow
       }
 
     val colHeaders: Seq[Any] =
@@ -28,7 +28,7 @@ object PortsNode extends SimpleFieldNode(KeyKind.Port):
 
     val header = Header.singleRow(colHeaders: _*)
     val namesRow: Row = Row(Key.portKeys.map { key =>
-      val fieldKey = FieldKey(key, NamedKey.fieldName)
+      val fieldKey = PortFieldKey(key, NamedKey.fieldName)
       FormField(fieldKey, key.name)
     }.prepended(Cell("Name")))
     val table = Table(

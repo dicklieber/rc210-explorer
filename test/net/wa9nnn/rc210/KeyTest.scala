@@ -20,7 +20,7 @@ package net.wa9nnn.rc210
 import play.api.libs.json.{Format, Json}
 
 class KeyTest extends WithMemory {
-  val macroKey3 = Key(KeyKind.Macro, 3)
+  val macroKey3 = Key(KeyMetadata.Macro, 3)
   "Happy" in {
     macroKey3.toString mustBe ("Macro3")
   }
@@ -41,12 +41,12 @@ class KeyTest extends WithMemory {
   }
   "throw if too big a number" in {
     assertThrows[AssertionError] { // Result type: Assertion
-      Key(KeyKind.Meter, 42)
+      Key(KeyMetadata.Meter, 42)
     }
   }
   "macroKeys" in {
     val keys = Key.macroKeys
-    keys must have length KeyKind.Macro.maxN
+    keys must have length KeyMetadata.Macro.maxN
   }
 }
 

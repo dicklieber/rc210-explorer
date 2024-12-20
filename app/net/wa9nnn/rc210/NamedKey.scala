@@ -30,18 +30,13 @@ case class NamedKey(key: Key, name: String) extends Ordered[NamedKey] with RowSo
     )
   }
 
-  val fieldKey: FieldKey = FieldKey(key, fieldName)
-
-  override def toString: String =
-    s"${key.rc210Value}: $key."
-
-object NamedKey:
+object NamedKey {
   val fieldName = "keyName"
   implicit val fmtNamedKey: Format[NamedKey] = Json.format[NamedKey]
+  
+}
 
-
-
-trait NamedKeySource :
+trait NamedKeySource {
 
   def nameForKey(key: Key): String
 
@@ -49,6 +44,6 @@ trait NamedKeySource :
     NamedKey(key, nameForKey(key))
 
   def namedKeys: Seq[NamedKey]
-
+}
 
 

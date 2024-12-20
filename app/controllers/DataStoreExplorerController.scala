@@ -19,7 +19,7 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
-import net.wa9nnn.rc210.KeyKind
+import net.wa9nnn.rc210.KeyMetadata
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.ui.{ButtonCell, TabE}
@@ -44,7 +44,7 @@ class DataStoreExplorerController @Inject()(dataStore: DataStore, navMain: NavMa
 
       val data: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
       val value: String = data("filterKeyKind").head
-      val keyKind = KeyKind.withName(value)
+      val keyKind = KeyMetadata.withName(value)
       val fieldEntries = dataStore(keyKind)
       val table: Table = buildTable(fieldEntries)
       val html = explorer(table, keyKind)
@@ -53,22 +53,22 @@ class DataStoreExplorerController @Inject()(dataStore: DataStore, navMain: NavMa
 
   def index: Action[AnyContent] = Action {
     val table = buildTable(dataStore.all)
-    val html = explorer(table, KeyKind.All)
+    val html = explorer(table, KeyMetadata.All)
     Ok(navMain(TabE.Explore, html))
   }
 
   private def buildTable(fieldEntries: Seq[FieldEntry]): Table = {
     val rows: Seq[Row] = fieldEntries
-      .sortBy(_.fieldKey.display)
+      .sorted
       .map { fieldEntry =>
-        val fieldKey = fieldEntry.fieldKey
+        val key = fieldEntry.key
         val fieldData = fieldEntry.fieldData
         Row(
-          ButtonCell.editUploadFlow(fieldKey),
-          Cell(fieldKey.display)
-            .withToolTip(fieldKey.toString),
+          ButtonCell.editUploadFlow(key),
+          Cell(key.display)
+            .withToolTip(key.toString),
           fieldData.fieldValue.displayCell,
-          ButtonCell.uploadRollback(fieldKey),
+          ButtonCell.uploadRollback(key),
           fieldData.candidate.map(_.displayCell).getOrElse("-")
         )
       }
@@ -78,7 +78,7 @@ class DataStoreExplorerController @Inject()(dataStore: DataStore, navMain: NavMa
       Seq(
         ButtonCell.upload(false)
         .withRowSpan(2),
-        Cell("FieldKey").withRowSpan(2),
+        Cell("Field").withRowSpan(2),
         Cell("Value").withRowSpan(2),
         Cell("Candidate")
           .withColSpan(2)

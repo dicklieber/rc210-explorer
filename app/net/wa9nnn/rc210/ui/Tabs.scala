@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.ui
 
 import controllers.routes
-import net.wa9nnn.rc210.KeyKind
+import net.wa9nnn.rc210.KeyMetadata
 import net.wa9nnn.rc210.serial.{SendField, UploadRequest}
 import net.wa9nnn.rc210.ui.nav.TabKind
 import net.wa9nnn.rc210.ui.nav.TabKind.*
@@ -26,7 +26,7 @@ import org.apache.pekko.actor.typed.SupervisorStrategy.restart
 
 /**
  * A [[Tab]] is something shown in the left side navigation menu. 
- * Tab instances are either a [[KeyKind]] that is a member of a [[Key]] or a [[TabE]] which is
+ * Tab instances are either a [[KeyMetadata]] that is a member of a [[Key]] or a [[TabE]] which is
  * an enum of individually defined [[Tabs]].
  */
 trait Tab:
@@ -62,9 +62,9 @@ enum TabE(override val entryName: String,
 object Tabs:
 
   val tabs: Seq[Tab] =
-    KeyKind
+    KeyMetadata
       .values
-      .filter(_.includeInNav)
+      .filter(_.includeInNavTab)
       .appendedAll(TabE.values)
       .sortBy(_.entryName)
 

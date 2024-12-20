@@ -1,11 +1,11 @@
 package net.wa9nnn.rc210
 
-class KeyKindTest extends RcSpec:
+class KeyMetadataTest extends RcSpec:
 
   "KeyKindTest" when {
     "enumeratum.EnumEntry.CapitalWords" should {
       "withName" should {
-        val meterAlarm = KeyKind.MeterAlarm
+        val meterAlarm = KeyMetadata.MeterAlarm
         "entryName" in {
           meterAlarm.entryName mustBe ("Meter Alarm")
         }

@@ -4,12 +4,12 @@
 @import net.wa9nnn.rc210.ui.{MacroSelect, MeterSelect, Tabs}
 @import views.html.helper.*
 @import views.html.input.selectOptions
-@import net.wa9nnn.rc210.FieldKey
-@import net.wa9nnn.rc210.KeyKind
-@(meterAlarm: Form[MeterAlarmNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+@import net.wa9nnn.rc210.Key
+@import net.wa9nnn.rc210.KeyMetadata
+@(meterAlarm: Form[MeterAlarmNode], key:Key)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
 @form(routes.EditController.save()) {
-    @keysAndName(fieldKey)
+    @keysAndName(key)
     <div class="col-">
         <table class="table table-bordered table-sm  w-auto rc210-table">
             <thead>

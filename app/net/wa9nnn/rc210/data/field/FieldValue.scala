@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, RowSource, TableSection}
-import net.wa9nnn.rc210.{FieldKey, Key}
+import net.wa9nnn.rc210.Key
 import play.api.libs.json.{Format, JsResult, JsValue}
 
 /**
@@ -43,34 +43,18 @@ sealed trait FieldValue extends LazyLogging with RowSource:
   def canRunAny: Boolean =
     runableMacros.nonEmpty
 
-  def tableSection(fieldKey: FieldKey): TableSection =
+  def tableSection(key: Key): TableSection =
     throw new NotImplementedError() //todo
 
   /**
    * Render this value as an RC-210 command string.
    */
-  def toCommands(fieldEntry: FieldEntryBase): Seq[String]
+  def toCommands(fieldEntry: TemplateSource): Seq[String]
 
   /**
    * Read only HTML display
    */
   def displayCell: Cell
-
-  /**
-   * A form input field
-   *
-   * @param fieldKey
-   */
-  def toEditCell(fieldKey: FieldKey): Cell =
-    throw new NotImplementedError() //todo
-
-  /**
-   *
-   * @param formFieldValue candidate from an HTML form.
-   */
-  def update(formFieldValue: String): FieldValueSimple
-
-  def toJsValue: JsValue
 
 object FieldValue:
   implicit val fmt: Format[FieldValue] = new Format[FieldValue] {
@@ -86,14 +70,13 @@ object FieldValue:
  */
 trait FieldValueSimple(val runableMacros: Key*) extends FieldValue
 
-trait FieldValueComplex(val runableMacros: Key*) extends FieldValue with LazyLogging:
+trait FieldValueComplex[T <: FieldValueComplex[?]](val runableMacros: Key*) extends FieldValue with LazyLogging:
   override def update(formFieldValue: String): FieldValueSimple =
     throw new NotImplementedError("Not needed for a ComplexFieldValue!")
 
   val key: Key
 
-  lazy val fieldKey: FieldKey = FieldKey(key)
-
+  
 
 
 

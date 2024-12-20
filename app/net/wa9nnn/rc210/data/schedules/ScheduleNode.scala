@@ -7,7 +7,7 @@ import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.schedules.ScheduleNode.s02
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.{ButtonCell, TableSectionButtons}
-import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyMetadata}
 import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.i18n.MessagesProvider
@@ -31,7 +31,7 @@ case class ScheduleNode(override val key: Key,
                         monthOfYear: MonthOfYearSchedule = MonthOfYearSchedule.Every,
                         hour: Hour = Hour.Every,
                         minute: Int = 0,
-                        macroKey: Key = Key(KeyKind.Macro, 1)) extends FieldValueComplex(macroKey):
+                        macroKey: Key = Key(KeyMetadata.Macro, 1)) extends FieldValueComplex(macroKey):
 
   override def toRow: Row = {
     Row(
@@ -59,13 +59,13 @@ case class ScheduleNode(override val key: Key,
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
-    val setPoint: String = key.rc210Value.toString
+  override def toCommands(fieldEntry: TemplateSource): Seq[String] = {
+    val setPoint: String = key.rc210Number.toString
     val sDow: String = dayOfWeek.rc210Value.toString
     val moy: String = s02(monthOfYear.rc210Value)
     val hours: String = s02(hour.rc210Value)
     val minutes: String = s02(minute)
-    val sMacro = s02(macroKey.rc210Value)
+    val sMacro = s02(macroKey.rc210Number)
 
     val dowDigits = WeekInMonth.translate(weekInMonth, dayOfWeek)
     //todo
@@ -75,8 +75,8 @@ case class ScheduleNode(override val key: Key,
     //1 * 4 0 0 1 3 9 * 5 6 * 0 0 * 9 9 * 0 0 * 9 0
   }
 
-  override def tableSection(fieldKey: FieldKey): TableSection =
-    TableSectionButtons(fieldKey, rows: _*)
+  override def tableSection(key: Key): TableSection =
+    TableSectionButtons(key, rows: _*)
 
   override def displayCell: Cell =
     KvTable.inACell(
@@ -85,8 +85,8 @@ case class ScheduleNode(override val key: Key,
 
   override def toJsValue: JsValue = Json.toJson(this)
 
-object ScheduleNode extends LazyLogging with FieldDefinitionComplex[ScheduleNode]:
-  override val keyKind: KeyKind = KeyKind.Schedule
+object ScheduleNode extends LazyLogging with FieldDefComplex[ScheduleNode]:
+  override val keyKind: KeyMetadata = KeyMetadata.Schedule
 
   def unapply(schedule: ScheduleNode): Option[(Key, DayOfWeek, WeekInMonth, MonthOfYearSchedule, Hour, Int, Key)] =
     Some(schedule.key, schedule.dayOfWeek, schedule.weekInMonth, schedule.monthOfYear, schedule.hour, schedule.minute, schedule.macroKey)
@@ -109,7 +109,7 @@ object ScheduleNode extends LazyLogging with FieldDefinitionComplex[ScheduleNode
   def s02(n: Int): String = f"$n%02d"
 
   def empty(setPoint: Int): ScheduleNode = {
-    val scheduleKey: Key = Key(KeyKind.Schedule, setPoint)
+    val scheduleKey: Key = Key(KeyMetadata.Schedule, setPoint)
     new ScheduleNode(
       key = scheduleKey
     )
@@ -136,17 +136,10 @@ object ScheduleNode extends LazyLogging with FieldDefinitionComplex[ScheduleNode
     }
   }
 
-  def apply(setPoint: Int): ScheduleNode = new ScheduleNode(Key(KeyKind.Schedule, setPoint))
+  def apply(setPoint: Int): ScheduleNode = new ScheduleNode(Key(KeyMetadata.Schedule, setPoint))
 
-  implicit val fmtSchedule: Format[ScheduleNode] = Json.format[ScheduleNode]
-
-  override def parse(jsValue: JsValue): FieldValue = jsValue.as[ScheduleNode]
-
-  //  override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-  //    schedules(fieldEntries.map(_.value[ScheduleNode]))
-  //
-  //    fieldEntries.map(_.value.toRow)
-
+  implicit val fmt: Format[ScheduleNode] = Json.format[ScheduleNode]
+  
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     val table = Table(Header(s"Schedules  (${fieldEntries.length})",
       "",
@@ -166,10 +159,9 @@ object ScheduleNode extends LazyLogging with FieldDefinitionComplex[ScheduleNode
     val value = form.fill(fieldEntry.value)
     scheduleEdit(value, fieldEntry.fieldKey)
 
-  override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] = {
+  override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] = 
     val value = form.bindFromRequest(data)
     bind(value.get)
-  }
 
 
 

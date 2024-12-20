@@ -18,7 +18,7 @@
 
 package net.wa9nnn.rc210.data.datastore
 
-import net.wa9nnn.rc210.{FieldKey, Key}
+import net.wa9nnn.rc210.{Key, KeyMetadata}
 import net.wa9nnn.rc210.data.field.FieldEntry
 
 /**
@@ -28,12 +28,12 @@ import net.wa9nnn.rc210.data.field.FieldEntry
  * Note that persistence is not handled by this trait.
  */
 trait DataStoreApi:
-  def fieldEntry(fieldKey: FieldKey): FieldEntry
-  def fieldEntry(key: Key): Seq[FieldEntry]
+  def fieldEntry(Key: Key): FieldEntry
+  def fieldEntry(key: KeyMetadata): Seq[FieldEntry]
   def candidates: Iterable[FieldEntry]
   def triggerNodes(macroKey: Key): Seq[FieldEntry]
   def update(candidateAndNames: CandidateAndNames): Unit
-  def acceptCandidate(fieldKey: FieldKey): Unit
+  def acceptCandidate(Key: Key): Unit
   def rollback(): Unit
-  def rollback(fieldKey: FieldKey): Unit
+  def rollback(Key: Key): Unit
   def flowData(search: Key): Option[FlowData]

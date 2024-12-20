@@ -18,7 +18,6 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row}
-import net.wa9nnn.rc210.FieldKey
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.*
@@ -31,7 +30,7 @@ case class FieldInt(value: Int) extends FieldValueSimple():
 
   override def toEditCell(fieldKey: FieldKey): Cell = FormField(fieldKey, value)
 
-  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = 
+  override def toCommands(fieldEntry: TemplateSource): Seq[String] = 
     val fieldKey = fieldEntry.fieldKey
 
     Seq(
@@ -49,7 +48,7 @@ case class FieldInt(value: Int) extends FieldValueSimple():
 
 object FieldInt extends SimpleExtractor:
 
-  override def extractFromInts(itr: Iterator[Int], field: FieldDefinitionSimple): FieldInt = {
+  override def extractFromInts(itr: Iterator[Int], field: FieldDefSimple): FieldInt = {
     new FieldInt(if (field.max > 256)
       itr.next() + itr.next() * 256
     else
@@ -62,6 +61,4 @@ object FieldInt extends SimpleExtractor:
 
     override def writes(o: FieldInt): JsValue = Json.toJson(o.value)
   }
-
-  override def parse(jsValue: JsValue): FieldValue = new FieldInt(jsValue.as[Int])
 

@@ -24,7 +24,7 @@ import net.wa9nnn.rc210.data.meter.MeterAlarmNode.bind
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.ButtonCell
 import net.wa9nnn.rc210.ui.html.meterEditor
-import net.wa9nnn.rc210.{Key, KeyKind}
+import net.wa9nnn.rc210.{Key, KeyMetadata}
 import play.api.data.Forms.*
 import play.api.data.{Form, Mapping}
 import play.api.i18n.MessagesProvider
@@ -55,8 +55,8 @@ case class MeterNode(key: Key, meterFaceName: MeterFaceName, low: VoltToReading,
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
-    val c = key.rc210Value.toString
+  override def toCommands(fieldEntry: TemplateSource): Seq[String] = {
+    val c = key.rc210Number.toString
     val m = meterFaceName.toString
     val x1 = low.hundredthVolt
     val y1 = low.reading
@@ -84,8 +84,8 @@ case class MeterNode(key: Key, meterFaceName: MeterFaceName, low: VoltToReading,
     high.reading,
   )
 
-object MeterNode extends FieldDefinitionComplex[MeterNode]:
-  val keyKind = KeyKind.Meter
+object MeterNode extends FieldDefComplex[MeterNode]:
+  val keyKind = KeyMetadata.Meter
 
   def unapply(u: MeterNode): Option[(Key, MeterFaceName, VoltToReading, VoltToReading)] = Some((u.key, u.meterFaceName, u.low, u.high))
 
@@ -99,7 +99,7 @@ object MeterNode extends FieldDefinitionComplex[MeterNode]:
 
   def extract(memory: Memory): Seq[FieldEntry] = {
     val mai = new AtomicInteger()
-    val nMeters = KeyKind.Meter.maxN
+    val nMeters = KeyMetadata.Meter.maxN
     val faceInts = memory.sub8(186, nMeters)
     val faceNames: Seq[MeterFaceName] = faceInts.map(i => MeterFaceName.find(i))
     val lowX: Seq[Int] = memory.iterator16At(202).take(nMeters).toSeq
@@ -110,16 +110,14 @@ object MeterNode extends FieldDefinitionComplex[MeterNode]:
     val meters: Seq[FieldEntry] = for {
       i <- 0 until nMeters
     } yield {
-      val meterKey: Key = Key(KeyKind.Meter, mai.incrementAndGet())
+      val meterKey: Key = Key(KeyMetadata.Meter, mai.incrementAndGet())
       val low = VoltToReading(lowX(i), lowY(i))
       val high = VoltToReading(highX(i), highY(i))
       val meter: MeterNode = MeterNode(meterKey, faceNames(i), low, high)
-      FieldEntry(this, meter.fieldKey, meter)
+      FieldEntry(this, meterKey, meter)
     }
     meters
   }
-
-  override def parse(jsValue: JsValue): FieldValue = jsValue.as[MeterNode]
 
   override def positions: Seq[FieldOffset] = Seq(
     FieldOffset(186, this, "meterFace"),
@@ -130,7 +128,7 @@ object MeterNode extends FieldDefinitionComplex[MeterNode]:
   )
 
   implicit val fmtVoltToReading: Format[VoltToReading] = Json.format[VoltToReading]
-  implicit val fmtMeter: Format[MeterNode] = Json.format[MeterNode]
+  implicit val fmt: Format[MeterNode] = Json.format[MeterNode]
 
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     val header = Seq(

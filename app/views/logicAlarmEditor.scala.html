@@ -5,13 +5,12 @@
 @import play.api.mvc.RequestHeader
 @import views.html.helper.{checkbox, *}
 @import net.wa9nnn.rc210.Key
-@import net.wa9nnn.rc210.FieldKey
-@import net.wa9nnn.rc210.KeyKind
-@(logicAlarmForm: Form[LogicAlarmNode], fieldKey: FieldKey)(implicit request: RequestHeader, messagesProvider: MessagesProvider) extends
+@import net.wa9nnn.rc210.KeyMetadata
+@(key:Key, logicAlarmForm: Form[LogicAlarmNode])(implicit request: RequestHeader, messagesProvider: MessagesProvider) extends
 <div class="container">
     @form(routes.EditController.save()) {
 
-        @keysAndName(fieldKey)
+        @keysAndName(key)
         <table>
             <tr>
                 <td>

@@ -18,7 +18,7 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.FieldKey
+import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.FieldData
 import net.wa9nnn.rc210.ui.nav.TabKind
@@ -70,8 +70,8 @@ class DataStoreController @Inject()(dataStore: DataStore)
     Redirect(routes.NavigationController.selectTabKind(TabKind.Fields))
   }
 
-  def rollbackOne(fieldKey: FieldKey): Action[AnyContent] = Action {
-    dataStore.rollback(fieldKey)
+  def rollbackOne(key:Key): Action[AnyContent] = Action {
+    dataStore.rollback(key)
     Redirect(routes.DataStoreExplorerController.index)
   }
 }

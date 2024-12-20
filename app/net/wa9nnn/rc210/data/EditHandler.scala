@@ -4,20 +4,19 @@ import com.wa9nnn.wa9nnnutil.tableui.Cell
 import controllers.routes
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.{FieldValueComplex, FieldEntry}
-import net.wa9nnn.rc210.{FieldKey, KeyKind}
+import net.wa9nnn.rc210.{Key, KeyMetadata}
 import play.api.i18n.MessagesProvider
 import play.api.mvc.{RequestHeader, Result, Results}
 import play.twirl.api.Html
 
 /**
- * Defines the behavior for a specific [[KeyKind]].
+ * Defines the behavior for a specific [[KeyMetadata]].
  */
 trait EditHandler:
 
-  val keyKind: KeyKind
-
   /**
-   * The landing page for a [[KeyKind]]. This may have the edit behavior from some [[KeyKind]]s.
+   * The landing page for a [[KeyMetadata]]. This may have the edit behavior from some [[KeyMetadata]]s.
+   *
    * @param fieldEntries from [[net.wa9nnn.rc210.data.datastore.DataStore]].
    * @return
    */
@@ -31,22 +30,19 @@ trait EditHandler:
    */
   def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html
 
-  def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate]=
-    throw new NotImplementedError() 
-  
-  
+  def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
+    throw new NotImplementedError()
 
-  def bind(in: FieldValueComplex): Seq[UpdateCandidate] =
+  def bind(in: FieldValueComplex[?]): Seq[UpdateCandidate] =
     Seq(
-      UpdateCandidate(in.fieldKey, in)
+      UpdateCandidate(candidate = in)
     )
 
-  def bind(in: String, fieldKey: FieldKey): Seq[UpdateCandidate] =
+  def bind(in: String, key: Key): Seq[UpdateCandidate] =
     Seq(
-      UpdateCandidate(fieldKey, in)
+      UpdateCandidate(candidate = in)
     )
 
-  
   // todo May not need this in EditHandler if default is always used.
   def saveOp(): Result =
     Results.Redirect(routes.EditController.index(keyKind))
@@ -56,19 +52,20 @@ trait EditHandler:
  */
 object EditHandler:
   def str(name: String)(implicit data: Map[String, Seq[String]]): Option[String] =
-    for {
+    for
+    {
       s: Seq[String] <- data.get(name)
       h <- s.headOption
-    } yield {
+    } yield
+    {
       h
     }
 
-  def fieldKey(using data: Map[String, Seq[String]]): Option[FieldKey] = {
-    val fieldKeyName: Option[String] = str(FieldKey.fieldKeyName)
+  def fieldKey(using data: Map[String, Seq[String]]): Option[Key] = {
+    val fieldKeyName: Option[String] = str(Key.keyName)
 
-    fieldKeyName.map {s =>
-      val fieldKey = FieldKey.fromId(s)
-      fieldKey
+    fieldKeyName.map { s =>
+      Key.fromId(s)
     }
   }
 

@@ -96,7 +96,7 @@ class MacroNodeSpec extends WithMemory {
     macroNodes should have length 90
     val fieldEntry = macroNodes(8)
     val display = fieldEntry.fieldValue.displayCell
-    fieldEntry.fieldKey.key.rc210Value should equal(9)
+    fieldEntry.fieldKey.key.rc210Number should equal(9)
     display should equal ("165 85 817 818 195")
   }
 }

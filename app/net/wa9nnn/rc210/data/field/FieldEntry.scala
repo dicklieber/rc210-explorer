@@ -18,16 +18,17 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.*
-import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
+import net.wa9nnn.rc210.{ Key, KeyMetadata}
 
 /**
- *  There is one of these for each element in the [[net.wa9nnn.rc210.data.datastore.DataStore]]
+ * There is one of these for each element in the [[net.wa9nnn.rc210.data.datastore.DataStore]]
+ *
+ * @param key             primary key for this 
  * @param fieldDefinition specific to this entry. e.g. template, name etc.
  * @param fieldData       the value. mutable
  */
-class FieldEntry(val fieldDefinition: FieldDefinition, initialValue: FieldData)
-  extends FieldEntryBase :
-  val fieldKey: FieldKey = initialValue.fieldKey
+class FieldEntry( val fieldDefinition: FieldDef[?], initialValue: FieldData):
+  val key: Key = initialValue.key
   val template: String = fieldDefinition.template
   private var _fieldData: FieldData = initialValue
   override val toString: String = _fieldData.display
@@ -50,7 +51,7 @@ class FieldEntry(val fieldDefinition: FieldDefinition, initialValue: FieldData)
     _fieldData.candidate.getOrElse(_fieldData.fieldValue).asInstanceOf[F]
 
   def tableSection: TableSection =
-    _fieldData.value.tableSection(fieldKey)
+    _fieldData.value.tableSection()
 
   def table: Table =
     //    val value1: Node = value
@@ -63,7 +64,7 @@ class FieldEntry(val fieldDefinition: FieldDefinition, initialValue: FieldData)
    * @return updated [[FieldEntry]].
    */
 
-  def setCandidate(formFieldValue: String): Unit = 
+  def setCandidate(formFieldValue: String): Unit =
     val newCandidate: FieldValueSimple = _fieldData.fieldValue.update(formFieldValue)
     _fieldData = _fieldData.setCandidate(newCandidate)
 
@@ -71,12 +72,15 @@ class FieldEntry(val fieldDefinition: FieldDefinition, initialValue: FieldData)
     throw new NotImplementedError() //todo
 
 object FieldEntry:
-  implicit val ageOrdering: Ordering[FieldEntry] = Ordering.by[FieldEntry, Key](_.fieldKey.key)
+  implicit val ordering: Ordering[FieldEntry] = Ordering.by[FieldEntry, Key](_.key)
 
-  def apply(fieldDefinition: FieldDefinition, fieldKey: FieldKey, fieldValue: FieldValue): FieldEntry =
-    new FieldEntry(fieldDefinition, FieldData(fieldKey, fieldValue))
+  def apply(fieldDefinition: FieldDef[?], key: Key, fieldValue: FieldValue): FieldEntry =
+    new FieldEntry(
+      key = key,
+      fieldDefinition = fieldDefinition,
+      initialValue = FieldData(fieldValue))
 
-  def header(keyKind: KeyKind): Header = Header(s"$keyKind", "Number", "Field",
+  def header(keyKind: KeyMetadata): Header = Header(s"$keyKind", "Number", "Field",
     Cell("Value")
       .withToolTip("Either the candidate or current value."),
     Cell("Change")

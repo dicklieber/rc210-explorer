@@ -34,39 +34,39 @@ object Binders {
     }
   }
 
-/*  implicit def fieldKeyPathBinder(implicit intBinder: PathBindable[FieldKey]): PathBindable[FieldKey] = new PathBindable[FieldKey] {
-    override def bind(key: String, fromPath: String): Either[String, FieldKey] = {
+/*  implicit def KeyPathBinder(implicit intBinder: PathBindable[Key]): PathBindable[Key] = new PathBindable[Key] {
+    override def bind(key: String, fromPath: String): Either[String, Key] = {
       try {
-        Right(FieldKey(fromPath))
+        Right(Key(fromPath))
       } catch {
         case e: Exception =>
           Left(e.getMessage)
       }
     }
 
-    override def unbind(key: String, fieldKeyStuff: FieldKey): String =
-      fieldKeyStuff.toString
+    override def unbind(key: String, KeyStuff: Key): String =
+      KeyStuff.toString
   }*/
 
 
-  implicit def fieldKeyBinder: PathBindable[FieldKey] = new PathBindable[FieldKey] {
-    override def bind(key: String, id: String): Either[String, FieldKey] =
+  implicit def KeyBinder: PathBindable[Key] = new PathBindable[Key] {
+    override def bind(key: String, id: String): Either[String, Key] =
 
       try {
-        Right(FieldKey.fromId(id))
+        Right(Key.fromId(id))
       } catch {
         case e: Exception =>
           Left(e.getMessage)
       }
 
-    override def unbind(key: String, fieldKey: FieldKey): String =
-      fieldKey.id
+    override def unbind(keyName: String, key: Key): String =
+      key.id
   }
 //  implicit def tabKeyBinder: PathBindable[TabKind] = new PathBindable[TabKind] {
 //    override def bind(key: String, value: String): Either[String, TabKind] =
 //
 //      try {
-//        Right(FieldKey(value))
+//        Right(Key(value))
 //      } catch {
 //        case e: Exception =>
 //          Left(e.getMessage)

@@ -18,13 +18,12 @@
 package net.wa9nnn.rc210.data.meter
 
 import com.wa9nnn.wa9nnnutil.tableui.*
-import net.wa9nnn.rc210.KeyKind.{Macro, Meter, MeterAlarm}
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.{ButtonCell, TableSectionButtons}
 import net.wa9nnn.rc210.ui.html.meterAlarmEditor
-import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
+import net.wa9nnn.rc210.{ Key, KeyMetadata}
 import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.i18n.MessagesProvider
@@ -35,10 +34,13 @@ import views.html.fieldIndex
 
 import java.util.concurrent.atomic.AtomicInteger
 
-case class MeterAlarmNode(val key: Key, meter: Key, alarmType: AlarmType, tripPoint: Int, macroKey: Key) extends FieldValueComplex(macroKey):
-  key.check(KeyKind.MeterAlarm)
+case class MeterAlarmNode(key: Key, 
+                          meter: Key, alarmType: AlarmType, 
+                          tripPoint: Int, //todo needs to be an enum
+                          macroKey: Key) extends FieldValueComplex[MeterAlarmNode](macroKey):
+  key.check(KeyMetadata.MeterAlarm)
   meter.check(Meter)
-  macroKey.check(KeyKind.Macro)
+  macroKey.check(KeyMetadata.Macro)
 
   private val rows: Seq[Row] = Seq(
     "Meter" -> meter.keyWithName,
@@ -55,8 +57,8 @@ case class MeterAlarmNode(val key: Key, meter: Key, alarmType: AlarmType, tripPo
     macroKey.keyWithName
   )
 
-  override def tableSection(fieldKey: FieldKey): TableSection =
-    TableSectionButtons(fieldKey, rows: _*)
+  override def tableSection(key: Key): TableSection =
+    TableSectionButtons(key, rows: _*)
 
   override def displayCell: Cell =
     KvTable.inACell(
@@ -69,18 +71,18 @@ case class MeterAlarmNode(val key: Key, meter: Key, alarmType: AlarmType, tripPo
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
+  override def toCommands(fieldEntry: TemplateSource): Seq[String] = {
     /**
      * *2066 alarm number * meterEditor number * alarmtype * trippoint * macro to run *
      * There are 8 meterEditor alarms, 1 through 8
      * Meter Number is 1 through 8 (for the ADC channels) AlarmType determines the action taken by that alarm:
      * 1 - Low Alarm 2 - High Alarm
      */
-    val aNumber = key.rc210Value
-    val mNumber = meter.rc210Value
+    val aNumber = key.rc210Number
+    val mNumber = meter.rc210Number
     val at = alarmType.rc210Value
     val trip = tripPoint //todo don't we need this?
-    val macNumber = macroKey.rc210Value
+    val macNumber = macroKey.rc210Number
     Seq(
       s"1*2066$aNumber*$mNumber*$at*$macNumber*"
     )
@@ -104,8 +106,8 @@ case class MeterAlarmNode(val key: Key, meter: Key, alarmType: AlarmType, tripPo
 *
 * */
 
-object MeterAlarmNode extends FieldDefinitionComplex[MeterAlarmNode]:
-  override val keyKind: KeyKind = KeyKind.MeterAlarm
+object MeterAlarmNode extends FieldDefComplex[MeterAlarmNode]:
+  override val keyKind: KeyMetadata = KeyMetadata.MeterAlarm
 
   def unapply(u: MeterAlarmNode): Option[(Key, Key, AlarmType, Int, Key)] = Some((u.key, u.meter, u.alarmType, u.tripPoint, u.macroKey))
 
@@ -136,23 +138,21 @@ object MeterAlarmNode extends FieldDefinitionComplex[MeterAlarmNode]:
     }
     val meters = memory.sub8(266, nMeters).map { number =>
       try {
-        val r: Key = Key(KeyKind.Meter, number + 1)
+        val r: Key = Key(KeyMetadata.Meter, number + 1)
         r
       } catch {
         case e: Exception =>
           logger.error(s"Bad meterEditor number got: $number , expecting 1 to $nMeters. Will use Meter 1")
-          Key(KeyKind.Meter, 1)
+          Key(KeyMetadata.Meter, 1)
       }
     }
     for {i <- 0 until nMeters}
       yield {
-        val key: Key = Key(KeyKind.MeterAlarm, mai.incrementAndGet())
+        val key: Key = Key(KeyMetadata.MeterAlarm, mai.incrementAndGet())
         val meterAlarm = MeterAlarmNode(key, meters(i), alarmType(i), setPoint(i).toInt, macroKeys(i))
         FieldEntry(this, meterAlarm.fieldKey, meterAlarm)
       }
   }
-
-  override def parse(jsValue: JsValue): FieldValue = jsValue.as[MeterAlarmNode]
 
   override def positions: Seq[FieldOffset] = Seq(
     FieldOffset(266, this, "Alarm Type"),
@@ -163,7 +163,7 @@ object MeterAlarmNode extends FieldDefinitionComplex[MeterAlarmNode]:
     FieldOffset(282, this, "alarm Set Point"),
   )
 
-  implicit val fmtMeterAlarm: Format[MeterAlarmNode] = Json.format[MeterAlarmNode]
+  implicit val fmt: Format[MeterAlarmNode] = Json.format[MeterAlarmNode]
 
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     fieldIndex(keyKind, Table(Header(s"Alarm Meters  (${fieldEntries.length})",

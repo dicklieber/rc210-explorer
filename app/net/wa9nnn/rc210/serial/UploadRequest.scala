@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.serial
 
 import com.wa9nnn.wa9nnnutil.tableui.{Header, Row, Table}
-import net.wa9nnn.rc210.FieldKey
+import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import play.api.libs.json.{Format, Json}
@@ -28,15 +28,15 @@ import play.api.mvc.PathBindable
  *
  * @param doCandidateOnly        true to upload the candidate. False to upload the fieldValue
  * @param acceptCandidate        true to set the fieldValue to the candidate, if present. Clears the candidate.
- * @param maybeFieldKey          if Some then just upload this field. None uploads all fields as conditioned by [[doCandidateOnly]].
+ * @param maybeKey          if Some then just upload this field. None uploads all fields as conditioned by [[doCandidateOnly]].
  */
 case class UploadRequest(doCandidateOnly: Boolean = true,
                          acceptCandidate: Boolean = true,
-                         maybeFieldKey: Option[FieldKey] = None):
+                         maybeKey: Option[Key] = None):
   override def toString: String =
-    val prefix: String = maybeFieldKey match
-      case Some(fieldKey: FieldKey) =>
-        s"Send ${fieldKey.display}"
+    val prefix: String = maybeKey match
+      case Some(key: Key) =>
+        s"Send ${key.display}"
       case None =>
         if (doCandidateOnly)
           "Send all candidate fields"
@@ -48,7 +48,7 @@ case class UploadRequest(doCandidateOnly: Boolean = true,
       prefix
 
   def filter(dataStore: DataStore): Seq[UploadData] =
-    maybeFieldKey match
+    maybeKey match
       case Some(fieldKey) =>
         val fieldEntry: FieldEntry = dataStore.fieldEntry(fieldKey)
         Seq(UploadData(fieldEntry, fieldEntry.value, acceptCandidate))
@@ -74,7 +74,7 @@ case class UploadRequest(doCandidateOnly: Boolean = true,
       Seq(
         Row("Upload", if (doCandidateOnly) "Candidate" else "Field Value"),
         Row("Accept", if (acceptCandidate) "Candidate to Field Value" else "Keep Candidate"),
-        Row("FieldKey", maybeFieldKey match
+        Row("FieldKey", maybeKey match
           case Some(fieldKey) =>
             fieldKey.display
           case None =>
@@ -96,7 +96,7 @@ object UploadRequest:
   implicit val fmtUploadRequest: Format[UploadRequest] = Json.format[UploadRequest]
 
   def apply(fieldKey: FieldKey): UploadRequest =
-    UploadRequest(maybeFieldKey = Option(fieldKey))
+    UploadRequest(maybeKey = Option(fieldKey))
 
   implicit def pathBinder: PathBindable[UploadRequest] = new PathBindable[UploadRequest] {
     override def bind(key: String, value: String): Either[String, UploadRequest] =

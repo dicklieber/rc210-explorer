@@ -2,7 +2,7 @@ package net.wa9nnn.rc210.data.datastore
 
 import net.wa9nnn.rc210.data.field.{FieldDefinitions, FieldEntry}
 import net.wa9nnn.rc210.security.authentication.{RcSession, User}
-import net.wa9nnn.rc210.{FieldKey, Key, KeyKind, WithTestConfiguration}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyMetadata, WithTestConfiguration}
 
 import scala.util.Failure
 
@@ -45,7 +45,7 @@ class DataStoreTest extends WithDataStore {
         val dataStore = newDataStore
         val fieldKey = FieldKey(Key.commonkey, "Say Hours")
         val b4: FieldEntry = dataStore.fieldEntry (fieldKey)
-        val candidate = UpdateCandidate(fieldKey, "true")
+        val candidate = UpdateCandidate(candidate = "true")
         val candidateAndNames = CandidateAndNames(candidate)
         dataStore.update(candidateAndNames)
         val after: FieldEntry = dataStore.fieldEntry(fieldKey)

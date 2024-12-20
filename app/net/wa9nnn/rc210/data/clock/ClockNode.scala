@@ -22,7 +22,7 @@ import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table, TableInACell}
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
+import net.wa9nnn.rc210.{ Key, KeyMetadata}
 import play.api.data.*
 import play.api.data.Forms.*
 import play.api.i18n.MessagesProvider
@@ -30,13 +30,11 @@ import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.{RequestHeader, Result, Results}
 import play.twirl.api.Html
 
-case class ClockNode(key: Key,
-                     enableDST: Boolean = true,
-                     hourDST: Int = 2,
-                     startDST: DSTPoint = DSTPoint(MonthOfYearDST.March, Occurrence.First),
-                     endDST: DSTPoint = DSTPoint(MonthOfYearDST.November, Occurrence.Second),
-                     say24Hours: Boolean = false,
-                    ) extends FieldValueComplex():
+case class ClockNode(enableDST: Boolean = true, 
+                     hourDST: Int = 2, 
+                     startDST: DSTPoint = DSTPoint(MonthOfYearDST.March, Occurrence.First), 
+                     endDST: DSTPoint = DSTPoint(MonthOfYearDST.November, Occurrence.Second), 
+                     say24Hours: Boolean = false) extends FieldValueComplex[ClockNode]():
 
   override def displayCell: Cell =
     val table = Table(Header(Seq.empty),
@@ -54,7 +52,7 @@ case class ClockNode(key: Key,
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
+  override def toCommands(fieldEntry: TemplateSource): Seq[String] = {
     //NOTE: To disable DST program the START month to 0, i.e. *21310
     /*
     *2131x yy z where x = 1 is to program the START month and 0 is to program the END month yy is the month (01-12) and must be 2 digits and z Is the occurrence of Sunday in that month (1 – 5).
@@ -100,8 +98,8 @@ case class ClockNode(key: Key,
     say24Hours
   )
 
-object ClockNode extends FieldDefinitionComplex[ClockNode] {
-  override val keyKind: KeyKind = KeyKind.Clock
+object ClockNode extends FieldDefComplex[ClockNode] {
+  override val keyKind: KeyMetadata = KeyMetadata.Clock
   override val form: Form[ClockNode] = Form(
     mapping(
       "key" -> of[Key],
@@ -110,7 +108,7 @@ object ClockNode extends FieldDefinitionComplex[ClockNode] {
       "startDST" -> DSTPoint.dstPointForm,
       "endDST" -> DSTPoint.dstPointForm,
       "say24Hours" -> boolean
-    )(ClockNode.apply)(ClockNode.unapply))
+    )((key: Key, enableDST: Boolean, hourDST: Int, startDST: DSTPoint, endDST: DSTPoint, say24Hours: Boolean) => ClockNode.apply(enableDST, hourDST, startDST, endDST, say24Hours))(ClockNode.unapply))
 
   def unapply(u: ClockNode): Option[(Key, Boolean, Int, DSTPoint, DSTPoint, Boolean)] = Some((u.key, u.enableDST, u.hourDST, u.startDST, u.endDST, u.say24Hours))
 
@@ -127,21 +125,13 @@ object ClockNode extends FieldDefinitionComplex[ClockNode] {
     //    SimpleField(1186, "Clock 24 Hours", commonKey, "n*5103b", FieldBoolean),
     val say24Hours: Boolean = memory.bool(1186)
 
-    val clock = new ClockNode(key, enableDST, startHour, startDST, endDST, say24Hours)
+    val clock = new ClockNode(enableDST, startHour, startDST, endDST, say24Hours)
     Seq(
       FieldEntry(this, clock.fieldKey, clock)
     )
   }
 
-  /**
-   * for various things e.g. parser name.
-   */
-
-  override def parse(jsValue: JsValue): FieldValue = jsValue.as[ClockNode]
-
-  val key: Key = Key(KeyKind.Clock) // there's only one
-  val fieldKey: FieldKey = FieldKey(key)
-
+  
   override def positions: Seq[FieldOffset] = Seq(
     FieldOffset(1186, this, "say24Hours"),
     FieldOffset(3687, this, "DSTFlag"),
@@ -150,7 +140,7 @@ object ClockNode extends FieldDefinitionComplex[ClockNode] {
     FieldOffset(4050, this, "hour"),
   )
 
-  implicit val fmtClock: Format[ClockNode] = Json.format[ClockNode]
+  implicit val fmt: Format[ClockNode] = Json.format[ClockNode]
 
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     val r: Html = fieldEntries.headOption match
@@ -167,6 +157,6 @@ object ClockNode extends FieldDefinitionComplex[ClockNode] {
   override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
     val value: Form[ClockNode] = form.bindFromRequest(data)
     val clockNode: ClockNode = value.get
-    Seq(UpdateCandidate(clockNode.fieldKey, clockNode))
+    Seq(UpdateCandidate(candidate = clockNode))
 }
 

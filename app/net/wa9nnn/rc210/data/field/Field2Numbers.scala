@@ -18,16 +18,16 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row}
-import net.wa9nnn.rc210.{FieldKey, Key}
-import net.wa9nnn.rc210.ui.{ FormField}
+import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.*
 
-case class Field2Numbers(value: Seq[Int]) extends FieldValueSimple() {
+case class Field2Numbers(value: Seq[Int]) extends FieldValueSimple():
 
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
+  override def toCommands(fieldEntry: TemplateSource): Seq[String] = {
     val fieldKey = fieldEntry.fieldKey
     val key: Key = fieldKey.key
     Seq(key.replaceN(fieldEntry.template)
@@ -49,66 +49,20 @@ case class Field2Numbers(value: Seq[Int]) extends FieldValueSimple() {
   override def toJsValue: JsValue = Json.toJson(this)
 
   override def displayCell: Cell =
-    Cell(value.map(_.toString).mkString(" "))  
+    Cell(value.map(_.toString).mkString(" "))
 
-  override def toEditCell(fieldKey: FieldKey): Cell = FormField(fieldKey, value)
 
   override def toRow: Row = Row(
     "Field2Numbers",
     toString
   )
-}
 
-object Field2Numbers extends SimpleExtractor {
-  //  implicit val fmtField2Numbers: Format[Field2Numbers] = new Format[Field2Numbers] {
-  //    override def writes(o: Field2Numbers) = JsString(o.value.mkString(" "))
-  //
-  //    override def reads(json: JsValue): JsResult[Field2Numbers] =
-  //
-  //      JsSuccess(Field2Numbers(json.as[String]
-  //        .split(" ")
-  //        .toIndexedSeq
-  //        .map(_.toInt)
-  //      )
-  //      )
-  //  }
-  implicit val fmtField2Numbers: Format[Field2Numbers] = Json.format[Field2Numbers]
-  //  implicit def fmtField2Numbers(implicit fmt: Reads[Field2Numbers]): Reads[Field2Numbers] = new Reads[Field2Numbers] {
-  //    override def reads(json: JsValue): JsResult[Field2Numbers] =
-  //
-  //      JsSuccess(Field2Numbers(json.as[String]
-  //        .split(" ")
-  //        .toIndexedSeq
-  //        .map(_.toInt)
-  //      )
-  //      )
-  //  }
-  //    override def writes(o: Field2Numbers): JsString = JsString(o.value.mkString(" "))
-  //
+object Field2Numbers extends SimpleExtractor:
 
-  //  override def jsonToField(jsValue: JsValue): FieldValue = jsValue.as[Field2Numbers]
+  implicit val fmt: Format[Field2Numbers] = Json.format[Field2Numbers]
 
-
-  override def extractFromInts(iterator: Iterator[Int], fieldDefinition: FieldDefinitionSimple): FieldValue = {
+  override def extractFromInts(iterator: Iterator[Int], fieldDefinition: FieldDefSimple): FieldValue = {
     Field2Numbers(Seq(iterator.next(), iterator.next()))
   }
-
-  override def parse(json: JsValue): FieldValue =
-    json.as[Field2Numbers]
-
-}
-
-import play.api.libs.json.Json.*
-
-//implicit val cfg = JsonConfiguration(
-//  // Each JSON objects is marked with the admTpe, ...
-//  discriminator = "admTpe",
-//  // ... indicating the lower-cased name of sub-type
-//  typeNaming = JsonNaming { fullName =>
-//    fullName.drop(39 /* remove pkg */ ).toLowerCase
-//  }
-//)
-
-
 
 

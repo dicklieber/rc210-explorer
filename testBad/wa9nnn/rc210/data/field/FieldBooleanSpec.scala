@@ -21,7 +21,7 @@ class FieldBooleanSpec extends RcSpec {
 
     "toCommand false" in {
       val fieldBoolean = FieldBoolean()
-      val command = fieldBoolean.toCommands(new FieldEntryBase {
+      val command = fieldBoolean.toCommands(new TemplateSource {
         override val fieldKey: FieldKey = FieldKey("nn", KeyFactory.defaultMacroKey)
         override val template: String = "1*999b"
       })
@@ -30,7 +30,7 @@ class FieldBooleanSpec extends RcSpec {
     }
     "toCommand true" in {
       val fieldBoolean = FieldBoolean(true)
-      val command = fieldBoolean.toCommands(new FieldEntryBase {
+      val command = fieldBoolean.toCommands(new TemplateSource {
         override val fieldKey: FieldKey = FieldKey("nn", KeyFactory.defaultMacroKey)
         override val template: String = "1*999b"
       })

@@ -23,7 +23,7 @@ import controllers.ExtractField
 import net.wa9nnn.rc210.data.EditHandler
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.LogicAlarmNode.{form, keyKind}
-import net.wa9nnn.rc210.{FieldKey, Key, KeyKind}
+import net.wa9nnn.rc210.{FieldKey, Key, KeyMetadata}
 import net.wa9nnn.rc210.data.vocabulary.{Word, Words}
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.ButtonCell
@@ -48,7 +48,7 @@ import scala.util.Try
  * @param key   Message key
  * @param words word numbers. Each 0 to 255. 
  */
-case class MessageNode(key: Key, words: Seq[Int]) extends FieldValueComplex() {
+case class MessageNode(key: Key, words: Seq[Int]) extends FieldValueComplex[MessageNode]() {
 
   def toWords: Seq[Word] = words.map(Word(_))
 
@@ -57,10 +57,10 @@ case class MessageNode(key: Key, words: Seq[Int]) extends FieldValueComplex() {
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntryBase): Seq[String] = {
+  override def toCommands(fieldEntry: TemplateSource): Seq[String] = {
     val value: Seq[String] = words.map(word => f"$word%03d")
     val word3s: String = value.mkString
-    Seq(f"1*2103${key.rc210Value}%02d$word3s")
+    Seq(f"1*2103${key.rc210Number}%02d$word3s")
   }
 
   override def toJsValue: JsValue = Json.toJson(this)
@@ -74,8 +74,8 @@ case class MessageNode(key: Key, words: Seq[Int]) extends FieldValueComplex() {
   }
 }
 
-object MessageNode extends FieldDefinitionComplex[MessageNode] with LazyLogging:
-  implicit val fmtPhrase: Format[MessageNode] = Json.format[MessageNode]
+object MessageNode extends FieldDefComplex[MessageNode] with LazyLogging:
+  implicit val fmt: Format[MessageNode] = Json.format[MessageNode]
 
   def apply(key: Key, kv: Map[String, String]): MessageNode = {
 
@@ -89,7 +89,7 @@ object MessageNode extends FieldDefinitionComplex[MessageNode] with LazyLogging:
 
   def form: Form[MessageNode] = throw new IllegalStateException("Not used with MessageNode!")
 
-  override val keyKind: KeyKind = KeyKind.Message
+  override val keyKind: KeyMetadata = KeyMetadata.Message
 
   override def positions: Seq[FieldOffset] = {
     Seq(
@@ -104,21 +104,18 @@ object MessageNode extends FieldDefinitionComplex[MessageNode] with LazyLogging:
    */
   override def extract(memory: Memory): Seq[FieldEntry] = {
     // the PHP code only gets the 40 from main. //Phrase - 1576-1975
-    // Have to dig for what comes from the RTC board.
+    // Have to dig for what cpomes from the RTC board.
     val mai = new AtomicInteger(1)
     for {
       chunk: Chunk <- memory.chunks(1576, 10, 40)
-      key: Key = Key(KeyKind.Message, mai.getAndIncrement())
+      key: Key = Key(KeyMetadata.Message, mai.getAndIncrement())
     } yield {
       val message: MessageNode = MessageNode(key, chunk.ints
         .takeWhile(_ != 0)
       )
-      val fieldKey = FieldKey(key)
-      FieldEntry(this, message)
+      FieldEntry(this, key, message)
     }
   }
-
-  override def parse(jsValue: JsValue): FieldValue = jsValue.as[MessageNode]
 
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     val table = Table(Header(s"Messages  (${fieldEntries.length})",

@@ -3,13 +3,13 @@ package net.wa9nnn.rc210.data
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValueSimple}
-import net.wa9nnn.rc210.{FieldKey, KeyKind}
+import net.wa9nnn.rc210.{Key, KeyMetadata}
 import play.api.i18n.MessagesProvider
 import play.api.mvc.RequestHeader
 import play.twirl.api.Html
 import views.html.common
 
-case object CommonNode extends SimpleFieldNode(KeyKind.Common):
+case object CommonNode extends SimpleFieldNode(KeyMetadata.Common):
   def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     val table = Table(header(fieldEntries.length),
       fieldEntries.map { fieldEntry =>

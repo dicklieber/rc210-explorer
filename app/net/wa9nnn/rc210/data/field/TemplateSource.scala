@@ -18,10 +18,6 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.RowSource
-import net.wa9nnn.rc210.FieldKey
 
-trait FieldEntryBase extends RowSource{
-  val fieldKey: FieldKey
+trait TemplateSource extends RowSource:
   val template: String
-
-}

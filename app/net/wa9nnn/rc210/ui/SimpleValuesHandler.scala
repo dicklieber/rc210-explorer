@@ -25,7 +25,7 @@ import net.wa9nnn.rc210.NamedKey
 import play.api.mvc.*
 
 /**
- * Keeps track of all the [[Key]]s for  a single [[net.wa9nnn.rc210.KeyKind]] e.g. [[net.wa9nnn.rc210.KeyKind.CommonKey]] or [[net.wa9nnn.rc210.KeyKind.Port]]; on index.
+ * Keeps track of all the [[Key]]s for  a single [[net.wa9nnn.rc210.KeyMetadata]] e.g. [[net.wa9nnn.rc210.KeyMetadata.CommonKey]] or [[net.wa9nnn.rc210.KeyMetadata.Port]]; on index.
  * Then uses these, on save, to get all the values.
  * This is needed because HTML checkboxes in foems don't send any value when unchecked.
  */

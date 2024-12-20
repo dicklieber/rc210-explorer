@@ -1,7 +1,7 @@
 package net.wa9nnn.rc210.ui
 
 import controllers.routes
-import net.wa9nnn.rc210.FieldKey
+import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.serial.UploadRequest
 import net.wa9nnn.rc210.ui.Button.button
 import play.api.mvc.Call
@@ -31,11 +31,11 @@ object Button:
 
   val editIcon = "bi-pencil-square"
 
-  def edit(fieldKey: FieldKey): String = {
-    val call = if fieldKey.fieldName == "Port" then
-      routes.EditController.index(fieldKey.key.keyKind)
+  def edit(key: Key): String = {
+    val call = if key.fieldName == "Port" then
+      routes.EditController.index(key.keyKind)
     else
-      routes.EditController.edit(fieldKey)
+      routes.EditController.edit(key)
     button(
       icon = editIcon,
       call = call,

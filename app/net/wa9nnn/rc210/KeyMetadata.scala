@@ -32,52 +32,57 @@ import net.wa9nnn.rc210.data.timers.TimerNode
 import net.wa9nnn.rc210.ui.{EnumEntryValue, Tab}
 
 /**
+ * Metadata about a kind of [[Key]].
+ *
  * @param maxN    how many keys there can be for this kind,
- * @param needsFieldName
- * @param includeInNav
+ *                if 1 then the [[Key.rc210Number]] with not be used.
+ * @param handler how to edit one of these.
+ * @param needsQualifier
+ * @param includeInNavTab
  */
-sealed trait KeyKind(val maxN: Int,
-                     val handler: EditHandler = null,
-                     val needsFieldName: Boolean = false,
-                     val includeInNav: Boolean = true) extends EnumEntryValue
-  with CapitalWords with Tab with Ordered[KeyKind]:
+sealed trait KeyMetadata(val maxN: Int,
+                         val handler: EditHandler = null,
+                         val needsQualifier: Boolean = false,
+                         val includeInNavTab: Boolean = true,
+                    ) extends EnumEntryValue
+  with CapitalWords with Tab with Ordered[KeyMetadata]:
   override def indexUrl: String = routes.EditController.index(this).url
 
-  override def values: IndexedSeq[EnumEntryValue] = KeyKind.values
+  override def values: IndexedSeq[EnumEntryValue] = KeyMetadata.values
 
   val rc210Value: Int = -1
 
-  def compare(that: KeyKind): Int = this.entryName.compareTo(that.entryName)
+  def compare(that: KeyMetadata): Int = this.entryName.compareTo(that.entryName)
 
-object KeyKind extends PlayEnum[KeyKind]:
+object KeyMetadata extends PlayEnum[KeyMetadata]:
 
-  override def values: IndexedSeq[KeyKind] = findValues
+  override def values: IndexedSeq[KeyMetadata] = findValues
 
-  case object All extends KeyKind(1, null, includeInNav = false)
+  case object All extends KeyMetadata(1, null, includeInNavTab = false)
 
-  case object LogicAlarm extends KeyKind(5, LogicAlarmNode)
+  case object LogicAlarm extends KeyMetadata(5, LogicAlarmNode)
 
-  case object Meter extends KeyKind(8, MeterNode)
+  case object Meter extends KeyMetadata(8, MeterNode)
 
-  case object MeterAlarm extends KeyKind(8, MeterAlarmNode)
+  case object MeterAlarm extends KeyMetadata(8, MeterAlarmNode)
 
-  case object CourtesyTone extends KeyKind(10, CourtesyToneNode)
+  case object CourtesyTone extends KeyMetadata(10, CourtesyToneNode)
 
-  case object Function extends KeyKind(1005, needsFieldName = true, includeInNav = false)
+  case object Function extends KeyMetadata(1005, needsFieldName = true, includeInNavTab = false)
 
-  case object Macro extends KeyKind(105, MacroNode)
+  case object Macro extends KeyMetadata(105, MacroNode)
 
-  case object Message extends KeyKind(70, MessageNode) // 40 (in Main) + 30 (in RTC)
+  case object Message extends KeyMetadata(70, MessageNode) // 40 (in Main) + 30 (in RTC)
 
-  case object Clock extends KeyKind(1, ClockNode)
+  case object Clock extends KeyMetadata(1, ClockNode)
 
-  case object Port extends KeyKind(3, PortsNode, needsFieldName = true)
+  case object Port extends KeyMetadata(3, PortsNode, needsFieldName = true)
 
-  case object Schedule extends KeyKind(40, ScheduleNode)
+  case object Schedule extends KeyMetadata(40, ScheduleNode)
 
-  case object Timer extends KeyKind(6, TimerNode)
+  case object Timer extends KeyMetadata(6, TimerNode)
 
-  case object Common extends KeyKind(1, CommonNode, needsFieldName = true)
+  case object Common extends KeyMetadata(1, CommonNode, needsFieldName = true)
 
-  case object RemoteBase extends KeyKind(1, RemoteBaseNode)
+  case object RemoteBase extends KeyMetadata(1, RemoteBaseNode)
 
