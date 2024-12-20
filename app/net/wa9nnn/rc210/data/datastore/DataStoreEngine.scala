@@ -21,6 +21,7 @@ package net.wa9nnn.rc210.data.datastore
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.{Key, KeyMetadata}
+import play.api.libs.Files.logger
 
 import scala.collection.concurrent.TrieMap
 
@@ -110,20 +111,23 @@ class DataStoreEngine extends DataStoreApi:
     }).toIndexedSeq
 
   /**
-   * Updates the candidates of field entries in the `keyFieldMap` based on the provided `CandidateAndNames`.
-   *
-   * @param candidateAndNames contains a sequence of `UpdateCandidate` objects that define the `Key` and 
-   *                          the new candidate value to be updated, as well as an optional sequence of `NamedKey`.
+   * @param candidates a sequence of `UpdateCandidate` instances containing the keys and values 
+   *                   used to update the corresponding fields in the `keyFieldMap`.
    */
-  def update(candidateAndNames: CandidateAndNames): Unit =
-    candidateAndNames.candidates.foreach { uc =>
-      val Key = uc.Key
-      val fieldEntry: FieldEntry = keyFieldMap(Key)
-      uc.candidate match
-        case value: String =>
-          fieldEntry.setCandidate(value)
-        case fieldValue: FieldValue =>
-          fieldEntry.set(fieldValue)
+  
+  def update(candidates: Seq[UpdateCandidate]): Unit =
+    candidates.foreach { updateCandidate =>
+      val key = updateCandidate.Key
+      try
+        val fieldEntry: FieldEntry = keyFieldMap(key)
+        updateCandidate.candidate match
+          case value: String =>
+            fieldEntry.setCandidate(value)
+          case fieldValue: FieldValue =>
+            fieldEntry.set(fieldValue)
+      catch
+        case e:NoSuchElementException =>
+          logger.error(s"No entry for key: $key")
     }
 
   /**

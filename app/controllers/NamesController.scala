@@ -19,19 +19,24 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.*
+import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.KeyMetadata.{Function, Port}
 import net.wa9nnn.rc210.NamedKey.fieldName
 import net.wa9nnn.rc210.data.datastore.DataStore
-import net.wa9nnn.rc210.ui.{ButtonCell, NamedKeyManager, TabE}
 import net.wa9nnn.rc210.ui.TabE.Names
+import net.wa9nnn.rc210.ui.{ButtonCell, NamedKeyManager, TabE}
 import play.api.mvc.*
 import views.html.NavMain
 
 import javax.inject.{Inject, Singleton}
 import scala.language.postfixOps
 
+/**
+ * Displays all currently defined named keys and allows editing of names
+ * by going to the appropriate page where the name is set.
+ */
 @Singleton()
-class NamesController @Inject()(namedKeyManager:NamedKeyManager,
+class NamesController @Inject()(namedKeyManager: NamedKeyManager,
                                 navMain: NavMain,
                                 components: MessagesControllerComponents)
   extends MessagesAbstractController(components) with LazyLogging:
@@ -44,13 +49,12 @@ class NamesController @Inject()(namedKeyManager:NamedKeyManager,
     implicit request =>
       val rows: Seq[Row] = namedKeyManager.namedKeys.map { namedKey =>
         val key = namedKey.key
-        val fieldKey: FieldKey = if key.keyMetadata == Port then
-          FieldKey(key, "Port")
-        else
-          FieldKey(key)
-        val keyKind = key.keyMetadata
+        //        val fieldKey: Key = if key.keyMetadata == Port then
+        //          Key(key)
+        //        else
+        //          Key(key)
         Row(
-          ButtonCell.edit(fieldKey),
+          ButtonCell.edit(key),
           Cell(key),
           namedKey.name
         )

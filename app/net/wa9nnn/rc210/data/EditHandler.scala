@@ -3,7 +3,8 @@ package net.wa9nnn.rc210.data
 import com.wa9nnn.wa9nnnutil.tableui.Cell
 import controllers.routes
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
-import net.wa9nnn.rc210.data.field.{FieldValueComplex, FieldEntry}
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValueComplex}
+import net.wa9nnn.rc210.ui.FormData
 import net.wa9nnn.rc210.{Key, KeyMetadata}
 import play.api.i18n.MessagesProvider
 import play.api.mvc.{RequestHeader, Result, Results}
@@ -30,7 +31,7 @@ trait EditHandler:
    */
   def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html
 
-  def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
+  def bind(formData: FormData): Seq[UpdateCandidate] =
     throw new NotImplementedError()
 
   def bind(in: FieldValueComplex[?]): Seq[UpdateCandidate] =

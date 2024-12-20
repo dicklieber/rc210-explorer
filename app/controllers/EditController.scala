@@ -19,12 +19,11 @@ package controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210
-import net.wa9nnn.rc210.data.EditHandler
 import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
-import net.wa9nnn.rc210.ui.{NamedKeyExtractor, NavMainController}
+import net.wa9nnn.rc210.ui.{FormData, NamedKeyExtractor, NamedKeyManager, NavMainController}
 import net.wa9nnn.rc210.*
 import play.api.mvc.*
 import play.api.mvc.Results.Ok
@@ -44,6 +43,7 @@ import scala.language.postfixOps
 @Singleton()
 class EditController @Inject()(navMain: NavMain)
                               (implicit dataStore: DataStore,
+                               namedKeyManager: NamedKeyManager,
                                components: ControllerComponents)
   extends NavMainController(components) with LazyLogging {
   /**
@@ -68,7 +68,7 @@ class EditController @Inject()(navMain: NavMain)
   def edit(key:Key): Action[AnyContent] = Action {
     implicit request =>
       val fieldEntry: FieldEntry = dataStore.fieldEntry(key)
-      Ok(navMain(key.keyMetadata, key.keyMetadata.editHandler.edit(fieldEntry)))
+      Ok(navMain(key.keyMetadata, key.keyMetadata.edit(fieldEntry)))
   }
 
   /**
@@ -80,25 +80,19 @@ class EditController @Inject()(navMain: NavMain)
 
     implicit request: Request[AnyContent] =>
 
-      given data: Map[String, Seq[String]] = request.body.asFormUrlEncoded.get
+      val formData: FormData = FormData()
 
       given RcSession = request.attrs(sessionKey)
 
-      logger.whenDebugEnabled {
-        data.foreach { (name, values) =>
-          logger.debug(s"$name: ${values.mkString(", ")}")
-        }
-      }
+      namedKeyManager.saveNamedKeys(formData)
 
       try
-        val fieldKey: FieldKey = EditHandler.fieldKey.get
-        val handler: EditHandler = fieldKey.key.keyKind.handler
-        val updateCandidates: Seq[UpdateCandidate] = handler.bind(data)
-        val namedKeys: Seq[NamedKey] = NamedKeyExtractor(data)
+        namedKeyManager.saveNamedKeys(formData)
+        val key  = formData.key
+        val updateCandidates = key.bind(formData)
 
-        val candidateAndNames: CandidateAndNames = CandidateAndNames(updateCandidates, namedKeys)
-        dataStore.update(candidateAndNames)
-        handler.saveOp()
+        dataStore.update(updateCandidates)
+        key.saveOp()
       catch
         case e: Exception =>
           logger.error(s"save: ${e.getMessage}", e)

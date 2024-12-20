@@ -26,7 +26,7 @@ object Binders {
   implicit def pathBinderMacro: PathBindable[Key] = new PathBindable[Key] {
     override def bind(key: String, value: String): Either[String, Key] = {
 
-      Right(Key((value)))
+      Right(Key.fromId(value))
     }
 
     override def unbind(key: String, macroKey: Key): String = {

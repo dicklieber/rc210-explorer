@@ -44,7 +44,8 @@ sealed trait KeyMetadata(val maxN: Int,
                          val handler: EditHandler = null,
                          val needsQualifier: Boolean = false,
                          val includeInNavTab: Boolean = true,
-                    ) extends EnumEntryValue
+                         val needsFieldName:Boolean = false,
+                    ) extends EnumEntryValue with EditHandler
   with CapitalWords with Tab with Ordered[KeyMetadata]:
   override def indexUrl: String = routes.EditController.index(this).url
 

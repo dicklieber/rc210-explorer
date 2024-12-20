@@ -69,6 +69,15 @@ class NamedKeyManager @Inject()(implicit config: Config) extends NamedKeySource 
   def update(namedKey: NamedKey): Unit =
     update(Seq(namedKey))
 
+  /**
+   * Saves the named keys from the provided form data.
+   *
+   * @param formData Represents the submitted HTML form data containing key-value pairs.
+   */
+  def saveNamedKeys(formData: FormData):Unit=
+    logger.error("handle named keys")
+    
+
   override def nameForKey(key: Key): String = keyNameMap.getOrElse(key, "")
 
   override def namedKeys: Seq[NamedKey] =

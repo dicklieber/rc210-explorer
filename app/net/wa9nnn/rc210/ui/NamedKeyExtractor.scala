@@ -11,7 +11,12 @@ object NamedKeyExtractor:
    * @param data submitted from data fields.
    * @return zero or more named keys.
    */
-  def apply(data: Map[String, Seq[String]]): Seq[NamedKey] =
+  def apply(formData: FormData): Seq[NamedKey] =
+    for 
+      entry <- formData.map
+      if entry._1.endsWith(NamedKey.fieldName)  
+    yield 
+      
     (for
       tuple <- data
       id: String = tuple._1

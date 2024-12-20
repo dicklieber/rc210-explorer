@@ -16,24 +16,10 @@
  *
  */
 
-package net.wa9nnn.rc210.data.datastore
+package net.wa9nnn.rc210.ui
 
-import net.wa9nnn.rc210.{Key, KeyMetadata}
-import net.wa9nnn.rc210.data.field.FieldEntry
+import com.wa9nnn.wa9nnnutil.tableui.Row
+import net.wa9nnn.rc210.Key
 
-/**
- * The `DataStoreApi` trait represents an interface for managing and retrieving data entries 
- * in a structured data store. It provides methods to access, manipulate, and retrieve field 
- * entries, manage candidates, and handle rollbacks.
- * Note that persistence is not handled by this trait.
- */
-trait DataStoreApi:
-  def fieldEntry(Key: Key): FieldEntry
-  def fieldEntry(key: KeyMetadata): Seq[FieldEntry]
-  def candidates: Iterable[FieldEntry]
-  def triggerNodes(macroKey: Key): Seq[FieldEntry]
-  def update(candidates: Seq[UpdateCandidate]): Unit
-  def acceptCandidate(Key: Key): Unit
-  def rollback(): Unit
-  def rollback(Key: Key): Unit
-  def flowData(search: Key): Option[FlowData]
+trait KeyedRow:
+  def toRow(key: Key): Row

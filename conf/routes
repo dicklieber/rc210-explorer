@@ -1,12 +1,12 @@
-GET         /index/:keyKind                      controllers.EditController.index(keyKind:KeyKind)
-GET         /edit/:fieldKey                      controllers.EditController.edit(fieldKey:FieldKey)
+GET         /index/:keyMetadata                      controllers.EditController.index(keyMetadata:KeyMetadata)
+GET         /edit/:key                           controllers.EditController.edit(key:Key)
 POST        /save                                controllers.EditController.save()
 GET         /landing/:tabKind                    controllers.NavigationController.selectTabKind(tabKind:TabKind)
 GET         /datastore/download                  controllers.DataStoreController.downloadJson
 GET         /datastore/view                      controllers.DataStoreController.viewJson
 GET         /datastore/upload                    controllers.DataStoreController.upload()
 POST        /datastore/save                      controllers.DataStoreController.save()
-GET         /datastore/rollback/:fieldKey        controllers.DataStoreController.rollbackOne(fieldKey:FieldKey)
+GET         /datastore/rollback/:key        controllers.DataStoreController.rollbackOne(key:Key)
 GET         /datastore/rollback                  controllers.DataStoreController.rollback()
 POST        /datastore/exploreFiltered           controllers.DataStoreExplorerController.filtered()
 GET         /datastore/exploreAll                controllers.DataStoreExplorerController.index

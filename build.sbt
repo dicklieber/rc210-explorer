@@ -84,10 +84,9 @@ resolvers +=
   "Sonatype OSS Snapshots" at "https://s01.oss.sonatype.org/content/repositories/snapshots"
 
 routesImport += "net.wa9nnn.rc210.Binders._"
-routesImport += "net.wa9nnn.rc210.FieldKey"
 routesImport += "net.wa9nnn.rc210.serial.UploadRequest"
 routesImport += "net.wa9nnn.rc210.serial.UploadRequest.pathBinder"
-routesImport += "net.wa9nnn.rc210.KeyKind"
+routesImport += "net.wa9nnn.rc210.KeyMetadata"
 routesImport += "net.wa9nnn.rc210.Key"
 routesImport += "net.wa9nnn.rc210.ui.nav.TabKind"
 routesImport += "net.wa9nnn.rc210.serial.SendField"

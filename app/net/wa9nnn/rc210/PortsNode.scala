@@ -13,11 +13,11 @@ object PortsNode extends SimpleFieldNode(KeyMetadata.Port):
 
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     val rows: Seq[Row] = fieldEntries
-      .groupBy(_.fieldKey.fieldName)
+      .groupBy(_.key.qualifier.get)
       .toSeq
-      .sortBy(_._1)
+      .sortBy((t: (String, Seq[FieldEntry])) => t._1)
       .map { (name, portEntries) =>
-        PortRow(name, portEntries.sortBy(_.fieldKey.key.rc210Number)).toRow
+        PortRow(name, portEntries.sortBy(_.key.rc210Number)).toRow
       }
 
     val colHeaders: Seq[Any] =
@@ -52,7 +52,7 @@ object PortsNode extends SimpleFieldNode(KeyMetadata.Port):
  * @param name        row header
  * @param portEntries remaining td elements.
  */
-case class PortRow(name: String, portEntries: Seq[FieldEntry]) extends RowSource:
+case class PortRow(name: String, portEntries: Seq[FieldEntry]) :
   def toRow: Row =
     Row(portEntries.map { fe =>
       val v: FieldValue = fe.value

@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.ui
 
 import com.wa9nnn.wa9nnnutil.tableui.Cell
-import net.wa9nnn.rc210.FieldKey
+import net.wa9nnn.rc210.{FieldKey, Key}
 import play.twirl.api.Html
 
 import java.time.LocalTime
@@ -28,13 +28,13 @@ import scala.xml.*
  * Generates  html elements for any value type.
  * [[https://github.com/scala/scala-xml Scala-xml]]
  */
-
+  
 /**
  * @deprecated use play form stuff.
  */
 object FormField:
-  def apply(fieldKey: FieldKey, value: Any, range: Option[Range] = None): Cell =
-    Cell.rawHtml(html(fieldKey.id, value, range).body)
+  def apply(key: Key, value: Any, range: Option[Range] = None): Cell =
+    Cell.rawHtml(html(key.id, value, range).body)
 
   def html(name:String, value: Any, range: Option[Range] = None): Html =
     val elem: Elem = value match {

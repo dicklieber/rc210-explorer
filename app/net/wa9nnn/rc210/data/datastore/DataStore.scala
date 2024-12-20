@@ -40,9 +40,8 @@ class DataStore @Inject()(config: Config,
     loadEntries(fieldEntries) 
   }
   load()
-  
-  override def update(candidateAndNames: CandidateAndNames): Unit =
-    namedKeyManager.update(candidateAndNames.namedKeys)
+
+  def update(candidates: Seq[UpdateCandidate]): Unit
     super.update(candidateAndNames)
     saveFile(path)
 

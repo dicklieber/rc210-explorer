@@ -1,10 +1,10 @@
 package net.wa9nnn.rc210.serial
 
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table, TableInACell}
-import net.wa9nnn.rc210.FieldKey
+import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.serial.comm.RcResponse
 
-case class FieldResult(fieldKey: FieldKey, responses: Seq[RcResponse]) extends ProgressItem:
+case class FieldResult(key: Key, responses: Seq[RcResponse]) extends ProgressItem:
   val ok: Boolean =
     val errorCount: Int = responses.foldLeft(0)((accum, rcResponse) =>
       if (!rcResponse.ok)
@@ -22,7 +22,7 @@ case class FieldResult(fieldKey: FieldKey, responses: Seq[RcResponse]) extends P
       Seq.empty
     else
       val top: RcResponse = responses.head
-      val row0 = new Row(top.detailCells.prepended(Cell(fieldKey.display)
+      val row0 = new Row(top.detailCells.prepended(Cell(key.display)
         .withRowSpan(responses.length)))
 
       val tailRows = responses

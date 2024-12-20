@@ -19,21 +19,22 @@ package net.wa9nnn.rc210
 
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, RowSource}
 import net.wa9nnn.rc210.NamedKey.fieldName
+import net.wa9nnn.rc210.ui.KeyedRow
 import play.api.libs.json.{Format, Json}
 
-case class NamedKey(key: Key, name: String) extends Ordered[NamedKey] with RowSource :
-  override def compare(that: NamedKey): Int = key compareTo that.key
+case class NamedKey(key: Key, name: String) extends KeyedRow:
 
-  override def toRow: Row = {
+  override def toRow(key: Key): Row =
     Row(
       Cell(key.toString), name
     )
-  }
 
 object NamedKey {
+  given ordering: Ordering[NamedKey] = Ordering.by(_.key)
+
   val fieldName = "keyName"
   implicit val fmtNamedKey: Format[NamedKey] = Json.format[NamedKey]
-  
+
 }
 
 trait NamedKeySource {
