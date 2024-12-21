@@ -43,8 +43,6 @@ case class Key(keyMetadata: KeyMetadata, rc210Number: Option[Int] = None, qualif
   rc210Number.foreach(n =>
     assert(n <= keyMetadata.maxN, s"Max number for $keyMetadata is ${keyMetadata.maxN}")
   )
-  assert(keyMetadata.maxN == -1 && rc210Number.isEmpty, s"Must not have a number!")
-  assert(keyMetadata.needsQualifier && qualifier.nonEmpty, s"Must not have a qualifier!")
 
   def check(expected: KeyMetadata): Unit =
     if (expected != keyMetadata) throw IllegalArgumentException(s"Expecting Key of type $expected, but got $this}")
@@ -59,15 +57,7 @@ case class Key(keyMetadata: KeyMetadata, rc210Number: Option[Int] = None, qualif
    * @return used in JSON or HRML form names.
    */
   def id: String =
-    var base: String = keyMetadata.entryName
-    rc210Number.foreach(n =>
-      base = base.concat(s"$$$n")
-    )
-    qualifier.foreach(q =>
-      base = base.concat(s"$$$q")
-    )
-
-    base
+    s"$keyMetadata|${rc210Number.getOrElse("")}|${qualifier.getOrElse("")}"
 
   def namedKey: NamedKey =
     NamedKey(this, name)
@@ -91,7 +81,8 @@ case class Key(keyMetadata: KeyMetadata, rc210Number: Option[Int] = None, qualif
   def toCell: Cell =
     Cell(toString)
 
-  override def toString: String = s"${keyMetadata.entryName}$rc210Number"
+  override def toString: String =
+    s"""${keyMetadata.entryName}${rc210Number.getOrElse("")}${qualifier.map(q => s":$q").getOrElse("")}"""
 
   def keyWithName: String =
     s"$rc210Number: $name"
@@ -116,10 +107,6 @@ object Key extends LazyLogging:
       // Finally compare by qualifier
       Ordering.Option(Ordering.String).compare(x.qualifier, y.qualifier)
     }
-  //  implicit val ordering: Ordering[Key] =
-//    Ordering.by[Key, String](_.keyMetadata)
-//      .orElseBy(_.rc210Number)
-//      .orElseBy(_.qualifier)
 
   val keyName: String = "key"
   var _namedKeySource: NamedKeySource = NoNamedKeySource
@@ -133,8 +120,8 @@ object Key extends LazyLogging:
     id match
       case keyRegx(sKK, sNumber, sQualifier) =>
         val keyMetadata = KeyMetadata.withName(sKK)
-        val maybeNumber = Option(sNumber).map(_.toInt)
-        val maybeQualifier = Option(sQualifier)
+        val maybeNumber = Option.when(sNumber.nonEmpty)(sNumber.toInt)
+        val maybeQualifier = Option.when(sQualifier.nonEmpty)(sQualifier)
         Key(keyMetadata, maybeNumber, maybeQualifier)
       case x =>
         throw new IllegalArgumentException(s"Can't parse $x")
@@ -142,9 +129,11 @@ object Key extends LazyLogging:
   def apply(keyMetadata: KeyMetadata, number: Int): Key =
     Key(keyMetadata, Some(number))
 
+  def apply(keyMetadata: KeyMetadata, number: Int, qualifier: String): Key =
+    Key(keyMetadata, Some(number), Some(qualifier))
+
   def apply(maybeSKey: Option[String]): Option[Key] =
     maybeSKey.map(fromId)
-
 
   implicit val fmtKey: Format[Key] = new Format[Key] {
     override def reads(json: JsValue): JsResult[Key] = {
@@ -159,8 +148,8 @@ object Key extends LazyLogging:
       }
     }
 
-    override def writes(sak: Key): JsValue = {
-      JsString(sak.toString)
+    override def writes(key: Key): JsValue = {
+      JsString(key.id)
     }
   }
 
@@ -177,20 +166,18 @@ object Key extends LazyLogging:
 
   lazy val portKeys: Seq[Key] = keys(Port)
   lazy val macroKeys: Seq[Key] = keys(Macro)
-  lazy val timerKeys: Seq[Key] = keys(Timer)
   lazy val commonkey: Key = Key(KeyMetadata.Common)
-  lazy val clockKey: Key = Key(KeyMetadata.Clock)
 
   /**
    * Codec to allow non-string types i routes.conf definitions.
    */
-  implicit def keyKindPathBinder: PathBindable[KeyMetadata] = new PathBindable[KeyMetadata] {
-    override def bind(key: String, value: String): Either[String, KeyMetadata] = {
-      Right(KeyMetadata.withName(value))
+  implicit val keyKindPathBinder: PathBindable[Key] = new PathBindable[Key] {
+    override def bind(paramKey: String, value: String): Either[String, Key] = {
+      Right(Key.fromId(value))
     }
 
-    override def unbind(key: String, macroKey: KeyMetadata): String = {
-      macroKey.toString
+    override def unbind(paramKey: String, key: Key): String = {
+      key.id 
     }
   }
 
@@ -198,9 +185,10 @@ object Key extends LazyLogging:
 
   implicit val keyFormatter: Formatter[Key] = new Formatter[Key]:
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Key] =
-      parsing(fromId(_), s"BadKey $key", Nil)(key, data)
+      parsing(fromId, s"BadKey $key", Nil)(key, data)
 
-    override def unbind(key: String, value: Key): Map[String, String] = Map(key -> value.toString)
+    override def unbind(key: String, value: Key): Map[String, String] = 
+      Map(key -> value.toString)
 
 
 

@@ -37,7 +37,7 @@ class DataStore @Inject()(config: Config,
   private val path: Path = Configs.path("vizRc210.dataStoreFile")(using config)
 
   memoryFileLoader.load.foreach { fieldEntries =>
-    loadEntries(fieldEntries) 
+    loadEntries(fieldEntries)
   }
   load()
 

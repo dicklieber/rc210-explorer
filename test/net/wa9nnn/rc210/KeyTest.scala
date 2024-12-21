@@ -19,37 +19,93 @@ package net.wa9nnn.rc210
 
 import play.api.libs.json.{Format, Json}
 
-class KeyTest extends WithMemory {
-  val macroKey3 = Key(KeyMetadata.Macro, 3)
-  "Happy" in {
-    macroKey3.toString mustBe ("Macro3")
-  }
-  "round trip toString get" in {
-    val string = macroKey3.toString
-    val backAgain = Key(string)
-    backAgain mustBe (macroKey3)
-  }
-  "round trip JSON" in {
-    val container = KeyContainer(macroKey3)
-    val sJson = Json.prettyPrint(Json.toJson(container))
-    sJson mustBe ("""{
-                      |  "key" : "Macro3",
-                      |  "other" : 42
-                      |}""".stripMargin)
-    val backAgain = Json.parse(sJson).as[KeyContainer]
-    backAgain mustBe (container)
-  }
-  "throw if too big a number" in {
-    assertThrows[AssertionError] { // Result type: Assertion
-      Key(KeyMetadata.Meter, 42)
+class KeyTest extends RcSpec {
+  private val macroKey3 = Key(KeyMetadata.Macro, 3)
+  "toString" when
+    {
+      "just metadata" in
+        {
+          val string = macroKey3.toString
+          string mustBe "Macro3"
+        }
+      "all parts" in
+        {
+          val string = Key(KeyMetadata.Port, 3, "color").toString
+          string mustBe "Port3:color"
+        }
     }
-  }
-  "macroKeys" in {
-    val keys = Key.macroKeys
-    keys must have length KeyMetadata.Macro.maxN
+  "id" when
+    {
+      "all parts" in
+        {
+          val key = Key(KeyMetadata.Port, 3, "color")
+          val id = key.id
+          id mustBe "Port|3|color"
+          val backAgain = Key.fromId(id)
+          backAgain mustBe key
+        }
+    }
+  "round trip toString get" in
+    {
+      val string = macroKey3.id
+      val backAgain = Key.fromId(string)
+      backAgain mustBe macroKey3
+    }
+  "round trip JSON" in
+    {
+      val sJson = Json.prettyPrint(Json.toJson(macroKey3))
+      sJson mustBe """"Macro|3|"""".stripMargin
+      val backAgain = Json.parse(sJson).as[Key]
+      backAgain mustBe macroKey3
+    }
+  "throw if too big a number" in
+    {
+      assertThrows[AssertionError] { // Result type: Assertion
+        Key(KeyMetadata.Meter, 42)
+      }
+    }
+  "macroKeys" in
+    {
+      val keys = Key.macroKeys
+      keys must have length KeyMetadata.Macro.maxN
+    }
+  "path binder" when
+    {
+      val key = Key(KeyMetadata.Port, 3, "beep")
+      val binder = Key.keyKindPathBinder
+      "binds" in
+        {
+          val value1: Either[String, Key] = binder.bind("p", "Macro|3|")
+          value1 mustBe Right(macroKey3)
+        }
+      "unbind" in
+        {
+          val r: String = binder.unbind("p", key)
+          r mustBe "Port|3|beep"
+        }
+    }
+  "ordering" in
+    {
+      val unordered = Seq(
+        macroKey3,
+        Key(KeyMetadata.Port, 3, "color"),
+        Key(KeyMetadata.Port, 1, "color"),
+        Key(KeyMetadata.Port, 2, "color"),
+        Key(KeyMetadata.Port, 2, "alpha"),
+        Key(KeyMetadata.Port, 2, "beep"),
+        Key(KeyMetadata.Clock),
+        Key(KeyMetadata.Port, 2, "omega")
+      )
+      val sorted = unordered.sorted
+      sorted.head mustBe Key(KeyMetadata.Clock)
+      val last = sorted.last
+      last.toString mustBe "Port3:color"
+    }
+  "replaceN" in {
+    val key = Key(KeyMetadata.Port, 3, "color")
+    val str = key.replaceN("|>>>>n<<=|")
+    str mustBe "|>>>>3<<=|"
   }
 }
 
-case class KeyContainer(key: Key, other: Int = 42)
 
-implicit val fmtKeyContainer: Format[KeyContainer] = Json.format[KeyContainer]
