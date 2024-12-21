@@ -7,15 +7,13 @@
 @import net.wa9nnn.rc210.ui.FormField
 @import net.wa9nnn.rc210.KeyMetadata
 @import net.wa9nnn.rc210.PortRow
-@import net.wa9nnn.rc210.FieldKey
 @import com.wa9nnn.wa9nnnutil.tableui.Table
 @import com.wa9nnn.wa9nnnutil.tableui.html.renderTable
 @( table:Table)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
     @form(action = routes.EditController.save()) {
-        
         @submitButton()
         @renderTable(table)
-        @fieldKeyStuff(FieldKey(Key.portKeys.head, "unused"))
+        @fieldKeyStuff(Key.portKeys.head)
         @submitButton()
     }

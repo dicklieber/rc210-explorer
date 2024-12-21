@@ -9,7 +9,7 @@
 @import net.wa9nnn.rc210.KeyMetadata
 @(f: Form[MeterNode], key:Key)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 @form(action = routes.EditController.save()) {
-    @keysAndName(fieldKey)
+    @keysAndName(key)
     <div class="col-">
         <table class="table table-bordered table-sm  w-auto rc210-table">
             <thead class="table-primary">

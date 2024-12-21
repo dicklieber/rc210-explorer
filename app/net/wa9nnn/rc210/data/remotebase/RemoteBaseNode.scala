@@ -21,8 +21,9 @@ import com.wa9nnn.wa9nnnutil.tableui.{Cell, KvTable, Row, TableSection}
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.ui.{Button, ButtonCell, FormData}
 import net.wa9nnn.rc210.util.Chunk
-import net.wa9nnn.rc210.{ Key, KeyMetadata}
+import net.wa9nnn.rc210.{Key, KeyMetadata}
 import play.api.data.Forms.*
 import play.api.data.{Form, Mapping}
 import play.api.i18n.MessagesProvider
@@ -31,20 +32,17 @@ import play.api.mvc.*
 import play.twirl.api.Html
 
 case class RemoteBaseNode(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[RBMemory] = Seq.empty) extends FieldValueComplex() {
-  override val key: Key = Key(KeyMetadata.RemoteBase)
 
   //  override def display: String = fieldName
 
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: TemplateSource): Seq[String] = Seq(
+  override def toCommands(fieldEntry: FieldEntry): Seq[String] = Seq(
     s"1*2083${radio.rc210Value}",
     s"1*2084${yaesu.rc210Value}",
     s"1*2060$prefix"
   )
-
-  override def toJsValue: JsValue = Json.toJson(this)
 
   override def displayCell: Cell =
     KvTable.inACell(
@@ -56,7 +54,7 @@ case class RemoteBaseNode(radio: Radio, yaesu: Yaesu, prefix: String, memories: 
 
 
   def toRow(key:Key): Row = Row(
-    Button.editButton(key),
+    ButtonCell.edit(key),
     radio,
     yaesu,
     prefix,
@@ -65,7 +63,7 @@ case class RemoteBaseNode(radio: Radio, yaesu: Yaesu, prefix: String, memories: 
 }
 
 object RemoteBaseNode extends FieldDefComplex[RemoteBaseNode] {
-  override val keyKind: KeyMetadata = KeyMetadata.RemoteBase
+  override val keyMetadata: KeyMetadata = KeyMetadata.RemoteBase
   def unapply(u: RemoteBaseNode): Option[(Radio, Yaesu, String, Seq[RBMemory])] = Some((u.radio, u.yaesu, u.prefix, u.memories))
 
   override val form: Form[RemoteBaseNode] = Form(
@@ -131,15 +129,17 @@ object RemoteBaseNode extends FieldDefComplex[RemoteBaseNode] {
   implicit val fmt: Format[RemoteBaseNode] = Json.format[RemoteBaseNode]
 
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    val filledForm = form.fill(fieldEntries.head.value)
-    views.html.remoteBase(filledForm)
+    val fieldEntry: FieldEntry = fieldEntries.head
+    val filledForm = form.fill(fieldEntry.value)
+    views.html.remoteBase(fieldEntry.key, filledForm)
 
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html=
     throw new NotImplementedError() //todo
 
-  override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] = {
-    bind(form.bindFromRequest(data).get)
-  }
+  override def bind(formData:FormData): Seq[UpdateCandidate] =
+    val key = formData.key
+    val remoteBaseNode: RemoteBaseNode = form.bindFromRequest(formData.map).get
+    Seq(UpdateCandidate(key, remoteBaseNode))
 }
 
 /**

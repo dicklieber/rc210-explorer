@@ -6,8 +6,8 @@ import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.schedules.ScheduleNode.s02
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.{ButtonCell, TableSectionButtons}
-import net.wa9nnn.rc210.{FieldKey, Key, KeyMetadata}
+import net.wa9nnn.rc210.ui.{ButtonCell, FormData, TableSectionButtons}
+import net.wa9nnn.rc210.{Key, KeyMetadata}
 import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.i18n.MessagesProvider
@@ -25,18 +25,16 @@ import views.html.{fieldIndex, scheduleEdit}
  * @param minute                        when this runs on selected day.
  * @param macroKey                      e.g. "macro42"
  */
-case class ScheduleNode(override val key: Key,
-                        dayOfWeek: DayOfWeek = DayOfWeek.EveryDay,
+case class ScheduleNode(dayOfWeek: DayOfWeek = DayOfWeek.EveryDay,
                         weekInMonth: WeekInMonth = WeekInMonth.Every,
                         monthOfYear: MonthOfYearSchedule = MonthOfYearSchedule.Every,
                         hour: Hour = Hour.Every,
                         minute: Int = 0,
                         macroKey: Key = Key(KeyMetadata.Macro, 1)) extends FieldValueComplex(macroKey):
 
-  override def toRow: Row = {
+  override def toRow(key: Key): Row = {
     Row(
-      ButtonCell.edit(fieldKey),
-      key.keyWithName,
+      ButtonCell.edit(key),
       dayOfWeek,
       weekInMonth,
       monthOfYear,
@@ -47,7 +45,6 @@ case class ScheduleNode(override val key: Key,
   }
 
   private val rows: Seq[Row] = Seq(
-    "Key" -> key.keyWithName,
     "Day Of Week" -> dayOfWeek,
     "Week In Month" -> weekInMonth,
     "Month" -> monthOfYear,
@@ -59,13 +56,14 @@ case class ScheduleNode(override val key: Key,
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: TemplateSource): Seq[String] = {
+  override def toCommands(fieldEntry: FieldEntry): Seq[String] =
+    val key = fieldEntry.key
     val setPoint: String = key.rc210Number.toString
     val sDow: String = dayOfWeek.rc210Value.toString
     val moy: String = s02(monthOfYear.rc210Value)
     val hours: String = s02(hour.rc210Value)
     val minutes: String = s02(minute)
-    val sMacro = s02(macroKey.rc210Number)
+    val sMacro = s02(key.rc210Number.get)
 
     val dowDigits = WeekInMonth.translate(weekInMonth, dayOfWeek)
     //todo
@@ -73,7 +71,6 @@ case class ScheduleNode(override val key: Key,
     Seq(command)
 
     //1 * 4 0 0 1 3 9 * 5 6 * 0 0 * 9 9 * 0 0 * 9 0
-  }
 
   override def tableSection(key: Key): TableSection =
     TableSectionButtons(key, rows: _*)
@@ -83,24 +80,21 @@ case class ScheduleNode(override val key: Key,
       rows: _*
     )
 
-  override def toJsValue: JsValue = Json.toJson(this)
-
 object ScheduleNode extends LazyLogging with FieldDefComplex[ScheduleNode]:
-  override val keyKind: KeyMetadata = KeyMetadata.Schedule
+  override val keyMetadata: KeyMetadata = KeyMetadata.Schedule
 
-  def unapply(schedule: ScheduleNode): Option[(Key, DayOfWeek, WeekInMonth, MonthOfYearSchedule, Hour, Int, Key)] =
-    Some(schedule.key, schedule.dayOfWeek, schedule.weekInMonth, schedule.monthOfYear, schedule.hour, schedule.minute, schedule.macroKey)
+  def unapply(schedule: ScheduleNode): Option[( DayOfWeek, WeekInMonth, MonthOfYearSchedule, Hour, Int, Key)] =
+    Some( schedule.dayOfWeek, schedule.weekInMonth, schedule.monthOfYear, schedule.hour, schedule.minute, schedule.macroKey)
 
   override val form: Form[ScheduleNode] = Form[ScheduleNode](
     mapping(
-      "key" -> of[Key],
       "dayOfWeek" -> DayOfWeek.formField,
       "weekInMonth" -> WeekInMonth.formField,
       "monthOfYear" -> MonthOfYearSchedule.formField,
       "hour" -> Hour.formField,
       "minute" -> number(0, 59),
       "macroKey" -> of[Key],
-    )(ScheduleNode.apply)(ScheduleNode.unapply)
+    )((dayOfWeek: DayOfWeek, weekInMonth: WeekInMonth, monthOfYear: MonthOfYearSchedule, hour: Hour, minute: Int, macroKey: Key) => ScheduleNode.apply(dayOfWeek, weekInMonth, monthOfYear, hour, minute, macroKey))(ScheduleNode.unapply)
   )
 
   /**
@@ -110,9 +104,7 @@ object ScheduleNode extends LazyLogging with FieldDefComplex[ScheduleNode]:
 
   def empty(setPoint: Int): ScheduleNode = {
     val scheduleKey: Key = Key(KeyMetadata.Schedule, setPoint)
-    new ScheduleNode(
-      key = scheduleKey
-    )
+    new ScheduleNode()
   }
 
   def header(count: Int): Header = Header(s"Schedules ($count)",
@@ -130,38 +122,29 @@ object ScheduleNode extends LazyLogging with FieldDefComplex[ScheduleNode]:
     )
   }
 
-  override def extract(memory: Memory): Seq[FieldEntry] = {
-    ScheduleBuilder(memory).map { schedule =>
-      FieldEntry(this, FieldKey(schedule.key), schedule)
-    }
-  }
+  override def extract(memory: Memory): Seq[FieldEntry] =
+    ScheduleBuilder(memory, this)
 
-  def apply(setPoint: Int): ScheduleNode = new ScheduleNode(Key(KeyMetadata.Schedule, setPoint))
+  def apply(setPoint: Int): ScheduleNode = new ScheduleNode()
 
   implicit val fmt: Format[ScheduleNode] = Json.format[ScheduleNode]
   
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    val table = Table(Header(s"Schedules  (${fieldEntries.length})",
-      "",
-      "Schedule",
-      "Day in Week",
-      Cell("Week").withToolTip("Week in month"),
-      "Month",
-      "Hour",
-      "Minute",
-      Cell("Macro").withToolTip("Macro to run")
-    ),
-      fieldEntries.map(_.value.toRow)
+    val table = Table(header(fieldEntries.length),
+      fieldEntries.map(fe => {
+        val value:ScheduleNode = fe.value
+        value.toRow(fe.key)
+      })
     )
-    fieldIndex(keyKind, table)
+    fieldIndex(keyMetadata, table)
 
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     val value = form.fill(fieldEntry.value)
-    scheduleEdit(value, fieldEntry.fieldKey)
+    scheduleEdit(value, fieldEntry.key)
 
-  override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] = 
-    val value = form.bindFromRequest(data)
-    bind(value.get)
+  override def bind(formData: FormData): Seq[UpdateCandidate] =
+    val scheduleNode: ScheduleNode = form.bindFromRequest(formData.map).get
+    Seq(UpdateCandidate(formData.key, scheduleNode))
 
 
 

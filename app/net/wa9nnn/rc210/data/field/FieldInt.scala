@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row}
+import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.*
@@ -28,25 +29,23 @@ case class FieldInt(value: Int) extends FieldValueSimple():
     toString
   )
 
-  override def toEditCell(fieldKey: FieldKey): Cell = FormField(fieldKey, value)
+  override def toEditCell(key:Key): Cell = FormField(key, value)
 
-  override def toCommands(fieldEntry: TemplateSource): Seq[String] = 
-    val fieldKey = fieldEntry.fieldKey
+  override def toCommands(fieldEntry: FieldEntry): Seq[String] =
+    val key = fieldEntry.key
 
     Seq(
-      fieldKey.key.replaceN(fieldEntry.template)
+      key.replaceN(fieldEntry.template)
       .replaceAll("v", value.toString)
     )
 
 
   override def displayCell: Cell = Cell(value)
 
-  override def update(formFieldValue: String): FieldInt = 
+
+object FieldInt extends SimpleExtractor[FieldInt]:
+  override def update(formFieldValue: String): FieldInt =
     FieldInt(formFieldValue.toInt)
-
-  override def toJsValue: JsValue = Json.toJson(this)
-
-object FieldInt extends SimpleExtractor:
 
   override def extractFromInts(itr: Iterator[Int], field: FieldDefSimple): FieldInt = {
     new FieldInt(if (field.max > 256)
@@ -56,7 +55,7 @@ object FieldInt extends SimpleExtractor:
     )
   }
 
-  implicit val fmtFieldInt: Format[FieldInt] = new Format[FieldInt] {
+  implicit val fmt: Format[FieldInt] = new Format[FieldInt] {
     override def reads(json: JsValue): JsResult[FieldInt] = JsSuccess(new FieldInt(json.as[Int]))
 
     override def writes(o: FieldInt): JsValue = Json.toJson(o.value)

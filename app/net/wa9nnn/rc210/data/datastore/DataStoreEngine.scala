@@ -35,16 +35,17 @@ class DataStoreEngine extends DataStoreApi:
   private implicit val keyFieldMap: TrieMap[Key, FieldEntry] = new TrieMap[Key, FieldEntry]()
 
   /**
-   * 
+   *
    * @param entries as returned by [[entries]].
    */
-  def loadEntries(entries:Seq[FieldEntry]):Unit =
+  def loadEntries(entries: Seq[FieldEntry]): Unit =
     entries.foreach { fieldEntry =>
-      keyFieldMap.put(fieldEntry.Key, fieldEntry)
+      keyFieldMap.put(fieldEntry.key, fieldEntry)
     }
-  def set(fieldDatas:Seq[FieldData]):Unit =
+
+  def set(fieldDatas: Seq[FieldData]): Unit =
     fieldDatas.foreach { fieldData =>
-      keyFieldMap.get(fieldData.Key).foreach( fieldEntry =>
+      keyFieldMap.get(fieldData.key).foreach(fieldEntry =>
         fieldEntry.set(fieldData)
       )
     }
@@ -56,7 +57,7 @@ class DataStoreEngine extends DataStoreApi:
    */
   def entries: Seq[FieldEntry] =
     keyFieldMap.values.toIndexedSeq.sorted
-    
+
   def fieldDatas: Seq[FieldData] =
     keyFieldMap.values.map(_.fieldData).toIndexedSeq.sorted
 
@@ -64,29 +65,30 @@ class DataStoreEngine extends DataStoreApi:
     apply(keyKind).map(_.value.asInstanceOf[T])
 
   def editValue[T <: FieldValue](Key: Key): T =
-    val maybeFieldEntry: Option[FieldEntry] = all.find(_.Key == Key)
+    val maybeFieldEntry: Option[FieldEntry] = all.find(_.key == Key)
     maybeFieldEntry match
       case Some(fieldEntry: FieldEntry) =>
         fieldEntry.value.asInstanceOf[T]
       case None =>
         throw new IllegalArgumentException(s"No editValue for KeyStuff: $Key")
 
-  def apply(keyKind: KeyMetadata): Seq[FieldEntry] =
-    all.filter(_.Key.key.keyKind == keyKind)
+  def apply(keyMetadata: KeyMetadata): Seq[FieldEntry] =
+    all.filter(_.key.keyMetadata == keyMetadata)
 
   def all: Seq[FieldEntry] =
     keyFieldMap.values.toIndexedSeq.sorted
-  
-//  def indexValues[T <: FieldValue](keyKind: KeyKind): Seq[T] =
-//    all.filter(_.Key.key.keyKind == keyKind).map(_.value.asInstanceOf[T])
 
-  def fieldEntry(Key: Key): FieldEntry =
+  //  def indexValues[T <: FieldValue](keyKind: KeyKind): Seq[T] =
+  //    all.filter(_.Key.key.keyKind == keyKind).map(_.value.asInstanceOf[T])
+
+  def getFieldEntry(Key: Key): FieldEntry =
     keyFieldMap.get(Key) match
       case Some(fieldEntry) =>
         fieldEntry
       case None =>
         throw new Exception(s"No value for Key: $Key")
-  def fieldDefinition(Key: Key):Option[FieldDef[?]] =
+
+  def fieldDefinition(Key: Key): Option[FieldDef[?]] =
     keyFieldMap.get(Key).map(_.fieldDefinition)
 
   //  def get(keyKind: KeyKind): Seq[FieldEntry] =
@@ -111,13 +113,13 @@ class DataStoreEngine extends DataStoreApi:
     }).toIndexedSeq
 
   /**
-   * @param candidates a sequence of `UpdateCandidate` instances containing the keys and values 
+   * @param candidates a sequence of `UpdateCandidate` instances containing the keys and values
    *                   used to update the corresponding fields in the `keyFieldMap`.
    */
-  
+
   def update(candidates: Seq[UpdateCandidate]): Unit =
     candidates.foreach { updateCandidate =>
-      val key = updateCandidate.Key
+      val key = updateCandidate.key
       try
         val fieldEntry: FieldEntry = keyFieldMap(key)
         updateCandidate.candidate match
@@ -126,7 +128,7 @@ class DataStoreEngine extends DataStoreApi:
           case fieldValue: FieldValue =>
             fieldEntry.set(fieldValue)
       catch
-        case e:NoSuchElementException =>
+        case e: NoSuchElementException =>
           logger.error(s"No entry for key: $key")
     }
 
@@ -138,14 +140,14 @@ class DataStoreEngine extends DataStoreApi:
    */
   def acceptCandidate(Key: Key): Unit =
     keyFieldMap(Key).acceptCandidate()
-  
+
   def rollback(): Unit =
     keyFieldMap.values.foreach { fieldEntry =>
       fieldEntry.rollBack
     }
 
   def rollback(Key: Key): Unit =
-    val aFieldEntry = fieldEntry(Key)
+    val aFieldEntry = getFieldEntry(Key)
     aFieldEntry.rollBack
 
   def triggers: Seq[FieldEntry] =
@@ -159,22 +161,16 @@ class DataStoreEngine extends DataStoreApi:
       fieldEntry
     }).toIndexedSeq
 
-  def flowData(search: Key): Option[FlowData] =
+  def flowData(searchKey: Key): Option[FlowData] =
     def buildFlowData(MacroEntry: FieldEntry): FlowData =
-      assert(MacroEntry.Key.key.keyKind == KeyMetadata.Macro, s"Must be an Macro entry!  But got: $MacroEntry")
+      assert(MacroEntry.key.keyMetadata == KeyMetadata.Macro, s"Must be an Macro entry!  But got: $MacroEntry")
+      val triggers: Seq[FieldEntry] = triggerNodes(searchKey)
+      new FlowData(MacroEntry, triggers, searchKey)
 
-      // find triggers
-      val Macro: MacroNode = MacroEntry.value
-      val key = Macro.key
-
-      val triggers: Seq[FieldEntry] = triggerNodes(key)
-
-      new FlowData(MacroEntry, triggers, search)
-
-    val entries: Seq[FieldEntry] = fieldEntry(search)
+    val entries: Seq[FieldEntry] = fieldEntry(searchKey.keyMetadata)
     assert(entries.length == 1, s"Should only be one entry for a complex key, but got $entries")
     entries.headOption.map { fieldEntry =>
-      fieldEntry.Key.key.keyKind match
+      fieldEntry.key.keyMetadata match
 
         case KeyMetadata.Macro =>
           buildFlowData(fieldEntry)

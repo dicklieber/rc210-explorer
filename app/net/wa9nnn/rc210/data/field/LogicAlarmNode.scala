@@ -18,11 +18,10 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.*
-import controllers.routes
 import controllers.routes.*
 import net.wa9nnn.rc210.data.EditHandler
 import net.wa9nnn.rc210.data.courtesy.CourtesyToneNode
-import net.wa9nnn.rc210.data.courtesy.CourtesyToneNode.{form, keyKind}
+import net.wa9nnn.rc210.data.courtesy.CourtesyToneNode.{form, keyMetadata}
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
@@ -37,9 +36,7 @@ import play.api.mvc.*
 import play.twirl.api.Html
 import views.html.{courtesyToneEdit, fieldIndex, logicAlarmEditor}
 
-case class LogicAlarmNode(override val key: Key, override val enabled: Boolean, 
-                          lowMacro: Key, highMacro: Key) extends FieldValueComplex[LogicAlarmNode](lowMacro, highMacro) {
-  key.check(KeyMetadata.LogicAlarm)
+case class LogicAlarmNode(override val enabled: Boolean, lowMacro: Key, highMacro: Key) extends FieldValueComplex[LogicAlarmNode](lowMacro, highMacro) {
   lowMacro.check(KeyMetadata.Macro)
   highMacro.check(KeyMetadata.Macro)
 
@@ -58,7 +55,6 @@ case class LogicAlarmNode(override val key: Key, override val enabled: Boolean,
   override def displayCell: Cell =
     val none: Header = Header.none
     KvTable.inACell(
-      "Key" -> key.keyWithName,
       "Enabled" -> CheckBoxCell(enabled),
       "Low Macro" -> lowMacro.keyWithName,
       "Low Macro" -> highMacro.keyWithName
@@ -67,15 +63,12 @@ case class LogicAlarmNode(override val key: Key, override val enabled: Boolean,
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: TemplateSource): Seq[String] = Seq {
+  override def toCommands(fieldEntry: FieldEntry): Seq[String] = Seq {
     "todo"
   }
 
-  override def toJsValue: JsValue = Json.toJson(this)
-
-  override def toRow: Row = Row(
-    ButtonCell.edit(fieldKey),
-    key.keyWithName,
+  override def toRow(key: Key): Row = Row(
+    ButtonCell.edit(key),
     enabled,
     lowMacro,
     highMacro
@@ -83,17 +76,16 @@ case class LogicAlarmNode(override val key: Key, override val enabled: Boolean,
 }
 
 object LogicAlarmNode extends FieldDefComplex[LogicAlarmNode]:
-  override val keyKind: KeyMetadata = KeyMetadata.LogicAlarm
+  override val keyMetadata: KeyMetadata = KeyMetadata.LogicAlarm
 
-  def unapply(u: LogicAlarmNode): Option[(Key, Boolean, Key, Key)] = Some((u.key, u.enabled, u.lowMacro, u.highMacro))
+  def unapply(u: LogicAlarmNode): Option[( Boolean, Key, Key)] = Some(( u.enabled, u.lowMacro, u.highMacro))
 
   val form: Form[LogicAlarmNode] = Form(
     mapping(
-      "key" -> of[Key],
       "enable" -> boolean,
       "lowMacro" -> of[Key],
       "highMacro" -> of[Key]
-    )(LogicAlarmNode.apply)(LogicAlarmNode.unapply)
+    )(( enabled: Boolean, lowMacro: Key, highMacro: Key) => LogicAlarmNode.apply(enabled, lowMacro, highMacro))(LogicAlarmNode.unapply)
   )
 
   /**
@@ -114,9 +106,9 @@ object LogicAlarmNode extends FieldDefComplex[LogicAlarmNode]:
       i <- 0 until KeyMetadata.LogicAlarm.maxN
     } yield
     {
-      val logicAlarmKey = Key(KeyMetadata.LogicAlarm, i + 1)
-      val logicAlarmNode: LogicAlarmNode = new LogicAlarmNode(logicAlarmKey, enables(i), lowMacros(i), highMacros(i))
-      FieldEntry(this, logicAlarmNode.fieldKey, logicAlarmNode)
+      val key = Key(KeyMetadata.LogicAlarm, i + 1)
+      val logicAlarmNode: LogicAlarmNode = LogicAlarmNode(enables(i), lowMacros(i), highMacros(i))
+      FieldEntry(this, key, logicAlarmNode)
     }
   }
 
@@ -132,18 +124,19 @@ object LogicAlarmNode extends FieldDefComplex[LogicAlarmNode]:
       "Low Macro",
       "High Macro"
     ),
-      fieldEntries.map(_.value.toRow)
+      fieldEntries.map(fieldEntry => fieldEntry.value.asInstanceOf[FieldValueComplex[LogicAlarmNode]].toRow(fieldEntry.key))
     )
-    fieldIndex(keyKind, table)
+    fieldIndex(keyMetadata, table)
 
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     val filled: Form[LogicAlarmNode] = form.fill(fieldEntry.value)
 
-    logicAlarmEditor(filled, fieldEntry.fieldKey)
+    logicAlarmEditor(fieldEntry.key, filled)
 
-  override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
-    val courtesyTone = form.bindFromRequest(data).get
+  override def bind(formData: FormData): Seq[UpdateCandidate] =
+    val key = formData.key
+    val courtesyTone = form.bindFromRequest(formData.map).get
     Seq(
-      UpdateCandidate(candidate = courtesyTone)
+      UpdateCandidate(key, courtesyTone)
     )
 

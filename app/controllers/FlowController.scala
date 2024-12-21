@@ -29,7 +29,6 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
-import net.wa9nnn.rc210.ui.flow.D3Data
 
 @Singleton
 class FlowController @Inject()(dataStore: DataStore)(using components: MessagesControllerComponents)
@@ -49,19 +48,4 @@ class FlowController @Inject()(dataStore: DataStore)(using components: MessagesC
     }.getOrElse(NotFound(key.keyWithName))
   }
 
-  //  def flow(key: Key): Action[AnyContent] = Action {
-  //
-  //    dataStore.flow(key).map { fd =>
-  //      val table = fd.table(functionsProvider)
-  //      Ok(views.html.bubbleSvg())
-  //    }.getOrElse(NotFound(key.keyWithName))
-  //  }
-  def d3Data(key: Key): Action[AnyContent] = Action {
-    dataStore.flowData(key).map { fd =>
-
-      val d3Data: D3Data = fd.d3Data()
-      val jsValue: JsValue = Json.toJson(d3Data)
-      Ok(jsValue)
-    }.getOrElse(NotFound(key.keyWithName))
-  }
 }

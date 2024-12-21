@@ -67,8 +67,8 @@ class EditController @Inject()(navMain: NavMain)
    */
   def edit(key:Key): Action[AnyContent] = Action {
     implicit request =>
-      val fieldEntry: FieldEntry = dataStore.fieldEntry(key)
-      Ok(navMain(key.keyMetadata, key.keyMetadata.edit(fieldEntry)))
+      val fieldEntry: FieldEntry = dataStore.getFieldEntry(key)
+      Ok(navMain(key.keyMetadata, key.keyMetadata.handler.edit(fieldEntry)))
   }
 
   /**
@@ -92,7 +92,7 @@ class EditController @Inject()(navMain: NavMain)
         val updateCandidates = key.bind(formData)
 
         dataStore.update(updateCandidates)
-        key.saveOp()
+        key.saveOp(key.keyMetadata)
       catch
         case e: Exception =>
           logger.error(s"save: ${e.getMessage}", e)

@@ -50,7 +50,7 @@ case class UploadRequest(doCandidateOnly: Boolean = true,
   def filter(dataStore: DataStore): Seq[UploadData] =
     maybeKey match
       case Some(fieldKey) =>
-        val fieldEntry: FieldEntry = dataStore.fieldEntry(fieldKey)
+        val fieldEntry: FieldEntry = dataStore.getFieldEntry(fieldKey)
         Seq(UploadData(fieldEntry, fieldEntry.value, acceptCandidate))
       case None =>
         for
@@ -95,8 +95,8 @@ case class UploadData(fieldEntry: FieldEntry, fieldValue: FieldValue, accept: Bo
 object UploadRequest:
   implicit val fmtUploadRequest: Format[UploadRequest] = Json.format[UploadRequest]
 
-  def apply(fieldKey: FieldKey): UploadRequest =
-    UploadRequest(maybeKey = Option(fieldKey))
+  def apply(key: Key): UploadRequest =
+    UploadRequest(maybeKey = Option(key))
 
   implicit def pathBinder: PathBindable[UploadRequest] = new PathBindable[UploadRequest] {
     override def bind(key: String, value: String): Either[String, UploadRequest] =

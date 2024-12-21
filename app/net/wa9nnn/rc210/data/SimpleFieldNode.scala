@@ -4,6 +4,7 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.{Key, KeyMetadata, NamedKey}
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.ui.FormData
 import play.api.i18n.MessagesProvider
 import play.api.mvc.RequestHeader
 import play.twirl.api.Html
@@ -16,18 +17,18 @@ import scala.collection.immutable
  * @param keyKind
  */
 abstract class SimpleFieldNode(val keyKind: KeyMetadata) extends EditHandler with LazyLogging:
-  def collect(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
+  def collect(formData: FormData): Seq[UpdateCandidate] =
 
     val valueSet: immutable.Iterable[UpdateCandidate] = (
       for {
-        (id: String, values: Seq[String]) <- data
+        (id: String, values: Seq[String]) <- formData.map
         if id != "fieldKey"
         if id != "key"
         key = Key.fromId(id)
-        if key.fieldName != NamedKey.fieldName
+        if key.qualifier.contains( NamedKey.fieldName)
         str <- values.headOption
       } yield {
-        UpdateCandidate(candidate = str)
+        UpdateCandidate(key, candidate = str)
       }
       ).toSeq
 

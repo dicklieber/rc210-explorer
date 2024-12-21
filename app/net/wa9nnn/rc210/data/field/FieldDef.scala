@@ -14,20 +14,21 @@ trait FieldDef[T <: FieldValue] extends LazyLogging with TemplateSource:
   def tooltip: String = ""
 
   def fieldName: String
-  val keyKind: KeyMetadata
+  val keyMetadata: KeyMetadata
   val template: String = ""
   val units: String = ""
 
   def positions: Seq[FieldOffset]
-  val fmt: Format[T]
-
   
-abstract class SimpleExtractor extends FieldExtractor :
+  
+abstract class SimpleExtractor[T<:FieldValueSimple] extends FieldExtractor :
   def extractFromInts(iterator: Iterator[Int], fieldDefinition: FieldDefSimple): FieldValue
 
+  def update(formFieldValue: String): FieldValueSimple
+  val fmt: Format[T]
 
-trait FieldExtractor 
 
+trait FieldExtractor
 
 
 

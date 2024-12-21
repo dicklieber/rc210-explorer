@@ -3,6 +3,7 @@ package net.wa9nnn.rc210.data
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValueSimple}
+import net.wa9nnn.rc210.ui.FormData
 import net.wa9nnn.rc210.{Key, KeyMetadata}
 import play.api.i18n.MessagesProvider
 import play.api.mvc.RequestHeader
@@ -14,15 +15,16 @@ case object CommonNode extends SimpleFieldNode(KeyMetadata.Common):
     val table = Table(header(fieldEntries.length),
       fieldEntries.map { fieldEntry =>
         Row(
-          fieldEntry.fieldKey.fieldName,
-          fieldEntry.value[FieldValueSimple].toEditCell(fieldEntry.fieldKey)
+          fieldEntry.key.qualifier.getOrElse("XYZZY"),
+//          fieldEntry.value[FieldValueSimple].toEditCell(fieldEntry.fieldKey)
+          fieldEntry.value[FieldValueSimple].displayCell //todo edit cell??
         )
       }
     )
     common(table)
 
-  override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] = {
-    val value: Seq[UpdateCandidate] = collect(data)
+  override def bind(formData: FormData): Seq[UpdateCandidate] = {
+    val value: Seq[UpdateCandidate] = collect(formData)
     value
   }
 
@@ -34,8 +36,9 @@ case object CommonNode extends SimpleFieldNode(KeyMetadata.Common):
     val table = Table(Header.none,
       Seq(
         Row(
-          fieldEntry.fieldKey.fieldName,
-          fieldEntry.value[FieldValueSimple].toEditCell(fieldEntry.fieldKey)
+          fieldEntry.key.qualifier.getOrElse("XYZZY"),
+          fieldEntry.value[FieldValueSimple].displayCell // todo (fieldEntry.fieldKey)
+//          fieldEntry.value[FieldValueSimple].toEditCell(fieldEntry.fieldKey)
         )
       )
     

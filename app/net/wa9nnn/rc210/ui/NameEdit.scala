@@ -23,7 +23,7 @@ object NameEdit:
    */
   def html(key: Key): Html =
     val namedKey: NamedKey = key.namedKey
-    val id: String = namedKey.fieldKey.id
+    val id: String = namedKey.key.id
 
     val r: Elem =
       <div>

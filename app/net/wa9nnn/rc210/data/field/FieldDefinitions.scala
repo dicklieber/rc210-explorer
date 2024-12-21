@@ -78,8 +78,8 @@ class FieldDefinitions @Inject()() {
     //MeterFaceName - 186-201
     //    *2064 C * M* X1* Y1* X2* Y2* C= Channel 1 to 8 M=Meter Type 0 to 6 X1, Y1, X2, Y2 represent two calibration points. There must be 6 parameters entered to define a meterEditor face, each value ending with *.
 
-    FieldDefSimple(322, "Rx Rcv Macro Active", Port, "n*2113 1 v", MacroKeyExtractor),
-    FieldDefSimple(325, "Rx Rcv Macro Low", Port, "n*2113  v", MacroKeyExtractor),
+    FieldDefSimple(322, "Rx Rcv Macro Active", Port, "n*2113 1 v", FieldMacroKey),
+    FieldDefSimple(325, "Rx Rcv Macro Low", Port, "n*2113  v", FieldMacroKey),
     //P1, P2, P3CWDI1 - 328-357
     //P1, P2, P3CWD2 - 358-402
     //P1, P2, P3INITIALID1 - 403-483
@@ -111,9 +111,9 @@ class FieldDefinitions @Inject()() {
     FieldDefSimple(3536, "Terminator", Common, "1*9020v", FieldDtmf) max 1,
     //ClockCorrection - 3538-3539 Humm, only two bytes but doc shows:  Docs shows this as *5105! Not *5101! In any event needs some special handling.
     FieldDefSimple(3540, "Say Year", Common, "n*5102b", FieldBoolean),
-    FieldDefSimple(3541, "Tail Message", Port, "n*21101v", MacroKeyExtractor),
-    FieldDefSimple(3544, "Tail Message", Port, "n*21102v", MacroKeyExtractor),
-    FieldDefSimple(3547, "Tail Message", Port, "n*21103v", MacroKeyExtractor),
+    FieldDefSimple(3541, "Tail Message", Port, "n*21101v", FieldMacroKey),
+    FieldDefSimple(3544, "Tail Message", Port, "n*21102v", FieldMacroKey),
+    FieldDefSimple(3547, "Tail Message", Port, "n*21103v", FieldMacroKey),
     FieldDefSimple(3550, "Tail Message Number", Port, "n*2111v", FieldInt),
     FieldDefSimple(3553, "Tail Timer", Port, "n*1020v", FieldInt) max 999 units "tails" tooltip "0 disables",
     FieldDefSimple(3559, "Tail Counter", Port, "n*2112v", FieldInt) max 999 units "tails" tooltip "0 disables",

@@ -4,12 +4,11 @@
 @import net.wa9nnn.rc210.ui.Tabs
 @import views.html.helper.{FieldConstructor, form, *}
 @import views.html.input.selectOptions
-@import net.wa9nnn.rc210.FieldKey
 @import net.wa9nnn.rc210.Key
-@(f: Form[RemoteBaseNode])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+@(key:Key, f: Form[RemoteBaseNode])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
 @form(routes.EditController.save()) {
-    @fieldKeyStuff(RemoteBaseNode.fieldKey)
+    @fieldKeyStuff(key)
     <table >
         <tr>
             <td>Radio:</td>

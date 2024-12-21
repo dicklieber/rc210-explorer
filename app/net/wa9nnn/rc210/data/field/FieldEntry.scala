@@ -17,8 +17,9 @@
 
 package net.wa9nnn.rc210.data.field
 
+import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.*
-import net.wa9nnn.rc210.{ Key, KeyMetadata}
+import net.wa9nnn.rc210.{Key, KeyMetadata}
 
 /**
  * There is one of these for each element in the [[net.wa9nnn.rc210.data.datastore.DataStore]]
@@ -27,7 +28,7 @@ import net.wa9nnn.rc210.{ Key, KeyMetadata}
  * @param fieldDefinition specific to this entry. e.g. template, name etc.
  * @param fieldData       the value. mutable
  */
-class FieldEntry( val fieldDefinition: FieldDef[?], initialValue: FieldData):
+class FieldEntry( val fieldDefinition: FieldDef[?], initialValue: FieldData) extends LazyLogging:
   val key: Key = initialValue.key
   val template: String = fieldDefinition.template
   private var _fieldData: FieldData = initialValue
@@ -51,7 +52,7 @@ class FieldEntry( val fieldDefinition: FieldDef[?], initialValue: FieldData):
     _fieldData.candidate.getOrElse(_fieldData.fieldValue).asInstanceOf[F]
 
   def tableSection: TableSection =
-    _fieldData.value.tableSection()
+    _fieldData.value.tableSection(key)
 
   def table: Table =
     //    val value1: Node = value
@@ -65,20 +66,18 @@ class FieldEntry( val fieldDefinition: FieldDef[?], initialValue: FieldData):
    */
 
   def setCandidate(formFieldValue: String): Unit =
-    val newCandidate: FieldValueSimple = _fieldData.fieldValue.update(formFieldValue)
-    _fieldData = _fieldData.setCandidate(newCandidate)
+    logger.error("Need to convert simple field value")
+//    val newCandidate: FieldValue = _fieldData.setCandidate()update(formFieldValue)
+//    _fieldData = _fieldData.setCandidate(newCandidate)
 
-  override def toRow: Row =
-    throw new NotImplementedError() //todo
 
 object FieldEntry:
   implicit val ordering: Ordering[FieldEntry] = Ordering.by[FieldEntry, Key](_.key)
 
   def apply(fieldDefinition: FieldDef[?], key: Key, fieldValue: FieldValue): FieldEntry =
     new FieldEntry(
-      key = key,
       fieldDefinition = fieldDefinition,
-      initialValue = FieldData(fieldValue))
+      initialValue = FieldData(key, fieldValue))
 
   def header(keyKind: KeyMetadata): Header = Header(s"$keyKind", "Number", "Field",
     Cell("Value")

@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.util
 
 import com.wa9nnn.wa9nnnutil.tableui.Cell
 import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.data.field.{TemplateSource, FieldValueSimple}
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValueSimple, TemplateSource}
 import play.api.libs.json.{JsString, JsValue}
 
 /**
@@ -35,9 +35,8 @@ trait FieldSelect[T] extends FieldValueSimple {
   /**
    * Render this value as an RC-210 command string.
    */
-  override def toCommands(fieldEntry: TemplateSource): Seq[String] = {
-    val fieldKey = fieldEntry.fieldKey
-    val key: Key = fieldKey.key
+  override def toCommands(fieldEntry: FieldEntry): Seq[String] = {
+    val key: Key = fieldEntry.key
 
     val number = try {
       value match {
@@ -55,8 +54,6 @@ trait FieldSelect[T] extends FieldValueSimple {
 
   }
 
-
-  override def toJsValue: JsValue = JsString(value.toString)
 
 //  /**
 //   *

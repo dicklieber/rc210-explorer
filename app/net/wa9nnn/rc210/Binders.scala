@@ -23,31 +23,16 @@ import play.api.mvc.PathBindable
 
 object Binders {
 
-  implicit def pathBinderMacro: PathBindable[Key] = new PathBindable[Key] {
-    override def bind(key: String, value: String): Either[String, Key] = {
-
-      Right(Key.fromId(value))
-    }
-
-    override def unbind(key: String, macroKey: Key): String = {
-      macroKey.toString
-    }
-  }
-
-/*  implicit def KeyPathBinder(implicit intBinder: PathBindable[Key]): PathBindable[Key] = new PathBindable[Key] {
-    override def bind(key: String, fromPath: String): Either[String, Key] = {
-      try {
-        Right(Key(fromPath))
-      } catch {
-        case e: Exception =>
-          Left(e.getMessage)
-      }
-    }
-
-    override def unbind(key: String, KeyStuff: Key): String =
-      KeyStuff.toString
-  }*/
-
+//  implicit def pathBinderhBinderMacro: PathBindable[Key] = new PathBindable[Key] {
+//    override def bind(key: String, value: String): Either[String, Key] = {
+//
+//      Right(Key.fromId(value))
+//    }
+//
+//    override def unbind(key: String, macroKey: Key): String = {
+//      macroKey.toString
+//    }
+//  }
 
   implicit def KeyBinder: PathBindable[Key] = new PathBindable[Key] {
     override def bind(key: String, id: String): Either[String, Key] =

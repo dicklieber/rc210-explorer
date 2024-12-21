@@ -22,12 +22,12 @@ import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
 import controllers.ExtractField
 import net.wa9nnn.rc210.data.EditHandler
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
-import net.wa9nnn.rc210.data.field.LogicAlarmNode.{form, keyKind}
-import net.wa9nnn.rc210.{FieldKey, Key, KeyMetadata}
+import net.wa9nnn.rc210.data.field.LogicAlarmNode.{form, keyMetadata}
 import net.wa9nnn.rc210.data.vocabulary.{Word, Words}
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.ButtonCell
+import net.wa9nnn.rc210.ui.{ButtonCell, FormData}
 import net.wa9nnn.rc210.util.Chunk
+import net.wa9nnn.rc210.{Key, KeyMetadata}
 import org.apache.pekko.http.scaladsl.model.HttpHeader.ParsingResult.Ok
 import play.api.data.Form
 import play.api.data.Forms.*
@@ -48,7 +48,7 @@ import scala.util.Try
  * @param key   Message key
  * @param words word numbers. Each 0 to 255. 
  */
-case class MessageNode(key: Key, words: Seq[Int]) extends FieldValueComplex[MessageNode]() {
+case class MessageNode(words: Seq[Int]) extends FieldValueComplex[MessageNode]() {
 
   def toWords: Seq[Word] = words.map(Word(_))
 
@@ -57,17 +57,16 @@ case class MessageNode(key: Key, words: Seq[Int]) extends FieldValueComplex[Mess
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: TemplateSource): Seq[String] = {
+  override def toCommands(fieldEntry: FieldEntry): Seq[String] = {
+    val key = fieldEntry.key
     val value: Seq[String] = words.map(word => f"$word%03d")
     val word3s: String = value.mkString
-    Seq(f"1*2103${key.rc210Number}%02d$word3s")
+    Seq(f"1*2103${key.rc210Number.get}%02d$word3s")
   }
 
-  override def toJsValue: JsValue = Json.toJson(this)
-
-  override def toRow: Row = {
+  override def toRow(key: Key): Row = {
     Row(
-      ButtonCell.editFlow(fieldKey),
+      ButtonCell.editFlow(key),
       key.keyWithName,
       toWords.map(_.string).mkString(" ")
     )
@@ -84,12 +83,12 @@ object MessageNode extends FieldDefComplex[MessageNode] with LazyLogging:
       .split(",")
       .toIndexedSeq
       .filter(_.nonEmpty).map(_.toInt)
-    new MessageNode(key, wordIds)
+    new MessageNode(wordIds)
   }
 
   def form: Form[MessageNode] = throw new IllegalStateException("Not used with MessageNode!")
 
-  override val keyKind: KeyMetadata = KeyMetadata.Message
+  override val keyMetadata: KeyMetadata = KeyMetadata.Message
 
   override def positions: Seq[FieldOffset] = {
     Seq(
@@ -110,33 +109,37 @@ object MessageNode extends FieldDefComplex[MessageNode] with LazyLogging:
       chunk: Chunk <- memory.chunks(1576, 10, 40)
       key: Key = Key(KeyMetadata.Message, mai.getAndIncrement())
     } yield {
-      val message: MessageNode = MessageNode(key, chunk.ints
-        .takeWhile(_ != 0)
-      )
+      val message: MessageNode = MessageNode(chunk.ints
+        .takeWhile(_ != 0))
       FieldEntry(this, key, message)
     }
   }
 
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    val table = Table(Header(s"Messages  (${fieldEntries.length})",
+    val header = Header(s"Messages  (${fieldEntries.length})",
       "",
       "Name",
       "Words"
-    ),
-      fieldEntries.map(_.value.toRow)
     )
-    fieldIndex(keyKind, table)
+    val table = Table(header,
+      fieldEntries.map(fe =>
+      {
+        val value:MessageNode = fe.value
+        value.toRow(fe.key)
+      })
+    )
+    fieldIndex(keyMetadata, table)
 
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    messageEditor(fieldEntry.value)
+    messageEditor(fieldEntry.key, fieldEntry.value)
 
-  override def bind(using data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
+  override def bind(formData: FormData): Seq[UpdateCandidate] =
     (for {
-      fieldKey <- EditHandler.fieldKey
-      ids <- EditHandler.str("ids")
+      fieldKey <- Option(formData.key)
+      ids <- formData("ids")
     } yield {
       val strings: Seq[String] = ids.split(',').toIndexedSeq
-      val messageNode = MessageNode(fieldKey.key, strings.map(_.toInt))
+      val messageNode = MessageNode(strings.map(_.toInt))
       UpdateCandidate(fieldKey, messageNode)
     }).toSeq
 

@@ -6,7 +6,8 @@
 @import net.wa9nnn.rc210.data.macros.MacroNode
 @import net.wa9nnn.rc210.Functions
 @import net.wa9nnn.rc210.KeyMetadata
-@(macroNode: MacroNode)
+@import net.wa9nnn.rc210.Key
+@(key:Key, macroNode: MacroNode)
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
@@ -19,7 +20,7 @@
 
     <div class="row">
         <div class="col">
-            @keysAndName(macroNode.fieldKey)
+            @keysAndName(key)
             <div><label for="dtmf">DTMF: </label>
                 <input id="dtmf" name="dtmf" value="@macroNode.dtmf">
             </div>

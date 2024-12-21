@@ -22,7 +22,8 @@ import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table, TableInACell}
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.{ Key, KeyMetadata}
+import net.wa9nnn.rc210.ui.{ButtonCell, FormData}
+import net.wa9nnn.rc210.{Key, KeyMetadata}
 import play.api.data.*
 import play.api.data.Forms.*
 import play.api.i18n.MessagesProvider
@@ -52,7 +53,7 @@ case class ClockNode(enableDST: Boolean = true,
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: TemplateSource): Seq[String] = {
+  override def toCommands(fieldEntry: FieldEntry): Seq[String] = {
     //NOTE: To disable DST program the START month to 0, i.e. *21310
     /*
     *2131x yy z where x = 1 is to program the START month and 0 is to program the END month yy is the month (01-12) and must be 2 digits and z Is the occurrence of Sunday in that month (1 – 5).
@@ -86,10 +87,8 @@ case class ClockNode(enableDST: Boolean = true,
     )
   }
 
-  override def toJsValue: JsValue = Json.toJson(this)
-
-  override def toRow: Row = Row(
-    fieldKey.editButtonCell,
+  override def toRow(key:Key): Row = Row(
+    ButtonCell.edit(key),
     key.keyWithName,
     enableDST,
     hourDST,
@@ -99,18 +98,17 @@ case class ClockNode(enableDST: Boolean = true,
   )
 
 object ClockNode extends FieldDefComplex[ClockNode] {
-  override val keyKind: KeyMetadata = KeyMetadata.Clock
+  override val keyMetadata: KeyMetadata = KeyMetadata.Clock
   override val form: Form[ClockNode] = Form(
     mapping(
-      "key" -> of[Key],
       "enableDST" -> boolean,
       "hourDST" -> number(min = 0, max = 23),
       "startDST" -> DSTPoint.dstPointForm,
       "endDST" -> DSTPoint.dstPointForm,
       "say24Hours" -> boolean
-    )((key: Key, enableDST: Boolean, hourDST: Int, startDST: DSTPoint, endDST: DSTPoint, say24Hours: Boolean) => ClockNode.apply(enableDST, hourDST, startDST, endDST, say24Hours))(ClockNode.unapply))
+    )(( enableDST: Boolean, hourDST: Int, startDST: DSTPoint, endDST: DSTPoint, say24Hours: Boolean) => ClockNode.apply(enableDST, hourDST, startDST, endDST, say24Hours))(ClockNode.unapply))
 
-  def unapply(u: ClockNode): Option[(Key, Boolean, Int, DSTPoint, DSTPoint, Boolean)] = Some((u.key, u.enableDST, u.hourDST, u.startDST, u.endDST, u.say24Hours))
+  def unapply(u: ClockNode): Option[( Boolean, Int, DSTPoint, DSTPoint, Boolean)] = Some((u.enableDST, u.hourDST, u.startDST, u.endDST, u.say24Hours))
 
   /**
    *
@@ -125,9 +123,10 @@ object ClockNode extends FieldDefComplex[ClockNode] {
     //    SimpleField(1186, "Clock 24 Hours", commonKey, "n*5103b", FieldBoolean),
     val say24Hours: Boolean = memory.bool(1186)
 
+    val key = Key(KeyMetadata.Clock)
     val clock = new ClockNode(enableDST, startHour, startDST, endDST, say24Hours)
     Seq(
-      FieldEntry(this, clock.fieldKey, clock)
+      FieldEntry(this, key, clock)
     )
   }
 
@@ -145,18 +144,19 @@ object ClockNode extends FieldDefComplex[ClockNode] {
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     val r: Html = fieldEntries.headOption match
       case Some(fe) =>
-        views.html.clock(fe.fieldKey, form.fill(fe.value))
+        views.html.clock(fe.key, form.fill(fe.value))
       case None =>
         throw new IllegalArgumentException("No ClockNode")
     r
 
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html = {
-    views.html.clock(fieldKey, form.fill(fieldEntry.value))
+    views.html.clock(fieldEntry.key, form.fill(fieldEntry.value))
   }
 
-  override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
-    val value: Form[ClockNode] = form.bindFromRequest(data)
+  override def bind(formData: FormData): Seq[UpdateCandidate] =
+    val key = formData.key
+    val value: Form[ClockNode] = form.bindFromRequest(formData.map)
     val clockNode: ClockNode = value.get
-    Seq(UpdateCandidate(candidate = clockNode))
+    Seq(UpdateCandidate(key, candidate = clockNode))
 }
 

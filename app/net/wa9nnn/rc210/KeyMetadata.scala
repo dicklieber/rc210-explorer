@@ -45,7 +45,7 @@ sealed trait KeyMetadata(val maxN: Int,
                          val needsQualifier: Boolean = false,
                          val includeInNavTab: Boolean = true,
                          val needsFieldName:Boolean = false,
-                    ) extends EnumEntryValue with EditHandler
+                    ) extends EnumEntryValue
   with CapitalWords with Tab with Ordered[KeyMetadata]:
   override def indexUrl: String = routes.EditController.index(this).url
 
@@ -59,7 +59,7 @@ object KeyMetadata extends PlayEnum[KeyMetadata]:
 
   override def values: IndexedSeq[KeyMetadata] = findValues
 
-  case object All extends KeyMetadata(1, null, includeInNavTab = false)
+  case object All extends KeyMetadata(1, handler = null, includeInNavTab = false)
 
   case object LogicAlarm extends KeyMetadata(5, LogicAlarmNode)
 

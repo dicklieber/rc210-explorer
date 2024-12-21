@@ -31,14 +31,13 @@ case class FieldDtmf(value: String) extends FieldValueSimple() with LazyLogging:
     toString
   )
 
-  override def toEditCell(fieldKey: FieldKey): Cell = FormField(fieldKey, value)
+  override def toEditCell(fieldKey: Key): Cell = FormField(fieldKey, value)
 
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: TemplateSource): Seq[String] = {
-    val fieldKey = fieldEntry.fieldKey
-    val key: Key = fieldKey.key
+  override def toCommands(fieldEntry: FieldEntry): Seq[String] = {
+    val key: Key = fieldEntry.key
     Seq(key.replaceN(fieldEntry.template)
       .replaceAll("v", value) //todo probably not right.
     )
@@ -46,14 +45,12 @@ case class FieldDtmf(value: String) extends FieldValueSimple() with LazyLogging:
 
   override def displayCell: Cell = Cell(value)
 
+
+object FieldDtmf extends SimpleExtractor[FieldDtmf]:
+
   override def update(formFieldValue: String): FieldDtmf = {
     FieldDtmf(formFieldValue)
   }
-
-  override def toJsValue: JsValue = Json.toJson(value)
-
-
-object FieldDtmf extends SimpleExtractor:
 
   override def extractFromInts(itr: Iterator[Int], fieldDefinition: FieldDefSimple): FieldValue = {
     val ints: Seq[Int] = for {
@@ -69,7 +66,7 @@ object FieldDtmf extends SimpleExtractor:
   }
 
 
-  implicit val fmtFieldDtmf: Format[FieldDtmf] = new Format[FieldDtmf] {
+  implicit val fmt: Format[FieldDtmf] = new Format[FieldDtmf] {
     override def reads(json: JsValue): JsResult[FieldDtmf] = JsSuccess(new FieldDtmf(json.as[String]))
 
     override def writes(o: FieldDtmf): JsValue = JsString(o.value)

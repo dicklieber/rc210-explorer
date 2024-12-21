@@ -1,14 +1,14 @@
 package net.wa9nnn.rc210.data.macros
 
-import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table, TableInACell}
+import com.wa9nnn.wa9nnnutil.tableui.*
 import net.wa9nnn.rc210.Functions.functions
 import net.wa9nnn.rc210.data.Dtmf.Dtmf
+import net.wa9nnn.rc210.data.EditHandler
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
-import net.wa9nnn.rc210.data.EditHandler
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.ButtonCell
-import net.wa9nnn.rc210.{ FunctionNode, Functions, Key, KeyMetadata}
+import net.wa9nnn.rc210.ui.{ButtonCell, FormData}
+import net.wa9nnn.rc210.{FunctionNode, Functions, Key, KeyMetadata}
 import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.i18n.MessagesProvider
@@ -28,12 +28,14 @@ import scala.annotation.tailrec
  * @param functions that this macro invokes.
  * @param dtmf      that can invoke this macro.
  */
-case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dtmf] = None) 
+case class MacroNode(functions: Seq[Key], dtmf: Option[Dtmf] = None)
   extends FieldValueComplex[MacroNode]():
+/*
   override def toString: String =
     val seq1: Seq[Any] = functions.map(_.rc210Number)
     val sFunctions:String = seq1.mkString(" ")
       s"$key: dtmf: ${dtmf.getOrElse("")} functions=$sFunctions"
+*/
 
   //  def enabled: Boolean = functions.nonEmpty
 
@@ -42,9 +44,10 @@ case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dt
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: TemplateSource): Seq[String] = {
+  override def toCommands(fieldEntry: FieldEntry): Seq[String] = {
+    val key = fieldEntry.key
     val numbers: String = functions.map(_.rc210Number).mkString("*")
-    val macroNumber: String = f"${key.rc210Number}%03d"
+    val macroNumber: String = f"${key.rc210Number.get}%03d"
     val mCmd = if (functions.isEmpty)
       s"1*4003$macroNumber" // erase macro
     else
@@ -63,10 +66,6 @@ case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dt
 
   override def displayCell: Cell = Cell(functions.map(_.rc210Number).mkString(" "))
 
-  override def toJsValue: JsValue = Json.toJson(this)
-
-  override def table(key: Key): Table = {
-    throw new NotImplementedError() //todo
     //    val value: Seq[Row] = functions.map { functionKey =>
     //      val name = functionKey.rc210Value.toString
     //      Row(name, FunctionsProvider(functionKey).description): _*
@@ -74,11 +73,11 @@ case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dt
     //    KvTable(s"Macro ${key.keyWithName}",
     //      TableSection("Functions", value)
     //    )
-  }
 
-  override def toRow: Row = Row(
-    ButtonCell.edit(fieldKey),
-    fieldKey.key.keyWithName,
+
+  override def toRow(key: Key): Row = Row(
+    ButtonCell.edit(key),
+    key.keyWithName,
     dtmf,
     TableInACell(Table(Seq.empty,
       functions.map { fKey =>
@@ -91,9 +90,9 @@ case class MacroNode(override val key: Key, functions: Seq[Key], dtmf: Option[Dt
 
 
 object MacroNode extends FieldDefComplex[MacroNode]:
-  override val keyKind: KeyMetadata = KeyMetadata.Macro
+  override val keyMetadata: KeyMetadata = KeyMetadata.Macro
 
-  def unapply(u: MacroNode): Option[(Key, Seq[Key], Option[Dtmf])] = Some((u.key, u.functions, u.dtmf))
+  def unapply(u: MacroNode): Option[(Seq[Key], Option[Dtmf])] = Some(( u.functions, u.dtmf))
 
   implicit val fmt: Format[MacroNode] = Json.format[MacroNode]
 
@@ -116,8 +115,8 @@ object MacroNode extends FieldDefComplex[MacroNode]:
         val key: Key = Key(KeyMetadata.Macro, mai.getAndIncrement())
         val functions: Iterable[Key] = chunk.map { functionNumber =>
           Key(KeyMetadata.Function, Option(functionNumber))
-        }.takeWhile(_.rc210Number != 0)
-        val macroNode: MacroNode = MacroNode(key, functions.toSeq, dtmfMacros(key))
+        }.takeWhile(_.rc210Number.get != 0)
+        val macroNode: MacroNode = MacroNode(functions.toSeq, dtmfMacros(key))
         FieldEntry(this, key, macroNode)
       }
 
@@ -137,26 +136,28 @@ object MacroNode extends FieldDefComplex[MacroNode]:
       "Functions"
     )
     val table = Table(header,
-      fieldEntries.map(_.value.toRow)
+      fieldEntries.map(fe => {
+        val value: MacroNode = fe.value
+        value.toRow(fe.key)
+      })
     )
-    fieldIndex(keyKind, table)
+    fieldIndex(keyMetadata, table)
 
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    macroEditor(fieldEntry.value)
+    macroEditor(fieldEntry.key, fieldEntry.value)
 
-  override def bind(using data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
-
+  override def bind(formData: FormData): Seq[UpdateCandidate] =
     (for {
-      fieldKey <- EditHandler.fieldKey
-      ids <- EditHandler.str("ids")
+      key <- Option(formData.key)
+      ids <- formData("ids") //todo
     } yield {
       val strings: Array[String] = ids.split(',').filter(_.nonEmpty)
       val functions: Seq[Key] = strings.toIndexedSeq.map(s => Key(KeyMetadata.Function, s.toInt))
-      val messageNode = MacroNode(fieldKey.key,
+      val messageNode = MacroNode(
         functions,
-        EditHandler.str("dtmf")
+        formData("dtmf")
       )
-      UpdateCandidate(fieldKey, messageNode)
+      UpdateCandidate(key, messageNode)
     }).toSeq
 
 

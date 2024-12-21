@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.ui
 
 import com.wa9nnn.wa9nnnutil.tableui.Cell
-import net.wa9nnn.rc210.{FieldKey, Key}
+import net.wa9nnn.rc210.Key
 import play.twirl.api.Html
 
 import java.time.LocalTime

@@ -34,19 +34,19 @@ trait EditHandler:
   def bind(formData: FormData): Seq[UpdateCandidate] =
     throw new NotImplementedError()
 
-  def bind(in: FieldValueComplex[?]): Seq[UpdateCandidate] =
+  def bind(key:Key, in: FieldValueComplex[?]): Seq[UpdateCandidate] =
     Seq(
-      UpdateCandidate(candidate = in)
+      UpdateCandidate(key, candidate = in)
     )
 
   def bind(in: String, key: Key): Seq[UpdateCandidate] =
     Seq(
-      UpdateCandidate(candidate = in)
+      UpdateCandidate(key, candidate = in)
     )
 
   // todo May not need this in EditHandler if default is always used.
-  def saveOp(): Result =
-    Results.Redirect(routes.EditController.index(keyKind))
+  def saveOp(keyMetadata: KeyMetadata): Result =
+    Results.Redirect(routes.EditController.index(keyMetadata))
 
 /**
  * Helpers to pick apart form form data.

@@ -20,14 +20,15 @@ package net.wa9nnn.rc210.data.field
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, RowSource, TableSection}
 import net.wa9nnn.rc210.Key
-import play.api.libs.json.{Format, JsResult, JsValue}
+import net.wa9nnn.rc210.ui.KeyedRow
+import play.api.libs.json.{Format, JsResult, JsValue, Json}
 
 /**
  * Holds the value for a rc2input.
  * Knows how to render as HTML control or string for JSON, showing to a user or RC-210 Command,
  * Has enough metadata needed to render
  */
-sealed trait FieldValue extends LazyLogging with RowSource:
+sealed trait FieldValue extends LazyLogging :
   /**
    * Nodes that actually have an enabled field should override this.
    *
@@ -49,7 +50,7 @@ sealed trait FieldValue extends LazyLogging with RowSource:
   /**
    * Render this value as an RC-210 command string.
    */
-  def toCommands(fieldEntry: TemplateSource): Seq[String]
+  def toCommands(fieldEntry: FieldEntry): Seq[String]
 
   /**
    * Read only HTML display
@@ -57,29 +58,22 @@ sealed trait FieldValue extends LazyLogging with RowSource:
   def displayCell: Cell
 
 object FieldValue:
-  implicit val fmt: Format[FieldValue] = new Format[FieldValue] {
-    override def reads(json: JsValue): JsResult[FieldValue] =
+  implicit val fmt: Format[FieldValue] = new Format[FieldValue]:
+    override def reads(json: JsValue) =
       throw new NotImplementedError() //todo
-    
-    override def writes(o: FieldValue): JsValue =
-      o.toJsValue
-  }
+
+    override def writes(o: FieldValue) =
+      Json.obj(
+        "type" -> o.getClass.getSimpleName
+      )
 
 /**
  * Renders itself as a [[[Cell]]
  */
-trait FieldValueSimple(val runableMacros: Key*) extends FieldValue
+trait FieldValueSimple(val runableMacros: Key*) extends FieldValue with RowSource:
+  def toEditCell(key: Key): Cell
+    
 
-trait FieldValueComplex[T <: FieldValueComplex[?]](val runableMacros: Key*) extends FieldValue with LazyLogging:
-  override def update(formFieldValue: String): FieldValueSimple =
-    throw new NotImplementedError("Not needed for a ComplexFieldValue!")
-
-  val key: Key
-
-  
-
-
-
-
-
+trait FieldValueComplex[T <: FieldValueComplex[?]](val runableMacros: Key*)
+  extends FieldValue with KeyedRow with LazyLogging
 

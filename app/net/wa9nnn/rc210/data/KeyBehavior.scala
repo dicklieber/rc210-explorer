@@ -1,5 +1,6 @@
 package net.wa9nnn.rc210.data
 
+import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.field.FieldValue
 import play.api.data.Form
 import play.api.mvc.Result
@@ -14,7 +15,7 @@ trait KeyBehavior[T <: FieldValue] {
 
   def index(): Result
 
-  def edit(fieldKey: Key): Result
+  def edit(key: Key): Result
 
   def save():Unit
 }

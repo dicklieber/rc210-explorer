@@ -24,7 +24,7 @@ import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.*
-import net.wa9nnn.rc210.{FieldKey, Key, KeyMetadata}
+import net.wa9nnn.rc210.{ Key, KeyMetadata}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, number, of}
 import play.api.i18n.MessagesProvider
@@ -35,18 +35,16 @@ import views.html.{fieldIndex, timerEditor}
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
-case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends FieldValueComplex(macroKey) {
+case class TimerNode(seconds: Int, macroKey: Key) extends FieldValueComplex(macroKey) :
   val duration: FiniteDuration = Duration(seconds, "seconds")
 
-  override def toRow: Row = Row(
-    ButtonCell.edit(fieldKey),
-    key.keyWithName,
+  override def toRow(key: Key): Row = Row(
+    ButtonCell.edit(key),
     seconds,
     macroKey.keyWithName
   )
 
   private val rows: Seq[Row] = Seq(
-    "Key" -> key.keyWithName,
     "Duration" -> duration,
     "Macro" -> macroKey.keyWithName,
   ).map(Row(_))
@@ -61,8 +59,9 @@ case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends FieldValueCo
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: TemplateSource): Seq[String] = {
-    val timeNumber: Int = key.rc210Number
+  override def toCommands(fieldEntry: FieldEntry): Seq[String] = {
+    val key = fieldEntry.key
+    val timeNumber: Int = key.rc210Number.get
     val secs: Int = seconds
     val macroNumber = macroKey.rc210Number
     Seq(
@@ -71,9 +70,6 @@ case class TimerNode(key: Key, seconds: Int, macroKey: Key) extends FieldValueCo
     )
   }
 
-  override def toJsValue: JsValue = Json.toJson(this)
-
-}
 
 object TimerNode extends FieldDefComplex[TimerNode] with LazyLogging:
 
@@ -97,38 +93,41 @@ object TimerNode extends FieldDefComplex[TimerNode] with LazyLogging:
       index <- 0 until KeyMetadata.Timer.maxN
     } yield {
       val key: Key = Key(KeyMetadata.Timer, index + 1)
-      FieldEntry(this, fieldKey(key), TimerNode(key, seconds.next(), Key(KeyMetadata.Macro, macroInts.next() + 1)))
+      FieldEntry(this, key, TimerNode(seconds.next(), Key(KeyMetadata.Macro, macroInts.next() + 1)))
     })
     r
   }
 
-  def unapply(u: TimerNode): Option[(Key, Int, Key)] = Some((u.key, u.seconds, u.macroKey))
+  def unapply(u: TimerNode): Option[( Int, Key)] = Some(( u.seconds, u.macroKey))
 
   val form: Form[TimerNode] = Form[TimerNode](
     mapping(
-      "key" -> of[Key],
       "seconds" -> number,
       "macroKey" -> of[Key],
-    )(TimerNode.apply)(TimerNode.unapply)
+    )((seconds: Int, macroKey: Key) => TimerNode.apply(seconds, macroKey))(TimerNode.unapply)
   )
 
   implicit val fmt: OFormat[TimerNode] = Json.format[TimerNode]
-  override val keyKind: KeyMetadata = KeyMetadata.Timer
+  override val keyMetadata: KeyMetadata = KeyMetadata.Timer
 
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    fieldIndex(keyKind, Table(Header(s"Timers  (${fieldEntries.length})",
+    fieldIndex(keyMetadata, Table(Header(s"Timers  (${fieldEntries.length})",
       "",
       "Timer",
       "Seconds",
       "Macro"
     ),
-      fieldEntries.map(_.fieldData.value.toRow)
+      fieldEntries.map(fe => {
+        val value:TimerNode = fe.value
+        value.toRow(fe.key)
+      })
     ))
 
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    timerEditor(form.fill(fieldEntry.value), fieldEntry.fieldKey)
+    timerEditor(form.fill(fieldEntry.value), fieldEntry.key)
 
-  override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
-    bind(form.bindFromRequest(data).get)
+  override def bind(formData: FormData): Seq[UpdateCandidate] =
+    val timerNode: TimerNode = form.bindFromRequest(formData.map).get
+    Seq(UpdateCandidate(formData.key, timerNode))
 
 

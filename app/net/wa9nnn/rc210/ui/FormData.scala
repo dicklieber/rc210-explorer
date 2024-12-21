@@ -42,7 +42,7 @@ class FormData(val map: Map[String, Seq[String]]):
 
   def key: Key =
     apply(Key.keyName)
-      .map(Key(_))
+      .map(s => Key.fromId(s))
       .getOrElse(throw new IllegalArgumentException(s"No key found in form data!"))
 
 object FormData:

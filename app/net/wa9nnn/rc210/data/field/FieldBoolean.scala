@@ -32,33 +32,26 @@ case class FieldBoolean(value: Boolean = false) extends FieldValueSimple() :
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: TemplateSource): Seq[String] = {
-    val fieldKey = fieldEntry.fieldKey
-    val key: Key = fieldKey.key
+  override def toCommands(fieldEntry: FieldEntry): Seq[String] =
+    val key = fieldEntry.key
     Seq(key.replaceN(fieldEntry.template)
       .replaceAll("v", if (value) "1" else "0")
       .replaceAll("b", if (value) "1" else "0")
     )
-  }
 
   override def displayCell: Cell = BooleanCell(value)
-  
-  override def update(formFieldValue: String): FieldBoolean = FieldBoolean(formFieldValue == "on")
-
-  override def toJsValue: JsValue = Json.toJson(this)
-
-  override def toEditCell(fieldKey: FieldKey): Cell =
-    FormField(fieldKey, value)
 
 
+  override def toEditCell(key: Key): Cell =
+    FormField(key, value)
 
-object FieldBoolean extends SimpleExtractor:
+object FieldBoolean extends SimpleExtractor[FieldBoolean]:
 
   override def extractFromInts(itr: Iterator[Int], fieldDefinition: FieldDefSimple): FieldValue =
     FieldBoolean(itr.next() > 0)
+  override def update(formFieldValue: String): FieldBoolean = FieldBoolean(formFieldValue == "on")
 
-
-  implicit val fmtFieldBoolean: Format[FieldBoolean] = new Format[FieldBoolean] {
+  implicit val fmt: Format[FieldBoolean] = new Format[FieldBoolean] {
 
     override def writes(o: FieldBoolean) = JsBoolean(o.value)
 

@@ -2,6 +2,7 @@
 @import net.wa9nnn.rc210.ui.Tabs
 @import net.wa9nnn.rc210.KeyMetadata
 @import net.wa9nnn.rc210.ui.ButtonCell
+@import net.wa9nnn.rc210.Key
 @(courtesyTones: Seq[CourtesyToneNode])
 
 <div>
@@ -35,10 +36,11 @@
         }
 
             <tbody>
-            @for(courtesyTone <- courtesyTones) {
+            @for((courtesyTone, index) <- courtesyTones.zipWithIndex) {
+                @defining(Key(KeyMetadata.CourtesyTone, index+1)){ key =>
                 <tr>
-                    <td rowspan="3">@Html(ButtonCell.edit(courtesyTone.fieldKey).toString)</td>
-                    <td rowspan="3"> @courtesyTone.key.keyWithName</td>
+                    <td rowspan="3">@Html(ButtonCell.edit(key).toString)</td>
+                    <td rowspan="3"> @key.keyWithName</td>
                     @for(segment <- 0 to 3) {
                         <td rowspan="3">@courtesyTone.segments(segment).delayMs</td>
                         <td>@courtesyTone.segments(segment).durationMs</td>
@@ -51,6 +53,7 @@
                     </tr>
                 }
             }
+        }
     </tbody>
     </table>
 </div>

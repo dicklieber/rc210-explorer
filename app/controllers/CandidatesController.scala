@@ -62,7 +62,7 @@ class CandidatesController @Inject()(dataStore: DataStore,
             key.display,
             fieldData.fieldValue.displayCell,
             fieldData.candidate.map(_.displayCell).getOrElse(""),
-            commandsCell(fieldData.value.toCommands(fieldEntry.fieldDefinition))
+            commandsCell(fieldData.value.toCommands(fieldEntry))
           )
           row
       }

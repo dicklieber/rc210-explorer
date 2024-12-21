@@ -4,7 +4,7 @@
 @import net.wa9nnn.rc210.ui.Tabs
 @import views.html.helper.*
 @import views.html.input.selectOptions
-@(f: Form[MeterNode], key: Key)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+@(key: Key, f: Form[MeterNode])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 @form(action = routes.EditController.save()) {
     @keysAndName(key)
     <div class="col-">

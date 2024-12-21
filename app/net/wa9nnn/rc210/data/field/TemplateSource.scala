@@ -19,5 +19,5 @@ package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.RowSource
 
-trait TemplateSource extends RowSource:
+trait TemplateSource :
   val template: String

@@ -24,7 +24,6 @@ import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.Functions
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.ui.{ButtonCell, TableSectionButtons}
-import net.wa9nnn.rc210.ui.flow.{D3Data, D3Link, D3Node}
 import play.api.mvc.Call
 import play.twirl.api.{Html, StringInterpolation}
 
@@ -36,7 +35,9 @@ import scala.language.postfixOps
  * @param triggers what this macro does.
  * @param searched what we looked for. UI should highlight this node.
  */
-class FlowData(val macroFieldEntry: FieldEntry, val triggers: Seq[FieldEntry], val searched: Key):
+class FlowData(val macroFieldEntry: FieldEntry,
+               val triggers: Seq[FieldEntry], 
+               val searched: Key):
   private val macroNode: MacroNode = macroFieldEntry.value
   private val macroFieldKey: Key = macroFieldEntry.key
 
@@ -55,7 +56,8 @@ class FlowData(val macroFieldEntry: FieldEntry, val triggers: Seq[FieldEntry], v
 
   def macroSection: Table =
     val table = Table(Seq.empty, Seq.empty)
-    val ts = new TableSectionButtons("Macro", ButtonCell.edit(macroFieldEntry.fieldKey))(
+    val ts = new TableSectionButtons("Macro",
+      ButtonCell.edit(macroFieldEntry.key))(
       "DTMF" -> macroFieldEntry.value[MacroNode].dtmf
     )
     table.append(ts)
@@ -63,20 +65,18 @@ class FlowData(val macroFieldEntry: FieldEntry, val triggers: Seq[FieldEntry], v
   def table: Table = {
     val triggerRows: Seq[Row] = triggers.map { fieldEntry =>
       //      val value: TriggerNode = triggerInfo.tableSection
-      Row.ofAny(fieldEntry.fieldKey, fieldEntry.value.tableSection)
+      Row.ofAny(fieldEntry.key, fieldEntry.value.tableSection)
     }
     val functionRows = macroNode.functions.map { functionKey =>
       Row.ofAny(functionKey.keyWithName, Functions.description(functionKey))
     }
     KvTable.apply("Flow Data",
       "Search" -> searched.keyWithName,
-      "Macro" -> macroFieldKey.key.keyWithName,
+      "Macro" -> macroFieldKey.keyWithName,
       KvTableSection("Triggers", triggerRows: _*),
       KvTableSection("Functions", functionRows: _*)
     )
   }
-
-  def d3Data(): D3Data = ???
 
 /*
     val fNodes: Seq[D3Node] = macroNode.functions.map(functionKey => FunctionsProvider(functionKey).d3Node(functionKey.toString))

@@ -22,17 +22,14 @@ import controllers.routes
 import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.ui.{FormField, TableSectionButtons}
 import net.wa9nnn.rc210.util.{FieldSelect, SelectOption}
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{Format, JsValue, Json}
 
 
-case class TimeoutTimerResetPoint(value: TotReset = TotReset.values.head) extends FieldValueSimple() {
+case class TimeoutTimerResetPoint(value: TotReset = TotReset.AfterCOS) extends FieldValueSimple() :
   override def displayCell: Cell = Cell(value)
 
-  def toCommands(fieldEntry: TemplateSource): Seq[String] =
+  def toCommands(fieldEntry: FieldEntry): Seq[String] = {
     Seq(s"*2122${value.rc210Value}")
-
-  override def update(formFieldValue: String): TimeoutTimerResetPoint = {
-    TimeoutTimerResetPoint(TotReset.withName(formFieldValue))
   }
 
 
@@ -45,9 +42,17 @@ case class TimeoutTimerResetPoint(value: TotReset = TotReset.values.head) extend
     "TimeoutTimerResetPoint",
     value
   )
-}
 
-object TimeoutTimerResetPoint extends SimpleExtractor :
+  override def toEditCell(key: Key): Cell =
+    FormField(key, value)
+
+object TimeoutTimerResetPoint extends SimpleExtractor[TimeoutTimerResetPoint] :
+
+  override def update(formFieldValue: String): FieldValueSimple =
+    val totValue = TotReset.withName(formFieldValue)
+    TimeoutTimerResetPoint(totValue)
+
+  implicit val fmt: Format[TimeoutTimerResetPoint] = Json.format[TimeoutTimerResetPoint]
 
   def apply(id: Int): TimeoutTimerResetPoint = {
     new TimeoutTimerResetPoint(TotReset.find(id))

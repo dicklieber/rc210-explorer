@@ -2,6 +2,7 @@ package net.wa9nnn.rc210.ui
 
 import controllers.routes
 import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.KeyMetadata.Port
 import net.wa9nnn.rc210.serial.UploadRequest
 import net.wa9nnn.rc210.ui.Button.button
 import play.api.mvc.Call
@@ -23,17 +24,17 @@ object Button:
     <a href={call.url} class={cssClass} title={toolTip}></a>
       .toString
 
-  def flow(fieldKey: FieldKey): String =
+  def flow(key: Key): String =
     button(
       icon = "bi-link-45deg",
-      call = routes.FlowController.flowChart(fieldKey.key),
+      call = routes.FlowController.flowChart(key),
       toolTip = "Show in flow page.")
 
   val editIcon = "bi-pencil-square"
 
   def edit(key: Key): String = {
-    val call = if key.fieldName == "Port" then
-      routes.EditController.index(key.keyKind)
+    val call = if key.keyMetadata == Port then
+      routes.EditController.index(key.keyMetadata)
     else
       routes.EditController.edit(key)
     button(
@@ -45,16 +46,16 @@ object Button:
   def rollback(): String =
     buildRollback(None)
 
-  def rollback(fieldKey: FieldKey): String =
-    buildRollback(Option(fieldKey))
+  def rollback(Key: Key): String =
+    buildRollback(Option(Key))
 
-  def buildRollback(fieldKey: Option[FieldKey]): String =
+  def buildRollback(Key: Option[Key]): String =
     val icon = "bi-arrow-counterclockwise"
-    fieldKey match
-      case Some(fieldKey) =>
+    Key match
+      case Some(key) =>
         button(icon,
-          routes.DataStoreController.rollbackOne(fieldKey),
-          s"Rollback ${fieldKey.display}. Remove candidate restore original value.")
+          routes.DataStoreController.rollbackOne(key),
+          s"Rollback $Key Remove candidate restore original value.")
       case None =>
         button(icon,
           routes.DataStoreController.rollback(),
@@ -63,16 +64,16 @@ object Button:
   def upload(doCandidateOnly: Boolean = true): String =
     buildUpload(None, doCandidateOnly)
 
-  def upload(fieldKey: FieldKey): String =
-    buildUpload(Option(fieldKey))
+  def upload(Key: Key): String =
+    buildUpload(Option(Key))
 
-  def buildUpload(fieldKey: Option[FieldKey], doCandidateOnly: Boolean = true): String =
+  def buildUpload(Key: Option[Key], doCandidateOnly: Boolean = true): String =
     val icon = "bi-upload"
-    fieldKey match
-      case Some(fieldKey) =>
+    Key match
+      case Some(key) =>
         button(icon,
-          routes.UploadController.start(UploadRequest(fieldKey)),
-          s"Upload ${fieldKey.display} and accept the candidate.")
+          routes.UploadController.start(UploadRequest(key)),
+          s"Upload ${key.display} and accept the candidate.")
       case None =>
         button(icon,
           routes.UploadController.start(UploadRequest(doCandidateOnly = doCandidateOnly)),

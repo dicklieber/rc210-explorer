@@ -66,9 +66,9 @@ class CommandsSender @Inject()(dataStore: DataStore, rc210: Rc210)
       val fieldEntry = uploadData.fieldEntry
       val commands: Seq[String] = uploadData.fieldValue.toCommands(fieldEntry)
       val responses: Seq[RcResponse] = streamBased.perform(commands)
-      val fieldKey = uploadData.fieldEntry.fieldKey
-      dataStore.acceptCandidate(fieldKey)
-      val fieldResult = FieldResult(fieldKey, responses)
+      val key = uploadData.fieldEntry.key
+      dataStore.acceptCandidate(key)
+      val fieldResult = FieldResult(key, responses)
       progressApi.doOne(fieldResult)
     }
     progressApi.finish()

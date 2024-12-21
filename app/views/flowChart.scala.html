@@ -1,5 +1,4 @@
 @import com.wa9nnn.wa9nnnutil.tableui.html.renderTable
-@import net.wa9nnn.rc210.FieldKey
 @import net.wa9nnn.rc210.KeyMetadata.Macro
 @import net.wa9nnn.rc210.data.datastore.FlowData
 @(flowData: FlowData)
@@ -16,7 +15,7 @@
     </fieldset>
     <div class="helpText">
         <p > <span title="Click on this icon, on other pages, to get to this display." class="helpHeader">&#10199;</span><br/>
-            This shows how things that can trigger @flowData.macroFieldEntry.fieldKey along with the Functions that the macro will invoke.
+            This shows how things that can trigger @flowData.macroFieldEntry.key along with the Functions that the macro will invoke.
         </p>
     </div>
 </div>

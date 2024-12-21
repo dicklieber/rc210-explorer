@@ -20,6 +20,7 @@ package net.wa9nnn.rc210.data.field
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row}
 import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.ui.FormField
+import os.copy
 import play.api.libs.json.*
 
 case class Field2Numbers(value: Seq[Int]) extends FieldValueSimple():
@@ -27,26 +28,15 @@ case class Field2Numbers(value: Seq[Int]) extends FieldValueSimple():
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: TemplateSource): Seq[String] = {
-    val fieldKey = fieldEntry.fieldKey
-    val key: Key = fieldKey.key
+  override def toCommands(fieldEntry: FieldEntry): Seq[String] = {
+    val key: Key = fieldEntry.key
     Seq(key.replaceN(fieldEntry.template)
       .replaceAll("v", value.map(int => f"$int%03d").mkString(""))
     )
   }
 
-  override def update(formFieldValue: String): Field2Numbers = {
-    val candidate: Seq[Int] = if (formFieldValue.isBlank)
-      Seq(0, 0)
-    else
-      formFieldValue
-        .split(" ")
-        .toIndexedSeq
-        .map(_.toInt)
-    copy(value = candidate)
-  }
-
-  override def toJsValue: JsValue = Json.toJson(this)
+  override def toEditCell(key: Key): Cell =
+    FormField(key, value)
 
   override def displayCell: Cell =
     Cell(value.map(_.toString).mkString(" "))
@@ -57,12 +47,24 @@ case class Field2Numbers(value: Seq[Int]) extends FieldValueSimple():
     toString
   )
 
-object Field2Numbers extends SimpleExtractor:
+object Field2Numbers extends SimpleExtractor[Field2Numbers]:
 
   implicit val fmt: Format[Field2Numbers] = Json.format[Field2Numbers]
 
-  override def extractFromInts(iterator: Iterator[Int], fieldDefinition: FieldDefSimple): FieldValue = {
+  override def extractFromInts(iterator: Iterator[Int], fieldDefinition: FieldDefSimple): FieldValue = 
     Field2Numbers(Seq(iterator.next(), iterator.next()))
-  }
+
+  override def update(formFieldValue: String): Field2Numbers =
+    val values: Seq[Int] = if (formFieldValue.isBlank)
+      Seq(0, 0)
+    else
+      formFieldValue
+        .split(" ")
+        .toIndexedSeq
+        .map(_.toInt)
+    Field2Numbers(values)
+  
+    
+  
 
 

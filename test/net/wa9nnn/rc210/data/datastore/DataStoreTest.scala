@@ -44,11 +44,11 @@ class DataStoreTest extends WithDataStore {
       "simple field" in {
         val dataStore = newDataStore
         val fieldKey = FieldKey(Key.commonkey, "Say Hours")
-        val b4: FieldEntry = dataStore.fieldEntry (fieldKey)
+        val b4: FieldEntry = dataStore.getFieldEntry (fieldKey)
         val candidate = UpdateCandidate(candidate = "true")
         val candidateAndNames = CandidateAndNames(candidate)
         dataStore.update(candidateAndNames)
-        val after: FieldEntry = dataStore.fieldEntry(fieldKey)
+        val after: FieldEntry = dataStore.getFieldEntry(fieldKey)
         val candidate1 = after.fieldData.candidate
         candidate1
 

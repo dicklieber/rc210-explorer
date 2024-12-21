@@ -28,7 +28,7 @@ import net.wa9nnn.rc210.data.field.FieldEntry
  * Note that persistence is not handled by this trait.
  */
 trait DataStoreApi:
-  def fieldEntry(Key: Key): FieldEntry
+  def getFieldEntry(Key: Key): FieldEntry
   def fieldEntry(key: KeyMetadata): Seq[FieldEntry]
   def candidates: Iterable[FieldEntry]
   def triggerNodes(macroKey: Key): Seq[FieldEntry]

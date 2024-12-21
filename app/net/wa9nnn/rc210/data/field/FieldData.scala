@@ -56,7 +56,7 @@ case class FieldData(key:Key, fieldValue: FieldValue, candidate: Option[FieldVal
 
 object FieldData:
   implicit val ordering: Ordering[FieldData] =
-    Ordering.by[FieldData, FieldKey](_.fieldKey)
+    Ordering.by[FieldData, Key](_.key)
     
   implicit val fmt: OFormat[FieldData] = Json.format[FieldData]
 

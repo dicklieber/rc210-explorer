@@ -22,7 +22,7 @@ import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.meter.MeterAlarmNode.bind
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.ButtonCell
+import net.wa9nnn.rc210.ui.{ButtonCell, FormData}
 import net.wa9nnn.rc210.ui.html.meterEditor
 import net.wa9nnn.rc210.{Key, KeyMetadata}
 import play.api.data.Forms.*
@@ -42,11 +42,10 @@ import java.util.concurrent.atomic.AtomicInteger
  * @param low           calibrate for high.
  * @param high          calibrate for low.
  */
-case class MeterNode(key: Key, meterFaceName: MeterFaceName, low: VoltToReading, high: VoltToReading) extends FieldValueComplex():
+case class MeterNode(meterFaceName: MeterFaceName, low: VoltToReading, high: VoltToReading) extends FieldValueComplex():
 
   override def displayCell: Cell =
     KvTable.inACell(
-      "Key" -> key.keyWithName,
       "Face" -> meterFaceName,
       "Low" -> low,
       "High" -> high,
@@ -55,8 +54,9 @@ case class MeterNode(key: Key, meterFaceName: MeterFaceName, low: VoltToReading,
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: TemplateSource): Seq[String] = {
-    val c = key.rc210Number.toString
+  override def toCommands(fieldEntry: FieldEntry): Seq[String] =
+    val key = fieldEntry.key
+    val c = key.rc210Number.get.toString
     val m = meterFaceName.toString
     val x1 = low.hundredthVolt
     val y1 = low.reading
@@ -70,13 +70,9 @@ case class MeterNode(key: Key, meterFaceName: MeterFaceName, low: VoltToReading,
        */
       s"1*2064$c*$m*$x1*$y1*$x2*$y2*"
     )
-  }
 
-  override def toJsValue: JsValue = Json.toJson(this)
-
-  override def toRow: Row = Row(
-    ButtonCell.edit(fieldKey),
-    fieldKey.key.keyWithName,
+  override def toRow(key: Key): Row = Row(
+    ButtonCell.edit(key),
     meterFaceName,
     low.hundredthVolt,
     low.reading,
@@ -85,17 +81,16 @@ case class MeterNode(key: Key, meterFaceName: MeterFaceName, low: VoltToReading,
   )
 
 object MeterNode extends FieldDefComplex[MeterNode]:
-  val keyKind = KeyMetadata.Meter
+  val keyMetadata = KeyMetadata.Meter
 
-  def unapply(u: MeterNode): Option[(Key, MeterFaceName, VoltToReading, VoltToReading)] = Some((u.key, u.meterFaceName, u.low, u.high))
+  def unapply(u: MeterNode): Option[(MeterFaceName, VoltToReading, VoltToReading)] = Some(( u.meterFaceName, u.low, u.high))
 
   override val form: Form[MeterNode] = Form(
     mapping(
-      "key" -> of[Key],
       "faceName" -> MeterFaceName.formField,
       "low" -> VoltToReading.form,
       "high" -> VoltToReading.form,
-    )(MeterNode.apply)(MeterNode.unapply))
+    )((meterFaceName: MeterFaceName, low: VoltToReading, high: VoltToReading) => MeterNode.apply(meterFaceName, low, high))(MeterNode.unapply))
 
   def extract(memory: Memory): Seq[FieldEntry] = {
     val mai = new AtomicInteger()
@@ -113,7 +108,7 @@ object MeterNode extends FieldDefComplex[MeterNode]:
       val meterKey: Key = Key(KeyMetadata.Meter, mai.incrementAndGet())
       val low = VoltToReading(lowX(i), lowY(i))
       val high = VoltToReading(highX(i), highY(i))
-      val meter: MeterNode = MeterNode(meterKey, faceNames(i), low, high)
+      val meter: MeterNode = MeterNode(faceNames(i), low, high)
       FieldEntry(this, meterKey, meter)
     }
     meters
@@ -147,13 +142,21 @@ object MeterNode extends FieldDefComplex[MeterNode]:
         Cell("Reading"),
       ),
     )
-    fieldIndex(keyKind, Table(header, fieldEntries.map(_.value.toRow)))
+    fieldIndex(keyMetadata, Table(header, fieldEntries.map(fe => {
+      val value:MeterNode = fe.value
+      value.toRow(fe.key)
+    })))
 
-  override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    meterEditor(form.fill(fieldEntry.value), fieldEntry.fieldKey)
+  override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html = {
+    val filledForm = form.fill(fieldEntry.value)
+    val key = fieldEntry.key
+    meterEditor(filledForm, key)
+  }
 
-  override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
-    bind(form.bindFromRequest(data).get)
+  override def bind(formData: FormData): Seq[UpdateCandidate] =
+    val key = formData.key
+    val meterNode: MeterNode = form.bindFromRequest(formData.map).get
+    Seq(UpdateCandidate(key, meterNode))
 
 /**
  *

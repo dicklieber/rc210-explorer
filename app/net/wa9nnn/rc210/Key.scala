@@ -97,10 +97,10 @@ case class Key(keyMetadata: KeyMetadata, rc210Number: Option[Int] = None, qualif
     s"$rc210Number: $name"
 
   def bind(formData: FormData): Seq[UpdateCandidate] =
-    keyMetadata.bind(formData)
+    keyMetadata.handler.bind(formData)
 
-  def saveOp(): Result =
-    keyMetadata.saveOp()
+  def saveOp(keyMetadata: KeyMetadata): Result =
+    keyMetadata.handler.saveOp(keyMetadata)
 
 object Key extends LazyLogging:
   given Ordering[Key] with

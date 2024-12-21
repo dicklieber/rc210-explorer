@@ -21,10 +21,10 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
 import controllers.routes
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
-import net.wa9nnn.rc210.{ Key, KeyMetadata}
-import net.wa9nnn.rc210.data.field.{FieldDefComplex, FieldValueComplex, FieldEntry, TemplateSource, FieldOffset, FieldValue}
+import net.wa9nnn.rc210.{Key, KeyMetadata}
+import net.wa9nnn.rc210.data.field.{FieldDefComplex, FieldEntry, FieldOffset, FieldValue, FieldValueComplex, TemplateSource}
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.ButtonCell
+import net.wa9nnn.rc210.ui.{ButtonCell, FormData}
 import play.api.data.*
 import play.api.data.Forms.*
 import play.api.i18n.MessagesProvider
@@ -40,7 +40,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * @param key      id
  * @param segments the four segment that mke up a courtesy tone.
  */
-case class CourtesyToneNode(override val key: Key, segments: Seq[Segment]) extends FieldValueComplex() {
+case class CourtesyToneNode(segments: Seq[Segment]) extends FieldValueComplex[CourtesyToneNode]():
   assert(segments.length == 4, s"Must have four segemnts but only have: $segments")
 
   override def displayCell: Cell =
@@ -49,41 +49,36 @@ case class CourtesyToneNode(override val key: Key, segments: Seq[Segment]) exten
     val html = courtesyToneCell(this)
     Cell.rawHtml(html.body)
 
-  implicit val k: Key = key
-  implicit val s: Seq[Segment] = segments
+//  implicit val k: Key = key
+//  implicit val s: Seq[Segment] = segments
 
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: TemplateSource): Seq[String] = {
+  override def toCommands(fieldEntry: FieldEntry): Seq[String] =
     val segN = new AtomicInteger(1)
+    val key = fieldEntry.key
     segments.map { segment =>
-      segment.toCommand(key.rc210Number, segN.getAndIncrement())
+      segment.toCommand(key.rc210Number.get, segN.getAndIncrement())
     }
-  }
 
-  override def toJsValue: JsValue = Json.toJson(this)
-
-  override def toRow: Row = Row(
-    ButtonCell.edit(fieldKey),
+  override def toRow(key: Key): Row = Row(
+    ButtonCell.edit(key),
     named(key),
-
   )
-}
 
 /**
  * [[CourtesyToneNode]] data are spread out in the [[Memory]] image.
  * This gaters all the data and produces all the [[CourtesyToneNode]]s.
  */
 object CourtesyToneNode extends FieldDefComplex[CourtesyToneNode] with LazyLogging:
-  override val keyKind: KeyMetadata = KeyMetadata.CourtesyTone
-  private val nCourtesyTones = keyKind.maxN
+  override val keyMetadata: KeyMetadata = KeyMetadata.CourtesyTone
+  private val nCourtesyTones = keyMetadata.maxN
 
-  def unapply(u: CourtesyToneNode): Option[(Key, Seq[Segment])] = Some((u.key, u.segments))
+  def unapply(u: CourtesyToneNode): Option[(Seq[Segment])] = Some((u.segments))
 
   val form: Form[CourtesyToneNode] = Form(
     mapping(
-      "key" -> of[Key],
       "segment" -> seq(Segment.form),
     )(CourtesyToneNode.apply)(CourtesyToneNode.unapply)
   )
@@ -98,19 +93,22 @@ object CourtesyToneNode extends FieldDefComplex[CourtesyToneNode] with LazyLoggi
    * @param memory    source of RC-210 data.
    * @return what we extracted.
    */
-  override def extract(memory: Memory): Seq[FieldEntry] = {
+  override def extract(memory: Memory): Seq[FieldEntry] =
     logger.debug("Extract CourtesyTone")
     val iterator = memory.iterator16At(856)
 
     val array = Array.ofDim[Int](10, 16)
-    for {
+    for
+    {
       part <- 0 until 16
       ct <- 0 until nCourtesyTones
-    } {
+    }
+    {
       array(ct)(part) = iterator.next()
     }
 
-    val courtesyTones: Seq[CourtesyToneNode] = for (ct <- 0 until 10) yield {
+    for (ct <- 0 until 10) yield
+    {
       val key: Key = Key(KeyMetadata.CourtesyTone, ct + 1)
       val segments = Seq(
         Segment(array(ct)(8), array(ct)(12), array(ct)(0), array(ct)(1)),
@@ -118,12 +116,9 @@ object CourtesyToneNode extends FieldDefComplex[CourtesyToneNode] with LazyLoggi
         Segment(array(ct)(10), array(ct)(14), array(ct)(4), array(ct)(5)),
         Segment(array(ct)(11), array(ct)(15), array(ct)(6), array(ct)(7)),
       )
-      CourtesyToneNode(key, segments)
+      val courtesyToneNode = CourtesyToneNode(segments)
+      FieldEntry(this, key, courtesyToneNode)
     }
-    courtesyTones.map { ct =>
-      FieldEntry(this, FieldKey(ct.key), ct)
-    }
-  }
 
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html = {
     val html = courtesyTones(fieldEntries.map(_.value[CourtesyToneNode]))
@@ -133,12 +128,13 @@ object CourtesyToneNode extends FieldDefComplex[CourtesyToneNode] with LazyLoggi
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     given Form[CourtesyToneNode] = form.fill(fieldEntry.value)
 
-    courtesyToneEdit(fieldEntry.fieldKey)
+    courtesyToneEdit(fieldEntry.key)
 
-  override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] =
-    val courtesyTone = form.bindFromRequest(data).get
+  override def bind( formData: FormData): Seq[UpdateCandidate] =
+    val key = formData.key
+    val courtesyTone = form.bindFromRequest(formData.map).get
     Seq(
-      UpdateCandidate(candidate = courtesyTone)
+      UpdateCandidate(key, courtesyTone)
     )
 
 

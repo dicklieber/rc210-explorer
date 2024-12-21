@@ -2,7 +2,7 @@ package net.wa9nnn.rc210.data.schedules
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.{Key, KeyMetadata}
-import net.wa9nnn.rc210.data.field.MonthOfYearSchedule
+import net.wa9nnn.rc210.data.field.{FieldDef, FieldEntry, MonthOfYearSchedule}
 import net.wa9nnn.rc210.data.schedules.WeekInMonth.Every
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.util.Chunk
@@ -16,9 +16,10 @@ object ScheduleBuilder extends LazyLogging {
   private val MACR0 = 4
   val fieldsInRC210Schedule = 5
 
-  def apply(memory: Memory): Seq[ScheduleNode] = {
+  def apply(memory: Memory, fieldDef: FieldDef[?]): Seq[FieldEntry] = {
+    val keyMetadata = fieldDef.keyMetadata
     // Each chunk is one RC-210 memory setpoint rc2input. With all the setpopint's value withinb that chunk.
-    implicit val chunks: Iterator[Chunk] = memory.chunks(616, KeyMetadata.Schedule.maxN, fieldsInRC210Schedule).iterator
+    implicit val chunks: Iterator[Chunk] = memory.chunks(616, keyMetadata.maxN, fieldsInRC210Schedule).iterator
 
     val chunk = chunks.next()
     val dows: Seq[DayOfWeekField] = chunk.map(DayOfWeekField(_)).toSeq
@@ -28,17 +29,17 @@ object ScheduleBuilder extends LazyLogging {
     val macros: Seq[Key] = chunks.next().map(i => Key(KeyMetadata.Macro, i)).toSeq
 
     for
-      n <- 0 until KeyMetadata.Schedule.maxN
+      n <- 0 until keyMetadata.maxN
     yield
-      val scheduleKey = Key(KeyMetadata.Schedule, n + 1)
+      val key = Key(keyMetadata, n + 1)
       val dayOfWeekField = dows(n)
-      ScheduleNode(key = scheduleKey,
+      val scheduleNode = ScheduleNode(
         dayOfWeek = dayOfWeekField.dayOfWeek,
         weekInMonth = dayOfWeekField.weekInMonth,
         monthOfYear = moys(n),
         hour = hours(n),
         minute = minutes(n),
-        macroKey = macros(n)
-      )
+        macroKey = macros(n))
+      FieldEntry(fieldDef, key, scheduleNode)
   }
 }

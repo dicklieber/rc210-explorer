@@ -1,7 +1,7 @@
 package net.wa9nnn.rc210.ui
 
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, Table, TableInACell, TableSection}
-import net.wa9nnn.rc210.FieldKey
+import net.wa9nnn.rc210.Key
 import play.api.mvc.Call
 import play.twirl.api.Html
 import views.html.flowChartButton
@@ -35,7 +35,7 @@ class TableSectionButtons(sectionName: String, buttonCells: Cell*)(newRows: (Row
 
 object TableSectionButtons:
 
-  def apply(fieldKey: FieldKey, newRows: Row*) =
-    new TableSectionButtons(fieldKey.toString,
-      fieldKey.editButtonCell)(newRows: _*)
+  def apply(key: Key, newRows: Row*) =
+    new TableSectionButtons(key.toString,
+      ButtonCell.edit(key))(newRows: _*)
 

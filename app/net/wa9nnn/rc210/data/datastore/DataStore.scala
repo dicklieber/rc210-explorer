@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.data.datastore
 
+import com.fasterxml.jackson.module.scala.deser.overrides
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210
@@ -32,8 +33,7 @@ import javax.inject.{Inject, Singleton}
  */
 @Singleton
 class DataStore @Inject()(config: Config,
-                          memoryFileLoader: MemoryFileLoader,
-                          namedKeyManager: NamedKeyManager) extends DataStorePersistence with LazyLogging:
+                          memoryFileLoader: MemoryFileLoader) extends DataStorePersistence with LazyLogging:
   private val path: Path = Configs.path("vizRc210.dataStoreFile")(using config)
 
   memoryFileLoader.load.foreach { fieldEntries =>
@@ -41,8 +41,8 @@ class DataStore @Inject()(config: Config,
   }
   load()
 
-  def update(candidates: Seq[UpdateCandidate]): Unit
-    super.update(candidateAndNames)
+  override def update(candidates: Seq[UpdateCandidate]): Unit=
+    super.update(candidates)
     saveFile(path)
 
   def load(): Unit =

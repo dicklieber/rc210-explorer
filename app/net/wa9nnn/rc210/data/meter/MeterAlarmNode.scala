@@ -21,9 +21,9 @@ import com.wa9nnn.wa9nnnutil.tableui.*
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.ui.{ButtonCell, TableSectionButtons}
+import net.wa9nnn.rc210.ui.{ButtonCell, FormData, TableSectionButtons}
 import net.wa9nnn.rc210.ui.html.meterAlarmEditor
-import net.wa9nnn.rc210.{ Key, KeyMetadata}
+import net.wa9nnn.rc210.{Key, KeyMetadata}
 import play.api.data.Form
 import play.api.data.Forms.*
 import play.api.i18n.MessagesProvider
@@ -34,13 +34,7 @@ import views.html.fieldIndex
 
 import java.util.concurrent.atomic.AtomicInteger
 
-case class MeterAlarmNode(key: Key, 
-                          meter: Key, alarmType: AlarmType, 
-                          tripPoint: Int, //todo needs to be an enum
-                          macroKey: Key) extends FieldValueComplex[MeterAlarmNode](macroKey):
-  key.check(KeyMetadata.MeterAlarm)
-  meter.check(Meter)
-  macroKey.check(KeyMetadata.Macro)
+case class MeterAlarmNode(meter: Key, alarmType: AlarmType, tripPoint: Int, macroKey: Key) extends FieldValueComplex[MeterAlarmNode](macroKey):
 
   private val rows: Seq[Row] = Seq(
     "Meter" -> meter.keyWithName,
@@ -48,9 +42,8 @@ case class MeterAlarmNode(key: Key,
     "Trip Point" -> tripPoint,
   ).map(Row(_))
 
-  override def toRow: Row = Row(
-    ButtonCell.edit(fieldKey),
-    key.keyWithName,
+  override def toRow(key: Key): Row = Row(
+    ButtonCell.edit(key),
     meter.keyWithName,
     alarmType.entryName,
     tripPoint,
@@ -71,7 +64,8 @@ case class MeterAlarmNode(key: Key,
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: TemplateSource): Seq[String] = {
+  override def toCommands(fieldEntry: FieldEntry): Seq[String] = {
+    val key = fieldEntry.key
     /**
      * *2066 alarm number * meterEditor number * alarmtype * trippoint * macro to run *
      * There are 8 meterEditor alarms, 1 through 8
@@ -87,9 +81,6 @@ case class MeterAlarmNode(key: Key,
       s"1*2066$aNumber*$mNumber*$at*$macNumber*"
     )
   }
-
-  override def toJsValue: JsValue = Json.toJson(this)
-
 
 /*
 *2064 C * M* X1* Y1* X2* Y2* C= Channel 1 to 8 M=MeterKind Type 0 to 6 X1, Y1, X2, Y2 represent two calibration points. There must be 6 parameters entered to define a meterEditor face, each value ending with *.
@@ -107,18 +98,17 @@ case class MeterAlarmNode(key: Key,
 * */
 
 object MeterAlarmNode extends FieldDefComplex[MeterAlarmNode]:
-  override val keyKind: KeyMetadata = KeyMetadata.MeterAlarm
+  override val keyMetadata: KeyMetadata = KeyMetadata.MeterAlarm
 
-  def unapply(u: MeterAlarmNode): Option[(Key, Key, AlarmType, Int, Key)] = Some((u.key, u.meter, u.alarmType, u.tripPoint, u.macroKey))
+  def unapply(u: MeterAlarmNode): Option[( Key, AlarmType, Int, Key)] = Some((u.meter, u.alarmType, u.tripPoint, u.macroKey))
 
   val form: Form[MeterAlarmNode] = Form(
     mapping(
-      "key" -> of[Key],
       "meter" -> of[Key],
       "alarmType" -> AlarmType.formField,
       "tripPoint" -> number,
       "macroKey" -> of[Key]
-    )(MeterAlarmNode.apply)(MeterAlarmNode.unapply))
+    )((meter: Key, alarmType: AlarmType, tripPoint: Int, macroKey: Key) => MeterAlarmNode.apply(meter, alarmType, tripPoint, macroKey))(MeterAlarmNode.unapply))
 
   private val nMeters = 8
 
@@ -130,7 +120,7 @@ object MeterAlarmNode extends FieldDefComplex[MeterAlarmNode]:
   override def extract(memory: Memory): Seq[FieldEntry] = {
     val mai = new AtomicInteger()
     val alarmType: Seq[AlarmType] = memory.sub8(274, nMeters).map(AlarmType.find)
-    val macroKeys: Seq[Key] = memory.sub8(314, nMeters).map(Key(Macro, _))
+    val macroKeys: Seq[Key] = memory.sub8(314, nMeters).map(Key(KeyMetadata.Macro, _))
     val setPoint: Seq[String] = memory.chunks(282, 4, nMeters).map { chunk =>
       val array = chunk.ints
       //      new String(array.map(_.toChar))
@@ -149,8 +139,8 @@ object MeterAlarmNode extends FieldDefComplex[MeterAlarmNode]:
     for {i <- 0 until nMeters}
       yield {
         val key: Key = Key(KeyMetadata.MeterAlarm, mai.incrementAndGet())
-        val meterAlarm = MeterAlarmNode(key, meters(i), alarmType(i), setPoint(i).toInt, macroKeys(i))
-        FieldEntry(this, meterAlarm.fieldKey, meterAlarm)
+        val meterAlarm = MeterAlarmNode(meters(i), alarmType(i), setPoint(i).toInt, macroKeys(i))
+        FieldEntry(this, key, meterAlarm)
       }
   }
 
@@ -165,24 +155,31 @@ object MeterAlarmNode extends FieldDefComplex[MeterAlarmNode]:
 
   implicit val fmt: Format[MeterAlarmNode] = Json.format[MeterAlarmNode]
 
-  override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    fieldIndex(keyKind, Table(Header(s"Alarm Meters  (${fieldEntries.length})",
+  override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html = {
+    val header = Header(s"Alarm Meters  (${fieldEntries.length})",
       "",
       "Alarm",
       "Meter",
       "Alarm Type",
       "Trip Point",
       "Macro",
-    ),
-      fieldEntries.map(_.value.toRow)
+    )
+    fieldIndex(keyMetadata, Table(header,
+      fieldEntries.map(fe => {
+        val value:MeterAlarmNode = fe.value
+        value.toRow(fe.key)
+      })
     )
     )
-
-  override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
-    meterAlarmEditor(form.fill(fieldEntry.value), fieldEntry.fieldKey)
-
-  override def bind(data: Map[String, Seq[String]]): Seq[UpdateCandidate] = {
-    bind(form.bindFromRequest(data).get)
   }
 
+  override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html = {
+    val filledForm = form.fill(fieldEntry.value)
+    meterAlarmEditor( fieldEntry.key, filledForm)
+  }
+
+  override def bind(formData: FormData): Seq[UpdateCandidate] =
+    val key = formData.key
+    val vameterAlarmNodeue: MeterAlarmNode = form.bindFromRequest(formData.map).get
+    Seq(UpdateCandidate(key, vameterAlarmNodeue))
 
