@@ -65,15 +65,14 @@ class MemoryFileLoader @Inject()( fieldDefinitions: FieldDefinitions)(implicit c
         number <- 1 to metadata.maxN
         fieldValue <- fieldDefinition.extractFromInts(it).toOption
       } yield {
-        metadata match
+        val key = metadata match
           case KeyMetadata.Common =>
             Key(metadata, fieldDefinition.fieldName)
+          case KeyMetadata.Port =>
+            Key(metadata, number, fieldDefinition.fieldName)
+          case m =>
+            Key(m, number, fieldDefinition.fieldName)
 
-        val n = if(fieldDefinition.keyMetadata == KeyMetadata.Common)
-          0 // todo this ids a hack, maybe handle in KeyKind definition or get rid of 0 as a magic number
-        else
-          number
-        val key = Key(fieldDefinition.keyMetadata, n)
         val fieldEntry = FieldEntry(fieldDefinition, key, fieldValue)
         logger.trace("FieldEntry: offset: {} fieldEntry: {})", fieldDefinition.offset, fieldEntry.toString)
         fieldEntry
@@ -92,9 +91,12 @@ class MemoryFileLoader @Inject()( fieldDefinitions: FieldDefinitions)(implicit c
     }
     r match
       case Failure(exception) =>
-        logger.error("Loading from {} {}", memoryFile.toExternalForm, exception.getMessage)
+        val message = exception.getMessage
+        logger.error("Loading from {} {}", memoryFile.toExternalForm, message)
       case Success(entries) => 
-        logger.info("Loaded {} entries from {}", entries.size, memoryFile.toExternalForm)
+        val loadedLength = memory.map(_.length).getOrElse(0)
+        logger.info("Loaded {} {} entries from {} mapSize: {}",
+          entries.size, memoryFile.toExternalForm, loadedLength)
     r
   }
 }

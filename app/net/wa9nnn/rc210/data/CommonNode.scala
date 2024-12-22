@@ -15,8 +15,7 @@ case object CommonNode extends SimpleFieldNode(KeyMetadata.Common):
     val table = Table(header(fieldEntries.length),
       fieldEntries.map { fieldEntry =>
         Row(
-          fieldEntry.key.qualifier.getOrElse("XYZZY"),
-//          fieldEntry.value[FieldValueSimple].toEditCell(fieldEntry.fieldKey)
+          fieldEntry.key.qualifier.getOrElse("Error No qualifier"),
           fieldEntry.value[FieldValueSimple].displayCell //todo edit cell??
         )
       }
