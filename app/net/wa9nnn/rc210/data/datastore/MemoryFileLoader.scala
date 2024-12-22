@@ -23,6 +23,7 @@ import net.wa9nnn.rc210.{Key, KeyMetadata}
 import net.wa9nnn.rc210.data.datastore.MemoryFileLoader.notInitialized
 import net.wa9nnn.rc210.data.field.{FieldDefinitions, FieldEntry}
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.ui.NamedKeyManager
 import net.wa9nnn.rc210.util.Configs.path
 
 import java.net.URL
@@ -34,7 +35,7 @@ import scala.util.{Failure, Success, Try}
  * Holds [[Memory]]
  *
  * @param fieldDefinitions
- * @param datFile
+ * @param namedKeyManager we don't need this directly here but need have it loaded
  */
 @Singleton
 class MemoryFileLoader @Inject()( fieldDefinitions: FieldDefinitions)(implicit config: Config) extends LazyLogging {
@@ -60,9 +61,14 @@ class MemoryFileLoader @Inject()( fieldDefinitions: FieldDefinitions)(implicit c
       val simpleFields: Seq[FieldEntry] = for {
         fieldDefinition <- fieldDefinitions.simpleFields
         it = fieldDefinition.iterator()
-        number <- 1 to fieldDefinition.keyMetadata.maxN
+        metadata = fieldDefinition.keyMetadata
+        number <- 1 to metadata.maxN
         fieldValue <- fieldDefinition.extractFromInts(it).toOption
       } yield {
+        metadata match
+          case KeyMetadata.Common =>
+            Key(metadata, fieldDefinition.fieldName)
+
         val n = if(fieldDefinition.keyMetadata == KeyMetadata.Common)
           0 // todo this ids a hack, maybe handle in KeyKind definition or get rid of 0 as a magic number
         else

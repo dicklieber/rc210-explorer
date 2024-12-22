@@ -113,11 +113,16 @@ class DataCollector @Inject()(implicit config: Config, rc210: Rc210, dataStore: 
               {
                 logger.error(s"""Illformed response from RC-210, expecting something like "xxx,yyy" but got: "$response" """)
               }
-            val memoryFileLine: String = f"${tokens.head.toInt},${tokens(1).toInt}"
-            itemMemoryFileWriter.println(memoryFileLine)
-            val downloadOp = DownloadOp(response)
-            progressApi.doOne(downloadOp)
-            eventBased.send("OK")
+            try
+              val memoryFileLine: String = f"${tokens.head.toInt},${tokens(1).toInt}"
+              itemMemoryFileWriter.println(memoryFileLine)
+              val downloadOp = DownloadOp(response)
+              progressApi.doOne(downloadOp)
+              eventBased.send("OK")
+            catch
+              case e:Exception =>
+                logger.error(s"Failed to parse response: $response", e)
+                cleanup("failed to parse response")
         }
       }
     })

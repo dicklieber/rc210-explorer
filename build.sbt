@@ -68,6 +68,8 @@ libraryDependencies ++= Seq(
   "com.github.andyglow" %% "typesafe-config-scala" % "2.0.0",
   "com.beachape" %% "enumeratum" % "1.7.5",
   "com.beachape" %% "enumeratum-play" % "1.8.2",
+  "net.codingwell" %% "scala-guice" % "6.0.0",
+
 
 )
 //publishTo := {
