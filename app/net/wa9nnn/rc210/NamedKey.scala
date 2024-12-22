@@ -29,22 +29,13 @@ case class NamedKey(key: Key, name: String) extends KeyedRow:
       Cell(key.toString), name
     )
 
-object NamedKey {
+object NamedKey :
   given ordering: Ordering[NamedKey] = Ordering.by(_.key)
 
   val fieldName = "keyName"
   implicit val fmtNamedKey: Format[NamedKey] = Json.format[NamedKey]
 
-}
 
-trait NamedKeySource {
 
-  def nameForKey(key: Key): String
-
-  def namedKey(key: Key): NamedKey =
-    NamedKey(key, nameForKey(key))
-
-  def namedKeys: Seq[NamedKey]
-}
 
 

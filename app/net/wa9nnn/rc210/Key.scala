@@ -19,12 +19,9 @@ package net.wa9nnn.rc210
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, CellProvider}
-import net.wa9nnn.rc210.Key._namedKeySource
 import net.wa9nnn.rc210.KeyMetadata.*
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
-import net.wa9nnn.rc210.ui.NamedKeyManager.NoNamedKeySource
-import net.wa9nnn.rc210.{NamedKey, NamedKeySource}
-import net.wa9nnn.rc210.ui.{EnumEntryValue, FormData, MacroSelect}
+import net.wa9nnn.rc210.ui.{FormData, NamedKeyManager}
 import play.api.data.FormError
 import play.api.data.format.Formatter
 import play.api.libs.json.*
@@ -65,7 +62,8 @@ case class Key(keyMetadata: KeyMetadata, rc210Number: Option[Int] = None, qualif
   /**
    * @return current name for this key
    */
-  def name: String = _namedKeySource.nameForKey(this)
+  def name: String =
+    NamedKeyManager.nameForKey(this)
 
   /**
    * Replaces 'n' in the template with the number (usually a port number).
@@ -109,10 +107,6 @@ object Key extends LazyLogging:
     }
 
   val keyName: String = "key"
-  var _namedKeySource: NamedKeySource = NoNamedKeySource
-
-  def setNamedSource(namedKeySource: NamedKeySource): Unit =
-    _namedKeySource = namedKeySource
 
   private val keyRegx = """(.*)\|(\d{0,2})\|(.*)""".r
 
@@ -131,6 +125,8 @@ object Key extends LazyLogging:
 
   def apply(keyMetadata: KeyMetadata, number: Int, qualifier: String): Key =
     Key(keyMetadata, Some(number), Some(qualifier))
+  def apply(keyMetadata: KeyMetadata,  qualifier: String): Key =
+    Key(keyMetadata, qualifier=Some(qualifier))
 
   def apply(maybeSKey: Option[String]): Option[Key] =
     maybeSKey.map(fromId)
@@ -152,8 +148,6 @@ object Key extends LazyLogging:
       JsString(key.id)
     }
   }
-
-  private var _namedSource: NamedKeySource = NoNamedKeySource
 
   private def keys(keyKind: KeyMetadata): Seq[Key] =
     for

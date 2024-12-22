@@ -18,23 +18,30 @@
 
 package net.wa9nnn.rc210.ui
 
-import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import jakarta.inject.{Inject, Singleton}
+import jakarta.inject.{Inject, Named, Singleton}
 import net.wa9nnn.rc210
-import net.wa9nnn.rc210.util.Configs
-import net.wa9nnn.rc210.{Key, NamedKey, NamedKeySource}
+import net.wa9nnn.rc210.{Key, NamedKey}
 import play.api.libs.json.Json
 
-import java.nio.file.{Files, NoSuchFileException, Path}
+import java.nio.file.{Files, NoSuchFileException, Path, Paths}
 import scala.collection.concurrent.TrieMap
 
-@Singleton
-class NamedKeyManager @Inject()(implicit config: Config) extends NamedKeySource with LazyLogging:
+/**
+ * Manages named keys by maintaining a mapping between keys and their corresponding names.
+ *
+ * This class allows for loading, updating, and saving named keys from a specified file.
+ * It extends the `NamedKeySource` trait to provide key-to-name resolution functionality
+ * and makes use of lazy logging for reporting errors and informational messages.
+ *
+ * @param namedDataFile path of the file used to store named keys.
+ */
+class NamedKeyManager @Inject()(@Named("namedDataFile")namedDataFile:String)
+extends NamedKeySource  with LazyLogging:
+  NamedKeyManager._namedKeySource = this
   private val keyNameMap = new TrieMap[Key, String]
-  Key.setNamedSource(this)
 
-  private val path: Path = Configs.path("vizRc210.namedDataFile")
+  private val path: Path = Paths.get(namedDataFile)
   // load last saved data.
   try
     val str: String = Files.readString(path)
@@ -42,7 +49,7 @@ class NamedKeyManager @Inject()(implicit config: Config) extends NamedKeySource 
     val loadedKeys:Seq[NamedKey] = jsValue.as[Seq[NamedKey]]
     keyNameMap.addAll(loadedKeys.map(namedKey => namedKey.key -> namedKey.name))
   catch
-    case e:NoSuchFileException =>
+    case _:NoSuchFileException =>
       logger.debug(s"No named keys file found at $path")
     case e: Exception =>
       logger.error(s"Error loading named keys from $path", e)
@@ -80,16 +87,18 @@ class NamedKeyManager @Inject()(implicit config: Config) extends NamedKeySource 
 
   override def nameForKey(key: Key): String = keyNameMap.getOrElse(key, "")
 
-  override def namedKeys: Seq[NamedKey] =
+  def namedKeys: Seq[NamedKey] =
     keyNameMap.map((key, name) => NamedKey(key, name)).toIndexedSeq.sorted
 
-//  keyNameMap.addAll(dto.namedKeys.map(namedKey => namedKey.key -> namedKey.name))
-object NamedKeyManager:
-  val NoNamedKeySource: NamedKeySource = new NamedKeySource:
-    override def nameForKey(key: Key) =
-      throw new NotImplementedError() //todo
+object NamedKeyManager extends NamedKeySource:
+  private[this] var _namedKeySource:NamedKeySource = _
+  def nameForKey(key: Key): String =
+    _namedKeySource.nameForKey(key)
 
-    override def namedKeys: Seq[NamedKey] =
-      throw new NotImplementedError() //todo
-
+trait NamedKeySource:
+  /**
+   * 
+   * @return empty string of key does not have a name.
+   */
+  def nameForKey(key: Key): String
 
