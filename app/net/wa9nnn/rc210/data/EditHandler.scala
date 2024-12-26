@@ -31,7 +31,7 @@ trait EditHandler:
    */
   def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html
 
-  def bind(formData: FormData): Seq[UpdateCandidate] =
+  def bind(formData: FormData): Iterable[UpdateCandidate] =
     throw new NotImplementedError()
 
   def bind(key:Key, in: FieldValueComplex[?]): Seq[UpdateCandidate] =

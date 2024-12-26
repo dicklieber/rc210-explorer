@@ -18,35 +18,57 @@
 
 package net.wa9nnn.rc210.ui
 
-import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.{Key, KeyIndicator, NamedKey}
 import net.wa9nnn.rc210.Key.keyName
 import play.api.mvc.{AnyContent, Request}
+
+import scala.collection.immutable
 
 /**
  * Represents form data extracted from an HTML form as a map of field names to their corresponding values.
  *
- * @param map A map where each key is a field name, and each value is a sequence of strings representing the field's values.
+ * @param map A map where each key is a field name, and each value is a
+ *            sequence of strings representing the field's values.
+ *            This is what Play gives us on a form post.
  */
-class FormData(val map: Map[String, Seq[String]]):
+class FormData(map: Map[String, Seq[String]]):
+  private val all: Seq[KeyAndValues] =
+    map.map { case (id, values) =>
+      val key = Key.fromId(id)
+      KeyAndValues(key, values)
+    }.toSeq
+
+  val data: Map[Key, KeyAndValues] = all.filter(_._1.indicator == KeyIndicator.Value).map { kv => kv._1 -> kv }.toMap
+  val maybeKey = all.find(_._1.indicator == KeyIndicator.Key).map(_.key)
+  val namedKeys: Seq[NamedKey] = all.filter(_._1.indicator == KeyIndicator.Name).map(NamedKey(_))
+
+  def valueOpt(qualifier: String): Option[String] =
+    val x: Option[KeyAndValues] = data.values.find(_.key.qualifier.contains(qualifier))
+    val y: Option[String] = x.map(_.head)
+    y
+
   /**
    * Get a value for a name in the HTML form data.
    *
-   * @param fieldName from the name="xyz" in an HTML form control.
+   * @param qualifier
    * @return the 1st value or None
    */
-  def apply(fieldName: String): Option[String] =
-    map.get(fieldName).flatMap(_.headOption)
+  def value(qualifier: String): String =
+    valueOpt(qualifier).getOrElse("")
 
-  def allValues(fieldName: String): Seq[String] =
-    map.getOrElse(fieldName, Seq.empty)
-
-  def key: Key =
-    apply(Key.keyName)
-      .map(s => Key.fromId(s))
-      .getOrElse(throw new IllegalArgumentException(s"No key found in form data!"))
+  def bindable: Map[String, String] =
+    for
+      (key: Key, keyAndValues: KeyAndValues) <- data
+    yield
+      key.qualifier.getOrElse("") -> keyAndValues.head
 
 object FormData:
   def apply()(using request: Request[AnyContent]): FormData =
     new FormData(request.body.asFormUrlEncoded.get)
 
-
+case class KeyAndValues(key: Key, values: Seq[String]):
+  /**
+   * Provides the first element from the `values` collection that matches a specified `PartialFunction`.
+   * If no matches are found, returns an empty string.
+   */
+  val head: String = values.iterator.collectFirst(pf => pf).getOrElse("")

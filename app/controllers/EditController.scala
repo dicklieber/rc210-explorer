@@ -23,7 +23,7 @@ import net.wa9nnn.rc210.data.datastore.*
 import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
-import net.wa9nnn.rc210.ui.{FormData, NamedKeyExtractor, NamedKeyManager, NavMainController}
+import net.wa9nnn.rc210.ui.{FormData, NamedKeyManager, NavMainController}
 import net.wa9nnn.rc210.*
 import play.api.mvc.*
 import play.api.mvc.Results.Ok
@@ -53,7 +53,8 @@ class EditController @Inject()(navMain: NavMain)
    * @return the Http response to send back to the browser.
    */
   def index(keyKind: KeyMetadata): Action[AnyContent] = Action {
-    implicit request => {
+    implicit request =>
+    {
       val fieldEntries: Seq[FieldEntry] = dataStore(keyKind)
       Ok(navMain(keyKind, keyKind.handler.index(fieldEntries)))
     }
@@ -65,7 +66,7 @@ class EditController @Inject()(navMain: NavMain)
    * @param key edit this one.
    * @return the Http response to send back to the browser.
    */
-  def edit(key:Key): Action[AnyContent] = Action {
+  def edit(key: Key): Action[AnyContent] = Action {
     implicit request =>
       val fieldEntry: FieldEntry = dataStore.getFieldEntry(key)
       Ok(navMain(key.keyMetadata, key.keyMetadata.handler.edit(fieldEntry)))
@@ -84,15 +85,17 @@ class EditController @Inject()(navMain: NavMain)
 
       given RcSession = request.attrs(sessionKey)
 
+      //todo how ti handle simple and complex
       namedKeyManager.saveNamedKeys(formData)
-
       try
-        namedKeyManager.saveNamedKeys(formData)
-        val key  = formData.key
-        val updateCandidates = key.bind(formData)
 
-        dataStore.update(updateCandidates)
-        key.saveOp(key.keyMetadata)
+        /*
+ //        val updateCandidates = key.bind(formData)
+ //
+ //        dataStore.update(updateCandidates)
+         key.saveOp(key.keyMetadata)
+ */
+        throw new NotImplementedError() //todo
       catch
         case e: Exception =>
           logger.error(s"save: ${e.getMessage}", e)
@@ -103,10 +106,12 @@ class EditController @Inject()(navMain: NavMain)
 
 object ExtractField:
   def apply[T](name: String, f: String => T)(using encoded: Map[String, Seq[String]]): T =
-    (for {
+    (for
+    {
       e <- encoded.get(name)
       v <- e.headOption
-    } yield {
+    } yield
+    {
       f(v)
     }).getOrElse(throw new IllegalArgumentException(s"No $name in body!"))
 

@@ -178,8 +178,9 @@ object MeterAlarmNode extends FieldDefComplex[MeterAlarmNode]:
     meterAlarmEditor( fieldEntry.key, filledForm)
   }
 
-  override def bind(formData: FormData): Seq[UpdateCandidate] =
-    val key = formData.key
-    val vameterAlarmNodeue: MeterAlarmNode = form.bindFromRequest(formData.map).get
-    Seq(UpdateCandidate(key, vameterAlarmNodeue))
 
+  override def bind(formData: FormData): Iterable[UpdateCandidate] =
+    for
+      key <- formData.maybeKey
+    yield
+      UpdateCandidate(key, form.bind(formData.bindable).get)

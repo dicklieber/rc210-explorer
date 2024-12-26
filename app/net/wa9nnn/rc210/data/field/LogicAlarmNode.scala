@@ -133,10 +133,9 @@ object LogicAlarmNode extends FieldDefComplex[LogicAlarmNode]:
 
     logicAlarmEditor(fieldEntry.key, filled)
 
-  override def bind(formData: FormData): Seq[UpdateCandidate] =
-    val key = formData.key
-    val courtesyTone = form.bindFromRequest(formData.map).get
-    Seq(
-      UpdateCandidate(key, courtesyTone)
-    )
-
+  override def bind(formData: FormData): Iterable[UpdateCandidate] =
+    for
+      key <- formData.maybeKey
+    yield
+      val node: LogicAlarmNode = form.bind(formData.bindable).get
+      UpdateCandidate(key, node)

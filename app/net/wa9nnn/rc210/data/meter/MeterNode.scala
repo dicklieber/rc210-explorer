@@ -18,6 +18,7 @@
 package net.wa9nnn.rc210.data.meter
 
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, KvTable, Row, Table}
+import net.wa9nnn.rc210.data.clock.ClockNode.form
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.data.meter.MeterAlarmNode.bind
@@ -153,10 +154,12 @@ object MeterNode extends FieldDefComplex[MeterNode]:
     meterEditor(filledForm, key)
   }
 
-  override def bind(formData: FormData): Seq[UpdateCandidate] =
-    val key = formData.key
-    val meterNode: MeterNode = form.bindFromRequest(formData.map).get
-    Seq(UpdateCandidate(key, meterNode))
+  override def bind(formData: FormData): Iterable[UpdateCandidate] =
+    for
+      key <- formData.maybeKey
+    yield
+      UpdateCandidate(key, form.bind(formData.bindable).get)
+
 
 /**
  *

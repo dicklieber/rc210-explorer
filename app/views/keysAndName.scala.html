@@ -1,7 +1,6 @@
 @import net.wa9nnn.rc210.Key
-@import net.wa9nnn.rc210.ui.NameEdit
+@import net.wa9nnn.rc210.ui.NamedKeyManager
 @(key: Key)
-
-@NameEdit.html(key)
+@NamedKeyManager.html(key)
 <input type="hidden" name="@Key.keyName" value="@key.id">
 

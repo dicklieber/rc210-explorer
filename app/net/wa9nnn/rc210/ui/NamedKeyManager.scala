@@ -23,9 +23,12 @@ import jakarta.inject.{Inject, Named, Singleton}
 import net.wa9nnn.rc210
 import net.wa9nnn.rc210.{Key, NamedKey}
 import play.api.libs.json.Json
+import play.twirl.api.Html
 
 import java.nio.file.{Files, NoSuchFileException, Path, Paths}
 import scala.collection.concurrent.TrieMap
+import scala.collection.immutable
+import scala.xml.Elem
 
 /**
  * Manages named keys by maintaining a mapping between keys and their corresponding names.
@@ -36,28 +39,30 @@ import scala.collection.concurrent.TrieMap
  *
  * @param namedDataFile path of the file used to store named keys.
  */
-class NamedKeyManager @Inject()(@Named("namedDataFile")namedDataFile:String)
-extends NamedKeySource  with LazyLogging:
+class NamedKeyManager @Inject()(@Named("namedDataFile") namedDataFile: String)
+  extends NamedKeySource with LazyLogging:
+  def this(path: Path) = this(path.toFile.toString)
+
   NamedKeyManager._namedKeySource = this
   private val keyNameMap = new TrieMap[Key, String]
 
-  private val path: Path = Paths.get(namedDataFile)
+  val path: Path = Paths.get(namedDataFile)
   // load last saved data.
   try
     val str: String = Files.readString(path)
     val jsValue = Json.parse(str)
-    val loadedKeys:Seq[NamedKey] = jsValue.as[Seq[NamedKey]]
+    val loadedKeys: Seq[NamedKey] = jsValue.as[Seq[NamedKey]]
     keyNameMap.addAll(loadedKeys.map(namedKey => namedKey.key -> namedKey.name))
   catch
-    case _:NoSuchFileException =>
+    case _: NoSuchFileException =>
       logger.debug(s"No named keys file found at $path")
     case e: Exception =>
       logger.error(s"Error loading named keys from $path", e)
-  
+
   private def save(): Unit =
     val sJson = Json.prettyPrint(Json.toJson(namedKeys))
     Files.writeString(path, sJson)
-  
+
   /**
    * Adds or removes name keys.
    *
@@ -81,9 +86,8 @@ extends NamedKeySource  with LazyLogging:
    *
    * @param formData Represents the submitted HTML form data containing key-value pairs.
    */
-  def saveNamedKeys(formData: FormData):Unit=
-    logger.error("handle named keys")
-    
+  def saveNamedKeys(formData: FormData): Unit =
+    update(formData.namedKeys)
 
   override def nameForKey(key: Key): String = keyNameMap.getOrElse(key, "")
 
@@ -91,14 +95,40 @@ extends NamedKeySource  with LazyLogging:
     keyNameMap.map((key, name) => NamedKey(key, name)).toIndexedSeq.sorted
 
 object NamedKeyManager extends NamedKeySource:
-  private[this] var _namedKeySource:NamedKeySource = _
+  private[this] var _namedKeySource: NamedKeySource = _
+
   def nameForKey(key: Key): String =
     _namedKeySource.nameForKey(key)
 
+  /**
+   * Use in twirl template e.g. @NameEdit.html(key)
+   * Shows the number followed by an <input> field with the name.
+   * The name will get sucked out of the [[FormData]] using [[NamedKeyManager.saveNamedKeys()]]
+   *
+   * @param key
+   * @return
+   */
+  def html(key: Key): Html =
+    val namedKey: NamedKey = key.namedKey
+    val id: String = namedKey.key.id
+    val parmName = "name-" + id
+
+    val r: Elem =
+      <div>
+        {namedKey.key.rc210Number}
+        : Name:
+        <input name={parmName} value={namedKey.name}></input>
+      </div>
+    Html(r.toString)
+
 trait NamedKeySource:
   /**
-   * 
+   *
    * @return empty string of key does not have a name.
    */
   def nameForKey(key: Key): String
 
+//object NameEdit:
+//  def cell(key: Key): Cell =
+//    Cell.rawHtml(html(key).body)
+//

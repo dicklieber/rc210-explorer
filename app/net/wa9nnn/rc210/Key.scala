@@ -31,11 +31,16 @@ import play.api.mvc.{PathBindable, Result}
  * Primary key for a [[net.wa9nnn.rc210.data.field.FieldValue]] stored in
  * the[[net.wa9nnn.rc210.data.datastore.DataStore]] or JSON.
  *
- * @param keyMetadata     smome
+ * @param keyMetadata     some
  * @param rc210Number     e.g. port or Schedule number
  * @param qualifier       used with [[KeyMetadata.Common]]
+ * @param indicator         indicates this key refers to the name of the  [[net.wa9nnn.rc210.data.field.FieldValue]].
+ *                        Only of interest when the [[Key]] is used in a [[PathBindable]]; between an HTML form and code.
  */
-case class Key(keyMetadata: KeyMetadata, rc210Number: Option[Int] = None, qualifier: Option[String] = None)
+case class Key(keyMetadata: KeyMetadata,
+               rc210Number: Option[Int] = None,
+               qualifier: Option[String] = None,
+               indicator: KeyIndicator = KeyIndicator.Value)
   extends CellProvider:
   rc210Number.foreach(n =>
     assert(n <= keyMetadata.maxN, s"Max number for $keyMetadata is ${keyMetadata.maxN}")
@@ -54,7 +59,7 @@ case class Key(keyMetadata: KeyMetadata, rc210Number: Option[Int] = None, qualif
    * @return used in JSON or HRML form names.
    */
   def id: String =
-    s"$keyMetadata|${rc210Number.getOrElse("")}|${qualifier.getOrElse("")}"
+    s"${indicator.char}$keyMetadata|${rc210Number.getOrElse("")}|${qualifier.getOrElse("")}"
 
   def namedKey: NamedKey =
     NamedKey(this, name)
@@ -85,7 +90,7 @@ case class Key(keyMetadata: KeyMetadata, rc210Number: Option[Int] = None, qualif
   def keyWithName: String =
     s"$rc210Number: $name"
 
-  def bind(formData: FormData): Seq[UpdateCandidate] =
+  def bind(formData: FormData): Iterable[UpdateCandidate] =
     keyMetadata.handler.bind(formData)
 
   def saveOp(keyMetadata: KeyMetadata): Result =
@@ -108,15 +113,16 @@ object Key extends LazyLogging:
 
   val keyName: String = "key"
 
-  private val keyRegx = """(.*)\|(\d{0,2})\|(.*)""".r
+  private val keyRegx = """([|n])(.*)\|(\d{0,2})\|(.*)""".r
 
   def fromId(id: String): Key =
     id match
-      case keyRegx(sKK, sNumber, sQualifier) =>
+      case keyRegx(sIndicator, sKK, sNumber, sQualifier) =>
         val keyMetadata = KeyMetadata.withName(sKK)
         val maybeNumber = Option.when(sNumber.nonEmpty)(sNumber.toInt)
         val maybeQualifier = Option.when(sQualifier.nonEmpty)(sQualifier)
-        Key(keyMetadata, maybeNumber, maybeQualifier)
+        val indicator: KeyIndicator = KeyIndicator.from(sIndicator)
+        Key(keyMetadata, maybeNumber, maybeQualifier, indicator)
       case x =>
         throw new IllegalArgumentException(s"Can't parse $x")
 
@@ -125,8 +131,9 @@ object Key extends LazyLogging:
 
   def apply(keyMetadata: KeyMetadata, number: Int, qualifier: String): Key =
     Key(keyMetadata, Some(number), Some(qualifier))
-  def apply(keyMetadata: KeyMetadata,  qualifier: String): Key =
-    Key(keyMetadata, qualifier=Some(qualifier))
+
+  def apply(keyMetadata: KeyMetadata, qualifier: String): Key =
+    Key(keyMetadata, qualifier = Some(qualifier))
 
   def apply(maybeSKey: Option[String]): Option[Key] =
     maybeSKey.map(fromId)
@@ -171,7 +178,7 @@ object Key extends LazyLogging:
     }
 
     override def unbind(paramKey: String, key: Key): String = {
-      key.id 
+      key.id
     }
   }
 
@@ -181,10 +188,20 @@ object Key extends LazyLogging:
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Key] =
       parsing(fromId, s"BadKey $key", Nil)(key, data)
 
-    override def unbind(key: String, value: Key): Map[String, String] = 
+    override def unbind(key: String, value: Key): Map[String, String] =
       Map(key -> value.toString)
 
 
+enum KeyIndicator(val char:Char):
+  case Value extends KeyIndicator('|')
+  case Name extends KeyIndicator('n')
+  case Key extends KeyIndicator('k')
+
+
+object KeyIndicator:
+  def from(str: String): KeyIndicator =
+    val ch = str.head
+    values.find(_.char == ch).getOrElse(throw new IllegalArgumentException(s"Unknown indicator $ch"))
 
 
 

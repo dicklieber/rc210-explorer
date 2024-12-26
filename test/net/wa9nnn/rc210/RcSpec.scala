@@ -22,8 +22,19 @@ import org.scalatest.*
 import org.scalatest.matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 
+import java.nio.file.*
+
 /**
  * Set the basic stuff for any ScalaTest
  */
-abstract class RcSpec extends AnyWordSpec with must.Matchers with OptionValues with Inside with Inspectors 
+abstract class RcSpec extends AnyWordSpec with must.Matchers with OptionValues with Inside with Inspectors :
+  def tempDir():Path =
+    val tempDirectory = Files.createTempDirectory("rc210Test")
+    tempDirectory.toFile.deleteOnExit()
+    tempDirectory
+  def tempDir(fileInTempDir:String):Path =
+    val tempDirectory = tempDir()
+    tempDirectory.resolve(fileInTempDir)
+
+
 

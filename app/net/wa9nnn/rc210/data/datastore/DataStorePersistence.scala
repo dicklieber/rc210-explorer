@@ -37,9 +37,11 @@ import scala.util.{Failure, Try, Using}
  * Adds persistence to the [[DataStoreEngine]].
  */
 class DataStorePersistence() extends DataStoreEngine with LazyLogging:
-  def loadFile(path: Path): Unit =
-    if Files.exists(path) then
+  def loadFile(path: Path): Unit = {
+    val sSkip = System.getProperty("skipLoadJson", "false")
+    if Files.exists(path) && sSkip != "true" then
       fromJson(Files.readString(path))
+  }
     
   def saveFile(path: Path): Unit =
     val sJson = toJson

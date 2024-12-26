@@ -18,7 +18,8 @@
 
 package net.wa9nnn.rc210.ui
 
-import net.wa9nnn.rc210.{Key, NamedKey, RcSpec, WithTestConfiguration}
+import net.wa9nnn.rc210.KeyMetadata.Common
+import net.wa9nnn.rc210.{Key, KeyMetadata, NamedKey, RcSpec, WithTestConfiguration}
 
 class NamedKeyManagerTest extends WithTestConfiguration {
 
@@ -27,25 +28,36 @@ class NamedKeyManagerTest extends WithTestConfiguration {
 
   "NamedKeyManagerTest" should
     {
+      def newNamedKeyManager(): NamedKeyManager =
+        new NamedKeyManager(tempDir("namedKey.json").toAbsolutePath.toString)
+
       "save/load" in
         {
-          val namedKeyManager = new NamedKeyManager(using config)
+          val namedKeyManager = newNamedKeyManager()
           namedKeyManager.update(startupMacro)
           val saved = namedKeyManager.namedKeys
           saved must have size 1
-          val loaded = new NamedKeyManager(using config)
-          
+          val path = namedKeyManager.path
+          val loaded = new NamedKeyManager(path)
+
           val namedKeys = loaded.namedKeys
           namedKeys must have size 1
+          
         }
 
-      "namedKey" in
+      "namedKey" when
         {
-          val namedKeyManager = new NamedKeyManager(using config)
-          namedKeyManager.update(startupMacro)
-
-          val str = namedKeyManager.nameForKey(aMacroKey)
-          str mustBe "startup Macro"
+          val namedKeyManager = newNamedKeyManager()
+          val aKey = Key(KeyMetadata.Port,1,"Color")
+          namedKeyManager.update(NamedKey(aKey, "Red"))
+          "name exists" in
+            {
+              namedKeyManager.nameForKey(aKey) mustBe "Red"
+            }
+          "name no name" in
+            {
+              namedKeyManager.nameForKey(Key(Common,"flavor")) mustBe ""
+            }
         }
     }
 }

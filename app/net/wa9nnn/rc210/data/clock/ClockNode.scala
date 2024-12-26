@@ -31,10 +31,10 @@ import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.{RequestHeader, Result, Results}
 import play.twirl.api.Html
 
-case class ClockNode(enableDST: Boolean = true, 
-                     hourDST: Int = 2, 
-                     startDST: DSTPoint = DSTPoint(MonthOfYearDST.March, Occurrence.First), 
-                     endDST: DSTPoint = DSTPoint(MonthOfYearDST.November, Occurrence.Second), 
+case class ClockNode(enableDST: Boolean = true,
+                     hourDST: Int = 2,
+                     startDST: DSTPoint = DSTPoint(MonthOfYearDST.March, Occurrence.First),
+                     endDST: DSTPoint = DSTPoint(MonthOfYearDST.November, Occurrence.Second),
                      say24Hours: Boolean = false) extends FieldValueComplex[ClockNode]():
 
   override def displayCell: Cell =
@@ -87,7 +87,7 @@ case class ClockNode(enableDST: Boolean = true,
     )
   }
 
-  override def toRow(key:Key): Row = Row(
+  override def toRow(key: Key): Row = Row(
     ButtonCell.edit(key),
     key.keyWithName,
     enableDST,
@@ -97,7 +97,7 @@ case class ClockNode(enableDST: Boolean = true,
     say24Hours
   )
 
-object ClockNode extends FieldDefComplex[ClockNode] {
+object ClockNode extends FieldDefComplex[ClockNode]:
   override val keyMetadata: KeyMetadata = KeyMetadata.Clock
   override val form: Form[ClockNode] = Form(
     mapping(
@@ -106,9 +106,9 @@ object ClockNode extends FieldDefComplex[ClockNode] {
       "startDST" -> DSTPoint.dstPointForm,
       "endDST" -> DSTPoint.dstPointForm,
       "say24Hours" -> boolean
-    )(( enableDST: Boolean, hourDST: Int, startDST: DSTPoint, endDST: DSTPoint, say24Hours: Boolean) => ClockNode.apply(enableDST, hourDST, startDST, endDST, say24Hours))(ClockNode.unapply))
+    )((enableDST: Boolean, hourDST: Int, startDST: DSTPoint, endDST: DSTPoint, say24Hours: Boolean) => ClockNode.apply(enableDST, hourDST, startDST, endDST, say24Hours))(ClockNode.unapply))
 
-  def unapply(u: ClockNode): Option[( Boolean, Int, DSTPoint, DSTPoint, Boolean)] = Some((u.enableDST, u.hourDST, u.startDST, u.endDST, u.say24Hours))
+  def unapply(u: ClockNode): Option[(Boolean, Int, DSTPoint, DSTPoint, Boolean)] = Some((u.enableDST, u.hourDST, u.startDST, u.endDST, u.say24Hours))
 
   /**
    *
@@ -130,7 +130,6 @@ object ClockNode extends FieldDefComplex[ClockNode] {
     )
   }
 
-  
   override def positions: Seq[FieldOffset] = Seq(
     FieldOffset(1186, this, "say24Hours"),
     FieldOffset(3687, this, "DSTFlag"),
@@ -153,10 +152,12 @@ object ClockNode extends FieldDefComplex[ClockNode] {
     views.html.clock(fieldEntry.key, form.fill(fieldEntry.value))
   }
 
-  override def bind(formData: FormData): Seq[UpdateCandidate] =
-    val key = formData.key
-    val value: Form[ClockNode] = form.bindFromRequest(formData.map)
-    val clockNode: ClockNode = value.get
-    Seq(UpdateCandidate(key, candidate = clockNode))
-}
+  override def bind(formData: FormData): Iterable[UpdateCandidate] =
+    for
+      key <- formData.maybeKey
+    yield
+      UpdateCandidate(key, form.bind(formData.bindable).get)
+
+
+
 

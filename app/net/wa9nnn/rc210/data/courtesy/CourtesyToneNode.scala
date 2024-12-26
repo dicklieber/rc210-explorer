@@ -130,11 +130,11 @@ object CourtesyToneNode extends FieldDefComplex[CourtesyToneNode] with LazyLoggi
 
     courtesyToneEdit(fieldEntry.key)
 
-  override def bind( formData: FormData): Seq[UpdateCandidate] =
-    val key = formData.key
-    val courtesyTone = form.bindFromRequest(formData.map).get
-    Seq(
-      UpdateCandidate(key, courtesyTone)
-    )
+  override def bind(formData: FormData): Seq[UpdateCandidate] =
+    (for
+      key <- formData.maybeKey
+    yield
+      val clockNode: CourtesyToneNode = form.bind(formData.bindable).get
+      UpdateCandidate(key, clockNode)).toSeq
 
 

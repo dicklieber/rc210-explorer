@@ -18,7 +18,8 @@
 package net.wa9nnn.rc210.data.datastore
 
 import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.data.field.{FieldValueComplex, FieldEntry}
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValueComplex}
+import net.wa9nnn.rc210.ui.KeyAndValues
 import play.api.libs.json.{Format, JsValue, Json}
 
 
@@ -31,5 +32,9 @@ import play.api.libs.json.{Format, JsValue, Json}
  * @param candidate  String for [[net.wa9nnn.rc210.data.field.FieldValueSimple]] or a [[FieldValueComplex]]
  */
 case class UpdateCandidate(key: Key, candidate: String | FieldValueComplex[?])
+
+object UpdateCandidate:
+  def apply(keyValues: KeyAndValues):UpdateCandidate =
+    UpdateCandidate(keyValues.key, keyValues.head)
 
 

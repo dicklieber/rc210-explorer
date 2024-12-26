@@ -20,6 +20,7 @@ package net.wa9nnn.rc210.data.remotebase
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, KvTable, Row, TableSection}
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
+import net.wa9nnn.rc210.data.meter.MeterNode.form
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.{Button, ButtonCell, FormData}
 import net.wa9nnn.rc210.util.Chunk
@@ -31,7 +32,11 @@ import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.*
 import play.twirl.api.Html
 
-case class RemoteBaseNode(radio: Radio, yaesu: Yaesu, prefix: String, memories: Seq[RBMemory] = Seq.empty) extends FieldValueComplex() {
+case class RemoteBaseNode(
+                           radio: Radio,
+                           yaesu: Yaesu,
+                           prefix: String,
+                           memories: Seq[RBMemory] = Seq.empty) extends FieldValueComplex() :
 
   //  override def display: String = fieldName
 
@@ -60,9 +65,9 @@ case class RemoteBaseNode(radio: Radio, yaesu: Yaesu, prefix: String, memories: 
     prefix,
     "memories"
   )
-}
 
-object RemoteBaseNode extends FieldDefComplex[RemoteBaseNode] {
+
+object RemoteBaseNode extends FieldDefComplex[RemoteBaseNode] :
   override val keyMetadata: KeyMetadata = KeyMetadata.RemoteBase
   def unapply(u: RemoteBaseNode): Option[(Radio, Yaesu, String, Seq[RBMemory])] = Some((u.radio, u.yaesu, u.prefix, u.memories))
 
@@ -136,11 +141,12 @@ object RemoteBaseNode extends FieldDefComplex[RemoteBaseNode] {
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html=
     throw new NotImplementedError() //todo
 
-  override def bind(formData:FormData): Seq[UpdateCandidate] =
-    val key = formData.key
-    val remoteBaseNode: RemoteBaseNode = form.bindFromRequest(formData.map).get
-    Seq(UpdateCandidate(key, remoteBaseNode))
-}
+  override def bind(formData: FormData): Iterable[UpdateCandidate] =
+    for
+      key <- formData.maybeKey
+    yield
+      UpdateCandidate(key, form.bind(formData.bindable).get)
+
 
 /**
  *
@@ -153,7 +159,8 @@ object RemoteBaseNode extends FieldDefComplex[RemoteBaseNode] {
 case class RBMemory(frequency: String, offset: Offset, mode: Mode, ctcssMode: CtcssMode, ctssCode: Int)
 
 object RBMemory:
-  def unapply(u: RBMemory): Option[(String, Offset, Mode, CtcssMode, Int)] = Some((u.frequency, u.offset, u.mode, u.ctcssMode, u.ctssCode))
+  def unapply(u: RBMemory): Option[(String, Offset, Mode, CtcssMode, Int)]
+  = Some((u.frequency, u.offset, u.mode, u.ctcssMode, u.ctssCode))
 
   val form: Mapping[RBMemory] =
     mapping(

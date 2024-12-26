@@ -126,8 +126,10 @@ object TimerNode extends FieldDefComplex[TimerNode] with LazyLogging:
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     timerEditor(form.fill(fieldEntry.value), fieldEntry.key)
 
-  override def bind(formData: FormData): Seq[UpdateCandidate] =
-    val timerNode: TimerNode = form.bindFromRequest(formData.map).get
-    Seq(UpdateCandidate(formData.key, timerNode))
 
+  override def bind(formData: FormData): Iterable[UpdateCandidate] =
+    for
+      key <- formData.maybeKey
+    yield
+      UpdateCandidate(key, form.bind(formData.bindable).get)
 

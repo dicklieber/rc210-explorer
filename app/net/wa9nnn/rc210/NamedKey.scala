@@ -18,8 +18,7 @@
 package net.wa9nnn.rc210
 
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, RowSource}
-import net.wa9nnn.rc210.NamedKey.fieldName
-import net.wa9nnn.rc210.ui.KeyedRow
+import net.wa9nnn.rc210.ui.{KeyAndValues, KeyedRow}
 import play.api.libs.json.{Format, Json}
 
 case class NamedKey(key: Key, name: String) extends KeyedRow:
@@ -29,7 +28,11 @@ case class NamedKey(key: Key, name: String) extends KeyedRow:
       Cell(key.toString), name
     )
 
-object NamedKey :
+object NamedKey:
+  def apply(key: Key): NamedKey = NamedKey(key, "")
+  def apply(keyValues:KeyAndValues): NamedKey =
+    NamedKey(keyValues.key, keyValues.head)
+
   given ordering: Ordering[NamedKey] = Ordering.by(_.key)
 
   val fieldName = "keyName"

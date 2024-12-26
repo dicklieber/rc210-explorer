@@ -142,11 +142,11 @@ object ScheduleNode extends LazyLogging with FieldDefComplex[ScheduleNode]:
     val value = form.fill(fieldEntry.value)
     scheduleEdit(value, fieldEntry.key)
 
-  override def bind(formData: FormData): Seq[UpdateCandidate] =
-    val scheduleNode: ScheduleNode = form.bindFromRequest(formData.map).get
-    Seq(UpdateCandidate(formData.key, scheduleNode))
-
-
-
-
+  override def bind(formData: FormData): Iterable[UpdateCandidate] =
+    for
+      key <- formData.maybeKey
+    yield
+      UpdateCandidate(key, form.bind(formData.bindable).get)
+  
+  
 

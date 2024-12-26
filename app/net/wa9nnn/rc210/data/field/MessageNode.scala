@@ -105,10 +105,12 @@ object MessageNode extends FieldDefComplex[MessageNode] with LazyLogging:
     // the PHP code only gets the 40 from main. //Phrase - 1576-1975
     // Have to dig for what cpomes from the RTC board.
     val mai = new AtomicInteger(1)
-    for {
+    for
+    {
       chunk: Chunk <- memory.chunks(1576, 10, 40)
       key: Key = Key(KeyMetadata.Message, mai.getAndIncrement())
-    } yield {
+    } yield
+    {
       val message: MessageNode = MessageNode(chunk.ints
         .takeWhile(_ != 0))
       FieldEntry(this, key, message)
@@ -124,7 +126,7 @@ object MessageNode extends FieldDefComplex[MessageNode] with LazyLogging:
     val table = Table(header,
       fieldEntries.map(fe =>
       {
-        val value:MessageNode = fe.value
+        val value: MessageNode = fe.value
         value.toRow(fe.key)
       })
     )
@@ -133,15 +135,14 @@ object MessageNode extends FieldDefComplex[MessageNode] with LazyLogging:
   override def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     messageEditor(fieldEntry.key, fieldEntry.value)
 
-  override def bind(formData: FormData): Seq[UpdateCandidate] =
-    (for {
-      fieldKey <- Option(formData.key)
-      ids <- formData("ids")
-    } yield {
-      val strings: Seq[String] = ids.split(',').toIndexedSeq
-      val messageNode = MessageNode(strings.map(_.toInt))
-      UpdateCandidate(fieldKey, messageNode)
-    }).toSeq
+  override def bind(formData: FormData): Iterable[UpdateCandidate] =
+    for
+      key <- formData.maybeKey
+    yield
+      val ids = formData.value("ids")
+      val numbers: Array[Int] = ids.split(',').map(_.toInt).toArray
+      val messageNode: MessageNode = MessageNode(numbers)
+      UpdateCandidate(key, messageNode)
 
 
 
