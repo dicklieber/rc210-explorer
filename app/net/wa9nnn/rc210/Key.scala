@@ -41,7 +41,7 @@ import play.api.mvc.{PathBindable, Result}
 case class Key(keyMetadata: KeyMetadata,
                rc210Number: Option[Int] = None,
                qualifier: Option[String] = None,
-               indicator: KeyIndicator = KeyIndicator.Value)
+               indicator: KeyIndicator = KeyIndicator.iValue)
   extends CellProvider with LazyLogging:
   rc210Number.foreach(n =>
     assert(n <= keyMetadata.maxN, s"Max number for $keyMetadata is ${keyMetadata.maxN}")

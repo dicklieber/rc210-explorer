@@ -22,7 +22,7 @@ import play.api.libs.json.{Format, Json}
 
 class KeyTest extends RcSpec with NamedKeySource {
   NamedKeyManager._namedKeySource = this
-  private val macroKey3 = Key(KeyMetadata.Macro, 3)
+  val macroKey3 = Key(KeyMetadata.Macro, 3)
   "toString" when
     {
       "just metadata" in
@@ -57,9 +57,9 @@ class KeyTest extends RcSpec with NamedKeySource {
         }
       "Key" in
         {
-          val string = macroKey3.withIndicator(KeyIndicator.Key).id
+          val string = macroKey3.withIndicator(KeyIndicator.iKey).id
           val backAgain = Key.fromId(string)
-          backAgain mustBe macroKey3.withIndicator(KeyIndicator.Key)
+          backAgain mustBe macroKey3.withIndicator(KeyIndicator.iKey)
         }
     }
   "round trip JSON" in
@@ -87,7 +87,7 @@ class KeyTest extends RcSpec with NamedKeySource {
       "binds" in
         {
           val value1: Either[String, Key] = binder.bind("p", "kMacro|3|")
-          value1 mustBe Right(macroKey3.withIndicator(KeyIndicator.Key))
+          value1 mustBe Right(macroKey3.withIndicator(KeyIndicator.iKey))
         }
       "unbind" in
         {

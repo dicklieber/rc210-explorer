@@ -21,7 +21,7 @@ package net.wa9nnn.rc210.ui
 import net.wa9nnn.rc210.KeyMetadata.Common
 import net.wa9nnn.rc210.{Key, KeyMetadata, NamedKey, RcSpec, WithTestConfiguration}
 
-class NamedKeyManagerTest extends WithTestConfiguration {
+class NamedIKeyManagerTest extends WithTestConfiguration {
 
   private val aMacroKey: Key = Key.macroKeys.head
   private val startupMacro = NamedKey(aMacroKey, "startup Macro")

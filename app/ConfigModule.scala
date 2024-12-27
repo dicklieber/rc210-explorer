@@ -8,6 +8,7 @@ import com.typesafe.config.{Config, ConfigFactory, ConfigRenderOptions, ConfigVa
 import com.typesafe.scalalogging.LazyLogging
 import net.codingwell.scalaguice.BindingExtensions.*
 import net.codingwell.scalaguice.ScalaModule
+import net.wa9nnn.rc210.Functions
 import net.wa9nnn.rc210.ui.NamedKeyManager
 import play.api.{Configuration, Environment}
 
@@ -23,7 +24,7 @@ class ConfigModule(env:Environment, configuration: Configuration) extends Abstra
 
   override def configure(): Unit =
     val config = configuration.underlying
-//    bind[Config].toInstance(config)
+    bind[Functions].toInstance(new Functions())
     bindConfig(config)
     bind[NamedKeyManager].asEagerSingleton()
 

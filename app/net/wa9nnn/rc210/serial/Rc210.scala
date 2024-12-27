@@ -80,7 +80,7 @@ class Rc210 @Inject()(config: Config, serialPortsSource: SerialPortsSource) exte
       logger.info(s"Selected port: ${_portAndVersion.selectedInfo}")
     catch
       case exception: Exception =>
-        logger.error(s"Failed to select port: $candidate", exception)
+        logger.error(s"Failed to select port: $candidate")
 
   def listPorts(): Seq[SerialPort] =
     serialPortsSource()

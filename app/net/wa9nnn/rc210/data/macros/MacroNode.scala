@@ -87,6 +87,8 @@ case class MacroNode(functions: Seq[Key], dtmf: Option[Dtmf] = None)
 
 object MacroNode extends FieldDefComplex[MacroNode]:
   override val keyMetadata: KeyMetadata = KeyMetadata.Macro
+  val idsKey: Key = Key(KeyMetadata.Macro, "ids")
+  val dtmfKey: Key = Key(KeyMetadata.Macro, "dtmf")
 
   def unapply(u: MacroNode): Option[(Seq[Key], Option[Dtmf])] = Some((u.functions, u.dtmf))
 
@@ -150,11 +152,11 @@ object MacroNode extends FieldDefComplex[MacroNode]:
       val strings: Array[String] = formData.value("ids").split(',').filter(_.nonEmpty)
       val functions: Seq[Key] = strings.toIndexedSeq.map(s => Key(KeyMetadata.Function, s.toInt))
 
-      val messageNode = MacroNode(
+      val macroNode = MacroNode(
         functions,
         formData.valueOpt("dtmf")
       )
-      UpdateCandidate(key, messageNode)
+      UpdateCandidate(key, macroNode)
 
 
 

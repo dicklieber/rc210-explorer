@@ -85,17 +85,13 @@ class EditController @Inject()(navMain: NavMain)
 
       given RcSession = request.attrs(sessionKey)
 
-      //todo how ti handle simple and complex
+      //todo how to handle simple and complex
       namedKeyManager.saveNamedKeys(formData)
       try
-
-        /*
- //        val updateCandidates = key.bind(formData)
- //
- //        dataStore.update(updateCandidates)
-         key.saveOp(key.keyMetadata)
- */
-        throw new NotImplementedError() //todo
+        val key = formData.maybeKey.get
+        val updateCandidates: Seq[UpdateCandidate] = key.keyMetadata.handler.bind(formData).toSeq
+        dataStore.update(updateCandidates)
+        key.saveOp(key.keyMetadata)
       catch
         case e: Exception =>
           logger.error(s"save: ${e.getMessage}", e)

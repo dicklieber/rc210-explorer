@@ -1,6 +1,6 @@
 package net.wa9nnn.rc210
 
-class KeyMetadataTest extends RcSpec:
+class iKeyMetadataTest extends RcSpec:
 
   "KeyKindTest" when {
     "enumeratum.EnumEntry.CapitalWords" should {

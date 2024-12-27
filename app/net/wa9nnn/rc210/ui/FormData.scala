@@ -18,8 +18,10 @@
 
 package net.wa9nnn.rc210.ui
 
+import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.{Key, KeyIndicator, NamedKey}
 import net.wa9nnn.rc210.Key.keyName
+import net.wa9nnn.rc210.KeyIndicator.iValue
 import play.api.mvc.{AnyContent, Request}
 
 import scala.collection.immutable
@@ -31,16 +33,19 @@ import scala.collection.immutable
  *            sequence of strings representing the field's values.
  *            This is what Play gives us on a form post.
  */
-class FormData(map: Map[String, Seq[String]]):
+class FormData(map: Map[String, Seq[String]]) extends LazyLogging:
+  logger.whenTraceEnabled{
+    map.foreach(kv => logger.trace(s"FormData: ${kv._1} -> ${kv._2.mkString(", ")}"))
+  }
   private val all: Seq[KeyAndValues] =
     map.map { case (id, values) =>
       val key = Key.fromId(id)
       KeyAndValues(key, values)
     }.toSeq
 
-  val data: Map[Key, KeyAndValues] = all.filter(_._1.indicator == KeyIndicator.Value).map { kv => kv._1 -> kv }.toMap
-  val maybeKey = all.find(_._1.indicator == KeyIndicator.Key).map(_.key)
-  val namedKeys: Seq[NamedKey] = all.filter(_._1.indicator == KeyIndicator.Name).map(NamedKey(_))
+  val data: Map[Key, KeyAndValues] = all.filter(_._1.indicator == KeyIndicator.iValue).map { kv => kv._1 -> kv }.toMap
+  val maybeKey = all.find(_._1.indicator == KeyIndicator.iKey).map(_.key.withIndicator(iValue))
+  val namedKeys: Seq[NamedKey] = all.filter(_._1.indicator == KeyIndicator.iName).map(NamedKey(_))
 
   def valueOpt(qualifier: String): Option[String] =
     val x: Option[KeyAndValues] = data.values.find(_.key.qualifier.contains(qualifier))

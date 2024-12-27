@@ -18,11 +18,11 @@
 
 package net.wa9nnn.rc210
 
-class NamedKeyFeature extends RcSpec {
+class FunctionNodeTest extends WithMemory {
 
-  "NamedKeyFeature" should
+  "FunctionNodeTest" should
     {
-      "keyWithName" in
+      "fmtFunction" in
         {
 
         }

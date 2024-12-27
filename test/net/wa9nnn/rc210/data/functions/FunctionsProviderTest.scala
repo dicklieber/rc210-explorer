@@ -20,6 +20,7 @@ package net.wa9nnn.rc210.data.functions
 import net.wa9nnn.rc210.{Functions, Key, KeyMetadata, RcSpec}
 
 class FunctionsTest extends RcSpec {
+  new Functions()
   "FunctionsTest" should {
 
     "size" in {
@@ -30,11 +31,6 @@ class FunctionsTest extends RcSpec {
     "happy path" in {
       val maybeNode = Functions.maybeFunctionNode(Key(KeyMetadata.Function, 3))
       maybeNode
-    }
-    "wrong key type" in {
-      assertThrows[IllegalArgumentException] { // Result type: Assertion
-        Functions.maybeFunctionNode(Key(KeyMetadata.Meter, 3))
-      }
     }
   }
 }

@@ -18,7 +18,7 @@
 
 package net.wa9nnn.rc210
 
-class KeyIndicatorTest extends WithMemory {
+class iKeyIndicatorTest extends WithMemory {
 
   "KeyIndicatorTest" should
     {
