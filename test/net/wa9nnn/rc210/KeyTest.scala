@@ -17,9 +17,11 @@
 
 package net.wa9nnn.rc210
 
+import net.wa9nnn.rc210.ui.{NamedKeyManager, NamedKeySource}
 import play.api.libs.json.{Format, Json}
 
-class KeyTest extends RcSpec {
+class KeyTest extends RcSpec with NamedKeySource {
+  NamedKeyManager._namedKeySource = this
   private val macroKey3 = Key(KeyMetadata.Macro, 3)
   "toString" when
     {
@@ -40,21 +42,30 @@ class KeyTest extends RcSpec {
         {
           val key = Key(KeyMetadata.Port, 3, "color")
           val id = key.id
-          id mustBe "Port|3|color"
+          id mustBe "|Port|3|color"
           val backAgain = Key.fromId(id)
           backAgain mustBe key
         }
     }
-  "round trip toString get" in
+  "round trip toString get" when
     {
-      val string = macroKey3.id
-      val backAgain = Key.fromId(string)
-      backAgain mustBe macroKey3
+      "Value" in
+        {
+          val string = macroKey3.id
+          val backAgain = Key.fromId(string)
+          backAgain mustBe macroKey3
+        }
+      "Key" in
+        {
+          val string = macroKey3.withIndicator(KeyIndicator.Key).id
+          val backAgain = Key.fromId(string)
+          backAgain mustBe macroKey3.withIndicator(KeyIndicator.Key)
+        }
     }
   "round trip JSON" in
     {
       val sJson = Json.prettyPrint(Json.toJson(macroKey3))
-      sJson mustBe """"Macro|3|"""".stripMargin
+      sJson mustBe """"|Macro|3|"""".stripMargin
       val backAgain = Json.parse(sJson).as[Key]
       backAgain mustBe macroKey3
     }
@@ -75,13 +86,13 @@ class KeyTest extends RcSpec {
       val binder = Key.keyKindPathBinder
       "binds" in
         {
-          val value1: Either[String, Key] = binder.bind("p", "Macro|3|")
-          value1 mustBe Right(macroKey3)
+          val value1: Either[String, Key] = binder.bind("p", "kMacro|3|")
+          value1 mustBe Right(macroKey3.withIndicator(KeyIndicator.Key))
         }
       "unbind" in
         {
           val r: String = binder.unbind("p", key)
-          r mustBe "Port|3|beep"
+          r mustBe "|Port|3|beep"
         }
     }
   "ordering" in
@@ -101,11 +112,27 @@ class KeyTest extends RcSpec {
       val last = sorted.last
       last.toString mustBe "Port3:color"
     }
-  "replaceN" in {
-    val key = Key(KeyMetadata.Port, 3, "color")
-    val str = key.replaceN("|>>>>n<<=|")
-    str mustBe "|>>>>3<<=|"
-  }
+  "replaceN" in
+    {
+      val key = Key(KeyMetadata.Port, 3, "color")
+      val str = key.replaceN("|>>>>n<<=|")
+      str mustBe "|>>>>3<<=|"
+    }
+  "KeyWithName" in
+    {
+      val numberAndName = macroKey3.keyWithName
+      numberAndName mustBe "3: Name for Macro3"
+    }
+  "display" in
+    {
+      val key = Key(KeyMetadata.Port, 3, "color")
+      val display = key.display
+      display mustBe "Port3;color"
+    }
+
+  override def nameForKey(key: Key): String =
+    if key == macroKey3 then "Name for Macro3"
+    else ""
 }
 
 

@@ -34,14 +34,15 @@ import play.api.mvc.{PathBindable, Result}
  * @param keyMetadata     some
  * @param rc210Number     e.g. port or Schedule number
  * @param qualifier       used with [[KeyMetadata.Common]]
- * @param indicator         indicates this key refers to the name of the  [[net.wa9nnn.rc210.data.field.FieldValue]].
- *                        Only of interest when the [[Key]] is used in a [[PathBindable]]; between an HTML form and code.
+ * @param indicator indicates this key refers to the name of the  [[net.wa9nnn.rc210.data.field.FieldValue]].
+ * Only of interest when the [[Key]] is used in a [[PathBindable]]; between an HTML form and code.
+ * This should only be [[KeyIndicator.Value]] in datastore or JSON.
  */
 case class Key(keyMetadata: KeyMetadata,
                rc210Number: Option[Int] = None,
                qualifier: Option[String] = None,
                indicator: KeyIndicator = KeyIndicator.Value)
-  extends CellProvider:
+  extends CellProvider with LazyLogging:
   rc210Number.foreach(n =>
     assert(n <= keyMetadata.maxN, s"Max number for $keyMetadata is ${keyMetadata.maxN}")
   )
@@ -52,7 +53,7 @@ case class Key(keyMetadata: KeyMetadata,
   val display: String =
     val sNumber = rc210Number.map(_.toString).getOrElse("")
     val sQualifier = qualifier.map(q => s";$q").getOrElse("")
-    s"$keyMetadata.entryName$sNumber$sQualifier}"
+    s"${keyMetadata.entryName}$sNumber$sQualifier"
 
   /**
    *
@@ -67,7 +68,7 @@ case class Key(keyMetadata: KeyMetadata,
   /**
    * @return current name for this key
    */
-  def name: String =
+  def name: String = 
     NamedKeyManager.nameForKey(this)
 
   /**
@@ -88,13 +89,13 @@ case class Key(keyMetadata: KeyMetadata,
     s"""${keyMetadata.entryName}${rc210Number.getOrElse("")}${qualifier.map(q => s":$q").getOrElse("")}"""
 
   def keyWithName: String =
-    s"$rc210Number: $name"
-
-  def bind(formData: FormData): Iterable[UpdateCandidate] =
-    keyMetadata.handler.bind(formData)
+    s"${rc210Number.getOrElse(throw new IllegalStateException("Named keys must have a number1"))}: $name"
 
   def saveOp(keyMetadata: KeyMetadata): Result =
     keyMetadata.handler.saveOp(keyMetadata)
+
+  def withIndicator(keyIndicator: KeyIndicator): Key =
+    copy(indicator = keyIndicator)
 
 object Key extends LazyLogging:
   given Ordering[Key] with
@@ -113,7 +114,7 @@ object Key extends LazyLogging:
 
   val keyName: String = "key"
 
-  private val keyRegx = """([|n])(.*)\|(\d{0,2})\|(.*)""".r
+  private val keyRegx = """([|nk])(.*)\|(\d{0,2})\|(.*)""".r
 
   def fromId(id: String): Key =
     id match
@@ -191,17 +192,6 @@ object Key extends LazyLogging:
     override def unbind(key: String, value: Key): Map[String, String] =
       Map(key -> value.toString)
 
-
-enum KeyIndicator(val char:Char):
-  case Value extends KeyIndicator('|')
-  case Name extends KeyIndicator('n')
-  case Key extends KeyIndicator('k')
-
-
-object KeyIndicator:
-  def from(str: String): KeyIndicator =
-    val ch = str.head
-    values.find(_.char == ch).getOrElse(throw new IllegalArgumentException(s"Unknown indicator $ch"))
 
 
 
