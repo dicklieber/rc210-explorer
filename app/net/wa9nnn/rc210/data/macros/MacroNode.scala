@@ -1,7 +1,6 @@
 package net.wa9nnn.rc210.data.macros
 
 import com.wa9nnn.wa9nnnutil.tableui.*
-import net.wa9nnn.rc210.Functions.functions
 import net.wa9nnn.rc210.data.Dtmf.Dtmf
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
@@ -29,25 +28,33 @@ import scala.annotation.tailrec
  */
 case class MacroNode(functions: Seq[Key], dtmf: Option[Dtmf] = None)
   extends FieldValueComplex[MacroNode]():
-  /*
-    override def toString: String =
-      val seq1: Seq[Any] = functions.map(_.rc210Number)
-      val sFunctions:String = seq1.mkString(" ")
-        s"$key: dtmf: ${dtmf.getOrElse("")} functions=$sFunctions"
-  */
+  override def toRow(key: Key): Row =
+    Row(
+      ButtonCell.edit(key),
+      key.keyWithName,
+      dtmf,
+      TableInACell(Table(Header.none,
+        functions.map { fKey =>
+          Row.ofAny(
+            s"${Functions.description(fKey)} (${fKey.rc210Number})"
+          ).withCssClass("functionsTable")
+        }
+      ))
+    )
 
-  //  def enabled: Boolean = functions.nonEmpty
-
-  //  override val commandStringValue: String = "*4002 10 * 162 * 187 * 122 * 347" // todo
+  override def toString: String =
+    val seq1: Seq[Any] = functions.map(_.rc210Number)
+    val sFunctions: String = seq1.mkString(" ")
+    s"dtmf: ${dtmf.getOrElse("")} functions=$sFunctions"
 
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntry): Seq[String] = {
+  override def toCommands(fieldEntry: FieldEntry): Seq[String] =
     val key = fieldEntry.key
     val numbers: String = functions.map(_.rc210Number).mkString("*")
     val macroNumber: String = f"${key.rc210Number.get}%03d"
-    val mCmd = if (functions.isEmpty)
+    val mCmd = if functions.isEmpty then
       s"1*4003$macroNumber" // erase macro
     else
       s"1*4002$macroNumber*$numbers"
@@ -61,28 +68,18 @@ case class MacroNode(functions: Seq[Key], dtmf: Option[Dtmf] = None)
       mCmd,
       s"1*2050$macroNumber$dtmf"
     )
-  }
 
-  override def displayCell: Cell = Cell(functions.map(_.rc210Number).mkString(" "))
-
-  //    val value: Seq[Row] = functions.map { functionKey =>
-  //      val name = functionKey.rc210Value.toString
-  //      Row(name, FunctionsProvider(functionKey).description): _*
-  //    }
-  //    KvTable(s"Macro ${key.keyWithName}",
-  //      TableSection("Functions", value)
-  //    )
-
-  override def toRow(key: Key): Row = Row(
-    ButtonCell.edit(key),
-    key.keyWithName,
-    dtmf,
-    TableInACell(Table(Seq.empty,
-      functions.map { fKey =>
-        Row.ofAny(
-          s"${Functions.description(fKey)} (${fKey.rc210Number})"
+  override def displayCell: Cell =
+    TableInACell(Table(Header.none,
+      for
+        fkey <- functions
+        functionNode <- Functions.maybeFunctionNode(fkey)
+      yield
+        Row(
+          functionNode.description,
+          functionNode.key.rc210Number,
+          functionNode.destination
         )
-      }).withCssClass("functionsTable")
     ))
 
 object MacroNode extends FieldDefComplex[MacroNode]:

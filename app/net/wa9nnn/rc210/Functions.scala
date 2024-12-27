@@ -8,7 +8,7 @@ import java.io.InputStream
 import scala.io.BufferedSource
 import scala.util.*
 import com.github.tototoshi.csv.*
-
+import net.wa9nnn.rc210.Functions.destParser
 import scala.util.matching.Regex
 
 class Functions extends LazyLogging:
@@ -22,14 +22,20 @@ class Functions extends LazyLogging:
   yield
     val key = Key(KeyMetadata.Function, line.head.toInt)
     val description = line(1)
-    if line.last.isEmpty then
-      SimpleFunctionNode(key, description)
-    else
-      line(2) match
-        case Functions.destParser(sMetadata, sNumber)=>
-          val metadata = KeyMetadata.withName(sMetadata)
-          val destKey = Key(metadata, sNumber.toInt)
-          TriggerFunctionNode(key, description, destKey)
+    val sDest = line(2)
+    val destination: Option[Key] = 
+      sDest match
+        case destParser(md,sN) =>
+          val keyMetadata = KeyMetadata.withName(md)
+          Option(Key(keyMetadata, sN.toInt))
+        case _ =>
+          None
+    
+    FunctionNode(
+      key,
+      description,
+      destination)
+
   inputStream.close()
 
   initFunctions(functionNodes)

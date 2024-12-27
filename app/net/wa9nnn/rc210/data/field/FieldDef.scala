@@ -41,6 +41,5 @@ trait FieldExtractor
  */
 case class FieldOffset(offset: Int, fieldDefinition: FieldDef[?], field: Option[String] = None)
 
-object FieldOffset {
+object FieldOffset :
   def apply(offset: Int, fieldDefinition: FieldDef[?], field: String) = new FieldOffset(offset = offset, fieldDefinition = fieldDefinition, field = Option(field))
-}
