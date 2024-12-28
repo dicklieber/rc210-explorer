@@ -18,13 +18,17 @@ package net.wa9nnn.rc210
  *
  */
 
-enum KeyIndicator(val char:Char):
+enum KeyIndicator(val char: Char):
   case iValue extends KeyIndicator('|')
   case iName extends KeyIndicator('n')
   case iKey extends KeyIndicator('k')
 
-
 object KeyIndicator:
+  def hasIndicator(str: String): Boolean =
+    indicatorChars.contains(str.head)
+
+  val indicatorChars: Array[Char] = values.map(_.char)
+
   def from(str: String): KeyIndicator =
     val ch = str.head
     values.find(_.char == ch).getOrElse(throw new IllegalArgumentException(s"Unknown indicator $ch"))

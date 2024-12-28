@@ -25,7 +25,11 @@ class iKeyIndicatorTest extends WithMemory {
       "from" in
         {
           val indicator = KeyIndicator.from("|")
-          indicator mustBe  KeyIndicator.Value
+          indicator mustBe  KeyIndicator.iValue
         }
+      "is" in {
+        KeyIndicator.hasIndicator("|Macro|1|") mustBe true
+        KeyIndicator.hasIndicator("plainFormField") mustBe false
+      }
     }
 }

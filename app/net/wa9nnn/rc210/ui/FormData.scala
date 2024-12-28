@@ -37,7 +37,7 @@ class FormData(formData: Map[String, Seq[String]]) extends LazyLogging:
   private val all =
     for
       (id, values) <- formData
-      if KeyIndicator.isKey(id) // Just ones that are actually [[Keys]]s
+      if KeyIndicator.hasIndicator(id) // Just ones that are actually [[Keys]]s
     yield
       val key = Key.fromId(id)
       KeyAndValues(key, values)
@@ -55,7 +55,7 @@ class FormData(formData: Map[String, Seq[String]]) extends LazyLogging:
   lazy val bindable: Map[String, String] =
     for
       (id, values) <- formData
-      if !KeyIndicator.isKey(id) // Just ones that are actually [[Keys]]s
+      if !KeyIndicator.hasIndicator(id) // Just ones that are actually [[Keys]]s
     yield
       id -> values.head
     

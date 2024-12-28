@@ -156,7 +156,9 @@ object ClockNode extends FieldDefComplex[ClockNode]:
     for
       key <- formData.maybeKey
     yield
-      UpdateCandidate(key, form.bind(formData.bindable).get)
+      val bindable = formData.bindable
+      val value: Form[ClockNode] = form.bind(bindable)
+      UpdateCandidate(key, value.get)
 
 
 
