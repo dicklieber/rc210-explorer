@@ -140,7 +140,11 @@ object MessageNode extends FieldDefComplex[MessageNode] with LazyLogging:
       key <- formData.maybeKey
     yield
       val ids = formData.value("ids")
-      val numbers: Array[Int] = ids.split(',').map(_.toInt)
+      val numbers: Array[Int] = if ids.isBlank then
+        Array.empty
+      else
+        ids.split(',').map(_.toInt)
+      
       val messageNode: MessageNode = MessageNode(numbers)
       UpdateCandidate(key, messageNode)
 
