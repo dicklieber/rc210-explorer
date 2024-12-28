@@ -22,7 +22,7 @@ import com.typesafe.scalalogging.LazyLogging
 import jakarta.inject.{Inject, Named, Singleton}
 import net.wa9nnn.rc210
 import net.wa9nnn.rc210.KeyIndicator.iName
-import net.wa9nnn.rc210.{Key, NamedKey}
+import net.wa9nnn.rc210.{Key, KeyIndicator, NamedKey}
 import play.api.libs.json.Json
 import play.twirl.api.Html
 
@@ -71,7 +71,7 @@ class NamedKeyManager @Inject()(@Named("namedDataFile") namedDataFile: String)
    */
   def update(namedKey: Seq[NamedKey]): Unit =
     namedKey.foreach { namedKey =>
-      val key = namedKey.key
+      val key = namedKey.key.withIndicator(KeyIndicator.iValue)
       if namedKey.name.isBlank then
         keyNameMap.remove(key)
       else
@@ -105,20 +105,20 @@ object NamedKeyManager extends NamedKeySource:
   /**
    * Use in twirl template e.g. @NameEdit.html(key)
    * Shows the number followed by an <input> field with the name.
-   * The name will get sucked out of the [[FormData]] using [[NamedKeyManager.saveNamedKeys()]]
    *
    * @param key
    * @return
    */
-  def html(key: Key): Html =
+  def keyAndNameEdit(key: Key): Html =
     val namedKey: NamedKey = key.namedKey
+    val keyName = key.name
     val parmName =  namedKey.key.withIndicator(iName).id
 
     val r: Elem =
       <div>
-        {namedKey.key.rc210Number}
+        {namedKey.key.toString}
         : Name:
-        <input name={parmName} value={namedKey.name}></input>
+        <input name={parmName} value={keyName}></input>
       </div>
     Html(r.toString)
 

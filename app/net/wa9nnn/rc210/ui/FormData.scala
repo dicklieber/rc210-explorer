@@ -28,7 +28,7 @@ import scala.collection.immutable
 /**
  * Represents form data extracted from an HTML form as a map of field names to their corresponding values.
  *
- * @param formData This is what Play gives us from an HTML form post. 
+ * @param formData This is what Play gives us from an HTML form post.
  */
 class FormData(formData: Map[String, Seq[String]]) extends LazyLogging:
   logger.whenTraceEnabled {
@@ -58,7 +58,7 @@ class FormData(formData: Map[String, Seq[String]]) extends LazyLogging:
       if !KeyIndicator.hasIndicator(id) // Just ones that are actually [[Keys]]s
     yield
       id -> values.head
-    
+
   def valueOpt(qualifier: String): Option[String] =
     val x: Option[KeyAndValues] = data.values.find(_.key.qualifier.contains(qualifier))
     val y: Option[String] = x.map(_.head)
@@ -71,7 +71,17 @@ class FormData(formData: Map[String, Seq[String]]) extends LazyLogging:
    * @return the 1st value or None
    */
   def value(qualifier: String): String =
-    valueOpt(qualifier).getOrElse("")
+    valueOpt(qualifier) match
+      case Some(value) =>
+        value
+      case None =>
+        // might be wanting a plain keyed value
+        formData.get(qualifier) match
+          case Some(value) =>
+            value.head
+          case None => ""
+
+
 
 
 object FormData:

@@ -5,6 +5,8 @@
 @import net.wa9nnn.rc210.KeyMetadata
 @import net.wa9nnn.rc210.data.vocabulary.Word
 @import net.wa9nnn.rc210.Key
+@import net.wa9nnn.rc210.ui.NamedKeyManager
+@import net.wa9nnn.rc210.ui.HiddenFieldKey
 @(key:Key, message: MessageNode)
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
@@ -15,7 +17,8 @@
 <script src="@routes.Assets.versioned("javascripts/macroNode.js")"></script>
 
     @form(action = routes.EditController.save(), Symbol("id") -> "form") {
-        @keysAndName(key)
+        @NamedKeyManager.keyAndNameEdit(key)
+        @HiddenFieldKey(key)
         <input type="hidden" name="ids" id="ids"> @* this will get set at submit time via javascript. *@
         <div class="row">
             <div class="col col-md-auto border border-primary">

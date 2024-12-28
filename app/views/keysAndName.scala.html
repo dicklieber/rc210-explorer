@@ -2,6 +2,6 @@
 @import net.wa9nnn.rc210.ui.NamedKeyManager
 @import net.wa9nnn.rc210.KeyIndicator.iKey
 @(key: Key)
-@NamedKeyManager.html(key)
+@NamedKeyManager.keyAndNameEdit(key)
 <input type="hidden" name="@key.withIndicator(iKey).id" value="@key.id">
 

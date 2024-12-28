@@ -34,7 +34,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin)
     scalacOptions ++= Seq(
       "-feature",
       " - language: implicitConversions",
-      "-explain",
+//      "-explain",
       //      "-deprecation",
       //      "-Xfatal-warnings",
       //      "-Ymacro-annotations",
