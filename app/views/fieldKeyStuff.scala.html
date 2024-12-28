@@ -1,5 +1,7 @@
 @import net.wa9nnn.rc210.Key
+@import net.wa9nnn.rc210.KeyIndicator.iKey
 @(key: Key)
-
-<input type="hidden" name="@Key.keyName" value="@key.id">
-@*<input type="hidden" name="@FieldKey.fieldKeyName" value="@fieldKey.id">*@
+@defining(key.withIndicator(iKey).id){k =>
+    <input type="hidden" name="@k" value="@k">
+    @*<input type="hidden" name="@FieldKey.fieldKeyName" value="@fieldKey.id">*@
+}

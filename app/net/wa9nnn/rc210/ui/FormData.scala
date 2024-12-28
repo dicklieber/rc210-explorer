@@ -19,9 +19,8 @@
 package net.wa9nnn.rc210.ui
 
 import com.typesafe.scalalogging.LazyLogging
+import net.wa9nnn.rc210.KeyIndicator.{from, iValue}
 import net.wa9nnn.rc210.{Key, KeyIndicator, NamedKey}
-import net.wa9nnn.rc210.Key.keyName
-import net.wa9nnn.rc210.KeyIndicator.iValue
 import play.api.mvc.{AnyContent, Request}
 
 import scala.collection.immutable
@@ -29,24 +28,37 @@ import scala.collection.immutable
 /**
  * Represents form data extracted from an HTML form as a map of field names to their corresponding values.
  *
- * @param map A map where each key is a field name, and each value is a
- *            sequence of strings representing the field's values.
- *            This is what Play gives us on a form post.
+ * @param formData This is what Play gives us from an HTML form post. 
  */
-class FormData(map: Map[String, Seq[String]]) extends LazyLogging:
-  logger.whenTraceEnabled{
-    map.foreach(kv => logger.trace(s"FormData: ${kv._1} -> ${kv._2.mkString(", ")}"))
+class FormData(formData: Map[String, Seq[String]]) extends LazyLogging:
+  logger.whenTraceEnabled {
+    formData.foreach(kv => logger.trace(s"FormData: ${kv._1} -> ${kv._2.mkString(", ")}"))
   }
-  private val all: Seq[KeyAndValues] =
-    map.map { case (id, values) =>
+  private val all =
+    for
+      (id, values) <- formData
+      if KeyIndicator.isKey(id) // Just ones that are actually [[Keys]]s
+    yield
       val key = Key.fromId(id)
       KeyAndValues(key, values)
-    }.toSeq
 
-  val data: Map[Key, KeyAndValues] = all.filter(_._1.indicator == KeyIndicator.iValue).map { kv => kv._1 -> kv }.toMap
-  val maybeKey = all.find(_._1.indicator == KeyIndicator.iKey).map(_.key.withIndicator(iValue))
-  val namedKeys: Seq[NamedKey] = all.filter(_._1.indicator == KeyIndicator.iName).map(NamedKey(_))
-
+  val data: Map[Key, KeyAndValues] = all.filter(_._1.indicator == KeyIndicator.iValue)
+    .map { kv => kv._1 -> kv }.toMap
+  val maybeKey: Option[Key] = all.find(_._1.indicator == KeyIndicator.iKey)
+    .map(_.key.withIndicator(iValue))
+  val namedKeys: Seq[NamedKey] = all.filter(_._1.indicator == KeyIndicator.iName)
+    .map(NamedKey(_)).toSeq
+  /**
+   *
+   * @return what can vew passed to play.api.data.Form#bind
+   */
+  lazy val bindable: Map[String, String] =
+    for
+      (id, values) <- formData
+      if !KeyIndicator.isKey(id) // Just ones that are actually [[Keys]]s
+    yield
+      id -> values.head
+    
   def valueOpt(qualifier: String): Option[String] =
     val x: Option[KeyAndValues] = data.values.find(_.key.qualifier.contains(qualifier))
     val y: Option[String] = x.map(_.head)
@@ -61,11 +73,6 @@ class FormData(map: Map[String, Seq[String]]) extends LazyLogging:
   def value(qualifier: String): String =
     valueOpt(qualifier).getOrElse("")
 
-  def bindable: Map[String, String] =
-    for
-      (key: Key, keyAndValues: KeyAndValues) <- data
-    yield
-      key.qualifier.getOrElse("") -> keyAndValues.head
 
 object FormData:
   def apply()(using request: Request[AnyContent]): FormData =
