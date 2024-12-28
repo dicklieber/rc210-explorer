@@ -7,10 +7,11 @@
 @import com.wa9nnn.wa9nnnutil.tableui.Table
 @import com.wa9nnn.wa9nnnutil.tableui.html.renderTable
 @import net.wa9nnn.rc210.Key
+@import net.wa9nnn.rc210.ui.HiddenFieldKey
 @(table:Table)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
 @form(action = routes.EditController.save()) {
-    @fieldKeyStuff(Key.commonkey))
+    @HiddenFieldKey(Key.commonkey))
     @renderTable(table)
     @submitButton()
 }
