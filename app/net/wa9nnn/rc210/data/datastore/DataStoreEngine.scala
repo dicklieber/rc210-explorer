@@ -58,9 +58,6 @@ class DataStoreEngine extends DataStoreApi:
   def entries: Seq[FieldEntry] =
     keyFieldMap.values.toIndexedSeq.sorted
 
-  def fieldDatas: Seq[FieldData] =
-    keyFieldMap.values.map(_.fieldData).toIndexedSeq.sorted
-
   def values[T <: FieldValue](keyKind: KeyMetadata): Seq[T] =
     apply(keyKind).map(_.value.asInstanceOf[T])
 
@@ -122,11 +119,7 @@ class DataStoreEngine extends DataStoreApi:
       val key = updateCandidate.key
       try
         val fieldEntry: FieldEntry = keyFieldMap(key)
-        updateCandidate.candidate match
-          case value: String =>
-            fieldEntry.setCandidate(value)
-          case fieldValue: FieldValue =>
-            fieldEntry.set(fieldValue)
+        fieldEntry.set(updateCandidate.candidate)
       catch
         case e: NoSuchElementException =>
           logger.error(s"No entry for key: $key")

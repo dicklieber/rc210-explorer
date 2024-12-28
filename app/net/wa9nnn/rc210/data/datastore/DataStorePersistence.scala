@@ -26,7 +26,7 @@ import net.wa9nnn.rc210.{Key, KeyMetadata, NamedKey}
 import net.wa9nnn.rc210.data.field.{FieldData, FieldEntry, FieldValue}
 import net.wa9nnn.rc210.security.Who
 import net.wa9nnn.rc210.util.Configs
-import play.api.libs.json.{JsArray, JsLookupResult, JsObject, JsValue, Json}
+import play.api.libs.json.*
 
 import java.nio.file.{Files, Path}
 import javax.inject.{Inject, Singleton}
@@ -42,15 +42,25 @@ class DataStorePersistence() extends DataStoreEngine with LazyLogging:
     if Files.exists(path) && sSkip != "true" then
       fromJson(Files.readString(path))
   }
-    
+
   def saveFile(path: Path): Unit =
     val sJson = toJson
     Files.writeString(path, sJson)
 
-  def toJson: String = 
-    Json.prettyPrint(Json.toJson(fieldDatas))
+  def toJson: String =
+    val a = Json.arr(
+      entries.map { fieldEntry =>
+        val fieldData = fieldEntry.fieldData
 
-  def fromJson(sJson: String): Unit = 
+        implicit val f: Format[?] = fieldEntry.fieldDefinition.fmt 
+        val toJson1: JsValue = Json.toJson(fieldData)
+        toJson1
+      }
+    )
+
+    Json.prettyPrint(a)
+
+  def fromJson(sJson: String): Unit =
     val jsValue = Json.parse(sJson)
     val jsArray: JsArray = jsValue.as[JsArray]
     jsArray.value.foreach { (obj: JsValue) =>
@@ -59,9 +69,9 @@ class DataStorePersistence() extends DataStoreEngine with LazyLogging:
       val key: Key = Key.fromId(id)
       val fe: FieldEntry = getFieldEntry(key)
 
-        val fieldData: FieldData = obj.as[FieldData]
-        fe.set(fieldData)
-      }
+      val fieldData: FieldData = obj.as[FieldData]
+      fe.set(fieldData)
+    }
 
 
 

@@ -3,14 +3,32 @@ package net.wa9nnn.rc210.data.field
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.data.EditHandler
 import net.wa9nnn.rc210.data.clock.ClockNode
+import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.serial.Memory
-import net.wa9nnn.rc210.{ Key, KeyMetadata}
+import net.wa9nnn.rc210.ui.FormData
+import net.wa9nnn.rc210.{Key, KeyMetadata}
 import play.api.data.Form
 import play.api.libs.json.{Format, JsResult, JsValue, Reads}
 
 import scala.util.Try
 
+/**
+ * Knows how to:
+ * - extract current values from [[Memory]] (data from RC-210).
+ * - provides Play Json Format [[fmt]] to read or write JSON.
+ * - instantiate a [[FieldValue]] from an HTML form. [[fromForm()]]
+ * - provides a [[KeyMetadata]] to help create [[Key]]s for 
+ *
+ * @tparam T what this produces.
+ */
 trait FieldDef[T <: FieldValue] extends LazyLogging with TemplateSource:
+  /**
+   *
+   * @param memory    source of RC-210 data.
+   * @return what we extracted.
+   */
+  def extract(memory: Memory): Seq[FieldEntry]
+
   def tooltip: String = ""
 
   def fieldName: String
@@ -19,16 +37,18 @@ trait FieldDef[T <: FieldValue] extends LazyLogging with TemplateSource:
   val units: String = ""
 
   def positions: Seq[FieldOffset]
-  
-  
-abstract class SimpleExtractor[T<:FieldValueSimple] extends FieldExtractor :
-  def extractFromInts(iterator: Iterator[Int], fieldDefinition: FieldDefSimple): FieldValue
 
-  def update(formFieldValue: String): FieldValueSimple
   val fmt: Format[T]
 
+  def fromForm(formData: FormData):Seq[UpdateCandidate]
 
-trait FieldExtractor
+//abstract class SimpleExtractor[T<:FieldValue] extends FieldExtractor :
+//  val fmt: Format[FieldValue]
+//
+//  def extractFromInts(iterator: Iterator[Int], fieldDefinition: FieldDefSimple): FieldValue
+//
+//  def update(formFieldValue: String): FieldValueSimple
+//
 
 
 

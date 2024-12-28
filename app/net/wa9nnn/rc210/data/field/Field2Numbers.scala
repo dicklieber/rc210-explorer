@@ -18,10 +18,12 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row}
-import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.ui.FormField
-import os.copy
+import net.wa9nnn.rc210.data.datastore.UpdateCandidate
+import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.{Key, KeyMetadata}
+import net.wa9nnn.rc210.ui.{FormData, FormField}
 import play.api.libs.json.*
+import Field2Numbers.update
 
 case class Field2Numbers(value: Seq[Int]) extends FieldValueSimple():
 
@@ -41,20 +43,34 @@ case class Field2Numbers(value: Seq[Int]) extends FieldValueSimple():
   override def displayCell: Cell =
     Cell(value.map(_.toString).mkString(" "))
 
-
   override def toRow: Row = Row(
     "Field2Numbers",
     toString
   )
 
-object Field2Numbers extends SimpleExtractor[Field2Numbers]:
+case class FieldDef2Numbers(offset: Int, fieldName: String, keyMetadata: KeyMetadata, override val template: String)
+  extends FieldDefSimple[Field2Numbers]:
+  override def positions: Seq[FieldOffset] = 
+    Seq(
+      FieldOffset(offset, this, fieldName)
+    )
 
-  implicit val fmt: Format[Field2Numbers] = Json.format[Field2Numbers]
+  override val fmt: Format[Field2Numbers] = Field2Numbers.fmt
 
-  override def extractFromInts(iterator: Iterator[Int], fieldDefinition: FieldDefSimple): FieldValue = 
-    Field2Numbers(Seq(iterator.next(), iterator.next()))
+  override def extract(memory: Memory): Seq[FieldEntry] = ???
 
-  override def update(formFieldValue: String): Field2Numbers =
+  override def fromFormField(value: String): Field2Numbers =
+    update(value)
+    
+
+object Field2Numbers :
+
+  val fmt: Format[Field2Numbers] = Json.format[Field2Numbers]
+
+//  override def extractFromInts(iterator: Iterator[Int], fieldDefinition: FieldDefSimple): FieldValue =
+//    Field2Numbers(Seq(iterator.next(), iterator.next()))
+
+  def update(formFieldValue: String): Field2Numbers =
     val values: Seq[Int] = if (formFieldValue.isBlank)
       Seq(0, 0)
     else

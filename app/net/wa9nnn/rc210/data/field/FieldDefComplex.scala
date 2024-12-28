@@ -29,12 +29,6 @@ trait FieldDefComplex[T <: FieldValueComplex[?]] extends FieldDef[T] with EditHa
 
   override def fieldName: String = keyMetadata.entryName
 
-  /**
-   *
-   * @param memory    source of RC-210 data.
-   * @return what we extracted.
-   */
-  def extract(memory: Memory): Seq[FieldEntry]
 
   def form: Form[T]
   val fmt: Format[T]

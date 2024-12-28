@@ -1,11 +1,14 @@
 package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.{ Key, KeyMetadata}
-import net.wa9nnn.rc210.data.field.{FieldDef, FieldOffset, FieldValue, SimpleExtractor}
+import net.wa9nnn.rc210.data.datastore.UpdateCandidate
+import net.wa9nnn.rc210.{Key, KeyMetadata}
+import net.wa9nnn.rc210.data.field.{FieldDef, FieldOffset, FieldValue}
 import net.wa9nnn.rc210.serial.Memory
+import net.wa9nnn.rc210.ui.FormData
 import play.api.libs.json.{Format, Json}
 
+import scala.collection.immutable
 import scala.util.Try
 
 /*
@@ -26,19 +29,22 @@ import scala.util.Try
  *
  */
 
-/**
- * A [[FieldDefSimple]] produces one RC-210 command as opposed to a complex rc2input like [[net.wa9nnn.rc210.data.schedules.ScheduleNode]] that may produce multiple commands.
- * And generally will be an HTML form itself to edit.
- *
- * @param offset         where in [[Memory]] this comes from.
- * @param fieldName      as shown to users.
- * @param keyMetadata
- * @param template       used to generate the rc-210 command.
- * @param fieldExtractor that knows how to get this from the [[net.wa9nnn.rc210.serial.Memory]]
- * @param tooltip        for this rc2input.
- * @param units          suffix for <input>
- * @param max            used by the extractor. e.g. max DtMF digits or max number.
- */
+trait FieldDefSimple[T <: FieldValue] extends FieldDef[T]:
+  /**
+   * to make RC-210 commands.
+   * Only needed for [[FieldDefSimple]] as [[FieldDefComplex]] builds these into the Complex field definetions.
+   */
+  val template: String
+
+  def fromFormField(value: String): T
+
+  def fromForm(formData: FormData): Seq[UpdateCandidate] =
+    formData.keyedValues.map { case (key, value) =>
+      val value1: T = fromFormField(value)
+      UpdateCandidate(key, value1)
+    }
+
+/*
 case class FieldDefSimple(offset: Int,
                           fieldName: String,
                           val keyMetadata: KeyMetadata,
@@ -49,7 +55,8 @@ case class FieldDefSimple(offset: Int,
                           min: Int = 1,
                           max: Int = 255,
                                 ) extends FieldDef with LazyLogging :
-  
+  private val fmt1: Format[FieldValue] = fieldExtractor.fmt
+  val fmt = fmt1
   def extractFromInts(iterator: Iterator[Int]): Try[FieldValue] = {
     val tried: Try[FieldValue] = Try {
       fieldExtractor.extractFromInts(iterator, this)
@@ -81,5 +88,6 @@ case class FieldDefSimple(offset: Int,
 
 
   override def positions: Seq[FieldOffset] = Seq(FieldOffset(offset, this))
+*/
 
 

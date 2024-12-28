@@ -42,6 +42,8 @@ class FormData(formData: Map[String, Seq[String]]) extends LazyLogging:
       val key = Key.fromId(id)
       KeyAndValues(key, values)
 
+  def keyedValues: Seq[(Key, String)] = all.filter(_._1.indicator == KeyIndicator.iValue)
+    .map { kv => kv._1 -> kv.head }.toSeq
   val data: Map[Key, KeyAndValues] = all.filter(_._1.indicator == KeyIndicator.iValue)
     .map { kv => kv._1 -> kv }.toMap
   val maybeKey: Option[Key] = all.find(_._1.indicator == KeyIndicator.iKey)
