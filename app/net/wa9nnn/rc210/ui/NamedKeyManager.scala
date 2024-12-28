@@ -96,7 +96,8 @@ class NamedKeyManager @Inject()(@Named("namedDataFile") namedDataFile: String)
     keyNameMap.map((key, name) => NamedKey(key, name)).toIndexedSeq.sorted
 
 object NamedKeyManager extends NamedKeySource:
-  var _namedKeySource: NamedKeySource = _
+  var _namedKeySource: NamedKeySource = new NamedKeySource:
+    override def nameForKey(key: Key) = "???"
 
   def nameForKey(key: Key): String =
     _namedKeySource.nameForKey(key)
