@@ -21,7 +21,7 @@ import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, TableSection}
 import controllers.routes
 import net.wa9nnn.rc210.{Key, KeyMetadata}
 import net.wa9nnn.rc210.ui.{FormField, TableSectionButtons}
-import net.wa9nnn.rc210.util.{FieldSelect, SelectOption}
+import net.wa9nnn.rc210.util.SelectOption
 import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue, Json}
 
 
