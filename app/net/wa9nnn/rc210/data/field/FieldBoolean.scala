@@ -23,7 +23,7 @@ import net.wa9nnn.rc210.ui.FormField
 import net.wa9nnn.rc210.ui.nav.{BooleanCell, CheckBoxCell}
 import play.api.libs.json.*
 
-case class FieldBoolean(value: Boolean = false) extends FieldValueSimple() :
+case class FieldBoolean(value: Boolean = false) extends FieldValueSimple():
   override def toRow: Row = Row(
     "FieldBoolean",
     toString
@@ -32,15 +32,12 @@ case class FieldBoolean(value: Boolean = false) extends FieldValueSimple() :
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntry): Seq[String] =
-    val key = fieldEntry.key
-    Seq(key.replaceN(fieldEntry.template)
+  override def toCommands(key: Key, template: String): String =
+    key.replaceN(template)
       .replaceAll("v", if (value) "1" else "0")
       .replaceAll("b", if (value) "1" else "0")
-    )
-
+    
   override def displayCell: Cell = BooleanCell(value)
-
 
   override def toEditCell(key: Key): Cell =
     FormField(key, value)
@@ -57,7 +54,7 @@ case class DefBool(offset: Int, fieldName: String, keyMetadata: KeyMetadata, tem
     JsBoolean(o.value)
 
   override def reads(json: JsValue): JsResult[FieldBoolean] =
-    JsSuccess( FieldBoolean(json.as[Boolean]))
+    JsSuccess(FieldBoolean(json.as[Boolean]))
 
 
 

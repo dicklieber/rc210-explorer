@@ -30,7 +30,7 @@ import net.wa9nnn.rc210.{Key, KeyMetadata}
  */
 class FieldEntry( val fieldDefinition: FieldDef[?], initialValue: FieldData) extends LazyLogging:
   val key: Key = initialValue.key
-  val template: String = fieldDefinition.template
+//  val template: String = fieldDefinition.template
   private var _fieldData: FieldData = initialValue
   override val toString: String = _fieldData.display
 
@@ -70,6 +70,12 @@ class FieldEntry( val fieldDefinition: FieldDef[?], initialValue: FieldData) ext
 //    val newCandidate: FieldValue = _fieldData.setCandidate()update(formFieldValue)
 //    _fieldData = _fieldData.setCandidate(newCandidate)
 
+  def toCommands: Seq[String] =
+    value[FieldValue] match
+      case complex: FieldValueComplex[?] =>
+        complex.toCommands(key)
+      case simple: FieldValueSimple =>
+        Seq(simple.toCommand(key, fieldDefinition.asInstanceOf[FieldDefSimple[?]].template))
 
 object FieldEntry:
   implicit val ordering: Ordering[FieldEntry] = Ordering.by[FieldEntry, Key](_.key)

@@ -34,9 +34,9 @@ import play.api.mvc.{PathBindable, Result}
  * @param keyMetadata     some
  * @param rc210Number     e.g. port or Schedule number
  * @param qualifier       used with [[KeyMetadata.Common]]
- * @param indicator indicates this key refers to the name of the  [[net.wa9nnn.rc210.data.field.FieldValue]].
- * Only of interest when the [[Key]] is used in a [[PathBindable]]; between an HTML form and code.
- * This should only be [[KeyIndicator.Value]] in datastore or JSON.
+ * @param indicator       indicates this key refers to the name of the  [[net.wa9nnn.rc210.data.field.FieldValue]].
+ *                        Only of interest when the [[Key]] is used in a [[PathBindable]]; between an HTML form and code.
+ *                        This should only be [[KeyIndicator.Value]] in datastore or JSON.
  */
 case class Key(keyMetadata: KeyMetadata,
                rc210Number: Option[Int] = None,
@@ -68,7 +68,7 @@ case class Key(keyMetadata: KeyMetadata,
   /**
    * @return current name for this key
    */
-  def name: String = 
+  def name: String =
     NamedKeyManager.nameForKey(this)
 
   /**
@@ -90,9 +90,12 @@ case class Key(keyMetadata: KeyMetadata,
 
   def keyWithName: String =
     s"${rc210Number.getOrElse(throw new IllegalStateException("Named keys must have a number1"))}: $name"
-  
+
   def withIndicator(keyIndicator: KeyIndicator): Key =
     copy(indicator = keyIndicator)
+
+  def number: Int =
+    rc210Number.getOrElse(throw new IllegalStateException("No number in this Key"))
 
 object Key extends LazyLogging:
   given Ordering[Key] with

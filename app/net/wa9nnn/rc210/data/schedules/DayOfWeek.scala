@@ -19,14 +19,13 @@
 package net.wa9nnn.rc210.data.schedules
 
 import enumeratum.*
+import net.wa9nnn.rc210.data.field.EnumEntryFieldValue
+import net.wa9nnn.rc210.ui.Rc210Enum
 
-import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
 
+sealed trait DayOfWeek(val rc210Value: Int) extends  EnumEntryFieldValue
 
-sealed trait DayOfWeek(val rc210Value: Int) extends  EnumEntryValue:
-  override def values: IndexedSeq[EnumEntryValue] = DayOfWeek.values
-
-object DayOfWeek extends EnumValue[DayOfWeek] {
+object DayOfWeek extends Rc210Enum[DayOfWeek] {
 
   override val values: IndexedSeq[DayOfWeek] = findValues
 

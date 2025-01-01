@@ -1,13 +1,13 @@
 package net.wa9nnn.rc210.data.field
 
 import enumeratum.{EnumEntry, PlayEnum}
-import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
+import net.wa9nnn.rc210.ui. Rc210Enum
 
 
-sealed trait MonthOfYearSchedule(val rc210Value: Int, val display: String) extends EnumEntryValue:
-  override def values: IndexedSeq[EnumEntryValue] = MonthOfYearSchedule.values
+sealed trait MonthOfYearSchedule(val rc210Value: Int, val display: String) extends EnumEntryFieldValue:
+  override def values: Seq[MonthOfYearSchedule] = MonthOfYearSchedule.values
 
-object MonthOfYearSchedule extends EnumValue[MonthOfYearSchedule] {
+object MonthOfYearSchedule extends Rc210Enum[MonthOfYearSchedule] {
 
 
   override val values: IndexedSeq[MonthOfYearSchedule] = findValues

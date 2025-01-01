@@ -17,19 +17,7 @@
 
 package net.wa9nnn.rc210.ui
 
+import com.wa9nnn.wa9nnnutil.tableui.Cell
 import enumeratum.EnumEntry
+import net.wa9nnn.rc210.data.field.FieldValue
 
-/**
- * for example:
- * {{{
- *   sealed trait Occurrence(val rc210Value: Int) extends EnumEntryValue
- * }}}
- *
- * Most uses of this are toString and rc210Value
- */
-trait EnumEntryValue extends EnumEntry:
-  val rc210Value: Int
-
-  def values: IndexedSeq[EnumEntryValue]
-
-  def options: Seq[(String, String)] = values.map(env => env.entryName -> env.entryName)

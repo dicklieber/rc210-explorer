@@ -19,15 +19,14 @@
 package net.wa9nnn.rc210.data.schedules
 
 import net.wa9nnn.rc210.KeyMetadata.All.rc210Value
+import net.wa9nnn.rc210.data.field.EnumEntryFieldValue
 import net.wa9nnn.rc210.data.schedules.WeekInMonth.Every
-import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
+import net.wa9nnn.rc210.ui.Rc210Enum
 
 
-sealed trait WeekInMonth(val rc210Value: Int) extends EnumEntryValue:
-  override def values: IndexedSeq[EnumEntryValue] = WeekInMonth.values
+sealed trait WeekInMonth(val rc210Value: Int) extends EnumEntryFieldValue
 
-
-object WeekInMonth extends EnumValue[WeekInMonth] :
+object WeekInMonth extends Rc210Enum[WeekInMonth] :
 
   override val values: IndexedSeq[WeekInMonth] = findValues
 

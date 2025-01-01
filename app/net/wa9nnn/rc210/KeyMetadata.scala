@@ -18,9 +18,8 @@
 package net.wa9nnn.rc210
 
 import controllers.routes
-import enumeratum.*
 import enumeratum.EnumEntry.CapitalWords
-import net.wa9nnn.rc210.data.{CommonNode, EditHandler}
+import enumeratum.*
 import net.wa9nnn.rc210.data.clock.{ClockNode, Occurrence}
 import net.wa9nnn.rc210.data.courtesy.CourtesyToneNode
 import net.wa9nnn.rc210.data.field.{LogicAlarmNode, MessageNode}
@@ -29,7 +28,8 @@ import net.wa9nnn.rc210.data.meter.{MeterAlarmNode, MeterNode}
 import net.wa9nnn.rc210.data.remotebase.RemoteBaseNode
 import net.wa9nnn.rc210.data.schedules.ScheduleNode
 import net.wa9nnn.rc210.data.timers.TimerNode
-import net.wa9nnn.rc210.ui.{EnumEntryValue, Tab}
+import net.wa9nnn.rc210.data.{CommonNode, EditHandler}
+import net.wa9nnn.rc210.ui.Tab
 
 /**
  * Metadata about a kind of [[Key]].
@@ -45,11 +45,11 @@ sealed trait KeyMetadata(val maxN: Int,
                          val needsQualifier: Boolean = false,
                          val includeInNavTab: Boolean = true,
                          val needsFieldName:Boolean = false,
-                    ) extends EnumEntryValue
+                    ) extends PlayEnum[KeyMetadata]
   with CapitalWords with Tab with Ordered[KeyMetadata]:
   override def indexUrl: String = routes.EditController.index(this).url
 
-  override def values: IndexedSeq[EnumEntryValue] = KeyMetadata.values
+  override def values: IndexedSeq[EnumEntry] = KeyMetadata.values
 
   val rc210Value: Int = -1
 

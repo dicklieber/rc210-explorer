@@ -17,19 +17,14 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
+import net.wa9nnn.rc210.ui.Rc210Enum
 
+sealed trait MuteDigit(val rc210Value: Int) extends EnumEntryFieldValue
 
-sealed trait MuteDigit(val rc210Value: Int) extends EnumEntryValue:
-  override def values: IndexedSeq[EnumEntryValue] = MuteDigit.values
-
-object MuteDigit extends EnumValue[MuteDigit] {
-
-
-  override val values: IndexedSeq[MuteDigit] = findValues
+object MuteDigit extends Rc210Enum[MuteDigit]:
+  override def values: Seq[MuteDigit] = MuteDigit.values
 
   case object firstDigit extends MuteDigit(1)
 
   case object secondDigit extends MuteDigit(2)
 
-}

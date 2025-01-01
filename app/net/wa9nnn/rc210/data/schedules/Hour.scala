@@ -17,13 +17,13 @@
  */
 package net.wa9nnn.rc210.data.schedules
 
-import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
+import net.wa9nnn.rc210.data.field.EnumEntryFieldValue
+import net.wa9nnn.rc210.ui.{ Rc210Enum}
 
 /**
  * Values for the a [[ScheduleNode]] hours.
  */
-sealed trait Hour(val rc210Value: Int, maybeName: Option[String] = None) extends EnumEntryValue:
-  override def values: IndexedSeq[EnumEntryValue] = Hour.values
+sealed trait Hour(val rc210Value: Int, maybeName: Option[String] = None) extends EnumEntryFieldValue:
 
   override def entryName: String = maybeName.getOrElse {
     if rc210Value < 12 then
@@ -32,7 +32,7 @@ sealed trait Hour(val rc210Value: Int, maybeName: Option[String] = None) extends
       s"${rc210Value - 12}PM"
   }
 
-object Hour extends EnumValue[Hour] {
+object Hour extends Rc210Enum[Hour] {
 
   override val values: IndexedSeq[Hour] = findValues
 

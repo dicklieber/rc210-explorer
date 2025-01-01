@@ -19,6 +19,7 @@ package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, RowSource, TableSection}
+import enumeratum.EnumEntry
 import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.ui.KeyedRow
 import play.api.libs.json.{Format, JsResult, JsValue, Json}
@@ -36,7 +37,7 @@ sealed trait FieldValue extends LazyLogging :
    */
   def enabled: Boolean = true
 
-  def runableMacros: Seq[Key]
+  def runableMacros: Seq[Key] = Seq.empty
 
   def canRunMacro(candidate: Key): Boolean =
     enabled && runableMacros.contains(candidate)
@@ -46,11 +47,6 @@ sealed trait FieldValue extends LazyLogging :
 
   def tableSection(key: Key): TableSection =
     throw new NotImplementedError() //todo
-
-  /**
-   * Render this value as an RC-210 command string.
-   */
-  def toCommands(fieldEntry: FieldEntry): Seq[String]
 
   /**
    * Read only HTML display
@@ -72,8 +68,22 @@ object FieldValue:
  */
 trait FieldValueSimple(val runableMacros: Key*) extends FieldValue with RowSource:
   def toEditCell(key: Key): Cell
-    
+
+  def toCommand(key: Key, template: String): String
 
 trait FieldValueComplex[T <: FieldValueComplex[?]](val runableMacros: Key*)
-  extends FieldValue with KeyedRow with LazyLogging
+  extends FieldValue with KeyedRow with LazyLogging:
 
+  def toCommands(key: Key): Seq[String]
+
+/**
+  A [[FieldValue]] that is an Enumeratium entry.
+ */
+trait EnumEntryFieldValue extends EnumEntry with FieldValue:
+  val rc210Value: Int
+
+  def values: IndexedSeq[EnumEntryFieldValue]
+
+  def options: Seq[(String, String)] = values.map(env => env.entryName -> env.entryName)
+
+  override def displayCell: Cell = Cell(entryName)

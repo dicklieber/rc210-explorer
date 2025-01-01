@@ -19,6 +19,7 @@ package net.wa9nnn.rc210.ui
 
 import com.typesafe.scalalogging.LazyLogging
 import enumeratum.PlayEnum
+import net.wa9nnn.rc210.data.field.EnumEntryFieldValue
 
 /**
  * for example:
@@ -28,7 +29,7 @@ import enumeratum.PlayEnum
  *
  * @tparam T
  */
-trait EnumValue[T <: EnumEntryValue] extends PlayEnum[T] with Selections with LazyLogging:
+trait Rc210Enum[T <: EnumEntryFieldValue] extends PlayEnum[T] with Selections with LazyLogging:
   val values: IndexedSeq[T]
 
   override def options: Seq[(String, String)] =
@@ -36,7 +37,7 @@ trait EnumValue[T <: EnumEntryValue] extends PlayEnum[T] with Selections with La
 
   override def equals(obj: Any): Boolean =
     obj match
-      case other: EnumValue[?] =>
+      case other: Rc210Enum[?] =>
         other.equals(this)
       case _ =>
         false

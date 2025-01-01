@@ -17,12 +17,12 @@
 
 package net.wa9nnn.rc210.data.remotebase
 
-import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
+import net.wa9nnn.rc210.data.field.EnumEntryFieldValue
+import net.wa9nnn.rc210.ui.Rc210Enum
 
-sealed trait Yaesu(val rc210Value: Int) extends EnumEntryValue:
-  override def values: IndexedSeq[EnumEntryValue] = Yaesu.values
+sealed trait Yaesu(val rc210Value: Int) extends EnumEntryFieldValue
 
-object Yaesu extends EnumValue[Yaesu]:
+object Yaesu extends Rc210Enum[Yaesu]:
 
   override val values: IndexedSeq[Yaesu] = findValues
 

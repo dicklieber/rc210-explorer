@@ -20,7 +20,7 @@ package net.wa9nnn.rc210.serial
 import enumeratum.{EnumEntry, PlayEnum}
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.data.remotebase.CtcssMode.findValues
-import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
+import net.wa9nnn.rc210.ui.Rc210Enum
 
 sealed trait SendField extends EnumEntry:
   def select(fieldEntry: FieldEntry): Option[UploadData]

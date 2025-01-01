@@ -17,12 +17,12 @@
 
 package net.wa9nnn.rc210.data.remotebase
 
-import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
+import net.wa9nnn.rc210.data.field.EnumEntryFieldValue
+import net.wa9nnn.rc210.ui.{ Rc210Enum}
 
-sealed trait Radio(val rc210Value: Int, val display: String) extends EnumEntryValue:
-  override def values: IndexedSeq[EnumEntryValue] = Radio.values
+sealed trait Radio(val rc210Value: Int, val display: String) extends EnumEntryFieldValue
 
-object Radio extends EnumValue[Radio]:
+object Radio extends Rc210Enum[Radio]:
 
   override val values: IndexedSeq[Radio] = findValues
 

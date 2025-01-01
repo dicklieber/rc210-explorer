@@ -36,12 +36,9 @@ case class FieldDtmf(value: String) extends FieldValueSimple() with LazyLogging:
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntry): Seq[String] = {
-    val key: Key = fieldEntry.key
-    Seq(key.replaceN(fieldEntry.template)
+  override def toCommand(key: Key, template: String): String =
+    key.replaceN(template)
       .replaceAll("v", value) //todo probably not right.
-    )
-  }
 
   override def displayCell: Cell = Cell(value)
 

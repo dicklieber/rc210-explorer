@@ -54,6 +54,7 @@ case class FieldData(key:Key, fieldValue: FieldValue, candidate: Option[FieldVal
   def rollBack: FieldData =
     copy(candidate = None)
 
+
 object FieldData:
   implicit val ordering: Ordering[FieldData] =
     Ordering.by[FieldData, Key](_.key)

@@ -17,13 +17,13 @@
 
 package net.wa9nnn.rc210.data.remotebase
 
-import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
+import net.wa9nnn.rc210.data.field.EnumEntryFieldValue
+import net.wa9nnn.rc210.ui.{ Rc210Enum}
 
 
-sealed trait Offset(val rc210Value: Int) extends EnumEntryValue:
-  override def values: IndexedSeq[EnumEntryValue] = Offset.values
+sealed trait Offset(val rc210Value: Int) extends EnumEntryFieldValue
 
-object Offset extends EnumValue[Offset]:
+object Offset extends Rc210Enum[Offset]:
 
   override val values: IndexedSeq[Offset] = findValues
 

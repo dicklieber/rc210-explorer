@@ -32,13 +32,9 @@ case class FieldInt(value: Int) extends FieldValueSimple():
 
   override def toEditCell(key: Key): Cell = FormField(key, value)
 
-  override def toCommands(fieldEntry: FieldEntry): Seq[String] =
-    val key = fieldEntry.key
-
-    Seq(
-      key.replaceN(fieldEntry.template)
-        .replaceAll("v", value.toString)
-    )
+  override def toCommand(key: Key, template: String): String =
+    key.replaceN(template)
+      .replaceAll("v", value.toString)
 
   override def displayCell: Cell = Cell(value)
 
@@ -48,7 +44,7 @@ case class DefInt(offset: Int, fieldName: String, keyMetadata: KeyMetadata, temp
   override def fromFormField(value: String): FieldInt =
     FieldInt(value.toInt)
 
-  override def extract(iterator: Iterator[Int]): FieldValueSimple = 
+  override def extract(iterator: Iterator[Int]): FieldValueSimple =
     FieldInt(iterator.next())
 
 

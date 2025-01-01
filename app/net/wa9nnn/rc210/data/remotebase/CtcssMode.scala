@@ -17,12 +17,12 @@
 
 package net.wa9nnn.rc210.data.remotebase
 
-import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
+import net.wa9nnn.rc210.data.field.EnumEntryFieldValue
+import net.wa9nnn.rc210.ui.Rc210Enum
 
-sealed trait CtcssMode(val rc210Value: Int) extends EnumEntryValue:
-  override def values: IndexedSeq[EnumEntryValue] = CtcssMode.values
+sealed trait CtcssMode(val rc210Value: Int) extends EnumEntryFieldValue
 
-object CtcssMode extends EnumValue[CtcssMode]:
+object CtcssMode extends Rc210Enum[CtcssMode]:
 
   override val values: IndexedSeq[CtcssMode] = findValues
 

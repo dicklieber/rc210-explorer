@@ -27,6 +27,7 @@ import play.api.libs.json.Format
 
 trait FieldDefComplex[T <: FieldValueComplex[?]] extends FieldDef[T] with EditHandler :
   def extract(memory: Memory): Seq[FieldEntry]
+ 
   
   override def fieldName: String = keyMetadata.entryName
 

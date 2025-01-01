@@ -18,13 +18,14 @@
 package net.wa9nnn.rc210.data.clock
 
 import enumeratum.*
-import net.wa9nnn.rc210.ui.{EnumEntryValue, EnumValue}
+import net.wa9nnn.rc210.data.field.EnumEntryFieldValue
+import net.wa9nnn.rc210.ui.Rc210Enum
 
 
-sealed abstract class Occurrence(val rc210Value: Int) extends EnumEntryValue:
-  override def values: IndexedSeq[EnumEntryValue] = Occurrence.values
+sealed abstract class Occurrence(val rc210Value: Int) extends EnumEntryFieldValue:
+  override def values: Seq[Occurrence] = Occurrence.values
 
-object Occurrence extends EnumValue[Occurrence] {
+object Occurrence extends Rc210Enum[Occurrence] {
   override val values: IndexedSeq[Occurrence] = findValues
 
   case object First extends Occurrence(1)

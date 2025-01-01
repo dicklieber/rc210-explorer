@@ -28,13 +28,14 @@ import scala.util.Try
 trait FieldDef[T <: FieldValue] extends LazyLogging:
   val fieldName: String
   val keyMetadata: KeyMetadata
-  val template: String 
   val fmt: Format[T]
 
 
 trait FieldDefSimple[T <: FieldValue] extends FieldDef[T] :
   def offset: Int
+  val template: String
 
+  
   def fromString(str: String): T
 
   /**

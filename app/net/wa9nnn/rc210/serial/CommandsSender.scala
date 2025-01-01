@@ -64,7 +64,7 @@ class CommandsSender @Inject()(dataStore: DataStore, rc210: Rc210)
 
     uploadDatas.foreach { uploadData =>
       val fieldEntry = uploadData.fieldEntry
-      val commands: Seq[String] = uploadData.fieldValue.toCommands(fieldEntry)
+      val commands: Seq[String] = fieldEntry.toCommands
       val responses: Seq[RcResponse] = streamBased.perform(commands)
       val key = uploadData.fieldEntry.key
       dataStore.acceptCandidate(key)

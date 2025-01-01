@@ -17,6 +17,7 @@
 
 package net.wa9nnn.rc210.util
 
+import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.Cell
 import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValueSimple, TemplateSource}
@@ -25,8 +26,9 @@ import play.api.libs.json.{JsString, JsValue}
 /**
  * An enumeration with behaviour.
  */
-trait FieldSelect[T] extends FieldValueSimple {
+trait FieldSelect[EnumEntryValue] extends FieldValueSimple with LazyLogging:
   def selectOptions: Seq[SelectOption]
+
   val name: String
   val value: T
 
@@ -35,24 +37,22 @@ trait FieldSelect[T] extends FieldValueSimple {
   /**
    * Render this value as an RC-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntry): Seq[String] = {
-    val key: Key = fieldEntry.key
-
-    val number = try {
-      value match {
+  override def toCommand(key: Key, template: String): String =
+    val number = try
+      value match
         case s: String =>
           selectOptions.find(_.display == s).get.id
         case m: Key =>
           m.rc210Number
-      }
-    } catch {
-      case e:Exception =>
-        logger.error(s"Getting number for: $value", e)
-    }
-    Seq(key.replaceN(fieldEntry.template)
-      .replaceAll("v", number.toString))
 
-  }
+    catch
+      case e: Exception =>
+        logger.error(s"Getting number for: $value", e)
+
+    key.replaceN(fieldEntry.template)
+      .replaceAll("v", number.toString)
+
+
 
 
 //  /**
@@ -75,10 +75,7 @@ trait FieldSelect[T] extends FieldValueSimple {
 //    """.stripMargin
 //  }
 
-}
-
-
-
+//}
 
 trait FieldSelectComp {
   val name: String

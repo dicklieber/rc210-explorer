@@ -57,8 +57,7 @@ case class MessageNode(words: Seq[Int]) extends FieldValueComplex[MessageNode]()
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntry): Seq[String] = {
-    val key = fieldEntry.key
+  override def toCommands(key: Key): Seq[String] = {
     val value: Seq[String] = words.map(word => f"$word%03d")
     val word3s: String = value.mkString
     Seq(f"1*2103${key.rc210Number.get}%02d$word3s")
