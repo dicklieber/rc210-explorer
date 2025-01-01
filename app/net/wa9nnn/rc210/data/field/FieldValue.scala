@@ -21,15 +21,20 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, RowSource, TableSection}
 import enumeratum.EnumEntry
 import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.data.clock.MonthOfYearDST
+import net.wa9nnn.rc210.data.clock.MonthOfYearDST.values
 import net.wa9nnn.rc210.ui.KeyedRow
 import play.api.libs.json.{Format, JsResult, JsValue, Json}
+import play.twirl.api.Html
+
+import scala.xml.*
 
 /**
  * Holds the value for a rc2input.
  * Knows how to render as HTML control or string for JSON, showing to a user or RC-210 Command,
  * Has enough metadata needed to render
  */
-sealed trait FieldValue extends LazyLogging :
+sealed trait FieldValue extends LazyLogging:
   /**
    * Nodes that actually have an enabled field should override this.
    *
@@ -77,11 +82,27 @@ trait FieldValueComplex[T <: FieldValueComplex[?]](val runableMacros: Key*)
   def toCommands(key: Key): Seq[String]
 
 /**
-  A [[FieldValue]] that is an Enumeratium entry.
+ * A [[FieldValue]] that is an Enumeratium entry.
  */
-trait EnumEntryFieldValue extends EnumEntry with FieldValue:
+trait Rc210EmumEntry extends EnumEntry with FieldValue:
   val rc210Value: Int
+  val vals: Seq[Rc210EmumEntry]
 
-  def options: Seq[String] 
+  def options: Seq[(String, String)] = vals.map(v =>
+    val s = v.entryName
+    s -> s
+  )
 
   override def displayCell: Cell = Cell(entryName)
+
+//  def selectControl(key: Key): Html =
+//    val id = key.id
+//    val s = <select name={id} id={id} class="" style="width-auto">
+//      {options.foreach { option =>
+//        <option value={option._1}>
+//          {option._1}
+//        </option>
+//      }}
+//    </select>.toString()
+//    Html(s)
+

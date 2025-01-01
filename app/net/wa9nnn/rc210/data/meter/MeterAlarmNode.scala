@@ -143,7 +143,7 @@ object MeterAlarmNode extends FieldDefComplex[MeterAlarmNode]:
         FieldEntry(this, key, meterAlarm)
       }
   }
-  
+
   implicit val fmt: Format[MeterAlarmNode] = Json.format[MeterAlarmNode]
 
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html = {

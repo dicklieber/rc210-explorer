@@ -17,10 +17,10 @@
 
 package net.wa9nnn.rc210.data.remotebase
 
-import net.wa9nnn.rc210.data.field.EnumEntryFieldValue
+import net.wa9nnn.rc210.data.field.Rc210EmumEntry
 import net.wa9nnn.rc210.ui.Rc210Enum
 
-sealed trait CtcssMode(val rc210Value: Int) extends EnumEntryFieldValue
+sealed trait CtcssMode(val rc210Value: Int) extends Rc210EmumEntry
 
 object CtcssMode extends Rc210Enum[CtcssMode]:
 

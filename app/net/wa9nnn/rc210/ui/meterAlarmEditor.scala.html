@@ -6,6 +6,7 @@
 @import views.html.input.selectOptions
 @import net.wa9nnn.rc210.Key
 @import net.wa9nnn.rc210.KeyMetadata
+@import net.wa9nnn.rc210.data.meter.AlarmType
 @(key:Key, meterAlarm: Form[MeterAlarmNode])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
 @form(routes.EditController.save()) {

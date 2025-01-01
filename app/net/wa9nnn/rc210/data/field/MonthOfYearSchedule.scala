@@ -4,7 +4,7 @@ import enumeratum.{EnumEntry, PlayEnum}
 import net.wa9nnn.rc210.ui. Rc210Enum
 
 
-sealed trait MonthOfYearSchedule(val rc210Value: Int, val display: String) extends EnumEntryFieldValue:
+sealed trait MonthOfYearSchedule(val rc210Value: Int, val display: String) extends Rc210EmumEntry:
   override def values: Seq[MonthOfYearSchedule] = MonthOfYearSchedule.values
 
 object MonthOfYearSchedule extends Rc210Enum[MonthOfYearSchedule] {

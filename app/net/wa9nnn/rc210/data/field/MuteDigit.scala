@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.ui.Rc210Enum
 
-sealed trait MuteDigit(val rc210Value: Int) extends EnumEntryFieldValue
+sealed trait MuteDigit(val rc210Value: Int) extends Rc210EmumEntry
 
 object MuteDigit extends Rc210Enum[MuteDigit]:
   override def values: Seq[MuteDigit] = MuteDigit.values

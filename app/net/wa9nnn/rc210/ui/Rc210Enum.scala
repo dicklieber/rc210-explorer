@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.ui
 
 import com.typesafe.scalalogging.LazyLogging
 import enumeratum.PlayEnum
-import net.wa9nnn.rc210.data.field.EnumEntryFieldValue
+import net.wa9nnn.rc210.data.field.Rc210EmumEntry
 
 /**
  * for example:
@@ -29,8 +29,9 @@ import net.wa9nnn.rc210.data.field.EnumEntryFieldValue
  *
  * @tparam T
  */
-trait Rc210Enum[T <: EnumEntryFieldValue] extends PlayEnum[T] with Selections with LazyLogging:
+trait Rc210Enum[T <: Rc210EmumEntry] extends PlayEnum[T]  with LazyLogging:
   val values: IndexedSeq[T]
+  val options: Seq[(String,String)] = values.map(t => (t.entryName, t.entryName))  
 
 
   override def equals(obj: Any): Boolean =
