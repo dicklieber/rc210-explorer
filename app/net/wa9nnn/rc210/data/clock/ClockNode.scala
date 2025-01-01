@@ -130,13 +130,13 @@ object ClockNode extends FieldDefComplex[ClockNode]:
     )
   }
 
-  override def positions: Seq[FieldOffset] = Seq(
-    FieldOffset(1186, this, "say24Hours"),
-    FieldOffset(3687, this, "DSTFlag"),
-    FieldOffset(4042, this, "startDST"),
-    FieldOffset(4046, this, "endDST"),
-    FieldOffset(4050, this, "hour"),
-  )
+//  override def positions: Seq[FieldOffset] = Seq(
+//    FieldOffset(1186, this, "say24Hours"),
+//    FieldOffset(3687, this, "DSTFlag"),
+//    FieldOffset(4042, this, "startDST"),
+//    FieldOffset(4046, this, "endDST"),
+//    FieldOffset(4050, this, "hour"),
+//  )
 
   implicit val fmt: Format[ClockNode] = Json.format[ClockNode]
 

@@ -18,8 +18,9 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row}
-import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.{Key, KeyMetadata}
 import net.wa9nnn.rc210.data.field.*
+import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.*
 
@@ -42,22 +43,30 @@ case class FieldInt(value: Int) extends FieldValueSimple():
 
   override def displayCell: Cell = Cell(value)
 
+  case class DefInt(offset: Int, fieldName: String, keyMetadata: KeyMetadata, override val template: String)
+    extends FieldDefSimple[FieldInt]:
 
-object FieldInt extends SimpleExtractor[FieldInt]:
-  override def update(formFieldValue: String): FieldInt =
-    FieldInt(formFieldValue.toInt)
+    override def fromFormField(value: String): FieldInt =
+      FieldInt(value.toInt)
 
-  override def extractFromInts(itr: Iterator[Int], field: FieldDefSimple): FieldInt = {
-    new FieldInt(if (field.max > 256)
-      itr.next() + itr.next() * 256
-    else
-      itr.next()
-    )
-  }
+    override def extract(memory: Memory): Seq[FieldEntry] =
+     FieldInt( memory.iterator(offset))
 
-  implicit val fmt: Format[FieldInt] = new Format[FieldInt] {
-    override def reads(json: JsValue): JsResult[FieldInt] = JsSuccess(new FieldInt(json.as[Int]))
+    override def positions: Seq[FieldOffset] = ???
 
-    override def writes(o: FieldInt): JsValue = Json.toJson(o.value)
-  }
+    override def extractFromInts(itr: Iterator[Int], fieldDefinition: FieldDefSimple): FieldValue = {
+      val ints: Seq[Int] = for
+      {
+        _ <- 0 to fieldDefinition.max
+      } yield
+      {
+        itr.next()
+      }
+
+      val tt: Array[Char] = ints.takeWhile(_ != 0)
+        .map(_.toChar).toArray
+      val str: String = new String(tt)
+      new FieldDtmf(str)
+    }
+
 

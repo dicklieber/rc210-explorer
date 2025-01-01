@@ -50,10 +50,6 @@ case class Field2Numbers(value: Seq[Int]) extends FieldValueSimple():
 
 case class FieldDef2Numbers(offset: Int, fieldName: String, keyMetadata: KeyMetadata, override val template: String)
   extends FieldDefSimple[Field2Numbers]:
-  override def positions: Seq[FieldOffset] = 
-    Seq(
-      FieldOffset(offset, this, fieldName)
-    )
 
   override val fmt: Format[Field2Numbers] = Field2Numbers.fmt
 

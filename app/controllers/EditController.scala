@@ -91,7 +91,7 @@ class EditController @Inject()(navMain: NavMain)
         val key = formData.maybeKey.get
         val updateCandidates: Seq[UpdateCandidate] = key.keyMetadata.handler.bind(formData).toSeq
         dataStore.update(updateCandidates)
-        key.saveOp(key.keyMetadata)
+        Results.Redirect(routes.EditController.index(key.keyMetadata))
       catch
         case e: Exception =>
           logger.error(s"save: ${e.getMessage}", e)

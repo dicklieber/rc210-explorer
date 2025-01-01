@@ -116,11 +116,6 @@ object ScheduleNode extends LazyLogging with FieldDefComplex[ScheduleNode]:
     "Time",
     "Macro To Run")
 
-  override def positions: Seq[FieldOffset] = {
-    Seq(
-      FieldOffset(616, this)
-    )
-  }
 
   override def extract(memory: Memory): Seq[FieldEntry] =
     ScheduleBuilder(memory, this)

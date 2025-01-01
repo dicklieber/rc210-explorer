@@ -90,10 +90,7 @@ case class Key(keyMetadata: KeyMetadata,
 
   def keyWithName: String =
     s"${rc210Number.getOrElse(throw new IllegalStateException("Named keys must have a number1"))}: $name"
-
-  def saveOp(keyMetadata: KeyMetadata): Result =
-    keyMetadata.handler.saveOp(keyMetadata)
-
+  
   def withIndicator(keyIndicator: KeyIndicator): Key =
     copy(indicator = keyIndicator)
 

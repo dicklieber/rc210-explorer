@@ -60,15 +60,10 @@ case class Memory( data: Array[Int] = Array.empty, url:URL, stamp:Instant) {
     new Iterator16(offset)
   /**
    * Create an [[Iterator[Int]] over the [[Memory]] starting at an offset.
-   *
-   * @param memoryBuffer data from RC-210 binary dump.
    */
-  def iterator(offset:Int, max:Int)(implicit memoryBuffer: Memory): Iterator[Int] = {
-    if (max > 255)
-      memoryBuffer.iterator16At(offset)
-    else
-      memoryBuffer.iterator8At(offset)
-  }
+  def iterator(offset:Int): Iterator[Int] = 
+    data.iterator.drop(offset)
+
   private class Iterator16(offset: Int) extends Iterator[Int] {
     private val
     iterator8: Iterator[ArraySeq[Int]] = array.drop(offset).sliding(2, 2)

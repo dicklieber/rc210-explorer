@@ -18,7 +18,7 @@
 package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row}
-import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.{Key, KeyMetadata}
 import net.wa9nnn.rc210.ui.FormField
 import net.wa9nnn.rc210.ui.nav.{BooleanCell, CheckBoxCell}
 import play.api.libs.json.*
@@ -45,18 +45,19 @@ case class FieldBoolean(value: Boolean = false) extends FieldValueSimple() :
   override def toEditCell(key: Key): Cell =
     FormField(key, value)
 
-object FieldBoolean extends SimpleExtractor[FieldBoolean]:
+case class DefBool(offset: Int, fieldName: String, keyMetadata: KeyMetadata, template: String)
+  extends FieldDefSimple[FieldBoolean]:
+  override def fromForm(formValue: String): FieldBoolean =
+    FieldBoolean(formValue == "on")
 
-  override def extractFromInts(itr: Iterator[Int], fieldDefinition: FieldDefSimple): FieldValue =
-    FieldBoolean(itr.next() > 0)
-  override def update(formFieldValue: String): FieldBoolean = FieldBoolean(formFieldValue == "on")
+  override def extract(iterator: Iterator[Int]): FieldValueSimple =
+    FieldBoolean(iterator.next() != 0)
 
-  implicit val fmt: Format[FieldBoolean] = new Format[FieldBoolean] {
+  override def writes(o: FieldBoolean): JsValue =
+    JsBoolean(o.value)
 
-    override def writes(o: FieldBoolean) = JsBoolean(o.value)
-
-    override def reads(json: JsValue): JsSuccess[FieldBoolean] = JsSuccess(new FieldBoolean(json.as[Boolean]))
-  }
+  override def reads(json: JsValue): JsResult[FieldBoolean] =
+    JsSuccess( FieldBoolean(json.as[Boolean]))
 
 
 

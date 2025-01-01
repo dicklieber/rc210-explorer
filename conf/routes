@@ -17,7 +17,6 @@ GET         /select/:name                        controllers.IOController.select
 GET         /candidates                          controllers.CandidatesController.index
 GET         /upload/start/:uploadRequest         controllers.UploadController.start(uploadRequest:UploadRequest)
 GET         /upload/ws/                          controllers.UploadController.ws()
-GET         /memory                              controllers.MemoryController.index
 GET         /restart                             controllers.Rc210Controller.restart()
 GET         /setClock                            controllers.Rc210Controller.setClock()
 POST        /download/start                      controllers.DownloadController.startDownload()

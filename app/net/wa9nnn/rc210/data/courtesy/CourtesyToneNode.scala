@@ -21,17 +21,17 @@ import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Header, Row, Table}
 import controllers.routes
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
-import net.wa9nnn.rc210.{Key, KeyMetadata}
-import net.wa9nnn.rc210.data.field.{FieldDefComplex, FieldEntry, FieldOffset, FieldValue, FieldValueComplex, TemplateSource}
+import net.wa9nnn.rc210.data.field.*
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.{ButtonCell, FormData}
+import net.wa9nnn.rc210.{Key, KeyMetadata}
 import play.api.data.*
 import play.api.data.Forms.*
 import play.api.i18n.MessagesProvider
 import play.api.libs.json.{Format, JsValue, Json, OFormat}
 import play.api.mvc.{RequestHeader, Result, Results}
 import play.twirl.api.Html
-import views.html.{courtesyToneCell, courtesyToneEdit, courtesyTones, fieldIndex, named}
+import views.html.*
 
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -83,11 +83,7 @@ object CourtesyToneNode extends FieldDefComplex[CourtesyToneNode] with LazyLoggi
     )(CourtesyToneNode.apply)(CourtesyToneNode.unapply)
   )
   implicit val fmt: Format[CourtesyToneNode] = Json.format[CourtesyToneNode]
-
-  override def positions: Seq[FieldOffset] = Seq(
-    FieldOffset(856, this),
-  )
-
+  
   /**
    *
    * @param memory    source of RC-210 data.

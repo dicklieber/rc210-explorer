@@ -19,13 +19,13 @@ package net.wa9nnn.rc210.data.field
 
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row, TableSection}
 import controllers.routes
-import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.{Key, KeyMetadata}
 import net.wa9nnn.rc210.ui.{FormField, TableSectionButtons}
 import net.wa9nnn.rc210.util.{FieldSelect, SelectOption}
-import play.api.libs.json.{Format, JsValue, Json}
+import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue, Json}
 
 
-case class TimeoutTimerResetPoint(value: TotReset = TotReset.AfterCOS) extends FieldValueSimple() :
+case class FieldTotReset(value: TotReset = TotReset.AfterCOS) extends FieldValueSimple() :
   override def displayCell: Cell = Cell(value)
 
   def toCommands(fieldEntry: FieldEntry): Seq[String] = {
@@ -46,19 +46,17 @@ case class TimeoutTimerResetPoint(value: TotReset = TotReset.AfterCOS) extends F
   override def toEditCell(key: Key): Cell =
     FormField(key, value)
 
-object TimeoutTimerResetPoint extends SimpleExtractor[TimeoutTimerResetPoint] :
+case class DefTimeoutTimerResetPoint(offset: Int, fieldName: String, keyMetadata: KeyMetadata, template: String)
+  extends FieldDefSimple[FieldTotReset]:
+  override def fromForm(formValue: String): FieldTotReset =
+    FieldTotReset(TotReset.withName(formValue))
 
-  override def update(formFieldValue: String): FieldValueSimple =
-    val totValue = TotReset.withName(formFieldValue)
-    TimeoutTimerResetPoint(totValue)
+  override def extract(iterator: Iterator[Int]): FieldTotReset =
+    FieldTotReset(TotReset.find(iterator.next()))
 
-  implicit val fmt: Format[TimeoutTimerResetPoint] = Json.format[TimeoutTimerResetPoint]
+  override def writes(o: FieldTotReset): JsValue =
+    JsString(o.value.entryName)
 
-  def apply(id: Int): TimeoutTimerResetPoint = {
-    new TimeoutTimerResetPoint(TotReset.find(id))
-  }
+  override def reads(json: JsValue): JsResult[FieldTotReset] =
+    JsSuccess( FieldTotReset(TotReset.withName( json.as[String])))
 
-  override def extractFromInts(itr: Iterator[Int], field: FieldDefSimple): TimeoutTimerResetPoint = {
-    val id = itr.next()
-    apply(id)
-  }

@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.data.field
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, Row}
-import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.{Key, KeyMetadata}
 import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue, Json}
 
@@ -45,17 +45,18 @@ case class FieldDtmf(value: String) extends FieldValueSimple() with LazyLogging:
 
   override def displayCell: Cell = Cell(value)
 
-
-object FieldDtmf extends SimpleExtractor[FieldDtmf]:
-
+case class FieldDefDtmf(offset: Int, fieldName: String, keyMetadata: KeyMetadata, override val template: String)
+  extends FieldDefSimple[FieldDtmf]:
   override def update(formFieldValue: String): FieldDtmf = {
     FieldDtmf(formFieldValue)
   }
 
   override def extractFromInts(itr: Iterator[Int], fieldDefinition: FieldDefSimple): FieldValue = {
-    val ints: Seq[Int] = for {
+    val ints: Seq[Int] = for
+    {
       _ <- 0 to fieldDefinition.max
-    } yield {
+    } yield
+    {
       itr.next()
     }
 
@@ -64,7 +65,6 @@ object FieldDtmf extends SimpleExtractor[FieldDtmf]:
     val str: String = new String(tt)
     new FieldDtmf(str)
   }
-
 
   implicit val fmt: Format[FieldDtmf] = new Format[FieldDtmf] {
     override def reads(json: JsValue): JsResult[FieldDtmf] = JsSuccess(new FieldDtmf(json.as[String]))

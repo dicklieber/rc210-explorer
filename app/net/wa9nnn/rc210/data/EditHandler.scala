@@ -11,7 +11,7 @@ import play.api.mvc.{RequestHeader, Result, Results}
 import play.twirl.api.Html
 
 /**
- * Defines the behavior for a specific [[KeyMetadata]].
+ * Defines the behavior for a Field.
  */
 trait EditHandler:
 
@@ -34,19 +34,19 @@ trait EditHandler:
   def bind(formData: FormData): Iterable[UpdateCandidate] =
     throw new NotImplementedError()
 
-  def bind(key:Key, in: FieldValueComplex[?]): Seq[UpdateCandidate] =
-    Seq(
-      UpdateCandidate(key, candidate = in)
-    )
+//  def bind(key:Key, in: FieldValueComplex[?]): Seq[UpdateCandidate] =
+//    Seq(
+//      UpdateCandidate(key, candidate = in)
+//    )
+//
+//  def bind(in: String, key: Key): Seq[UpdateCandidate] =
+//    Seq(
+//      UpdateCandidate(key, candidate = in)
+//    )
 
-  def bind(in: String, key: Key): Seq[UpdateCandidate] =
-    Seq(
-      UpdateCandidate(key, candidate = in)
-    )
-
-  // todo May not need this in EditHandler if default is always used.
-  def saveOp(keyMetadata: KeyMetadata): Result =
-    Results.Redirect(routes.EditController.index(keyMetadata))
+//  // todo May not need this in EditHandler if default is always used.
+//  def saveOp(keyMetadata: KeyMetadata): Result =
+//    Results.Redirect(routes.EditController.index(keyMetadata))
 
 /**
  * Helpers to pick apart form form data.

@@ -21,7 +21,7 @@ import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.{Key, KeyMetadata}
 import net.wa9nnn.rc210.data.datastore.MemoryFileLoader.notInitialized
-import net.wa9nnn.rc210.data.field.{FieldDefinitions, FieldEntry}
+import net.wa9nnn.rc210.data.field.{FieldDefComplex, FieldDefSimple, FieldDefinitions, FieldEntry}
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.NamedKeyManager
 import net.wa9nnn.rc210.util.Configs.path
@@ -38,7 +38,7 @@ import scala.util.{Failure, Success, Try}
  * @param namedKeyManager we don't need this directly here but need have it loaded
  */
 @Singleton
-class MemoryFileLoader @Inject()( fieldDefinitions: FieldDefinitions)(implicit config: Config) extends LazyLogging {
+class MemoryFileLoader @Inject()(fieldDefinitions: FieldDefinitions)(implicit config: Config) extends LazyLogging :
   private val memoryFilePath: Path = path("vizRc210.memoryFile")
   private val memoryFile: URL = memoryFilePath.toUri.toURL
 
@@ -47,63 +47,37 @@ class MemoryFileLoader @Inject()( fieldDefinitions: FieldDefinitions)(implicit c
   def memory: Try[Memory] = tryMemory
 
   /**
-   * Get saved Memory (Raw RC-210 download data.)
-   *
-   * @return [[Memory]] or the reason why.
+   * Extract RC-210 values from [[Memory]]
+   * for loading into the [[DataStore]].
    */
-  private def loadMemory(): Unit = {
+  def extractFieldEntries(): Seq[FieldEntry] =
     tryMemory = Memory.load(memoryFile)
-  }
-
-  def load: Try[Seq[FieldEntry]] = {
-    loadMemory()
-    val r: Try[Seq[FieldEntry]] = memory.map { implicit memory =>
-      val simpleFields: Seq[FieldEntry] = for {
-        fieldDefinition <- fieldDefinitions.simpleFields
-        it = fieldDefinition.iterator()
-        metadata = fieldDefinition.keyMetadata
-        number <- 1 to metadata.maxN
-        fieldValue <- fieldDefinition.extractFromInts(it).toOption
-      } yield {
-        val key = metadata match
-          case KeyMetadata.Common =>
-            Key(metadata, fieldDefinition.fieldName)
-          case KeyMetadata.Port =>
-            Key(metadata, number, fieldDefinition.fieldName)
-          case m =>
-            Key(m, number, fieldDefinition.fieldName)
-
-        val fieldEntry = FieldEntry(fieldDefinition, key, fieldValue)
-        logger.trace("FieldEntry: offset: {} fieldEntry: {})", fieldDefinition.offset, fieldEntry.toString)
-        fieldEntry
-      }
-
-      val complexFields: Seq[FieldEntry] = fieldDefinitions.complexFd.flatMap { memoryExtractor =>
-        try {
-          memoryExtractor.extract(memory)
-        } catch {
-          case e: Throwable =>
-            logger.error(s"loading: ${memoryExtractor}", e)
-            Seq.empty
-        }
-      }
-      simpleFields ++: complexFields
-    }
-    r match
+    memory match
       case Failure(exception) =>
-        val message = exception.getMessage
-        logger.error("Loading from {} {}", memoryFile.toExternalForm, message)
-      case Success(entries) => 
-        val loadedLength = memory.map(_.length).getOrElse(0)
-        logger.info("Loaded {} {} entries from {} mapSize: {}",
-          entries.size, memoryFile.toExternalForm, loadedLength)
-    r
-  }
-}
+        logger.error("Loading", exception)
+        Seq.empty
+      case Success(memory) =>
+        val r =
+        {
+          fieldDefinitions.extractors.flatMap { fieldDefinition =>
+            val fieldName = fieldDefinition.fieldName
+            val metadata = fieldDefinition.keyMetadata
+            fieldDefinition match
+              case complex: FieldDefComplex[_] =>
+                complex.extract(memory)
+              case simple: FieldDefSimple[_] =>
+                val iterator = memory.iterator(simple.offset)
+                for
+                  n <- 1 to simple.keyMetadata.maxN
+                yield
+                  val key = Key(metadata, n, fieldName)
+                  val value = simple.extract(iterator)
+                  FieldEntry(simple, key, value)
+              case x =>
+                throw new IllegalStateException(s"Unknown fieldDefinition: $x")
+          }
+        }
+        r
 
-object MemoryFileLoader {
-  val notInitialized: Exception = new Exception("No RC-210 data!")
-}
-
-
-
+  object MemoryFileLoader:
+    val notInitialized: Exception = new Exception("No RC-210 data!")

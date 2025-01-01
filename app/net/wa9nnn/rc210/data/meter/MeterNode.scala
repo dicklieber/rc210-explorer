@@ -21,7 +21,6 @@ import com.wa9nnn.wa9nnnutil.tableui.{Cell, KvTable, Row, Table}
 import net.wa9nnn.rc210.data.clock.ClockNode.form
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.*
-import net.wa9nnn.rc210.data.meter.MeterAlarmNode.bind
 import net.wa9nnn.rc210.serial.Memory
 import net.wa9nnn.rc210.ui.{ButtonCell, FormData}
 import net.wa9nnn.rc210.ui.html.meterEditor
