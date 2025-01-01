@@ -17,15 +17,15 @@
 
 package net.wa9nnn.rc210.data.clock
 
+import net.wa9nnn.rc210.data.clock.MonthOfYearDST.values
 import net.wa9nnn.rc210.data.field.EnumEntryFieldValue
 import net.wa9nnn.rc210.ui.Rc210Enum
 
 
-sealed abstract class MonthOfYearDST(val rc210Value: Int) extends EnumEntryFieldValue:
-  override def values: Seq[MonthOfYearDST] = MonthOfYearDST.values
+sealed trait  MonthOfYearDST(val rc210Value: Int) extends EnumEntryFieldValue:
+  override def options: Seq[String] = values.map(_.entryName)
 
-object MonthOfYearDST extends Rc210Enum[MonthOfYearDST] {
-
+object MonthOfYearDST extends Rc210Enum[MonthOfYearDST] :
   override val values: IndexedSeq[MonthOfYearDST] = findValues
 
   case object January extends MonthOfYearDST(0)
@@ -51,7 +51,5 @@ object MonthOfYearDST extends Rc210Enum[MonthOfYearDST] {
   case object November extends MonthOfYearDST(10)
 
   case object December extends MonthOfYearDST(11)
-
-}
 
 

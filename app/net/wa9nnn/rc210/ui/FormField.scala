@@ -39,8 +39,8 @@ object FormField:
       case enumValue: EnumEntryFieldValue =>
         <select name={name}>
           {enumValue.options map { choice =>
-          <option value={choice._1} selected={if (enumValue.entryName == choice._1) "selected" else null}>
-            {choice._2}
+          <option value={choice} selected={if (enumValue.entryName == choice) "selected" else null}>
+            {choice}
           </option>
 
         }}

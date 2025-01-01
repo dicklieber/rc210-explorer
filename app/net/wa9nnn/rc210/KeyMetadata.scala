@@ -44,16 +44,16 @@ sealed trait KeyMetadata(val maxN: Int,
                          val handler: EditHandler = null,
                          val needsQualifier: Boolean = false,
                          val includeInNavTab: Boolean = true,
-                         val needsFieldName:Boolean = false,
-                    ) extends PlayEnum[KeyMetadata]
+                         val needsFieldName: Boolean = false,
+                        ) extends EnumEntry
   with CapitalWords with Tab with Ordered[KeyMetadata]:
   override def indexUrl: String = routes.EditController.index(this).url
-
-  override def values: IndexedSeq[EnumEntry] = KeyMetadata.values
 
   val rc210Value: Int = -1
 
   def compare(that: KeyMetadata): Int = this.entryName.compareTo(that.entryName)
+
+//  override def values: IndexedSeq[KeyMetadata] = values
 
 object KeyMetadata extends PlayEnum[KeyMetadata]:
 

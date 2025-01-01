@@ -50,10 +50,11 @@ case class ClockNode(enableDST: Boolean = true,
 
     TableInACell(table)
 
+
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntry): Seq[String] = {
+  override def toCommands(key: Key): Seq[String] = 
     //NOTE: To disable DST program the START month to 0, i.e. *21310
     /*
     *2131x yy z where x = 1 is to program the START month and 0 is to program the END month yy is the month (01-12) and must be 2 digits and z Is the occurrence of Sunday in that month (1 – 5).
@@ -85,7 +86,6 @@ case class ClockNode(enableDST: Boolean = true,
       end,
       say24
     )
-  }
 
   override def toRow(key: Key): Row = Row(
     ButtonCell.edit(key),

@@ -82,8 +82,6 @@ trait FieldValueComplex[T <: FieldValueComplex[?]](val runableMacros: Key*)
 trait EnumEntryFieldValue extends EnumEntry with FieldValue:
   val rc210Value: Int
 
-  def values: IndexedSeq[EnumEntryFieldValue]
-
-  def options: Seq[(String, String)] = values.map(env => env.entryName -> env.entryName)
+  def options: Seq[String] 
 
   override def displayCell: Cell = Cell(entryName)

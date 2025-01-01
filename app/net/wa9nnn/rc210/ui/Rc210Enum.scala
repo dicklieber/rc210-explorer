@@ -32,8 +32,6 @@ import net.wa9nnn.rc210.data.field.EnumEntryFieldValue
 trait Rc210Enum[T <: EnumEntryFieldValue] extends PlayEnum[T] with Selections with LazyLogging:
   val values: IndexedSeq[T]
 
-  override def options: Seq[(String, String)] =
-    values.map((v: T) => v.entryName -> v.entryName)
 
   override def equals(obj: Any): Boolean =
     obj match
