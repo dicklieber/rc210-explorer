@@ -143,16 +143,7 @@ object MeterAlarmNode extends FieldDefComplex[MeterAlarmNode]:
         FieldEntry(this, key, meterAlarm)
       }
   }
-
-  override def positions: Seq[FieldOffset] = Seq(
-    FieldOffset(266, this, "Alarm Type"),
-
-    FieldOffset(186, this, "meterFace"),
-    FieldOffset(202, this, "meterLowVolt"),
-    FieldOffset(218, this, "meterLowrReading"),
-    FieldOffset(282, this, "alarm Set Point"),
-  )
-
+  
   implicit val fmt: Format[MeterAlarmNode] = Json.format[MeterAlarmNode]
 
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html = {

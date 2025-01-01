@@ -29,9 +29,6 @@ import scala.xml.*
  * [[https://github.com/scala/scala-xml Scala-xml]]
  */
   
-/**
- * @deprecated use play form stuff.
- */
 object FormField:
   def apply(key: Key, value: Any, range: Option[Range] = None): Cell =
     Cell.rawHtml(html(key.id, value, range).body)

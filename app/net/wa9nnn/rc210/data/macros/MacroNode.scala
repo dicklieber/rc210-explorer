@@ -90,12 +90,7 @@ object MacroNode extends FieldDefComplex[MacroNode]:
   def unapply(u: MacroNode): Option[(Seq[Key], Option[Dtmf])] = Some((u.functions, u.dtmf))
 
   implicit val fmt: Format[MacroNode] = Json.format[MacroNode]
-
-  override def positions: Seq[FieldOffset] = Seq(
-    FieldOffset(1985, this),
-    FieldOffset(2825, this),
-  )
-
+  
   private val longMacroSlots = 15
   private val shortMacroSlots = 4
 

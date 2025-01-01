@@ -121,15 +121,6 @@ object RemoteBaseNode extends FieldDefComplex[RemoteBaseNode] :
     Seq(FieldEntry(this, Key(KeyMetadata.RemoteBase), remoteBase))
   }
 
-  override def positions: Seq[FieldOffset] = Seq(
-    FieldOffset(1176, this, "Radio Type"),
-    FieldOffset(1177, this, "Yaesu"),
-    FieldOffset(3525, this, "Remote Base Prefix"),
-    FieldOffset(3562, this, "Frequencies"),
-    FieldOffset(3562, this, "Offset"),
-  )
-
-
   implicit val fmtRBMemory: Format[RBMemory] = Json.format[RBMemory]
   implicit val fmt: Format[RemoteBaseNode] = Json.format[RemoteBaseNode]
 

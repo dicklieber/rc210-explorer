@@ -112,8 +112,6 @@ object LogicAlarmNode extends FieldDefComplex[LogicAlarmNode]:
     }
   }
 
-  override def positions: Seq[FieldOffset] = Seq()
-
   implicit val fmt: OFormat[LogicAlarmNode] = Json.format[LogicAlarmNode]
 
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =

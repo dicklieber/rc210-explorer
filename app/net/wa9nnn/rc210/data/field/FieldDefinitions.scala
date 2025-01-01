@@ -23,6 +23,7 @@ import net.wa9nnn.rc210.PortsNode
 import net.wa9nnn.rc210.data.CommonNode
 import net.wa9nnn.rc210.data.clock.ClockNode
 import net.wa9nnn.rc210.data.courtesy.CourtesyToneNode
+import net.wa9nnn.rc210.data.field.DefInt
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.meter.{MeterAlarmNode, MeterNode}
 import net.wa9nnn.rc210.data.remotebase.RemoteBaseNode
@@ -50,7 +51,7 @@ class FieldDefinitions @Inject()() :
   )
 
 //  val m: FieldDefComplex[MessageNode] = MessageNode
-  val defs: Seq[FieldDef] = Seq(
+  val defs: Seq[FieldDef[?]] = Seq(
     ScheduleNode,
 /*
     MacroNode,
@@ -66,18 +67,13 @@ class FieldDefinitions @Inject()() :
     CommonNode,
 */
   )
-  private val allFields: Seq[FieldDef[?]] = simpleFields ++ defs
+  val allFields: Seq[FieldDef[?]] = simpleFields ++ defs
   
-  private val fieldDefMap: Map[String, FieldDef] = allFields.map(fd => fd.fieldName -> fd).toMap
+  private val fieldDefMap: Map[String, FieldDef[?]] = allFields.map(fd => fd.fieldName -> fd).toMap
 
-  def extractors: Seq[FieldDef[?]] =
-    for
-      fs <- allFields
-      if fs.isInstanceOf[MemoryExtractSupport]
-    yield
-      fs
 
-  def lookup[T<:FieldDef](name: String): T =
+
+  def lookup[T<:FieldDef[?]](name: String): T =
     fieldDefMap(name).asInstanceOf[T]
 
   

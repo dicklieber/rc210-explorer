@@ -89,13 +89,7 @@ object MessageNode extends FieldDefComplex[MessageNode] with LazyLogging:
   def form: Form[MessageNode] = throw new IllegalStateException("Not used with MessageNode!")
 
   override val keyMetadata: KeyMetadata = KeyMetadata.Message
-
-  override def positions: Seq[FieldOffset] = {
-    Seq(
-      FieldOffset(1576, this)
-    )
-  }
-
+  
   /**
    *
    * @param memory    source of RC-210 data.

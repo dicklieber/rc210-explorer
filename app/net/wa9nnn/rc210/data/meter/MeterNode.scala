@@ -114,14 +114,6 @@ object MeterNode extends FieldDefComplex[MeterNode]:
     meters
   }
 
-  override def positions: Seq[FieldOffset] = Seq(
-    FieldOffset(186, this, "meterFace"),
-    FieldOffset(202, this, "meterLowVolt"),
-    FieldOffset(218, this, "meterLowReading"),
-    FieldOffset(282, this, "alarm Set Point"),
-    FieldOffset(2064, this, "meterEditor"),
-  )
-
   implicit val fmtVoltToReading: Format[VoltToReading] = Json.format[VoltToReading]
   implicit val fmt: Format[MeterNode] = Json.format[MeterNode]
 

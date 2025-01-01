@@ -45,28 +45,19 @@ case class FieldDtmf(value: String) extends FieldValueSimple() with LazyLogging:
 
   override def displayCell: Cell = Cell(value)
 
-case class FieldDefDtmf(offset: Int, fieldName: String, keyMetadata: KeyMetadata, override val template: String)
+case class DefDtmf(offset: Int, fieldName: String, keyMetadata: KeyMetadata, template: String, maxDigits: Int)
   extends FieldDefSimple[FieldDtmf]:
-  override def update(formFieldValue: String): FieldDtmf = {
-    FieldDtmf(formFieldValue)
-  }
 
-  override def extractFromInts(itr: Iterator[Int], fieldDefinition: FieldDefSimple): FieldValue = {
-    val ints: Seq[Int] = for
-    {
-      _ <- 0 to fieldDefinition.max
-    } yield
-    {
-      itr.next()
-    }
-
-    val tt: Array[Char] = ints.takeWhile(_ != 0)
+  override def extract(iterator: Iterator[Int]): FieldDtmf =
+    val tt: Array[Char] = iterator.takeWhile(_ != 0)
       .map(_.toChar).toArray
     val str: String = new String(tt)
-    new FieldDtmf(str)
-  }
+    FieldDtmf(str)
 
-  implicit val fmt: Format[FieldDtmf] = new Format[FieldDtmf] {
+  override def fromForm(formValue: String): FieldDtmf =
+    FieldDtmf(formValue)
+
+  val fmt: Format[FieldDtmf] = new Format[FieldDtmf] {
     override def reads(json: JsValue): JsResult[FieldDtmf] = JsSuccess(new FieldDtmf(json.as[String]))
 
     override def writes(o: FieldDtmf): JsValue = JsString(o.value)

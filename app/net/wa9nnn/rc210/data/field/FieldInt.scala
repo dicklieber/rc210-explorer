@@ -30,43 +30,27 @@ case class FieldInt(value: Int) extends FieldValueSimple():
     toString
   )
 
-  override def toEditCell(key:Key): Cell = FormField(key, value)
+  override def toEditCell(key: Key): Cell = FormField(key, value)
 
   override def toCommands(fieldEntry: FieldEntry): Seq[String] =
     val key = fieldEntry.key
 
     Seq(
       key.replaceN(fieldEntry.template)
-      .replaceAll("v", value.toString)
+        .replaceAll("v", value.toString)
     )
-
 
   override def displayCell: Cell = Cell(value)
 
-  case class DefInt(offset: Int, fieldName: String, keyMetadata: KeyMetadata, override val template: String)
-    extends FieldDefSimple[FieldInt]:
+case class DefInt(offset: Int, fieldName: String, keyMetadata: KeyMetadata, template: String)
+  extends FieldDefSimple[FieldInt]:
 
-    override def fromFormField(value: String): FieldInt =
-      FieldInt(value.toInt)
+  override def fromFormField(value: String): FieldInt =
+    FieldInt(value.toInt)
 
-    override def extract(memory: Memory): Seq[FieldEntry] =
-     FieldInt( memory.iterator(offset))
+  override def extract(iterator: Iterator[Int]): FieldValueSimple = 
+    FieldInt(iterator.next())
 
-    override def positions: Seq[FieldOffset] = ???
 
-    override def extractFromInts(itr: Iterator[Int], fieldDefinition: FieldDefSimple): FieldValue = {
-      val ints: Seq[Int] = for
-      {
-        _ <- 0 to fieldDefinition.max
-      } yield
-      {
-        itr.next()
-      }
-
-      val tt: Array[Char] = ints.takeWhile(_ != 0)
-        .map(_.toChar).toArray
-      val str: String = new String(tt)
-      new FieldDtmf(str)
-    }
 
 

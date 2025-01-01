@@ -22,6 +22,7 @@ import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210
 import net.wa9nnn.rc210.*
+import net.wa9nnn.rc210.data.field.FieldEntry
 import net.wa9nnn.rc210.ui.NamedKeyManager
 import net.wa9nnn.rc210.util.Configs
 
@@ -36,20 +37,17 @@ class DataStore @Inject()(config: Config,
                           memoryFileLoader: MemoryFileLoader) extends DataStorePersistence with LazyLogging:
   private val path: Path = Configs.path("vizRc210.dataStoreFile")(using config)
 
-  memoryFileLoader.load.foreach { fieldEntries =>
-    loadEntries(fieldEntries)
-  }
-  load()
+  loadEntries(memoryFileLoader.extractFieldEntries())
 
-  override def update(candidates: Seq[UpdateCandidate]): Unit=
+  override def update(candidates: Seq[UpdateCandidate]): Unit =
     super.update(candidates)
     saveFile(path)
 
   def load(): Unit =
     loadFile(path)
-    
-    
-    
+
+
+
 //  private def save(session: RcSession): Unit =
 //    val dto: DataTransferJson = toJson.copy(who = Some(session.user.who))
 //    persistence.save(dto)
