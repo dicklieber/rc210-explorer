@@ -51,8 +51,8 @@ case class DefDtmf(offset: Int, fieldName: String, keyMetadata: KeyMetadata, tem
     val str: String = new String(tt)
     FieldDtmf(str)
 
-  override def fromForm(formValue: String): FieldDtmf =
-    FieldDtmf(formValue)
+  override def fromString(str: String): FieldDtmf =
+    FieldDtmf(str)
 
   val fmt: Format[FieldDtmf] = new Format[FieldDtmf] {
     override def reads(json: JsValue): JsResult[FieldDtmf] = JsSuccess(new FieldDtmf(json.as[String]))

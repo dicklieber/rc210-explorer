@@ -55,9 +55,8 @@ case class CourtesyToneNode(segments: Seq[Segment]) extends FieldValueComplex[Co
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntry): Seq[String] =
+  override def toCommands(key: Key): Seq[String] =
     val segN = new AtomicInteger(1)
-    val key = fieldEntry.key
     segments.map { segment =>
       segment.toCommand(key.rc210Number.get, segN.getAndIncrement())
     }
@@ -82,7 +81,7 @@ object CourtesyToneNode extends FieldDefComplex[CourtesyToneNode] with LazyLoggi
       "segment" -> seq(Segment.form),
     )(CourtesyToneNode.apply)(CourtesyToneNode.unapply)
   )
-  implicit val fmt: Format[CourtesyToneNode] = Json.format[CourtesyToneNode]
+  implicit val fmt: OFormat[CourtesyToneNode] = Json.format[CourtesyToneNode]
   
   /**
    *

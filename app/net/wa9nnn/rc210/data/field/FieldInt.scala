@@ -41,8 +41,15 @@ case class FieldInt(value: Int) extends FieldValueSimple():
 case class DefInt(offset: Int, fieldName: String, keyMetadata: KeyMetadata, template: String)
   extends FieldDefSimple[FieldInt]:
 
-  override def fromFormField(value: String): FieldInt =
-    FieldInt(value.toInt)
+  override def fromString(str: String): FieldInt =
+    FieldInt(str.toInt)
+
+  override def fmt: Format[FieldInt] = new Format[FieldInt]:
+    override def reads(json: JsValue) =
+      JsSuccess(FieldInt(json.as[Int]))
+
+    override def writes(o: FieldInt) =
+      JsNumber(o.value)
 
   override def extract(iterator: Iterator[Int]): FieldValueSimple =
     FieldInt(iterator.next())

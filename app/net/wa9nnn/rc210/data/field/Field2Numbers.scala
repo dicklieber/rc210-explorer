@@ -47,13 +47,13 @@ case class Field2Numbers(value: Seq[Int]) extends FieldValueSimple():
 case class Def2Numbers(offset: Int, fieldName: String, keyMetadata: KeyMetadata, override val template: String)
   extends FieldDefSimple[Field2Numbers]:
 
-  implicit val fmt: Format[Field2Numbers] = Json.format[Field2Numbers]
+  implicit val fmt: OFormat[Field2Numbers] = Json.format[Field2Numbers]
 
   def extract(iterator: Iterator[Int]): Field2Numbers =
     Field2Numbers(Seq(iterator.next(), iterator.next()))
 
-  override def fromFormField(value: String): Field2Numbers =
-    update(value)
+  override def fromString(str: String): Field2Numbers =
+    update(str)
 
   def update(str: String): Field2Numbers =
     val values: Seq[Int] = if (str.isBlank)

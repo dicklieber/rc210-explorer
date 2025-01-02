@@ -20,7 +20,7 @@ package net.wa9nnn.rc210.data.field
 import net.wa9nnn.rc210.ui.{ Rc210Enum}
 
 
-sealed trait TotReset(val rc210Value: Int) extends Rc210EmumEntry
+sealed trait TotReset(val rc210Value: Int) extends Rc210EnumEntry
 
 object TotReset extends Rc210Enum[TotReset] {
 

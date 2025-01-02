@@ -84,9 +84,9 @@ trait FieldValueComplex[T <: FieldValueComplex[?]](val runableMacros: Key*)
 /**
  * A [[FieldValue]] that is an Enumeratium entry.
  */
-trait Rc210EmumEntry extends EnumEntry with FieldValue:
+trait Rc210EnumEntry extends EnumEntry with FieldValue:
   val rc210Value: Int
-  val vals: Seq[Rc210EmumEntry]
+  val vals: Seq[Rc210EnumEntry]
 
   def options: Seq[(String, String)] = vals.map(v =>
     val s = v.entryName

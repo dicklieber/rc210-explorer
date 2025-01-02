@@ -27,7 +27,7 @@ import net.wa9nnn.rc210.{Key, KeyMetadata}
 import play.api.data.*
 import play.api.data.Forms.*
 import play.api.i18n.MessagesProvider
-import play.api.libs.json.{Format, JsValue, Json}
+import play.api.libs.json.{Format, JsValue, Json, OFormat}
 import play.api.mvc.{RequestHeader, Result, Results}
 import play.twirl.api.Html
 
@@ -138,7 +138,7 @@ object ClockNode extends FieldDefComplex[ClockNode]:
 //    FieldOffset(4050, this, "hour"),
 //  )
 
-  implicit val fmt: Format[ClockNode] = Json.format[ClockNode]
+  implicit val fmt: OFormat[ClockNode] = Json.format[ClockNode]
 
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     val r: Html = fieldEntries.headOption match

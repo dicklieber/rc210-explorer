@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.ui
 
 import com.typesafe.scalalogging.LazyLogging
 import enumeratum.PlayEnum
-import net.wa9nnn.rc210.data.field.Rc210EmumEntry
+import net.wa9nnn.rc210.data.field.Rc210EnumEntry
 
 /**
  * for example:
@@ -29,7 +29,7 @@ import net.wa9nnn.rc210.data.field.Rc210EmumEntry
  *
  * @tparam T
  */
-trait Rc210Enum[T <: Rc210EmumEntry] extends PlayEnum[T]  with LazyLogging:
+trait Rc210Enum[T <: Rc210EnumEntry] extends PlayEnum[T]  with LazyLogging:
   val values: IndexedSeq[T]
   val options: Seq[(String,String)] = values.map(t => (t.entryName, t.entryName))  
 

@@ -26,9 +26,9 @@ import scala.util.Try
  * @tparam T what this produces.
  */
 trait FieldDef[T <: FieldValue] extends LazyLogging:
-  val fieldName: String
-  val keyMetadata: KeyMetadata
-  val fmt: Format[T]
+  def fieldName: String
+  def keyMetadata: KeyMetadata
+  def fmt: Format[T]
 
 
 trait FieldDefSimple[T <: FieldValue] extends FieldDef[T] :

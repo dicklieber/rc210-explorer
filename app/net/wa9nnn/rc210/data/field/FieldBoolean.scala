@@ -32,11 +32,11 @@ case class FieldBoolean(value: Boolean = false) extends FieldValueSimple():
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(key: Key, template: String): String =
+  override def toCommand(key: Key, template: String): String =
     key.replaceN(template)
       .replaceAll("v", if (value) "1" else "0")
       .replaceAll("b", if (value) "1" else "0")
-    
+
   override def displayCell: Cell = BooleanCell(value)
 
   override def toEditCell(key: Key): Cell =
@@ -44,18 +44,18 @@ case class FieldBoolean(value: Boolean = false) extends FieldValueSimple():
 
 case class DefBool(offset: Int, fieldName: String, keyMetadata: KeyMetadata, template: String)
   extends FieldDefSimple[FieldBoolean]:
-  override def fromForm(formValue: String): FieldBoolean =
-    FieldBoolean(formValue == "on")
+  override def fromString(str: String): FieldBoolean = 
+    FieldBoolean(str == "on")
 
   override def extract(iterator: Iterator[Int]): FieldValueSimple =
     FieldBoolean(iterator.next() != 0)
 
-  override def writes(o: FieldBoolean): JsValue =
-    JsBoolean(o.value)
+  implicit val fmt: OFormat[FieldBoolean] = new OFormat[FieldBoolean]:
+    override def writes(o: FieldBoolean): JsObject = 
+      Json.obj("value" -> o.value)
 
-  override def reads(json: JsValue): JsResult[FieldBoolean] =
-    JsSuccess(FieldBoolean(json.as[Boolean]))
-
+    override def reads(json: JsValue): JsResult[FieldBoolean] =
+      JsSuccess(FieldBoolean(json.as[Boolean]))
 
 
 

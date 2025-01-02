@@ -19,7 +19,7 @@ package net.wa9nnn.rc210.ui
 
 import com.wa9nnn.wa9nnnutil.tableui.Cell
 import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.data.field.Rc210EmumEntry
+import net.wa9nnn.rc210.data.field.Rc210EnumEntry
 import play.twirl.api.Html
 
 import java.time.LocalTime
@@ -36,7 +36,7 @@ object FormField:
 
   def html(name:String, value: Any, range: Option[Range] = None): Html =
     val elem: Elem = value match {
-      case enumValue: Rc210EmumEntry =>
+      case enumValue: Rc210EnumEntry =>
         <select name={name}>
           {enumValue.options map { choice =>
           <option value={choice._1} selected={if (enumValue.entryName == choice._1) "selected" else null}>

@@ -17,11 +17,11 @@
 
 package net.wa9nnn.rc210.data.remotebase
 
-import net.wa9nnn.rc210.data.field.Rc210EmumEntry
+import net.wa9nnn.rc210.data.field.Rc210EnumEntry
 import net.wa9nnn.rc210.ui.Rc210Enum
 
 
-sealed trait Offset(val rc210Value: Int) extends Rc210EmumEntry
+sealed trait Offset(val rc210Value: Int) extends Rc210EnumEntry
 
 object Offset extends Rc210Enum[Offset]:
 
