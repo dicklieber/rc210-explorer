@@ -23,7 +23,8 @@ import net.wa9nnn.rc210.data.field.Rc210EnumEntry
 import net.wa9nnn.rc210.ui.Rc210Enum
 
 
-sealed trait DayOfWeek(val rc210Value: Int) extends  Rc210EnumEntry
+sealed trait DayOfWeek(val rc210Value: Int) extends  Rc210EnumEntry:
+  override val vals: Seq[Rc210EnumEntry] = DayOfWeek.values
 
 object DayOfWeek extends Rc210Enum[DayOfWeek] {
 

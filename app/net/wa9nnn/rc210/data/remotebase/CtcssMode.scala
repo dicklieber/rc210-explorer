@@ -18,9 +18,11 @@
 package net.wa9nnn.rc210.data.remotebase
 
 import net.wa9nnn.rc210.data.field.Rc210EnumEntry
+import net.wa9nnn.rc210.data.remotebase.CtcssMode.values
 import net.wa9nnn.rc210.ui.Rc210Enum
 
-sealed trait CtcssMode(val rc210Value: Int) extends Rc210EnumEntry
+sealed trait CtcssMode(val rc210Value: Int) extends Rc210EnumEntry:
+  override val vals: Seq[Rc210EnumEntry] = values
 
 object CtcssMode extends Rc210Enum[CtcssMode]:
 

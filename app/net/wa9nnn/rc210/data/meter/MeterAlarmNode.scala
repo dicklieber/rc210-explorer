@@ -64,8 +64,7 @@ case class MeterAlarmNode(meter: Key, alarmType: AlarmType, tripPoint: Int, macr
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntry): Seq[String] = {
-    val key = fieldEntry.key
+  override def toCommands(key: Key): Seq[String] = {
     /**
      * *2066 alarm number * meterEditor number * alarmtype * trippoint * macro to run *
      * There are 8 meterEditor alarms, 1 through 8

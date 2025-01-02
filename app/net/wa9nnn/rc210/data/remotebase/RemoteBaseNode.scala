@@ -43,7 +43,7 @@ case class RemoteBaseNode(
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntry): Seq[String] = Seq(
+  override def toCommands(key: Key): Seq[String] = Seq(
     s"1*2083${radio.rc210Value}",
     s"1*2084${yaesu.rc210Value}",
     s"1*2060$prefix"

@@ -59,8 +59,7 @@ case class TimerNode(seconds: Int, macroKey: Key) extends FieldValueComplex(macr
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntry): Seq[String] = {
-    val key = fieldEntry.key
+  override def toCommands(key: Key): Seq[String] = {
     val timeNumber: Int = key.rc210Number.get
     val secs: Int = seconds
     val macroNumber = macroKey.rc210Number

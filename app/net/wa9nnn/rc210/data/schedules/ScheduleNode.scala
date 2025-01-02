@@ -56,8 +56,7 @@ case class ScheduleNode(dayOfWeek: DayOfWeek = DayOfWeek.EveryDay,
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntry): Seq[String] =
-    val key = fieldEntry.key
+  override def toCommands(key: Key): Seq[String] =
     val setPoint: String = key.rc210Number.toString
     val sDow: String = dayOfWeek.rc210Value.toString
     val moy: String = s02(monthOfYear.rc210Value)

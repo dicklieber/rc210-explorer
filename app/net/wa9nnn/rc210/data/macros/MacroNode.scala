@@ -50,8 +50,7 @@ case class MacroNode(functions: Seq[Key], dtmf: Option[Dtmf] = None)
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntry): Seq[String] =
-    val key = fieldEntry.key
+  override def toCommands(key: Key): Seq[String] =
     val numbers: String = functions.map(_.rc210Number).mkString("*")
     val macroNumber: String = f"${key.rc210Number.get}%03d"
     val mCmd = if functions.isEmpty then

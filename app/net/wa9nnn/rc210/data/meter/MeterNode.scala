@@ -54,8 +54,7 @@ case class MeterNode(meterFaceName: MeterFaceName, low: VoltToReading, high: Vol
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntry): Seq[String] =
-    val key = fieldEntry.key
+  override def toCommands(key: Key): Seq[String] =
     val c = key.rc210Number.get.toString
     val m = meterFaceName.toString
     val x1 = low.hundredthVolt

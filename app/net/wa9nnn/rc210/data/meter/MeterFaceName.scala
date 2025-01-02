@@ -18,13 +18,15 @@
 package net.wa9nnn.rc210.data.meter
 
 import net.wa9nnn.rc210.data.field.Rc210EnumEntry
+import net.wa9nnn.rc210.data.meter.MeterFaceName.values
 import net.wa9nnn.rc210.ui.Rc210Enum
 
 
-sealed abstract class MeterFaceName(val rc210Value: Int) extends Rc210EnumEntry
+sealed abstract class MeterFaceName(val rc210Value: Int) extends Rc210EnumEntry:
+  override val vals: Seq[Rc210EnumEntry] = values
 
 object MeterFaceName extends Rc210Enum[MeterFaceName] {
-  override val values: Seq[MeterFaceName] = findValues
+  override val values: IndexedSeq[MeterFaceName] = findValues
 
   case object Off extends MeterFaceName(0)
 
