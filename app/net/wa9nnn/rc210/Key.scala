@@ -124,7 +124,7 @@ object Key extends LazyLogging:
         val indicator: KeyIndicator = KeyIndicator.from(sIndicator)
         Key(keyMetadata, maybeNumber, maybeQualifier, indicator)
       case x =>
-        throw new IllegalArgumentException(s"No match for $x")
+        throw new IllegalArgumentException(s"""No match for "$x"!""")
 
   def apply(keyMetadata: KeyMetadata, number: Int): Key =
     Key(keyMetadata, Some(number))
