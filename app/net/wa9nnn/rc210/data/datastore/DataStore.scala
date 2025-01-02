@@ -38,55 +38,13 @@ class DataStore @Inject()(config: Config,
                           memoryFileLoader: MemoryFileLoader) extends DataStorePersistence with LazyLogging:
   private val path: Path = Configs.path("vizRc210.dataStoreFile")(using config)
 
-  loadEntries(memoryFileLoader.extractFieldEntries())
+  reload() // initial
+
+  def reload(): Unit =
+    loadDefinitions(memoryFileLoader.extractFieldEntries())
+    loadJsonFile(path)
 
   def update(candidates: Seq[UpdateCandidate], rcSession: RcSession): Unit =
     super.update(candidates)
     saveFile(path, rcSession)
 
-  def load(): Unit =
-    loadFile(path)
-
-
-
-//  private def save(session: RcSession): Unit =
-//    val dto: DataTransferJson = toJson.copy(who = Some(session.user.who))
-//    persistence.save(dto)
-
-/*
-  /**
-   * Update values from datastore.json
-   */
-  def loadFromJson(): Unit =
-    try
-      persistence.load().foreach { dto =>
-        dto.values.foreach { fieldEntryJson =>
-          val fieldKey = fieldEntryJson.fieldKey
-          keyFieldMap.get(fieldKey).foreach { fieldEntry =>
-            val newFieldValue: FieldValue = fieldEntry.fieldDefinition.parse(fieldEntryJson.fieldValue)
-            val newCandidate: Option[FieldValue] = fieldEntryJson.candidate.map(fieldEntry.fieldDefinition.parse)
-
-            val updated = fieldEntry.copy(fieldValue = newFieldValue, candidate = newCandidate)
-            keyFieldMap.put(fieldKey, updated)
-          }
-        }
-      }
-
-    catch
-      case e: Exception =>
-        logger.error("Loading", e)
-*/
-//
-//  private def loadFromMemory(): Unit =
-//    memoryFileLoader.load match
-//      case Failure(exception) =>
-//        logger.error("Loading DataStore from Download Memory image.", exception)
-//      case Success(fieldEntries: Seq[FieldEntry]) =>
-//        fieldEntries.foreach { fe =>
-//          keyFieldMap.put(fe.fieldKey, fe)
-//        }
-//
-//  def toJson: DataTransferJson =
-//    DataTransferJson(values = keyFieldMap.values.map(FieldEntryJson(_)).toSeq)
-//
-//

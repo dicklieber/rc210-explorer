@@ -38,10 +38,11 @@ class DataStoreEngine extends DataStoreApi:
    *
    * @param entries as returned by [[entries]].
    */
-  def loadEntries(entries: Seq[FieldEntry]): Unit =
+  def loadDefinitions(entries: Seq[FieldEntry]): Unit =
     entries.foreach { fieldEntry =>
       keyFieldMap.put(fieldEntry.key, fieldEntry)
     }
+    
 
   def set(fieldDatas: Seq[FieldData]): Unit =
     fieldDatas.foreach { fieldData =>

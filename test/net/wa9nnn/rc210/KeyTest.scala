@@ -23,6 +23,14 @@ import play.api.libs.json.{Format, Json}
 class KeyTest extends RcSpec with NamedKeySource {
   NamedKeyManager._namedKeySource = this
   val macroKey3 = Key(KeyMetadata.Macro, 3)
+  "|Function|165|"in {
+    val key1 = Key.fromId("|Function|165|")
+    key1 mustBe Key(KeyMetadata.Function, 165)  
+  }
+  "|Clock||"in {
+    val key1 = Key.fromId("|Clock||")
+    key1 mustBe Key(KeyMetadata.Clock)  
+  }
   "toString" when
     {
       "just metadata" in

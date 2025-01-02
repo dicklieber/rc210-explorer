@@ -20,21 +20,22 @@ package net.wa9nnn.rc210.data.datastore
 
 import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
+import net.wa9nnn.rc210.data.field.{FieldData, FieldEntry, FieldValue}
 import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210explorer.BuildInfo
 import play.api.libs.json.*
+import play.libs.F
 
 import java.nio.file.{Files, Path}
 import java.time.Instant
 
 /**
- * Adds persistence to the [[DataStoreEngine]].
+ * Adds persistence (JSON) to the [[DataStoreEngine]].
  */
-class DataStorePersistence() extends DataStoreEngine with LazyLogging:
+class DataStorePersistence extends DataStoreEngine with LazyLogging:
   private var metadata: Metadata = Metadata.empty
 
-  def loadFile(path: Path): Unit = 
+  def loadJsonFile(path: Path): Unit =
     val sSkip = System.getProperty("skipLoadJson", "false")
     if Files.exists(path) && sSkip != "true" then
       fromJson(Files.readString(path))
@@ -74,14 +75,24 @@ class DataStorePersistence() extends DataStoreEngine with LazyLogging:
 
   def fromJson(sJson: String): Unit =
     val jsValue = Json.parse(sJson)
-    val jsArray: JsArray = jsValue.as[JsArray]
-    jsArray.value.foreach { (obj: JsValue) =>
-      val value: JsLookupResult = obj \ "key"
-      val id = value.as[String]
-      val key: Key = Key.fromId(id)
-      val fe: FieldEntry = getFieldEntry(key)
-      //      val fieldData: FieldData = obj.as[FieldData]
-      //      fe.set(fieldData)
+    val jsMetadata = (jsValue \ "metadata")
+    metadata = jsMetadata.as[Metadata]
+    val jsData:JsArray = (jsValue \ "data").as
+
+    jsData.value.foreach { (obj: JsValue) =>
+      val id = (obj \ "key").as[String]
+      try
+        val key: Key = Key.fromId(id)
+        val fe: FieldEntry = getFieldEntry(key)
+
+        given fmt: Format[FieldValue] = fe.fieldDefinition.fmt.asInstanceOf[Format[FieldValue]]
+
+        val current: FieldValue = (obj \ "current").as[FieldValue]
+        val candidate: Option[FieldValue] = (obj \ "candidate").asOpt[FieldValue]
+        fe.set(FieldData(key, current, candidate))
+      catch
+        case e:Exception =>
+          logger.error(s"No match for: {} ${e.getMessage}")
     }
 
 case class Metadata(title: String, version: String, stamp: String, user: String)

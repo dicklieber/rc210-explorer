@@ -44,6 +44,7 @@ case class FieldBoolean(value: Boolean = false) extends FieldValueSimple():
 
 case class DefBool(offset: Int, fieldName: String, keyMetadata: KeyMetadata, template: String)
   extends FieldDefSimple[FieldBoolean]:
+  logger.trace("DefBool")
   override def fromString(str: String): FieldBoolean = 
     FieldBoolean(str == "on")
 

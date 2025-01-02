@@ -20,12 +20,11 @@ package net.wa9nnn.rc210
 import com.typesafe.scalalogging.LazyLogging
 import com.wa9nnn.wa9nnnutil.tableui.{Cell, CellProvider}
 import net.wa9nnn.rc210.KeyMetadata.*
-import net.wa9nnn.rc210.data.datastore.UpdateCandidate
-import net.wa9nnn.rc210.ui.{FormData, NamedKeyManager}
+import net.wa9nnn.rc210.ui.NamedKeyManager
 import play.api.data.FormError
 import play.api.data.format.Formatter
 import play.api.libs.json.*
-import play.api.mvc.{PathBindable, Result}
+import play.api.mvc.PathBindable
 
 /**
  * Primary key for a [[net.wa9nnn.rc210.data.field.FieldValue]] stored in
@@ -60,7 +59,7 @@ case class Key(keyMetadata: KeyMetadata,
    * @return used in JSON or HRML form names.
    */
   def id: String =
-    s"${indicator.char}$keyMetadata|${rc210Number.getOrElse("")}|${qualifier.getOrElse("")}"
+    s"${indicator.char}${keyMetadata.entryName}|${rc210Number.getOrElse("")}|${qualifier.getOrElse("")}"
 
   def namedKey: NamedKey =
     NamedKey(this, name)
@@ -114,7 +113,7 @@ object Key extends LazyLogging:
 
   val keyName: String = "key"
 
-  private val keyRegx = """([|nk])(.*)\|(\d{0,2})\|(.*)""".r
+  private val keyRegx = """([|nk])(.*)\|(\d{0,4})\|(.*)""".r
 
   def fromId(id: String): Key =
     id match
@@ -125,7 +124,7 @@ object Key extends LazyLogging:
         val indicator: KeyIndicator = KeyIndicator.from(sIndicator)
         Key(keyMetadata, maybeNumber, maybeQualifier, indicator)
       case x =>
-        throw new IllegalArgumentException(s"Can't parse $x")
+        throw new IllegalArgumentException(s"No match for $x")
 
   def apply(keyMetadata: KeyMetadata, number: Int): Key =
     Key(keyMetadata, Some(number))
