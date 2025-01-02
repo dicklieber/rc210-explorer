@@ -138,7 +138,7 @@ object MessageNode extends FieldDefComplex[MessageNode] with LazyLogging:
       else
         ids.split(',').map(_.toInt)
       
-      val messageNode: MessageNode = MessageNode(numbers)
+      val messageNode: MessageNode = MessageNode(numbers.toIndexedSeq)
       UpdateCandidate(key, messageNode)
 
 

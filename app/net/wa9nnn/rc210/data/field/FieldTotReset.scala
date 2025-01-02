@@ -28,9 +28,8 @@ import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue, Json}
 case class FieldTotReset(value: TotReset = TotReset.AfterCOS) extends FieldValueSimple() :
   override def displayCell: Cell = Cell(value)
 
-  def toCommands(fieldEntry: FieldEntry): Seq[String] = {
-    Seq(s"*2122${value.rc210Value}")
-  }
+  override def toCommand(key: Key, template: String): String =
+    s"*2122${value.rc210Value}"
 
 
   override def tableSection(key: Key): TableSection =
@@ -48,15 +47,17 @@ case class FieldTotReset(value: TotReset = TotReset.AfterCOS) extends FieldValue
 
 case class DefTimeoutTimerResetPoint(offset: Int, fieldName: String, keyMetadata: KeyMetadata, template: String)
   extends FieldDefSimple[FieldTotReset]:
-  override def fromForm(formValue: String): FieldTotReset =
-    FieldTotReset(TotReset.withName(formValue))
+  override def fromString(str: String): FieldTotReset =
+    FieldTotReset(TotReset.withName(str))
 
   override def extract(iterator: Iterator[Int]): FieldTotReset =
     FieldTotReset(TotReset.find(iterator.next()))
 
-  override def writes(o: FieldTotReset): JsValue =
-    JsString(o.value.entryName)
+  override def fmt: Format[FieldTotReset] = new Format[FieldTotReset]:
 
-  override def reads(json: JsValue): JsResult[FieldTotReset] =
-    JsSuccess( FieldTotReset(TotReset.withName( json.as[String])))
+    override def writes(o: FieldTotReset): JsValue =
+      JsString(o.value.entryName)
+
+    override def reads(json: JsValue): JsResult[FieldTotReset] =
+      JsSuccess( FieldTotReset(TotReset.withName( json.as[String])))
 

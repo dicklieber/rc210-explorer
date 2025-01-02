@@ -17,20 +17,20 @@
 
 package net.wa9nnn.rc210.data.field
 
-import net.wa9nnn.rc210.ui.{ Rc210Enum}
+import net.wa9nnn.rc210.data.field.TotReset.values
+import net.wa9nnn.rc210.ui.Rc210Enum
 
 
-sealed trait TotReset(val rc210Value: Int) extends Rc210EnumEntry
+sealed trait TotReset(val rc210Value: Int) extends Rc210EnumEntry:
+  override val vals: Seq[Rc210EnumEntry] = values
 
-object TotReset extends Rc210Enum[TotReset] {
+object TotReset extends Rc210Enum[TotReset] :
 
-  override val values: Seq[TotReset] = findValues
+  override val values: IndexedSeq[TotReset] = findValues
 
   case object AfterCOS extends TotReset(0)
   case object AfterCTSegment1 extends TotReset(1)
   case object AfterCTSegment2 extends TotReset(2)
   case object AfterCTSegment3 extends TotReset(3)
   case object AfterCTSegment4 extends TotReset(4)
-
-}
 

@@ -37,6 +37,7 @@ import scala.xml.*
 sealed trait FieldValue extends LazyLogging:
   /**
    * Nodes that actually have an enabled field should override this.
+   * Used to determine if macro keys are runnable.
    *
    * @return
    */
@@ -71,12 +72,12 @@ object FieldValue:
 /**
  * Renders itself as a [[[Cell]]
  */
-trait FieldValueSimple(val runableMacros: Key*) extends FieldValue with RowSource:
+trait FieldValueSimple(override val runableMacros: Key*) extends FieldValue with RowSource:
   def toEditCell(key: Key): Cell
 
   def toCommand(key: Key, template: String): String
 
-trait FieldValueComplex[T <: FieldValueComplex[?]](val runableMacros: Key*)
+trait FieldValueComplex[T <: FieldValueComplex[?]](override val runableMacros: Key*)
   extends FieldValue with KeyedRow with LazyLogging:
 
   def toCommands(key: Key): Seq[String]

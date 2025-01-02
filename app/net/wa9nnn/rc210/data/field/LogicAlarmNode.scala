@@ -63,7 +63,7 @@ case class LogicAlarmNode(override val enabled: Boolean, lowMacro: Key, highMacr
   /**
    * Render this value as an RD-210 command string.
    */
-  override def toCommands(fieldEntry: FieldEntry): Seq[String] = Seq {
+  override def toCommands(key: Key): Seq[String] = Seq {
     "todo"
   }
 
