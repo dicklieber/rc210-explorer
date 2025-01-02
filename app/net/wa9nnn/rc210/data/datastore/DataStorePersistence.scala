@@ -18,39 +18,38 @@
 
 package net.wa9nnn.rc210.data.datastore
 
-import com.google.inject.ImplementedBy
-import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import net.wa9nnn.rc210.data.EditHandler
-import net.wa9nnn.rc210.{Key, KeyMetadata, NamedKey}
-import net.wa9nnn.rc210.data.field.{FieldData, FieldEntry, FieldValue}
-import net.wa9nnn.rc210.security.Who
+import net.wa9nnn.rc210.Key
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.security.authentication.RcSession
-import net.wa9nnn.rc210.util.Configs
 import net.wa9nnn.rc210explorer.BuildInfo
 import play.api.libs.json.*
 
 import java.nio.file.{Files, Path}
 import java.time.Instant
-import javax.inject.{Inject, Singleton}
-import scala.collection.immutable.Seq
-import scala.util.{Failure, Try, Using}
 
 /**
  * Adds persistence to the [[DataStoreEngine]].
  */
 class DataStorePersistence() extends DataStoreEngine with LazyLogging:
-  def loadFile(path: Path): Unit = {
+  private var metadata: Metadata = Metadata.empty
+
+  def loadFile(path: Path): Unit = 
     val sSkip = System.getProperty("skipLoadJson", "false")
     if Files.exists(path) && sSkip != "true" then
       fromJson(Files.readString(path))
-  }
 
   def saveFile(path: Path, rcSession: RcSession): Unit =
-    val sJson = toJson(rcSession)
+    metadata = Metadata(
+      BuildInfo.name + "-data",
+      BuildInfo.version,
+      Instant.now().toString,
+      rcSession.user.callsign
+    )
+    val sJson = toJson()
     Files.writeString(path, sJson)
 
-  def toJson(rcSession: RcSession): String =
+  def toJson(): String =
     val values: Seq[JsObject] = entries.map { fieldEntry =>
       val fieldData = fieldEntry.fieldData
 
@@ -67,12 +66,7 @@ class DataStorePersistence() extends DataStoreEngine with LazyLogging:
           withoutCandidate
     }
     val o = Json.obj(
-      "metadata" -> Json.obj(
-        "title" -> (BuildInfo.name + "-data"),
-        "version" -> BuildInfo.version,
-        "stamp" -> Instant.now().toString,
-        "user" -> rcSession.user.callsign,
-      ),
+      "metadata" -> metadata,
       "data" -> values,
     )
 
@@ -90,5 +84,8 @@ class DataStorePersistence() extends DataStoreEngine with LazyLogging:
       //      fe.set(fieldData)
     }
 
+case class Metadata(title: String, version: String, stamp: String, user: String)
 
-
+object Metadata:
+  implicit val fmt: Format[Metadata] = Json.format[Metadata]
+  val empty: Metadata = Metadata("", "", "", "")

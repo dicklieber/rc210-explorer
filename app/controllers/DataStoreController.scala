@@ -43,7 +43,7 @@ class DataStoreController @Inject()(dataStore: DataStore)
     implicit request: Request[AnyContent] =>
       val rcSession: RcSession = request.attrs(sessionKey)
 
-      Ok(dataStore.toJson(rcSession)).withHeaders(
+      Ok(dataStore.toJson()).withHeaders(
         "Content-Type" -> "text/json",
         "Content-Disposition" -> s"""attachment; filename="rc210.json""""
       )
@@ -53,7 +53,7 @@ class DataStoreController @Inject()(dataStore: DataStore)
     implicit request: Request[AnyContent] =>
       val rcSession: RcSession = request.attrs(sessionKey)
 
-      Ok(dataStore.toJson(rcSession))
+      Ok(dataStore.toJson())
   }
 
   def upload(): Action[AnyContent] = Action {
