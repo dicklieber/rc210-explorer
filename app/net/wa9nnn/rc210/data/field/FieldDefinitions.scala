@@ -89,9 +89,8 @@ class FieldDefinitions @Inject()() :
 //  )
 
 //  val m: FieldDefComplex[MessageNode] = MessageNode
-  val defs: Seq[FieldDef[?]] = Seq(
+  val complexDefs: Seq[FieldDefComplex[?]] = Seq(
     ScheduleNode,
-/*
     MacroNode,
     CourtesyToneNode,
     TimerNode,
@@ -101,11 +100,10 @@ class FieldDefinitions @Inject()() :
     MeterNode,
     MeterAlarmNode,
     LogicAlarmNode,
-    PortsNode,
-    CommonNode,
-*/
+//    PortsNode,
+//    CommonNode,
   )
-  val allFields: Seq[FieldDef[?]] = simpleFields ++ defs
+  val allFields: Seq[FieldDef[?]] = simpleFields ++ complexDefs
   
   private val fieldDefMap: Map[String, FieldDef[?]] = allFields.map(fd => fd.fieldName -> fd).toMap
 
