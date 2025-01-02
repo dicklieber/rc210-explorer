@@ -21,6 +21,8 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.datastore.DataStore
 import net.wa9nnn.rc210.data.field.FieldData
+import net.wa9nnn.rc210.security.authentication.RcSession
+import net.wa9nnn.rc210.security.authorzation.AuthFilter.sessionKey
 import net.wa9nnn.rc210.ui.nav.TabKind
 import play.api.libs.Files
 import play.api.libs.json.Json
@@ -35,18 +37,23 @@ class DataStoreController @Inject()(dataStore: DataStore)
                                    (implicit cc: MessagesControllerComponents)
   extends MessagesAbstractController(cc) with LazyLogging {
 
-  private def sJson: String =
-    dataStore.toJson
+
 
   def downloadJson: Action[AnyContent] = Action {
-    Ok(sJson).withHeaders(
-      "Content-Type" -> "text/json",
-      "Content-Disposition" -> s"""attachment; filename="rc210.json""""
-    )
+    implicit request: Request[AnyContent] =>
+      val rcSession: RcSession = request.attrs(sessionKey)
+
+      Ok(dataStore.toJson(rcSession)).withHeaders(
+        "Content-Type" -> "text/json",
+        "Content-Disposition" -> s"""attachment; filename="rc210.json""""
+      )
   }
 
   def viewJson: Action[AnyContent] = Action {
-    Ok(sJson)
+    implicit request: Request[AnyContent] =>
+      val rcSession: RcSession = request.attrs(sessionKey)
+
+      Ok(dataStore.toJson(rcSession))
   }
 
   def upload(): Action[AnyContent] = Action {
@@ -59,8 +66,8 @@ class DataStoreController @Inject()(dataStore: DataStore)
       .file("jsonFile")
       .foreach { jsonFile =>
         val sJson = java.nio.file.Files.readString(jsonFile.ref.path)
-        val fieldDatas: Seq[FieldData] = Json.parse(sJson).as[Seq[FieldData]]
-        dataStore.set(fieldDatas)
+//        val fieldDatas: Seq[FieldData] = Json.parse(sJson).as[Seq[FieldData]]
+//        dataStore.set(fieldDatas)
       }
     Redirect(routes.NavigationController.selectTabKind(TabKind.Fields))
   }

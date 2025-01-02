@@ -25,10 +25,13 @@ import net.wa9nnn.rc210.data.EditHandler
 import net.wa9nnn.rc210.{Key, KeyMetadata, NamedKey}
 import net.wa9nnn.rc210.data.field.{FieldData, FieldEntry, FieldValue}
 import net.wa9nnn.rc210.security.Who
+import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.util.Configs
+import net.wa9nnn.rc210explorer.BuildInfo
 import play.api.libs.json.*
 
 import java.nio.file.{Files, Path}
+import java.time.Instant
 import javax.inject.{Inject, Singleton}
 import scala.collection.immutable.Seq
 import scala.util.{Failure, Try, Using}
@@ -43,22 +46,37 @@ class DataStorePersistence() extends DataStoreEngine with LazyLogging:
       fromJson(Files.readString(path))
   }
 
-  def saveFile(path: Path): Unit =
-    val sJson = toJson
+  def saveFile(path: Path, rcSession: RcSession): Unit =
+    val sJson = toJson(rcSession)
     Files.writeString(path, sJson)
 
-  def toJson: String =
-    val a = Json.arr(
-      entries.map { fieldEntry =>
-        val fieldData = fieldEntry.fieldData
+  def toJson(rcSession: RcSession): String =
+    val values: Seq[JsObject] = entries.map { fieldEntry =>
+      val fieldData = fieldEntry.fieldData
 
-        implicit val f: Format[?] = fieldEntry.fieldDefinition.fmt 
-        val toJson1: JsValue = Json.toJson(fieldData)
-        toJson1
-      }
+      val f: Writes[FieldValue] = fieldEntry.fieldDefinition.fmt.asInstanceOf[Writes[FieldValue]]
+      val valueJs = f.writes(fieldData.fieldValue)
+      val withoutCandidate = Json.obj(
+        "key" -> fieldEntry.key.id,
+        "current" -> valueJs,
+      )
+      fieldData.candidate match
+        case Some(candidate) =>
+          withoutCandidate + ("candidate" -> f.writes(candidate))
+        case None =>
+          withoutCandidate
+    }
+    val o = Json.obj(
+      "metadata" -> Json.obj(
+        "title" -> (BuildInfo.name + "-data"),
+        "version" -> BuildInfo.version,
+        "stamp" -> Instant.now().toString,
+        "user" -> rcSession.user.callsign,
+      ),
+      "data" -> values,
     )
 
-    Json.prettyPrint(a)
+    Json.prettyPrint(o)
 
   def fromJson(sJson: String): Unit =
     val jsValue = Json.parse(sJson)
@@ -68,9 +86,8 @@ class DataStorePersistence() extends DataStoreEngine with LazyLogging:
       val id = value.as[String]
       val key: Key = Key.fromId(id)
       val fe: FieldEntry = getFieldEntry(key)
-
-      val fieldData: FieldData = obj.as[FieldData]
-      fe.set(fieldData)
+      //      val fieldData: FieldData = obj.as[FieldData]
+      //      fe.set(fieldData)
     }
 
 

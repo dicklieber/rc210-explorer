@@ -23,6 +23,7 @@ import com.typesafe.scalalogging.LazyLogging
 import net.wa9nnn.rc210
 import net.wa9nnn.rc210.*
 import net.wa9nnn.rc210.data.field.FieldEntry
+import net.wa9nnn.rc210.security.authentication.RcSession
 import net.wa9nnn.rc210.ui.NamedKeyManager
 import net.wa9nnn.rc210.util.Configs
 
@@ -39,9 +40,9 @@ class DataStore @Inject()(config: Config,
 
   loadEntries(memoryFileLoader.extractFieldEntries())
 
-  override def update(candidates: Seq[UpdateCandidate]): Unit =
+  def update(candidates: Seq[UpdateCandidate], rcSession: RcSession): Unit =
     super.update(candidates)
-    saveFile(path)
+    saveFile(path, rcSession)
 
   def load(): Unit =
     loadFile(path)

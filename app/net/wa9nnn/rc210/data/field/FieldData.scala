@@ -59,6 +59,6 @@ object FieldData:
   implicit val ordering: Ordering[FieldData] =
     Ordering.by[FieldData, Key](_.key)
     
-  implicit val fmt: OFormat[FieldData] = Json.format[FieldData]
+//  implicit val fmt: OFormat[FieldData] = Json.format[FieldData]
 
 

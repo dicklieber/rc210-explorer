@@ -80,17 +80,15 @@ class EditController @Inject()(navMain: NavMain)
   def save(): Action[AnyContent] = Action {
 
     implicit request: Request[AnyContent] =>
-
       val formData: FormData = FormData()
-
-      given RcSession = request.attrs(sessionKey)
+      val rcSession: RcSession = request.attrs(sessionKey)
 
       //todo how to handle simple and complex
       namedKeyManager.saveNamedKeys(formData)
       try
         val key = formData.maybeKey.get
         val updateCandidates: Seq[UpdateCandidate] = key.keyMetadata.handler.bind(formData).toSeq
-        dataStore.update(updateCandidates)
+        dataStore.update(updateCandidates, rcSession: RcSession)
         Results.Redirect(routes.EditController.index(key.keyMetadata))
       catch
         case e: Exception =>
