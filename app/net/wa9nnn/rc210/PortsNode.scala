@@ -1,7 +1,7 @@
 package net.wa9nnn.rc210
 
 import com.wa9nnn.wa9nnnutil.tableui.*
-import net.wa9nnn.rc210.data.SimpleFieldNode
+import net.wa9nnn.rc210.data.SimpleFieldsNode
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
 import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
 import net.wa9nnn.rc210.ui.{ButtonCell, FormData, FormField}
@@ -9,7 +9,7 @@ import play.api.i18n.MessagesProvider
 import play.api.mvc.RequestHeader
 import play.twirl.api.Html
 
-object PortsNode extends SimpleFieldNode(KeyMetadata.Port):
+object PortsNode extends SimpleFieldsNode(KeyMetadata.Port):
 
   override def index(fieldEntries: Seq[FieldEntry])(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     val rows: Seq[Row] = fieldEntries

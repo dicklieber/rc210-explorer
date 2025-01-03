@@ -16,10 +16,10 @@ import scala.collection.immutable
  *
  * @param keyKind
  */
-abstract class SimpleFieldNode(val keyKind: KeyMetadata) extends EditHandler with LazyLogging:
+abstract class SimpleFieldsNode(val keyKind: KeyMetadata) extends EditHandler with LazyLogging:
   def collect(formData: FormData): Seq[UpdateCandidate] =
-    val data = formData.data
-    throw new NotImplementedError() //todo
-//    UpdateCandidate(kk)
+    formData.keyedValues.map(keyAndValue =>
+      UpdateCandidate(keyAndValue.key, keyAndValue.str)
+    )
 
 

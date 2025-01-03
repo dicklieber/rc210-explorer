@@ -42,7 +42,6 @@ class DataStoreEngine extends DataStoreApi:
     entries.foreach { fieldEntry =>
       keyFieldMap.put(fieldEntry.key, fieldEntry)
     }
-    
 
   def set(fieldDatas: Seq[FieldData]): Unit =
     fieldDatas.foreach { fieldData =>
@@ -118,12 +117,19 @@ class DataStoreEngine extends DataStoreApi:
   def update(candidates: Seq[UpdateCandidate]): Unit =
     candidates.foreach { updateCandidate =>
       val key = updateCandidate.key
-      try
-        val fieldEntry: FieldEntry = keyFieldMap(key)
-        fieldEntry.set(updateCandidate.candidate)
-      catch
-        case e: NoSuchElementException =>
-          logger.error(s"No entry for key: $key")
+      val fieldEntry = getFieldEntry(key)
+
+      updateCandidate.candidate match
+        case str: String =>
+          fieldEntry.fieldDefinition match
+            case defSimple: FieldDefSimple[?] =>
+              val candidateValue = defSimple.fromString(str)
+              fieldEntry.set(candidateValue)
+            case _ =>
+              logger.error(s"""No simple definition for key: "$key"!""")
+
+        case candidateValue: FieldValue =>
+          fieldEntry.set(candidateValue)
     }
 
   /**

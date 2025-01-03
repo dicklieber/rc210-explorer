@@ -42,8 +42,9 @@ class FormData(formData: Map[String, Seq[String]]) extends LazyLogging:
       val key = Key.fromId(id)
       KeyAndValues(key, values)
 
-  def keyedValues: Seq[(Key, String)] = all.filter(_._1.indicator == KeyIndicator.iValue)
-    .map { kv => kv._1 -> kv.head }.toSeq
+  def keyedValues: Seq[KeyAndValue] = all.filter(_._1.indicator == KeyIndicator.iValue)
+    .map { kv => kv.keyAndValue }.toSeq
+
   val data: Map[Key, KeyAndValues] = all.filter(_._1.indicator == KeyIndicator.iValue)
     .map { kv => kv._1 -> kv }.toMap
   val maybeKey: Option[Key] = all.find(_._1.indicator == KeyIndicator.iKey)
@@ -63,7 +64,7 @@ class FormData(formData: Map[String, Seq[String]]) extends LazyLogging:
 
   def valueOpt(qualifier: String): Option[String] =
     val x: Option[KeyAndValues] = data.values.find(_.key.qualifier.contains(qualifier))
-    val y: Option[String] = x.map(_.head)
+    val y: Option[String] = x.map(_.oneValue)
     y
 
   /**
@@ -83,9 +84,6 @@ class FormData(formData: Map[String, Seq[String]]) extends LazyLogging:
             value.head
           case None => ""
 
-
-
-
 object FormData:
   def apply()(using request: Request[AnyContent]): FormData =
     new FormData(request.body.asFormUrlEncoded.get)
@@ -95,4 +93,14 @@ case class KeyAndValues(key: Key, values: Seq[String]):
    * Provides the first element from the `values` collection that matches a specified `PartialFunction`.
    * If no matches are found, returns an empty string.
    */
-  val head: String = values.iterator.collectFirst(pf => pf).getOrElse("")
+  val oneValue: String = values.iterator.collectFirst(pf => pf).getOrElse("")
+
+  def keyAndValue: KeyAndValue =
+    KeyAndValue(key, oneValue)
+
+/**
+ *
+ * @param key
+ * @param  str from form for the [[Key]].
+ */
+case class KeyAndValue(key: Key, str: String)

@@ -19,12 +19,11 @@
 package net.wa9nnn.rc210.data.datastore
 
 import com.typesafe.scalalogging.LazyLogging
+import com.wa9nnn.util.BuildInfo
 import net.wa9nnn.rc210.Key
 import net.wa9nnn.rc210.data.field.{FieldData, FieldEntry, FieldValue}
 import net.wa9nnn.rc210.security.authentication.RcSession
-import net.wa9nnn.rc210explorer.BuildInfo
 import play.api.libs.json.*
-import play.libs.F
 
 import java.nio.file.{Files, Path}
 import java.time.Instant

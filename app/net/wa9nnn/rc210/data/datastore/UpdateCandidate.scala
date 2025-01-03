@@ -31,7 +31,7 @@ import play.api.libs.json.{Format, JsValue, Json}
  * @param key   id of value.
  * @param candidate  String for [[net.wa9nnn.rc210.data.field.FieldValueSimple]] or a [[FieldValueComplex]]
  */
-case class UpdateCandidate(key: Key, candidate:  FieldValue)
+case class UpdateCandidate(key: Key, candidate:  String|FieldValue)
 
 
 

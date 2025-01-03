@@ -31,7 +31,7 @@ case class NamedKey(key: Key, name: String) extends KeyedRow:
 object NamedKey:
   def apply(key: Key): NamedKey = NamedKey(key, "")
   def apply(keyValues:KeyAndValues): NamedKey =
-    NamedKey(keyValues.key, keyValues.head)
+    NamedKey(keyValues.key, keyValues.oneValue)
 
   given ordering: Ordering[NamedKey] = Ordering.by(_.key)
 

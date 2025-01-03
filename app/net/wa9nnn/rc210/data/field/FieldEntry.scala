@@ -65,10 +65,6 @@ class FieldEntry( val fieldDefinition: FieldDef[?], initialValue: FieldData) ext
    * @return updated [[FieldEntry]].
    */
 
-  def setCandidate(formFieldValue: String): Unit =
-    logger.error("Need to convert simple field value")
-//    val newCandidate: FieldValue = _fieldData.setCandidate()update(formFieldValue)
-//    _fieldData = _fieldData.setCandidate(newCandidate)
 
   def toCommands: Seq[String] =
     value[FieldValue] match
