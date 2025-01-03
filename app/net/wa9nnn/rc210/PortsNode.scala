@@ -1,9 +1,10 @@
 package net.wa9nnn.rc210
 
 import com.wa9nnn.wa9nnnutil.tableui.*
+import net.wa9nnn.rc210.KeyIndicator.iName
 import net.wa9nnn.rc210.data.SimpleFieldsNode
 import net.wa9nnn.rc210.data.datastore.UpdateCandidate
-import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue}
+import net.wa9nnn.rc210.data.field.{FieldEntry, FieldValue, FieldValueSimple}
 import net.wa9nnn.rc210.ui.{ButtonCell, FormData, FormField}
 import play.api.i18n.MessagesProvider
 import play.api.mvc.RequestHeader
@@ -28,8 +29,8 @@ object PortsNode extends SimpleFieldsNode(KeyMetadata.Port):
 
     val header = Header.singleRow(colHeaders: _*)
     val namesRow: Row = Row(Key.portKeys.map { key =>
-//      val fieldKey = PortFieldKey(key, NamedKey.fieldName)
-      FormField(key, key.name)
+      //      val fieldKey = PortFieldKey(key, NamedKey.fieldName)
+      FormField(key.withIndicator(iName), key.name)
     }.prepended(Cell("Name")))
     val table = Table(
       header,
@@ -40,8 +41,8 @@ object PortsNode extends SimpleFieldsNode(KeyMetadata.Port):
 
   def edit(fieldEntry: FieldEntry)(using request: RequestHeader, messagesProvider: MessagesProvider): Html =
     throw new NotImplementedError() //not used
-  
-  override def bind(formData: FormData): Seq[UpdateCandidate] = 
+
+  override def bind(formData: FormData): Seq[UpdateCandidate] =
     val value: Seq[UpdateCandidate] = collect(formData)
     value
 
@@ -51,12 +52,11 @@ object PortsNode extends SimpleFieldsNode(KeyMetadata.Port):
  * @param name        row header
  * @param portEntries remaining td elements.
  */
-case class PortRow(name: String, portEntries: Seq[FieldEntry]) :
+case class PortRow(name: String, portEntries: Seq[FieldEntry]):
   def toRow: Row =
     Row(portEntries.map { fe =>
       val v: FieldValue = fe.value
-//      v.toEditCell(fe.fieldKey)
-      v.displayCell
+      fe.value[FieldValueSimple].toEditCell(fe.key)
     }.prepended(Cell(name))
     )
 

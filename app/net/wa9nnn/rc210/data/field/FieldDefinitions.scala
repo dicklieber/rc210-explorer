@@ -40,7 +40,11 @@ class FieldDefinitions @Inject()() :
   val simpleFields: Seq[FieldDefSimple[?]] = Seq(
     DefDtmf(0, "Pre Access Code", Common, "1*2108v", maxDigits = 3),
     DefDtmf(4, "TT PadTest", Common, "1*2108v", maxDigits = 5),
-    DefBool(10, "Say Hours", Common, "1*5104b"),
+    DefBool(10, "Hang Time 1", Port, "1*5104b"),
+    DefInt(11, "Hang Time 1", Port, "n*10001v"),
+    DefInt(14, "Hang Time 2", Port, "n*10002v"),
+    DefInt(17, "Hang Time 3", Port, "n*10003v"),
+
   )
 
 

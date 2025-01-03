@@ -10,11 +10,14 @@
 @import com.wa9nnn.wa9nnnutil.tableui.Table
 @import com.wa9nnn.wa9nnnutil.tableui.html.renderTable
 @import net.wa9nnn.rc210.ui.HiddenFieldKey
+@import net.wa9nnn.rc210.KeyMetadata.LogicAlarm
+@import net.wa9nnn.rc210.KeyMetadata.Port
+@import net.wa9nnn.rc210.KeyIndicator.iKey
 @( table:Table)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
     @form(action = routes.EditController.save()) {
+        @HiddenFieldKey(Key(Port).withIndicator(iKey)))
         @submitButton()
         @renderTable(table)
-        @HiddenFieldKey(Key.portKeys.head)
         @submitButton()
     }
