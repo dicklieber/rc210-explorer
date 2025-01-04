@@ -26,11 +26,10 @@ import play.api.libs.json.{Format, JsResult, JsString, JsSuccess, JsValue, Json}
 case class FieldDtmf(value: String) extends FieldValueSimple() with LazyLogging:
   logger.debug("value: {}", value)
 
-  override def toRow: Row = Row(
-    "FieldDtmf",
-    toString
+  override def toRow(fieldEntry: FieldEntry): Row = Row(
+    fieldEntry.fieldDefinition.fieldName,
+    value
   )
-
   override def toEditCell(fieldKey: Key): Cell = FormField(fieldKey, value)
 
   /**

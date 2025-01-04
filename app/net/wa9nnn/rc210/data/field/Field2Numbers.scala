@@ -39,8 +39,8 @@ case class Field2Numbers(value: Seq[Int]) extends FieldValueSimple():
   override def displayCell: Cell =
     Cell(value.map(_.toString).mkString(" "))
 
-  override def toRow: Row = Row(
-    "Field2Numbers",
+  override def toRow(fieldEntry: FieldEntry): Row = Row(
+    fieldEntry.fieldDefinition.fieldName,
     toString
   )
 

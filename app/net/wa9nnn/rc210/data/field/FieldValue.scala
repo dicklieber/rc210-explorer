@@ -72,29 +72,17 @@ object FieldValue:
 /**
  * Renders itself as a [[[Cell]]
  */
-trait FieldValueSimple(override val runableMacros: Key*) extends FieldValue with RowSource:
+trait FieldValueSimple(override val runableMacros: Key*) extends FieldValue :
   def toEditCell(key: Key): Cell
 
   def toCommand(key: Key, template: String): String
+  def toRow(fieldEntry: FieldEntry): Row
 
 trait FieldValueComplex[T <: FieldValueComplex[?]](override val runableMacros: Key*)
   extends FieldValue with KeyedRow with LazyLogging:
 
   def toCommands(key: Key): Seq[String]
 
-/**
- * A [[FieldValue]] that is an Enumeratium entry.
- */
-trait Rc210EnumEntry extends EnumEntry with FieldValue:
-  val rc210Value: Int
-  val vals: Seq[Rc210EnumEntry]
-
-  def options: Seq[(String, String)] = vals.map(v =>
-    val s = v.entryName
-    s -> s
-  )
-
-  override def displayCell: Cell = Cell(entryName)
 
 //  def selectControl(key: Key): Html =
 //    val id = key.id

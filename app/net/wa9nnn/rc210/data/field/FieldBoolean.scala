@@ -24,8 +24,8 @@ import net.wa9nnn.rc210.ui.nav.{BooleanCell, CheckBoxCell}
 import play.api.libs.json.*
 
 case class FieldBoolean(value: Boolean = false) extends FieldValueSimple():
-  override def toRow: Row = Row(
-    "FieldBoolean",
+  override def toRow(fieldEntry: FieldEntry): Row = Row(
+    fieldEntry.fieldDefinition.fieldName,
     toString
   )
 

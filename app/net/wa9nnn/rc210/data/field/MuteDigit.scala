@@ -18,13 +18,14 @@
 package net.wa9nnn.rc210.data.field
 
 import net.wa9nnn.rc210.data.field.MuteDigit.values
-import net.wa9nnn.rc210.data.field.Rc210EnumEntry
-import net.wa9nnn.rc210.ui.Rc210Enum
+import net.wa9nnn.rc210.ui.{Rc210Enum, Rc210EnumEntry}
 //*2090x where x=1 to mute on the 1st digit or x=2 to mute on the 2nd digit
-sealed trait MuteDigit(val rc210Value: Int) extends Rc210EnumEntry:
+sealed abstract class MuteDigit(val rc210Value: Int) extends Rc210EnumEntry:
   override val vals: Seq[Rc210EnumEntry] = values
+  logger.trace(s"vals: $vals")
 
 object MuteDigit extends Rc210Enum[MuteDigit]:
+
   override val values: IndexedSeq[MuteDigit] = findValues
 
   case object FirstDigit extends MuteDigit(1)

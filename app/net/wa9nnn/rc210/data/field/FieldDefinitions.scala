@@ -19,11 +19,8 @@ package net.wa9nnn.rc210.data.field
 
 
 import net.wa9nnn.rc210.KeyMetadata.{Common, Port}
-import net.wa9nnn.rc210.PortsNode
-import net.wa9nnn.rc210.data.CommonNode
 import net.wa9nnn.rc210.data.clock.ClockNode
 import net.wa9nnn.rc210.data.courtesy.CourtesyToneNode
-import net.wa9nnn.rc210.data.field.DefInt
 import net.wa9nnn.rc210.data.macros.MacroNode
 import net.wa9nnn.rc210.data.meter.{MeterAlarmNode, MeterNode}
 import net.wa9nnn.rc210.data.remotebase.RemoteBaseNode
@@ -45,23 +42,16 @@ class FieldDefinitions @Inject()() :
     DefInt(14, "Hang Time 2", Port, "n*10002v"),
     DefInt(17, "Hang Time 3", Port, "n*10003v"),
 
+    DefInt(20, "Initial ID Timer  ", Port, "n*1000v") units "minutes",
+    DefInt(23, "Pending ID Timer  ", Port, "n*1003v") units "minutes",
+    DefBool(26, "Tx Enable", Port, "nn10b"),
+    DefBool(29, "DTMF Cover Tone", Port, "nn13b"),
+    DefInt(32, "DTMF Mute Timer", Port, "n*1006v") max 999 units "100 ms",
+    DefBool(38, "Kerchunk", Port, "nn15b"),
+    DefInt(41, "Kerchunk Timer", Port, "nn1018b") max 6000 units "ms",
+    DefFieldEnum[MuteDigit](47, "Mute Digit", Port, "n*2090v", MuteDigit),
+    
   )
-
-
-//  val simpleFields: Seq[FieldDefSimple] = Seq(
-//    FieldDefSimple(0, "Site Prefix", Common, "1*2108v", FieldDtmf) max 3,
-//    FieldDefSimple(4, "TT PadTest", Common, "1*2093v", FieldDtmf) max 5,
-//    FieldDefSimple(10, "Say Hours", Common, "1*5104b", FieldBoolean),
-//    FieldDefSimple(11, "Hang Time 1", Port, "n*10001v", FieldInt),
-//    FieldDefSimple(14, "Hang Time 2", Port, "n*10002v", FieldInt),
-//    FieldDefSimple(17, "Hang Time 3", Port, "n*10003v", FieldInt),
-//    FieldDefSimple(20, "Initial ID Timer  ", Port, "n*1000v", FieldInt) units "minutes",
-//    FieldDefSimple(23, "Pending ID Timer  ", Port, "n*1003v", FieldInt) units "minutes",
-//    FieldDefSimple(26, "Tx Enable", Port, "nn10b", FieldBoolean),
-//    FieldDefSimple(29, "DTMF Cover Tone", Port, "nn13b", FieldBoolean),
-//    FieldDefSimple(32, "DTMF Mute Timer", Port, "n*1006v", FieldInt) max 999 units "100 ms",
-//    FieldDefSimple(38, "Kerchunk", Port, "nn15b", FieldBoolean),
-//    FieldDefSimple(41, "Kerchunk Timer", Port, "nn1018b", FieldInt) max 6000 units "ms",
 ////    SimpleField(47, "Mute Digit Select", Common, "n*2090v", MuteDigit), //todo
 //    FieldDefSimple(48, "CTCSS During ID", Port, "n*2089b", FieldBoolean),
 //    FieldDefSimple(54, "Timeout Ports", Common, "1*2051b", FieldBoolean),

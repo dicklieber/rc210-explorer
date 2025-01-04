@@ -19,7 +19,6 @@ package net.wa9nnn.rc210.ui
 
 import com.wa9nnn.wa9nnnutil.tableui.Cell
 import net.wa9nnn.rc210.Key
-import net.wa9nnn.rc210.data.field.Rc210EnumEntry
 import play.twirl.api.Html
 
 import java.time.LocalTime

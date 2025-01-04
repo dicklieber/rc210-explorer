@@ -62,7 +62,10 @@
     <logger name="net.wa9nnn.rc210.serial.comm.RcSerialPort" level="INFO"/>
     <logger name="net.wa9nnn.rc210.serial.comm.RealStreamBased" level="INFO"/>
     <logger name="net.wa9nnn.rc210.serial.comm.RcResponse" level="INFO"/>
-    <logger name="net.wa9nnn.rc210.ui.FormData" level="INFO"/>
+    <logger name="net.wa9nnn.rc210.ui.Rc210EnumEntry" level="TRACE"/>
+    <logger name="net.wa9nnn.rc210.data.field.MuteDigit" level="TRACE"/>
+    <logger name="net.wa9nnn.rc210.data.field.MuteDigit$" level="TRACE"/>
+    <logger name="net.wa9nnn.rc210.ui.FormData" level="TRACE"/>
     <logger name="ConfigModule" level="INFO"/>
     <logger name="play" level="INFO" />
     <logger name="play" level="INFO"/>

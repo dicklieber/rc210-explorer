@@ -72,9 +72,7 @@ class FieldEntry( val fieldDefinition: FieldDef[?], initialValue: FieldData) ext
         complex.toCommands(key)
       case simple: FieldValueSimple =>
         Seq(simple.toCommand(key, fieldDefinition.asInstanceOf[FieldDefSimple[?]].template))
-      case x =>
-        logger.error(s"$x is neither complex nor simple!")
-        Seq.empty
+ 
 
 object FieldEntry:
   implicit val ordering: Ordering[FieldEntry] = Ordering.by[FieldEntry, Key](_.key)

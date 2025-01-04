@@ -18,8 +18,8 @@
 package net.wa9nnn.rc210.data.clock
 
 import net.wa9nnn.rc210.data.clock.MonthOfYearDST.values
-import net.wa9nnn.rc210.data.field.Rc210EnumEntry
-import net.wa9nnn.rc210.ui.Rc210Enum
+import net.wa9nnn.rc210.ui.{Rc210Enum, Rc210EnumEntry}
+
 
 
 sealed trait  MonthOfYearDST(val rc210Value: Int) extends Rc210EnumEntry:

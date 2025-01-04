@@ -25,9 +25,9 @@ import net.wa9nnn.rc210.ui.FormField
 import play.api.libs.json.*
 
 case class FieldInt(value: Int) extends FieldValueSimple():
-  override def toRow: Row = Row(
-    "FieldDtmf",
-    toString
+  override def toRow(fieldEntry: FieldEntry): Row = Row(
+    fieldEntry.fieldDefinition.fieldName,
+    value.toString
   )
 
   override def toEditCell(key: Key): Cell = FormField(key, value)
@@ -38,8 +38,18 @@ case class FieldInt(value: Int) extends FieldValueSimple():
 
   override def displayCell: Cell = Cell(value)
 
-case class DefInt(offset: Int, fieldName: String, keyMetadata: KeyMetadata, template: String)
+case class DefInt(offset: Int, 
+                  fieldName: String, 
+                  keyMetadata: KeyMetadata, 
+                  template: String, 
+                  units: String = "",
+                  max: Int = Int.MaxValue,
+                 )
   extends FieldDefSimple[FieldInt]:
+  def units(units: String): DefInt =
+    copy(units = units)
+  def max(max:Int): DefInt =
+    copy(max = max)
 
   override def fromString(str: String): FieldInt =
     FieldInt(str.toInt)

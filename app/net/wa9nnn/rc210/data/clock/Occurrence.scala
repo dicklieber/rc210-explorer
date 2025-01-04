@@ -18,8 +18,7 @@
 package net.wa9nnn.rc210.data.clock
 
 import net.wa9nnn.rc210.data.clock.Occurrence.values
-import net.wa9nnn.rc210.data.field.Rc210EnumEntry
-import net.wa9nnn.rc210.ui.Rc210Enum
+import net.wa9nnn.rc210.ui.{Rc210Enum, Rc210EnumEntry}
 
 sealed trait Occurrence(val rc210Value: Int) extends Rc210EnumEntry:
   override val vals: Seq[Rc210EnumEntry] = values

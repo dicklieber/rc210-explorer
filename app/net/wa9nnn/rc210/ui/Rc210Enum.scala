@@ -19,7 +19,6 @@ package net.wa9nnn.rc210.ui
 
 import com.typesafe.scalalogging.LazyLogging
 import enumeratum.PlayEnum
-import net.wa9nnn.rc210.data.field.Rc210EnumEntry
 
 /**
  * for example:

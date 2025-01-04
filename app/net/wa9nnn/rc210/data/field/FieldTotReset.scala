@@ -37,10 +37,11 @@ case class FieldTotReset(value: TotReset = TotReset.AfterCOS) extends FieldValue
       Row("TotReset" -> value)
     )
 
-  override def toRow: Row = Row(
-    "TimeoutTimerResetPoint",
-    value
-  )
+  override def toRow(fieldEntry: FieldEntry): Row =
+    Row(
+      fieldEntry.fieldDefinition.fieldName,
+      value.entryName
+    )
 
   override def toEditCell(key: Key): Cell =
     FormField(key, value)
